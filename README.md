@@ -8,9 +8,12 @@ front-end code.
 
 This API is defined using Swagger (aka OpenAPI), and the `swagger` library
 takes care of validating request and responses according to the schema defined
-in [api/swagger/swagger.yaml](api/swagger/swagger.yaml)
+in [api/swagger/swagger.yaml](api/swagger/swagger.yaml).
 
-The `token` authorization model refers to the Auth0 JWT token scheme.
+The critical code is in [api/controllers](/api/controllers).
+
+The `token` authorization model refers to the Auth0 JWT token scheme, and
+many calls look at group memberships defined by the Auth0 app.
 
 The calls in the `/user` paths are proxied to the Auth0 administration API.
 The calls in the `/case`, `/method`, `/organization` and the like are proxied
