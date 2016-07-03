@@ -8,7 +8,7 @@ front-end code.
 
 This API is defined using Swagger (aka OpenAPI), and the `swagger` library
 takes care of validating request and responses according to the schema defined
-in [](`api/swagger/swagger.yaml`)
+in [api/swagger/swagger.yaml](api/swagger/swagger.yaml)
 
 The `token` authorization model refers to the Auth0 JWT token scheme.
 
