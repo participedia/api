@@ -31,7 +31,6 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "nave use 6 bash -c 'node test | tap-spec'",
-    "cmd": "nave use 6 bash -c 'npm install && npm test'"
+    "test": "nave use 6 bash -c 'node test | tap-spec'"
   }
 }
