@@ -1,7 +1,8 @@
 'use strict';
 
 var SwaggerExpress = require('swagger-express-mw');
-require('dotenv').config();
+var process = require('process')
+require('dotenv').config({silent: process.env.NODE_ENV == 'production'})
 
 var {config, app} = require('./app')
 
