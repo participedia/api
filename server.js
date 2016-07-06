@@ -11,5 +11,6 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   swaggerExpress.register(app);
 
   var port = process.env.PORT || 10010;
+  console.log("Starting the API server at port:", port)
   app.listen(port);
 });

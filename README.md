@@ -25,3 +25,10 @@ defining the following environment variables:
 is managing the users, and `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 corresponding to the AWS account with permissions to access the ElasticSearch
 cluster.
+
+`npm start` starts the API server.
+
+`npm test` runs the test suite.
+
+`swagger project editor` can be used (once `swagger` is installed) to edit the
+API definition file.
