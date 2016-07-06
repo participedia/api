@@ -18,3 +18,10 @@ many calls look at group memberships defined by the Auth0 app.
 The calls in the `/user` paths are proxied to the Auth0 administration API.
 The calls in the `/case`, `/method`, `/organization` and the like are proxied
 to the ElasticSearch database.
+
+The code expects a file `.env` to be located in the root directory of the folder,
+defining the following environment variables:
+`AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` as per the Auth0 application which
+is managing the users, and `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+corresponding to the AWS account with permissions to access the ElasticSearch
+cluster.
