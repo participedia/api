@@ -1,6 +1,7 @@
 'use strict';
 
 require('dotenv').config();
+var express = require('express')
 var process = require('process')
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
@@ -32,6 +33,8 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+app.use(express.static('docs'));
 
 module.exports = {
   config: config,

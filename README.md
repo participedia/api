@@ -28,7 +28,9 @@ cluster.
 
 `npm start` starts the API server.
 
-`npm test` runs the test suite.
+`npm test` runs the test suite.  These are written using
+[http://visionmedia.github.io/superagent/](superagent) and
+[https://github.com/substack/tape](tape)
 
 `swagger project editor` can be used (once `swagger` is installed) to edit the
 API definition file.

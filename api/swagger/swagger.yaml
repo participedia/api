@@ -1,3 +1,7 @@
+# NOTE: if you modify this file, please update the copy in docs/ off the main directory and do a firebase deploy to update
+# the docs site.
+
+
 swagger: "2.0"
 info:
   version: "0.0.1"
@@ -29,6 +33,34 @@ securityDefinitions:
 
 
 paths:
+
+
+  /case/new:
+    x-swagger-router-controller: case
+    put:
+      description: Submit a new case
+      operationId: newCase
+      tags:
+        - case
+      produces:
+        - application/json
+      security:
+        - token: []
+      parameters:
+        - name: case
+          in: body
+          description: the new case data
+          schema:
+            $ref: '#/definitions/case'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/case'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
 
   /case/{caseId}:
     x-swagger-router-controller: case
@@ -62,6 +94,30 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/errorModel'
+    get:
+      description: Get a case
+      operationId: getCaseById
+      tags:
+        - case
+      produces:
+        - application/json
+      security:
+        - token: []
+      parameters:
+        - name: caseId
+          in: path
+          description: the caseId
+          type: integer
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/case'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
     delete:
       description: Delete a case
       operationId: deleteCaseById
@@ -83,33 +139,6 @@ paths:
           schema:
             $ref: '#/definitions/errorModel'
 
-
-  /case/new:
-    x-swagger-router-controller: case
-    put:
-      description: Submit a new case
-      operationId: newCase
-      tags:
-        - case
-      produces:
-        - application/json
-      security:
-        - token: []
-      parameters:
-        - name: case
-          in: body
-          description: the new case data
-          schema:
-            $ref: '#/definitions/case'
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: '#/definitions/case'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorModel'
 
   /method/new:
     x-swagger-router-controller: method
@@ -141,7 +170,35 @@ paths:
       description: Submit a new revision of a method
       operationId: editMethodById
       tags:
-        - organization
+        - method
+      security:
+        - token: []
+      parameters:
+        - name: methodId
+          in: path
+          description: the methodId
+          type: integer
+          required: true
+        - name: method
+          in: body
+          description: the new version of the method
+          required: true
+          schema:
+            $ref: '#/definitions/method'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/method'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+    get:
+      description: get a method description
+      operationId: getMethodById
+      tags:
+        - method
       security:
         - token: []
       parameters:
@@ -241,6 +298,28 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/errorModel'
+    get:
+      description: Get an organization
+      operationId: getOrganization
+      tags:
+        - organization
+      security:
+        - token: []
+      parameters:
+        - name: organizationId
+          in: path
+          description: the `organizationId`
+          type: integer
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/organization'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
     delete:
       description: Delete an organization
       operationId: deleteOrganization
@@ -263,7 +342,7 @@ paths:
             $ref: '#/definitions/errorModel'
 
 
-  /record/{recordType}/{recordId}/set_featured:
+  /feature/{recordType}/{recordId}:
     put:
       tags:
         - case
@@ -297,7 +376,7 @@ paths:
           schema:
             $ref: '#/definitions/errorModel'
 
-  /record/{recordType}/{recordId}/set_hidden:
+  /hide/{recordType}/{recordId}:
     put:
       tags:
         - case
@@ -318,9 +397,9 @@ paths:
           description: the recordID
           type: integer
           required: true
-        - name: featured
+        - name: hidden
           in: query
-          description: whether to mark the item as featured or not
+          description: whether to mark the item as shown or not
           type: boolean
           required: true
       responses:
@@ -359,7 +438,8 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/errorModel'
-  /users/{id}:
+
+  /user/{id}:
     get:
       description: Returns a user profile based on a single ID
       operationId: findUserById
@@ -460,7 +540,7 @@ paths:
           schema:
             $ref: '#/definitions/errorModel'
 
-  /notifications/{notificationId}/ack:
+  /notification/{notificationId}/ack:
     put:
       description: Mark notification with id `notificationId` as acknowledged
       tags:
