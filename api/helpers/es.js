@@ -1,6 +1,6 @@
 var process = require('process')
 var elasticsearch = require('elasticsearch')
-require('dotenv').config({silent: process.NODE_ENV == 'production'})
+require('dotenv').config({silent: process.env.NODE_ENV == 'production'})
 
 var client = new elasticsearch.Client({
   host : 'search-ppsandbox-6atza6pvphfjp73xqg7yhyl5qi.us-east-1.es.amazonaws.com',
