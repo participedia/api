@@ -1,10 +1,10 @@
 'use strict';
 
-require('dotenv').config();
-var express = require('express')
 var process = require('process')
-var SwaggerExpress = require('swagger-express-mw');
-var app = require('express')();
+require('dotenv').config({silent: process.NODE_ENV == 'production'})
+var express = require('express')
+var SwaggerExpress = require('swagger-express-mw')
+var app = require('express')()
 module.exports = app; // for testing
 var jwt = require('./api/helpers/jwt')()
 
@@ -21,22 +21,22 @@ var config = {
         }
         else {
           // console.log(req.user); // Contains { iss: 'https://xxx.auth0.com/', sub: 'auth0|xxx', ... }
-          return cb(null);
+          return cb(null)
         }
       })
     }
   }
-};
+}
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  next()
+})
 
 app.use(express.static('docs'));
 
 module.exports = {
   config: config,
   app: app
-};
+}
