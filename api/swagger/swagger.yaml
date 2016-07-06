@@ -5,9 +5,9 @@ info:
   description: This API is the proxy used by Participedia.net to talk to the database of records in the database, as well as the user database.  It should be considered the stable interface to the data.  Some data sources may have their own API, but those are subject to change without notice.
 # during dev, should point to your local machine
 host: localhost:10010
-# basePath prefixes all resource paths 
+# basePath prefixes all resource paths
 basePath: /
-# 
+#
 schemes:
   # tip: remove http to make production-grade
   - http
@@ -24,46 +24,22 @@ securityDefinitions:
     description: For all of the API calls below, any call that causes a change in state on the server must be signed with a JWT token provided by Auth0.  The credentials of the user will be used to determine whether the user has the permissions required to perform the requested operation.  See Auth0 docs for details.
     name:
       Authorization
-    in: 
+    in:
       header
 
 
 paths:
 
-  /case/new:
+  /case/{caseId}:
     x-swagger-router-controller: case
     put:
-      description: Submit a new case
-      operationId: newCase
+      description: Submit a new revision of a case
+      operationId: editCaseById
       tags:
         - case
       produces:
         - application/json
-      security: 
-        - token: []
-      parameters:
-        - name: case
-          in: body
-          description: the new case data
-          schema:
-            $ref: '#/definitions/case'
-      responses:
-        "200":
-          description: Success
-          schema: 
-            $ref: '#/definitions/case'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorModel'
-
-  /case/{caseId}:
-    put:
-      description: Submit a new revision of a case
-      operationId: editCase
-      tags:
-        - case
-      security: 
+      security:
         - token: []
       parameters:
         - name: caseId
@@ -88,10 +64,10 @@ paths:
             $ref: '#/definitions/errorModel'
     delete:
       description: Delete a case
-      operationId: deleteCase
+      operationId: deleteCaseById
       tags:
         - case
-      security: 
+      security:
         - token: []
       parameters:
         - name: caseId
@@ -108,13 +84,41 @@ paths:
             $ref: '#/definitions/errorModel'
 
 
+  /case/new:
+    x-swagger-router-controller: case
+    put:
+      description: Submit a new case
+      operationId: newCase
+      tags:
+        - case
+      produces:
+        - application/json
+      security:
+        - token: []
+      parameters:
+        - name: case
+          in: body
+          description: the new case data
+          schema:
+            $ref: '#/definitions/case'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/case'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+
   /method/new:
+    x-swagger-router-controller: method
     put:
       description: Submit a new method
       operationId: newMethod
       tags:
         - method
-      security: 
+      security:
         - token: []
       parameters:
         - name: method
@@ -135,10 +139,10 @@ paths:
   /method/{methodId}:
     put:
       description: Submit a new revision of a method
-      operationId: editMethod
+      operationId: editMethodById
       tags:
         - organization
-      security: 
+      security:
         - token: []
       parameters:
         - name: methodId
@@ -163,10 +167,10 @@ paths:
             $ref: '#/definitions/errorModel'
     delete:
       description: Delete a method
-      operationId: deleteMethod
+      operationId: deleteMethodById
       tags:
         - method
-      security: 
+      security:
         - token: []
       parameters:
         - name: methodId
@@ -184,12 +188,13 @@ paths:
 
 
   /organization/new:
+    x-swagger-router-controller: organization
     put:
       description: Submit a new organization
       operationId: newOrganization
       tags:
         - organization
-      security: 
+      security:
         - token: []
       parameters:
         - name: organization
@@ -213,7 +218,7 @@ paths:
       operationId: editOrganization
       tags:
         - organization
-      security: 
+      security:
         - token: []
       parameters:
         - name: organizationId
@@ -241,7 +246,7 @@ paths:
       operationId: deleteOrganization
       tags:
         - organization
-      security: 
+      security:
         - token: []
       parameters:
         - name: organizationId
@@ -266,7 +271,7 @@ paths:
         - organization
         - news
       description: Set the `featured` status of a record (case, method, organization or news).  The query parameter `featured` is a boolean.
-      security: 
+      security:
         - token: []
       parameters:
         - name: recordType
@@ -300,7 +305,7 @@ paths:
         - organization
         - news
       description: Set the `hidden` status of a record (case, method, organization or news).  The query parameter `hidden` is a boolean.  Hidden records are not available to lay users or the web site, they are effectively in the 'moderation' queue.
-      security: 
+      security:
         - token: []
       parameters:
         - name: recordType
@@ -399,7 +404,7 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/user'
-        
+
       responses:
         '200':
           description: user profile
@@ -414,7 +419,7 @@ paths:
       operationId: deleteUser
       tags:
         - user
-      security: 
+      security:
         - token: []
       parameters:
         - name: id
@@ -429,7 +434,7 @@ paths:
         default:
           description: unexpected error
           schema:
-            $ref: '#/definitions/errorModel'    
+            $ref: '#/definitions/errorModel'
 
 
   /notifications/{userId}:
@@ -453,11 +458,11 @@ paths:
         default:
           description: unexpected error
           schema:
-            $ref: '#/definitions/errorModel'          
+            $ref: '#/definitions/errorModel'
 
   /notifications/{notificationId}/ack:
     put:
-      description: Mark notification with id `notificationId` as acknowledged 
+      description: Mark notification with id `notificationId` as acknowledged
       tags:
         - notification
       parameters:
@@ -476,9 +481,9 @@ paths:
         default:
           description: unexpected error
           schema:
-            $ref: '#/definitions/errorModel'          
-        
-        
+            $ref: '#/definitions/errorModel'
+
+
   /swagger:
     x-swagger-pipe: swagger_raw
 
@@ -586,7 +591,7 @@ definitions:
       - id
       - name
     properties:
-      id: 
+      id:
         type: integer
       name:
         type: string
@@ -629,5 +634,3 @@ definitions:
           format: int32
         message:
           type: string
-          
-  

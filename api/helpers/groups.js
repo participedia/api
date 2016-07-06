@@ -7,9 +7,9 @@ function user_has(req, groupName, errCB, okCB) {
     if (user && user.app_metadata && user.app_metadata.authorization &&
         user.app_metadata.authorization.groups)
     if (user.app_metadata.authorization.groups.indexOf(groupName) == -1) {
-      errCB(err)
+      errCB && errCB(err)
     } else {
-      okCB()
+      okCB && okCB()
     }
   })
 }
