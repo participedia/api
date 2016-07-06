@@ -7,8 +7,13 @@
   "author": "",
   "license": "",
   "main": "app.js",
+  "engines": {
+    "node": "6.2.0"
+  },
   "dependencies": {
     "aws_es": "^1.1.2",
+    "babel": "^6.5.2",
+    "babel-cli": "^6.10.1",
     "bunyan": "^1.8.1",
     "dotenv": "^2.0.0",
     "elasticsearch": "^11.0.1",

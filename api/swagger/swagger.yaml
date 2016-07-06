@@ -1,7 +1,3 @@
-# NOTE: if you modify this file, please update the copy in docs/ off the main directory and do a firebase deploy to update
-# the docs site.
-
-
 swagger: "2.0"
 info:
   version: "0.0.1"
@@ -355,7 +351,7 @@ paths:
       parameters:
         - name: recordType
           in: path
-          description: the caseId
+          description: the recordType: one of `case`, `method`, `organization`, `news`
           type: string
           required: true
         - name: recordId
@@ -389,7 +385,7 @@ paths:
       parameters:
         - name: recordType
           in: path
-          description: the caseId
+          description: the recordType: one of `case`, `method`, `organization`, `news`
           type: string
           required: true
         - name: recordId

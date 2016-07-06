@@ -351,7 +351,7 @@ paths:
       parameters:
         - name: recordType
           in: path
-          description: the caseId
+          description: the recordType: one of `case`, `method`, `organization`, `news`
           type: string
           required: true
         - name: recordId
@@ -385,7 +385,7 @@ paths:
       parameters:
         - name: recordType
           in: path
-          description: the caseId
+          description: the recordType: one of `case`, `method`, `organization`, `news`
           type: string
           required: true
         - name: recordId
