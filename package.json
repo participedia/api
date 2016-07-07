@@ -25,10 +25,9 @@
     "should": "^7.1.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0"
-    "tape": "^4.6.0"
   },
   "devDependencies": {
-    "swagger-ui": "^2.1.4",
+    "swagger-ui": "^2.1.4"
   },
   "scripts": {
     "start": "node server.js",
