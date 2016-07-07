@@ -1,12 +1,13 @@
-  // var should = require('should');
-var request = require('supertest');
-var server = require('../app');
-var test = require('tape');
+var request = require('supertest')
+var server = require('../app')
+var test = require('tape')
+var process = require('process')
 var SwaggerExpress = require('swagger-express-mw');
+require('dotenv').config({silent: process.env.NODE_ENV == 'production'})
 
 var {config, app} = require('../app')
 
-const bearerToken = "Bearer " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImRhdmlkLmFzY2hlckBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7ImF1dGhvcml6YXRpb24iOnsiZ3JvdXBzIjpbIkN1cmF0b3JzIiwiQ29udHJpYnV0b3JzIl19fSwiaXNzIjoiaHR0cHM6Ly9wYXJ0aWNpcGVkaWEuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTAyOTA5ODUyMDU5OTY0NzE4MjY5IiwiYXVkIjoibE9SUG1FT05nWDJLNzFTWDdmazM1WDVQTlpPQ2FTZlUiLCJleHAiOjE0Njc4NTgyMDAsImlhdCI6MTQ2NzgyMjIwMH0.IgundgODUo1UhzxZBkDzg8iyP_86hJJRXH7bT11-S1E"
+const bearerToken = "Bearer " + process.env.BEARER_TOKEN
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
