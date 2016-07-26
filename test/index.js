@@ -1,21 +1,20 @@
 var request = require('supertest')
-var server = require('../app')
 var test = require('tape')
 var process = require('process')
-var SwaggerExpress = require('swagger-express-mw');
-require('dotenv').config({silent: process.env.NODE_ENV == 'production'})
+var SwaggerExpress = require('swagger-express-mw')
+require('dotenv').config({silent: process.env.NODE_ENV === 'production'})
 
 var {config, app} = require('../app')
 
-const bearerToken = "Bearer " + process.env.BEARER_TOKEN
+const bearerToken = 'Bearer ' + process.env.BEARER_TOKEN
 
-SwaggerExpress.create(config, function(err, swaggerExpress) {
-  if (err) { throw err; }
+SwaggerExpress.create(config, function (err, swaggerExpress) {
+  if (err) { throw err }
 
-  swaggerExpress.register(app);
+  swaggerExpress.register(app)
 
   test('newCase creates a case', function (t) {
-    const body = {'id':1000, 'title':'meathead'}
+    const body = {'id': 1000, 'title': 'meathead'}
     request(app)
       .put('/case/new')
       .set('Authorization', bearerToken)
@@ -25,10 +24,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function (err, res) {
-        t.error(err, 'No error');
-        t.same(res.body, body, 'Case created as expected');
-        t.end();
+        t.error(err, 'No error')
+        t.same(res.body, body, 'Case created as expected')
+        t.end()
       })
   })
-
 })

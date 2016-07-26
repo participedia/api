@@ -30,6 +30,23 @@ securityDefinitions:
 
 paths:
 
+  /case/countByCountry:
+    x-swagger-router-controller: case
+    get:
+      description: Get counts of cases by Country
+      operationId: countByCountry
+      tags:
+        - case
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/case'
+
 
   /case/new:
     x-swagger-router-controller: case
