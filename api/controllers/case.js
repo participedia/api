@@ -198,8 +198,7 @@ router.put('/:caseId', function editCaseById (req, res) {
     var caseBody = req.body
     console.log('caseId', caseId, 'case', caseBody)
     res.status(200).json(req.body)
-  })
-})
+  })})
 
 /**
  * @api {get} /case/:caseId Get the last version of a case
@@ -228,16 +227,19 @@ router.put('/:caseId', function editCaseById (req, res) {
  */
 
 router.get('/:caseId', function editCaseById (req, res) {
-  groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
-    res.status(401).json({message: 'access denied - user does not have proper authorization'})
-    return
-  }, function () {
-    var caseId = req.swagger.params.caseId.value
-    var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
-    res.status(200).json(req.body)
+  es.get({
+    index: 'pp',
+    type: 'case',
+    id: req.params.caseId
+  }).then(function (resp) {
+    res.status(200).json({
+      OK: true,
+      data: resp
+    })
+  }, function (resp) {
+    res.status(500).json('uh-oh')
   })
+
 })
 
 /**
