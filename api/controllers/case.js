@@ -5,7 +5,6 @@ var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var Bodybuilder = require('bodybuilder')
 
-
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
  * @apiGroup Cases
@@ -53,6 +52,66 @@ router.get('/countsByCountry', function (req, res) {
   }, function (resp) {
     res.status(500).json('uh-oh')
   })
+})
+
+/**
+ * @api {get} /case/search Search through the cases
+ * @apiGroup Cases
+ * @apiVersion 0.1.0
+ * @apiName search
+ *
+ * @apiParam  {String} query query term
+ * @apiParam  {String} sortingMethod ('chronological' or 'alphabetical' or 'featured')
+ * @apiParam  {String} selectedCategory ('All' or 'Case' or 'Method' or 'Organization' or 'News')
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data Mapping of country names to counts (when `OK` is true)
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *          ... (ElasticSearch records) ...
+ *       }
+ *     }
+ *
+ */
+
+router.get('/search', function (req, res) {
+  let body = new Bodybuilder()
+  let query = req.params.query
+  let sortingMethod = req.params.sortingMethod
+  let selectedCategory = req.params.selectedCategory
+
+  if (query) {
+    body = body.query('match', '_all', query)
+  }
+  if (sortingMethod === 'chronological') {
+    body = body.sort('LastUpdatedDate', 'desc')
+  } else {
+    body = body.sort('CaseID.raw', 'asc') // Note this requires a non-analyzed field
+  }
+  let bodyquery = body.size(30).build('v2')
+
+  if (query) {
+    let ret = es.search({
+      index: 'pp',
+      body: bodyquery
+    })
+    res.json(ret)
+  } else {
+    es.search({
+      index: 'pp',
+      match_all: {},
+      body: bodyquery
+    }).then(function success (ret) {
+      res.json({OK: true, data: ret})
+    }, function failure (error) {
+      res.status(500).json(error)
+    })
+  }
 })
 
 /**

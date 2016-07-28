@@ -4,6 +4,7 @@ require('dotenv').config({silent: process.env.NODE_ENV === 'production'})
 
 var client = new elasticsearch.Client({
   host: 'search-ppsandbox-6atza6pvphfjp73xqg7yhyl5qi.us-east-1.es.amazonaws.com',
+  // host: 'localhost:32771',
   connectionClass: require('http-aws-es'),
   amazonES: {
     region: 'us-east-1',
