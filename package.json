@@ -2,10 +2,10 @@
   "name": "participedia",
   "version": "0.0.1",
   "private": true,
-  "description": "New Swagger API Project",
+  "description": "API for Participedia v3",
   "keywords": [],
-  "author": "",
-  "license": "",
+  "author": "David Ascher <david.ascher@gmail.com>",
+  "license": "MIT",
   "main": "app.js",
   "engines": {
     "node": "6.2.0"
@@ -32,11 +32,12 @@
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
-    "start": "nave use 6 bash -c 'node-dev server.js'",
+    "start": "./node_modules/.bin/babel-node server.js",
+    "start-dev": "nave use 6 bash -c 'node-dev server.js'",
     "build": "apidoc -i api",
+    "deploy": "git push heroku",
     "test": "nave use 6 bash -c 'node test | tap-spec'"
   }
 }
