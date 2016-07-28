@@ -22,7 +22,7 @@ app.use(methodOverride())
 app.use(cors())
 app.use(bodyParser.json())
 
-app.use(express.static(path.join(__dirname, 'docs')))
+app.use(express.static(path.join(__dirname, 'doc')))
 app.use(errorhandler())
 
 app.use('/case', case_)
