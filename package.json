@@ -36,7 +36,7 @@
   "scripts": {
     "start": "./node_modules/.bin/babel-node server.js",
     "start-dev": "nave use 6 bash -c 'node-dev server.js'",
-    "build": "apidoc -i api",
+    "postinstall": "apidoc -i api",
     "deploy": "git push heroku",
     "test": "nave use 6 bash -c 'node test | tap-spec'"
   }
