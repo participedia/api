@@ -1,17 +1,32 @@
 'use strict'
-
-var SwaggerExpress = require('swagger-express-mw')
 var process = require('process')
 require('dotenv').config({silent: process.env.NODE_ENV === 'production'})
+var express = require('express')
 
-var { config, app } = require('./app')
+var app = express()
+var port = process.env.PORT || 3001
+var case_ = require('./api/controllers/case')
+var http = require('http')
+var path = require('path')
+var errorhandler = require('errorhandler')
+// var favicon = require('serve-favicon')
+var morgan = require('morgan')
+var bodyParser = require('body-parser')
+var methodOverride = require('method-override')
+var cors = require('cors')
 
-SwaggerExpress.create(config, function (err, swaggerExpress) {
-  if (err) { throw err }
+app.set('port', port)
+// app.use(favicon(__dirname + '/public/favicon.ico'))
+app.use(morgan('dev'))
+app.use(methodOverride())
+app.use(cors())
+app.use(bodyParser.json())
 
-  swaggerExpress.register(app)
+app.use(express.static(path.join(__dirname, 'docs')))
+app.use(errorhandler())
 
-  var port = process.env.PORT || 10010
-  console.log('Starting the API server at port:', port)
-  app.listen(port)
+app.use('/case', case_)
+
+http.createServer(app).listen(app.get('port'), function () {
+  console.log('Express server listening on port ' + app.get('port'))
 })

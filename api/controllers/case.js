@@ -1,9 +1,85 @@
 'use strict'
-
+var express = require('express')
+var router = express.Router()
 var groups = require('../helpers/groups')
 var es = require('../helpers/es')
+var Bodybuilder = require('bodybuilder')
 
-function newCase (req, res) { // is a PUT
+
+/**
+ * @api {get} /case/countsByCountry Get case counts for each country
+ * @apiGroup Cases
+ * @apiVersion 0.1.0
+ * @apiName countsByCountry
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data Mapping of country names to counts (when `OK` is true)
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *          countryCounts: {
+ *            "United States": 122,
+ *            "United Kingdom": 57,
+ *            "Italy": 51,
+ *            ...
+ *        }
+ *     }
+ *
+ */
+
+router.get('/countsByCountry', function (req, res) {
+  let body = new Bodybuilder()
+  let bodyquery = body.aggregation('terms', 'Country', null, {size: 0}).size(0).build()
+  es.search({
+    index: 'pp',
+    type: 'case',
+    body: bodyquery
+  }).then(function (resp) {
+    var countryCounts = {}
+    let buckets = resp.aggregations.agg_terms_Country.buckets
+    for (let i in buckets) {
+      countryCounts[buckets[i].key] = buckets[i].doc_count
+    }
+    res.status(200).json({
+      OK: true,
+      data: {
+        countryCounts: countryCounts
+      }
+    })
+  }, function (resp) {
+    res.status(500).json('uh-oh')
+  })
+})
+
+/**
+ * @api {post} /case/new Create new case
+ * @apiGroup Cases
+ * @apiVersion 0.1.0
+ * @apiName newCase
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data case data
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "ID": 3,
+ *         "Description": 'foo'
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
+router.post('/new', function (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
@@ -25,9 +101,35 @@ function newCase (req, res) { // is a PUT
       }
     })
   })
-}
+})
 
-function editCaseById (req, res) {
+/**
+ * @api {put} /case/:caseId  Submit a new version of a case
+ * @apiGroup Cases
+ * @apiVersion 0.1.0
+ * @apiName editCase
+ * @apiParam {Number} caseId Case ID
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data case data
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "ID": 3,
+ *         "Description": 'foo'
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
+
+router.put('/:caseId', function editCaseById (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
@@ -38,9 +140,79 @@ function editCaseById (req, res) {
     console.log('caseId', caseId, 'case', caseBody)
     res.status(200).json(req.body)
   })
-}
+})
 
-module.exports = {
-  editCaseById: editCaseById,
-  newCase: newCase
-}
+/**
+ * @api {get} /case/:caseId Get the last version of a case
+ * @apiGroup Cases
+ * @apiVersion 0.1.0
+ * @apiName getCaseById
+ * @apiParam {Number} caseId Case ID
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data case data
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "ID": 3,
+ *         "Description": 'foo'
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
+
+router.get('/:caseId', function editCaseById (req, res) {
+  groups.user_has(req, 'Contributors', function () {
+    console.log("user doesn't have Contributors group membership")
+    res.status(401).json({message: 'access denied - user does not have proper authorization'})
+    return
+  }, function () {
+    var caseId = req.swagger.params.caseId.value
+    var caseBody = req.body
+    console.log('caseId', caseId, 'case', caseBody)
+    res.status(200).json(req.body)
+  })
+})
+
+/**
+ * @api {delete} /case/:caseId Delete a case
+ * @apiGroup Cases
+ * @apiVersion 0.1.0
+ * @apiName deleteCase
+ * @apiParam {Number} caseId Case ID
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *        OK: true
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
+
+router.delete('/:caseId', function editCaseById (req, res) {
+  groups.user_has(req, 'Contributors', function () {
+    console.log("user doesn't have Contributors group membership")
+    res.status(401).json({message: 'access denied - user does not have proper authorization'})
+    return
+  }, function () {
+    var caseId = req.swagger.params.caseId.value
+    var caseBody = req.body
+    console.log('caseId', caseId, 'case', caseBody)
+    res.status(200).json(req.body)
+  })
+})
+
+module.exports = router
