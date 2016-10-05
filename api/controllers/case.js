@@ -94,6 +94,8 @@ router.get('/countsByCountry', function (req, res) {
  *
  */
 
+// Should not return things that aren't displayable as SearchHits (i.e. Users...)
+
 router.get('/search', function (req, res) {
   let body = new Bodybuilder()
   let query = req.query.query
@@ -125,6 +127,7 @@ router.get('/search', function (req, res) {
   if (query) {
     es.search({
       index: 'pp',
+      type: 'case',
       body: bodyquery
     }).then(function success(ret) {
       // console.log("ret", ret);
@@ -136,6 +139,7 @@ router.get('/search', function (req, res) {
   } else {
     es.search({
       index: 'pp',
+      type: 'case',
       match_all: {}
     }).then(function success (ret) {
       res.json(ret)

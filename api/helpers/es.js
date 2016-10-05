@@ -14,10 +14,8 @@ var client = new elasticsearch.Client({
   // log: 'debug'
 })
 
-
 // var client = new elasticsearch.Client({
 //   hosts: 'localhost:32769',
 // })
-    // hosts: esDomain.endpoint + ':' + String(esDomain.port),
 
 module.exports = exports = client
