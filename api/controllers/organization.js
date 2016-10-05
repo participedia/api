@@ -18,59 +18,7 @@ var jsonStringify = require('json-pretty');
 
 
 /**
- * @api {get} /case/countsByCountry Get case counts for each country
- * @apiGroup Cases
- * @apiVersion 0.1.0
- * @apiName countsByCountry
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data Mapping of country names to counts (when `OK` is true)
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *          countryCounts: {
- *            "United States": 122,
- *            "United Kingdom": 57,
- *            "Italy": 51,
- *            ...
- *        }
- *     }
- *
- */
-
-// TODO: figure out if the choropleth should show cases or all things
-
-router.get('/countsByCountry', function (req, res) {
-  let body = new Bodybuilder()
-  let bodyquery = body.aggregation('terms', 'geo_country', null, {size: 0}).size(0).build()
-  es.search({
-    index: 'pp',
-    type: 'case',
-    body: bodyquery
-  }).then(function (resp) {
-    console.log(resp)
-    var countryCounts = {}
-    let buckets = resp.aggregations.agg_terms_geo_country.buckets
-    for (let i in buckets) {
-      countryCounts[buckets[i].key] = buckets[i].doc_count
-    }
-    res.status(200).json({
-      OK: true,
-      data: {
-        countryCounts: countryCounts
-      }
-    })
-  }, function (resp) {
-    res.status(500).json('uh-oh')
-  })
-})
-
-/**
- * @api {get} /case/search Search through the cases
+ * @api {get} /organization/search Search through the cases
  * @apiGroup Cases
  * @apiVersion 0.1.0
  * @apiName search
@@ -105,15 +53,10 @@ router.get('/search', function (req, res) {
   if (! selectedCategory) {
     selectedCategory = 'all'
   }
+  console.log("query", query, "sortingMethod", sortingMethod, "selectedCategory", selectedCategory)
 
   if (query) {
-    console.log(query.indexOf(':'))
-    if (query.indexOf(':') == -1) {
-      body = body.query('match', "_all", query)
-    } else {
-      let parts = query.split(':', 2)
-      body = body.query('match', parts[0], parts[1])
-    }
+    body = body.query('match', "_all", query)
   }
   if (sortingMethod === 'chronological') {
     body = body.sort('lastmodified', 'desc')
@@ -121,13 +64,15 @@ router.get('/search', function (req, res) {
     body = body.sort('id', 'asc') // Note this requires a non-analyzed field
   }
   let bodyquery = body.size(30).build('v2')
+  console.log(JSON.stringify(bodyquery, null, 2))
 
   if (query) {
+    console.log("FIRST BIT");
     es.search({
       index: 'pp',
       body: bodyquery
     }).then(function success(ret) {
-      // console.log("ret", ret);
+      console.log("ret", ret);
       res.json(ret)
     }, function failure (error) {
       console.log("error", error);
@@ -136,9 +81,11 @@ router.get('/search', function (req, res) {
   } else {
     es.search({
       index: 'pp',
-      match_all: {}
+      match_all: {},
+      // body: bodyquery
     }).then(function success (ret) {
-      res.json(ret)
+      console.log("ret", JSON.stringify(ret, null, 2));
+      res.json({OK: true, data: ret})
     }, function failure (error) {
       console.log("error", error);
       res.status(500).json(error)
@@ -147,7 +94,7 @@ router.get('/search', function (req, res) {
 })
 
 /**
- * @api {post} /case/new Create new case
+ * @api {post} /organization/new Create new case
  * @apiGroup Cases
  * @apiVersion 0.1.0
  * @apiName newCase
@@ -195,11 +142,11 @@ router.post('/new', function (req, res) {
 })
 
 /**
- * @api {put} /case/:caseId  Submit a new version of a case
+ * @api {put} /organization/:orgId  Submit a new version of a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
  * @apiName editCase
- * @apiParam {Number} caseId Case ID
+ * @apiParam {Number} orgId Case ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -220,24 +167,24 @@ router.post('/new', function (req, res) {
  *
  */
 
-router.put('/:caseId', function editCaseById (req, res) {
+router.put('/:orgId', function editCaseById (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
-    var caseId = req.swagger.params.caseId.value
+    var orgId = req.swagger.params.orgId.value
     var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
+    console.log('orgId', orgId, 'case', caseBody)
     res.status(200).json(req.body)
   })})
 
 /**
- * @api {get} /case/:caseId Get the last version of a case
+ * @api {get} /organization/:orgId Get the last version of a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
  * @apiName getCaseById
- * @apiParam {Number} caseId Case ID
+ * @apiParam {Number} orgId Case ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -258,6 +205,7 @@ router.put('/:caseId', function editCaseById (req, res) {
  *
  */
 
+// TODO: refactor this in a common helper
 
 function getLastThingByID(tableName, id, cb) {
   var docClient = new AWS.DynamoDB.DocumentClient();
@@ -279,18 +227,18 @@ function getAuthorByAuthorID(authorID, cb) {
   getLastThingByID('pp_users', authorID, cb);
 }
 
-router.get('/:caseId', function editCaseById (req, res) {
+router.get('/:orgId', function editOrgById (req, res) {
   // Get the case for dynamodb
   // get the author from dynamodb
   
   var docClient = new AWS.DynamoDB.DocumentClient();
   var params = {
-      TableName : "pp_cases",
+      TableName : "pp_organizations",
       Limit : 1,
       ScanIndexForward: false, // this will return the last row with this id
       KeyConditionExpression: "id = :id",
       ExpressionAttributeValues: {
-          ":id":req.params.caseId
+          ":id":req.params.orgId
       }
   };
 
@@ -315,18 +263,18 @@ router.get('/:caseId', function editCaseById (req, res) {
           }
         })
       } else {
-        res.status(500).json({"error": "No case found for id =" + req.params.caseId});
+        res.status(500).json({"error": "No organization found for id =" + req.params.orgId});
       }
     }
   });
 })
 
 /**
- * @api {delete} /case/:caseId Delete a case
+ * @api {delete} /organization/:orgId Delete a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
  * @apiName deleteCase
- * @apiParam {Number} caseId Case ID
+ * @apiParam {Number} orgId Case ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -342,15 +290,15 @@ router.get('/:caseId', function editCaseById (req, res) {
  *
  */
 
-router.delete('/:caseId', function editCaseById (req, res) {
+router.delete('/:orgId', function editCaseById (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
-    var caseId = req.swagger.params.caseId.value
+    var orgId = req.swagger.params.orgId.value
     var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
+    console.log('orgId', orgId, 'organization', caseBody)
     res.status(200).json(req.body)
   })
 })

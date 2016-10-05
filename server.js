@@ -6,6 +6,7 @@ var express = require('express')
 var app = express()
 var port = process.env.PORT || 3001
 var case_ = require('./api/controllers/case')
+var organization = require('./api/controllers/organization')
 var http = require('http')
 var path = require('path')
 var errorhandler = require('errorhandler')
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'doc')))
 app.use(errorhandler())
 
 app.use('/case', case_)
+app.use('/organization', organization)
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'))
