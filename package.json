@@ -20,6 +20,7 @@
     "bunyan": "^1.8.1",
     "cors": "^2.7.1",
     "dotenv": "^2.0.0",
+    "dynamodb": "^0.3.6",
     "elasticsearch": "^11.0.1",
     "errorhandler": "^1.4.3",
     "express": "^4.12.3",
