@@ -6,6 +6,7 @@ var express = require('express')
 var app = express()
 var port = process.env.PORT || 3001
 var case_ = require('./api/controllers/case')
+var search = require('./api/controllers/search')
 var organization = require('./api/controllers/organization')
 var http = require('http')
 var path = require('path')
@@ -26,6 +27,8 @@ app.use(bodyParser.json())
 
 app.use(express.static(path.join(__dirname, 'doc')))
 app.use(errorhandler())
+
+app.use('/search', search)
 
 app.use('/case', case_)
 app.use('/organization', organization)
