@@ -7,6 +7,10 @@ var ddb = require('../helpers/ddb')
 
 var AWS = require("aws-sdk");
 
+if (typeof Promises === 'undefined') {
+  var Promises = require('promise-polyfill')
+}
+
 AWS.config.update({
   profile: "ppadmin",
   region: "us-east-1"
@@ -51,7 +55,7 @@ router.get('/', function (req, res) {
     sortingMethod = 'chronological'
   }
   if (! selectedCategory) {
-    selectedCategory = 'all'
+    selectedCategory = 'All'
   }
 
   if (query) {
@@ -69,31 +73,102 @@ router.get('/', function (req, res) {
     body = body.sort('id', 'asc') // Note this requires a non-analyzed field
   }
   let bodyquery = body.size(30).build('v2')
+  let includeCases = selectedCategory === 'All' || selectedCategory === 'Cases'
+  let includeMethods = selectedCategory === 'All' || selectedCategory === 'Methods'
+  let includeNews = selectedCategory === 'All' || selectedCategory === 'News'
+  let includeOrgs = selectedCategory === 'All' || selectedCategory === 'Organizations'
 
   if (query) {
-    es.search({
-      index: 'pp',
-      type: 'case',
-      body: bodyquery
-    }).then(function success(ret) {
-      // console.log("ret", ret);
-      res.json(ret)
-    }, function failure (error) {
-      console.log("error", error);
-      res.status(500).json(error);
-    })
+    let promises = []
+    if (includeCases) {
+      promises.push(
+        es.search({
+          index: 'pp',
+          type: 'case',
+          body: bodyquery
+        }).then(function (result) { 
+          return {type: 'case', hits: result['hits']['hits']}
+        })
+      )
+    }
+    if (includeOrgs) {
+      promises.push(
+        es.search({
+          index: 'pp',
+          type: 'organization',
+          body: bodyquery
+        }).then(function (result) { 
+          return {type: 'organization', hits: result['hits']['hits']}
+        })
+      )
+    }
+    if (includeMethods) {
+      promises.push(
+        es.search({
+          index: 'pp',
+          type: 'method',
+          body: bodyquery
+        }).then(function (result) { 
+          return {type: 'method', hits: result['hits']['hits']}
+        })
+      )
+    }
+    Promises.all(promises).then(
+      function (results) {
+        res.json({results: results});
+      }, function failure(error) {
+        console.log("error", error);
+        res.status(500).json(error)
+      }
+    )
   } else {
-    es.search({
-      index: 'pp',
-      type: 'case',
-      match_all: {}
-    }).then(function success (ret) {
-      res.json(ret)
-    }, function failure (error) {
-      console.log("error", error);
-      res.status(500).json(error)
-    })
+    let promises = []
+    if (includeCases) {
+      promises.push(
+        es.search({
+          index: 'pp',
+          type: 'case',
+          match_all: {}
+        }).then(function (result) { 
+          return {type: 'case', hits: result['hits']['hits']}
+        })
+      )
+    }
+    if (includeOrgs) {
+      promises.push(
+        es.search({
+          index: 'pp',
+          type: 'organization',
+          match_all: {}
+        }).then(function (result) { 
+          return {type: 'organization', hits: result['hits']['hits']}
+        })
+      )
+    }
+    if (includeMethods) {
+      promises.push(
+        es.search({
+          index: 'pp',
+          type: 'method',
+          match_all: {}
+        }).then(function (result) { 
+          return {type: 'method', hits: result['hits']['hits']}
+        })
+      )
+    }
+    Promises.all(promises).then(
+      function (results) {
+        res.json({results: results});
+      }, function failure(error) {
+        console.log("error", error);
+        res.status(500).json(error)
+      }
+    )
   }
 })
+
+function searchCaseWithQuery(bodyquery) {
+
+}
 
 module.exports = router
