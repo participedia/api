@@ -29,6 +29,7 @@
     "json-pretty": "0.0.1",
     "method-override": "^2.3.6",
     "morgan": "^1.7.0",
+    "promise-polyfill": "^6.0.2",
     "react-dropzone-s3-uploader": "^0.7.3",
     "serve-favicon": "^2.3.0",
     "should": "^7.1.0",
