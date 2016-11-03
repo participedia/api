@@ -4,7 +4,7 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
-
+var getAuthorByAuthorID = require('../helpers/getAuthor')
 var AWS = require("aws-sdk");
 
 AWS.config.update({
@@ -18,90 +18,14 @@ var jsonStringify = require('json-pretty');
 
 
 /**
- * @api {get} /organization/search Search through the cases
- * @apiGroup Cases
+ * @api {post} /organization/new Create new organization
+ * @apiGroup Organizations
  * @apiVersion 0.1.0
- * @apiName search
- *
- * @apiParam  {String} query query term
- * @apiParam  {String} sortingMethod ('chronological' or 'alphabetical' or 'featured')
- * @apiParam  {String} selectedCategory ('All' or 'Case' or 'Method' or 'Organization' or 'News')
+ * @apiName newOrganization
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data Mapping of country names to counts (when `OK` is true)
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *          ... (ElasticSearch records) ...
- *       }
- *     }
- *
- */
-
-router.get('/search', function (req, res) {
-  let body = new Bodybuilder()
-  let query = req.query.query
-  let sortingMethod = req.query.sortingMethod
-  let selectedCategory = req.query.selectedCategory
-  if (! sortingMethod) {
-    sortingMethod = 'chronological'
-  }
-  if (! selectedCategory) {
-    selectedCategory = 'all'
-  }
-  console.log("query", query, "sortingMethod", sortingMethod, "selectedCategory", selectedCategory)
-
-  if (query) {
-    body = body.query('match', "_all", query)
-  }
-  if (sortingMethod === 'chronological') {
-    body = body.sort('lastmodified', 'desc')
-  } else {
-    body = body.sort('id', 'asc') // Note this requires a non-analyzed field
-  }
-  let bodyquery = body.size(30).build('v2')
-  console.log(JSON.stringify(bodyquery, null, 2))
-
-  if (query) {
-    console.log("FIRST BIT");
-    es.search({
-      index: 'pp',
-      body: bodyquery
-    }).then(function success(ret) {
-      console.log("ret", ret);
-      res.json(ret)
-    }, function failure (error) {
-      console.log("error", error);
-      res.status(500).json(error);
-    })
-  } else {
-    es.search({
-      index: 'pp',
-      match_all: {},
-      // body: bodyquery
-    }).then(function success (ret) {
-      console.log("ret", JSON.stringify(ret, null, 2));
-      res.json({OK: true, data: ret})
-    }, function failure (error) {
-      console.log("error", error);
-      res.status(500).json(error)
-    })
-  }
-})
-
-/**
- * @api {post} /organization/new Create new case
- * @apiGroup Cases
- * @apiVersion 0.1.0
- * @apiName newCase
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data case data
+ * @apiSuccess {Object} organization data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -128,7 +52,7 @@ router.post('/new', function (req, res) {
     // sign with with AWS4 module
     es.index({
       index: 'pp',
-      type: 'case',
+      type: 'organization',
       body: req.body
     }, function (error, response) {
       if (error) {
@@ -142,15 +66,15 @@ router.post('/new', function (req, res) {
 })
 
 /**
- * @api {put} /organization/:orgId  Submit a new version of a case
- * @apiGroup Cases
+ * @api {put} /organization/:id  Submit a new version of a organization
+ * @apiGroup Organizations
  * @apiVersion 0.1.0
- * @apiName editCase
- * @apiParam {Number} orgId Case ID
+ * @apiName editOrganization
+ * @apiParam {Number} id Organization ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data case data
+ * @apiSuccess {Object} organization data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -167,28 +91,26 @@ router.post('/new', function (req, res) {
  *
  */
 
-router.put('/:orgId', function editCaseById (req, res) {
+router.put('/:id', function editOrgById (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
-    var orgId = req.swagger.params.orgId.value
-    var caseBody = req.body
-    console.log('orgId', orgId, 'case', caseBody)
+    var orgId = req.swagger.params.id.value
     res.status(200).json(req.body)
   })})
 
 /**
- * @api {get} /organization/:orgId Get the last version of a case
+ * @api {get} /organization/:id Get the last version of a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
- * @apiName getCaseById
- * @apiParam {Number} orgId Case ID
+ * @apiName getOrgById
+ * @apiParam {Number} id Organization ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data case data
+ * @apiSuccess {Object} Organization data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -205,29 +127,7 @@ router.put('/:orgId', function editCaseById (req, res) {
  *
  */
 
-// TODO: refactor this in a common helper
-
-function getLastThingByID(tableName, id, cb) {
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  var params = {
-      TableName : tableName,
-      Limit : 1,
-      ScanIndexForward: false, // this will return the last row with this id
-      KeyConditionExpression: "id = :id",
-      ExpressionAttributeValues: {
-          ":id": String(id)
-      }
-  };
-
-  console.log("params", params);
-  docClient.query(params, cb)
-}
-
-function getAuthorByAuthorID(authorID, cb) {
-  getLastThingByID('pp_users', authorID, cb);
-}
-
-router.get('/:orgId', function editOrgById (req, res) {
+router.get('/:id', function editOrgById (req, res) {
   // Get the case for dynamodb
   // get the author from dynamodb
   
@@ -238,7 +138,7 @@ router.get('/:orgId', function editOrgById (req, res) {
       ScanIndexForward: false, // this will return the last row with this id
       KeyConditionExpression: "id = :id",
       ExpressionAttributeValues: {
-          ":id":req.params.orgId
+          ":id":req.params.id
       }
   };
 
@@ -263,18 +163,18 @@ router.get('/:orgId', function editOrgById (req, res) {
           }
         })
       } else {
-        res.status(500).json({"error": "No organization found for id =" + req.params.orgId});
+        res.status(500).json({"error": "No organization found for id =" + req.params.id});
       }
     }
   });
 })
 
 /**
- * @api {delete} /organization/:orgId Delete a case
- * @apiGroup Cases
+ * @api {delete} /organization/:id Delete a case
+ * @apiGroup Organizations
  * @apiVersion 0.1.0
- * @apiName deleteCase
- * @apiParam {Number} orgId Case ID
+ * @apiName deleteOrganization
+ * @apiParam {Number} Organization ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -290,15 +190,13 @@ router.get('/:orgId', function editOrgById (req, res) {
  *
  */
 
-router.delete('/:orgId', function editCaseById (req, res) {
+router.delete('/:id', function editCaseById (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
-    var orgId = req.swagger.params.orgId.value
-    var caseBody = req.body
-    console.log('orgId', orgId, 'organization', caseBody)
+    var orgId = req.swagger.params.id.value
     res.status(200).json(req.body)
   })
 })
