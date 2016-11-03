@@ -21,6 +21,9 @@ var jsonStringify = require('json-pretty');
 
 router.get('/getAllForType', function (req, res) {
   let objType = req.query.objType.toLowerCase()
+  if (objType !== 'organization' || objType !== 'case' || objType !== 'method') {
+    res.status(401).json({message: 'Unsupported objType for getAllForType: ' + objType})
+  }
   var params = {
     TableName : `pp_${objType}s`,
     IndexName : `title_en-index`
@@ -44,8 +47,8 @@ router.get('/getAllForType', function (req, res) {
 })
 
 /**
- * @api {get} /case/search Search through the cases
- * @apiGroup Cases
+ * @api {get} /search Search through the cases
+ * @apiGroup Search
  * @apiVersion 0.1.0
  * @apiName search
  *
