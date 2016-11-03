@@ -4,9 +4,8 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
-var cache = require('apicache')
-var AWS = require("aws-sdk");
 var getAuthorByAuthorID = require('../helpers/getAuthor')
+var AWS = require("aws-sdk");
 
 AWS.config.update({
   profile: "ppadmin",
@@ -19,61 +18,10 @@ var jsonStringify = require('json-pretty');
 
 
 /**
- * @api {get} /case/countsByCountry Get case counts for each country
- * @apiGroup Cases
+ * @api {post} /method/new Create new method
+ * @apiGroup Methods
  * @apiVersion 0.1.0
- * @apiName countsByCountry
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data Mapping of country names to counts (when `OK` is true)
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *          countryCounts: {
- *            "United States": 122,
- *            "United Kingdom": 57,
- *            "Italy": 51,
- *            ...
- *        }
- *     }
- *
- */
-
-// TODO: figure out if the choropleth should show cases or all things
-
-router.get('/countsByCountry', function (req, res) {
-  let body = new Bodybuilder()
-  let bodyquery = body.aggregation('terms', 'geo_country', null, {size: 0}).size(0).build()
-  es.search({
-    index: 'pp',
-    type: 'case',
-    body: bodyquery
-  }).then(function (resp) {
-    var countryCounts = {}
-    let buckets = resp.aggregations.agg_terms_geo_country.buckets
-    for (let i in buckets) {
-      countryCounts[buckets[i].key] = buckets[i].doc_count
-    }
-    res.status(200).json({
-      OK: true,
-      data: {
-        countryCounts: countryCounts
-      }
-    })
-  }, function (resp) {
-    res.status(500).json('uh-oh')
-  })
-})
-
-/**
- * @api {post} /case/new Create new case
- * @apiGroup Cases
- * @apiVersion 0.1.0
- * @apiName newCase
+ * @apiName newMethod
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -99,11 +47,12 @@ router.post('/new', function (req, res) {
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
+    console.log('user is in curators group')
     // figure out what ElasticSearch query this corresponds to
     // sign with with AWS4 module
     es.index({
       index: 'pp',
-      type: 'case',
+      type: 'method',
       body: req.body
     }, function (error, response) {
       if (error) {
@@ -117,11 +66,11 @@ router.post('/new', function (req, res) {
 })
 
 /**
- * @api {put} /case/:caseId  Submit a new version of a case
- * @apiGroup Cases
+ * @api {put} /method/:orgId  Submit a new version of a method
+ * @apiGroup Methods
  * @apiVersion 0.1.0
- * @apiName editCase
- * @apiParam {Number} caseId Case ID
+ * @apiName editMethod
+ * @apiParam {Number} methodId Method ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -142,25 +91,23 @@ router.post('/new', function (req, res) {
  *
  */
 
-router.put('/:caseId', function editCaseById (req, res) {
-  cache.clear()
+router.put('/:id', function editCaseById (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
-    var caseId = req.swagger.params.caseId.value
+    var orgId = req.swagger.params.id.value
     var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
     res.status(200).json(req.body)
   })})
 
 /**
- * @api {get} /case/:caseId Get the last version of a case
+ * @api {get} /method/:id Get the last version of a method
  * @apiGroup Cases
  * @apiVersion 0.1.0
- * @apiName getCaseById
- * @apiParam {Number} caseId Case ID
+ * @apiName getMethodById
+ * @apiParam {Number} id Method ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -181,18 +128,18 @@ router.put('/:caseId', function editCaseById (req, res) {
  *
  */
 
-router.get('/:caseId', function editCaseById (req, res) {
+router.get('/:id', function editMethodById (req, res) {
   // Get the case for dynamodb
   // get the author from dynamodb
   
   var docClient = new AWS.DynamoDB.DocumentClient();
   var params = {
-      TableName : "pp_cases",
+      TableName : "pp_methods",
       Limit : 1,
       ScanIndexForward: false, // this will return the last row with this id
       KeyConditionExpression: "id = :id",
       ExpressionAttributeValues: {
-          ":id":req.params.caseId
+          ":id":req.params.id
       }
   };
 
@@ -202,33 +149,33 @@ router.get('/:caseId', function editCaseById (req, res) {
       res.status(500).json(err)
     } else {
       console.log("Query succeeded.");
-      let thecase = data.Items[0];
-      if (thecase) {
-        getAuthorByAuthorID(thecase.author_uid, function(err, author) {
+      let method = data.Items[0];
+      if (method) {
+        getAuthorByAuthorID(method.author_uid, function(err, author) {
           console.log("author", author, err)
           if (author) {
-            thecase.author = author.Items[0];
+            method.author = author.Items[0];
             res.status(200).json({
               OK: true,
               data: data.Items
             })
           } else {
-            res.status(500).json({"error": "No author record found for id="+thecase.author_uid});
+            res.status(500).json({"error": "No author record found for id="+method.author_uid});
           }
         })
       } else {
-        res.status(500).json({"error": "No case found for id =" + req.params.caseId});
+        res.status(500).json({"error": "No method found for id =" + req.params.id});
       }
     }
   });
 })
 
 /**
- * @api {delete} /case/:caseId Delete a case
- * @apiGroup Cases
+ * @api {delete} /method/:id Delete a case
+ * @apiGroup Methods
  * @apiVersion 0.1.0
- * @apiName deleteCase
- * @apiParam {Number} caseId Case ID
+ * @apiName deleteMethod
+ * @apiParam {Number} id Method ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -244,16 +191,13 @@ router.get('/:caseId', function editCaseById (req, res) {
  *
  */
 
-router.delete('/:caseId', function editCaseById (req, res) {
-  cache.clear()
+router.delete('/:id', function editCaseById (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
-    var caseId = req.swagger.params.caseId.value
-    var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
+    var id = req.swagger.params.id.value
     res.status(200).json(req.body)
   })
 })

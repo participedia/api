@@ -2,12 +2,15 @@
 var process = require('process')
 require('dotenv').config({silent: process.env.NODE_ENV === 'production'})
 var express = require('express')
+var compression = require('compression')
 
 var app = express()
+app.use(compression())
 var port = process.env.PORT || 3001
 var case_ = require('./api/controllers/case')
 var search = require('./api/controllers/search')
 var organization = require('./api/controllers/organization')
+var method = require('./api/controllers/method')
 var http = require('http')
 var path = require('path')
 var errorhandler = require('errorhandler')
@@ -28,10 +31,14 @@ app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, 'doc')))
 app.use(errorhandler())
 
-app.use('/search', search)
+var cache = require('apicache').middleware
+// XXX Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
+
+app.use('/search', cache('5 minutes'), search)
 
 app.use('/case', case_)
 app.use('/organization', organization)
+app.use('/method', method)
 
 app.use('/s3/:path', isUser)
 app.use('/s3', require('react-dropzone-s3-uploader/s3router')({
