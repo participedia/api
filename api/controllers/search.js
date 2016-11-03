@@ -19,6 +19,30 @@ AWS.config.update({
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 
+router.get('/getAllForType', function (req, res) {
+  let objType = req.query.objType.toLowerCase()
+  var params = {
+    TableName : `pp_${objType}s`,
+    IndexName : `title_en-index`
+  };
+  var docClient = new AWS.DynamoDB.DocumentClient();
+  try {
+    docClient.scan(params, function(err, data) {
+        if (err) {
+            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+        } else {
+          let titles = {}
+          data.Items.forEach(function (item) {
+            titles[item['title_en']] = Number(item['id'])
+          })
+          res.json(titles)
+        }
+    });
+  } catch (e) {
+    console.log(`Exception in /getAllForType: ${e}`)
+  }
+})
+
 /**
  * @api {get} /case/search Search through the cases
  * @apiGroup Cases
