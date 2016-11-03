@@ -11,6 +11,7 @@
     "node": "6.2.0"
   },
   "dependencies": {
+    "apicache": "^0.3.4",
     "apidoc": "^0.16.1",
     "aws_es": "^1.1.2",
     "babel": "^6.5.2",
@@ -18,6 +19,7 @@
     "body-parser": "^1.15.2",
     "bodybuilder": "^1.12.0",
     "bunyan": "^1.8.1",
+    "compression": "^1.6.2",
     "cors": "^2.7.1",
     "dotenv": "^2.0.0",
     "dynamodb": "^0.3.6",
