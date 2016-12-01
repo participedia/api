@@ -147,11 +147,9 @@ router.get('/:id', function editOrgById (req, res) {
       console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
       res.status(500).json(err)
     } else {
-      console.log("Query succeeded.");
       let thecase = data.Items[0];
       if (thecase) {
         getAuthorByAuthorID(thecase.author_uid, function(err, author) {
-          console.log("author", author, err)
           if (author) {
             thecase.author = author.Items[0];
             res.status(200).json({

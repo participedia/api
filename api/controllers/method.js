@@ -148,11 +148,9 @@ router.get('/:id', function editMethodById (req, res) {
       console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
       res.status(500).json(err)
     } else {
-      console.log("Query succeeded.");
       let method = data.Items[0];
       if (method) {
         getAuthorByAuthorID(method.author_uid, function(err, author) {
-          console.log("author", author, err)
           if (author) {
             method.author = author.Items[0];
             res.status(200).json({
