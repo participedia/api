@@ -21,7 +21,7 @@ var jsonStringify = require('json-pretty');
 
 router.get('/getAllForType', function (req, res) {
   let objType = req.query.objType.toLowerCase()
-  if (objType !== 'organization' || objType !== 'case' || objType !== 'method') {
+  if (objType !== 'organization' && objType !== 'case' && objType !== 'method') {
     res.status(401).json({message: 'Unsupported objType for getAllForType: ' + objType})
   }
   var params = {
