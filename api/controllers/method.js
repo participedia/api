@@ -25,7 +25,7 @@ var jsonStringify = require('json-pretty');
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data case data
+ * @apiSuccess {Object} data method data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -41,7 +41,7 @@ var jsonStringify = require('json-pretty');
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.post('/new', function (req, res) {
+router.post('/new', function newMethod(req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
@@ -66,15 +66,15 @@ router.post('/new', function (req, res) {
 })
 
 /**
- * @api {put} /method/:orgId  Submit a new version of a method
+ * @api {put} /method/:id  Submit a new version of a method
  * @apiGroup Methods
  * @apiVersion 0.1.0
- * @apiName editMethod
+ * @apiName editMethodById
  * @apiParam {Number} methodId Method ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data case data
+ * @apiSuccess {Object} data method data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -91,27 +91,27 @@ router.post('/new', function (req, res) {
  *
  */
 
-router.put('/:id', function editCaseById (req, res) {
+router.put('/:id', function editMethodById (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
-    var orgId = req.swagger.params.id.value
-    var caseBody = req.body
+    var methodId = req.swagger.params.id.value
+    var methodBody = req.body
     res.status(200).json(req.body)
   })})
 
 /**
  * @api {get} /method/:id Get the last version of a method
- * @apiGroup Cases
+ * @apiGroup Methods
  * @apiVersion 0.1.0
  * @apiName getMethodById
  * @apiParam {Number} id Method ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data case data
+ * @apiSuccess {Object} method data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -129,9 +129,9 @@ router.put('/:id', function editCaseById (req, res) {
  */
 
 router.get('/:id', function editMethodById (req, res) {
-  // Get the case for dynamodb
+  // Get the method for dynamodb
   // get the author from dynamodb
-  
+
   var docClient = new AWS.DynamoDB.DocumentClient();
   var params = {
       TableName : "pp_methods",
@@ -169,7 +169,7 @@ router.get('/:id', function editMethodById (req, res) {
 })
 
 /**
- * @api {delete} /method/:id Delete a case
+ * @api {delete} /method/:id Delete a method
  * @apiGroup Methods
  * @apiVersion 0.1.0
  * @apiName deleteMethod
@@ -189,7 +189,7 @@ router.get('/:id', function editMethodById (req, res) {
  *
  */
 
-router.delete('/:id', function editCaseById (req, res) {
+router.delete('/:id', function deleteMethod (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
