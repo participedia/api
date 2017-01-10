@@ -102,8 +102,8 @@ router.put('/:id', function editOrgById (req, res) {
   })})
 
 /**
- * @api {get} /organization/:id Get the last version of a case
- * @apiGroup Cases
+ * @api {get} /organization/:id Get the last version of an organization
+ * @apiGroup Organizations
  * @apiVersion 0.1.0
  * @apiName getOrgById
  * @apiParam {Number} id Organization ID
@@ -127,10 +127,10 @@ router.put('/:id', function editOrgById (req, res) {
  *
  */
 
-router.get('/:id', function editOrgById (req, res) {
-  // Get the case for dynamodb
+router.get('/:id', function getOrgById (req, res) {
+  // Get the organization for dynamodb
   // get the author from dynamodb
-  
+
   var docClient = new AWS.DynamoDB.DocumentClient();
   var params = {
       TableName : "pp_organizations",
@@ -147,17 +147,17 @@ router.get('/:id', function editOrgById (req, res) {
       console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
       res.status(500).json(err)
     } else {
-      let thecase = data.Items[0];
-      if (thecase) {
-        getAuthorByAuthorID(thecase.author_uid, function(err, author) {
+      let theOrg = data.Items[0];
+      if (theOrg) {
+        getAuthorByAuthorID(theOrg.author_uid, function(err, author) {
           if (author) {
-            thecase.author = author.Items[0];
+            theOrg.author = author.Items[0];
             res.status(200).json({
               OK: true,
               data: data.Items
             })
           } else {
-            res.status(500).json({"error": "No author record found for id="+thecase.author_uid});
+            res.status(500).json({"error": "No author record found for id="+theOrg.author_uid});
           }
         })
       } else {
@@ -168,7 +168,7 @@ router.get('/:id', function editOrgById (req, res) {
 })
 
 /**
- * @api {delete} /organization/:id Delete a case
+ * @api {delete} /organization/:id Delete an organization
  * @apiGroup Organizations
  * @apiVersion 0.1.0
  * @apiName deleteOrganization
@@ -188,7 +188,7 @@ router.get('/:id', function editOrgById (req, res) {
  *
  */
 
-router.delete('/:id', function editCaseById (req, res) {
+router.delete('/:id', function deleteOrganization (req, res) {
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
