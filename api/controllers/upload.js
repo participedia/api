@@ -16,5 +16,6 @@ router.get('/search', function (req, res) {
         headers: {'Access-Control-Allow-Origin': '*'}, // optional
         ACL: 'private' // this is default
     }));
-  }
-}
+  })
+})
+
