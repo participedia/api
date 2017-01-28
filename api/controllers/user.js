@@ -107,7 +107,7 @@ router.get('/get/:userId', function edituserById (req, res, next) {
 })
 
 
-router.put('/update', function updateUser (req, res, next) {
+router.post('/update', function updateUser (req, res, next) {
   console.log(req.body);
   res.status(200)
     .json({'ok': 'ok'})
