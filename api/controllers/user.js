@@ -123,7 +123,7 @@ router.post('/update', function updateUser (req, res, next) {
       .then(function (data) {
         // If user exists, do an update
         db.none('update users set name=$1 where id=$4',
-          [req.body.name, userId])
+          [name, userId])
           .then(function () {
             res.status(200)
               .json({
