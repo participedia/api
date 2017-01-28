@@ -138,7 +138,7 @@ router.post('/update', function updateUser (req, res, next) {
       .catch(function (err) {
         db.none('insert into users(name)' +
             'values(${name})',
-          req.body)
+          req.body.user)
           .then(function () {
             res.status(200)
               .json({
