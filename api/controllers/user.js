@@ -108,44 +108,52 @@ router.get('/get/:userId', function edituserById (req, res, next) {
 
 
 router.post('/update', function updateUser (req, res, next) {
-  console.log(req.body);
-  res.status(200)
-    .json({'ok': 'ok'})
+  console.log(req.body.user);
+  if (req.body.secretToken != process.env.SECRET_TOKEN) {
+    res.status(401)
+      .json({
+        status: 'unauthorized',
+        message: "Call didn't pass in right secret token"
+      });
+  } else {
+    // See if the user exists.
+    var userId = req.body.user.user_id
+    var name = req.body.user.name
+    db.one('select * from users where id = $1', userId)
+      .then(function (data) {
+        // If user exists, do an update
+        db.none('update users set name=$1 where id=$4',
+          [req.body.name, userId])
+          .then(function () {
+            res.status(200)
+              .json({
+                status: 'success',
+                message: 'Updated user'
+              });
+          })
+          .catch(function (err) {
+            return next(err);
+          });
+      })
+      .catch(function (err) {
+        db.none('insert into users(name)' +
+            'values(${name})',
+          req.body)
+          .then(function () {
+            res.status(200)
+              .json({
+                status: 'success',
+                message: 'Inserted user'
+              });
+          })
+          .catch(function (err) {
+            return next(err);
+          });
+      });
+  }
 })
 
   // var userId = parseInt(req.params.userId);
-  // // See if the user exists.
-  // db.one('select * from users where id = $1', userId)
-  //   .then(function (data) {
-  //     // If user exists, do an update
-  //     db.none('update users set name=$1, age=$2, sex=$3 where id=$4',
-  //       [req.body.name, parseInt(req.body.age), req.body.sex, userId])
-  //       .then(function () {
-  //         res.status(200)
-  //           .json({
-  //             status: 'success',
-  //             message: 'Updated user'
-  //           });
-  //       })
-  //       .catch(function (err) {
-  //         return next(err);
-  //       });
-  //   })
-  //   .catch(function (err) {
-  //     db.none('insert into users(name, age, sex)' +
-  //         'values(${name}, ${age}, ${sex})',
-  //       req.body)
-  //       .then(function () {
-  //         res.status(200)
-  //           .json({
-  //             status: 'success',
-  //             message: 'Inserted user'
-  //           });
-  //       })
-  //       .catch(function (err) {
-  //         return next(err);
-  //       });
-  //   });
 
 router.put('/update/:userId', function updateUserById (req, res, next) {
   var userId = parseInt(req.params.userId);
