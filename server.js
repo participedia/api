@@ -10,6 +10,7 @@ var port = process.env.PORT || 3001
 var case_ = require('./api/controllers/case')
 var search = require('./api/controllers/search')
 var organization = require('./api/controllers/organization')
+var user = require('./api/controllers/user')
 var method = require('./api/controllers/method')
 var http = require('http')
 var path = require('path')
@@ -39,6 +40,7 @@ app.use('/search', cache('5 minutes'), search)
 app.use('/case', case_)
 app.use('/organization', organization)
 app.use('/method', method)
+app.use('/user', user)
 
 app.use('/s3/:path', isUser)
 app.use('/s3', require('react-dropzone-s3-uploader/s3router')({
