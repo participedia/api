@@ -107,10 +107,12 @@ router.get('/get/:userId', function edituserById (req, res, next) {
 })
 
 
-router.post('/update', function updateUser (req, res, next) {
-  console.log(req.body);
-  res.status(200)
-    .json({'ok': 'ok'})
+// router.post('/update2', function updateUser (req, res, next) {
+//   console.log(req.body);
+//   res.status(200)
+//     .json({'ok': 'ok'})
+// })
+
   // var userId = parseInt(req.params.userId);
   // // See if the user exists.
   // db.one('select * from users where id = $1', userId)
@@ -144,11 +146,6 @@ router.post('/update', function updateUser (req, res, next) {
   //         return next(err);
   //       });
   //   });
-})
-
-
-module.exports = router
-
 
 router.put('/update/:userId', function updateUserById (req, res, next) {
   var userId = parseInt(req.params.userId);
