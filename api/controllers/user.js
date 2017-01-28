@@ -107,11 +107,11 @@ router.get('/get/:userId', function edituserById (req, res, next) {
 })
 
 
-// router.post('/update2', function updateUser (req, res, next) {
-//   console.log(req.body);
-//   res.status(200)
-//     .json({'ok': 'ok'})
-// })
+router.post('/update', function updateUser (req, res, next) {
+  console.log(req.body);
+  res.status(200)
+    .json({'ok': 'ok'})
+})
 
   // var userId = parseInt(req.params.userId);
   // // See if the user exists.
