@@ -4,19 +4,7 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 var url = require('url')
 var jwt = require('../helpers/jwt')()
-var promise = require('bluebird');
-
-var options = {
-  // Initialization Options
-  promiseLib: promise
-};
-
-var pgp = require('pg-promise')(options);
-var connectionString = process.env.DATABASE_URL;
-var parse = require('pg-connection-string').parse;
-var config = parse(connectionString)
-config['ssl'] = true
-var db = pgp(config);
+var db = require('../helpers/db')
 
 /**
  * @api {get} /users List users 
@@ -107,6 +95,31 @@ router.get('/get/:userId', function edituserById (req, res, next) {
 })
 
 
+/**
+ * @api {post} /user/update Update user table from auth0
+ * @apiGroup users
+ * @apiVersion 0.1.0
+ * @apiName updateUser
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data user data
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "ID": 3,
+ *         "Description": 'foo'
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
+
 router.post('/update', function updateUser (req, res, next) {
   console.log(req.body.user);
   if (req.body.secretToken != process.env.SECRET_TOKEN) {
@@ -153,43 +166,41 @@ router.post('/update', function updateUser (req, res, next) {
   }
 })
 
-  // var userId = parseInt(req.params.userId);
-
-router.put('/update/:userId', function updateUserById (req, res, next) {
-  var userId = parseInt(req.params.userId);
-  // See if the user exists.
-  db.one('select * from users where id = $1', userId)
-    .then(function (data) {
-      // If user exists, do an update
-      db.none('update users set name=$1, age=$2, sex=$3 where id=$4',
-        [req.body.name, parseInt(req.body.age), req.body.sex, userId])
-        .then(function () {
-          res.status(200)
-            .json({
-              status: 'success',
-              message: 'Updated user'
-            });
-        })
-        .catch(function (err) {
-          return next(err);
-        });
-    })
-    .catch(function (err) {
-      db.none('insert into users(name, age, sex)' +
-          'values(${name}, ${age}, ${sex})',
-        req.body)
-        .then(function () {
-          res.status(200)
-            .json({
-              status: 'success',
-              message: 'Inserted user'
-            });
-        })
-        .catch(function (err) {
-          return next(err);
-        });
-    });
-})
+// router.put('/update/:userId', function updateUserById (req, res, next) {
+//   var userId = parseInt(req.params.userId);
+//   // See if the user exists.
+//   db.one('select * from users where id = $1', userId)
+//     .then(function (data) {
+//       // If user exists, do an update
+//       db.none('update users set name=$1, age=$2, sex=$3 where id=$4',
+//         [req.body.name, parseInt(req.body.age), req.body.sex, userId])
+//         .then(function () {
+//           res.status(200)
+//             .json({
+//               status: 'success',
+//               message: 'Updated user'
+//             });
+//         })
+//         .catch(function (err) {
+//           return next(err);
+//         });
+//     })
+//     .catch(function (err) {
+//       db.none('insert into users(name, age, sex)' +
+//           'values(${name}, ${age}, ${sex})',
+//         req.body)
+//         .then(function () {
+//           res.status(200)
+//             .json({
+//               status: 'success',
+//               message: 'Inserted user'
+//             });
+//         })
+//         .catch(function (err) {
+//           return next(err);
+//         });
+//     });
+// })
 
 
 module.exports = router
