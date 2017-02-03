@@ -46,7 +46,6 @@ var jsonStringify = require('json-pretty');
 // TODO: figure out if the choropleth should show cases or all things
 
 router.get('/countsByCountry', function (req, res) {
-  console.log('IN countsByCountry')
   let body = new Bodybuilder()
   let bodyquery = body.aggregation('terms', 'geo_country', null, {size: 0}).size(0).build()
   es.search({
@@ -95,14 +94,24 @@ router.get('/countsByCountry', function (req, res) {
  *
  */
 router.post('/new', function (req, res, next) {
-  // console.log("USER", req.user)
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
   }, function () {
-    // XXX do SQL insertion
-    res.status(200).json(req.body)
-    next()
+    // figure out what ElasticSearch query this corresponds to		+    // XXX do SQL insertion
+    // sign with with AWS4 module		+    res.status(200).json(req.body)
+    es.index({
+      index: 'pp',		
+      type: 'case',		
+      body: req.body		
+    }, function (error, response) {		
+      if (error) {		
+        res.status(error.status).json({message: error.message})		
+      } else {		
+        // console.log(response)		
+        res.status(200).json(req.body)		
+      }		
+    })
   })
 })
 
