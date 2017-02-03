@@ -10,7 +10,9 @@ var config;
 
 try {
   config = parse(connectionString)
-  config['ssl'] = true
+  if (process.env.NODE_ENV !== "test") {
+    config['ssl'] = true
+  }
 } catch (e) {
   console.log("# Error parsing DATABASE_URL environment variable")
 }
