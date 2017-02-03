@@ -51,7 +51,11 @@ app.use(morgan('dev'))
 app.use(methodOverride())
 app.use(cors())
 app.use(bodyParser.json())
-app.use(jwt({secret: process.env.AUTH0_CLIENT_SECRET, algorithms: ['HS256']}).unless({'method': ['OPTIONS', 'GET']}))
+app.use(jwt({
+  secret: process.env.AUTH0_CLIENT_SECRET, 
+  credentialsRequired: false,
+  algorithms: ['HS256']
+}).unless({'method': ['OPTIONS', 'GET']}))
 app.use(express.static(path.join(__dirname, 'swagger')))
 app.use(errorhandler())
 

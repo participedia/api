@@ -42,7 +42,7 @@
     "supertest": "^3.0.0",
     "swagger-express-mw": "^0.7.0",
     "tap-spec": "^4.1.1",
-    "tap-xunit": "^1.7.0",
+    "tap-summary": "^3.0.1",
     "tape": "^4.6.3",
     "tape-watch": "^2.2.4"
   },
@@ -52,8 +52,7 @@
     "start-dev": "nave use 6 bash -c 'node-dev server.js'",
     "postinstall": "./node_modules/apidoc/bin/apidoc -i api -o swagger",
     "deploy": "git push heroku",
-    "test": "tape-watch -1 test/**/*.js",
-    "test:circleci": "mkdir -p $CIRCLE_TEST_REPORTS/junit && tape test/**/*.js | tap-xunit > $CIRCLE_TEST_REPORTS/junit/test_result.xml",
+    "test": "tape-watch -1 test/**/*.js | tap-summary",
     "watch": "tape-watch --watch -1 test/**/*.js | faucet "
   }
 }
