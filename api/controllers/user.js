@@ -166,41 +166,4 @@ router.post('/update', function updateUser (req, res, next) {
   }
 })
 
-// router.put('/update/:userId', function updateUserById (req, res, next) {
-//   var userId = parseInt(req.params.userId);
-//   // See if the user exists.
-//   db.one('select * from users where id = $1', userId)
-//     .then(function (data) {
-//       // If user exists, do an update
-//       db.none('update users set name=$1, age=$2, sex=$3 where id=$4',
-//         [req.body.name, parseInt(req.body.age), req.body.sex, userId])
-//         .then(function () {
-//           res.status(200)
-//             .json({
-//               status: 'success',
-//               message: 'Updated user'
-//             });
-//         })
-//         .catch(function (err) {
-//           return next(err);
-//         });
-//     })
-//     .catch(function (err) {
-//       db.none('insert into users(name, age, sex)' +
-//           'values(${name}, ${age}, ${sex})',
-//         req.body)
-//         .then(function () {
-//           res.status(200)
-//             .json({
-//               status: 'success',
-//               message: 'Inserted user'
-//             });
-//         })
-//         .catch(function (err) {
-//           return next(err);
-//         });
-//     });
-// })
-
-
 module.exports = router
