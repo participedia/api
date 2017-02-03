@@ -5,8 +5,9 @@ var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
 var cache = require('apicache')
-var AWS = require("aws-sdk");
+var AWS = require("aws-sdk")
 var getAuthorByAuthorID = require('../helpers/getAuthor')
+var log = require('winston')
 
 AWS.config.update({
   profile: "ppadmin",
@@ -93,25 +94,24 @@ router.get('/countsByCountry', function (req, res) {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.post('/new', function (req, res) {
+router.post('/new', function (req, res, next) {
   groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
+    log.debug("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
-    return
   }, function () {
-    // figure out what ElasticSearch query this corresponds to
-    // sign with with AWS4 module
+    // figure out what ElasticSearch query this corresponds to		+    // XXX do SQL insertion
+    // sign with with AWS4 module		+    res.status(200).json(req.body)
     es.index({
-      index: 'pp',
-      type: 'case',
-      body: req.body
-    }, function (error, response) {
-      if (error) {
-        res.status(error.status).json({message: error.message})
-      } else {
-        // console.log(response)
-        res.status(200).json(req.body)
-      }
+      index: 'pp',		
+      type: 'case',		
+      body: req.body		
+    }, function (error, response) {		
+      if (error) {		
+        res.status(error.status).json({message: error.message})		
+      } else {		
+        // console.log(response)		
+        res.status(200).json(req.body)		
+      }		
     })
   })
 })
