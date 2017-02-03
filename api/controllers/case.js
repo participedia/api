@@ -5,8 +5,9 @@ var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
 var cache = require('apicache')
-var AWS = require("aws-sdk");
+var AWS = require("aws-sdk")
 var getAuthorByAuthorID = require('../helpers/getAuthor')
+var log = require('winston')
 
 AWS.config.update({
   profile: "ppadmin",
@@ -95,7 +96,7 @@ router.get('/countsByCountry', function (req, res) {
  */
 router.post('/new', function (req, res, next) {
   groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
+    log.debug("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
   }, function () {
     // figure out what ElasticSearch query this corresponds to		+    // XXX do SQL insertion

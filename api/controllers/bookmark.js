@@ -5,9 +5,10 @@ var groups = require('../helpers/groups')
 var url = require('url')
 var jwt = require('../helpers/jwt')()
 var db = require('../helpers/db')
+var log = require('winston')
 
 /**
- * @api {get} /list/:userId List bookmarks for a given user 
+ * @api {get} /bookmark/:userId List bookmarks for a given user 
  * @apiGroup bookmarks
  * @apiVersion 0.1.0
  * @apiName getbookmarksforuser
@@ -32,25 +33,31 @@ var db = require('../helpers/db')
  *
  */
 router.get('/list/:userId', function (req, res, next) {
-  var userId = parseInt(req.params.userId);
   // Find out if userID exists in user table
-  
-  db.any('SELECT * FROM bookmarks WHERE user = $1', userId)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL users'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
+  try {
+    var userId = req.params.userId;
+    db.any('SELECT * FROM bookmarks WHERE userid=$1', [userId])
+      .then(function (data) {
+        res.status(200)
+          .json({
+            status: 'success',
+            data: data,
+            message: 'Retrieved ALL users'
+          });
+      })
+      .catch(function (err) {
+        log.error(err)
+        return next(err);
+      });
+  } catch(err) {
+    console.log(err);
+    log.error(err)
+    return next(err);
+  };
 })
 
 /**
- * @api {post} /new Create a bookmark
+ * @api {post} /bookmark/add Create a bookmark
  * @apiGroup bookmarks
  * @apiVersion 0.1.0
  * @apiName addBookmark
@@ -74,35 +81,50 @@ router.get('/list/:userId', function (req, res, next) {
  *
  */
 
-router.post('/new', function addBookmark (req, res, next) {
-  // XXX require auth
-  groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
-    res.status(401).json({message: 'access denied - user does not have proper authorization'})
-    return
-  }, function () {
-    console.log("we have a user")
-    var userId = req.user.user_id;
-    db.one('insert into bookmarks(bookmarktype, bookmarkid, userid) values($1,$2,$3) returning id' +
-        [req.body.bookmarkType, req.body.thingID, userId])
-      .then(function (data) {
-        console.log("created bookmark with id", data)
-        res.status(200)
-          .json({
-            status: 'success',
-            id: data.id,
-            message: 'Inserted bookmark, returning ID'
-          });
-      })
-      .catch(function (err) {
-        return next(err);
-      });
-  })
+router.post('/add', function addBookmark (req, res, next) {
+    groups.user_has(req, 'Contributors', function () {
+    //  log.debug("user doesn't have Contributors group membership")
+      res.status(401).json({message: 'access denied - user does not have proper authorization'})
+    }, function () {
+      if (! req.body.bookmarkType) {
+     //   log.error("Required parameter (bookmarkType) wasn't specified")
+        res.status(400).json({message:"Required parameter (bookmarkType) wasn't specified"})
+        return
+      }
+      if (! req.body.thingID) {
+      //  log.error("Required parameter (thingID) wasn't specified")
+        res.status(400).json({error: "Required parameter (thingID) wasn't specified"})
+        return
+      }
+      var userId = req.user.user_id;
+      if (! userId) {
+      //  log.error("No user")
+        res.status(400).json({error: "User (userId) wasn't specified"})
+        return
+      }
+      db.one('insert into bookmarks(bookmarktype, thingid, userid) VALUES($1,$2,$3) returning id',
+          [req.body.bookmarkType, req.body.thingID, userId])
+        .then(function (data) {
+          try {
+            res.status(200)
+              .json({
+                status: 'success',
+                message: 'Inserted bookmark, returning ID'
+              });
+          } catch (e) {
+            console.log(e)
+          }
+        })
+        .catch(function (err) {
+          // log.error("Catch in INSERT", err)
+          return next(err);
+        });
+    })
 })
 
 
 /**
- * @api {delete} /:bookmarkID Delete specified bookmark
+ * @api {delete} /bookmark/:bookmarkID Delete specified bookmark
  * @apiGroup bookmarks
  * @apiVersion 0.1.0
  * @apiName updateUser
@@ -127,7 +149,7 @@ router.post('/new', function addBookmark (req, res, next) {
 
 router.delete('/delete/:bookmarkID', function updateUser (req, res, next) {
   groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
+    log.debug("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {

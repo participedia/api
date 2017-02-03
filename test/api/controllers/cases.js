@@ -1,6 +1,7 @@
 var request = require('supertest')
 var test = require('tape')
 var app = require('../../../app')
+var tokens = require('../../setupenv')
 
 test('/case/newCase fails to add a case without authentication', function (t) {
   request(app)
@@ -20,7 +21,7 @@ test('/case/newCase adds a case with authentication', function (t) {
     .post('/case/new')
     .set('Content-Type', 'application/json')
     .set('Accept', 'application/json')
-    .set('Authorization', 'Bearer ' + process.env.BEARER_TOKEN)
+    .set('Authorization', 'Bearer ' + tokens.user_token)
     .expect('Content-Type', /json/)
     .expect(200)
     .end(function (err, res) {

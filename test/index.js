@@ -1,6 +1,6 @@
+var process = require('process')
 var request = require('supertest')
 var test = require('tape')
-var process = require('process')
 require('dotenv').config({silent: process.env.NODE_ENV === 'production'})
 
 var app = require('../app')

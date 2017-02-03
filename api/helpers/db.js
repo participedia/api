@@ -11,9 +11,9 @@ var config;
 try {
   config = parse(connectionString)
   config['ssl'] = true
-  var db = pgp(config);
 } catch (e) {
   console.log("# Error parsing DATABASE_URL environment variable")
 }
+var db = pgp(config);
 
 module.exports = exports = db
