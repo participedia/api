@@ -1,3 +1,6 @@
 test:
   override:
     - npm run test:circleci
+  post:
+    - mkdir $CIRCLE_ARTIFACTS/junit
+
