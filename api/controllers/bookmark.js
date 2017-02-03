@@ -117,7 +117,7 @@ router.post('/add', function addBookmark (req, res, next) {
           }
         })
         .catch(function (err) {
-          // log.error("Catch in INSERT", err)
+          log.error("Exception in INSERT", err)
           return next(err);
         });
     })
