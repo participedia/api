@@ -53,7 +53,7 @@
     "postinstall": "./node_modules/apidoc/bin/apidoc -i api -o swagger",
     "deploy": "git push heroku",
     "test": "tape-watch -1 test/**/*.js",
-    "test:circleci": "tape test/**/*.js | tap-xunit > $CIRCLE_TEST_REPORTS/junit/test_result.xml",
+    "test:circleci": "mkdir -p $CIRCLE_ARTIFACTS/junit && tape test/**/*.js | tap-xunit > $CIRCLE_TEST_REPORTS/junit/test_result.xml",
     "watch": "tape-watch --watch -1 test/**/*.js | faucet "
   }
 }
