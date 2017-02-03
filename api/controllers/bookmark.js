@@ -82,6 +82,7 @@ router.get('/list/:userId', function (req, res, next) {
  */
 
 router.post('/add', function addBookmark (req, res, next) {
+  try {
     groups.user_has(req, 'Contributors', function () {
     //  log.debug("user doesn't have Contributors group membership")
       res.status(401).json({message: 'access denied - user does not have proper authorization'})
@@ -120,6 +121,10 @@ router.post('/add', function addBookmark (req, res, next) {
           return next(err);
         });
     })
+  } catch (e) {
+    log.error(e)
+    return next(err)
+  }
 })
 
 
