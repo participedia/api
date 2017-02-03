@@ -42,6 +42,7 @@
     "supertest": "^3.0.0",
     "swagger-express-mw": "^0.7.0",
     "tap-spec": "^4.1.1",
+    "tap-xunit": "^1.7.0",
     "tape": "^4.6.3",
     "tape-watch": "^2.2.4"
   },
@@ -52,6 +53,7 @@
     "postinstall": "./node_modules/apidoc/bin/apidoc -i api -o swagger",
     "deploy": "git push heroku",
     "test": "tape-watch -1 test/**/*.js",
+    "test:circle": "tape test/**/*.js | tap-xunit > $CIRCLE_TEST_REPORTS/test_result.xml",
     "watch": "tape-watch --watch -1 test/**/*.js | faucet "
   }
 }
