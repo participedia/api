@@ -1,39 +1,31 @@
-var should = require('should');
-var request = require('supertest');
-var server = require('../../../app');
+var request = require('supertest')
+var test = require('tape')
+var app = require('../../../app')
 
-var test = require('tape');
-// 
-// test('First test!', function (t) {
-//   t.end();
-// });
+test('/case/newCase fails to add a case without authentication', function (t) {
+  request(app)
+    .post('/case/new')
+    .set('Content-Type', 'application/json')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(401)
+    .end(function (err, res) {
+      t.error(err, 'No error');
+      t.end()
+    })
+})
 
+test('/case/newCase adds a case with authentication', function (t) {
+  request(app)
+    .post('/case/new')
+    .set('Content-Type', 'application/json')
+    .set('Accept', 'application/json')
+    .set('Authorization', 'Bearer ' + process.env.BEARER_TOKEN)
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end(function (err, res) {
+      t.error(err, 'No error');
+      t.end()
+    })
+})
 
-describe('controllers', function() {
-
-  describe('cases', function() {
-
-    describe('GET /newCase', function() {
-
-      it('should create a new case', function(done) {
-
-        request(server)
-          .put('/newCase')
-          .set('Accept', 'application/json')
-          .send({'id': 1, 'title': 'cucumber'})
-          .expect('Content-Type', /json/)
-          .expect(200)
-          .end(function(err, res) {
-            should.not.exist(err);
-
-            res.body.should.eql({'id':1, 'title': 'cucumber'});
-
-            done();
-          });
-      });
-
-    });
-
-  });
-
-});
