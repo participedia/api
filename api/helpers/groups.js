@@ -2,7 +2,6 @@ var jwt = require('./jwt')()
 
 function userHas (req, groupName, errCB, okCB) {
   try {
-    jwt(req, req.res, function (err) {
       user = req.user
       if (user && user.app_metadata && user.app_metadata.authorization &&
           user.app_metadata.authorization.groups) {
@@ -11,10 +10,12 @@ function userHas (req, groupName, errCB, okCB) {
         } else {
           okCB && okCB()
         }
+      } else {
+        errCB("no user")
       }
-    })
   } catch (e) {
     console.log('exception in userHas', e)
+    errCB("exception in userHas")
   }
 }
 

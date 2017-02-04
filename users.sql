@@ -1,0 +1,7 @@
+CREATE TABLE users (
+  ID SERIAL PRIMARY KEY,
+  name VARCHAR,
+  age INTEGER,
+  sex VARCHAR
+);
+
