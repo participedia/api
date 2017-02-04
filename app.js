@@ -13,6 +13,12 @@ var config = {
 }
 var express = require('express')
 var compression = require('compression')
+var AWS = require("aws-sdk")
+
+AWS.config.update({
+  profile: "pp",
+  region: "us-east-1"
+});
 
 var app = express()
 app.use(compression())
@@ -38,6 +44,7 @@ app.use(morgan('dev'))
 app.use(methodOverride())
 app.use(cors())
 app.use(bodyParser.json())
+console.log("AUTH0_CLIENT_SECRET", process.env.AUTH0_CLIENT_SECRET)
 app.use(jwt({
   secret: process.env.AUTH0_CLIENT_SECRET, 
   credentialsRequired: false,
@@ -58,7 +65,8 @@ app.use('/method', method)
 app.use('/user', user)
 app.use('/bookmark', bookmark)
 
-app.use('/s3/:path', isUser)
+app.use('/s3/:path', jwt({
+  secret: process.env.AUTH0_CLIENT_SECRET}), isUser)
 app.use('/s3', require('react-dropzone-s3-uploader/s3router')({
     bucket: 'uploads.participedia.xyz',
     region: 'us-east-1', //optional

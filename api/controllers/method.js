@@ -6,13 +6,6 @@ var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
 var getAuthorByAuthorID = require('../helpers/getAuthor')
 var AWS = require("aws-sdk");
-
-AWS.config.update({
-  profile: "ppadmin",
-  region: "us-east-1"
-});
-
-
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 

@@ -4,7 +4,6 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 
 router.get('/search', function (req, res) {
-
   groups.user_has(req, 'Contributors', function () {
     console.log("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})

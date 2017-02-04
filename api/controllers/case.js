@@ -9,12 +9,6 @@ var AWS = require("aws-sdk")
 var getAuthorByAuthorID = require('../helpers/getAuthor')
 var log = require('winston')
 
-AWS.config.update({
-  profile: "ppadmin",
-  region: "us-east-1"
-});
-
-
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 
@@ -66,6 +60,7 @@ router.get('/countsByCountry', function (req, res) {
       }
     })
   }, function (resp) {
+    log.error("Exception in /countsByCountry", resp)
     res.status(500).json('uh-oh')
   })
 })
