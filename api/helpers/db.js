@@ -6,10 +6,13 @@ var promise = require('bluebird');
 var pgp = require('pg-promise')(options);
 var connectionString = process.env.DATABASE_URL;
 var parse = require('pg-connection-string').parse;
+var log = require('winston')
 var config;
 
 try {
+  log.info("connection string", connectionString)
   config = parse(connectionString)
+  
   if (process.env.NODE_ENV !== "test") {
     config['ssl'] = true
   }
