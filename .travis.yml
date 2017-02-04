@@ -9,7 +9,8 @@ notifications:
 services:
 - postgresql
 before_script:
-- psql -a -U postgres -c 'create database travis;' -f setup.sql 
+- psql -a -U postgres -c 'create database travis;'
+- psql -a -U postgres -d travis -f setup.sql 
 
 deploy:
   api_key:
