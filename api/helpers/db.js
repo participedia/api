@@ -10,7 +10,7 @@ var log = require('winston')
 var config;
 
 try {
-  log.info("connection string", connectionString)
+  log.error("XXX connection string", connectionString)
   config = parse(connectionString)
   
   if (process.env.NODE_ENV !== "test") {
