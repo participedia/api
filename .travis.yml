@@ -10,6 +10,8 @@ services:
 - postgresql
 before_script:
 - psql -a -U postgres -c 'create database travis;' -f setup.sql 
+- set
+
 deploy:
   api_key:
     secure: wuFmZVBMUvopTcWRnG6ZrLspQTuBhVLgYeSP3cj2HHH3RNOuQpGLFSXeWYA1ufJPVhV4WoWm+XND3AqvKeZ+JFtKJUG7jODGJxNmj103bwFO5ySIUnbNWYSNdRmEzi43lVO4wQOQL5GIVPsCjy9IxXLDKusk+10G+FQXZMnCB1QJp4GVD0EHTSaU2a5p2oT0HnGvTk+lyj1XBMoStO+Gb2YyiRjdb4CczVYjvej0okuz75fqudsPJwLiBUGlFmBjL3/tWp9cyQSD0exlol9k8RviVQ5N+c4lDy8LyTEYDzrJG5QY+WRnkldQSg9aGfdrQQY4tjnPG6+t776fUwP+TayNqhKUq1UY5DMGxqJ9QfEt3Ct+5+CIjV6fV1lrjNseHC/jKxa0BL+BfJNC+Rymz4Ii25a5sK907y9C06cGyVGFwI1N2VIT853frATu6FVatR2Ui5n+lgDlXmQg49RJwe1m6SdmBzXud+m0fjwnQAGqPqrKkS9ddkPNDEZ3nwAFthEdmf7K9H7q7JH4NnrkBdQnlTugnEcSWw3//IQZK90VL/Gsz6BBdWS8tNS9CLBpXh63hkjz11NvysiiVvliUvMEu8sDQJfFqPjWuEUu62Mr3JNqdifI4k2j96nlD9TgpmWTfOfdBmjt0CnX8boChC+JUVepTL5Y6j7io2tLvxc=
