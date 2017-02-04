@@ -15,29 +15,11 @@ The critical code is in [api/controllers](/api/controllers).
 The `token` authorization model refers to the Auth0 JWT token scheme, and
 many calls look at group memberships defined by the Auth0 app.
 
-The code expects a file `.env` to be located in the root directory of the folder,
-defining the following environment variables:
- * `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` as per the Auth0 application which
-is managing the users.  The AUTH0_CLIENT_SECRET doesn't have to be the real one for dev environments, it can be anything (e.g. 'thisisjunk')
- * `BEARER_TOKEN` so you can run `npm test` with an authenticated user.  To generate
-   a bearer token, go to `jwt.io`, put in the `AUTH0_CLIENT_SECRET` you picked above (e.g. 'thisisjunk') in the 'verify signature' spot for it, and adjust the payload to look like:
-
-```
-{
-  "sub": "1234567890",
-  "name": "asdasasd Doe",
-  "app_metadata": {
-    "authorization": {
-      "groups": [
-        "Contributors",
-        "Curators"
-      ]
-    }
-  }
-}
-```
-
-  the encoded token in the left is your `BEARER_TOKEN`
+Some environment variables need to be defined, either in the environment or in a `.env` file located
+in the root directory of the folder, defining the following environment variables:
+ * `DATABASE_URL` points to a Postgres database (including username & password)
+ * `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` for the usual AWS
+    purposes (used for now for DynamoDB/ElasticSearch and S3, but in the future just S3)
 
 `npm start` starts the API server.
 
