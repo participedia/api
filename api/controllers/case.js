@@ -96,11 +96,8 @@ router.get('/countsByCountry', function (req, res) {
  */
 router.post('/new', function (req, res, next) {
   groups.user_has(req, 'Contributors', function () {
-    log.debug("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
   }, function () {
-    // figure out what ElasticSearch query this corresponds to		+    // XXX do SQL insertion
-    // sign with with AWS4 module		+    res.status(200).json(req.body)
     es.index({
       index: 'pp',		
       type: 'case',		

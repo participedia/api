@@ -48,7 +48,7 @@ app.use(errorhandler())
 
 
 var cache = require('apicache').middleware
-// XXX Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
+// TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
 
 app.use('/search', cache('5 minutes'), search)
 

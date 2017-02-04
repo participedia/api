@@ -84,22 +84,21 @@ router.get('/list/:userId', function (req, res, next) {
 router.post('/add', function addBookmark (req, res, next) {
   try {
     groups.user_has(req, 'Contributors', function () {
-    //  log.debug("user doesn't have Contributors group membership")
       res.status(401).json({message: 'access denied - user does not have proper authorization'})
     }, function () {
       if (! req.body.bookmarkType) {
-     //   log.error("Required parameter (bookmarkType) wasn't specified")
+        log.error("Required parameter (bookmarkType) wasn't specified")
         res.status(400).json({message:"Required parameter (bookmarkType) wasn't specified"})
         return
       }
       if (! req.body.thingID) {
-      //  log.error("Required parameter (thingID) wasn't specified")
+        log.error("Required parameter (thingID) wasn't specified")
         res.status(400).json({error: "Required parameter (thingID) wasn't specified"})
         return
       }
       var userId = req.user.user_id;
       if (! userId) {
-      //  log.error("No user")
+        log.error("No user")
         res.status(400).json({error: "User (userId) wasn't specified"})
         return
       }
@@ -154,7 +153,6 @@ router.post('/add', function addBookmark (req, res, next) {
 
 router.delete('/delete/:bookmarkID', function updateUser (req, res, next) {
   groups.user_has(req, 'Contributors', function () {
-    log.debug("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {

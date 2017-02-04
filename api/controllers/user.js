@@ -36,8 +36,7 @@ var db = require('../helpers/db')
  *
  */
 router.get('/', function (req, res, next) {
-  console.log("in /user/")
-  // XXX figure out about pagination -- for now, return everything.
+  // TODO figure out about pagination -- for now, return everything.
   db.any('select * from users')
     .then(function (data) {
       res.status(200)
