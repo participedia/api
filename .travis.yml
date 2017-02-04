@@ -10,7 +10,6 @@ services:
 - postgresql
 before_script:
 - psql -a -U postgres -c 'create database travis;' -f setup.sql 
-- set
 
 deploy:
   api_key:
