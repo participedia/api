@@ -11,7 +11,6 @@ var config;
 
 try {
   config = parse(connectionString)
-  
   if (process.env.NODE_ENV !== "test") {
     config['ssl'] = true
   }

@@ -48,13 +48,17 @@
     "tape-watch": "^2.2.4",
     "winston": "^2.3.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.2.0"
+  },
   "scripts": {
     "start": "./node_modules/apidoc/bin/apidoc -i api -o swagger && nodemon ./node_modules/.bin/babel-node server.js",
     "start-dev": "nave use 6 bash -c 'node-dev server.js'",
     "postinstall": "./node_modules/apidoc/bin/apidoc -i api -o swagger",
     "deploy": "git push heroku",
-    "test": "tape-watch -1 -r ../test/setupenv test/**/*.js | tap-summary",
+    "test": "NODE_ENV=test mocha test3 --timeout 10000",
     "watch": "tape-watch --watch -1 test/**/*.js | faucet "
   }
 }

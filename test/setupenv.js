@@ -1,5 +1,6 @@
 // For testing, we generate JWTs for pretend users.  Best not to use any secrets.
 var jwt = require('jsonwebtoken')
+var test = require('tape')
 
 // We expect to not have an AUTH0_SECRET
 var process = require('process')
@@ -28,8 +29,9 @@ var bearer_token = jwt.sign(
   process.env.AUTH0_CLIENT_SECRET
 )
 process.env.BEARER_TOKEN = bearer_token
-jwt.verify(process.env.BEARER_TOKEN, process.env.AUTH0_CLIENT_SECRET)
+// jwt.verify(process.env.BEARER_TOKEN, process.env.AUTH0_CLIENT_SECRET)
 
 module.exports = {
-  user_token: bearer_token
+  user_token: bearer_token,
+  user_payload: userPayload
 }

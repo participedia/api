@@ -8,7 +8,6 @@ var cache = require('apicache')
 var AWS = require("aws-sdk")
 var getAuthorByAuthorID = require('../helpers/getAuthor')
 var log = require('winston')
-
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 

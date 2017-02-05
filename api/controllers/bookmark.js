@@ -37,17 +37,20 @@ router.get('/list/:userId', function (req, res, next) {
   try {
     var userId = req.params.userId;
     db.any('SELECT * FROM bookmarks WHERE userid=$1', [userId])
-      .then(function (data) {
-        res.status(200)
-          .json({
-            status: 'success',
-            data: data,
-            message: 'Retrieved ALL users'
-          });
+      .then(data => {
+        res.json({
+          success: true,
+          status: 'success',
+          data: data,
+          message: 'Retrieved ALL users'
+        });
       })
       .catch(function (err) {
+        res.json({
+          success: false, 
+          error: error.message || error
+        })
         log.error(err)
-        return next(err);
       });
   } catch(err) {
     console.log(err);
@@ -105,17 +108,17 @@ router.post('/add', function addBookmark (req, res, next) {
       db.one('insert into bookmarks(bookmarktype, thingid, userid) VALUES($1,$2,$3) returning id',
           [req.body.bookmarkType, req.body.thingID, userId])
         .then(function (data) {
-          try {
-            res.status(200)
-              .json({
-                status: 'success',
-                message: 'Inserted bookmark, returning ID'
-              });
-          } catch (e) {
-            console.log(e)
-          }
+          res.json({
+            success: true,
+            status: 'success',
+            message: 'Inserted bookmark, returning ID'
+          });
         })
         .catch(function (err) {
+          res.json({
+            success: false, 
+            error: error.message || error
+          })
           log.error("Exception in INSERT", err)
           return next(err);
         });

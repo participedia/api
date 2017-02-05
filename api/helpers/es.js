@@ -3,11 +3,6 @@ var elasticsearch = require('elasticsearch')
 require('dotenv').config({silent: process.env.NODE_ENV === 'production'})
 var AWS = require("aws-sdk")
 
-AWS.config.update({
-  profile: "pp",
-  region: "us-east-1"
-});
-
 var client = new elasticsearch.Client({
   host: 'search-pp-stage-37xn6cdq7tj7ehv5rjrgxgrjhq.us-east-1.es.amazonaws.com',
   connectionClass: require('http-aws-es'),

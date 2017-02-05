@@ -6,6 +6,11 @@ require('dotenv').config({silent: process.env.NODE_ENV === 'production'})
 var app = require('express')()
 var jwt = require('./api/helpers/jwt')()
 
+if (process.env.NODE_ENV === 'test' && process.env.AUTH0_CLIENT_SECRET !== 'notasecret') {
+  console.log("CODING ERROR: Someone imported 'app' before 'setupenv' in the test suite")
+  process.exit(1)
+}
+
 // Set up the token security handler
 var config = {
   appRoot: path.join(__dirname, '..'), // required config
@@ -39,7 +44,6 @@ app.use(morgan('dev'))
 app.use(methodOverride())
 app.use(cors())
 app.use(bodyParser.json())
-console.log("AUTH0_CLIENT_SECRET", process.env.AUTH0_CLIENT_SECRET)
 app.use(jwt({
   secret: process.env.AUTH0_CLIENT_SECRET, 
   credentialsRequired: false,
