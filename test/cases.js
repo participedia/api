@@ -8,6 +8,20 @@ let should = chai.should();
 chai.use(chaiHttp);
 
 describe('Cases', () => {
+  describe('Lookup', () => {
+    it('finds case 100', (done) => {
+      chai.request(app)
+        .get('/case/100')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .send({
+        })
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    })
+  })
   describe('Adding', () => {
     it('fails without authentication', (done) => {
       chai.request(app)

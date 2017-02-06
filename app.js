@@ -19,7 +19,7 @@ var config = {
 var express = require('express')
 var compression = require('compression')
 var AWS = require("aws-sdk")
-
+AWS.config.update({'region': 'us-east-1'})
 var app = express()
 app.use(compression())
 var port = process.env.PORT || 3001
