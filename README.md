@@ -1,5 +1,7 @@
 # API server for participedia.net (v3)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/participedia/api.svg)](https://greenkeeper.io/)
+
 This is a simple proxy server whose primary role is to ensure that only the
 calls with the appropriate authorization credentials are able to modify the
 database.  It also serves as an abstraction layer for the back-end databases,
