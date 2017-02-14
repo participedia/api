@@ -15,7 +15,7 @@
     "apidoc": "^0.17.5",
     "aws_es": "^1.1.2",
     "babel": "^6.5.2",
-    "babel-cli": "^6.22.2",
+    "babel-cli": "^6.23.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
     "bodybuilder": "^2.0.0",
