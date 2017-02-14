@@ -41,7 +41,7 @@
     "should": "^11.2.0",
     "supertest": "^3.0.0",
     "swagger-express-mw": "^0.7.0",
-    "tap": "^10.0.2",
+    "tap": "^10.1.1",
     "tap-spec": "^4.1.1",
     "tap-summary": "^3.0.1",
     "tape": "^4.6.3",
