@@ -43,24 +43,27 @@ var db = require('../helpers/db')
 router.get('/countsByCountry', function (req, res) {
     var countryCounts = {};
     db.query(
-        'select $1~.$3~, count($1~.$3~) from $1~, $2~ where $1~.$4~ = $2~.$5~ group by $1~.$3~;'
+        'select $1~.$3~, count($1~.$3~) from $1~, $2~ where $1~.$4~ = $2~.$5~ group by $1~.$3~;',
         ['geolocation', 'cases', 'country', 'id', 'location']
     ).then(function(data){
         // convert array to object
-        data.forEach(function([country, count]){
-            countryCounts[country] = count;
+        data.forEach(function(row){
+            if (row.country === null){
+                return;
+            }
+            countryCounts[row.country] = row.count;
         });
         res.status(200).json({
-          OK: true,
-          data: {
-            countryCounts: countryCounts
-          }
+            OK: true,
+            data: {
+                countryCounts: countryCounts
+            }
         })
     }).catch(function(error){
-        log.error("Exception in /countsByCountry", resp)
+        log.error("Exception in /countsByCountry", error)
         res.status(500).json({
             OK: false,
-            error: error
+            error: jsonStringify(error)
         })
     })
 });
