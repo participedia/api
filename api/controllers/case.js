@@ -40,7 +40,7 @@ var db = require('../helpers/db')
 
 // TODO: figure out if the choropleth should show cases or all things
 
-router.get('countsByCountry', function (req, res) {
+router.get('/countsByCountry', function (req, res) {
     var countryCounts = {};
     db.query(
         'select $1~.$3~, count($1~.$3~) from $1~, $2~ where $1~.$4~ = $2~.$5~ group by $1~.$3~;'
