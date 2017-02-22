@@ -41,12 +41,12 @@ var db = require('../helpers/db')
 // TODO: figure out if the choropleth should show cases or all things
 
 router.get('/countsByCountry', function (req, res) {
-    var countryCounts = {};
     db.query(
         'select $1~.$3~, count($1~.$3~) from $1~, $2~ where $1~.$4~ = $2~.$5~ group by $1~.$3~;',
         ['geolocation', 'cases', 'country', 'id', 'location']
     ).then(function(data){
         // convert array to object
+        var countryCounts = {};
         data.forEach(function(row){
             if (row.country === null){
                 return;
@@ -60,39 +60,14 @@ router.get('/countsByCountry', function (req, res) {
             }
         })
     }).catch(function(error){
-        log.error("Exception in /countsByCountry", error)
+        log.error("Exception in /case/countsByCountry => %s", error)
         res.status(500).json({
             OK: false,
-            error: jsonStringify(error)
+            error: error
         })
     })
 });
 
-
-router.get('/countsByCountry_old', function (req, res) {
-  let body = new Bodybuilder()
-  let bodyquery = body.aggregation('terms', 'geo_country', null, {size: 0}).size(0).build()
-  es.search({
-    index: 'pp',
-    type: 'case',
-    body: bodyquery
-  }).then(function (resp) {
-    var countryCounts = {}
-    let buckets = resp.aggregations.agg_terms_geo_country.buckets
-    for (let i in buckets) {
-      countryCounts[buckets[i].key] = buckets[i].doc_count
-    }
-    res.status(200).json({
-      OK: true,
-      data: {
-        countryCounts: countryCounts
-      }
-    })
-  }, function (resp) {
-    log.error("Exception in /countsByCountry", resp)
-    res.status(500).json('uh-oh')
-  })
-})
 
 /**
  * @api {post} /case/new Create new case
@@ -202,45 +177,64 @@ router.put('/:caseId', function editCaseById (req, res) {
  *
  */
 
-router.get('/:caseId', function editCaseById (req, res) {
-  // Get the case for dynamodb
-  // get the author from dynamodb
+ router.get('/:caseId', function getCaseById (req, res) {
+     db.one(
+         'SELECT * FROM $1~, $2~ WHERE $1~.$3~ = $2~.$4~ AND $1~.$3~ = $5;',
+         ['cases', 'case__localized_texts',  'id', 'case_id', req.params.caseId]
+     ).then(function(data){
+         console.log('received case => %s', data);
+         res.status(200).json({
+             OK: true,
+             data: data
+         })
+     }).catch(function(error){
+         log.error("Exception in GET /case/%s => %s", req.params.caseId, error)
+         res.status(500).json({
+             OK: false,
+             error: error
+         })
+     })
+ })
 
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  var params = {
-      TableName : "pp_cases",
-      Limit : 1,
-      ScanIndexForward: false, // this will return the last row with this id
-      KeyConditionExpression: "id = :id",
-      ExpressionAttributeValues: {
-          ":id":req.params.caseId
-      }
-  };
-
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-      res.status(500).json(err)
-    } else {
-      let thecase = data.Items[0];
-      if (thecase) {
-        getAuthorByAuthorID(thecase.author_uid, function(err, author) {
-          if (author) {
-            thecase.author = author.Items[0];
-            res.status(200).json({
-              OK: true,
-              data: data.Items
-            })
-          } else {
-            res.status(500).json({"error": "No author record found for id="+thecase.author_uid});
-          }
-        })
-      } else {
-        res.status(500).json({"error": "No case found for id =" + req.params.caseId});
-      }
-    }
-  });
-})
+// router.get('/:caseId', function editCaseById (req, res) {
+//   // Get the case for dynamodb
+//   // get the author from dynamodb
+//
+//   var docClient = new AWS.DynamoDB.DocumentClient();
+//   var params = {
+//       TableName : "pp_cases",
+//       Limit : 1,
+//       ScanIndexForward: false, // this will return the last row with this id
+//       KeyConditionExpression: "id = :id",
+//       ExpressionAttributeValues: {
+//           ":id":req.params.caseId
+//       }
+//   };
+//
+//   docClient.query(params, function(err, data) {
+//     if (err) {
+//       console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
+//       res.status(500).json(err)
+//     } else {
+//       let thecase = data.Items[0];
+//       if (thecase) {
+//         getAuthorByAuthorID(thecase.author_uid, function(err, author) {
+//           if (author) {
+//             thecase.author = author.Items[0];
+//             res.status(200).json({
+//               OK: true,
+//               data: data.Items
+//             })
+//           } else {
+//             res.status(500).json({"error": "No author record found for id="+thecase.author_uid});
+//           }
+//         })
+//       } else {
+//         res.status(500).json({"error": "No case found for id =" + req.params.caseId});
+//       }
+//     }
+//   });
+// })
 
 /**
  * @api {delete} /case/:caseId Delete a case
