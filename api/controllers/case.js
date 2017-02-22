@@ -11,6 +11,7 @@ var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 
+var db = require('../helpers/db')
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -34,12 +35,38 @@ var jsonStringify = require('json-pretty');
  *            ...
  *        }
  *     }
- *
+ * })
  */
 
 // TODO: figure out if the choropleth should show cases or all things
 
-router.get('/countsByCountry', function (req, res) {
+router.get('countsByCountry', function (req, res) {
+    var countryCounts = {};
+    db.query(
+        'select $1~.$3~, count($1~.$3~) from $1~, $2~ where $1~.$4~ = $2~.$5~ group by $1~.$3~;'
+        ['geolocation', 'cases', 'country', 'id', 'location']
+    ).then(function(data){
+        // convert array to object
+        data.forEach(function([country, count]){
+            countryCounts[country] = count;
+        });
+        res.status(200).json({
+          OK: true,
+          data: {
+            countryCounts: countryCounts
+          }
+        })
+    }).catch(function(error){
+        log.error("Exception in /countsByCountry", resp)
+        res.status(500).json({
+            OK: false,
+            error: error
+        })
+    })
+});
+
+
+router.get('/countsByCountry_old', function (req, res) {
   let body = new Bodybuilder()
   let bodyquery = body.aggregation('terms', 'geo_country', null, {size: 0}).size(0).build()
   es.search({
@@ -93,16 +120,16 @@ router.post('/new', function (req, res, next) {
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
   }, function () {
     es.index({
-      index: 'pp',		
-      type: 'case',		
-      body: req.body		
-    }, function (error, response) {		
-      if (error) {		
-        res.status(error.status).json({message: error.message})		
-      } else {		
-        // console.log(response)		
-        res.status(200).json(req.body)		
-      }		
+      index: 'pp',
+      type: 'case',
+      body: req.body
+    }, function (error, response) {
+      if (error) {
+        res.status(error.status).json({message: error.message})
+      } else {
+        // console.log(response)
+        res.status(200).json(req.body)
+      }
     })
   })
 })
@@ -175,7 +202,7 @@ router.put('/:caseId', function editCaseById (req, res) {
 router.get('/:caseId', function editCaseById (req, res) {
   // Get the case for dynamodb
   // get the author from dynamodb
-  
+
   var docClient = new AWS.DynamoDB.DocumentClient();
   var params = {
       TableName : "pp_cases",
