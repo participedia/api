@@ -105,7 +105,6 @@ router.post('/new', function (req, res, next) {
       if (error) {
         res.status(error.status).json({message: error.message})
       } else {
-        // console.log(response)
         res.status(200).json(req.body)
       }
     })
@@ -147,7 +146,6 @@ router.put('/:caseId', function editCaseById (req, res) {
   }, function () {
     var caseId = req.swagger.params.caseId.value
     var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
     res.status(200).json(req.body)
   })})
 
@@ -182,7 +180,6 @@ router.put('/:caseId', function editCaseById (req, res) {
          'SELECT * FROM $1~, $2~ WHERE $1~.$3~ = $2~.$4~ AND $1~.$3~ = $5;',
          ['cases', 'case__localized_texts',  'id', 'case_id', req.params.caseId]
      ).then(function(data){
-         console.log('received case => %s', data);
          res.status(200).json({
              OK: true,
              data: data
@@ -196,45 +193,6 @@ router.put('/:caseId', function editCaseById (req, res) {
      })
  })
 
-// router.get('/:caseId', function editCaseById (req, res) {
-//   // Get the case for dynamodb
-//   // get the author from dynamodb
-//
-//   var docClient = new AWS.DynamoDB.DocumentClient();
-//   var params = {
-//       TableName : "pp_cases",
-//       Limit : 1,
-//       ScanIndexForward: false, // this will return the last row with this id
-//       KeyConditionExpression: "id = :id",
-//       ExpressionAttributeValues: {
-//           ":id":req.params.caseId
-//       }
-//   };
-//
-//   docClient.query(params, function(err, data) {
-//     if (err) {
-//       console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-//       res.status(500).json(err)
-//     } else {
-//       let thecase = data.Items[0];
-//       if (thecase) {
-//         getAuthorByAuthorID(thecase.author_uid, function(err, author) {
-//           if (author) {
-//             thecase.author = author.Items[0];
-//             res.status(200).json({
-//               OK: true,
-//               data: data.Items
-//             })
-//           } else {
-//             res.status(500).json({"error": "No author record found for id="+thecase.author_uid});
-//           }
-//         })
-//       } else {
-//         res.status(500).json({"error": "No case found for id =" + req.params.caseId});
-//       }
-//     }
-//   });
-// })
 
 /**
  * @api {delete} /case/:caseId Delete a case
@@ -260,13 +218,12 @@ router.put('/:caseId', function editCaseById (req, res) {
 router.delete('/:caseId', function editCaseById (req, res) {
   cache.clear()
   groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
+    console.error("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
     var caseId = req.swagger.params.caseId.value
     var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
     res.status(200).json(req.body)
   })
 })
