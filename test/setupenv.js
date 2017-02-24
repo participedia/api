@@ -7,7 +7,6 @@ var process = require('process')
 process.env.AUTH0_CLIENT_SECRET = 'notasecret'
 process.env.AUTH0_CLIENT_ID = 'either'
 process.env.AUTH0_CLIENT_ID = 'either'
-process.env.DATABASE_URL = 'postgres://dethe@localhost/participedia'
 
 // We'll create a BEARER_TOKEN environment variable
 
