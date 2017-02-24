@@ -180,12 +180,19 @@ router.put('/:caseId', function editCaseById (req, res) {
          let caseId = req.params.caseId;
          return t.batch([
              t.one('SELECT * FROM cases, case__localized_texts WHERE cases.id = case__localized_texts.case_id AND  cases.id = $1;',caseId),
-             t.any('SELECT users.name, case__authors.timestamp FROM users, case__authors WHERE users.id = case__authors.author AND case__authors.case_id = $1', caseId)
+             t.any('SELECT users.name, users.id, case__authors.timestamp FROM users, case__authors WHERE users.id = case__authors.author AND case__authors.case_id = $1', caseId),
+             t.task(function(t){
+                 return t.one('SELECT location FROM cases WHERE id = $1', caseId)
+                    .then(function(the_case){
+                        console.log('location_id: %s', jsonStringify(the_case));
+                        return t.one('SELECT * from geolocation where geolocation.id = $1', the_case.location);
+                    });
+             })
          ]);
     }).then(function(data){
         let the_case = data[0];
-        let authors = data[1];
-        the_case.authors = authors;
+        the_case.authors = data[1]; // authors
+        the_case.location = data[2]; // geolocation
          res.status(200).json({
              OK: true,
              data: the_case
