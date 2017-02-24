@@ -218,6 +218,13 @@ CREATE TABLE case__videos (
     case_id INTEGER REFERENCES cases(id)
 );
 
+CREATE TABLE bookmarks (
+  ID SERIAL PRIMARY KEY,
+  bookmarktype VARCHAR,
+  thingid INTEGER,
+  userid VARCHAR
+);
+
 -- import all the things!
 -- this is generated from json_stats.py as copy_commands.sql
 

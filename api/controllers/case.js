@@ -51,7 +51,7 @@ router.get('/countsByCountry', function (req, res) {
             if (row.country === null){
                 return;
             }
-            countryCounts[row.country] = row.count;
+            countryCounts[row.country.toLowerCase()] = row.count;
         });
         res.status(200).json({
             OK: true,
@@ -176,13 +176,19 @@ router.put('/:caseId', function editCaseById (req, res) {
  */
 
  router.get('/:caseId', function getCaseById (req, res) {
-     db.one(
-         'SELECT * FROM $1~, $2~ WHERE $1~.$3~ = $2~.$4~ AND $1~.$3~ = $5;',
-         ['cases', 'case__localized_texts',  'id', 'case_id', req.params.caseId]
-     ).then(function(data){
+     db.task(function(t){
+         let caseId = req.params.caseId;
+         return t.batch([
+             t.one('SELECT * FROM cases, case__localized_texts WHERE cases.id = case__localized_texts.case_id AND  cases.id = $1;',caseId),
+             t.any('SELECT users.name, case__authors.timestamp FROM users, case__authors WHERE users.id = case__authors.author AND case__authors.case_id = $1', caseId)
+         ]);
+    }).then(function(data){
+        let the_case = data[0];
+        let authors = data[1];
+        the_case.authors = authors;
          res.status(200).json({
              OK: true,
-             data: data
+             data: the_case
          })
      }).catch(function(error){
          log.error("Exception in GET /case/%s => %s", req.params.caseId, error)
