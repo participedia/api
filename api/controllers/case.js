@@ -140,7 +140,7 @@ router.post('/new', function (req, res, next) {
 router.put('/:caseId', function editCaseById (req, res) {
   cache.clear()
   groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
+    console.error("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
@@ -184,7 +184,6 @@ router.put('/:caseId', function editCaseById (req, res) {
              t.task(function(t){
                  return t.one('SELECT location FROM cases WHERE id = $1', caseId)
                     .then(function(the_case){
-                        console.log('location_id: %s', jsonStringify(the_case));
                         return t.one('SELECT * from geolocation where geolocation.id = $1', the_case.location);
                     });
              })
