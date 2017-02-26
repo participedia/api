@@ -10,7 +10,7 @@ services:
 - postgresql
 before_script:
 - psql -a -U postgres -c 'create database travis;'
-- psql -a -U postgres -d travis -f setup.sql
+- bash migrations/migration_001.sh
 deploy:
   provider: heroku
   api_key:
