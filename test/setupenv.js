@@ -4,9 +4,9 @@ var test = require('tape')
 
 // We expect to not have an AUTH0_SECRET
 var process = require('process')
-process.env.AUTH0_CLIENT_SECRET = 'notasecret' 
-process.env.AUTH0_CLIENT_ID = 'either' 
-process.env.AUTH0_CLIENT_ID = 'either' 
+process.env.AUTH0_CLIENT_SECRET = 'notasecret'
+process.env.AUTH0_CLIENT_ID = 'either'
+process.env.AUTH0_CLIENT_ID = 'either'
 
 // We'll create a BEARER_TOKEN environment variable
 
