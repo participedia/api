@@ -65,4 +65,18 @@ describe('Cases', () => {
         });
     });
   })
+  describe('Get case with tags', () => {
+    if('This case should have 3 tags', (done) => {
+      chai.request(app)
+        .get('/case/39')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            res.body.OK.should.be.equal.to('true')
+            res.should.have.status(200);
+            let the_case = res.body.data;
+            the_case.should.have.lengthOf(3);
+        });
+    });
+  })
 })
