@@ -35,7 +35,7 @@ describe('Users', () => {
           user.cases.should.have.lengthOf(2);
           user.methods.should.have.lengthOf(5);
           user.organizations.should.have.lengthOf(2);
-          done()
+          done();
       });
   });
 })
