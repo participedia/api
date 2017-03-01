@@ -75,7 +75,8 @@ describe('Cases', () => {
             res.body.OK.should.be.equal.to('true')
             res.should.have.status(200);
             let the_case = res.body.data;
-            the_case.should.have.lengthOf(3);
+            the_case.tags.should.have.lengthOf(3);
+            done();
         });
     });
   })
