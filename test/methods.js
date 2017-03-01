@@ -9,9 +9,9 @@ chai.use(chaiHttp);
 
 describe('Methods', () => {
   describe('Lookup', () => {
-    it('finds method 100', (done) => {
+    it('finds method 190', (done) => {
       chai.request(app)
-        .get('/method/100')
+        .get('/method/190')
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
         .send({
@@ -20,8 +20,8 @@ describe('Methods', () => {
           res.should.have.status(200);
           done();
         });
-    })
-  })
+    });
+  });
   describe('Adding', () => {
     it('fails without authentication', (done) => {
       chai.request(app)
@@ -49,20 +49,19 @@ describe('Methods', () => {
         });
     });
   });
-  let userID = tokens.user_payload.user_id;
-  describe('Counting by country', () => {
-    it('returns stuff', (done) => {
+  describe('Get method with tags', () => {
+    it('should have 7 tags', (done) => {
       chai.request(app)
-        .get('/method/countsByCountry')
+        .get('/method/428')
         .set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
-        .set('Authorization', 'Bearer ' + tokens.user_token)
         .end((err, res) => {
-          var countryCounts = res.body.data.countryCounts
-          countryCounts.should.have.property('france')
-          res.should.have.status(200);
-          done();
+            res.body.OK.should.equal(true)
+            res.should.have.status(200);
+            let the_method = res.body.data;
+            the_method.tags.should.have.lengthOf(7);
+            done();
         });
     });
-  })
-})
+  });
+});

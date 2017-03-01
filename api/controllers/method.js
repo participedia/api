@@ -4,12 +4,14 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
+var cache = require('apicache')
+var AWS = require("aws-sdk")
 var getAuthorByAuthorID = require('../helpers/getAuthor')
-var AWS = require("aws-sdk");
+var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
-var db = require('../helpers/db')
 
+var db = require('../helpers/db')
 
 /**
  * @api {post} /method/new Create new method
@@ -129,12 +131,6 @@ router.get('/:methodId', function getmethodById (req, res) {
             t.any('SELECT * FROM method__attachments WHERE method__attachments.method_id = $1', methodId),
             t.any('SELECT tag FROM method__tags WHERE method__tags.method_id = $1', methodId),
             t.any('SELECT * FROM method__videos WHERE method__videos.method_id = $1', methodId),
-            t.task(function(t){
-                return t.one('SELECT location FROM methods WHERE id = $1', methodId)
-                   .then(function(method){
-                       return t.one('SELECT * from geolocation where geolocation.id = $1', method.location);
-                   });
-            })
         ]);
    }).then(function(data){
        let method = data[0];
@@ -155,7 +151,6 @@ router.get('/:methodId', function getmethodById (req, res) {
        });
        method.tags = data[3];
        method.videos = data[4];
-       method.location = data[5]; // geolocation
         res.status(200).json({
             OK: true,
             data: method
