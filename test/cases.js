@@ -20,8 +20,8 @@ describe('Cases', () => {
           res.should.have.status(200);
           done();
         });
-    })
-  })
+    });
+  });
   describe('Adding', () => {
     it('fails without authentication', (done) => {
       chai.request(app)
@@ -64,5 +64,20 @@ describe('Cases', () => {
           done();
         });
     });
-  })
-})
+  });
+  describe('Get case with tags', () => {
+    it('should have 3 tags', (done) => {
+      chai.request(app)
+        .get('/case/39')
+        .set('Content-Type', 'application/json')
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            res.body.OK.should.equal(true)
+            res.should.have.status(200);
+            let the_case = res.body.data;
+            the_case.tags.should.have.lengthOf(3);
+            done();
+        });
+    });
+  });
+});
