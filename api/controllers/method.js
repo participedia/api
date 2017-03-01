@@ -127,7 +127,6 @@ router.get('/:methodId', function getmethodById (req, res) {
             t.one('SELECT * FROM methods, method__localized_texts WHERE methods.id = method__localized_texts.method_id AND  methods.id = $1;',methodId),
             t.any('SELECT users.name, users.id, method__authors.timestamp FROM users, method__authors WHERE users.id = method__authors.author AND method__authors.method_id = $1', methodId),
             t.any('SELECT * FROM method__attachments WHERE method__attachments.method_id = $1', methodId),
-            t.any('SELECT method__methods.method_id, method__localized_texts.title FROM method__methods, method__localized_texts WHERE method__methods.method_id = $1 AND method__methods.method_id = method__localized_texts.method_id', methodId),
             t.any('SELECT tag FROM method__tags WHERE method__tags.method_id = $1', methodId),
             t.any('SELECT * FROM method__videos WHERE method__videos.method_id = $1', methodId),
             t.task(function(t){
@@ -154,10 +153,9 @@ router.get('/:methodId', function getmethodById (req, res) {
                }
            }
        });
-       method.methods = data[3]
-       method.tags = data[4];
-       method.videos = data[5];
-       method.location = data[6]; // geolocation
+       method.tags = data[3];
+       method.videos = data[4];
+       method.location = data[5]; // geolocation
         res.status(200).json({
             OK: true,
             data: method
