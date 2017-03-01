@@ -2,74 +2,55 @@
 var express = require('express')
 var router = express.Router()
 var groups = require('../helpers/groups')
-var url = require('url')
-var jwt = require('../helpers/jwt')()
+var cache = require('apicache')
+var log = require('winston')
+var jsonStringify = require('json-pretty');
 var db = require('../helpers/db')
 
-/**
- * @api {get} /users List users 
- * @apiGroup users
- * @apiVersion 0.1.0
- * @apiName listusers
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data user data
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- * {
- *   status: "success",
- *   data: [
- *   {
- *     id: 1,
- *     name: "Tyler",
- *     age: 3,
- *     sex: "M"
- *   }
- * ],
- *   message: "Retrieved ALL users"
- * }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
-router.get('/', function (req, res, next) {
-  // TODO figure out about pagination -- for now, return everything.
-  db.any('select * from users')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL users'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-})
+
+
+ router.get('/:userId', function getUserById (req, res) {
+     db.task(function(t){
+         let userId = req.params.userId;
+         return t.batch([
+             t.one('SELECT id, name FROM users WHERE users.id = $1;', userId),
+             t.any('SELECT case__authors.case_id, title FROM case__localized_texts, case__authors WHERE author = $1 AND case__localized_texts.case_id = case__authors.case_id', userId),
+             t.any('SELECT method__authors.method_id, title FROM method__localized_texts, method__authors WHERE author = $1 AND method__localized_texts.method_id =  method__authors.method_id', userId),
+             t.any('SELECT organization__authors.organization_id, title FROM organization__localized_texts, organization__authors WHERE author_id = $1 AND organization__localized_texts.organization_id = organization__authors.organization_id', userId),
+         ]);
+    }).then(function(data){
+        let user = data[0];
+        user.cases = data[1];
+        user.methods = data[2];
+        user.organizations = data[3];
+         res.status(200).json({
+             OK: true,
+             data: user
+         })
+     }).catch(function(error){
+         log.error("Exception in GET /user/%s => %s", req.params.userId, error)
+         res.status(500).json({
+             OK: false,
+             error: error
+         })
+     })
+ })
+
 
 /**
- * @api {get} /user/get/:userId Get info about a user
- * @apiGroup users
+ * @api {delete} /case/:caseId Delete a case
+ * @apiGroup Cases
  * @apiVersion 0.1.0
- * @apiName getuserById
- * @apiParam {string} userId user ID
+ * @apiName deleteCase
+ * @apiParam {Number} caseId Case ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data user data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "OK": true,
- *       "data": {
- *         "ID": 3,
- *         "Description": 'foo'
- *        }
+ *        OK: true
  *     }
  *
  * @apiError NotAuthenticated The user is not authenticated
@@ -77,92 +58,17 @@ router.get('/', function (req, res, next) {
  *
  */
 
-router.get('/get/:userId', function edituserById (req, res, next) {
-  var userId = parseInt(req.params.userId);
-  db.one('select * from users where id = $1', userId)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ONE user'
-        });
-    })
-    .catch(function (err) {
-      return next(err);
-    });
-})
-
-
-/**
- * @api {post} /user/update Update user table from auth0
- * @apiGroup users
- * @apiVersion 0.1.0
- * @apiName updateUser
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data user data
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *         "ID": 3,
- *         "Description": 'foo'
- *        }
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
-
-router.post('/update', function updateUser (req, res, next) {
-  console.log(req.body.user);
-  if (req.body.secretToken != process.env.SECRET_TOKEN) {
-    res.status(401)
-      .json({
-        status: 'unauthorized',
-        message: "Call didn't pass in right secret token"
-      });
-  } else {
-    // See if the user exists.
-    var userId = req.body.user.user_id
-    var name = req.body.user.name
-    db.one('select * from users where id = $1', userId)
-      .then(function (data) {
-        // If user exists, do an update
-        db.none('update users set name=$1 where id=$4',
-          [name, userId])
-          .then(function () {
-            res.status(200)
-              .json({
-                status: 'success',
-                message: 'Updated user'
-              });
-          })
-          .catch(function (err) {
-            return next(err);
-          });
-      })
-      .catch(function (err) {
-        db.none('insert into users(name)' +
-            'values(${name})',
-          req.body.user)
-          .then(function () {
-            res.status(200)
-              .json({
-                status: 'success',
-                message: 'Inserted user'
-              });
-          })
-          .catch(function (err) {
-            return next(err);
-          });
-      });
-  }
+router.delete('/:caseId', function editCaseById (req, res) {
+  cache.clear()
+  groups.user_has(req, 'Contributors', function () {
+    console.error("user doesn't have Contributors group membership")
+    res.status(401).json({message: 'access denied - user does not have proper authorization'})
+    return
+  }, function () {
+    var caseId = req.swagger.params.caseId.value
+    var caseBody = req.body
+    res.status(200).json(req.body)
+  })
 })
 
 module.exports = router
