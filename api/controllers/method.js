@@ -8,6 +8,7 @@ var getAuthorByAuthorID = require('../helpers/getAuthor')
 var AWS = require("aws-sdk");
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
+var db = require('../helpers/db')
 
 
 /**
@@ -116,49 +117,58 @@ router.put('/:id', function editMethodById (req, res) {
  *        }
  *     }
  *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
 
-router.get('/:id', function editMethodById (req, res) {
-  // Get the method for dynamodb
-  // get the author from dynamodb
-
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  var params = {
-      TableName : "pp_methods",
-      Limit : 1,
-      ScanIndexForward: false, // this will return the last row with this id
-      KeyConditionExpression: "id = :id",
-      ExpressionAttributeValues: {
-          ":id":req.params.id
-      }
-  };
-
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-      res.status(500).json(err)
-    } else {
-      let method = data.Items[0];
-      if (method) {
-        getAuthorByAuthorID(method.author_uid, function(err, author) {
-          if (author) {
-            method.author = author.Items[0];
-            res.status(200).json({
-              OK: true,
-              data: data.Items
+router.get('/:methodId', function getmethodById (req, res) {
+    db.task(function(t){
+        let methodId = req.params.methodId;
+        return t.batch([
+            t.one('SELECT * FROM methods, method__localized_texts WHERE methods.id = method__localized_texts.method_id AND  methods.id = $1;',methodId),
+            t.any('SELECT users.name, users.id, method__authors.timestamp FROM users, method__authors WHERE users.id = method__authors.author AND method__authors.method_id = $1', methodId),
+            t.any('SELECT * FROM method__attachments WHERE method__attachments.method_id = $1', methodId),
+            t.any('SELECT method__methods.method_id, method__localized_texts.title FROM method__methods, method__localized_texts WHERE method__methods.method_id = $1 AND method__methods.method_id = method__localized_texts.method_id', methodId),
+            t.any('SELECT tag FROM method__tags WHERE method__tags.method_id = $1', methodId),
+            t.any('SELECT * FROM method__videos WHERE method__videos.method_id = $1', methodId),
+            t.task(function(t){
+                return t.one('SELECT location FROM methods WHERE id = $1', methodId)
+                   .then(function(method){
+                       return t.one('SELECT * from geolocation where geolocation.id = $1', method.location);
+                   });
             })
-          } else {
-            res.status(500).json({"error": "No author record found for id="+method.author_uid});
-          }
+        ]);
+   }).then(function(data){
+       let method = data[0];
+       method.authors = data[1]; // authors
+       let attachments = data[2]; // files and images
+       method.other_images = []
+       method.files = []
+       attachments.forEach(function(att){
+           if (att.type == 'file'){
+               method.files.push(att);
+           }else if (att.type == 'image'){
+               if (att.is_lead){
+                   method.lead_image = att;
+               }else{
+                   method.other_images.push(att);
+               }
+           }
+       });
+       method.methods = data[3]
+       method.tags = data[4];
+       method.videos = data[5];
+       method.location = data[6]; // geolocation
+        res.status(200).json({
+            OK: true,
+            data: method
         })
-      } else {
-        res.status(500).json({"error": "No method found for id =" + req.params.id});
-      }
-    }
-  });
+    }).catch(function(error){
+        log.error("Exception in GET /method/%s => %s", req.params.methodId, error)
+        res.status(500).json({
+            OK: false,
+            error: error
+        })
+    })
 })
 
 /**
