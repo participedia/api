@@ -20,24 +20,23 @@ describe('Users', () => {
           res.should.have.status(200);
           done();
         });
-    })
-  })
-  describe('Get user with stuff', () => {
-  if('This user should have 2 cases, 5 methods, 2 organizations', (done) => {
-    chai.request(app)
-      .get('/user/25')
-      .set('Content-Type', 'application/json')
-      .set('Accept', 'application/json')
-      .end((err, res) => {
-          res.body.OK.should.be.equal.to('true')
-          res.should.have.status(200);
-          let user = res.body.data;
-          user.cases.should.have.lengthOf(2);
-          user.methods.should.have.lengthOf(5);
-          user.organizations.should.have.lengthOf(2);
-          done();
-      });
+    });
   });
-})
-
-})
+  describe('Get user with stuff', () => {
+      it('This user should have 2 cases, 5 methods, 2 organizations', (done) => {
+        chai.request(app)
+          .get('/user/25')
+          .set('Content-Type', 'application/json')
+          .set('Accept', 'application/json')
+          .end((err, res) => {
+              res.body.OK.should.be.equal.to('true')
+              res.should.have.status(200);
+              let user = res.body.data;
+              user.cases.should.have.lengthOf(2);
+              user.methods.should.have.lengthOf(5);
+              user.organizations.should.have.lengthOf(2);
+              done();
+          });
+      });
+    });
+});
