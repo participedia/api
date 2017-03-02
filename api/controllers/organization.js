@@ -4,10 +4,14 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
+var cache = require('apicache')
+var AWS = require("aws-sdk")
 var getAuthorByAuthorID = require('../helpers/getAuthor')
-var AWS = require("aws-sdk");
+var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
+
+var db = require('../helpers/db')
 
 
 /**
@@ -120,45 +124,54 @@ router.put('/:id', function editOrgById (req, res) {
  *
  */
 
-router.get('/:id', function getOrgById (req, res) {
-  // Get the organization for dynamodb
-  // get the author from dynamodb
-
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  var params = {
-      TableName : "pp_organizations",
-      Limit : 1,
-      ScanIndexForward: false, // this will return the last row with this id
-      KeyConditionExpression: "id = :id",
-      ExpressionAttributeValues: {
-          ":id":req.params.id
-      }
-  };
-
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-      res.status(500).json(err)
-    } else {
-      let theOrg = data.Items[0];
-      if (theOrg) {
-        getAuthorByAuthorID(theOrg.author_uid, function(err, author) {
-          if (author) {
-            theOrg.author = author.Items[0];
-            res.status(200).json({
-              OK: true,
-              data: data.Items
-            })
-          } else {
-            res.status(500).json({"error": "No author record found for id="+theOrg.author_uid});
-          }
-        })
-      } else {
-        res.status(500).json({"error": "No organization found for id =" + req.params.id});
-      }
-    }
-  });
-})
+ router.get('/:organizationId', function getorganizationById (req, res) {
+     db.task(function(t){
+         let organizationId = req.params.organizationId;
+         return t.batch([
+             t.one('SELECT * FROM organizations, organization__localized_texts WHERE organizations.id = organization__localized_texts.organization_id AND  organizations.id = $1;',organizationId),
+             t.any('SELECT users.name, users.id, organization__authors.timestamp FROM users, organization__authors WHERE users.id = organization__authors.author_id AND organization__authors.organization_id = $1', organizationId),
+             t.any('SELECT * FROM organization__attachments WHERE organization__attachments.organization_id = $1', organizationId),
+             t.any('SELECT tag FROM organization__tags WHERE organization__tags.organization_id = $1', organizationId),
+             t.any('SELECT * FROM organization__videos WHERE organization__videos.organization_id = $1', organizationId),
+             t.task(function(t){
+                 return t.one('SELECT location FROM organizations WHERE id = $1', organizationId)
+                    .then(function(organization){
+                        return t.one('SELECT * from geolocation where geolocation.id = $1', organization.location);
+                    });
+             })
+         ]);
+    }).then(function(data){
+        let organization = data[0];
+        organization.authors = data[1]; // authors
+        let attachments = data[2]; // files and images
+        organization.other_images = []
+        organization.files = []
+        attachments.forEach(function(att){
+            if (att.type == 'file'){
+                organization.files.push(att);
+            }else if (att.type == 'image'){
+                if (att.is_lead){
+                    organization.lead_image = att;
+                }else{
+                    organization.other_images.push(att);
+                }
+            }
+        });
+        organization.tags = data[3];
+        organization.videos = data[4];
+        organization.location = data[5]; // geolocation
+         res.status(200).json({
+             OK: true,
+             data: organization
+         })
+     }).catch(function(error){
+         log.error("Exception in GET /organization/%s => %s", req.params.organizationId, error)
+         res.status(500).json({
+             OK: false,
+             error: error
+         })
+     })
+ })
 
 /**
  * @api {delete} /organization/:id Delete an organization
