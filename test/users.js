@@ -29,7 +29,7 @@ describe('Users', () => {
           .set('Content-Type', 'application/json')
           .set('Accept', 'application/json')
           .end((err, res) => {
-              res.body.OK.should.be.equal.to('true')
+              res.body.OK.should.equal(true)
               res.should.have.status(200);
               let user = res.body.data;
               user.cases.should.have.lengthOf(2);
