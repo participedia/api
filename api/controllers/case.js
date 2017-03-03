@@ -11,6 +11,7 @@ var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 
+var db = require('../helpers/db')
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -34,35 +35,39 @@ var jsonStringify = require('json-pretty');
  *            ...
  *        }
  *     }
- *
+ * })
  */
 
 // TODO: figure out if the choropleth should show cases or all things
 
 router.get('/countsByCountry', function (req, res) {
-  let body = new Bodybuilder()
-  let bodyquery = body.aggregation('terms', 'geo_country', null, {size: 0}).size(0).build()
-  es.search({
-    index: 'pp',
-    type: 'case',
-    body: bodyquery
-  }).then(function (resp) {
-    var countryCounts = {}
-    let buckets = resp.aggregations.agg_terms_geo_country.buckets
-    for (let i in buckets) {
-      countryCounts[buckets[i].key] = buckets[i].doc_count
-    }
-    res.status(200).json({
-      OK: true,
-      data: {
-        countryCounts: countryCounts
-      }
+    db.query(
+        'select $1~.$3~, count($1~.$3~) from $1~, $2~ where $1~.$4~ = $2~.$5~ group by $1~.$3~;',
+        ['geolocation', 'cases', 'country', 'id', 'location']
+    ).then(function(data){
+        // convert array to object
+        var countryCounts = {};
+        data.forEach(function(row){
+            if (row.country === null){
+                return;
+            }
+            countryCounts[row.country.toLowerCase()] = row.count;
+        });
+        res.status(200).json({
+            OK: true,
+            data: {
+                countryCounts: countryCounts
+            }
+        })
+    }).catch(function(error){
+        log.error("Exception in /case/countsByCountry => %s", error)
+        res.status(500).json({
+            OK: false,
+            error: error
+        })
     })
-  }, function (resp) {
-    log.error("Exception in /countsByCountry", resp)
-    res.status(500).json('uh-oh')
-  })
-})
+});
+
 
 /**
  * @api {post} /case/new Create new case
@@ -93,16 +98,15 @@ router.post('/new', function (req, res, next) {
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
   }, function () {
     es.index({
-      index: 'pp',		
-      type: 'case',		
-      body: req.body		
-    }, function (error, response) {		
-      if (error) {		
-        res.status(error.status).json({message: error.message})		
-      } else {		
-        // console.log(response)		
-        res.status(200).json(req.body)		
-      }		
+      index: 'pp',
+      type: 'case',
+      body: req.body
+    }, function (error, response) {
+      if (error) {
+        res.status(error.status).json({message: error.message})
+      } else {
+        res.status(200).json(req.body)
+      }
     })
   })
 })
@@ -136,13 +140,12 @@ router.post('/new', function (req, res, next) {
 router.put('/:caseId', function editCaseById (req, res) {
   cache.clear()
   groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
+    console.error("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
     var caseId = req.swagger.params.caseId.value
     var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
     res.status(200).json(req.body)
   })})
 
@@ -172,45 +175,57 @@ router.put('/:caseId', function editCaseById (req, res) {
  *
  */
 
-router.get('/:caseId', function editCaseById (req, res) {
-  // Get the case for dynamodb
-  // get the author from dynamodb
-  
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  var params = {
-      TableName : "pp_cases",
-      Limit : 1,
-      ScanIndexForward: false, // this will return the last row with this id
-      KeyConditionExpression: "id = :id",
-      ExpressionAttributeValues: {
-          ":id":req.params.caseId
-      }
-  };
+ router.get('/:caseId', function getCaseById (req, res) {
+     db.task(function(t){
+         let caseId = req.params.caseId;
+         return t.batch([
+             t.one('SELECT * FROM cases, case__localized_texts WHERE cases.id = case__localized_texts.case_id AND  cases.id = $1;',caseId),
+             t.any('SELECT users.name, users.id, case__authors.timestamp FROM users, case__authors WHERE users.id = case__authors.author AND case__authors.case_id = $1', caseId),
+             t.any('SELECT * FROM case__attachments WHERE case__attachments.case_id = $1', caseId),
+             t.any('SELECT case__methods.method_id, method__localized_texts.title FROM case__methods, method__localized_texts WHERE case__methods.case_id = $1 AND case__methods.method_id = method__localized_texts.method_id', caseId),
+             t.any('SELECT tag FROM case__tags WHERE case__tags.case_id = $1', caseId),
+             t.any('SELECT * FROM case__videos WHERE case__videos.case_id = $1', caseId),
+             t.task(function(t){
+                 return t.one('SELECT location FROM cases WHERE id = $1', caseId)
+                    .then(function(the_case){
+                        return t.one('SELECT * from geolocation where geolocation.id = $1', the_case.location);
+                    });
+             })
+         ]);
+    }).then(function(data){
+        let the_case = data[0];
+        the_case.authors = data[1]; // authors
+        let attachments = data[2]; // files and images
+        the_case.other_images = []
+        the_case.files = []
+        attachments.forEach(function(att){
+            if (att.type == 'file'){
+                the_case.files.push(att);
+            }else if (att.type == 'image'){
+                if (att.is_lead){
+                    the_case.lead_image = att;
+                }else{
+                    the_case.other_images.push(att);
+                }
+            }
+        });
+        the_case.methods = data[3]
+        the_case.tags = data[4];
+        the_case.videos = data[5];
+        the_case.location = data[6]; // geolocation
+         res.status(200).json({
+             OK: true,
+             data: the_case
+         })
+     }).catch(function(error){
+         log.error("Exception in GET /case/%s => %s", req.params.caseId, error)
+         res.status(500).json({
+             OK: false,
+             error: error
+         })
+     })
+ })
 
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-      res.status(500).json(err)
-    } else {
-      let thecase = data.Items[0];
-      if (thecase) {
-        getAuthorByAuthorID(thecase.author_uid, function(err, author) {
-          if (author) {
-            thecase.author = author.Items[0];
-            res.status(200).json({
-              OK: true,
-              data: data.Items
-            })
-          } else {
-            res.status(500).json({"error": "No author record found for id="+thecase.author_uid});
-          }
-        })
-      } else {
-        res.status(500).json({"error": "No case found for id =" + req.params.caseId});
-      }
-    }
-  });
-})
 
 /**
  * @api {delete} /case/:caseId Delete a case
@@ -236,13 +251,12 @@ router.get('/:caseId', function editCaseById (req, res) {
 router.delete('/:caseId', function editCaseById (req, res) {
   cache.clear()
   groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
+    console.error("user doesn't have Contributors group membership")
     res.status(401).json({message: 'access denied - user does not have proper authorization'})
     return
   }, function () {
     var caseId = req.swagger.params.caseId.value
     var caseBody = req.body
-    console.log('caseId', caseId, 'case', caseBody)
     res.status(200).json(req.body)
   })
 })

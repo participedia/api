@@ -4,9 +4,14 @@ var test = require('tape')
 
 // We expect to not have an AUTH0_SECRET
 var process = require('process')
-process.env.AUTH0_CLIENT_SECRET = 'notasecret' 
-process.env.AUTH0_CLIENT_ID = 'either' 
-process.env.AUTH0_CLIENT_ID = 'either' 
+process.env.AUTH0_CLIENT_SECRET = 'notasecret'
+process.env.AUTH0_CLIENT_ID = 'either'
+process.env.AUTH0_CLIENT_ID = 'either'
+
+// test locally
+if (process.env.TESTLOCAL === 'true'){
+    process.env.DATABASE_URL = 'postgres://' + process.env.USER + '@localhost:5432/participedia';
+}
 
 // We'll create a BEARER_TOKEN environment variable
 
