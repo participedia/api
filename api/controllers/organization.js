@@ -133,12 +133,7 @@ router.put('/:id', function editOrgById (req, res) {
              t.any('SELECT * FROM organization__attachments WHERE organization__attachments.organization_id = $1', organizationId),
              t.any('SELECT tag FROM organization__tags WHERE organization__tags.organization_id = $1', organizationId),
              t.any('SELECT * FROM organization__videos WHERE organization__videos.organization_id = $1', organizationId),
-             t.task(function(t){
-                 return t.one('SELECT location FROM organizations WHERE id = $1', organizationId)
-                    .then(function(organization){
-                        return t.one('SELECT * from geolocation where geolocation.id = $1', organization.location);
-                    });
-             })
+             t.one('SELECT * FROM organization__locations WHERE organization__locations.organization_id = $1', organizationId)
          ]);
     }).then(function(data){
         let organization = data[0];

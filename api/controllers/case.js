@@ -42,8 +42,7 @@ var db = require('../helpers/db')
 
 router.get('/countsByCountry', function (req, res) {
     db.query(
-        'select $1~.$3~, count($1~.$3~) from $1~, $2~ where $1~.$4~ = $2~.$5~ group by $1~.$3~;',
-        ['geolocation', 'cases', 'country', 'id', 'location']
+        'SELECT country, COUNT(country) FROM case__locations  GROUP BY country;'
     ).then(function(data){
         // convert array to object
         var countryCounts = {};
@@ -68,6 +67,32 @@ router.get('/countsByCountry', function (req, res) {
     })
 });
 
+router.get('/countsByCountry2', function (req, res) {
+    db.query(
+        'SELECT geolocation.country, count(geolocation.country) FROM geolocation, cases WHERE geolocation.id = cases.location GROUP BY geolocation.country;'
+    ).then(function(data){
+        // convert array to object
+        var countryCounts = {};
+        data.forEach(function(row){
+            if (row.country === null){
+                return;
+            }
+            countryCounts[row.country.toLowerCase()] = row.count;
+        });
+        res.status(200).json({
+            OK: true,
+            data: {
+                countryCounts: countryCounts
+            }
+        })
+    }).catch(function(error){
+        log.error("Exception in /case/countsByCountry => %s", error)
+        res.status(500).json({
+            OK: false,
+            error: error
+        })
+    })
+});
 
 /**
  * @api {post} /case/new Create new case
@@ -185,12 +210,7 @@ router.put('/:caseId', function editCaseById (req, res) {
              t.any('SELECT case__methods.method_id, method__localized_texts.title FROM case__methods, method__localized_texts WHERE case__methods.case_id = $1 AND case__methods.method_id = method__localized_texts.method_id', caseId),
              t.any('SELECT tag FROM case__tags WHERE case__tags.case_id = $1', caseId),
              t.any('SELECT * FROM case__videos WHERE case__videos.case_id = $1', caseId),
-             t.task(function(t){
-                 return t.one('SELECT location FROM cases WHERE id = $1', caseId)
-                    .then(function(the_case){
-                        return t.one('SELECT * from geolocation where geolocation.id = $1', the_case.location);
-                    });
-             })
+             t.one('SELECT * FROM case__locations WHERE case__locations.case_id = $1', caseId)
          ]);
     }).then(function(data){
         let the_case = data[0];

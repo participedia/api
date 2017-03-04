@@ -248,3 +248,5 @@ CREATE TABLE bookmarks (
 \COPY case__attachments (case_id,is_lead,size,title,type,url) FROM 'migrations/case__attachments.csv' WITH CSV HEADER
 \COPY case__tags (case_id,tag) FROM 'migrations/case__tags.csv' WITH CSV HEADER
 \COPY case__videos (case_id,title,url) FROM 'migrations/case__videos.csv' WITH CSV HEADER
+
+\include 'migrations/migration_002.sql'

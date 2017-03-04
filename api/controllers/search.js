@@ -5,6 +5,7 @@ var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
 var AWS = require("aws-sdk");
+var db = require('../helpers/db')
 
 if (typeof Promises === 'undefined') {
   var Promises = require('promise-polyfill')
@@ -107,7 +108,7 @@ router.get('/', function (req, res) {
           index: 'pp',
           type: 'case',
           body: bodyquery
-        }).then(function (result) { 
+        }).then(function (result) {
           return {type: 'case', hits: result['hits']['hits']}
         })
       )
@@ -118,7 +119,7 @@ router.get('/', function (req, res) {
           index: 'pp',
           type: 'organization',
           body: bodyquery
-        }).then(function (result) { 
+        }).then(function (result) {
           return {type: 'organization', hits: result['hits']['hits']}
         })
       )
@@ -129,7 +130,7 @@ router.get('/', function (req, res) {
           index: 'pp',
           type: 'method',
           body: bodyquery
-        }).then(function (result) { 
+        }).then(function (result) {
           return {type: 'method', hits: result['hits']['hits']}
         })
       )
@@ -150,7 +151,7 @@ router.get('/', function (req, res) {
           index: 'pp',
           type: 'case',
           match_all: {}
-        }).then(function (result) { 
+        }).then(function (result) {
           return {type: 'case', hits: result['hits']['hits']}
         })
       )
@@ -161,7 +162,7 @@ router.get('/', function (req, res) {
           index: 'pp',
           type: 'organization',
           match_all: {}
-        }).then(function (result) { 
+        }).then(function (result) {
           return {type: 'organization', hits: result['hits']['hits']}
         })
       )
@@ -172,7 +173,7 @@ router.get('/', function (req, res) {
           index: 'pp',
           type: 'method',
           match_all: {}
-        }).then(function (result) { 
+        }).then(function (result) {
           return {type: 'method', hits: result['hits']['hits']}
         })
       )
