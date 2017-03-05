@@ -1,10 +1,9 @@
-'use strict'
-var express = require('express')
-var router = express.Router()
-var groups = require('../helpers/groups')
-var url = require('url')
-var jwt = require('../helpers/jwt')()
-var db = require('../helpers/db')
+"use strict";
+let express = require("express");
+/* eslint-disable new-cap */
+let router = express.Router();
+/* eslint-enable new-cap */
+let db = require("../helpers/db");
 
 /**
  * @api {get} /users List users 
@@ -35,21 +34,21 @@ var db = require('../helpers/db')
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.get('/', function (req, res, next) {
+router.get("/", function(req, res, next) {
   // TODO figure out about pagination -- for now, return everything.
-  db.any('select * from users')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL users'
-        });
+  db
+    .any("select * from users")
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Retrieved ALL users"
+      });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       return next(err);
     });
-})
+});
 
 /**
  * @api {get} /user/get/:userId Get info about a user
@@ -77,22 +76,21 @@ router.get('/', function (req, res, next) {
  *
  */
 
-router.get('/get/:userId', function edituserById (req, res, next) {
-  var userId = parseInt(req.params.userId);
-  db.one('select * from users where id = $1', userId)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ONE user'
-        });
+router.get("/get/:userId", function edituserById(req, res, next) {
+  let userId = parseInt(req.params.userId);
+  db
+    .one("select * from users where id = $1", userId)
+    .then(function(data) {
+      res.status(200).json({
+        status: "success",
+        data: data,
+        message: "Retrieved ONE user"
+      });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       return next(err);
     });
-})
-
+});
 
 /**
  * @api {post} /user/update Update user table from auth0
@@ -119,50 +117,47 @@ router.get('/get/:userId', function edituserById (req, res, next) {
  *
  */
 
-router.post('/update', function updateUser (req, res, next) {
+router.post("/update", function updateUser(req, res, next) {
   console.log(req.body.user);
   if (req.body.secretToken != process.env.SECRET_TOKEN) {
-    res.status(401)
-      .json({
-        status: 'unauthorized',
-        message: "Call didn't pass in right secret token"
-      });
+    res.status(401).json({
+      status: "unauthorized",
+      message: "Call didn't pass in right secret token"
+    });
   } else {
     // See if the user exists.
-    var userId = req.body.user.user_id
-    var name = req.body.user.name
-    db.one('select * from users where id = $1', userId)
-      .then(function (data) {
+    let userId = req.body.user.user_id;
+    let name = req.body.user.name;
+    db
+      .one("select * from users where id = $1", userId)
+      .then(function(data) {
         // If user exists, do an update
-        db.none('update users set name=$1 where id=$4',
-          [name, userId])
-          .then(function () {
-            res.status(200)
-              .json({
-                status: 'success',
-                message: 'Updated user'
-              });
+        db
+          .none("update users set name=$1 where id=$4", [name, userId])
+          .then(function() {
+            res.status(200).json({
+              status: "success",
+              message: "Updated user"
+            });
           })
-          .catch(function (err) {
+          .catch(function(err) {
             return next(err);
           });
       })
-      .catch(function (err) {
-        db.none('insert into users(name)' +
-            'values(${name})',
-          req.body.user)
-          .then(function () {
-            res.status(200)
-              .json({
-                status: 'success',
-                message: 'Inserted user'
-              });
+      .catch(function(err) {
+        db
+          .none("insert into users(name)" + "values(${name})", req.body.user)
+          .then(function() {
+            res.status(200).json({
+              status: "success",
+              message: "Inserted user"
+            });
           })
-          .catch(function (err) {
+          .catch(function(err) {
             return next(err);
           });
       });
   }
-})
+});
 
-module.exports = router
+module.exports = router;

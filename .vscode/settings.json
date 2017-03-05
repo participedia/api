@@ -1,8 +1,9 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "files.exclude": {
-      "doc/**": true,
-      "docs/**": true,
-      "public/**": true
-    }
+  "eslint.autoFixOnSave": true,
+  "files.exclude": {
+    "doc/**": true,
+    "docs/**": true,
+    "public/**": true
+  }
 }
