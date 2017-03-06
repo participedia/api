@@ -124,7 +124,7 @@ router.post("/add", (req, res, next) => {
               success: true,
               status: "success",
               message: "Inserted bookmark, returning ID",
-              data: data
+              data
             });
           })
           .catch(error => {
@@ -189,10 +189,10 @@ router.delete("/delete/:bookmarkID", (req, res, next) => {
           } else {
             db
               .none("delete from bookmarks where id = $1", bookmarkID)
-              .then(data => res.status(200).json({
+              .then(extradata => res.status(200).json({
                 status: "success",
-                message: 'Removed a bookmark',
-                data: data
+                message: "Removed a bookmark",
+                extradata
               }))
               .catch(err => next(err));
           }

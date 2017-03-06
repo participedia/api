@@ -10,9 +10,11 @@ function userHas(req, groupName, errCB, okCB) {
       user.app_metadata.authorization.groups
     ) {
       if (user.app_metadata.authorization.groups.indexOf(groupName) === -1) {
-        errCB && errCB();
-      } else {
-        okCB && okCB();
+        if (errCB) {
+          errCB();
+        }
+      } else if (okCB) {
+        okCB();
       }
     } else {
       errCB("no user");

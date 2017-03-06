@@ -1,41 +1,40 @@
-"use strict";
-let express = require("express");
+const express = require("express");
 /* eslint-disable new-cap */
-let router = express.Router();
+const router = express.Router();
 /* eslint-enable new-cap */
-let es = require("../helpers/es");
-let AWS = require("aws-sdk");
+const es = require("../helpers/es");
+const AWS = require("aws-sdk");
+const log = require("winston");
+const Bodybuilder = require("bodybuilder");
 
-let Bodybuilder = require("bodybuilder");
-
-router.get("/getAllForType", function(req, res) {
-  let objType = req.query.objType.toLowerCase();
+router.get("/getAllForType", (req, res) => {
+  const objType = req.query.objType.toLowerCase();
   if (
     objType !== "organization" && objType !== "case" && objType !== "method"
   ) {
     res
       .status(401)
-      .json({ message: "Unsupported objType for getAllForType: " + objType });
+      .json({ message: `Unsupported objType for getAllForType: ${objType}` });
   }
-  let params = {
+  const params = {
     TableName: `pp_${objType}s`,
     IndexName: `title_en-index`
   };
-  let docClient = new AWS.DynamoDB.DocumentClient();
+  const docClient = new AWS.DynamoDB.DocumentClient();
   try {
-    docClient.scan(params, function(err, data) {
+    docClient.scan(params, (err, data) => {
       if (err) {
-        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+        log.error("Unable to query. Error:", JSON.stringify(err, null, 2));
       } else {
-        let titles = {};
-        data.Items.forEach(function(item) {
-          titles[item["title_en"]] = Number(item["id"]);
+        const titles = {};
+        data.Items.forEach(item => {
+          titles[item.title_en] = Number(item.id);
         });
         res.json(titles);
       }
     });
   } catch (e) {
-    console.log(`Exception in /getAllForType: ${e}`);
+    log.error(`Exception in /getAllForType: ${e}`);
   }
 });
 
@@ -66,9 +65,9 @@ router.get("/getAllForType", function(req, res) {
 
 // Should not return things that aren't displayable as SearchHits (i.e. Users...)
 
-router.get("/", function(req, res) {
+router.get("/", (req, res) => {
   let body = new Bodybuilder();
-  let query = req.query.query;
+  const query = req.query.query;
   let sortingMethod = req.query.sortingMethod;
   let selectedCategory = req.query.selectedCategory;
   if (!sortingMethod) {
@@ -79,11 +78,11 @@ router.get("/", function(req, res) {
   }
 
   if (query) {
-    console.log(query.indexOf(":"));
-    if (query.indexOf(":") == -1) {
+    log.info(query.indexOf(":"));
+    if (query.indexOf(":") === -1) {
       body = body.query("match", "_all", query);
     } else {
-      let parts = query.split(":", 2);
+      const parts = query.split(":", 2);
       body = body.query("match", parts[0], parts[1]);
     }
   }
@@ -92,16 +91,17 @@ router.get("/", function(req, res) {
   } else {
     body = body.sort("id", "asc"); // Note this requires a non-analyzed field
   }
-  let bodyquery = body.size(30).build("v2");
-  let includeCases = selectedCategory === "All" || selectedCategory === "Cases";
-  let includeMethods = selectedCategory === "All" ||
+  const bodyquery = body.size(30).build("v2");
+  const includeCases = selectedCategory === "All" ||
+    selectedCategory === "Cases";
+  const includeMethods = selectedCategory === "All" ||
     selectedCategory === "Methods";
   // let includeNews = selectedCategory === 'All' || selectedCategory === 'News'
-  let includeOrgs = selectedCategory === "All" ||
+  const includeOrgs = selectedCategory === "All" ||
     selectedCategory === "Organizations";
 
   if (query) {
-    let promises = [];
+    const promises = [];
     if (includeCases) {
       promises.push(
         es
@@ -110,9 +110,7 @@ router.get("/", function(req, res) {
             type: "case",
             body: bodyquery
           })
-          .then(function(result) {
-            return { type: "case", hits: result["hits"]["hits"] };
-          })
+          .then(result => ({ type: "case", hits: result.hits.hits }))
       );
     }
     if (includeOrgs) {
@@ -123,9 +121,7 @@ router.get("/", function(req, res) {
             type: "organization",
             body: bodyquery
           })
-          .then(function(result) {
-            return { type: "organization", hits: result["hits"]["hits"] };
-          })
+          .then(result => ({ type: "organization", hits: result.hits.hits }))
       );
     }
     if (includeMethods) {
@@ -136,22 +132,20 @@ router.get("/", function(req, res) {
             type: "method",
             body: bodyquery
           })
-          .then(function(result) {
-            return { type: "method", hits: result["hits"]["hits"] };
-          })
+          .then(result => ({ type: "method", hits: result.hits.hits }))
       );
     }
     Promise.all(promises).then(
-      function(results) {
-        res.json({ results: results });
+      results => {
+        res.json({ results });
       },
-      function failure(error) {
-        console.log("error", error);
+      error => {
+        log.error("error", error);
         res.status(500).json(error);
       }
     );
   } else {
-    let promises = [];
+    const promises = [];
     if (includeCases) {
       promises.push(
         es
@@ -160,9 +154,7 @@ router.get("/", function(req, res) {
             type: "case",
             match_all: {}
           })
-          .then(function(result) {
-            return { type: "case", hits: result["hits"]["hits"] };
-          })
+          .then(result => ({ type: "case", hits: result.hits.hits }))
       );
     }
     if (includeOrgs) {
@@ -173,9 +165,7 @@ router.get("/", function(req, res) {
             type: "organization",
             match_all: {}
           })
-          .then(function(result) {
-            return { type: "organization", hits: result["hits"]["hits"] };
-          })
+          .then(result => ({ type: "organization", hits: result.hits.hits }))
       );
     }
     if (includeMethods) {
@@ -186,17 +176,15 @@ router.get("/", function(req, res) {
             type: "method",
             match_all: {}
           })
-          .then(function(result) {
-            return { type: "method", hits: result["hits"]["hits"] };
-          })
+          .then(result => ({ type: "method", hits: result.hits.hits }))
       );
     }
     Promise.all(promises).then(
-      function(results) {
-        res.json({ results: results });
+      results => {
+        res.json({ results });
       },
-      function failure(error) {
-        console.log("error", error);
+      error => {
+        log.error("error", error);
         res.status(500).json(error);
       }
     );

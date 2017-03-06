@@ -1,9 +1,8 @@
-"use strict";
-let express = require("express");
+const express = require("express");
 /* eslint-disable new-cap */
-let router = express.Router();
+const router = express.Router();
 /* eslint-enable new-cap */
-let db = require("../helpers/db");
+const db = require("../helpers/db");
 
 /**
  * @api {get} /users List users 
@@ -34,20 +33,18 @@ let db = require("../helpers/db");
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.get("/", function(req, res, next) {
+router.get("/", (req, res, next) => {
   // TODO figure out about pagination -- for now, return everything.
   db
     .any("select * from users")
-    .then(function(data) {
+    .then(data => {
       res.status(200).json({
         status: "success",
-        data: data,
+        data,
         message: "Retrieved ALL users"
       });
     })
-    .catch(function(err) {
-      return next(err);
-    });
+    .catch(err => next(err));
 });
 
 /**
@@ -76,20 +73,18 @@ router.get("/", function(req, res, next) {
  *
  */
 
-router.get("/get/:userId", function edituserById(req, res, next) {
-  let userId = parseInt(req.params.userId);
+router.get("/get/:userId", (req, res, next) => {
+  const userId = parseInt(req.params.userId, 10);
   db
     .one("select * from users where id = $1", userId)
-    .then(function(data) {
+    .then(data => {
       res.status(200).json({
         status: "success",
-        data: data,
+        data,
         message: "Retrieved ONE user"
       });
     })
-    .catch(function(err) {
-      return next(err);
-    });
+    .catch(err => next(err));
 });
 
 /**
@@ -117,45 +112,41 @@ router.get("/get/:userId", function edituserById(req, res, next) {
  *
  */
 
-router.post("/update", function updateUser(req, res, next) {
-  console.log(req.body.user);
-  if (req.body.secretToken != process.env.SECRET_TOKEN) {
+router.post("/update", (req, res, next) => {
+  if (req.body.secretToken !== process.env.SECRET_TOKEN) {
     res.status(401).json({
       status: "unauthorized",
       message: "Call didn't pass in right secret token"
     });
   } else {
     // See if the user exists.
-    let userId = req.body.user.user_id;
-    let name = req.body.user.name;
+    const userId = req.body.user.user_id;
+    const name = req.body.user.name;
     db
       .one("select * from users where id = $1", userId)
-      .then(function(data) {
+      .then(data => {
         // If user exists, do an update
         db
           .none("update users set name=$1 where id=$4", [name, userId])
-          .then(function() {
+          .then(() => {
             res.status(200).json({
               status: "success",
               message: "Updated user"
             });
           })
-          .catch(function(err) {
-            return next(err);
-          });
+          .catch(err => next(err));
       })
-      .catch(function(err) { /* this feels like it assumes what the error was */
+      .catch(err => {
+        /* this feels like it assumes what the error was */
         db
-          .none("insert into users(name)" + "values(${name})", req.body.user)
-          .then(function() {
+          .none(`insert into users(name) values(${name})`, req.body.user)
+          .then(() => {
             res.status(200).json({
               status: "success",
               message: "Inserted user"
             });
           })
-          .catch(function(err) {
-            return next(err);
-          });
+          .catch(err => next(err));
       });
   }
 });

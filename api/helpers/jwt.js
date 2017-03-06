@@ -11,7 +11,7 @@ if (!process.env.AUTH0_CLIENT_ID) {
 }
 
 // Initialize express-jwt
-const jwt = function() {
+const jwt = function signer() {
   return ejwt({
     secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, "base64"),
     audience: process.env.AUTH0_CLIENT_ID

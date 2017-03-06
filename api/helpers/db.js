@@ -1,4 +1,5 @@
 const promise = require("bluebird");
+const log = require("winston");
 
 const options = {
   // Initialization Options
@@ -18,8 +19,8 @@ try {
     config.ssl = true;
   }
 } catch (e) {
-  console.log("# Error parsing DATABASE_URL environment variable");
+  log.error("# Error parsing DATABASE_URL environment variable");
 }
 const db = pgp(config);
 
-module.exports = (exports = db);
+module.exports = db;
