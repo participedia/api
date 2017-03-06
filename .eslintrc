@@ -1,45 +1,30 @@
 {
-"env": {
-        "browser": true,
-        "node": true,
-        "es6": true,
-        "jest": true,
-        "jquery": true
-    },
-    "parser": "babel-eslint",
-    "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "arrowFunctions": true,
-            "binaryLiterals": true,
-            "blockBindings": true,
-            "classes": true,
-            "defaultParams": true,
-            "destructuring": true,
-            "forOf": true,
-            "generators": true,
-            "modules": true,
-            "objectLiteralComputedProperties": true,
-            "objectLiteralDuplicateProperties": true,
-            "objectLiteralShorthandMethods": true,
-            "objectLiteralShorthandProperties": true,
-            "octalLiterals": true,
-            "regexUFlag": true,
-            "regexYFlag": true,
-            "spread": true,
-            "superInFunctions": true,
-            "templateStrings": true,
-            "unicodeCodePointEscapes": true,
-            "globalReturn": true,
-            "jsx": true,
-            "experimentalObjectRestSpread": true
-        }
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "strict": 0
+  "extends": [
+    "airbnb",
+    "plugin:jasmine/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "jasmine",
+    "prettier"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2016,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
     }
+  },
+  "env": {
+    "es6": true,
+    "jasmine": true,
+    "node": true
+  },
+  "rules": {
+    "require-jsdoc": "off",
+    "react/prop-types": "off",
+    "camelcase": "off",
+    "prettier/prettier": "warn"
+  }
 }

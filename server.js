@@ -1,9 +1,8 @@
-'use strict'
-var process = require('process')
-require('dotenv').config({silent: process.env.NODE_ENV === 'production'})
-var http = require('http')
-var app = require('./app')
+const log = require("winston");
+require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
+const http = require("http");
+const app = require("./app");
 
-http.createServer(app).listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'))
-})
+http.createServer(app).listen(app.get("port"), () => {
+  log.info(`Express server listening on port ${app.get("port")}`);
+});

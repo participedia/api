@@ -1,24 +1,30 @@
-var jwt = require('./jwt')()
+const log = require("winston");
 
-function userHas (req, groupName, errCB, okCB) {
+function userHas(req, groupName, errCB, okCB) {
   try {
-      user = req.user
-      if (user && user.app_metadata && user.app_metadata.authorization &&
-          user.app_metadata.authorization.groups) {
-        if (user.app_metadata.authorization.groups.indexOf(groupName) === -1) {
-          errCB && errCB(err)
-        } else {
-          okCB && okCB()
+    const user = req.user;
+    if (
+      user &&
+      user.app_metadata &&
+      user.app_metadata.authorization &&
+      user.app_metadata.authorization.groups
+    ) {
+      if (user.app_metadata.authorization.groups.indexOf(groupName) === -1) {
+        if (errCB) {
+          errCB();
         }
-      } else {
-        errCB("no user")
+      } else if (okCB) {
+        okCB();
       }
+    } else {
+      errCB("no user");
+    }
   } catch (e) {
-    console.log('exception in userHas', e)
-    errCB("exception in userHas")
+    log.error("exception in userHas", e);
+    errCB("exception in userHas");
   }
 }
 
 module.exports = {
   user_has: userHas
-}
+};

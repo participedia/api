@@ -1,14 +1,11 @@
-'use strict'
-var express = require('express')
-var router = express.Router()
-var groups = require('../helpers/groups')
-var es = require('../helpers/es')
-var ddb = require('../helpers/ddb')
-var getAuthorByAuthorID = require('../helpers/getAuthor')
-var AWS = require("aws-sdk");
-var Bodybuilder = require('bodybuilder')
-var jsonStringify = require('json-pretty');
-
+"use strict";
+let express = require("express");
+/* eslint-disable new-cap */
+let router = express.Router();
+/* eslint-enable new-cap */ let groups = require("../helpers/groups");
+let es = require("../helpers/es");
+let getAuthorByAuthorID = require("../helpers/getAuthor");
+let AWS = require("aws-sdk");
 
 /**
  * @api {post} /method/new Create new method
@@ -34,29 +31,39 @@ var jsonStringify = require('json-pretty');
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.post('/new', function newMethod(req, res) {
-  groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
-    res.status(401).json({message: 'access denied - user does not have proper authorization'})
-    return
-  }, function () {
-    console.log('user is in curators group')
-    // figure out what ElasticSearch query this corresponds to
-    // sign with with AWS4 module
-    es.index({
-      index: 'pp',
-      type: 'method',
-      body: req.body
-    }, function (error, response) {
-      if (error) {
-        res.status(error.status).json({message: error.message})
-      } else {
-        // console.log(response)
-        res.status(200).json(req.body)
-      }
-    })
-  })
-})
+router.post("/new", function newMethod(req, res) {
+  groups.user_has(
+    req,
+    "Contributors",
+    function() {
+      console.log("user doesn't have Contributors group membership");
+      res.status(401).json({
+        message: "access denied - user does not have proper authorization"
+      });
+      return;
+    },
+    function() {
+      console.log("user is in curators group");
+      // figure out what ElasticSearch query this corresponds to
+      // sign with with AWS4 module
+      es.index(
+        {
+          index: "pp",
+          type: "method",
+          body: req.body
+        },
+        function(error, response) {
+          if (error) {
+            res.status(error.status).json({ message: error.message });
+          } else {
+            // console.log(response)
+            res.status(200).json(req.body);
+          }
+        }
+      );
+    }
+  );
+});
 
 /**
  * @api {put} /method/:id  Submit a new version of a method
@@ -84,16 +91,24 @@ router.post('/new', function newMethod(req, res) {
  *
  */
 
-router.put('/:id', function editMethodById (req, res) {
-  groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
-    res.status(401).json({message: 'access denied - user does not have proper authorization'})
-    return
-  }, function () {
-    var methodId = req.swagger.params.id.value
-    var methodBody = req.body
-    res.status(200).json(req.body)
-  })})
+router.put("/:id", function editMethodById(req, res) {
+  groups.user_has(
+    req,
+    "Contributors",
+    function() {
+      console.log("user doesn't have Contributors group membership");
+      res.status(401).json({
+        message: "access denied - user does not have proper authorization"
+      });
+      return;
+    },
+    function() {
+      // let methodId = req.swagger.params.id.value;
+      // let methodBody = req.body;
+      res.status(200).json(req.body);
+    }
+  );
+});
 
 /**
  * @api {get} /method/:id Get the last version of a method
@@ -121,25 +136,25 @@ router.put('/:id', function editMethodById (req, res) {
  *
  */
 
-router.get('/:id', function editMethodById (req, res) {
+router.get("/:id", function editMethodById(req, res) {
   // Get the method for dynamodb
   // get the author from dynamodb
 
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  var params = {
-      TableName : "pp_methods",
-      Limit : 1,
-      ScanIndexForward: false, // this will return the last row with this id
-      KeyConditionExpression: "id = :id",
-      ExpressionAttributeValues: {
-          ":id":req.params.id
-      }
+  let docClient = new AWS.DynamoDB.DocumentClient();
+  let params = {
+    TableName: "pp_methods",
+    Limit: 1,
+    ScanIndexForward: false, // this will return the last row with this id
+    KeyConditionExpression: "id = :id",
+    ExpressionAttributeValues: {
+      ":id": req.params.id
+    }
   };
 
   docClient.query(params, function(err, data) {
     if (err) {
       console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-      res.status(500).json(err)
+      res.status(500).json(err);
     } else {
       let method = data.Items[0];
       if (method) {
@@ -149,17 +164,21 @@ router.get('/:id', function editMethodById (req, res) {
             res.status(200).json({
               OK: true,
               data: data.Items
-            })
+            });
           } else {
-            res.status(500).json({"error": "No author record found for id="+method.author_uid});
+            res.status(500).json({
+              error: "No author record found for id=" + method.author_uid
+            });
           }
-        })
+        });
       } else {
-        res.status(500).json({"error": "No method found for id =" + req.params.id});
+        res
+          .status(500)
+          .json({ error: "No method found for id =" + req.params.id });
       }
     }
   });
-})
+});
 
 /**
  * @api {delete} /method/:id Delete a method
@@ -182,15 +201,22 @@ router.get('/:id', function editMethodById (req, res) {
  *
  */
 
-router.delete('/:id', function deleteMethod (req, res) {
-  groups.user_has(req, 'Contributors', function () {
-    console.log("user doesn't have Contributors group membership")
-    res.status(401).json({message: 'access denied - user does not have proper authorization'})
-    return
-  }, function () {
-    var id = req.swagger.params.id.value
-    res.status(200).json(req.body)
-  })
-})
+router.delete("/:id", function deleteMethod(req, res) {
+  groups.user_has(
+    req,
+    "Contributors",
+    function() {
+      console.log("user doesn't have Contributors group membership");
+      res.status(401).json({
+        message: "access denied - user does not have proper authorization"
+      });
+      return;
+    },
+    function() {
+      // let id = req.swagger.params.id.value;
+      res.status(200).json(req.body);
+    }
+  );
+});
 
-module.exports = router
+module.exports = router;

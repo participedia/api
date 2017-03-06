@@ -1,22 +1,26 @@
-var options = {
+const promise = require("bluebird");
+const log = require("winston");
+
+const options = {
   // Initialization Options
   promiseLib: promise
 };
-var promise = require('bluebird');
-var pgp = require('pg-promise')(options);
-var connectionString = process.env.DATABASE_URL;
-var parse = require('pg-connection-string').parse;
-var log = require('winston')
-var config;
+const pgp = require("pg-promise")(options);
+
+const connectionString = process.env.DATABASE_URL;
+
+const parse = require("pg-connection-string").parse;
+
+let config;
 
 try {
-  config = parse(connectionString)
-  if (process.env.NODE_ENV !== "test") {
-    config['ssl'] = true
+  config = parse(connectionString);
+  if (process.env.NODE_ENV !== "test" && config.host !== "localhost") {
+    config.ssl = true;
   }
 } catch (e) {
-  console.log("# Error parsing DATABASE_URL environment variable")
+  log.error("# Error parsing DATABASE_URL environment variable");
 }
-var db = pgp(config);
+const db = pgp(config);
 
-module.exports = exports = db
+module.exports = db;

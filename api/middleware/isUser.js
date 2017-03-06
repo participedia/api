@@ -1,20 +1,25 @@
-'use strict'
-var express = require('express')
-var router = express.Router()
-var groups = require('../helpers/groups')
+const groups = require("../helpers/groups");
+const log = require("winston");
 
-function isUser (req, res, next) {
+function isUser(req, res, next) {
   try {
-    groups.user_has(req, 'Contributors', function (err) {
-      console.log("in isUser, user doesn't have Contributors group membership")
-      res.status(401).json({message: 'access denied - user does not have proper authorization'})
-      return
-    }, function () {
-      next();
-    })
+    groups.user_has(
+      req,
+      "Contributors",
+      err => {
+        log.error("in isUser, user doesn't have Contributors group membership");
+        res.status(401).json({
+          message: "access denied - user does not have proper authorization",
+          error: err
+        });
+      },
+      () => {
+        next();
+      }
+    );
   } catch (e) {
-    console.log("Exception in isUser", e);
+    log.error("Exception in isUser", e);
   }
 }
 
-module.exports = isUser
+module.exports = isUser;
