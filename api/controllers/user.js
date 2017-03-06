@@ -144,7 +144,7 @@ router.post("/update", function updateUser(req, res, next) {
             return next(err);
           });
       })
-      .catch(function(err) {
+      .catch(function(err) { /* this feels like it assumes what the error was */
         db
           .none("insert into users(name)" + "values(${name})", req.body.user)
           .then(function() {

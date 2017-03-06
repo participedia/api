@@ -1,11 +1,10 @@
-"use strict";
-let express = require("express");
+const express = require("express");
 /* eslint-disable new-cap */
-let router = express.Router();
+const router = express.Router();
 /* eslint-enable new-cap */
-let groups = require("../helpers/groups");
-let db = require("../helpers/db");
-let log = require("winston");
+const groups = require("../helpers/groups");
+const db = require("../helpers/db");
+const log = require("winston");
 
 /**
  * @api {get} /bookmark/:userId List bookmarks for a given user 
@@ -32,29 +31,28 @@ let log = require("winston");
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.get("/list/:userId", function(req, res, next) {
+router.get("/list/:userId", (req, res, next) => {
   // Find out if userID exists in user table
   try {
-    let userId = req.params.userId;
+    const userId = req.params.userId;
     db
       .any("SELECT * FROM bookmarks WHERE userid=$1", [userId])
       .then(data => {
         res.json({
           success: true,
           status: "success",
-          data: data,
+          data,
           message: "Retrieved ALL users"
         });
       })
-      .catch(function(err) {
+      .catch(error => {
         res.json({
           success: false,
           error: error.message || error
         });
-        log.error(err);
+        log.error(error);
       });
   } catch (err) {
-    console.log(err);
     log.error(err);
     return next(err);
   }
@@ -85,17 +83,17 @@ router.get("/list/:userId", function(req, res, next) {
  *
  */
 
-router.post("/add", function addBookmark(req, res, next) {
+router.post("/add", (req, res, next) => {
   try {
     groups.user_has(
       req,
       "Contributors",
-      function() {
+      () => {
         res.status(401).json({
           message: "access denied - user does not have proper authorization"
         });
       },
-      function() {
+      () => {
         if (!req.body.bookmarkType) {
           log.error("Required parameter (bookmarkType) wasn't specified");
           res.status(400).json({
@@ -110,7 +108,7 @@ router.post("/add", function addBookmark(req, res, next) {
             .json({ error: "Required parameter (thingID) wasn't specified" });
           return;
         }
-        let userId = req.user.user_id;
+        const userId = req.user.user_id;
         if (!userId) {
           log.error("No user");
           res.status(400).json({ error: "User (userId) wasn't specified" });
@@ -121,26 +119,27 @@ router.post("/add", function addBookmark(req, res, next) {
             "insert into bookmarks(bookmarktype, thingid, userid) VALUES($1,$2,$3) returning id",
             [req.body.bookmarkType, req.body.thingID, userId]
           )
-          .then(function(data) {
+          .then(data => {
             res.json({
               success: true,
               status: "success",
-              message: "Inserted bookmark, returning ID"
+              message: "Inserted bookmark, returning ID",
+              data: data
             });
           })
-          .catch(function(err) {
+          .catch(error => {
             res.json({
               success: false,
               error: error.message || error
             });
-            log.error("Exception in INSERT", err);
-            return next(err);
+            log.error("Exception in INSERT", error);
+            return next(error);
           });
       }
     );
   } catch (e) {
     log.error(e);
-    return next(err);
+    return next(e);
   }
 });
 
@@ -168,43 +167,37 @@ router.post("/add", function addBookmark(req, res, next) {
  *
  */
 
-router.delete("/delete/:bookmarkID", function updateUser(req, res, next) {
+router.delete("/delete/:bookmarkID", (req, res, next) => {
   groups.user_has(
     req,
     "Contributors",
-    function() {
+    () => {
       res.status(401).json({
         message: "access denied - user does not have proper authorization"
       });
-      return;
     },
-    function() {
-      let userId = req.user.user_id;
-      let bookmarkID = parseInt(req.params.bookmarkID);
+    () => {
+      const userId = req.user.user_id;
+      const bookmarkID = parseInt(req.params.bookmarkID, 10);
       db
         .one("select * from bookmarks where ID = $1", bookmarkID)
-        .then(function(data) {
-          if (data.user != userId) {
+        .then(data => {
+          if (data.user !== userId) {
             res.status(401).json({
               message: "access denied - user is not the owner of the bookmark"
             });
           } else {
             db
               .none("delete from bookmarks where id = $1", bookmarkID)
-              .then(function(data) {
-                res.status(200).json({
-                  status: "success",
-                  message: `Removed a bookmark`
-                });
-              })
-              .catch(function(err) {
-                return next(err);
-              });
+              .then(data => res.status(200).json({
+                status: "success",
+                message: 'Removed a bookmark',
+                data: data
+              }))
+              .catch(err => next(err));
           }
         })
-        .catch(function(err) {
-          return next(err);
-        });
+        .catch(err => next(err));
     }
   );
 });

@@ -1,10 +1,10 @@
-var tokens = require('./setupenv')
-var request = require('supertest')
-var app = require('../app')
-var log = require('winston')
+/* eslint-env node, jasmine */
+
+let tokens = require('./setupenv')
+let app = require('../app')
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let should = chai.should();
+chai.should();
 chai.use(chaiHttp);
 
 describe('Cases', () => {
@@ -49,7 +49,7 @@ describe('Cases', () => {
         });
     });
   });
-  let userID = tokens.user_payload.user_id;
+  // let userID = tokens.user_payload.user_id;
   describe('Counting by country', () => {
     it('returns stuff', (done) => {
       chai.request(app)

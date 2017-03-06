@@ -1,6 +1,5 @@
 // For testing, we generate JWTs for pretend users.  Best not to use any secrets.
 var jwt = require('jsonwebtoken')
-var test = require('tape')
 
 // We expect to not have an AUTH0_SECRET
 var process = require('process')

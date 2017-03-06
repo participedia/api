@@ -1,12 +1,11 @@
 {
   "extends": [
-    "google",
-    "plugin:react/recommended",
-    "prettier",
-    "prettier/react"
+    "airbnb",
+    "plugin:jasmine/recommended",
+    "prettier"
   ],
   "plugins": [
-    "react",
+    "jasmine",
     "prettier"
   ],
   "parser": "babel-eslint",
@@ -19,6 +18,7 @@
   },
   "env": {
     "es6": true,
+    "jasmine": true,
     "node": true
   },
   "rules": {

@@ -1,6 +1,8 @@
+const log = require("winston");
+
 function userHas(req, groupName, errCB, okCB) {
   try {
-    user = req.user;
+    const user = req.user;
     if (
       user &&
       user.app_metadata &&
@@ -8,7 +10,7 @@ function userHas(req, groupName, errCB, okCB) {
       user.app_metadata.authorization.groups
     ) {
       if (user.app_metadata.authorization.groups.indexOf(groupName) === -1) {
-        errCB && errCB(err);
+        errCB && errCB();
       } else {
         okCB && okCB();
       }
@@ -16,7 +18,7 @@ function userHas(req, groupName, errCB, okCB) {
       errCB("no user");
     }
   } catch (e) {
-    console.log("exception in userHas", e);
+    log.error("exception in userHas", e);
     errCB("exception in userHas");
   }
 }

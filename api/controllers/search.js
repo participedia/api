@@ -141,7 +141,7 @@ router.get("/", function(req, res) {
           })
       );
     }
-    Promises.all(promises).then(
+    Promise.all(promises).then(
       function(results) {
         res.json({ results: results });
       },
@@ -191,7 +191,7 @@ router.get("/", function(req, res) {
           })
       );
     }
-    Promises.all(promises).then(
+    Promise.all(promises).then(
       function(results) {
         res.json({ results: results });
       },

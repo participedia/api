@@ -1,16 +1,14 @@
-"use strict";
-
-let path = require("path");
-let process = require("process");
+const path = require("path");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
-let app = require("express")();
-let jwt = require("./api/helpers/jwt")();
+const app = require("express")();
+const log = require("winston");
+const jwt = require("express-jwt");
 
 if (
   process.env.NODE_ENV === "test" &&
   process.env.AUTH0_CLIENT_SECRET !== "notasecret"
 ) {
-  console.log(
+  log.error(
     "CODING ERROR: Someone imported 'app' before 'setupenv' in the test suite"
   );
   process.exit(1);
@@ -21,26 +19,26 @@ if (
 //   appRoot: path.join(__dirname, ".."), // required config
 //   validateResponse: false
 // };
-let express = require("express");
-let compression = require("compression");
-let AWS = require("aws-sdk");
+const express = require("express");
+const compression = require("compression");
+const AWS = require("aws-sdk");
+const casecontroller = require("./api/controllers/case");
+const search = require("./api/controllers/search");
+const organization = require("./api/controllers/organization");
+const user = require("./api/controllers/user");
+const bookmark = require("./api/controllers/bookmark");
+const method = require("./api/controllers/method");
+const errorhandler = require("errorhandler");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
+const cors = require("cors");
+const isUser = require("./api/middleware/isUser");
+
+const port = process.env.PORT || 3001;
+
 AWS.config.update({ region: "us-east-1" });
 app.use(compression());
-let port = process.env.PORT || 3001;
-let case_ = require("./api/controllers/case");
-let search = require("./api/controllers/search");
-let organization = require("./api/controllers/organization");
-let user = require("./api/controllers/user");
-let bookmark = require("./api/controllers/bookmark");
-let method = require("./api/controllers/method");
-let errorhandler = require("errorhandler");
-let morgan = require("morgan");
-let bodyParser = require("body-parser");
-let methodOverride = require("method-override");
-let cors = require("cors");
-let isUser = require("./api/middleware/isUser");
-let jwt = require("express-jwt");
-
 app.set("port", port);
 app.use(morgan("dev"));
 app.use(methodOverride());
@@ -56,12 +54,12 @@ app.use(
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 
-let cache = require("apicache").middleware;
+const cache = require("apicache").middleware;
 // TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
 
 app.use("/search", cache("5 minutes"), search);
 
-app.use("/case", case_);
+app.use("/case", casecontroller);
 app.use("/organization", organization);
 app.use("/method", method);
 app.use("/user", user);

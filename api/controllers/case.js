@@ -1,14 +1,12 @@
-"use strict";
-let express = require("express");
+const express = require("express");
 /* eslint-disable new-cap */
-let router = express.Router();
+const router = express.Router();
 /* eslint-enable new-cap */
-let groups = require("../helpers/groups");
-let es = require("../helpers/es");
-let cache = require("apicache");
-let log = require("winston");
-
-let db = require("../helpers/db");
+const groups = require("../helpers/groups");
+const es = require("../helpers/es");
+const cache = require("apicache");
+const log = require("winston");
+const db = require("../helpers/db");
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -37,16 +35,16 @@ let db = require("../helpers/db");
 
 // TODO: figure out if the choropleth should show cases or all things
 
-router.get("/countsByCountry", function(req, res) {
+router.get("/countsByCountry", (req, res) => {
   db
     .query(
       "select $1~.$3~, count($1~.$3~) from $1~, $2~ where $1~.$4~ = $2~.$5~ group by $1~.$3~;",
       ["geolocation", "cases", "country", "id", "location"]
     )
-    .then(function(data) {
+    .then(data => {
       // convert array to object
-      let countryCounts = {};
-      data.forEach(function(row) {
+      const countryCounts = {};
+      data.forEach(row => {
         if (row.country === null) {
           return;
         }
@@ -55,15 +53,15 @@ router.get("/countsByCountry", function(req, res) {
       res.status(200).json({
         OK: true,
         data: {
-          countryCounts: countryCounts
+          countryCounts
         }
       });
     })
-    .catch(function(error) {
+    .catch(error => {
       log.error("Exception in /case/countsByCountry => %s", error);
       res.status(500).json({
         OK: false,
-        error: error
+        error
       });
     });
 });
@@ -92,27 +90,27 @@ router.get("/countsByCountry", function(req, res) {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.post("/new", function(req, res, next) {
+router.post("/new", (req, res) => {
   groups.user_has(
     req,
     "Contributors",
-    function() {
+    () => {
       res.status(401).json({
         message: "access denied - user does not have proper authorization"
       });
     },
-    function() {
+    () => {
       es.index(
         {
           index: "pp",
           type: "case",
           body: req.body
         },
-        function(error, response) {
+        (error, response) => {
           if (error) {
             res.status(error.status).json({ message: error.message });
           } else {
-            res.status(200).json(req.body);
+            res.status(200).json(req.body); /* should this be response? */
           }
         }
       );
@@ -146,19 +144,18 @@ router.post("/new", function(req, res, next) {
  *
  */
 
-router.put("/:caseId", function editCaseById(req, res) {
+router.put("/:caseId", (req, res) => {
   cache.clear();
   groups.user_has(
     req,
     "Contributors",
-    function() {
-      console.error("user doesn't have Contributors group membership");
+    () => {
+      log.error("user doesn't have Contributors group membership");
       res.status(401).json({
         message: "access denied - user does not have proper authorization"
       });
-      return;
     },
-    function() {
+    () => {
       //   let caseId = req.swagger.params.caseId.value;
       //   let caseBody = req.body;
       res.status(200).json(req.body);
@@ -192,10 +189,10 @@ router.put("/:caseId", function editCaseById(req, res) {
  *
  */
 
-router.get("/:caseId", function getCaseById(req, res) {
+router.get("/:caseId", (req, res) => {
   db
-    .task(function(t) {
-      let caseId = req.params.caseId;
+    .task(t => {
+      const caseId = req.params.caseId;
       return t.batch([
         t.one(
           "SELECT * FROM cases, case__localized_texts WHERE cases.id = case__localized_texts.case_id AND  cases.id = $1;",
@@ -221,28 +218,26 @@ router.get("/:caseId", function getCaseById(req, res) {
           "SELECT * FROM case__videos WHERE case__videos.case_id = $1",
           caseId
         ),
-        t.task(function(t) {
-          return t
+        t.task(t2 =>
+          t2
             .one("SELECT location FROM cases WHERE id = $1", caseId)
-            .then(function(the_case) {
-              return t.one(
+            .then(the_case =>
+              t2.one(
                 "SELECT * from geolocation where geolocation.id = $1",
                 the_case.location
-              );
-            });
-        })
+              )))
       ]);
     })
-    .then(function(data) {
-      let the_case = data[0];
+    .then(data => {
+      const the_case = data[0];
       the_case.authors = data[1]; // authors
-      let attachments = data[2]; // files and images
+      const attachments = data[2]; // files and images
       the_case.other_images = [];
       the_case.files = [];
-      attachments.forEach(function(att) {
-        if (att.type == "file") {
+      attachments.forEach(att => {
+        if (att.type === "file") {
           the_case.files.push(att);
-        } else if (att.type == "image") {
+        } else if (att.type === "image") {
           if (att.is_lead) {
             the_case.lead_image = att;
           } else {
@@ -259,11 +254,11 @@ router.get("/:caseId", function getCaseById(req, res) {
         data: the_case
       });
     })
-    .catch(function(error) {
+    .catch(error => {
       log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
       res.status(500).json({
         OK: false,
-        error: error
+        error
       });
     });
 });
@@ -289,19 +284,18 @@ router.get("/:caseId", function getCaseById(req, res) {
  *
  */
 
-router.delete("/:caseId", function editCaseById(req, res) {
+router.delete("/:caseId", (req, res) => {
   cache.clear();
   groups.user_has(
     req,
     "Contributors",
-    function() {
-      console.error("user doesn't have Contributors group membership");
+    () => {
+      log.error("user doesn't have Contributors group membership");
       res.status(401).json({
         message: "access denied - user does not have proper authorization"
       });
-      return;
     },
-    function() {
+    () => {
       //   let caseId = req.swagger.params.caseId.value;
       //   let caseBody = req.body;
       res.status(200).json(req.body);
