@@ -15,7 +15,7 @@ let config;
 
 try {
   config = parse(connectionString);
-  if (process.env.NODE_ENV !== "test") {
+  if (process.env.NODE_ENV !== "test" && config.host !== "localhost") {
     config.ssl = true;
   }
 } catch (e) {
