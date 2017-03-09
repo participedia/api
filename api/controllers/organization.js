@@ -130,31 +130,14 @@ router.put('/:id', function editOrgById (req, res) {
          return t.batch([
              t.one('SELECT * FROM organizations, organization__localized_texts WHERE organizations.id = organization__localized_texts.organization_id AND  organizations.id = $1;',organizationId),
              t.any('SELECT users.name, users.id, organization__authors.timestamp FROM users, organization__authors WHERE users.id = organization__authors.author_id AND organization__authors.organization_id = $1', organizationId),
-             t.any('SELECT * FROM organization__attachments WHERE organization__attachments.organization_id = $1', organizationId),
              t.any('SELECT tag FROM organization__tags WHERE organization__tags.organization_id = $1', organizationId),
              t.any('SELECT * FROM organization__videos WHERE organization__videos.organization_id = $1', organizationId),
-             t.one('SELECT * FROM organization__locations WHERE organization__locations.organization_id = $1', organizationId)
          ]);
     }).then(function(data){
         let organization = data[0];
         organization.authors = data[1]; // authors
-        let attachments = data[2]; // files and images
-        organization.other_images = []
-        organization.files = []
-        attachments.forEach(function(att){
-            if (att.type == 'file'){
-                organization.files.push(att);
-            }else if (att.type == 'image'){
-                if (att.is_lead){
-                    organization.lead_image = att;
-                }else{
-                    organization.other_images.push(att);
-                }
-            }
-        });
-        organization.tags = data[3];
-        organization.videos = data[4];
-        organization.location = data[5]; // geolocation
+        organization.tags = data[2];
+        organization.videos = data[3];
          res.status(200).json({
              OK: true,
              data: organization

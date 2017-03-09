@@ -128,29 +128,14 @@ router.get('/:methodId', function getmethodById (req, res) {
         return t.batch([
             t.one('SELECT * FROM methods, method__localized_texts WHERE methods.id = method__localized_texts.method_id AND  methods.id = $1;',methodId),
             t.any('SELECT users.name, users.id, method__authors.timestamp FROM users, method__authors WHERE users.id = method__authors.author AND method__authors.method_id = $1', methodId),
-            t.any('SELECT * FROM method__attachments WHERE method__attachments.method_id = $1', methodId),
             t.any('SELECT tag FROM method__tags WHERE method__tags.method_id = $1', methodId),
             t.any('SELECT * FROM method__videos WHERE method__videos.method_id = $1', methodId),
         ]);
    }).then(function(data){
        let method = data[0];
        method.authors = data[1]; // authors
-       let attachments = data[2]; // files and images
-       method.other_images = []
-       method.files = []
-       attachments.forEach(function(att){
-           if (att.type == 'file'){
-               method.files.push(att);
-           }else if (att.type == 'image'){
-               if (att.is_lead){
-                   method.lead_image = att;
-               }else{
-                   method.other_images.push(att);
-               }
-           }
-       });
-       method.tags = data[3];
-       method.videos = data[4];
+       method.tags = data[2];
+       method.videos = data[3];
         res.status(200).json({
             OK: true,
             data: method
