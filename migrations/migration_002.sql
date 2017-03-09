@@ -1,3 +1,6 @@
+/* Move locations from one general table to a table per object type like other
+   object properties. Reference them by object_id rather than by location_id */
+
 CREATE TABLE organization__locations (
     location_name TEXT,
     address1 TEXT,

@@ -250,3 +250,4 @@ CREATE TABLE bookmarks (
 \COPY case__videos (case_id,title,url) FROM 'migrations/case__videos.csv' WITH CSV HEADER
 
 \include 'migrations/migration_002.sql'
+\include 'migrations/migration_003.sql'
