@@ -67,33 +67,6 @@ router.get('/countsByCountry', function (req, res) {
     })
 });
 
-router.get('/countsByCountry2', function (req, res) {
-    db.query(
-        'SELECT geolocation.country, count(geolocation.country) FROM geolocation, cases WHERE geolocation.id = cases.location GROUP BY geolocation.country;'
-    ).then(function(data){
-        // convert array to object
-        var countryCounts = {};
-        data.forEach(function(row){
-            if (row.country === null){
-                return;
-            }
-            countryCounts[row.country.toLowerCase()] = row.count;
-        });
-        res.status(200).json({
-            OK: true,
-            data: {
-                countryCounts: countryCounts
-            }
-        })
-    }).catch(function(error){
-        log.error("Exception in /case/countsByCountry => %s", error)
-        res.status(500).json({
-            OK: false,
-            error: error
-        })
-    })
-});
-
 /**
  * @api {post} /case/new Create new case
  * @apiGroup Cases
