@@ -179,16 +179,12 @@ router.put('/:caseId', function editCaseById (req, res) {
          return t.batch([
              t.one('SELECT * FROM cases, case__localized_texts WHERE cases.id = case__localized_texts.case_id AND  cases.id = $1;',caseId),
              t.any('SELECT users.name, users.id, case__authors.timestamp FROM users, case__authors WHERE users.id = case__authors.author AND case__authors.case_id = $1', caseId),
-             t.any('SELECT case__methods.method_id, method__localized_texts.title FROM case__methods, method__localized_texts WHERE case__methods.case_id = $1 AND case__methods.method_id = method__localized_texts.method_id', caseId),
-             t.any('SELECT tag FROM case__tags WHERE case__tags.case_id = $1', caseId),
-             t.any('SELECT * FROM case__videos WHERE case__videos.case_id = $1', caseId)
+             t.any('SELECT case__methods.method_id, method__localized_texts.title FROM case__methods, method__localized_texts WHERE case__methods.case_id = $1 AND case__methods.method_id = method__localized_texts.method_id', caseId)
          ]);
     }).then(function(data){
         let the_case = data[0];
         the_case.authors = data[1]; // authors
         the_case.methods = data[2]
-        the_case.tags = data[3];
-        the_case.videos = data[4];
          res.status(200).json({
              OK: true,
              data: the_case

@@ -127,15 +127,11 @@ router.get('/:methodId', function getmethodById (req, res) {
         let methodId = req.params.methodId;
         return t.batch([
             t.one('SELECT * FROM methods, method__localized_texts WHERE methods.id = method__localized_texts.method_id AND  methods.id = $1;',methodId),
-            t.any('SELECT users.name, users.id, method__authors.timestamp FROM users, method__authors WHERE users.id = method__authors.author AND method__authors.method_id = $1', methodId),
-            t.any('SELECT tag FROM method__tags WHERE method__tags.method_id = $1', methodId),
-            t.any('SELECT * FROM method__videos WHERE method__videos.method_id = $1', methodId),
+            t.any('SELECT users.name, users.id, method__authors.timestamp FROM users, method__authors WHERE users.id = method__authors.author AND method__authors.method_id = $1', methodId)
         ]);
    }).then(function(data){
        let method = data[0];
        method.authors = data[1]; // authors
-       method.tags = data[2];
-       method.videos = data[3];
         res.status(200).json({
             OK: true,
             data: method

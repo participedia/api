@@ -129,15 +129,11 @@ router.put('/:id', function editOrgById (req, res) {
          let organizationId = req.params.organizationId;
          return t.batch([
              t.one('SELECT * FROM organizations, organization__localized_texts WHERE organizations.id = organization__localized_texts.organization_id AND  organizations.id = $1;',organizationId),
-             t.any('SELECT users.name, users.id, organization__authors.timestamp FROM users, organization__authors WHERE users.id = organization__authors.author_id AND organization__authors.organization_id = $1', organizationId),
-             t.any('SELECT tag FROM organization__tags WHERE organization__tags.organization_id = $1', organizationId),
-             t.any('SELECT * FROM organization__videos WHERE organization__videos.organization_id = $1', organizationId),
+             t.any('SELECT users.name, users.id, organization__authors.timestamp FROM users, organization__authors WHERE users.id = organization__authors.author_id AND organization__authors.organization_id = $1', organizationId)
          ]);
     }).then(function(data){
         let organization = data[0];
         organization.authors = data[1]; // authors
-        organization.tags = data[2];
-        organization.videos = data[3];
          res.status(200).json({
              OK: true,
              data: organization
