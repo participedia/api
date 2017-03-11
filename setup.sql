@@ -61,7 +61,8 @@ CREATE TABLE method__localized_texts (
     body TEXT,
     title TEXT NOT NULL,
     language TEXT NOT NULL, /* two-letter IANA language subtag */
-    method_id INTEGER REFERENCES methods(id)
+    method_id INTEGER REFERENCES methods(id),
+    CONSTRAINT method_id_langugage PRIMARY KEY(method_id, language)
 );
 
 /* Keep track of each day and time someone edits */
@@ -109,7 +110,8 @@ CREATE TABLE organization__localized_texts (
     body TEXT,
     title TEXT NOT NULL,
     language TEXT NOT NULL, /* two-letter IANA language subtag */
-    organization_id INTEGER REFERENCES organizations(id)
+    organization_id INTEGER REFERENCES organizations(id),
+    CONSTRAINT organization_id_language PRIMARY KEY(organization_id, language)
 );
 
 /* Keep track of each day and time someone edits */
@@ -182,7 +184,8 @@ CREATE TABLE case__localized_texts (
     body TEXT NOT NULL,
     title TEXT NOT NULL,
     language TEXT NOT NULL, /* two-letter IANA language subtag */
-    case_id INTEGER REFERENCES cases(id)
+    case_id INTEGER REFERENCES cases(id),
+    CONSTRAINT case_id_language PRIMARY KEY(case_id, language)
 );
 
 /* all methods referenced by a case */
@@ -253,3 +256,4 @@ CREATE TABLE bookmarks (
 \include 'migrations/migration_003.sql'
 \include 'migrations/migration_004.sql'
 \include 'migrations/migration_005.sql'
+\include 'migrations/migration_006.sql'
