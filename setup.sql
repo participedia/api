@@ -67,7 +67,7 @@ CREATE TABLE method__localized_texts (
 
 /* Keep track of each day and time someone edits */
 CREATE TABLE method__authors (
-    author INTEGER REFERENCES users(id),
+    user_id INTEGER REFERENCES users(id),
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     method_id INTEGER REFERENCES methods(id)
 );
@@ -116,7 +116,7 @@ CREATE TABLE organization__localized_texts (
 
 /* Keep track of each day and time someone edits */
 CREATE TABLE organization__authors (
-    author_id INTEGER REFERENCES users(id),
+    user_id INTEGER REFERENCES users(id),
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     organization_id INTEGER REFERENCES organizations(id)
 );
@@ -196,7 +196,7 @@ CREATE TABLE case__methods (
 
 /* Keep track of each day and time someone edits */
 CREATE TABLE case__authors (
-    author INTEGER REFERENCES users(id),
+    user_id INTEGER REFERENCES users(id),
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     case_id INTEGER REFERENCES cases(id)
 );
@@ -256,4 +256,4 @@ CREATE TABLE bookmarks (
 \include 'migrations/migration_003.sql'
 \include 'migrations/migration_004.sql'
 \include 'migrations/migration_005.sql'
-\include 'migrations/migration_006.sql'
+-- \include 'migrations/migration_006.sql'
