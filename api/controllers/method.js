@@ -11,7 +11,7 @@ var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 
-var db = require('../helpers/db')
+var {db, sql} = require('../helpers/db')
 
 /**
  * @api {post} /method/new Create new method
@@ -123,20 +123,14 @@ router.put('/:id', function editMethodById (req, res) {
  */
 
 router.get('/:methodId', function getmethodById (req, res) {
-    db.task(function(t){
-        let methodId = req.params.methodId;
-        return t.batch([
-            t.one('SELECT * FROM methods, method__localized_texts WHERE methods.id = method__localized_texts.method_id AND  methods.id = $1;',methodId),
-            t.any('SELECT users.name, users.id, method__authors.timestamp FROM users, method__authors WHERE users.id = method__authors.author AND method__authors.method_id = $1', methodId)
-        ]);
-   }).then(function(data){
-       let method = data[0];
-       method.authors = data[1]; // authors
+    db.one(sql('../sql/method_by_id.sql'), {methodId: req.params.methodId, lang: req.params.language || 'en'})
+    .then(function(method){
         res.status(200).json({
             OK: true,
             data: method
         })
-    }).catch(function(error){
+    })
+    .catch(function(error){
         log.error("Exception in GET /method/%s => %s", req.params.methodId, error)
         res.status(500).json({
             OK: false,

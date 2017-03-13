@@ -11,7 +11,7 @@ var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 
-var db = require('../helpers/db')
+var {db, sql} = require('../helpers/db')
 
 
 /**
@@ -125,15 +125,8 @@ router.put('/:id', function editOrgById (req, res) {
  */
 
  router.get('/:organizationId', function getorganizationById (req, res) {
-     db.task(function(t){
-         let organizationId = req.params.organizationId;
-         return t.batch([
-             t.one('SELECT * FROM organizations, organization__localized_texts WHERE organizations.id = organization__localized_texts.organization_id AND  organizations.id = $1;',organizationId),
-             t.any('SELECT users.name, users.id, organization__authors.timestamp FROM users, organization__authors WHERE users.id = organization__authors.author_id AND organization__authors.organization_id = $1', organizationId)
-         ]);
-    }).then(function(data){
-        let organization = data[0];
-        organization.authors = data[1]; // authors
+     db.one(sql('../sql/method_by_id.sql'), {organizationId: req.params.organizationId, lang: req.params.language || 'en'})
+    .then(function(organization){
          res.status(200).json({
              OK: true,
              data: organization

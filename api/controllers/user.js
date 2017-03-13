@@ -5,24 +5,13 @@ var groups = require('../helpers/groups')
 var cache = require('apicache')
 var log = require('winston')
 var jsonStringify = require('json-pretty');
-var db = require('../helpers/db')
+var {db, sql} = require('../helpers/db')
 
 
 
  router.get('/:userId', function getUserById (req, res) {
-     db.task(function(t){
-         let userId = req.params.userId;
-         return t.batch([
-             t.one('SELECT id, name FROM users WHERE users.id = $1;', userId),
-             t.any('SELECT case__authors.case_id, title FROM case__localized_texts, case__authors WHERE author = $1 AND case__localized_texts.case_id = case__authors.case_id', userId),
-             t.any('SELECT method__authors.method_id, title FROM method__localized_texts, method__authors WHERE author = $1 AND method__localized_texts.method_id =  method__authors.method_id', userId),
-             t.any('SELECT organization__authors.organization_id, title FROM organization__localized_texts, organization__authors WHERE author_id = $1 AND organization__localized_texts.organization_id = organization__authors.organization_id', userId),
-         ]);
-    }).then(function(data){
-        let user = data[0];
-        user.cases = data[1];
-        user.methods = data[2];
-        user.organizations = data[3];
+     db.one(sql('../sql/user_by_id.sql'), {userId: req.params.userId})
+    .then(function(user){
          res.status(200).json({
              OK: true,
              data: user

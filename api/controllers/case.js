@@ -11,7 +11,7 @@ var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 
-var db = require('../helpers/db')
+var {db, sql} = require('../helpers/db');
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -41,15 +41,11 @@ var db = require('../helpers/db')
 // TODO: figure out if the choropleth should show cases or all things
 
 router.get('/countsByCountry', function (req, res) {
-    db.query(
-        'SELECT (location).country, COUNT((location).country) FROM cases GROUP BY (location).country;'
-    ).then(function(data){
+    db.any(sql('../sql/cases_by_country.sql'))
+    .then(function(countries){
         // convert array to object
         var countryCounts = {};
-        data.forEach(function(row){
-            if (row.country === null){
-                return;
-            }
+        countries.forEach(function(row){
             countryCounts[row.country.toLowerCase()] = row.count;
         });
         res.status(200).json({
@@ -58,7 +54,8 @@ router.get('/countsByCountry', function (req, res) {
                 countryCounts: countryCounts
             }
         })
-    }).catch(function(error){
+    })
+    .catch(function(error){
         log.error("Exception in /case/countsByCountry => %s", error)
         res.status(500).json({
             OK: false,
@@ -174,22 +171,14 @@ router.put('/:caseId', function editCaseById (req, res) {
  */
 
  router.get('/:caseId', function getCaseById (req, res) {
-     db.task(function(t){
-         let caseId = req.params.caseId;
-         return t.batch([
-             t.one('SELECT * FROM cases, case__localized_texts WHERE cases.id = case__localized_texts.case_id AND  cases.id = $1;',caseId),
-             t.any('SELECT users.name, users.id, case__authors.timestamp FROM users, case__authors WHERE users.id = case__authors.author AND case__authors.case_id = $1', caseId),
-             t.any('SELECT case__methods.method_id, method__localized_texts.title FROM case__methods, method__localized_texts WHERE case__methods.case_id = $1 AND case__methods.method_id = method__localized_texts.method_id', caseId)
-         ]);
-    }).then(function(data){
-        let the_case = data[0];
-        the_case.authors = data[1]; // authors
-        the_case.methods = data[2]
+     db.one(sql('../sql/case_by_id.sql'), {caseId: req.params.caseId, lang: req.params.language || 'en'})
+     .then(function(the_case){
          res.status(200).json({
              OK: true,
              data: the_case
          })
-     }).catch(function(error){
+     })
+     .catch(function(error){
          log.error("Exception in GET /case/%s => %s", req.params.caseId, error)
          res.status(500).json({
              OK: false,

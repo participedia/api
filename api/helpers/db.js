@@ -2,6 +2,7 @@ var options = {
   // Initialization Options
   promiseLib: promise
 };
+const path = require('path');
 var promise = require('bluebird');
 var pgp = require('pg-promise')(options);
 var connectionString = process.env.DATABASE_URL;
@@ -19,4 +20,11 @@ try {
 }
 var db = pgp(config);
 
-module.exports = exports = db
+function sql(filename){
+    return new pgp.QueryFile(path.join(__dirname, filename), {minify: true});
+};
+
+module.exports = {
+    db: db,
+    sql: sql
+}
