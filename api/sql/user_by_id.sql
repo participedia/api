@@ -1,13 +1,53 @@
 SELECT
-    id,
-    name
+	users.name,
+	users.id,
+	to_json(cases_authored) cases,
+	to_json(methods_authored) methods,
+	to_json(organizations_authored) organizations
 FROM
-    users
+	users LEFT JOIN
+	(
+	    SELECT DISTINCT
+	         array_agg(ROW(authors.case_id, texts.title)) cases_authored, authors.user_id
+	    FROM
+	        case__localized_texts texts,
+	        case__authors authors
+	    WHERE
+	        texts.language = ${language} AND
+	        texts.case_id = authors.case_id
+	    GROUP BY
+	    	authors.user_id
+        HAVING
+            authors.user_id = ${userId}
+	) AS case_authors ON case_authors.user_id = users.id LEFT JOIN
+	(
+	    SELECT DISTINCT
+	         array_agg(ROW(authors.method_id, texts.title)) methods_authored, authors.user_id
+	    FROM
+	        method__localized_texts texts,
+	        method__authors authors
+	    WHERE
+	        texts.language = ${language} AND
+	        texts.method_id = authors.method_id
+	    GROUP BY
+	    	authors.user_id
+        HAVING
+            authors.user_id = ${userId}
+	) AS method_authors ON method_authors.user_id = users.id LEFT JOIN
+	(
+	    SELECT DISTINCT
+	         array_agg(ROW(authors.organization_id, texts.title)) organizations_authored, authors.user_id
+	    FROM
+	        organization__localized_texts texts,
+	        organization__authors authors
+	    WHERE
+	        texts.language = ${language} AND
+	        texts.organization_id = authors.organization_id
+	    GROUP BY
+	    	authors.user_id
+        HAVING
+            authors.user_id = ${userId}
+	) AS org_authors  ON org_authors.user_id = users.id
 WHERE
-    users.id = $1
+	users.id = ${userId}
 ;
-
-
--- SELECT case__authors.case_id, title FROM case__localized_texts, case__authors WHERE author = $1 AND case__localized_texts.case_id = case__authors.case_id', userId),
--- t.any('SELECT method__authors.method_id, title FROM method__localized_texts, method__authors WHERE author = $1 AND method__localized_texts.method_id =  method__authors.method_id', userId),
--- t.any('SELECT organization__authors.organization_id, title FROM organization__localized_texts, organization__authors WHERE author_id = $1 AND organization__localized_texts.organization_id = organization__authors.organization_id', userId),

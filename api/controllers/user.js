@@ -5,13 +5,12 @@ var groups = require('../helpers/groups')
 var cache = require('apicache')
 var log = require('winston')
 var jsonStringify = require('json-pretty');
-var {db, sql} = require('../helpers/db')
-
-
+var {db, sql} = require('../helpers/db');
 
  router.get('/:userId', function getUserById (req, res) {
-     db.one(sql('../sql/user_by_id.sql'), {userId: req.params.userId})
+     db.one(sql('../sql/user_by_id.sql'), {userId: req.params.userId, language: req.params.language || 'en'})
     .then(function(user){
+        console.log('user: %s', user);
          res.status(200).json({
              OK: true,
              data: user

@@ -125,7 +125,7 @@ router.put('/:id', function editOrgById (req, res) {
  */
 
  router.get('/:organizationId', function getorganizationById (req, res) {
-     db.one(sql('../sql/method_by_id.sql'), {organizationId: req.params.organizationId, lang: req.params.language || 'en'})
+     db.one(sql('../sql/organization_by_id.sql'), {organizationId: req.params.organizationId, lang: req.params.language || 'en'})
     .then(function(organization){
          res.status(200).json({
              OK: true,
