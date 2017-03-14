@@ -1,7 +1,10 @@
 language: node_js
 sudo: false
+dist: trusty
 node_js:
 - '6'
+addons:
+  postgresql: "9.5"
 cache: yarn
 notifications:
   slack:
@@ -9,8 +12,8 @@ notifications:
 services:
 - postgresql
 before_script:
-- psql -a -U postgres -c 'create database travis;'
-- psql -a -U postgres -d travis -f setup.sql		
+- psql -a -U postgres -c 'create database participedia;'
+- psql -a -U postgres -d participedia -f setup.sql		
 deploy:
   provider: heroku
   api_key:
