@@ -3,7 +3,7 @@ sudo: required
 node_js:
 - '6'
 addons:
-  postgresql: "9.6"
+  postgresql: "9.5"
 cache: yarn
 notifications:
   slack:
