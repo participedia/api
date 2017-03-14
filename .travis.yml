@@ -1,5 +1,5 @@
 language: node_js
-sudo: required
+sudo: no
 node_js:
 - '6'
 addons:
