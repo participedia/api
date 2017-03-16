@@ -1,45 +1,49 @@
 'use strict'
 var express = require('express')
 var router = express.Router()
-var groups = require('../helpers/groups')
-var es = require('../helpers/es')
-var ddb = require('../helpers/ddb')
-var AWS = require("aws-sdk");
-var db = require('../helpers/db')
+// var groups = require('../helpers/groups')
+// var es = require('../helpers/es')
+// var ddb = require('../helpers/ddb')
+// var AWS = require("aws-sdk");
+var {db,sql} = require('../helpers/db')
+var log = require('winston')
 
-if (typeof Promises === 'undefined') {
-  var Promises = require('promise-polyfill')
-}
+// if (typeof Promises === 'undefined') {
+//   var Promises = require('promise-polyfill')
+// }
 
-var Bodybuilder = require('bodybuilder')
-var jsonStringify = require('json-pretty');
+// var Bodybuilder = require('bodybuilder')
+// var jsonStringify = require('json-pretty');
 
-router.get('/getAllForType', function (req, res) {
-  let objType = req.query.objType.toLowerCase()
-  if (objType !== 'organization' && objType !== 'case' && objType !== 'method') {
-    res.status(401).json({message: 'Unsupported objType for getAllForType: ' + objType})
-  }
-  var params = {
-    TableName : `pp_${objType}s`,
-    IndexName : `title_en-index`
-  };
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  try {
-    docClient.scan(params, function(err, data) {
-        if (err) {
-            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-        } else {
-          let titles = {}
-          data.Items.forEach(function (item) {
-            titles[item['title_en']] = Number(item['id'])
-          })
-          res.json(titles)
-        }
-    });
-  } catch (e) {
-    console.log(`Exception in /getAllForType: ${e}`)
-  }
-})
+router.get('/getAllForType', function getAllForType (req, res) {
+    let objType = req.query.objType.toLowerCase();
+    let page = parseInt(req.query.page || 1);
+    const limit = 30;
+    let offset = (page - 1) * limit;
+    console.log('/getAllForType w00t!');
+    if (objType !== 'organization' && objType !== 'case' && objType !== 'method') {
+      res.status(401).json({message: 'Unsupported objType for getAllForType: ' + objType})
+    }
+    console.log('calling database, look out!');
+    db.any(sql('../sql/titles_for_' + objType + 's.sql'), {
+        language: req.query.language || 'en',
+        limit: limit,
+        offset: offset
+    })
+   .then(function(titlelist){
+       console.log('just got back from database and boy are my arms tired');
+        var jtitlelist = {};
+        titlelist.forEach(function(row){
+            jtitlelist[row.title] = parseInt(row[objType + 'Id'])
+        });
+        res.status(200).json(jtitlelist);
+    })
+    .catch(function(error){
+        log.error("Exception in GET /search/getAllForType", error)
+        res.status(500).json({ error: error })
+    })
+});
+
 
 /**
  * @api {get} /search Search through the cases
