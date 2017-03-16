@@ -1,19 +1,18 @@
 'use strict'
 var express = require('express')
 var router = express.Router()
-// var groups = require('../helpers/groups')
-// var es = require('../helpers/es')
-// var ddb = require('../helpers/ddb')
-// var AWS = require("aws-sdk");
 var {db,sql} = require('../helpers/db')
 var log = require('winston')
 
-// if (typeof Promises === 'undefined') {
-//   var Promises = require('promise-polyfill')
-// }
-
-// var Bodybuilder = require('bodybuilder')
-// var jsonStringify = require('json-pretty');
+var groups = require('../helpers/groups')
+var es = require('../helpers/es')
+var ddb = require('../helpers/ddb')
+var AWS = require("aws-sdk");
+if (typeof Promises === 'undefined') {
+  var Promises = require('promise-polyfill')
+}
+var Bodybuilder = require('bodybuilder')
+var jsonStringify = require('json-pretty');
 
 router.get('/getAllForType', function getAllForType (req, res) {
     let objType = req.query.objType.toLowerCase();
@@ -29,10 +28,13 @@ router.get('/getAllForType', function getAllForType (req, res) {
         offset: offset
     })
    .then(function(titlelist){
-       console.log('just got back from database and boy are my arms tired: %s', titlelist);
         var jtitlelist = {};
+        // FIXME: this is a dumb format but it is what front-end expects.
+        // Switch both (and tests) to use array of {title: , id: } pairs.
+        // Also, if we're going to use {OK: true, data: []} everywhere else
+        // we should use it here too.
         titlelist.forEach(function(row){
-            jtitlelist[row.title] = parseInt(row[objType + 'Id'])
+            jtitlelist[row.title] = parseInt(row[objType + '_id'])
         });
         res.status(200).json(jtitlelist);
     })
@@ -83,7 +85,6 @@ router.get('/', function (req, res) {
   }
 
   if (query) {
-    console.log(query.indexOf(':'))
     if (query.indexOf(':') == -1) {
       body = body.query('match', "_all", query)
     } else {
