@@ -20,18 +20,16 @@ router.get('/getAllForType', function getAllForType (req, res) {
     let page = parseInt(req.query.page || 1);
     const limit = 30;
     let offset = (page - 1) * limit;
-    console.log('/getAllForType w00t!');
     if (objType !== 'organization' && objType !== 'case' && objType !== 'method') {
       res.status(401).json({message: 'Unsupported objType for getAllForType: ' + objType})
     }
-    console.log('calling database, look out!');
     db.any(sql('../sql/titles_for_' + objType + 's.sql'), {
         language: req.query.language || 'en',
         limit: limit,
         offset: offset
     })
    .then(function(titlelist){
-       console.log('just got back from database and boy are my arms tired');
+       console.log('just got back from database and boy are my arms tired: %s', titlelist);
         var jtitlelist = {};
         titlelist.forEach(function(row){
             jtitlelist[row.title] = parseInt(row[objType + 'Id'])
