@@ -1,17 +1,17 @@
-'use strict'
-var express = require('express')
-var router = express.Router()
-var groups = require('../helpers/groups')
-var es = require('../helpers/es')
-var ddb = require('../helpers/ddb')
-var cache = require('apicache')
-var AWS = require("aws-sdk")
-var getAuthorByAuthorID = require('../helpers/getAuthor')
-var log = require('winston')
-var Bodybuilder = require('bodybuilder')
-var jsonStringify = require('json-pretty');
+"use strict";
+var express = require("express");
+var router = express.Router();
+var groups = require("../helpers/groups");
+var es = require("../helpers/es");
+var ddb = require("../helpers/ddb");
+var cache = require("apicache");
+var AWS = require("aws-sdk");
+var getAuthorByAuthorID = require("../helpers/getAuthor");
+var log = require("winston");
+var Bodybuilder = require("bodybuilder");
+var jsonStringify = require("json-pretty");
 
-var {db, sql} = require('../helpers/db');
+var { db, sql } = require("../helpers/db");
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -40,28 +40,29 @@ var {db, sql} = require('../helpers/db');
 
 // TODO: figure out if the choropleth should show cases or all things
 
-router.get('/countsByCountry', function (req, res) {
-    db.any(sql('../sql/cases_by_country.sql'))
-    .then(function(countries){
-        // convert array to object
-        var countryCounts = {};
-        countries.forEach(function(row){
-            countryCounts[row.country.toLowerCase()] = row.count;
+router.get("/countsByCountry", function(req, res) {
+    db
+        .any(sql("../sql/cases_by_country.sql"))
+        .then(function(countries) {
+            // convert array to object
+            var countryCounts = {};
+            countries.forEach(function(row) {
+                countryCounts[row.country.toLowerCase()] = row.count;
+            });
+            res.status(200).json({
+                OK: true,
+                data: {
+                    countryCounts: countryCounts
+                }
+            });
+        })
+        .catch(function(error) {
+            log.error("Exception in /case/countsByCountry => %s", error);
+            res.status(500).json({
+                OK: false,
+                error: error
+            });
         });
-        res.status(200).json({
-            OK: true,
-            data: {
-                countryCounts: countryCounts
-            }
-        })
-    })
-    .catch(function(error){
-        log.error("Exception in /case/countsByCountry => %s", error)
-        res.status(500).json({
-            OK: false,
-            error: error
-        })
-    })
 });
 
 /**
@@ -88,23 +89,38 @@ router.get('/countsByCountry', function (req, res) {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.post('/new', function (req, res, next) {
-  groups.user_has(req, 'Contributors', function () {
-    res.status(401).json({message: 'access denied - user does not have proper authorization'})
-  }, function () {
-    es.index({
-      index: 'pp',
-      type: 'case',
-      body: req.body
-    }, function (error, response) {
-      if (error) {
-        res.status(error.status).json({message: error.message})
-      } else {
-        res.status(200).json(req.body)
-      }
-    })
-  })
-})
+router.post("/new", function(req, res, next) {
+    groups.user_has(
+        req,
+        "Contributors",
+        function() {
+            res
+                .status(401)
+                .json({
+                    message: "access denied - user does not have proper authorization"
+                });
+        },
+        function() {
+            es.index(
+                {
+                    index: "pp",
+                    type: "case",
+                    body: req.body
+                },
+                function(error, response) {
+                    if (error) {
+                        res
+                            .status(error.status)
+                            .json({ message: error.message });
+                    } else {
+                        console.log("req.body: %s", req.body);
+                        res.status(200).json(req.body);
+                    }
+                }
+            );
+        }
+    );
+});
 
 /**
  * @api {put} /case/:caseId  Submit a new version of a case
@@ -132,17 +148,27 @@ router.post('/new', function (req, res, next) {
  *
  */
 
-router.put('/:caseId', function editCaseById (req, res) {
-  cache.clear()
-  groups.user_has(req, 'Contributors', function () {
-    console.error("user doesn't have Contributors group membership")
-    res.status(401).json({message: 'access denied - user does not have proper authorization'})
-    return
-  }, function () {
-    var caseId = req.swagger.params.caseId.value
-    var caseBody = req.body
-    res.status(200).json(req.body)
-  })})
+router.put("/:caseId", function editCaseById(req, res) {
+    cache.clear();
+    groups.user_has(
+        req,
+        "Contributors",
+        function() {
+            console.error("user doesn't have Contributors group membership");
+            res
+                .status(401)
+                .json({
+                    message: "access denied - user does not have proper authorization"
+                });
+            return;
+        },
+        function() {
+            var caseId = req.swagger.params.caseId.value;
+            var caseBody = req.body;
+            res.status(200).json(req.body);
+        }
+    );
+});
 
 /**
  * @api {get} /case/:caseId Get the last version of a case
@@ -170,23 +196,30 @@ router.put('/:caseId', function editCaseById (req, res) {
  *
  */
 
- router.get('/:caseId', function getCaseById (req, res) {
-     db.one(sql('../sql/case_by_id.sql'), {caseId: req.params.caseId, lang: req.params.language || 'en'})
-     .then(function(the_case){
-         res.status(200).json({
-             OK: true,
-             data: the_case
-         })
-     })
-     .catch(function(error){
-         log.error("Exception in GET /case/%s => %s", req.params.caseId, error)
-         res.status(500).json({
-             OK: false,
-             error: error
-         })
-     })
- })
-
+router.get("/:caseId", function getCaseById(req, res) {
+    db
+        .one(sql("../sql/case_by_id.sql"), {
+            caseId: req.params.caseId,
+            lang: req.params.language || "en"
+        })
+        .then(function(the_case) {
+            res.status(200).json({
+                OK: true,
+                data: the_case
+            });
+        })
+        .catch(function(error) {
+            log.error(
+                "Exception in GET /case/%s => %s",
+                req.params.caseId,
+                error
+            );
+            res.status(500).json({
+                OK: false,
+                error: error
+            });
+        });
+});
 
 /**
  * @api {delete} /case/:caseId Delete a case
@@ -209,17 +242,26 @@ router.put('/:caseId', function editCaseById (req, res) {
  *
  */
 
-router.delete('/:caseId', function editCaseById (req, res) {
-  cache.clear()
-  groups.user_has(req, 'Contributors', function () {
-    console.error("user doesn't have Contributors group membership")
-    res.status(401).json({message: 'access denied - user does not have proper authorization'})
-    return
-  }, function () {
-    var caseId = req.swagger.params.caseId.value
-    var caseBody = req.body
-    res.status(200).json(req.body)
-  })
-})
+router.delete("/:caseId", function editCaseById(req, res) {
+    cache.clear();
+    groups.user_has(
+        req,
+        "Contributors",
+        function() {
+            console.error("user doesn't have Contributors group membership");
+            res
+                .status(401)
+                .json({
+                    message: "access denied - user does not have proper authorization"
+                });
+            return;
+        },
+        function() {
+            var caseId = req.swagger.params.caseId.value;
+            var caseBody = req.body;
+            res.status(200).json(req.body);
+        }
+    );
+});
 
-module.exports = router
+module.exports = router;
