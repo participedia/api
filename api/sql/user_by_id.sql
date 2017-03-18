@@ -1,6 +1,7 @@
 SELECT
 	users.name,
 	users.id,
+    'user' as type,
 	to_json(cases_authored) cases,
 	to_json(methods_authored) methods,
 	to_json(organizations_authored) organizations

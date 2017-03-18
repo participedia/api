@@ -1,5 +1,6 @@
 SELECT
     cases.id,
+    'case' as type,
     cases.original_language,
     cases.issue,
     cases.communication_mode,

@@ -1,5 +1,6 @@
 SELECT
     methods.id,
+    'method' as type,
     methods.original_language,
     methods.best_for,
     methods.communication_mode,

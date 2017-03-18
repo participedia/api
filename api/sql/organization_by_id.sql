@@ -1,5 +1,6 @@
 SELECT
     organizations.id,
+    'organization' as type,
     organizations.original_language,
     organizations.executive_director,
     organizations.issue,
