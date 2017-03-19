@@ -60,6 +60,7 @@ FROM
 WHERE
     cases.id = case__localized_texts.case_id AND
     case__localized_texts.language = ${language} AND
+    ${facets:raw}
     author_list.case_id = cases.id
 ${order_by:raw}
 LIMIT ${limit}

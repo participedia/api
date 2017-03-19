@@ -52,6 +52,7 @@ function query_nouns_by_type(
     db
         .any(sql("../sql/list_" + objType + "s.sql"), {
             query: query,
+            facets: format_facet_string(facets, objType),
             order_by: orderBy,
             language: language,
             limit: RESPONSE_LIMIT,
@@ -74,6 +75,7 @@ function query_all_nouns(res, query, facets, page, language, orderBy) {
             let query = ["case", "method", "organization"].map(objType => {
                 return t.any(sql("../sql/list_" + objType + "s.sql"), {
                     query: query,
+                    facets: format_facet_string(facets, objType),
                     language: language,
                     limit: RESPONSE_LIMIT,
                     offset: (page - 1) * RESPONSE_LIMIT,
@@ -106,16 +108,19 @@ function query_all_nouns(res, query, facets, page, language, orderBy) {
         });
 }
 
-function get_nouns_by_type(res, objType, page, language, orderBy) {
+function get_nouns_by_type(res, objType, facets, page, language, orderBy) {
     db
         .any(sql("../sql/list_" + objType + "s.sql"), {
+            facets: format_facet_string(facets, objType),
             language: language,
             limit: RESPONSE_LIMIT,
             offset: (page - 1) * RESPONSE_LIMIT,
             order_by: orderBy
         })
         .then(function(objList) {
-            res.status(200).json({ results: { type: objType, hits: objList } });
+            res
+                .status(200)
+                .json({ results: [{ type: objType, hits: objList }] });
         })
         .catch(function(error) {
             log.error("Exception in GET /search/getAllForType", error);
@@ -123,12 +128,13 @@ function get_nouns_by_type(res, objType, page, language, orderBy) {
         });
 }
 
-function get_all_nouns(res, page, language, orderBy) {
+function get_all_nouns(res, facets, page, language, orderBy) {
     // IMPLEMENT ME!
     db
         .task(t => {
             let query = ["case", "method", "organization"].map(objType => {
                 return t.any(sql("../sql/list_" + objType + "s.sql"), {
+                    facets: format_facet_string(facets, objType),
                     language: language,
                     limit: RESPONSE_LIMIT,
                     offset: (page - 1) * RESPONSE_LIMIT,
@@ -159,6 +165,19 @@ function get_all_nouns(res, page, language, orderBy) {
             log.error("Exception in GET /search/getAllForType", error);
             res.status(500).json({ error: error });
         });
+}
+
+function format_facet_string(facets, type) {
+    // super-simple for now
+    if (facets["location.country"]) {
+        return "(" +
+            type +
+            "s).location.country = '" +
+            facets["location.country"] +
+            "' AND";
+    } else {
+        return "";
+    }
 }
 
 /**
@@ -253,16 +272,30 @@ router.get("/", function(req, res) {
     } else {
         switch (selectedCategory) {
             case "Cases":
-                get_nouns_by_type(res, "case", page, language, orderBy);
+                get_nouns_by_type(res, "case", facets, page, language, orderBy);
                 break;
             case "Methods":
-                get_nouns_by_type(res, "method", page, language, orderBy);
+                get_nouns_by_type(
+                    res,
+                    "method",
+                    facets,
+                    page,
+                    language,
+                    orderBy
+                );
                 break;
             case "Organizations":
-                get_nouns_by_type(res, "organization", page, language, orderBy);
+                get_nouns_by_type(
+                    res,
+                    "organization",
+                    facets,
+                    page,
+                    language,
+                    orderBy
+                );
                 break;
             default:
-                get_all_nouns(res, page, language, orderBy);
+                get_all_nouns(res, facets, page, language, orderBy);
                 break;
         }
     }

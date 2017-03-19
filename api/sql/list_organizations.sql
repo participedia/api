@@ -38,6 +38,7 @@ FROM
 WHERE
     organizations.id = organization__localized_texts.organization_id AND
     organization__localized_texts.language = ${language} AND
+    ${facets:raw}
     author_list.organization_id = organizations.id
 ${order_by:raw}
 LIMIT ${limit}
