@@ -208,7 +208,7 @@ router.get("/", function(req, res) {
     }
     let orderBy = {
         alphabetical: "ORDER BY title",
-        chronological: "ORDER BY updated_date",
+        chronological: "ORDER BY updated_date DESC",
         featured: "ORDER BY featured, id"
     }[sortingMethod];
     if (query) {
