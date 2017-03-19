@@ -49,6 +49,7 @@ WHERE
     methods.id = method__localized_texts.method_id AND
     method__localized_texts.language = ${language} AND
     author_list.method_id = methods.id
+${order_by:raw}
 LIMIT ${limit}
 OFFSET ${offset}
 ;

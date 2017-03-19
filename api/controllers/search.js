@@ -40,11 +40,19 @@ router.get("/getAllForType", function getAllForType(req, res) {
         });
 });
 
-function query_nouns_by_type(res, objType, query, page, language, sortMethod) {
+function query_nouns_by_type(
+    res,
+    objType,
+    query,
+    facets,
+    page,
+    language,
+    orderBy
+) {
     db
         .any(sql("../sql/list_" + objType + "s.sql"), {
             query: query,
-            sortMethod: sortMethod,
+            order_by: orderBy,
             language: language,
             limit: RESPONSE_LIMIT,
             offset: (page - 1) * RESPONSE_LIMIT
@@ -60,15 +68,16 @@ function query_nouns_by_type(res, objType, query, page, language, sortMethod) {
         });
 }
 
-function query_all_nouns(res, query, page, language, sortMethod) {
-    // IMPLEMENT ME!
+function query_all_nouns(res, query, facets, page, language, orderBy) {
     db
         .task(t => {
             let query = ["case", "method", "organization"].map(objType => {
                 return t.any(sql("../sql/list_" + objType + "s.sql"), {
+                    query: query,
                     language: language,
                     limit: RESPONSE_LIMIT,
-                    offset: (page - 1) * RESPONSE_LIMIT
+                    offset: (page - 1) * RESPONSE_LIMIT,
+                    order_by: orderBy
                 });
             });
             return t.batch(query);
@@ -97,12 +106,13 @@ function query_all_nouns(res, query, page, language, sortMethod) {
         });
 }
 
-function get_nouns_by_type(res, objType, page, language) {
+function get_nouns_by_type(res, objType, page, language, orderBy) {
     db
         .any(sql("../sql/list_" + objType + "s.sql"), {
             language: language,
             limit: RESPONSE_LIMIT,
-            offset: (page - 1) * RESPONSE_LIMIT
+            offset: (page - 1) * RESPONSE_LIMIT,
+            order_by: orderBy
         })
         .then(function(objList) {
             res.status(200).json({ results: { type: objType, hits: objList } });
@@ -113,7 +123,7 @@ function get_nouns_by_type(res, objType, page, language) {
         });
 }
 
-function get_all_nouns(res, page, language) {
+function get_all_nouns(res, page, language, orderBy) {
     // IMPLEMENT ME!
     db
         .task(t => {
@@ -121,7 +131,8 @@ function get_all_nouns(res, page, language) {
                 return t.any(sql("../sql/list_" + objType + "s.sql"), {
                     language: language,
                     limit: RESPONSE_LIMIT,
-                    offset: (page - 1) * RESPONSE_LIMIT
+                    offset: (page - 1) * RESPONSE_LIMIT,
+                    order_by: orderBy
                 });
             });
             return t.batch(query);
@@ -179,19 +190,27 @@ function get_all_nouns(res, page, language) {
 
 router.get("/", function(req, res) {
     let query = req.query.query;
+    let facets = {};
     let sortingMethod = req.query.sortingMethod || "chronological";
     let selectedCategory = req.query.selectedCategory || "All";
     let language = req.query.language || "en";
     let page = parseInt(req.query.page || 1);
 
+    // handle faceted queries
+    // currently only faceted query is "geo_country"
+    // for more facets, and mixing facets with query terms
+    // we'll need a more capable query parser
     if (query) {
-        if (query.indexOf(":") == -1) {
-            body = body.query("match", "_all", query);
-        } else {
-            let parts = query.split(":", 2);
-            body = body.query("match", parts[0], parts[1]);
+        if (query.indexOf("geo_country") > -1) {
+            facets["location.country"] = query.split(":")[1];
+            query = "";
         }
     }
+    let orderBy = {
+        alphabetical: "ORDER BY title",
+        chronological: "ORDER BY updated_date",
+        featured: "ORDER BY featured, id"
+    }[sortingMethod];
     if (query) {
         switch (selectedCategory) {
             case "Cases":
@@ -199,9 +218,10 @@ router.get("/", function(req, res) {
                     res,
                     "case",
                     query,
+                    facets,
                     page,
                     language,
-                    sortingMethod
+                    orderBy
                 );
                 break;
             case "Organizations":
@@ -209,9 +229,10 @@ router.get("/", function(req, res) {
                     res,
                     "organization",
                     query,
+                    facets,
                     page,
                     language,
-                    sortingMethod
+                    orderBy
                 );
                 break;
             case "Methods":
@@ -219,28 +240,29 @@ router.get("/", function(req, res) {
                     res,
                     "method",
                     query,
+                    facets,
                     page,
                     language,
-                    sortingMethod
+                    orderBy
                 );
                 break;
             default:
-                query_all_nouns(res, query, page, language, sortingMethod);
+                query_all_nouns(res, query, facets, page, language, orderBy);
                 break;
         }
     } else {
         switch (selectedCategory) {
             case "Cases":
-                get_nouns_by_type(res, "case", page, language);
+                get_nouns_by_type(res, "case", page, language, orderBy);
                 break;
             case "Methods":
-                get_nouns_by_type(res, "method", page, language);
+                get_nouns_by_type(res, "method", page, language, orderBy);
                 break;
             case "Organizations":
-                get_nouns_by_type(res, "organization", page, language);
+                get_nouns_by_type(res, "organization", page, language, orderBy);
                 break;
             default:
-                get_all_nouns(res, page, language);
+                get_all_nouns(res, page, language, orderBy);
                 break;
         }
     }

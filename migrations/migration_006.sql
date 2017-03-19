@@ -5,3 +5,15 @@ CREATE TYPE author AS (
     timestamp TIMESTAMP WITH TIME ZONE,
     name TEXT
 );
+
+/* Add support for "featured" flag */
+
+
+ALTER TABLE cases
+    ADD COLUMN featured BOOLEAN DEFAULT false;
+
+ALTER TABLE methods
+    ADD COLUMN featured BOOLEAN DEFAULT false;
+
+ALTER TABLE organizations
+    ADD COLUMN featured BOOLEAN DEFAULT false;
