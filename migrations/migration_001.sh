@@ -5,4 +5,4 @@
 # environment of. For instance, in development my $MY_APP is "participedia-dethe"
 #
 # psql -d template1 -c "DROP DATABASE participedia;" -c "CREATE DATABASE participedia;"
-psql -d $DATABASE_URL -f migrations/setup.sql
+psql -d $DATABASE_URL -f setup.sql

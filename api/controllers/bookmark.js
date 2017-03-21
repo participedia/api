@@ -4,11 +4,11 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 var url = require('url')
 var jwt = require('../helpers/jwt')()
-var db = require('../helpers/db')
+var {db, sql} = require('../helpers/db');
 var log = require('winston')
 
 /**
- * @api {get} /bookmark/:userId List bookmarks for a given user 
+ * @api {get} /bookmark/:userId List bookmarks for a given user
  * @apiGroup bookmarks
  * @apiVersion 0.1.0
  * @apiName getbookmarksforuser
@@ -47,7 +47,7 @@ router.get('/list/:userId', function (req, res, next) {
       })
       .catch(function (err) {
         res.json({
-          success: false, 
+          success: false,
           error: error.message || error
         })
         log.error(err)
@@ -116,7 +116,7 @@ router.post('/add', function addBookmark (req, res, next) {
         })
         .catch(function (err) {
           res.json({
-            success: false, 
+            success: false,
             error: error.message || error
           })
           log.error("Exception in INSERT", err)

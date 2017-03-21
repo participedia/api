@@ -4,10 +4,14 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
+var cache = require('apicache')
+var AWS = require("aws-sdk")
 var getAuthorByAuthorID = require('../helpers/getAuthor')
-var AWS = require("aws-sdk");
+var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
+
+var {db, sql} = require('../helpers/db')
 
 
 /**
@@ -120,45 +124,21 @@ router.put('/:id', function editOrgById (req, res) {
  *
  */
 
-router.get('/:id', function getOrgById (req, res) {
-  // Get the organization for dynamodb
-  // get the author from dynamodb
-
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  var params = {
-      TableName : "pp_organizations",
-      Limit : 1,
-      ScanIndexForward: false, // this will return the last row with this id
-      KeyConditionExpression: "id = :id",
-      ExpressionAttributeValues: {
-          ":id":req.params.id
-      }
-  };
-
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-      res.status(500).json(err)
-    } else {
-      let theOrg = data.Items[0];
-      if (theOrg) {
-        getAuthorByAuthorID(theOrg.author_uid, function(err, author) {
-          if (author) {
-            theOrg.author = author.Items[0];
-            res.status(200).json({
-              OK: true,
-              data: data.Items
-            })
-          } else {
-            res.status(500).json({"error": "No author record found for id="+theOrg.author_uid});
-          }
-        })
-      } else {
-        res.status(500).json({"error": "No organization found for id =" + req.params.id});
-      }
-    }
-  });
-})
+ router.get('/:organizationId', function getorganizationById (req, res) {
+     db.one(sql('../sql/organization_by_id.sql'), {organizationId: req.params.organizationId, lang: req.params.language || 'en'})
+    .then(function(organization){
+         res.status(200).json({
+             OK: true,
+             data: organization
+         })
+     }).catch(function(error){
+         log.error("Exception in GET /organization/%s => %s", req.params.organizationId, error)
+         res.status(500).json({
+             OK: false,
+             error: error
+         })
+     })
+ })
 
 /**
  * @api {delete} /organization/:id Delete an organization

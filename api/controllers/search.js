@@ -1,44 +1,184 @@
-'use strict'
-var express = require('express')
-var router = express.Router()
-var groups = require('../helpers/groups')
-var es = require('../helpers/es')
-var ddb = require('../helpers/ddb')
-var AWS = require("aws-sdk");
+"use strict";
+var express = require("express");
+var router = express.Router();
+var { db, sql } = require("../helpers/db");
+var log = require("winston");
 
-if (typeof Promises === 'undefined') {
-  var Promises = require('promise-polyfill')
+const RESPONSE_LIMIT = 30;
+
+router.get("/getAllForType", function getAllForType(req, res) {
+    let objType = req.query.objType.toLowerCase();
+    let page = parseInt(req.query.page || 1);
+    let offset = (page - 1) * RESPONSE_LIMIT;
+    if (
+        objType !== "organization" && objType !== "case" && objType !== "method"
+    ) {
+        res.status(401).json({
+            message: "Unsupported objType for getAllForType: " + objType
+        });
+    }
+    db
+        .any(sql("../sql/titles_for_" + objType + "s.sql"), {
+            language: req.query.language || "en",
+            limit: RESPONSE_LIMIT,
+            offset: offset
+        })
+        .then(function(titlelist) {
+            var jtitlelist = {};
+            // FIXME: this is a dumb format but it is what front-end expects.
+            // Switch both (and tests) to use array of {title: , id: } pairs.
+            // Also, if we're going to use {OK: true, data: []} everywhere else
+            // we should use it here too.
+            titlelist.forEach(function(row) {
+                jtitlelist[row.title] = parseInt(row[objType + "_id"]);
+            });
+            res.status(200).json(jtitlelist);
+        })
+        .catch(function(error) {
+            log.error("Exception in GET /search/getAllForType", error);
+            res.status(500).json({ error: error });
+        });
+});
+
+function query_nouns_by_type(
+    res,
+    objType,
+    query,
+    facets,
+    page,
+    language,
+    orderBy
+) {
+    db
+        .any(sql("../sql/search_" + objType + "s.sql"), {
+            query: query,
+            facets: format_facet_string(facets, objType),
+            order_by: orderBy,
+            language: language,
+            limit: RESPONSE_LIMIT,
+            offset: (page - 1) * RESPONSE_LIMIT
+        })
+        .then(function(objList) {
+            res
+                .status(200)
+                .json({ results: [{ type: objType, hits: objList }] });
+        })
+        .catch(function(error) {
+            log.error("Exception in GET /search/getAllForType", error);
+            res.status(500).json({ error: error });
+        });
 }
 
-var Bodybuilder = require('bodybuilder')
-var jsonStringify = require('json-pretty');
+function query_all_nouns(res, query, facets, page, language, orderBy) {
+    db
+        .task(t => {
+            let query = ["case", "method", "organization"].map(objType => {
+                return t.any(sql("../sql/search_" + objType + "s.sql"), {
+                    query: query,
+                    facets: format_facet_string(facets, objType),
+                    language: language,
+                    limit: RESPONSE_LIMIT,
+                    offset: (page - 1) * RESPONSE_LIMIT,
+                    order_by: orderBy
+                });
+            });
+            return t.batch(query);
+        })
+        .then(function(objLists) {
+            res.status(200).json({
+                results: [
+                    {
+                        type: "case",
+                        hits: objList[0]
+                    },
+                    {
+                        type: "method",
+                        hits: objList[1]
+                    },
+                    {
+                        type: "organization",
+                        hits: objList[2]
+                    }
+                ]
+            });
+        })
+        .catch(function(error) {
+            log.error("Exception in GET /search/getAllForType", error);
+            res.status(500).json({ error: error });
+        });
+}
 
-router.get('/getAllForType', function (req, res) {
-  let objType = req.query.objType.toLowerCase()
-  if (objType !== 'organization' && objType !== 'case' && objType !== 'method') {
-    res.status(401).json({message: 'Unsupported objType for getAllForType: ' + objType})
-  }
-  var params = {
-    TableName : `pp_${objType}s`,
-    IndexName : `title_en-index`
-  };
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  try {
-    docClient.scan(params, function(err, data) {
-        if (err) {
-            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-        } else {
-          let titles = {}
-          data.Items.forEach(function (item) {
-            titles[item['title_en']] = Number(item['id'])
-          })
-          res.json(titles)
-        }
-    });
-  } catch (e) {
-    console.log(`Exception in /getAllForType: ${e}`)
-  }
-})
+function get_nouns_by_type(res, objType, facets, page, language, orderBy) {
+    db
+        .any(sql("../sql/list_" + objType + "s.sql"), {
+            facets: format_facet_string(facets, objType),
+            language: language,
+            limit: RESPONSE_LIMIT,
+            offset: (page - 1) * RESPONSE_LIMIT,
+            order_by: orderBy
+        })
+        .then(function(objList) {
+            res
+                .status(200)
+                .json({ results: [{ type: objType, hits: objList }] });
+        })
+        .catch(function(error) {
+            log.error("Exception in GET /search/getAllForType", error);
+            res.status(500).json({ error: error });
+        });
+}
+
+function get_all_nouns(res, facets, page, language, orderBy) {
+    // IMPLEMENT ME!
+    db
+        .task(t => {
+            let query = ["case", "method", "organization"].map(objType => {
+                return t.any(sql("../sql/list_" + objType + "s.sql"), {
+                    facets: format_facet_string(facets, objType),
+                    language: language,
+                    limit: RESPONSE_LIMIT,
+                    offset: (page - 1) * RESPONSE_LIMIT,
+                    order_by: orderBy
+                });
+            });
+            return t.batch(query);
+        })
+        .then(function(objLists) {
+            res.status(200).json({
+                results: [
+                    {
+                        type: "case",
+                        hits: objLists[0]
+                    },
+                    {
+                        type: "method",
+                        hits: objLists[1]
+                    },
+                    {
+                        type: "organization",
+                        hits: objLists[2]
+                    }
+                ]
+            });
+        })
+        .catch(function(error) {
+            log.error("Exception in GET /search/getAllForType", error);
+            res.status(500).json({ error: error });
+        });
+}
+
+function format_facet_string(facets, type) {
+    // super-simple for now
+    if (facets["location.country"]) {
+        return "(" +
+            type +
+            "s).location.country = '" +
+            facets["location.country"] +
+            "' AND";
+    } else {
+        return "";
+    }
+}
 
 /**
  * @api {get} /search Search through the cases
@@ -59,7 +199,7 @@ router.get('/getAllForType', function (req, res) {
  *     {
  *       "OK": true,
  *       "data": {
- *          ... (ElasticSearch records) ...
+ *          ... (records) ...
  *       }
  *     }
  *
@@ -67,129 +207,98 @@ router.get('/getAllForType', function (req, res) {
 
 // Should not return things that aren't displayable as SearchHits (i.e. Users...)
 
-router.get('/', function (req, res) {
-  let body = new Bodybuilder()
-  let query = req.query.query
-  let sortingMethod = req.query.sortingMethod
-  let selectedCategory = req.query.selectedCategory
-  if (! sortingMethod) {
-    sortingMethod = 'chronological'
-  }
-  if (! selectedCategory) {
-    selectedCategory = 'All'
-  }
+router.get("/", function(req, res) {
+    let query = req.query.query;
+    let facets = {};
+    let sortingMethod = req.query.sortingMethod || "chronological";
+    let selectedCategory = req.query.selectedCategory || "All";
+    let language = req.query.language || "en";
+    let page = parseInt(req.query.page || 1);
 
-  if (query) {
-    console.log(query.indexOf(':'))
-    if (query.indexOf(':') == -1) {
-      body = body.query('match', "_all", query)
+    // handle faceted queries
+    // currently only faceted query is "geo_country"
+    // for more facets, and mixing facets with query terms
+    // we'll need a more capable query parser
+    if (query) {
+        if (query.indexOf("geo_country") > -1) {
+            facets["location.country"] = query.split(":")[1];
+            query = "";
+        }
+    }
+    let orderBy = {
+        alphabetical: "ORDER BY title",
+        chronological: "ORDER BY updated_date DESC",
+        featured: "ORDER BY featured, id"
+    }[sortingMethod];
+    if (query) {
+        switch (selectedCategory) {
+            case "Cases":
+                query_nouns_by_type(
+                    res,
+                    "case",
+                    query,
+                    facets,
+                    page,
+                    language,
+                    orderBy
+                );
+                break;
+            case "Organizations":
+                query_nouns_by_type(
+                    res,
+                    "organization",
+                    query,
+                    facets,
+                    page,
+                    language,
+                    orderBy
+                );
+                break;
+            case "Methods":
+                query_nouns_by_type(
+                    res,
+                    "method",
+                    query,
+                    facets,
+                    page,
+                    language,
+                    orderBy
+                );
+                break;
+            default:
+                query_all_nouns(res, query, facets, page, language, orderBy);
+                break;
+        }
     } else {
-      let parts = query.split(':', 2)
-      body = body.query('match', parts[0], parts[1])
+        switch (selectedCategory) {
+            case "Cases":
+                get_nouns_by_type(res, "case", facets, page, language, orderBy);
+                break;
+            case "Methods":
+                get_nouns_by_type(
+                    res,
+                    "method",
+                    facets,
+                    page,
+                    language,
+                    orderBy
+                );
+                break;
+            case "Organizations":
+                get_nouns_by_type(
+                    res,
+                    "organization",
+                    facets,
+                    page,
+                    language,
+                    orderBy
+                );
+                break;
+            default:
+                get_all_nouns(res, facets, page, language, orderBy);
+                break;
+        }
     }
-  }
-  if (sortingMethod === 'chronological') {
-    body = body.sort('lastmodified', 'desc')
-  } else {
-    body = body.sort('id', 'asc') // Note this requires a non-analyzed field
-  }
-  let bodyquery = body.size(30).build('v2')
-  let includeCases = selectedCategory === 'All' || selectedCategory === 'Cases'
-  let includeMethods = selectedCategory === 'All' || selectedCategory === 'Methods'
-  let includeNews = selectedCategory === 'All' || selectedCategory === 'News'
-  let includeOrgs = selectedCategory === 'All' || selectedCategory === 'Organizations'
+});
 
-  if (query) {
-    let promises = []
-    if (includeCases) {
-      promises.push(
-        es.search({
-          index: 'pp',
-          type: 'case',
-          body: bodyquery
-        }).then(function (result) { 
-          return {type: 'case', hits: result['hits']['hits']}
-        })
-      )
-    }
-    if (includeOrgs) {
-      promises.push(
-        es.search({
-          index: 'pp',
-          type: 'organization',
-          body: bodyquery
-        }).then(function (result) { 
-          return {type: 'organization', hits: result['hits']['hits']}
-        })
-      )
-    }
-    if (includeMethods) {
-      promises.push(
-        es.search({
-          index: 'pp',
-          type: 'method',
-          body: bodyquery
-        }).then(function (result) { 
-          return {type: 'method', hits: result['hits']['hits']}
-        })
-      )
-    }
-    Promises.all(promises).then(
-      function (results) {
-        res.json({results: results});
-      }, function failure(error) {
-        console.log("error", error);
-        res.status(500).json(error)
-      }
-    )
-  } else {
-    let promises = []
-    if (includeCases) {
-      promises.push(
-        es.search({
-          index: 'pp',
-          type: 'case',
-          match_all: {}
-        }).then(function (result) { 
-          return {type: 'case', hits: result['hits']['hits']}
-        })
-      )
-    }
-    if (includeOrgs) {
-      promises.push(
-        es.search({
-          index: 'pp',
-          type: 'organization',
-          match_all: {}
-        }).then(function (result) { 
-          return {type: 'organization', hits: result['hits']['hits']}
-        })
-      )
-    }
-    if (includeMethods) {
-      promises.push(
-        es.search({
-          index: 'pp',
-          type: 'method',
-          match_all: {}
-        }).then(function (result) { 
-          return {type: 'method', hits: result['hits']['hits']}
-        })
-      )
-    }
-    Promises.all(promises).then(
-      function (results) {
-        res.json({results: results});
-      }, function failure(error) {
-        console.log("error", error);
-        res.status(500).json(error)
-      }
-    )
-  }
-})
-
-function searchCaseWithQuery(bodyquery) {
-
-}
-
-module.exports = router
+module.exports = router;

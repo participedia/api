@@ -4,11 +4,14 @@ var router = express.Router()
 var groups = require('../helpers/groups')
 var es = require('../helpers/es')
 var ddb = require('../helpers/ddb')
+var cache = require('apicache')
+var AWS = require("aws-sdk")
 var getAuthorByAuthorID = require('../helpers/getAuthor')
-var AWS = require("aws-sdk");
+var log = require('winston')
 var Bodybuilder = require('bodybuilder')
 var jsonStringify = require('json-pretty');
 
+var {db, sql} = require('../helpers/db')
 
 /**
  * @api {post} /method/new Create new method
@@ -116,49 +119,24 @@ router.put('/:id', function editMethodById (req, res) {
  *        }
  *     }
  *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
 
-router.get('/:id', function editMethodById (req, res) {
-  // Get the method for dynamodb
-  // get the author from dynamodb
-
-  var docClient = new AWS.DynamoDB.DocumentClient();
-  var params = {
-      TableName : "pp_methods",
-      Limit : 1,
-      ScanIndexForward: false, // this will return the last row with this id
-      KeyConditionExpression: "id = :id",
-      ExpressionAttributeValues: {
-          ":id":req.params.id
-      }
-  };
-
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.log("Unable to query. Error:", JSON.stringify(err, null, 2));
-      res.status(500).json(err)
-    } else {
-      let method = data.Items[0];
-      if (method) {
-        getAuthorByAuthorID(method.author_uid, function(err, author) {
-          if (author) {
-            method.author = author.Items[0];
-            res.status(200).json({
-              OK: true,
-              data: data.Items
-            })
-          } else {
-            res.status(500).json({"error": "No author record found for id="+method.author_uid});
-          }
+router.get('/:methodId', function getmethodById (req, res) {
+    db.one(sql('../sql/method_by_id.sql'), {methodId: req.params.methodId, lang: req.params.language || 'en'})
+    .then(function(method){
+        res.status(200).json({
+            OK: true,
+            data: method
         })
-      } else {
-        res.status(500).json({"error": "No method found for id =" + req.params.id});
-      }
-    }
-  });
+    })
+    .catch(function(error){
+        log.error("Exception in GET /method/%s => %s", req.params.methodId, error)
+        res.status(500).json({
+            OK: false,
+            error: error
+        })
+    })
 })
 
 /**
