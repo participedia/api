@@ -50,7 +50,7 @@ function query_nouns_by_type(
     orderBy
 ) {
     db
-        .any(sql("../sql/list_" + objType + "s.sql"), {
+        .any(sql("../sql/search_" + objType + "s.sql"), {
             query: query,
             facets: format_facet_string(facets, objType),
             order_by: orderBy,
@@ -73,7 +73,7 @@ function query_all_nouns(res, query, facets, page, language, orderBy) {
     db
         .task(t => {
             let query = ["case", "method", "organization"].map(objType => {
-                return t.any(sql("../sql/list_" + objType + "s.sql"), {
+                return t.any(sql("../sql/search_" + objType + "s.sql"), {
                     query: query,
                     facets: format_facet_string(facets, objType),
                     language: language,
