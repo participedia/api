@@ -13,6 +13,42 @@ var jsonStringify = require("json-pretty");
 
 var { db, sql } = require("../helpers/db");
 
+const empty_case = {
+  title: "",
+  body: "",
+  user_id: null,
+  original_language: "en",
+  issue: null,
+  communication_mode: null,
+  communication_with_audience: null,
+  content_country: null,
+  decision_method: null,
+  facetoface_online_or_both: null,
+  facilitated: null,
+  voting: "none",
+  number_of_meeting_days: null,
+  ongoing: false,
+  total_number_of_participants: null,
+  targeted_participant_demographic: "General Public",
+  kind_of_influence: null,
+  targeted_participants_public_role: "Lay Public",
+  targeted_audience: "General Public",
+  participant_selection: "Open to all",
+  specific_topic: null,
+  staff_type: null,
+  type_of_funding_entity: null,
+  typical_implementing_entity: null,
+  typical_sponsoring_entity: null,
+  who_else_supported_the_initiative: null,
+  who_was_primarily_responsible_for_organizing_the_initiative: null,
+  location: null,
+  lead_image: { url: "" },
+  other_images: [],
+  files: [],
+  videos: [],
+  tags: []
+};
+
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
  * @apiGroup Cases
@@ -107,21 +143,42 @@ router.post("/new", function(req, res, next) {
       //   video
       //   location
       //   related cases
-      var title = req.body.title;
-      var body = req.body.summary;
+      let title = req.body.title;
+      let body = req.body.summary;
+      let user_id = req.user && req.user.id;
       if (!(title && body)) {
         res.status(400).json({
           message: "Cannot create Case, both title and summary are required"
         });
       }
+      if (!user_id) {
+        res.status(400).json({
+          message: "Need a user_id to create a Case"
+        });
+      }
       console.log("Create new case for %s", req.body);
-      res.status(201).json({
-        OK: true,
-        data: {
-          title: title,
-          body: body
-        }
-      });
+      db
+        .none(
+          sql("../sql/create_case.sql"),
+          Object.assign({}, empty_case, {
+            title,
+            body,
+            user_id
+          })
+        )
+        .then(function(case_id) {
+          res.status(201).json({
+            OK: true,
+            data: case_id
+          });
+        })
+        .catch(function(error) {
+          log.error("Exception in POST /case/new => %s", error);
+          res.status(500).json({
+            OK: false,
+            error: error
+          });
+        });
     }
   );
 });
