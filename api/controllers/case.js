@@ -11,11 +11,12 @@ var log = require("winston");
 var Bodybuilder = require("bodybuilder");
 var jsonStringify = require("json-pretty");
 
-var { db, sql } = require("../helpers/db");
+var { db, sql, as } = require("../helpers/db");
 
 const empty_case = {
   title: "",
   body: "",
+  language: "en",
   user_id: null,
   original_language: "en",
   issue: null,
@@ -42,11 +43,11 @@ const empty_case = {
   who_else_supported_the_initiative: null,
   who_was_primarily_responsible_for_organizing_the_initiative: null,
   location: null,
-  lead_image: { url: "" },
-  other_images: [],
-  files: [],
-  videos: [],
-  tags: []
+  lead_image_url: "",
+  other_images: "{}",
+  files: "{}",
+  videos: "{}",
+  tags: "{}"
 };
 
 /**
@@ -145,14 +146,14 @@ router.post("/new", function(req, res, next) {
       //   related cases
       let title = req.body.title;
       let body = req.body.summary;
-      let user_id = req.user && req.user.id;
+      let user_id = req.user && req.user.user_id;
       if (!(title && body)) {
-        res.status(400).json({
+        return res.status(400).json({
           message: "Cannot create Case, both title and summary are required"
         });
       }
       if (!user_id) {
-        res.status(400).json({
+        return res.status(400).json({
           message: "Need a user_id to create a Case"
         });
       }
@@ -167,14 +168,14 @@ router.post("/new", function(req, res, next) {
           })
         )
         .then(function(case_id) {
-          res.status(201).json({
+          return res.status(201).json({
             OK: true,
             data: case_id
           });
         })
         .catch(function(error) {
           log.error("Exception in POST /case/new => %s", error);
-          res.status(500).json({
+          return res.status(500).json({
             OK: false,
             error: error
           });

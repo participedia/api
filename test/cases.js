@@ -66,6 +66,7 @@ describe("Cases", () => {
           relatedCases: "" // not sure what the client expects to send here
         })
         .end((err, res) => {
+          console.log("message: %s", res.body.message);
           res.should.have.status(201);
           done();
         });
