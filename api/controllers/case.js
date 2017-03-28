@@ -11,7 +11,45 @@ var log = require("winston");
 var Bodybuilder = require("bodybuilder");
 var jsonStringify = require("json-pretty");
 
-var { db, sql } = require("../helpers/db");
+var { db, sql, as } = require("../helpers/db");
+
+const empty_case = {
+  title: "",
+  body: "",
+  language: "en",
+  user_id: null,
+  original_language: "en",
+  issue: null,
+  communication_mode: null,
+  communication_with_audience: null,
+  content_country: null,
+  decision_method: null,
+  facetoface_online_or_both: null,
+  facilitated: null,
+  voting: "none",
+  number_of_meeting_days: null,
+  ongoing: false,
+  total_number_of_participants: null,
+  targeted_participant_demographic: "General Public",
+  kind_of_influence: null,
+  targeted_participants_public_role: "Lay Public",
+  targeted_audience: "General Public",
+  participant_selection: "Open to all",
+  specific_topic: null,
+  staff_type: null,
+  type_of_funding_entity: null,
+  typical_implementing_entity: null,
+  typical_sponsoring_entity: null,
+  who_else_supported_the_initiative: null,
+  who_was_primarily_responsible_for_organizing_the_initiative: null,
+  location: null,
+  lead_image_url: "",
+  other_images: "{}",
+  files: "{}",
+  videos: "{}",
+  tags: "{}",
+  featured: false
+};
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -41,28 +79,28 @@ var { db, sql } = require("../helpers/db");
 // TODO: figure out if the choropleth should show cases or all things
 
 router.get("/countsByCountry", function(req, res) {
-    db
-        .any(sql("../sql/cases_by_country.sql"))
-        .then(function(countries) {
-            // convert array to object
-            var countryCounts = {};
-            countries.forEach(function(row) {
-                countryCounts[row.country.toLowerCase()] = row.count;
-            });
-            res.status(200).json({
-                OK: true,
-                data: {
-                    countryCounts: countryCounts
-                }
-            });
-        })
-        .catch(function(error) {
-            log.error("Exception in /case/countsByCountry => %s", error);
-            res.status(500).json({
-                OK: false,
-                error: error
-            });
-        });
+  db
+    .any(sql("../sql/cases_by_country.sql"))
+    .then(function(countries) {
+      // convert array to object
+      var countryCounts = {};
+      countries.forEach(function(row) {
+        countryCounts[row.country.toLowerCase()] = row.count;
+      });
+      res.status(200).json({
+        OK: true,
+        data: {
+          countryCounts: countryCounts
+        }
+      });
+    })
+    .catch(function(error) {
+      log.error("Exception in /case/countsByCountry => %s", error);
+      res.status(500).json({
+        OK: false,
+        error: error
+      });
+    });
 });
 
 /**
@@ -90,36 +128,61 @@ router.get("/countsByCountry", function(req, res) {
  *
  */
 router.post("/new", function(req, res, next) {
-    groups.user_has(
-        req,
-        "Contributors",
-        function() {
-            res
-                .status(401)
-                .json({
-                    message: "access denied - user does not have proper authorization"
-                });
-        },
-        function() {
-            es.index(
-                {
-                    index: "pp",
-                    type: "case",
-                    body: req.body
-                },
-                function(error, response) {
-                    if (error) {
-                        res
-                            .status(error.status)
-                            .json({ message: error.message });
-                    } else {
-                        console.log("req.body: %s", req.body);
-                        res.status(200).json(req.body);
-                    }
-                }
-            );
-        }
-    );
+  groups.user_has(
+    req,
+    "Contributors",
+    function() {
+      res.status(401).json({
+        message: "access denied - user does not have proper authorization"
+      });
+    },
+    function() {
+      // create new `case` in db
+      // req.body *should* contain:
+      //   title
+      //   body (or "summary"?)
+      //   photo
+      //   video
+      //   location
+      //   related cases
+      let title = req.body.title;
+      let body = req.body.summary;
+      let user_id = req.user && req.user.user_id;
+      if (!(title && body)) {
+        return res.status(400).json({
+          message: "Cannot create Case, both title and summary are required"
+        });
+      }
+      if (!user_id) {
+        return res.status(400).json({
+          message: "Need a user_id to create a Case"
+        });
+      }
+      console.log("Create new case for %s", req.body);
+      db
+        .none(
+          sql("../sql/create_case.sql"),
+          Object.assign({}, empty_case, {
+            title,
+            body,
+            user_id
+          })
+        )
+        .then(function(case_id) {
+          return res.status(201).json({
+            OK: true,
+            data: case_id
+          });
+        })
+        .catch(function(error) {
+          log.error("Exception in POST /case/new => %s", error);
+          return res.status(500).json({
+            OK: false,
+            error: error
+          });
+        });
+    }
+  );
 });
 
 /**
@@ -149,25 +212,23 @@ router.post("/new", function(req, res, next) {
  */
 
 router.put("/:caseId", function editCaseById(req, res) {
-    cache.clear();
-    groups.user_has(
-        req,
-        "Contributors",
-        function() {
-            console.error("user doesn't have Contributors group membership");
-            res
-                .status(401)
-                .json({
-                    message: "access denied - user does not have proper authorization"
-                });
-            return;
-        },
-        function() {
-            var caseId = req.swagger.params.caseId.value;
-            var caseBody = req.body;
-            res.status(200).json(req.body);
-        }
-    );
+  cache.clear();
+  groups.user_has(
+    req,
+    "Contributors",
+    function() {
+      console.error("user doesn't have Contributors group membership");
+      res.status(401).json({
+        message: "access denied - user does not have proper authorization"
+      });
+      return;
+    },
+    function() {
+      var caseId = req.swagger.params.caseId.value;
+      var caseBody = req.body;
+      res.status(200).json(req.body);
+    }
+  );
 });
 
 /**
@@ -197,28 +258,24 @@ router.put("/:caseId", function editCaseById(req, res) {
  */
 
 router.get("/:caseId", function getCaseById(req, res) {
-    db
-        .one(sql("../sql/case_by_id.sql"), {
-            caseId: req.params.caseId,
-            lang: req.params.language || "en"
-        })
-        .then(function(the_case) {
-            res.status(200).json({
-                OK: true,
-                data: the_case
-            });
-        })
-        .catch(function(error) {
-            log.error(
-                "Exception in GET /case/%s => %s",
-                req.params.caseId,
-                error
-            );
-            res.status(500).json({
-                OK: false,
-                error: error
-            });
-        });
+  db
+    .one(sql("../sql/case_by_id.sql"), {
+      caseId: req.params.caseId,
+      lang: req.params.language || "en"
+    })
+    .then(function(the_case) {
+      res.status(200).json({
+        OK: true,
+        data: the_case
+      });
+    })
+    .catch(function(error) {
+      log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
+      res.status(500).json({
+        OK: false,
+        error: error
+      });
+    });
 });
 
 /**
@@ -243,25 +300,23 @@ router.get("/:caseId", function getCaseById(req, res) {
  */
 
 router.delete("/:caseId", function editCaseById(req, res) {
-    cache.clear();
-    groups.user_has(
-        req,
-        "Contributors",
-        function() {
-            console.error("user doesn't have Contributors group membership");
-            res
-                .status(401)
-                .json({
-                    message: "access denied - user does not have proper authorization"
-                });
-            return;
-        },
-        function() {
-            var caseId = req.swagger.params.caseId.value;
-            var caseBody = req.body;
-            res.status(200).json(req.body);
-        }
-    );
+  cache.clear();
+  groups.user_has(
+    req,
+    "Contributors",
+    function() {
+      console.error("user doesn't have Contributors group membership");
+      res.status(401).json({
+        message: "access denied - user does not have proper authorization"
+      });
+      return;
+    },
+    function() {
+      var caseId = req.swagger.params.caseId.value;
+      var caseBody = req.body;
+      res.status(200).json(req.body);
+    }
+  );
 });
 
 module.exports = router;
