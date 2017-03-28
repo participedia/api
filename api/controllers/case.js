@@ -47,7 +47,8 @@ const empty_case = {
   other_images: "{}",
   files: "{}",
   videos: "{}",
-  tags: "{}"
+  tags: "{}",
+  featured: false
 };
 
 /**

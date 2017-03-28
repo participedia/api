@@ -1,5 +1,5 @@
-WITH insert_case as (
-  INSERT into cases (
+WITH insert_user as (
+  INSERT into users (
     original_language, issue, communication_mode,
     communication_with_audience, content_country,
     decision_method, end_date, facetoface_online_or_both,
@@ -14,7 +14,7 @@ WITH insert_case as (
     who_else_supported_the_initiative,
     who_was_primarily_responsible_for_organizing_the_initiative,
     location, lead_image, other_images,
-    files, videos, tags, featured
+    files, videos, tags
   )
   VALUES
     (
@@ -24,21 +24,21 @@ WITH insert_case as (
       null, 'Lay Public', 'General Public',
       'Open to all', null, null, null, null,
       null, null, null, null, CAST(ROW('${lead_image_url}', '', 0) as attachment),
-      '{}', '{}', '{}', '{}', false
-    ) RETURNING id as case_id
+      '{}', '{}', '{}', '{}'
+    ) RETURNING id as user_id
 ),
 insert_author as (
-  INSERT into case__authors(user_id, timestamp, case_id)
+  INSERT into user__authors(user_id, timestamp, user_id)
   VALUES
-    (${user_id}, 'now', (select case_id from insert_case))
+    (${user_id}, 'now', (select user_id from insert_user))
 )
 
-INSERT INTO case__localized_texts(body, title, language, case_id)
+INSERT INTO user__localized_texts(body, title, language, user_id)
 VALUES
   (
     ${body},
     ${title},
     ${language},
-    (select case_id from insert_case)
+    (select user_id from insert_user)
   )
 ;
