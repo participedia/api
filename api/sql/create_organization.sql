@@ -8,7 +8,7 @@ WITH insert_organization as (
   )
   VALUES
     (
-      ${language}, null, null, 'now', true, null, 'now', null
+      ${language}, null, null, 'now', true, null, 'now', null,
       CAST(ROW('${lead_image_url}', '', 0) as attachment),
       '{}', '{}', '{}', '{}', false
     ) RETURNING id as organization_id

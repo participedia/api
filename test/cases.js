@@ -56,7 +56,7 @@ describe("Cases", () => {
         .set("Accept", "application/json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({
-          // madatory
+          // mandatory
           title: "This is the first title of the rest of your post",
           summary: "Eat this, it is my body",
           //optional
