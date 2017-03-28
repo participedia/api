@@ -30,7 +30,15 @@ SELECT
     cases.typical_sponsoring_entity,
     cases.who_else_supported_the_initiative,
     cases.who_was_primarily_responsible_for_organizing_the_initiative,
-    to_json(cases.location) AS location,
+    to_json(
+    	COALESCE(
+    		cases.location,
+    		CAST(
+    			ROW('', '', '', '', '', '', '', '', '')
+    			as geolocation
+    		)
+    	)
+    ) AS location,
     to_json(cases.lead_image) AS lead_image,
     to_json(COALESCE(cases.other_images, '{}')) AS other_images,
     to_json(COALESCE(cases.files, '{}')) AS files,

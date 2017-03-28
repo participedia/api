@@ -8,7 +8,15 @@ SELECT
     organizations.published,
     organizations.sector,
     organizations.updated_date,
-    to_json(organizations.location) AS location,
+    to_json(
+    	COALESCE(
+    		organizations.location,
+    		CAST(
+    			ROW('', '', '', '', '', '', '', '', '')
+    			as geolocation
+    		)
+    	)
+    ) AS location,
     to_json(organizations.lead_image) AS lead_image,
     to_json(COALESCE(organizations.other_images, '{}')) AS other_images,
     to_json(COALESCE(organizations.files, '{}')) AS files,
