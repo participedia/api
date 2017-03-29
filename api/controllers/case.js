@@ -129,10 +129,6 @@ router.get("/countsByCountry", function(req, res) {
  *
  */
 
-function insertCase() {
-
-}
-
 router.post("/new", function(req, res, next) {
   groups.user_has(
     req,
