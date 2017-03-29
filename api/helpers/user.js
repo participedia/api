@@ -16,9 +16,8 @@ var getUserIdForUser = function (user, cb) {
       db.one(sql("../sql/create_user_id.sql"), {
         userEmail: user.email
       })
-      .then(function(userId) {
-        console.log("created user", userId);
-        cb(userId);
+      .then(function(user) {
+        cb(user.user_id);
       })
       .catch(function (error) {
         log.error("Problem creating user", error);
