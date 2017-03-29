@@ -12,6 +12,7 @@ var Bodybuilder = require("bodybuilder");
 var jsonStringify = require("json-pretty");
 
 var { db, sql, as } = require("../helpers/db");
+var { getUserIdForUser } = require("../helpers/user")
 
 const empty_case = {
   title: "",
@@ -127,6 +128,11 @@ router.get("/countsByCountry", function(req, res) {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
+
+function insertCase() {
+
+}
+
 router.post("/new", function(req, res, next) {
   groups.user_has(
     req,
@@ -147,40 +153,39 @@ router.post("/new", function(req, res, next) {
       //   related cases
       let title = req.body.title;
       let body = req.body.summary;
-      let user_id = req.user && req.user.user_id;
       if (!(title && body)) {
         return res.status(400).json({
-          message: "Cannot create Case, both title and summary are required"
+            message: "Cannot create Case, both title and summary are required"
         });
       }
-      if (!user_id) {
-        return res.status(400).json({
-          message: "Need a user_id to create a Case"
-        });
-      }
-      console.log("Create new case for %s", req.body);
-      db
-        .none(
-          sql("../sql/create_case.sql"),
-          Object.assign({}, empty_case, {
-            title,
-            body,
-            user_id
-          })
-        )
-        .then(function(case_id) {
-          return res.status(201).json({
-            OK: true,
-            data: case_id
-          });
+      let user_id = req.user && req.user.user_id;
+      if (! user_id) {
+        user_id = getUserIdForUser(req.user, function(user_id) {
+          console.log("Create new case for %s", req.body);
+          db
+            .none(
+              sql("../sql/create_case.sql"),
+              Object.assign({}, empty_case, {
+                title,
+                body,
+                user_id
+              })
+            )
+            .then(function(case_id) {
+              return res.status(201).json({
+                OK: true,
+                data: case_id
+              });
+            })
+            .catch(function(error) {
+              log.error("Exception in POST /case/new => %s", error);
+              return res.status(500).json({
+                OK: false,
+                error: error
+              });
+            });
         })
-        .catch(function(error) {
-          log.error("Exception in POST /case/new => %s", error);
-          return res.status(500).json({
-            OK: false,
-            error: error
-          });
-        });
+      }
     }
   );
 });
