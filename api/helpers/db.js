@@ -1,9 +1,11 @@
 var promise = require("bluebird");
 var options = {
   // Initialization Options
-  promiseLib: promise,
-  query: evt => console.info("Executing query %s", evt.query)
+  promiseLib: promise
 };
+if (process.env.LOG_QUERY === "true") {
+  options.query = evt => console.info("Executing query %s", evt.query);
+}
 var pgp = require("pg-promise")(options);
 const path = require("path");
 var connectionString = process.env.DATABASE_URL;
