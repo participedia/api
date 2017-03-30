@@ -8,7 +8,6 @@ VALUES
   (
     ${userEmail},
     'en', 'en',
-    'jon do'
+    ${userName}
   )
 RETURNING id as user_id;
-
