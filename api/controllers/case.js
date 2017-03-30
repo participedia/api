@@ -12,7 +12,7 @@ var Bodybuilder = require("bodybuilder");
 var jsonStringify = require("json-pretty");
 
 var { db, sql, as } = require("../helpers/db");
-var { getUserIdForUser } = require("../helpers/user")
+var { getUserIdForUser } = require("../helpers/user");
 
 const empty_case = {
   title: "",
@@ -130,6 +130,18 @@ router.get("/countsByCountry", function(req, res) {
  */
 
 router.post("/new", function(req, res, next) {
+  if (req.user) {
+    Object.keys(req.user).forEach(function(key) {
+      console.log("res.user.%s => %s", key, req.user[key]);
+    });
+    if (req.user.metadata) {
+      Object.keys(req.user.metadata).forEach(function(key) {
+        console.log("res.user.metadata.%s => %s", key, req.user.metadata[key]);
+      });
+    }
+  } else {
+    console.log(">> No user at all <<");
+  }
   groups.user_has(
     req,
     "Contributors",
@@ -151,11 +163,11 @@ router.post("/new", function(req, res, next) {
       let body = req.body.summary;
       if (!(title && body)) {
         return res.status(400).json({
-            message: "Cannot create Case, both title and summary are required"
+          message: "Cannot create Case, both title and summary are required"
         });
       }
       let user_id = req.user && req.user.user_id;
-      if (! user_id) {
+      if (!user_id) {
         user_id = getUserIdForUser(req.user, function(user_id) {
           console.log("Create new case for %s", req.body);
           db
@@ -180,7 +192,7 @@ router.post("/new", function(req, res, next) {
                 error: error
               });
             });
-        })
+        });
       }
     }
   );
