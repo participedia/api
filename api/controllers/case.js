@@ -130,18 +130,6 @@ router.get("/countsByCountry", function(req, res) {
  */
 
 router.post("/new", function(req, res, next) {
-  if (req.user) {
-    Object.keys(req.user).forEach(function(key) {
-      console.log("res.user.%s => %s", key, req.user[key]);
-    });
-    if (req.user.metadata) {
-      Object.keys(req.user.metadata).forEach(function(key) {
-        console.log("res.user.metadata.%s => %s", key, req.user.metadata[key]);
-      });
-    }
-  } else {
-    console.log(">> No user at all <<");
-  }
   groups.user_has(
     req,
     "Contributors",
