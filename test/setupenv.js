@@ -19,6 +19,7 @@ if (process.env.TESTLOCAL === 'true'){
 var userPayload = {
   "sub": "1234567890",
   "name": "asdasasd Doe",
+  "email": "joe@example.com",
   "user_id": "123",
   "app_metadata": {
     "authorization": {
