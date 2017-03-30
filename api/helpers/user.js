@@ -3,6 +3,9 @@ var log = require("winston");
 
 var getUserIdForUser = function(user, cb) {
   log.info("user", JSON.stringify(user));
+  if (user.user_id) {
+    return cb(user.user_id);
+  }
   db
     .one(sql("../sql/user_by_email.sql"), {
       userEmail: user.email

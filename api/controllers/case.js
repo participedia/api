@@ -154,34 +154,31 @@ router.post("/new", function(req, res, next) {
           message: "Cannot create Case, both title and summary are required"
         });
       }
-      let user_id = req.user && req.user.user_id;
-      if (!user_id) {
-        user_id = getUserIdForUser(req.user, function(user_id) {
-          console.log("Create new case for %s", req.body);
-          db
-            .none(
-              sql("../sql/create_case.sql"),
-              Object.assign({}, empty_case, {
-                title,
-                body,
-                user_id
-              })
-            )
-            .then(function(case_id) {
-              return res.status(201).json({
-                OK: true,
-                data: case_id
-              });
+      getUserIdForUser(req.user, function(user_id) {
+        console.log("Create new case for %s", req.body);
+        db
+          .none(
+            sql("../sql/create_case.sql"),
+            Object.assign({}, empty_case, {
+              title,
+              body,
+              user_id
             })
-            .catch(function(error) {
-              log.error("Exception in POST /case/new => %s", error);
-              return res.status(500).json({
-                OK: false,
-                error: error
-              });
+          )
+          .then(function(case_id) {
+            return res.status(201).json({
+              OK: true,
+              data: case_id
             });
-        });
-      }
+          })
+          .catch(function(error) {
+            log.error("Exception in POST /case/new => %s", error);
+            return res.status(500).json({
+              OK: false,
+              error: error
+            });
+          });
+      });
     }
   );
 });
