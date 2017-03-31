@@ -1,8 +1,10 @@
 var { db, sql } = require("../helpers/db");
 var log = require("winston");
 
-var getUserIdForUser = function(user, cb) {
-  log.info("user", JSON.stringify(user));
+var getUserIdForUser = function(req, cb) {
+  let user = req.user;
+  let name = req.header("X-Auth0-Name");
+  let auth0UserId = req.header("X-Auth0-UserId");
   if (user.user_id) {
     return cb(user.user_id);
   }
@@ -11,15 +13,15 @@ var getUserIdForUser = function(user, cb) {
       userEmail: user.email
     })
     .then(function(user) {
-      console.log("found user: %s", user.id);
       cb(user.id);
     })
     .catch(function(error) {
-      console.log("ERROR", error);
+      // get user.name and then create a new user in our database
       db
         .one(sql("../sql/create_user_id.sql"), {
           userEmail: user.email,
-          userName: user.name
+          userName: name,
+          auth0UserId: auth0UserId
         })
         .then(function(user) {
           cb(user.user_id);

@@ -154,8 +154,7 @@ router.post("/new", function(req, res, next) {
           message: "Cannot create Case, both title and summary are required"
         });
       }
-      getUserIdForUser(req.user, function(user_id) {
-        console.log("Create new case for %s", req.body);
+      getUserIdForUser(req, function(user_id) {
         db
           .none(
             sql("../sql/create_case.sql"),

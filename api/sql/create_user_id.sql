@@ -2,12 +2,14 @@ INSERT into users (
   email,
   language,
   language_1,
-  name
+  name,
+  auth0_user_id
 )
 VALUES
   (
     ${userEmail},
     'en', 'en',
-    ${userName}
+    ${userName},
+    ${auth0UserId}
   )
 RETURNING id as user_id;
