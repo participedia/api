@@ -78,11 +78,9 @@ router.delete("/:userId", function edituserById(req, res) {
     "Contributors",
     function() {
       console.error("user doesn't have Contributors group membership");
-      res
-        .status(401)
-        .json({
-          message: "access denied - user does not have proper authorization"
-        });
+      res.status(401).json({
+        message: "access denied - user does not have proper authorization"
+      });
       return;
     },
     function() {

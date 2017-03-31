@@ -127,6 +127,7 @@ router.get("/countsByCountry", function(req, res) {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
+
 router.post("/new", function(req, res, next) {
   groups.user_has(
     req,
@@ -147,18 +148,12 @@ router.post("/new", function(req, res, next) {
       //   related cases
       let title = req.body.title;
       let body = req.body.summary;
-      let user_id = req.user && req.user.user_id;
+      let user_id = req.user.user_id;
       if (!(title && body)) {
         return res.status(400).json({
           message: "Cannot create Case, both title and summary are required"
         });
       }
-      if (!user_id) {
-        return res.status(400).json({
-          message: "Need a user_id to create a Case"
-        });
-      }
-      console.log("Create new case for %s", req.body);
       db
         .none(
           sql("../sql/create_case.sql"),
