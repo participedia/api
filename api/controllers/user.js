@@ -1,11 +1,10 @@
 "use strict";
-var express = require("express");
-var router = express.Router();
-var groups = require("../helpers/groups");
-var cache = require("apicache");
-var log = require("winston");
-var jsonStringify = require("json-pretty");
-var { db, sql } = require("../helpers/db");
+let express = require("express");
+let router = express.Router(); // eslint-disable-line new-cap
+let groups = require("../helpers/groups");
+let cache = require("apicache");
+let log = require("winston");
+let { db, sql } = require("../helpers/db");
 
 /**
  * @api {get} /user/:userId Retrieve a user
@@ -84,8 +83,8 @@ router.delete("/:userId", function edituserById(req, res) {
       return;
     },
     function() {
-      var userId = req.swagger.params.userId.value;
-      var userBody = req.body;
+      // let userId = req.swagger.params.userId.value;
+      // let userBody = req.body;
       res.status(200).json(req.body);
     }
   );

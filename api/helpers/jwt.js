@@ -1,4 +1,4 @@
-var ejwt = require("express-jwt");
+let ejwt = require("express-jwt");
 
 if (!process.env.AUTH0_CLIENT_SECRET) {
   console.error("need to set AUTH0_CLIENT_SECRET");
@@ -10,7 +10,7 @@ if (!process.env.AUTH0_CLIENT_ID) {
 }
 
 // Initialize express-jwt
-var jwt = function() {
+let jwt = function() {
   return ejwt({
     secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, "base64"),
     audience: process.env.AUTH0_CLIENT_ID

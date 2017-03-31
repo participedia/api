@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "google",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2016,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "require-jsdoc": "off",
+    "react/prop-types": "off",
+    "camelcase": "off",
+    "prettier/prettier": "warn"
+  }
+}

@@ -1,6 +1,6 @@
-var { db, sql } = require("../helpers/db");
-var log = require("winston");
-var unless = require("express-unless");
+let { db, sql } = require("../helpers/db");
+let log = require("winston");
+let unless = require("express-unless");
 
 function ensureUser(req, res, next) {
   let user = req.user;

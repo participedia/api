@@ -1,10 +1,8 @@
-var tokens = require("./setupenv");
-var request = require("supertest");
-var app = require("../app");
-var log = require("winston");
+let tokens = require("./setupenv");
+let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-let should = chai.should();
+chai.should();
 chai.use(chaiHttp);
 
 describe("Methods", () => {

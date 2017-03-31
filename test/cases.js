@@ -1,10 +1,8 @@
-var tokens = require("./setupenv");
-var request = require("supertest");
-var app = require("../app");
-var log = require("winston");
+let tokens = require("./setupenv");
+let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-let should = chai.should();
+chai.should();
 chai.use(chaiHttp);
 
 describe("Cases", () => {
@@ -59,7 +57,7 @@ describe("Cases", () => {
           // mandatory
           title: "This is the first title of the rest of your post",
           summary: "Eat this, it is my body",
-          //optional
+          // optional
           photo: "", // not sure what the client wants to send here
           vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
           geoSuggest: "???", // not sure what the client thinks it is sending here
@@ -71,7 +69,7 @@ describe("Cases", () => {
         });
     });
   });
-  let userID = tokens.user_payload.user_id;
+  // let userID = tokens.user_payload.user_id;
   describe("Counting by country", () => {
     it("returns stuff", done => {
       chai
@@ -81,7 +79,7 @@ describe("Cases", () => {
         .set("Accept", "application/json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .end((err, res) => {
-          var countryCounts = res.body.data.countryCounts;
+          let countryCounts = res.body.data.countryCounts;
           countryCounts.should.have.property("france");
           res.should.have.status(200);
           done();
