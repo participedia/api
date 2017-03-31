@@ -12,7 +12,6 @@ var Bodybuilder = require("bodybuilder");
 var jsonStringify = require("json-pretty");
 
 var { db, sql, as } = require("../helpers/db");
-var { getUserIdForUser } = require("../helpers/user");
 
 const empty_case = {
   title: "",
@@ -149,35 +148,34 @@ router.post("/new", function(req, res, next) {
       //   related cases
       let title = req.body.title;
       let body = req.body.summary;
+      let user_id = req.user.user_id;
       if (!(title && body)) {
         return res.status(400).json({
           message: "Cannot create Case, both title and summary are required"
         });
       }
-      getUserIdForUser(req, function(user_id) {
-        db
-          .none(
-            sql("../sql/create_case.sql"),
-            Object.assign({}, empty_case, {
-              title,
-              body,
-              user_id
-            })
-          )
-          .then(function(case_id) {
-            return res.status(201).json({
-              OK: true,
-              data: case_id
-            });
+      db
+        .none(
+          sql("../sql/create_case.sql"),
+          Object.assign({}, empty_case, {
+            title,
+            body,
+            user_id
           })
-          .catch(function(error) {
-            log.error("Exception in POST /case/new => %s", error);
-            return res.status(500).json({
-              OK: false,
-              error: error
-            });
+        )
+        .then(function(case_id) {
+          return res.status(201).json({
+            OK: true,
+            data: case_id
           });
-      });
+        })
+        .catch(function(error) {
+          log.error("Exception in POST /case/new => %s", error);
+          return res.status(500).json({
+            OK: false,
+            error: error
+          });
+        });
     }
   );
 });

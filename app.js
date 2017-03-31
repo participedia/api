@@ -42,6 +42,7 @@ var methodOverride = require("method-override");
 var cors = require("cors");
 var isUser = require("./api/middleware/isUser");
 var jwt = require("express-jwt");
+var { ensureUser } = require("./api/helpers/user");
 
 app.set("port", port);
 app.use(morgan("dev"));
@@ -55,6 +56,7 @@ app.use(
     algorithms: ["HS256"]
   }).unless({ method: ["OPTIONS", "GET"] })
 );
+app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 
