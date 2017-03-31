@@ -1,10 +1,9 @@
 "use strict";
-var express = require("express");
-var router = express.Router();
-var groups = require("../helpers/groups");
-var url = require("url");
-var { db, sql } = require("../helpers/db");
-var log = require("winston");
+let express = require("express");
+let router = express.Router(); // eslint-disable-line new-cap
+let groups = require("../helpers/groups");
+let { db } = require("../helpers/db");
+let log = require("winston");
 
 /**
  * @api {get} /bookmark/:userId List bookmarks for a given user
@@ -34,7 +33,7 @@ var log = require("winston");
 router.get("/list/:userId", function(req, res, next) {
   // Find out if userID exists in user table
   try {
-    var userId = req.params.userId;
+    let userId = req.params.userId;
     db
       .any("SELECT * FROM bookmarks WHERE userid=$1", [userId])
       .then(data => {
@@ -90,20 +89,16 @@ router.post("/add", function addBookmark(req, res, next) {
       req,
       "Contributors",
       function() {
-        res
-          .status(401)
-          .json({
-            message: "access denied - user does not have proper authorization"
-          });
+        res.status(401).json({
+          message: "access denied - user does not have proper authorization"
+        });
       },
       function() {
         if (!req.body.bookmarkType) {
           log.error("Required parameter (bookmarkType) wasn't specified");
-          res
-            .status(400)
-            .json({
-              message: "Required parameter (bookmarkType) wasn't specified"
-            });
+          res.status(400).json({
+            message: "Required parameter (bookmarkType) wasn't specified"
+          });
           return;
         }
         if (!req.body.thingID) {
@@ -113,7 +108,7 @@ router.post("/add", function addBookmark(req, res, next) {
             .json({ error: "Required parameter (thingID) wasn't specified" });
           return;
         }
-        var userId = req.user.user_id;
+        let userId = req.user.user_id;
         if (!userId) {
           log.error("No user");
           res.status(400).json({ error: "User (userId) wasn't specified" });
@@ -176,25 +171,21 @@ router.delete("/delete/:bookmarkID", function updateUser(req, res, next) {
     req,
     "Contributors",
     function() {
-      res
-        .status(401)
-        .json({
-          message: "access denied - user does not have proper authorization"
-        });
+      res.status(401).json({
+        message: "access denied - user does not have proper authorization"
+      });
       return;
     },
     function() {
-      var userId = req.user.user_id;
-      var bookmarkID = parseInt(req.params.bookmarkID);
+      let userId = req.user.user_id;
+      let bookmarkID = parseInt(req.params.bookmarkID);
       db
         .one("select * from bookmarks where ID = $1", bookmarkID)
         .then(function(data) {
           if (data.user != userId) {
-            res
-              .status(401)
-              .json({
-                message: "access denied - user is not the owner of the bookmark"
-              });
+            res.status(401).json({
+              message: "access denied - user is not the owner of the bookmark"
+            });
           } else {
             db
               .none("delete from bookmarks where id = $1", bookmarkID)

@@ -49,14 +49,21 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
-    "istanbul": "^0.4.5",
+    "babel-eslint": "^7.2.1",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
-    "mocha": "^3.2.0"
+    "eslint": "^3.19.0",
+    "eslint-config-google": "^0.7.1",
+    "eslint-config-prettier": "^1.5.0",
+    "eslint-plugin-prettier": "^2.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "prettier": "^0.22.0"
   },
   "scripts": {
     "start": "./node_modules/apidoc/bin/apidoc -i api -o swagger && nodemon ./node_modules/.bin/babel-node server.js",
     "start-dev": "nave use 6 bash -c 'node-dev server.js'",
+    "lint": "eslint \"**.js\"",
     "postinstall": "./node_modules/apidoc/bin/apidoc -i api -o swagger",
     "deploy": "git push heroku",
     "coverage": "NODE_ENV=test istanbul cover _mocha -- -R spec && open coverage/lcov-report/index.html",

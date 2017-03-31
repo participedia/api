@@ -1,9 +1,9 @@
 "use strict";
 
-var path = require("path");
-var process = require("process");
+let path = require("path");
+let process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
-var app = require("express")();
+let app = require("express")();
 
 if (
   process.env.NODE_ENV === "test" &&
@@ -15,34 +15,26 @@ if (
   process.exit(1);
 }
 
-// Set up the token security handler
-var config = {
-  appRoot: path.join(__dirname, ".."), // required config
-  validateResponse: false
-};
-var express = require("express");
-var compression = require("compression");
-var AWS = require("aws-sdk");
+let express = require("express");
+let compression = require("compression");
+let AWS = require("aws-sdk");
 AWS.config.update({ region: "us-east-1" });
-var app = express();
 app.use(compression());
-var port = process.env.PORT || 3001;
-var case_ = require("./api/controllers/case");
-var search = require("./api/controllers/search");
-var organization = require("./api/controllers/organization");
-var user = require("./api/controllers/user");
-var bookmark = require("./api/controllers/bookmark");
-var method = require("./api/controllers/method");
-var http = require("http");
-var path = require("path");
-var errorhandler = require("errorhandler");
-var morgan = require("morgan");
-var bodyParser = require("body-parser");
-var methodOverride = require("method-override");
-var cors = require("cors");
-var isUser = require("./api/middleware/isUser");
-var jwt = require("express-jwt");
-var { ensureUser } = require("./api/helpers/user");
+let port = process.env.PORT || 3001;
+let case_ = require("./api/controllers/case");
+let search = require("./api/controllers/search");
+let organization = require("./api/controllers/organization");
+let user = require("./api/controllers/user");
+let bookmark = require("./api/controllers/bookmark");
+let method = require("./api/controllers/method");
+let errorhandler = require("errorhandler");
+let morgan = require("morgan");
+let bodyParser = require("body-parser");
+let methodOverride = require("method-override");
+let cors = require("cors");
+let isUser = require("./api/middleware/isUser");
+let jwt = require("express-jwt");
+let { ensureUser } = require("./api/helpers/user");
 
 app.set("port", port);
 app.use(morgan("dev"));
@@ -60,7 +52,7 @@ app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 
-var cache = require("apicache").middleware;
+let cache = require("apicache").middleware;
 // TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
 
 app.use("/search", cache("5 minutes"), search);
@@ -82,7 +74,7 @@ app.use(
   "/s3",
   require("react-dropzone-s3-uploader/s3router")({
     bucket: "uploads.participedia.xyz",
-    region: "us-east-1", //optional
+    region: "us-east-1", // optional
     headers: { "Access-Control-Allow-Origin": "*" }, // optional
     ACL: "private" // this is default
   })

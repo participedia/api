@@ -1,17 +1,16 @@
-var promise = require("bluebird");
-var options = {
+let promise = require("bluebird");
+let options = {
   // Initialization Options
   promiseLib: promise
 };
 if (process.env.LOG_QUERY === "true") {
   options.query = evt => console.info("Executing query %s", evt.query);
 }
-var pgp = require("pg-promise")(options);
+let pgp = require("pg-promise")(options);
 const path = require("path");
-var connectionString = process.env.DATABASE_URL;
-var parse = require("pg-connection-string").parse;
-var log = require("winston");
-var config;
+let connectionString = process.env.DATABASE_URL;
+let parse = require("pg-connection-string").parse;
+let config;
 
 try {
   config = parse(connectionString);
@@ -23,7 +22,7 @@ try {
 } catch (e) {
   console.log("# Error parsing DATABASE_URL environment variable");
 }
-var db = pgp(config);
+let db = pgp(config);
 
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), { minify: true });

@@ -1,17 +1,11 @@
 "use strict";
-var express = require("express");
-var router = express.Router();
-var groups = require("../helpers/groups");
-var es = require("../helpers/es");
-var ddb = require("../helpers/ddb");
-var cache = require("apicache");
-var AWS = require("aws-sdk");
-var getAuthorByAuthorID = require("../helpers/getAuthor");
-var log = require("winston");
-var Bodybuilder = require("bodybuilder");
-var jsonStringify = require("json-pretty");
+let express = require("express");
+let router = express.Router(); // eslint-disable-line new-cap
+let groups = require("../helpers/groups");
+let cache = require("apicache");
+let log = require("winston");
 
-var { db, sql, as } = require("../helpers/db");
+let { db, sql } = require("../helpers/db");
 
 const empty_case = {
   title: "",
@@ -83,7 +77,7 @@ router.get("/countsByCountry", function(req, res) {
     .any(sql("../sql/cases_by_country.sql"))
     .then(function(countries) {
       // convert array to object
-      var countryCounts = {};
+      let countryCounts = {};
       countries.forEach(function(row) {
         countryCounts[row.country.toLowerCase()] = row.count;
       });
@@ -219,8 +213,8 @@ router.put("/:caseId", function editCaseById(req, res) {
       return;
     },
     function() {
-      var caseId = req.swagger.params.caseId.value;
-      var caseBody = req.body;
+      // let caseId = req.swagger.params.caseId.value;
+      // let caseBody = req.body;
       res.status(200).json(req.body);
     }
   );
@@ -307,8 +301,8 @@ router.delete("/:caseId", function editCaseById(req, res) {
       return;
     },
     function() {
-      var caseId = req.swagger.params.caseId.value;
-      var caseBody = req.body;
+      // let caseId = req.swagger.params.caseId.value;
+      // let caseBody = req.body;
       res.status(200).json(req.body);
     }
   );

@@ -1,17 +1,14 @@
 "use strict";
-var express = require("express");
-var router = express.Router();
-var groups = require("../helpers/groups");
-var es = require("../helpers/es");
-var ddb = require("../helpers/ddb");
-var cache = require("apicache");
-var AWS = require("aws-sdk");
-var getAuthorByAuthorID = require("../helpers/getAuthor");
-var log = require("winston");
-var Bodybuilder = require("bodybuilder");
-var jsonStringify = require("json-pretty");
 
-var { db, sql } = require("../helpers/db");
+let express = require("express");
+let router = express.Router(); // eslint-disable-line new-cap
+let groups = require("../helpers/groups");
+let log = require("winston");
+
+let {
+  db,
+  sql
+} = require("../helpers/db");
 
 const empty_organization = {
   title: "",
@@ -153,7 +150,7 @@ router.put("/:id", function editOrgById(req, res) {
       return;
     },
     function() {
-      var orgId = req.swagger.params.id.value;
+      // let orgId = req.swagger.params.id.value;
       res.status(200).json(req.body);
     }
   );
@@ -243,7 +240,7 @@ router.delete("/:id", function deleteOrganization(req, res) {
       return;
     },
     function() {
-      var orgId = req.swagger.params.id.value;
+      // let orgId = req.swagger.params.id.value;
       res.status(200).json(req.body);
     }
   );

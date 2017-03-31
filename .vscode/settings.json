@@ -4,5 +4,6 @@
       "doc/**": true,
       "docs/**": true,
       "public/**": true
-    }
-}
+    },
+    "eslint.enable": true
+  }
