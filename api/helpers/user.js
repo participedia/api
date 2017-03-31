@@ -6,8 +6,13 @@ function ensureUser(req, res, next) {
   let user = req.user;
   let name = req.header("X-Auth0-Name");
   let auth0UserId = req.header("X-Auth0-UserId");
+  if (!user) {
+    // not authenticated, let it fail elsewhere
+    return next();
+  }
   if (user.user_id) {
-    next();
+    // all is well, carry on
+    return next();
   }
   db
     .one(sql("../sql/user_by_email.sql"), {
