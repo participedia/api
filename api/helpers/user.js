@@ -7,8 +7,14 @@ function ensureUser(req, res, next) {
   let name = req.header("X-Auth0-Name");
   let auth0UserId = req.header("X-Auth0-UserId");
   if (!user) {
-    // not authenticated, let it fail elsewhere
-    return next();
+    res.status(401).json({
+      message: "User must be logged in to add or edit content."
+    });
+  }
+  if (!okToEdit(user)) {
+    res.status(401).json({
+      message: "User is not authorized to add or edit content."
+    });
   }
   if (user.user_id) {
     // all is well, carry on
@@ -44,6 +50,22 @@ function ensureUser(req, res, next) {
     });
 }
 
+function okToEdit(user) {
+  // User should be logged in and not be part of the Banned group
+  if (
+    !(user.app_metadata &&
+      user.app_metadata.authorization &&
+      user.app_metadata.authorization.groups)
+  ) {
+    // how do we have a user, but not this metadata?
+    return false;
+  }
+  if (user.app_metadata.authorization.groups.indexOf("Banned") !== -1) {
+    return false;
+  }
+  return true;
+}
+
 ensureUser.unless = unless;
 
-module.exports = (exports = { ensureUser });
+module.exports = (exports = { ensureUser, okToEdit });

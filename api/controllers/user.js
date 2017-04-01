@@ -1,7 +1,6 @@
 "use strict";
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
-let groups = require("../helpers/groups");
 let cache = require("apicache");
 let log = require("winston");
 let { db, sql } = require("../helpers/db");
@@ -72,22 +71,9 @@ router.get("/:userId", function getUserById(req, res) {
 
 router.delete("/:userId", function edituserById(req, res) {
   cache.clear();
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      console.error("user doesn't have Contributors group membership");
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
-      });
-      return;
-    },
-    function() {
-      // let userId = req.swagger.params.userId.value;
-      // let userBody = req.body;
-      res.status(200).json(req.body);
-    }
-  );
+  // let userId = req.swagger.params.userId.value;
+  // let userBody = req.body;
+  res.status(200).json(req.body);
 });
 
 module.exports = router;

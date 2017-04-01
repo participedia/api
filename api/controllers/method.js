@@ -1,7 +1,6 @@
 "use strict";
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
-let groups = require("../helpers/groups");
 let log = require("winston");
 
 let { db, sql } = require("../helpers/db");
@@ -62,61 +61,49 @@ const empty_method = {
  *
  */
 router.post("/new", function(req, res, next) {
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
+  // create new `method` in db
+  // req.body *should* contain:
+  //   title
+  //   body (or "summary"?)
+  //   photo
+  //   video
+  //   location
+  //   related methods
+  let title = req.body.title;
+  let body = req.body.summary;
+  let user_id = req.user && req.user.user_id;
+  if (!(title && body)) {
+    return res.status(400).json({
+      message: "Cannot create Method, both title and summary are required"
+    });
+  }
+  if (!user_id) {
+    return res.status(400).json({
+      message: "Need a user_id to create a Method"
+    });
+  }
+  db
+    .none(
+      sql("../sql/create_method.sql"),
+      Object.assign({}, empty_method, {
+        title,
+        body,
+        user_id
+      })
+    )
+    .then(function(method_id) {
+      return res.status(201).json({
+        OK: true,
+        data: method_id
       });
-    },
-    function() {
-      // create new `method` in db
-      // req.body *should* contain:
-      //   title
-      //   body (or "summary"?)
-      //   photo
-      //   video
-      //   location
-      //   related methods
-      let title = req.body.title;
-      let body = req.body.summary;
-      let user_id = req.user && req.user.user_id;
-      if (!(title && body)) {
-        return res.status(400).json({
-          message: "Cannot create Method, both title and summary are required"
-        });
-      }
-      if (!user_id) {
-        return res.status(400).json({
-          message: "Need a user_id to create a Method"
-        });
-      }
-      console.log("Create new method for %s", req.body);
-      db
-        .none(
-          sql("../sql/create_method.sql"),
-          Object.assign({}, empty_method, {
-            title,
-            body,
-            user_id
-          })
-        )
-        .then(function(method_id) {
-          return res.status(201).json({
-            OK: true,
-            data: method_id
-          });
-        })
-        .catch(function(error) {
-          log.error("Exception in POST /method/new => %s", error);
-          return res.status(500).json({
-            OK: false,
-            error: error
-          });
-        });
-    }
-  );
+    })
+    .catch(function(error) {
+      log.error("Exception in POST /method/new => %s", error);
+      return res.status(500).json({
+        OK: false,
+        error: error
+      });
+    });
 });
 
 /**
@@ -146,22 +133,9 @@ router.post("/new", function(req, res, next) {
  */
 
 router.put("/:id", function editMethodById(req, res) {
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      console.log("user doesn't have Contributors group membership");
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
-      });
-      return;
-    },
-    function() {
-      // let methodId = req.swagger.params.id.value;
-      // let methodBody = req.body;
-      res.status(200).json(req.body);
-    }
-  );
+  // let methodId = req.swagger.params.id.value;
+  // let methodBody = req.body;
+  res.status(200).json(req.body);
 });
 
 /**
@@ -235,21 +209,8 @@ router.get("/:methodId", function getmethodById(req, res) {
  */
 
 router.delete("/:id", function deleteMethod(req, res) {
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      console.log("user doesn't have Contributors group membership");
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
-      });
-      return;
-    },
-    function() {
-      // let id = req.swagger.params.id.value;
-      res.status(200).json(req.body);
-    }
-  );
+  // let id = req.swagger.params.id.value;
+  res.status(200).json(req.body);
 });
 
 module.exports = router;
