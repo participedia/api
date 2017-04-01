@@ -171,6 +171,14 @@ function format_facet_string(facets, type) {
       "s).location.country = '" +
       facets["location.country"] +
       "' AND";
+  } else if (facets["tag"]) {
+    let sq = "( " +
+      type +
+      "s.tags @> array[" +
+      facets["tag"].replace(/"/g, "'") +
+      "] ) AND";
+    log.info(sq);
+    return sq;
   } else {
     return "";
   }
@@ -212,12 +220,16 @@ router.get("/", function(req, res) {
   let page = parseInt(req.query.page || 1);
 
   // handle faceted queries
-  // currently only faceted query is "geo_country"
+  // currently only faceted query is "geo_country" and tags
   // for more facets, and mixing facets with query terms
   // we'll need a more capable query parser
   if (query) {
     if (query.indexOf("geo_country") > -1) {
       facets["location.country"] = query.split(":")[1];
+      query = "";
+    }
+    if (query.indexOf("tag") > -1) {
+      facets["tag"] = query.split(":")[1];
       query = "";
     }
   }

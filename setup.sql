@@ -228,6 +228,14 @@ CREATE TABLE bookmarks (
   userid VARCHAR
 );
 
+-- INDICES
+
+-- These are used to do array membership of tags
+CREATE INDEX "cases_tags" ON "public"."cases" USING GIN ("tags");
+CREATE INDEX "methods_tags" ON "public"."methods" USING GIN ("tags");
+CREATE INDEX "organizations_tags" ON "public"."organizations" USING GIN ("tags");
+
+
 -- import all the things!
 -- this is generated from json_stats.py as copy_commands.sql
 
