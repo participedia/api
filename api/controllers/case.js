@@ -123,13 +123,84 @@ router.get("/countsByCountry", function(req, res) {
 
 router.post("/new", function(req, res, next) {
   // create new `case` in db
-  // req.body *should* contain:
-  //   title
-  //   body (or "summary"?)
-  //   photo
-  //   video
-  //   location
-  //   related cases
+  // req.body:
+  /*
+  {
+     "title":"Safer Jam",
+     "summary":"Dangerous Summary",
+     "vidURL":"https://www.youtube.com/watch?v=QF7g3rCnD-w",
+     "location":{
+        "label":"Cleveland, OH, United States",
+        "placeId":"ChIJLWto4y7vMIgRQhhi91XLBO0",
+        "isFixture":false,
+        "gmaps":{
+           "address_components":[
+              {
+                 "long_name":"Cleveland",
+                 "short_name":"Cleveland",
+                 "types":[
+                    "locality",
+                    "political"
+                 ]
+              },
+              {
+                 "long_name":"Cuyahoga County",
+                 "short_name":"Cuyahoga County",
+                 "types":[
+                    "administrative_area_level_2",
+                    "political"
+                 ]
+              },
+              {
+                 "long_name":"Ohio",
+                 "short_name":"OH",
+                 "types":[
+                    "administrative_area_level_1",
+                    "political"
+                 ]
+              },
+              {
+                 "long_name":"United States",
+                 "short_name":"US",
+                 "types":[
+                    "country",
+                    "political"
+                 ]
+              }
+           ],
+           "formatted_address":"Cleveland, OH, USA",
+           "geometry":{
+              "bounds":{
+                 "south":41.390628,
+                 "west":-81.87897599999997,
+                 "north":41.604436,
+                 "east":-81.53274390000001
+              },
+              "location":{
+                 "lat":41.49932,
+                 "lng":-81.69436050000002
+              },
+              "location_type":"APPROXIMATE",
+              "viewport":{
+                 "south":41.390628,
+                 "west":-81.87897599999997,
+                 "north":41.5992571,
+                 "east":-81.53274390000001
+              }
+           },
+           "place_id":"ChIJLWto4y7vMIgRQhhi91XLBO0",
+           "types":[
+              "locality",
+              "political"
+           ]
+        },
+        "location":{
+           "lat":41.49932,
+           "lng":-81.69436050000002
+        }
+     }
+  }
+  */
   let title = req.body.title;
   let body = req.body.summary;
   let user_id = req.user.user_id;
