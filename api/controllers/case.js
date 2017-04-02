@@ -1,7 +1,6 @@
 "use strict";
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
-let groups = require("../helpers/groups");
 let cache = require("apicache");
 let log = require("winston");
 
@@ -123,55 +122,115 @@ router.get("/countsByCountry", function(req, res) {
  */
 
 router.post("/new", function(req, res, next) {
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
+  // create new `case` in db
+  // req.body:
+  /*
+  {
+     "title":"Safer Jam",
+     "summary":"Dangerous Summary",
+     "vidURL":"https://www.youtube.com/watch?v=QF7g3rCnD-w",
+     "location":{
+        "label":"Cleveland, OH, United States",
+        "placeId":"ChIJLWto4y7vMIgRQhhi91XLBO0",
+        "isFixture":false,
+        "gmaps":{
+           "address_components":[
+              {
+                 "long_name":"Cleveland",
+                 "short_name":"Cleveland",
+                 "types":[
+                    "locality",
+                    "political"
+                 ]
+              },
+              {
+                 "long_name":"Cuyahoga County",
+                 "short_name":"Cuyahoga County",
+                 "types":[
+                    "administrative_area_level_2",
+                    "political"
+                 ]
+              },
+              {
+                 "long_name":"Ohio",
+                 "short_name":"OH",
+                 "types":[
+                    "administrative_area_level_1",
+                    "political"
+                 ]
+              },
+              {
+                 "long_name":"United States",
+                 "short_name":"US",
+                 "types":[
+                    "country",
+                    "political"
+                 ]
+              }
+           ],
+           "formatted_address":"Cleveland, OH, USA",
+           "geometry":{
+              "bounds":{
+                 "south":41.390628,
+                 "west":-81.87897599999997,
+                 "north":41.604436,
+                 "east":-81.53274390000001
+              },
+              "location":{
+                 "lat":41.49932,
+                 "lng":-81.69436050000002
+              },
+              "location_type":"APPROXIMATE",
+              "viewport":{
+                 "south":41.390628,
+                 "west":-81.87897599999997,
+                 "north":41.5992571,
+                 "east":-81.53274390000001
+              }
+           },
+           "place_id":"ChIJLWto4y7vMIgRQhhi91XLBO0",
+           "types":[
+              "locality",
+              "political"
+           ]
+        },
+        "location":{
+           "lat":41.49932,
+           "lng":-81.69436050000002
+        }
+     }
+  }
+  */
+  let title = req.body.title;
+  let body = req.body.summary;
+  let user_id = req.user.user_id;
+  if (!(title && body)) {
+    return res.status(400).json({
+      message: "Cannot create Case, both title and summary are required"
+    });
+  }
+  db
+    .one(
+      sql("../sql/create_case.sql"),
+      Object.assign({}, empty_case, {
+        title,
+        body,
+        user_id
+      })
+    )
+    .then(function(case_id) {
+      return res.status(201).json({
+        OK: true,
+        data: case_id
       });
-    },
-    function() {
-      // create new `case` in db
-      // req.body *should* contain:
-      //   title
-      //   body (or "summary"?)
-      //   photo
-      //   video
-      //   location
-      //   related cases
-      let title = req.body.title;
-      let body = req.body.summary;
-      let user_id = req.user.user_id;
-      if (!(title && body)) {
-        return res.status(400).json({
-          message: "Cannot create Case, both title and summary are required"
-        });
-      }
-      db
-        .none(
-          sql("../sql/create_case.sql"),
-          Object.assign({}, empty_case, {
-            title,
-            body,
-            user_id
-          })
-        )
-        .then(function(case_id) {
-          return res.status(201).json({
-            OK: true,
-            data: case_id
-          });
-        })
-        .catch(function(error) {
-          log.error("Exception in POST /case/new => %s", error);
-          return res.status(500).json({
-            OK: false,
-            error: error
-          });
-        });
-    }
-  );
+    })
+    .catch(function(error) {
+      log.error("Exception in POST /case/new => %s", error);
+      return res.status(500).json({
+        OK: false,
+        error: error
+      });
+    });
 });
 
 /**
@@ -202,22 +261,9 @@ router.post("/new", function(req, res, next) {
 
 router.put("/:caseId", function editCaseById(req, res) {
   cache.clear();
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      console.error("user doesn't have Contributors group membership");
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
-      });
-      return;
-    },
-    function() {
-      // let caseId = req.swagger.params.caseId.value;
-      // let caseBody = req.body;
-      res.status(200).json(req.body);
-    }
-  );
+  // let caseId = req.swagger.params.caseId.value;
+  // let caseBody = req.body;
+  res.status(200).json(req.body);
 });
 
 /**
@@ -290,22 +336,9 @@ router.get("/:caseId", function getCaseById(req, res) {
 
 router.delete("/:caseId", function editCaseById(req, res) {
   cache.clear();
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      console.error("user doesn't have Contributors group membership");
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
-      });
-      return;
-    },
-    function() {
-      // let caseId = req.swagger.params.caseId.value;
-      // let caseBody = req.body;
-      res.status(200).json(req.body);
-    }
-  );
+  // let caseId = req.swagger.params.caseId.value;
+  // let caseBody = req.body;
+  res.status(200).json(req.body);
 });
 
 module.exports = router;

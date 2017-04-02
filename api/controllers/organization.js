@@ -2,7 +2,6 @@
 
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
-let groups = require("../helpers/groups");
 let log = require("winston");
 
 let {
@@ -55,61 +54,49 @@ const empty_organization = {
  *
  */
 router.post("/new", function(req, res, next) {
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
+  // create new `organization` in db
+  // req.body *should* contain:
+  //   title
+  //   body (or "summary"?)
+  //   photo
+  //   video
+  //   location
+  //   related organizations
+  let title = req.body.title;
+  let body = req.body.summary;
+  let user_id = req.user && req.user.user_id;
+  if (!(title && body)) {
+    return res.status(400).json({
+      message: "Cannot create Organization, both title and summary are required"
+    });
+  }
+  if (!user_id) {
+    return res.status(400).json({
+      message: "Need a user_id to create a Organization"
+    });
+  }
+  db
+    .one(
+      sql("../sql/create_organization.sql"),
+      Object.assign({}, empty_organization, {
+        title,
+        body,
+        user_id
+      })
+    )
+    .then(function(organization_id) {
+      return res.status(201).json({
+        OK: true,
+        data: organization_id
       });
-    },
-    function() {
-      // create new `organization` in db
-      // req.body *should* contain:
-      //   title
-      //   body (or "summary"?)
-      //   photo
-      //   video
-      //   location
-      //   related organizations
-      let title = req.body.title;
-      let body = req.body.summary;
-      let user_id = req.user && req.user.user_id;
-      if (!(title && body)) {
-        return res.status(400).json({
-          message: "Cannot create Organization, both title and summary are required"
-        });
-      }
-      if (!user_id) {
-        return res.status(400).json({
-          message: "Need a user_id to create a Organization"
-        });
-      }
-      console.log("Create new organization for %s", req.body);
-      db
-        .none(
-          sql("../sql/create_organization.sql"),
-          Object.assign({}, empty_organization, {
-            title,
-            body,
-            user_id
-          })
-        )
-        .then(function(organization_id) {
-          return res.status(201).json({
-            OK: true,
-            data: organization_id
-          });
-        })
-        .catch(function(error) {
-          log.error("Exception in POST /organization/new => %s", error);
-          return res.status(500).json({
-            OK: false,
-            error: error
-          });
-        });
-    }
-  );
+    })
+    .catch(function(error) {
+      log.error("Exception in POST /organization/new => %s", error);
+      return res.status(500).json({
+        OK: false,
+        error: error
+      });
+    });
 });
 
 /**
@@ -139,21 +126,8 @@ router.post("/new", function(req, res, next) {
  */
 
 router.put("/:id", function editOrgById(req, res) {
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      console.log("user doesn't have Contributors group membership");
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
-      });
-      return;
-    },
-    function() {
-      // let orgId = req.swagger.params.id.value;
-      res.status(200).json(req.body);
-    }
-  );
+  // let orgId = req.swagger.params.id.value;
+  res.status(200).json(req.body);
 });
 
 /**
@@ -229,21 +203,8 @@ router.get("/:organizationId", function getorganizationById(req, res) {
  */
 
 router.delete("/:id", function deleteOrganization(req, res) {
-  groups.user_has(
-    req,
-    "Contributors",
-    function() {
-      console.log("user doesn't have Contributors group membership");
-      res.status(401).json({
-        message: "access denied - user does not have proper authorization"
-      });
-      return;
-    },
-    function() {
-      // let orgId = req.swagger.params.id.value;
-      res.status(200).json(req.body);
-    }
-  );
+  // let orgId = req.swagger.params.id.value;
+  res.status(200).json(req.body);
 });
 
 module.exports = router;

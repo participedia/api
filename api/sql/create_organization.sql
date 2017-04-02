@@ -26,5 +26,5 @@ VALUES
     ${title},
     ${language},
     (select organization_id from insert_organization)
-  )
+  ) RETURNING organization_id
 ;
