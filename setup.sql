@@ -228,6 +228,7 @@ CREATE TABLE bookmarks (
   userid VARCHAR
 );
 
+
 -- import all the things!
 -- this is generated from json_stats.py as copy_commands.sql
 
@@ -259,3 +260,4 @@ CREATE TABLE bookmarks (
 \include 'migrations/migration_006.sql'
 \include 'migrations/migration_007.sql'
 \include 'migrations/migration_008.sql'
+\include 'migrations/migration_009.sql'
