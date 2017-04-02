@@ -203,16 +203,16 @@ router.post("/new", function(req, res, next) {
   */
   let title = req.body.title;
   let body = req.body.summary;
-  let user_id = req.user.user_id;
-  let location = as.location(req.body.location);
-  let videos = as.video(req.body.vidURL);
-  let lead_image_url = ""; // frontend isn't sending this yet
-  let related_cases = ""; // frontend isn't sending this yet
   if (!(title && body)) {
     return res.status(400).json({
       message: "Cannot create Case, both title and summary are required"
     });
   }
+  let user_id = req.user.user_id;
+  let location = as.location(req.body.location);
+  let videos = as.video(req.body.vidURL);
+  let lead_image = as.attachment(req.body.leadImage); // frontend isn't sending this yet
+  let related_cases = ""; // frontend isn't sending this yet
   db
     .one(
       sql("../sql/create_case.sql"),

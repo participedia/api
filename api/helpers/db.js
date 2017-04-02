@@ -20,7 +20,7 @@ try {
     config.ssl = true;
   }
 } catch (e) {
-  console.log("# Error parsing DATABASE_URL environment variable");
+  console.error("# Error parsing DATABASE_URL environment variable");
 }
 let db = pgp(config);
 
@@ -39,17 +39,29 @@ function author(user_id, name) {
 // as.attachment
 function attachment(url, title, size) {
   if (!url) {
+    return "null";
+  }
+  title = title || "";
+  if (size === undefined) {
+    size = "null";
+  }
+  return `("${url}", "${title}", ${size})::attachment`;
+}
+
+// as.attachments
+function attachments(url, title, size) {
+  if (!url) {
     return "'{}'";
   }
   title = title || "";
   if (size === undefined) {
     size = "null";
   }
-  return `ARRAY("${url}", "${title}", ${size})]::attachment[]`;
+  return `ARRAY[("${url}", "${title}", ${size})]::attachment[]`;
 }
 
-// as.video
-function video(url, title) {
+// as.videos
+function videos(url, title) {
   if (!url) {
     return "{}";
   }
@@ -79,6 +91,6 @@ function location(location) {
   return `("${name}", "", "", "${city}", "${province}", "${country}", "", "${lat}", "${long}")::geolocation`;
 }
 
-var as = Object.assign({}, pgp.as, { author, attachment, location, video });
+var as = Object.assign({}, pgp.as, { author, attachments, location, videos });
 
 module.exports = { db, sql, as };

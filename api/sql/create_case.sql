@@ -23,7 +23,7 @@ WITH insert_case as (
       true, 'now', null, 'now', 'General Public',
       null, 'Lay Public', 'General Public',
       'Open to all', null, null, null, null,
-      null, null, null, ${location}, CAST(ROW('${lead_image_url}', '', 0) as attachment),
+      null, null, null, ${location:raw}, ${lead_image},
       '{}', '{}', ${videos}, '{}', false
     ) RETURNING id as case_id
 ),

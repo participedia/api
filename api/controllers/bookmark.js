@@ -51,7 +51,7 @@ router.get("/list/:userId", function(req, res, next) {
         log.error(err);
       });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     log.error(err);
     return next(err);
   }
