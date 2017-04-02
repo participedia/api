@@ -23,8 +23,8 @@ WITH insert_case as (
       true, 'now', null, 'now', 'General Public',
       null, 'Lay Public', 'General Public',
       'Open to all', null, null, null, null,
-      null, null, null, null, CAST(ROW('${lead_image_url}', '', 0) as attachment),
-      '{}', '{}', '{}', '{}', false
+      null, null, null, ${location}, CAST(ROW('${lead_image_url}', '', 0) as attachment),
+      '{}', '{}', ${videos}, '{}', false
     ) RETURNING id as case_id
 ),
 insert_author as (

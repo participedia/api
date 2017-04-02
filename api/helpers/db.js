@@ -28,8 +28,57 @@ function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), { minify: true });
 }
 
-module.exports = {
-  db: db,
-  sql: sql,
-  as: pgp.as
-};
+// as.author
+function author(user_id, name) {
+  if (!(user_id && name)) {
+    throw new Exception("Must have both user_id and name for an author");
+  }
+  return `(${user_id}, "now", "${name}")::author`;
+}
+
+// as.attachment
+function attachment(url, title, size) {
+  if (!url) {
+    return "'{}'";
+  }
+  title = title || "";
+  if (size === undefined) {
+    size = "null";
+  }
+  return `ARRAY("${url}", "${title}", ${size})]::attachment[]`;
+}
+
+// as.video
+function video(url, title) {
+  if (!url) {
+    return "{}";
+  }
+  title = title || "";
+  return `ARRAY[("${url}", "${title}")]::video[]`;
+}
+
+// as.location
+function location(location) {
+  if (!location) {
+    return "null";
+  }
+  let { label, lat, long, gMaps } = location;
+  let name = label;
+  let city = "";
+  let province = "";
+  let country = "";
+  gMaps.address_components.forEach(function(component) {
+    if (component.types.includes("city")) {
+      city = component.long_name;
+    } else if (component.types.includes("administrative_area_level_1")) {
+      province = component.long_name; // could also be a state or territory
+    } else if (component.types.includes("country")) {
+      country = component.long_name;
+    }
+  });
+  return `("${name}", "", "", "${city}", "${province}", "${country}", "", "${lat}", "${long}")::geolocation`;
+}
+
+var as = Object.assign({}, pgp.as, { author, attachment, location, video });
+
+module.exports = { db, sql, as };
