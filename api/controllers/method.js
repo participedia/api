@@ -83,7 +83,7 @@ router.post("/new", function(req, res, next) {
     });
   }
   db
-    .none(
+    .one(
       sql("../sql/create_method.sql"),
       Object.assign({}, empty_method, {
         title,

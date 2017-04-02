@@ -31,5 +31,5 @@ VALUES
     ${title},
     ${language},
     (select method_id from insert_method)
-  )
+  ) RETURNING method_id
 ;

@@ -210,7 +210,7 @@ router.post("/new", function(req, res, next) {
     });
   }
   db
-    .none(
+    .one(
       sql("../sql/create_case.sql"),
       Object.assign({}, empty_case, {
         title,

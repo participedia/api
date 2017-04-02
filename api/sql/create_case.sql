@@ -40,5 +40,5 @@ VALUES
     ${title},
     ${language},
     (select case_id from insert_case)
-  )
+  ) RETURNING case_id
 ;

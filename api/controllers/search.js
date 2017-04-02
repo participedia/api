@@ -125,7 +125,6 @@ function get_nouns_by_type(res, objType, facets, page, language, orderBy) {
 }
 
 function get_all_nouns(res, facets, page, language, orderBy) {
-  // IMPLEMENT ME!
   db
     .task(t => {
       let query = ["case", "method", "organization"].map(objType => {

@@ -75,9 +75,8 @@ router.post("/new", function(req, res, next) {
       message: "Need a user_id to create a Organization"
     });
   }
-  console.log("Create new organization for %s", req.body);
   db
-    .none(
+    .one(
       sql("../sql/create_organization.sql"),
       Object.assign({}, empty_organization, {
         title,
