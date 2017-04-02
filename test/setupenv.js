@@ -11,7 +11,7 @@ process.env.AUTH0_CLIENT_ID = "either";
 if (process.env.TESTLOCAL === "true") {
   process.env.DATABASE_URL = "postgres://" +
     process.env.USER +
-    "@localhost:5432/participedia";
+    "@localhost:5432/participedia-test";
   console.log(
     "Starting test locally using DATABASE_URL %s",
     process.env.DATABASE_URL

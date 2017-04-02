@@ -45,7 +45,7 @@ function attachment(url, title, size) {
   if (size === undefined) {
     size = "null";
   }
-  return `("${url}", "${title}", ${size})::attachment`;
+  return `('${url}', '${title}', ${size})::attachment`;
 }
 
 // as.attachments
@@ -57,7 +57,7 @@ function attachments(url, title, size) {
   if (size === undefined) {
     size = "null";
   }
-  return `ARRAY[("${url}", "${title}", ${size})]::attachment[]`;
+  return `ARRAY[('${url}', '${title}', ${size})]::attachment[]`;
 }
 
 // as.videos
@@ -66,7 +66,7 @@ function videos(url, title) {
     return "{}";
   }
   title = title || "";
-  return `ARRAY[("${url}", "${title}")]::video[]`;
+  return `ARRAY[('${url}', '${title}')]::video[]`;
 }
 
 // as.location
@@ -74,12 +74,12 @@ function location(location) {
   if (!location) {
     return "null";
   }
-  let { label, lat, long, gMaps } = location;
+  let { label, lat, long, gmaps } = location;
   let name = label;
   let city = "";
   let province = "";
   let country = "";
-  gMaps.address_components.forEach(function(component) {
+  gmaps.address_components.forEach(function(component) {
     if (component.types.includes("city")) {
       city = component.long_name;
     } else if (component.types.includes("administrative_area_level_1")) {
@@ -88,9 +88,15 @@ function location(location) {
       country = component.long_name;
     }
   });
-  return `("${name}", "", "", "${city}", "${province}", "${country}", "", "${lat}", "${long}")::geolocation`;
+  return `('${name}', '', '', '${city}', '${province}', '${country}', '', '${lat}', '${long}')::geolocation`;
 }
 
-var as = Object.assign({}, pgp.as, { author, attachments, location, videos });
+var as = Object.assign({}, pgp.as, {
+  author,
+  attachment,
+  attachments,
+  location,
+  videos
+});
 
 module.exports = { db, sql, as };

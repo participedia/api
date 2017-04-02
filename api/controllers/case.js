@@ -210,8 +210,8 @@ router.post("/new", function(req, res, next) {
   }
   let user_id = req.user.user_id;
   let location = as.location(req.body.location);
-  let videos = as.video(req.body.vidURL);
-  let lead_image = as.attachment(req.body.leadImage); // frontend isn't sending this yet
+  let videos = as.videos(req.body.vidURL);
+  let lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
   let related_cases = ""; // frontend isn't sending this yet
   db
     .one(
@@ -220,7 +220,7 @@ router.post("/new", function(req, res, next) {
         title,
         body,
         location,
-        lead_image_url,
+        lead_image,
         videos,
         related_cases,
         user_id
@@ -234,6 +234,7 @@ router.post("/new", function(req, res, next) {
     })
     .catch(function(error) {
       log.error("Exception in POST /case/new => %s", error);
+      console.error(error);
       return res.status(500).json({
         OK: false,
         error: error

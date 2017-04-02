@@ -23,8 +23,8 @@ WITH insert_case as (
       true, 'now', null, 'now', 'General Public',
       null, 'Lay Public', 'General Public',
       'Open to all', null, null, null, null,
-      null, null, null, ${location:raw}, ${lead_image},
-      '{}', '{}', ${videos}, '{}', false
+      null, null, null, ${location:raw}, ${lead_image:raw},
+      '{}', '{}', ${videos:raw}, '{}', false
     ) RETURNING id as case_id
 ),
 insert_author as (
