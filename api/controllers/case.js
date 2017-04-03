@@ -3,8 +3,10 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
+let jwt = require("express-jwt");
 
 let { db, sql } = require("../helpers/db");
+let { getUserIfExists } = require("../helpers/user");
 
 const empty_case = {
   title: "",
@@ -292,26 +294,58 @@ router.put("/:caseId", function editCaseById(req, res) {
  *
  */
 
-router.get("/:caseId", function getCaseById(req, res) {
-  db
-    .one(sql("../sql/case_by_id.sql"), {
-      caseId: req.params.caseId,
-      lang: req.params.language || "en"
-    })
-    .then(function(the_case) {
-      res.status(200).json({
-        OK: true,
-        data: the_case
+router.get(
+  "/:caseId",
+  jwt({
+    secret: process.env.AUTH0_CLIENT_SECRET,
+    credentialsRequired: false,
+    algorithms: ["HS256"]
+  }),
+  function getCaseById(req, res) {
+    db
+      .one(sql("../sql/case_by_id.sql"), {
+        caseId: req.params.caseId,
+        lang: req.params.language || "en"
+      })
+      .then(function(the_case) {
+        getUserIfExists(req, res, function(userId) {
+          if (userId) {
+            db
+              .one(
+                "select * from bookmarks where bookmarktype = $1 AND thingid = $2 AND userid = $3",
+                ["case", req.params.caseId, userId]
+              )
+              .then(function(data) {
+                the_case["bookmarked"] = true;
+                res.status(200).json({
+                  OK: true,
+                  data: the_case
+                });
+              })
+              .catch(function() {
+                the_case["bookmarked"] = false;
+                res.status(200).json({
+                  OK: true,
+                  data: the_case
+                });
+              });
+          } else {
+            res.status(200).json({
+              OK: true,
+              data: the_case
+            });
+          }
+        });
+      })
+      .catch(function(error) {
+        log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
+        res.status(500).json({
+          OK: false,
+          error: error
+        });
       });
-    })
-    .catch(function(error) {
-      log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
-      res.status(500).json({
-        OK: false,
-        error: error
-      });
-    });
-});
+  }
+);
 
 /**
  * @api {delete} /case/:caseId Delete a case
