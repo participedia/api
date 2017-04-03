@@ -14,8 +14,8 @@ WITH insert_method as (
       ${language}, null, null, null, null, null, null,
       null, null, null, null, null, 'now', true,
       null, null, null, 'now',
-      CAST(ROW('${lead_image_url}', '', 0) as attachment),
-      '{}', '{}', '{}', '{}', false
+      ${lead_image:raw},
+      '{}', '{}', ${videos:raw}, '{}', false
     ) RETURNING id as method_id
 ),
 insert_author as (

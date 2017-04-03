@@ -8,9 +8,9 @@ WITH insert_organization as (
   )
   VALUES
     (
-      ${language}, null, null, 'now', true, null, 'now', null,
-      CAST(ROW('${lead_image_url}', '', 0) as attachment),
-      '{}', '{}', '{}', '{}', false
+      ${language}, null, null, 'now', true, null, 'now', ${location:raw},
+      ${lead_image:raw},
+      '{}', '{}', ${videos:raw}, '{}', false
     ) RETURNING id as organization_id
 ),
 insert_author as (

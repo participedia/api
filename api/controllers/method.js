@@ -3,7 +3,7 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let log = require("winston");
 
-let { db, sql } = require("../helpers/db");
+let { db, sql, as } = require("../helpers/db");
 
 const empty_method = {
   title: "",
@@ -71,23 +71,24 @@ router.post("/new", function(req, res, next) {
   //   related methods
   let title = req.body.title;
   let body = req.body.summary;
-  let user_id = req.user && req.user.user_id;
   if (!(title && body)) {
     return res.status(400).json({
       message: "Cannot create Method, both title and summary are required"
     });
   }
-  if (!user_id) {
-    return res.status(400).json({
-      message: "Need a user_id to create a Method"
-    });
-  }
+  let user_id = req.user.user_id;
+  let videos = as.videos(req.body.vidURL);
+  let lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
+  let related_cases = ""; // frontend isn't sending this yet
   db
     .one(
       sql("../sql/create_method.sql"),
       Object.assign({}, empty_method, {
         title,
         body,
+        lead_image,
+        videos,
+        related_cases,
         user_id
       })
     )
