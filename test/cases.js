@@ -114,7 +114,7 @@ describe("Cases", () => {
           title: "This is the first title of the rest of your post",
           summary: "Eat this, it is my body",
           // optional
-          lead_image: "https://cdn.thinglink.me/api/image/756598547733807104/", // not sure what the client wants to send here
+          lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
           vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
           location: location,
           relatedCases: ["1", "2", "3", "4"],
