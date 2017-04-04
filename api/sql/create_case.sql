@@ -33,6 +33,12 @@ insert_author as (
     (${user_id}, 'now', (select case_id from insert_case))
 )
 
+${related_cases:raw}
+
+${related_methods:raw}
+
+${related_organizations:raw}
+
 INSERT INTO case__localized_texts(body, title, language, case_id)
 VALUES
   (

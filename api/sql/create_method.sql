@@ -24,6 +24,12 @@ insert_author as (
     (${user_id}, 'now', (select method_id from insert_method))
 )
 
+${related_cases:raw}
+
+${related_methods:raw}
+
+${related_organizations:raw}
+
 INSERT INTO method__localized_texts(body, title, language, method_id)
 VALUES
   (

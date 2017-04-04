@@ -117,7 +117,9 @@ describe("Cases", () => {
           lead_image: "https://cdn.thinglink.me/api/image/756598547733807104/", // not sure what the client wants to send here
           vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
           location: location,
-          relatedCases: "" // not sure what the client expects to send here
+          relatedCases: ["1", "2", "3", "4"],
+          relatedMethods: ["145", "146", "147"],
+          relatedOrganizations: ["199", "200", "201"]
         })
         .end((err, res) => {
           res.should.have.status(201);

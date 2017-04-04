@@ -1,4 +1,5 @@
 let promise = require("bluebird");
+let { isString } = require("lodash");
 let options = {
   // Initialization Options
   promiseLib: promise
@@ -30,6 +31,7 @@ function sql(filename) {
 
 // as.author
 function author(user_id, name) {
+  // TODO: escape user_id and name to avoid injection attacks
   if (!(user_id && name)) {
     throw new Exception("Must have both user_id and name for an author");
   }
@@ -38,6 +40,7 @@ function author(user_id, name) {
 
 // as.attachment
 function attachment(url, title, size) {
+  // TODO: escape url, title, size to avoid injection attacks
   if (!url) {
     return "null";
   }
@@ -50,6 +53,7 @@ function attachment(url, title, size) {
 
 // as.attachments
 function attachments(url, title, size) {
+  // TODO: escape url, title, size to avoid injection attacks
   if (!url) {
     return "'{}'";
   }
@@ -62,6 +66,7 @@ function attachments(url, title, size) {
 
 // as.videos
 function videos(url, title) {
+  // TODO: escape url, title to avoid injection attacks
   if (!url) {
     return "{}";
   }
@@ -71,6 +76,7 @@ function videos(url, title) {
 
 // as.location
 function location(location) {
+  // TODO: escape all values of location to avoid injection attacks
   if (!location) {
     return "null";
   }
@@ -91,12 +97,37 @@ function location(location) {
   return `('${name}', '', '', '${city}', '${province}', '${country}', '', '${lat}', '${long}')::geolocation`;
 }
 
+function related_list(owner, related, id_list) {
+  // TODO: escape id_list to avoid injection attacks
+  // owner == case for case__related_methods
+  // related == method for case__related_methods
+  // id_list is either a single identifier or an array of identifiers
+  if (!id_list || !id_list.length) {
+    return "";
+  }
+  if (isString(id_list)) {
+    id_list = [id_list];
+  }
+  let values = id_list.map(id => `(${id})`).join(", ");
+  return `
+  INSERT INTO
+    ${owner}__related_${related}s
+  SELECT
+    ${owner}_id, related_${related}_id
+  FROM
+    (select ${owner}_id FROM insert_${owner}),
+    (VALUES ${values}) as t (related_${related}_id)
+  ON CONFLICT
+    (${owner}_id, related_${related}_id) DO NOTHING;`;
+}
+
 var as = Object.assign({}, pgp.as, {
   author,
   attachment,
   attachments,
   location,
-  videos
+  videos,
+  related_list
 });
 
 module.exports = { db, sql, as };

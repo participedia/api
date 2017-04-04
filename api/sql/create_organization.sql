@@ -19,6 +19,12 @@ insert_author as (
     (${user_id}, 'now', (select organization_id from insert_organization))
 )
 
+${related_cases:raw}
+
+${related_methods:raw}
+
+${related_organizations:raw}
+
 INSERT INTO organization__localized_texts(body, title, language, organization_id)
 VALUES
   (
