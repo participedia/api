@@ -20,7 +20,7 @@ function isUser(req, res, next) {
       }
     );
   } catch (e) {
-    console.log("Exception in isUser", e);
+    console.error("Exception in isUser", e);
   }
 }
 

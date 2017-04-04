@@ -58,9 +58,8 @@ describe("Methods", () => {
           title: "Rhythm",
           summary: "Never fails",
           // optional
-          photo: "",
+          lead_image: "https://cdn.thinglink.me/api/image/756598547733807104/",
           vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
-          geoSuggest: "???",
           relatedCases: ""
         })
         .end((err, res) => {

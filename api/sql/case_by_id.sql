@@ -33,10 +33,7 @@ SELECT
     to_json(
     	COALESCE(
     		cases.location,
-    		CAST(
-    			ROW('', '', '', '', '', '', '', '', '')
-    			as geolocation
-    		)
+    		('', '', '', '', '', '', '', '', '')::geolocation
     	)
     ) AS location,
     to_json(cases.lead_image) AS lead_image,
@@ -51,11 +48,11 @@ FROM
     case__localized_texts,
     (
         SELECT
-            array_agg(CAST(ROW(
+            array_agg((
                 case__authors.user_id,
                 case__authors.timestamp,
                 users.name
-            ) AS author)) authors,
+            )::author) authors,
             case__authors.case_id
         FROM
             case__authors,

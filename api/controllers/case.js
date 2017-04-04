@@ -4,7 +4,7 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 
-let { db, sql } = require("../helpers/db");
+let { db, sql, as } = require("../helpers/db");
 
 const empty_case = {
   title: "",
@@ -203,18 +203,30 @@ router.post("/new", function(req, res, next) {
   */
   let title = req.body.title;
   let body = req.body.summary;
-  let user_id = req.user.user_id;
   if (!(title && body)) {
     return res.status(400).json({
       message: "Cannot create Case, both title and summary are required"
     });
   }
+  let user_id = req.user.user_id;
+  let location = as.location(req.body.location);
+  let videos = as.videos(req.body.vidURL);
+  let lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
+  let related_cases = as.related_list(req.body.related_cases);
+  let related_methods = as.related_list(req.body.related_methods);
+  let related_organizations = as.related_list(req.body.related_organizations);
   db
     .one(
       sql("../sql/create_case.sql"),
       Object.assign({}, empty_case, {
         title,
         body,
+        location,
+        lead_image,
+        videos,
+        related_cases,
+        related_methods,
+        related_organizations,
         user_id
       })
     )
@@ -226,6 +238,7 @@ router.post("/new", function(req, res, next) {
     })
     .catch(function(error) {
       log.error("Exception in POST /case/new => %s", error);
+      console.error(error);
       return res.status(500).json({
         OK: false,
         error: error

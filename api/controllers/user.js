@@ -33,7 +33,6 @@ router.get("/:userId", function getUserById(req, res) {
       language: req.params.language || "en"
     })
     .then(function(user) {
-      console.log("user: %s", user);
       res.status(200).json({
         OK: true,
         data: user
