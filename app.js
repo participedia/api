@@ -9,7 +9,7 @@ if (
   process.env.NODE_ENV === "test" &&
   process.env.AUTH0_CLIENT_SECRET !== "notasecret"
 ) {
-  console.log(
+  console.error(
     "CODING ERROR: Someone imported 'app' before 'setupenv' in the test suite"
   );
   process.exit(1);

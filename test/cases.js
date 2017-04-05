@@ -5,6 +5,62 @@ let chaiHttp = require("chai-http");
 chai.should();
 chai.use(chaiHttp);
 
+let location = {
+  label: "Cleveland, OH, United States",
+  placeId: "ChIJLWto4y7vMIgRQhhi91XLBO0",
+  isFixture: false,
+  gmaps: {
+    address_components: [
+      {
+        long_name: "Cleveland",
+        short_name: "Cleveland",
+        types: ["locality", "political"]
+      },
+      {
+        long_name: "Cuyahoga County",
+        short_name: "Cuyahoga County",
+        types: ["administrative_area_level_2", "political"]
+      },
+      {
+        long_name: "Ohio",
+        short_name: "OH",
+        types: ["administrative_area_level_1", "political"]
+      },
+      {
+        long_name: "United States",
+        short_name: "US",
+        types: ["country", "political"]
+      }
+    ],
+    formatted_address: "Cleveland, OH, USA",
+    geometry: {
+      bounds: {
+        south: 41.390628,
+        west: -81.87897599999997,
+        north: 41.604436,
+        east: -81.53274390000001
+      },
+      location: {
+        lat: 41.49932,
+        lng: -81.69436050000002
+      },
+      location_type: "APPROXIMATE",
+      viewport: {
+        south: 41.390628,
+        west: -81.87897599999997,
+        north: 41.5992571,
+        east: -81.53274390000001
+      }
+    },
+    place_id: "ChIJLWto4y7vMIgRQhhi91XLBO0",
+    types: ["locality", "political"]
+  },
+  location: {
+    lat: 41.49932,
+    lng: -81.69436050000002
+  }
+};
+
 describe("Cases", () => {
   describe("Lookup", () => {
     it("finds case 100", done => {
@@ -58,10 +114,12 @@ describe("Cases", () => {
           title: "This is the first title of the rest of your post",
           summary: "Eat this, it is my body",
           // optional
-          photo: "", // not sure what the client wants to send here
+          lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
           vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
-          geoSuggest: "???", // not sure what the client thinks it is sending here
-          relatedCases: "" // not sure what the client expects to send here
+          location: location,
+          relatedCases: ["1", "2", "3", "4"],
+          relatedMethods: ["145", "146", "147"],
+          relatedOrganizations: ["199", "200", "201"]
         })
         .end((err, res) => {
           res.should.have.status(201);

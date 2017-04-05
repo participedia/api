@@ -6,7 +6,8 @@ let log = require("winston");
 
 let {
   db,
-  sql
+  sql,
+  as
 } = require("../helpers/db");
 
 const empty_organization = {
@@ -64,23 +65,30 @@ router.post("/new", function(req, res, next) {
   //   related organizations
   let title = req.body.title;
   let body = req.body.summary;
-  let user_id = req.user && req.user.user_id;
   if (!(title && body)) {
     return res.status(400).json({
       message: "Cannot create Organization, both title and summary are required"
     });
   }
-  if (!user_id) {
-    return res.status(400).json({
-      message: "Need a user_id to create a Organization"
-    });
-  }
+  let user_id = req.user.user_id;
+  let location = as.location(req.body.location);
+  let videos = as.videos(req.body.vidURL);
+  let lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
+  let related_cases = as.related_list(req.body.related_cases);
+  let related_methods = as.related_list(req.body.related_methods);
+  let related_organizations = as.related_list(req.body.related_organizations);
   db
     .one(
       sql("../sql/create_organization.sql"),
       Object.assign({}, empty_organization, {
         title,
         body,
+        location,
+        lead_image,
+        videos,
+        related_cases,
+        related_methods,
+        related_organizations,
         user_id
       })
     )

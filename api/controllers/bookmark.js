@@ -51,6 +51,7 @@ function lookupBookmarksById(req, res, userId, next) {
       log.error(error);
     });
 }
+
 function queryBookmarks(req, res, next) {
   let userid = req.params.userid;
 

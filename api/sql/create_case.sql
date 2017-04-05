@@ -23,8 +23,8 @@ WITH insert_case as (
       true, 'now', null, 'now', 'General Public',
       null, 'Lay Public', 'General Public',
       'Open to all', null, null, null, null,
-      null, null, null, null, CAST(ROW('${lead_image_url}', '', 0) as attachment),
-      '{}', '{}', '{}', '{}', false
+      null, null, null, ${location:raw}, ${lead_image:raw},
+      '{}', '{}', ${videos:raw}, '{}', false
     ) RETURNING id as case_id
 ),
 insert_author as (
@@ -32,6 +32,12 @@ insert_author as (
   VALUES
     (${user_id}, 'now', (select case_id from insert_case))
 )
+
+${related_cases:raw}
+
+${related_methods:raw}
+
+${related_organizations:raw}
 
 INSERT INTO case__localized_texts(body, title, language, case_id)
 VALUES

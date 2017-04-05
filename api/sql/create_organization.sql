@@ -8,9 +8,9 @@ WITH insert_organization as (
   )
   VALUES
     (
-      ${language}, null, null, 'now', true, null, 'now', null,
-      CAST(ROW('${lead_image_url}', '', 0) as attachment),
-      '{}', '{}', '{}', '{}', false
+      ${language}, null, null, 'now', true, null, 'now', ${location:raw},
+      ${lead_image:raw},
+      '{}', '{}', ${videos:raw}, '{}', false
     ) RETURNING id as organization_id
 ),
 insert_author as (
@@ -18,6 +18,12 @@ insert_author as (
   VALUES
     (${user_id}, 'now', (select organization_id from insert_organization))
 )
+
+${related_cases:raw}
+
+${related_methods:raw}
+
+${related_organizations:raw}
 
 INSERT INTO organization__localized_texts(body, title, language, organization_id)
 VALUES

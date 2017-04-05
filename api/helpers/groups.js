@@ -16,7 +16,7 @@ function userHas(req, groupName, errCB, okCB) {
       errCB("no user");
     }
   } catch (e) {
-    console.log("exception in userHas", e);
+    console.error("exception in userHas", e);
     errCB("exception in userHas");
   }
 }
