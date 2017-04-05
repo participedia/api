@@ -3,6 +3,8 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
+let jwt = require("express-jwt");
+
 let { getUserIfExists } = require("../helpers/user");
 let { db, sql, as } = require("../helpers/db");
 
