@@ -70,7 +70,7 @@ function query_nouns_by_type(
 function query_all_nouns(res, query, facets, page, language, orderBy) {
   db
     .task(t => {
-      let query = ["case", "method", "organization"].map(objType => {
+      let dbqueries = ["case", "method", "organization"].map(objType => {
         return t.any(sql("../sql/search_" + objType + "s.sql"), {
           query: query,
           facets: format_facet_string(facets, objType),
@@ -80,22 +80,22 @@ function query_all_nouns(res, query, facets, page, language, orderBy) {
           order_by: orderBy
         });
       });
-      return t.batch(query);
+      return t.batch(dbqueries);
     })
     .then(function(objLists) {
       res.status(200).json({
         results: [
           {
             type: "case",
-            hits: objList[0]
+            hits: objLists[0]
           },
           {
             type: "method",
-            hits: objList[1]
+            hits: objLists[1]
           },
           {
             type: "organization",
-            hits: objList[2]
+            hits: objLists[2]
           }
         ]
       });
@@ -176,7 +176,6 @@ function format_facet_string(facets, type) {
       "s.tags @> array[" +
       facets["tag"].replace(/"/g, "'") +
       "] ) AND";
-    log.info(sq);
     return sq;
   } else {
     return "";
