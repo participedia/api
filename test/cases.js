@@ -127,6 +127,30 @@ describe("Cases", () => {
         });
     });
   });
+  it("test SQL santization", done => {
+    chai
+      .request(app)
+      .post("/case/new")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + tokens.user_token)
+      .send({
+        // mandatory
+        title: "This is the first'); drop table users; -- title of the rest of your post",
+        summary: "Eat this, '); drop table users; -- it is my body",
+        // optional
+        lead_image: "CitizensAssembly_2.jpg'); drop table users; --", // key into S3 bucket
+        vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w'); drop table users; --",
+        location: location,
+        relatedCases: ["1", "2", "3", "4"],
+        relatedMethods: ["145", "146", "147"],
+        relatedOrganizations: ["199", "200", "201"]
+      })
+      .end((err, res) => {
+        res.should.have.status(201);
+        done();
+      });
+  });
   // let userID = tokens.user_payload.user_id;
   describe("Counting by country", () => {
     it("returns stuff", done => {
