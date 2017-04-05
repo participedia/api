@@ -185,12 +185,20 @@ router.delete("/delete", function updateUser(req, res, next) {
             });
           })
           .catch(function(err) {
-            return next(err);
+            log.error("error delete a bookmark", err);
+            res.json({
+              success: false,
+              error: err.message || err
+            });
           });
       }
     })
     .catch(function(err) {
-      return next(err); // this seems wrong?
+      log.error("error looking for bookmark to delete", err);
+      res.json({
+        success: false,
+        error: err.message || err
+      });
     });
 });
 
