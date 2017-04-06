@@ -3,7 +3,9 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
+let jwt = require("express-jwt");
 
+let { getUserIfExists } = require("../helpers/user");
 let { db, sql, as } = require("../helpers/db");
 
 const empty_case = {
@@ -305,16 +307,42 @@ router.put("/:caseId", function editCaseById(req, res) {
  *
  */
 
-router.get("/:caseId", function getCaseById(req, res) {
+function getCaseById(req, res) {
   db
     .one(sql("../sql/case_by_id.sql"), {
       caseId: req.params.caseId,
       lang: req.params.language || "en"
     })
     .then(function(the_case) {
-      res.status(200).json({
-        OK: true,
-        data: the_case
+      getUserIfExists(req, res, function(userId) {
+        if (userId) {
+          db
+            .one(
+              "select * from bookmarks where bookmarktype = $1 AND thingid = $2 AND userid = $3",
+              ["case", req.params.caseId, userId]
+            )
+            .then(function(data) {
+              console.info("CASE IS BOOKMARKED");
+              the_case["bookmarked"] = true;
+              res.status(200).json({
+                OK: true,
+                data: the_case
+              });
+            })
+            .catch(function() {
+              console.info("CASE IS NOT BOOKMARKED");
+              the_case["bookmarked"] = false;
+              res.status(200).json({
+                OK: true,
+                data: the_case
+              });
+            });
+        } else {
+          res.status(200).json({
+            OK: true,
+            data: the_case
+          });
+        }
       });
     })
     .catch(function(error) {
@@ -324,7 +352,19 @@ router.get("/:caseId", function getCaseById(req, res) {
         error: error
       });
     });
-});
+}
+
+// We want to extract the user ID from the auth token if it's there,
+// but not fail if not.
+router.get(
+  "/:caseId",
+  jwt({
+    secret: process.env.AUTH0_CLIENT_SECRET,
+    credentialsRequired: false,
+    algorithms: ["HS256"]
+  }),
+  getCaseById
+);
 
 /**
  * @api {delete} /case/:caseId Delete a case
