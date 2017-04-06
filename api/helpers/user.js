@@ -2,13 +2,31 @@ let { db, sql } = require("../helpers/db");
 let log = require("winston");
 let unless = require("express-unless");
 
+function getUserIfExists(req, res, next) {
+  let user = req.user;
+  if (!user) {
+    return next();
+  } else {
+    db
+      .one(sql("../sql/user_by_email.sql"), {
+        userEmail: user.email
+      })
+      .then(function(user) {
+        next(user.id);
+      })
+      .catch(function() {
+        next();
+      });
+  }
+}
+
 function ensureUser(req, res, next) {
   let user = req.user;
   let name = req.header("X-Auth0-Name");
   let auth0UserId = req.header("X-Auth0-UserId");
   if (!user) {
     res.status(401).json({
-      message: "User must be logged in to add or edit content."
+      message: "User must be logged in to perform this function"
     });
   }
   if (!okToEdit(user)) {
@@ -68,4 +86,4 @@ function okToEdit(user) {
 
 ensureUser.unless = unless;
 
-module.exports = (exports = { ensureUser, okToEdit });
+module.exports = (exports = { ensureUser, okToEdit, getUserIfExists });
