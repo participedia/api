@@ -29,6 +29,11 @@ function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), { minify: true });
 }
 
+// as.number, enhances existing as.number to cope with numbers as strings
+function number(value) {
+  return pgp.as.number(Number(value));
+}
+
 // as.author
 function author(user_id, name) {
   // TODO: escape user_id and name to avoid injection attacks
@@ -134,7 +139,8 @@ var as = Object.assign({}, pgp.as, {
   attachments,
   location,
   videos,
-  related_list
+  related_list,
+  number
 });
 
 module.exports = { db, sql, as };

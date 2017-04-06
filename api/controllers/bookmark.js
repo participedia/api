@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let groups = require("../helpers/groups");
-let { db } = require("../helpers/db");
+let { db, as } = require("../helpers/db");
 let { userByEmail, ensureUser } = require("../helpers/user");
 let log = require("winston");
 
@@ -34,7 +34,7 @@ let log = require("winston");
 
 function lookupBookmarksById(req, res, userId, next) {
   db
-    .any("SELECT * FROM bookmarks WHERE userid=$1", [userId])
+    .any("SELECT * FROM bookmarks WHERE userid=$1", [as.number(userId)])
     .then(data => {
       res.json({
         success: true,
@@ -108,16 +108,18 @@ router.post("/add", function addBookmark(req, res, next) {
       .json({ error: "Required parameter (thingID) wasn't specified" });
     return;
   }
-  let userId = req.user.user_id;
-  if (!userId) {
+  if (!req.user.user_id) {
     log.error("No user");
     res.status(400).json({ error: "User (userId) wasn't specified" });
     return;
   }
+  let userId = as.number(req.user.user_id);
+  let thingId = as.number(req.body.thingID);
+  let bookmarkType = as.text(req.body.bookmarkType);
   db
     .one(
-      "insert into bookmarks(bookmarktype, thingid, userid) VALUES($1,$2,$3) returning id",
-      [req.body.bookmarkType, req.body.thingID, userId]
+      "insert into bookmarks(bookmarktype, thingid, userid) VALUES(${bookmarkType},${thingId},${userId}) returning id",
+      { bookmarkType, thingId, userId }
     )
     .then(function(data) {
       res.json({
@@ -163,13 +165,13 @@ router.post("/add", function addBookmark(req, res, next) {
  */
 
 router.delete("/delete", function updateUser(req, res, next) {
-  let userId = req.user.user_id;
-  let bookmarktype = req.body.bookmarkType;
-  let thingid = req.body.thingID;
+  let userId = as.number(req.user.user_id);
+  let bookmarkType = as.number(req.body.bookmarkType);
+  let thingId = as.text(req.body.thingID);
   db
     .one(
-      "select * from bookmarks where bookmarktype = $1 AND thingid = $2 AND userid = $3",
-      [bookmarktype, thingid, userId]
+      "select * from bookmarks where bookmarktype = ${bookmarkType} AND thingid = ${thingId} AND userid = ${userId}",
+      { bookmarkType, thingId, userId }
     )
     .then(function(data) {
       if (data.userid != userId) {
