@@ -1,7 +1,7 @@
 "use strict";
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
-let { db, sql } = require("../helpers/db");
+let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
 
 const RESPONSE_LIMIT = 30;
@@ -49,6 +49,12 @@ function query_nouns_by_type(
   language,
   orderBy
 ) {
+  console.log(
+    "query_nouns_by_type: objType=%s, query=%s, facets=%s",
+    objType,
+    query,
+    JSON.stringify(facets)
+  );
   db
     .any(sql("../sql/search_" + objType + "s.sql"), {
       query: query,
@@ -68,6 +74,11 @@ function query_nouns_by_type(
 }
 
 function query_all_nouns(res, query, facets, page, language, orderBy) {
+  console.log(
+    "query_all_nouns: query=%s, facets=%s",
+    query,
+    JSON.stringify(facets)
+  );
   db
     .task(t => {
       let dbqueries = ["case", "method", "organization"].map(objType => {
@@ -107,6 +118,11 @@ function query_all_nouns(res, query, facets, page, language, orderBy) {
 }
 
 function get_nouns_by_type(res, objType, facets, page, language, orderBy) {
+  console.log(
+    "get_nouns_by_type: objType=%s, facets=%s",
+    objType,
+    JSON.stringify(facets)
+  );
   db
     .any(sql("../sql/list_" + objType + "s.sql"), {
       facets: format_facet_string(facets, objType),
@@ -125,6 +141,11 @@ function get_nouns_by_type(res, objType, facets, page, language, orderBy) {
 }
 
 function get_all_nouns(res, facets, page, language, orderBy) {
+  console.log(
+    "get_all_nouns: query=%s, facets=%s",
+    query,
+    JSON.stringify(facets)
+  );
   db
     .task(t => {
       let query = ["case", "method", "organization"].map(objType => {
@@ -165,18 +186,11 @@ function get_all_nouns(res, facets, page, language, orderBy) {
 function format_facet_string(facets, type) {
   // super-simple for now
   if (facets["location.country"]) {
-    return "(" +
-      type +
-      "s).location.country = '" +
-      facets["location.country"] +
-      "' AND";
-  } else if (facets["tag"]) {
-    let sq = "( " +
-      type +
-      "s.tags @> array[" +
-      facets["tag"].replace(/"/g, "'") +
-      "] ) AND";
-    return sq;
+    let country = as.text(facets["location.country"]);
+    return `(${type}s).location.country = ${country} AND`;
+  } else if (facets.tag) {
+    let tag = as.text(facets.tag);
+    return `(${type}s.tags @> array[${tag}]) AND`;
   } else {
     return "";
   }

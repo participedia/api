@@ -1,3 +1,4 @@
+let tokens = require("./setupenv"); // setupenv has to be imported before app
 let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
@@ -64,6 +65,44 @@ describe("Search", () => {
           res.should.have.status(200);
           res.body.results.should.have.lengthOf(1);
           res.body.results[0].type.should.equal("organization");
+          // res.body.results[0].hits.should.have.lengthOf(17);
+          done();
+        });
+    });
+  });
+  describe("get cases tagged 'nuclear'", () => {
+    it("finds all Cases with the facet tag=nuclear", done => {
+      chai
+        .request(app)
+        .get(
+          "/search?query=tag%3Anuclear&selectedCategory=Cases&sortingMethod=chronological"
+        )
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.results.should.have.lengthOf(1);
+          res.body.results[0].type.should.equal("case");
+          // res.body.results[0].hits.should.have.lengthOf(17);
+          done();
+        });
+    });
+  });
+  describe("get cases tagged 'animal welfare'", () => {
+    it("finds all Cases with the facet tag=animal welfare", done => {
+      chai
+        .request(app)
+        .get(
+          "/search?query=tag%3Aanimal%20welfare&selectedCategory=Cases&sortingMethod=chronological"
+        )
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.results.should.have.lengthOf(1);
+          res.body.results[0].type.should.equal("case");
           // res.body.results[0].hits.should.have.lengthOf(17);
           done();
         });
