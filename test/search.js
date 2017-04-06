@@ -62,8 +62,11 @@ describe("Search", () => {
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
-          // res.body.hits.should.have.lengthOf(1);
-          // res.body.hits[0].should.have.lengthOf(14);
+          // should.equal(Object.keys(res.body).length, 30);
+          console.log("type: %s", JSON.stringify(res.body.results[0].type));
+          res.body.results.should.have.lengthOf(1);
+          res.body.results[0].type.should.equal("organization");
+          res.body.results[0].hits.should.have.lengthOf(14);
           done();
         });
     });
