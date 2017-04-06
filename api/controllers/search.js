@@ -40,7 +40,7 @@ router.get("/getAllForType", function getAllForType(req, res) {
     });
 });
 
-function query_nouns_by_type(
+const query_nouns_by_type = async (
   res,
   objType,
   query,
@@ -48,39 +48,26 @@ function query_nouns_by_type(
   page,
   language,
   orderBy
-) {
-  console.log(
-    "query_nouns_by_type: objType=%s, query=%s, facets=%s",
-    objType,
-    query,
-    JSON.stringify(facets)
-  );
-  db
-    .any(sql("../sql/search_" + objType + "s.sql"), {
+) => {
+  try {
+    const objList = await db.any(sql("../sql/search_" + objType + "s.sql"), {
       query: query,
       facets: format_facet_string(facets, objType),
       order_by: orderBy,
       language: language,
       limit: RESPONSE_LIMIT,
       offset: (page - 1) * RESPONSE_LIMIT
-    })
-    .then(function(objList) {
-      res.status(200).json({ results: [{ type: objType, hits: objList }] });
-    })
-    .catch(function(error) {
-      log.error("Exception in GET /search/getAllForType", error);
-      res.status(500).json({ error: error });
     });
-}
+    res.status(200).json({ results: [{ type: objType, hits: objList }] });
+  } catch (error) {
+    log.error("Exception in GET /search/getAllForType", error);
+    res.status(500).json({ error: error });
+  }
+};
 
-function query_all_nouns(res, query, facets, page, language, orderBy) {
-  console.log(
-    "query_all_nouns: query=%s, facets=%s",
-    query,
-    JSON.stringify(facets)
-  );
-  db
-    .task(t => {
+const query_all_nouns = async (res, query, facets, page, language, orderBy) => {
+  try {
+    const objLists = await db.task(t => {
       let dbqueries = ["case", "method", "organization"].map(objType => {
         return t.any(sql("../sql/search_" + objType + "s.sql"), {
           query: query,
@@ -92,62 +79,55 @@ function query_all_nouns(res, query, facets, page, language, orderBy) {
         });
       });
       return t.batch(dbqueries);
-    })
-    .then(function(objLists) {
-      res.status(200).json({
-        results: [
-          {
-            type: "case",
-            hits: objLists[0]
-          },
-          {
-            type: "method",
-            hits: objLists[1]
-          },
-          {
-            type: "organization",
-            hits: objLists[2]
-          }
-        ]
-      });
-    })
-    .catch(function(error) {
-      log.error("Exception in GET /search/getAllForType", error);
-      res.status(500).json({ error: error });
     });
-}
+    res.status(200).json({
+      results: [
+        {
+          type: "case",
+          hits: objLists[0]
+        },
+        {
+          type: "method",
+          hits: objLists[1]
+        },
+        {
+          type: "organization",
+          hits: objLists[2]
+        }
+      ]
+    });
+  } catch (error) {
+    log.error("Exception in GET /search/getAllForType", error);
+    res.status(500).json({ error: error });
+  }
+};
 
-function get_nouns_by_type(res, objType, facets, page, language, orderBy) {
-  console.log(
-    "get_nouns_by_type: objType=%s, facets=%s",
-    objType,
-    JSON.stringify(facets)
-  );
-  db
-    .any(sql("../sql/list_" + objType + "s.sql"), {
+const get_nouns_by_type = async (
+  res,
+  objType,
+  facets,
+  page,
+  language,
+  orderBy
+) => {
+  try {
+    const objList = await db.any(sql("../sql/list_" + objType + "s.sql"), {
       facets: format_facet_string(facets, objType),
       language: language,
       limit: RESPONSE_LIMIT,
       offset: (page - 1) * RESPONSE_LIMIT,
       order_by: orderBy
-    })
-    .then(function(objList) {
-      res.status(200).json({ results: [{ type: objType, hits: objList }] });
-    })
-    .catch(function(error) {
-      log.error("Exception in GET /search/getAllForType", error);
-      res.status(500).json({ error: error });
     });
-}
+    res.status(200).json({ results: [{ type: objType, hits: objList }] });
+  } catch (error) {
+    log.error("Exception in GET /search/getAllForType", error);
+    res.status(500).json({ error: error });
+  }
+};
 
-function get_all_nouns(res, facets, page, language, orderBy) {
-  console.log(
-    "get_all_nouns: query=%s, facets=%s",
-    query,
-    JSON.stringify(facets)
-  );
-  db
-    .task(t => {
+const get_all_nouns = async (res, facets, page, language, orderBy) => {
+  try {
+    const objLists = await db.task(t => {
       let query = ["case", "method", "organization"].map(objType => {
         return t.any(sql("../sql/list_" + objType + "s.sql"), {
           facets: format_facet_string(facets, objType),
@@ -158,30 +138,28 @@ function get_all_nouns(res, facets, page, language, orderBy) {
         });
       });
       return t.batch(query);
-    })
-    .then(function(objLists) {
-      res.status(200).json({
-        results: [
-          {
-            type: "case",
-            hits: objLists[0]
-          },
-          {
-            type: "method",
-            hits: objLists[1]
-          },
-          {
-            type: "organization",
-            hits: objLists[2]
-          }
-        ]
-      });
-    })
-    .catch(function(error) {
-      log.error("Exception in GET /search/getAllForType", error);
-      res.status(500).json({ error: error });
     });
-}
+    res.status(200).json({
+      results: [
+        {
+          type: "case",
+          hits: objLists[0]
+        },
+        {
+          type: "method",
+          hits: objLists[1]
+        },
+        {
+          type: "organization",
+          hits: objLists[2]
+        }
+      ]
+    });
+  } catch (error) {
+    log.error("Exception in GET /search/getAllForType", error);
+    res.status(500).json({ error: error });
+  }
+};
 
 function format_facet_string(facets, type) {
   // super-simple for now
@@ -194,6 +172,41 @@ function format_facet_string(facets, type) {
   } else {
     return "";
   }
+}
+
+// strip off final character (assumed to be "s")
+const singularLowerCase = name => name.slice(0, -1).toLowerCase();
+
+function parseSearchReq(req) {
+  let query = req.query.query;
+  let facets = {};
+  const sortingMethod = req.query.sortingMethod || "chronological";
+  const category = singularLowerCase(req.query.selectedCategory || "Alls");
+  const language = as.text(req.query.language || "en");
+  const page = as.number(req.query.page || 1);
+  // handle faceted queries
+  // currently only faceted query is "geo_country" and tags
+  // for more facets, and mixing facets with query terms
+  // we'll need a more capable query parser
+
+  if (query) {
+    if (query.indexOf("geo_country") > -1) {
+      facets["location.country"] = query.split(":")[1];
+      query = "";
+    }
+    if (query.indexOf("tag") > -1) {
+      facets["tag"] = query.split(":")[1];
+      query = "";
+    }
+  }
+
+  const orderBy = {
+    alphabetical: "ORDER BY title",
+    chronological: "ORDER BY updated_date DESC",
+    featured: "ORDER BY featured, id"
+  }[sortingMethod];
+
+  return { query, facets, orderBy, category, language, page };
 }
 
 /**
@@ -224,85 +237,22 @@ function format_facet_string(facets, type) {
 // Should not return things that aren't displayable as SearchHits (i.e. Users...)
 
 router.get("/", function(req, res) {
-  let query = req.query.query;
-  let facets = {};
-  let sortingMethod = req.query.sortingMethod || "chronological";
-  let selectedCategory = req.query.selectedCategory || "All";
-  let language = req.query.language || "en";
-  let page = parseInt(req.query.page || 1);
+  const { query, facets, orderBy, category, lang, page } = parseSearchReq(req);
 
-  // handle faceted queries
-  // currently only faceted query is "geo_country" and tags
-  // for more facets, and mixing facets with query terms
-  // we'll need a more capable query parser
   if (query) {
-    if (query.indexOf("geo_country") > -1) {
-      facets["location.country"] = query.split(":")[1];
-      query = "";
-    }
-    if (query.indexOf("tag") > -1) {
-      facets["tag"] = query.split(":")[1];
-      query = "";
-    }
-  }
-  let orderBy = {
-    alphabetical: "ORDER BY title",
-    chronological: "ORDER BY updated_date DESC",
-    featured: "ORDER BY featured, id"
-  }[sortingMethod];
-  if (query) {
-    switch (selectedCategory) {
-      case "Cases":
-        query_nouns_by_type(
-          res,
-          "case",
-          query,
-          facets,
-          page,
-          language,
-          orderBy
-        );
-        break;
-      case "Organizations":
-        query_nouns_by_type(
-          res,
-          "organization",
-          query,
-          facets,
-          page,
-          language,
-          orderBy
-        );
-        break;
-      case "Methods":
-        query_nouns_by_type(
-          res,
-          "method",
-          query,
-          facets,
-          page,
-          language,
-          orderBy
-        );
-        break;
-      default:
-        query_all_nouns(res, query, facets, page, language, orderBy);
-        break;
+    if (["case", "method", "organization"].includes(category)) {
+      query_nouns_by_type(res, category, query, facets, page, lang, orderBy);
+    } else {
+      // no category selected, search across all categories
+      query_all_nouns(res, query, facets, page, lang, orderBy);
     }
   } else {
-    switch (selectedCategory) {
-      case "Cases":
-        get_nouns_by_type(res, "case", facets, page, language, orderBy);
-        break;
-      case "Methods":
-        get_nouns_by_type(res, "method", facets, page, language, orderBy);
-        break;
-      case "Organizations":
-        get_nouns_by_type(res, "organization", facets, page, language, orderBy);
-        break;
-      default:
-        get_all_nouns(res, facets, page, language, orderBy);
-        break;
+    // no query
+    if (["case", "method", "organization"].includes(category)) {
+      get_nouns_by_type(res, category, facets, page, lang, orderBy);
+    } else {
+      // no category selected, get across all categories
+      get_all_nouns(res, facets, page, lang, orderBy);
     }
   }
 });
