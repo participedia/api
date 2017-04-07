@@ -84,26 +84,26 @@ describe("Search", () => {
           res.should.have.status(200);
           res.body.results.should.have.lengthOf(1);
           res.body.results[0].type.should.equal("case");
-          // res.body.results[0].hits.should.have.lengthOf(17);
+          res.body.results[0].hits.should.have.lengthOf(1);
           done();
         });
     });
   });
-  describe("get cases tagged 'animal welfare'", () => {
-    it("finds all Cases with the facet tag=animal welfare", done => {
+  describe("Test search with multi-word tags'", () => {
+    it("finds everything with the facet tag=animal welfare", done => {
       chai
         .request(app)
         .get(
-          "/search?query=tag%3Aanimal%20welfare&selectedCategory=Cases&sortingMethod=chronological"
+          "/search?query=tag%3A%22animal%20welfare%22&selectedCategory=All&sortingMethod=chronological"
         )
         .set("Content-Type", "application/json")
         .set("Accept", "application/json")
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.results.should.have.lengthOf(1);
+          res.body.results.should.have.lengthOf(3);
           res.body.results[0].type.should.equal("case");
-          // res.body.results[0].hits.should.have.lengthOf(17);
+          res.body.results[0].hits.should.have.lengthOf(2);
           done();
         });
     });
