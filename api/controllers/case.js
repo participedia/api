@@ -83,16 +83,11 @@ router.get("/countsByCountry", async function getCountsByCountry(req, res) {
     });
     res.status(200).json({
       OK: true,
-      data: {
-        countryCounts: countryCounts
-      }
+      data: { countryCounts: countryCounts }
     });
   } catch (error) {
     log.error("Exception in /case/countsByCountry => %s", error);
-    res.status(500).json({
-      OK: false,
-      error: error
-    });
+    res.status(500).json({ OK: false, error: error });
   }
 });
 
@@ -121,7 +116,7 @@ router.get("/countsByCountry", async function getCountsByCountry(req, res) {
  *
  */
 
-router.post("/new", async function postNewCase(req, res, next) {
+router.post("/new", async function postNewCase(req, res) {
   // create new `case` in db
   // req.body:
   /*
@@ -232,17 +227,10 @@ router.post("/new", async function postNewCase(req, res, next) {
         user_id
       })
     );
-    return res.status(201).json({
-      OK: true,
-      data: case_id
-    });
+    return res.status(201).json({ OK: true, data: case_id });
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
-    console.error(error);
-    return res.status(500).json({
-      OK: false,
-      error: error
-    });
+    return res.status(500).json({ OK: false, error: error });
   }
 });
 
