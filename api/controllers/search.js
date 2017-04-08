@@ -6,38 +6,39 @@ let log = require("winston");
 
 const RESPONSE_LIMIT = 30;
 
-router.get("/getAllForType", function getAllForType(req, res) {
-  let objType = req.query.objType.toLowerCase();
-  let page = parseInt(req.query.page || 1);
-  let offset = (page - 1) * RESPONSE_LIMIT;
-  if (
-    objType !== "organization" && objType !== "case" && objType !== "method"
-  ) {
-    res.status(401).json({
-      message: "Unsupported objType for getAllForType: " + objType
-    });
-  }
-  db
-    .any(sql("../sql/titles_for_" + objType + "s.sql"), {
-      language: as.value(req.query.language || "en"),
-      limit: RESPONSE_LIMIT,
-      offset: offset
-    })
-    .then(function(titlelist) {
-      let jtitlelist = {};
-      // FIXME: this is a dumb format but it is what front-end expects.
-      // Switch both (and tests) to use array of {title: , id: } pairs.
-      // Also, if we're going to use {OK: true, data: []} everywhere else
-      // we should use it here too.
-      titlelist.forEach(function(row) {
-        jtitlelist[row.title] = parseInt(row[objType + "_id"]);
+router.get("/getAllForType", async function getAllForType(req, res) {
+  try {
+    let objType = req.query.objType.toLowerCase();
+    let page = parseInt(req.query.page || 1);
+    let offset = (page - 1) * RESPONSE_LIMIT;
+    if (
+      objType !== "organization" && objType !== "case" && objType !== "method"
+    ) {
+      res.status(401).json({
+        message: "Unsupported objType for getAllForType: " + objType
       });
-      res.status(200).json(jtitlelist);
-    })
-    .catch(function(error) {
-      log.error("Exception in GET /search/getAllForType", error);
-      res.status(500).json({ error: error });
+    }
+    const titlelist = await db.any(
+      sql("../sql/titles_for_" + objType + "s.sql"),
+      {
+        language: as.value(req.query.language || "en"),
+        limit: RESPONSE_LIMIT,
+        offset: offset
+      }
+    );
+    let jtitlelist = {};
+    // FIXME: this is a dumb format but it is what front-end expects.
+    // Switch both (and tests) to use array of {title: , id: } pairs.
+    // Also, if we're going to use {OK: true, data: []} everywhere else
+    // we should use it here too.
+    titlelist.forEach(function(row) {
+      jtitlelist[row.title] = parseInt(row[objType + "_id"]);
     });
+    res.status(200).json(jtitlelist);
+  } catch (error) {
+    log.error("Exception in GET /search/getAllForType", error);
+    res.status(500).json({ error: error });
+  }
 });
 
 const query_nouns_by_type = async (

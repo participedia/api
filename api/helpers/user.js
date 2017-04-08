@@ -2,23 +2,17 @@ let { db, sql } = require("../helpers/db");
 let log = require("winston");
 let unless = require("express-unless");
 
-function getUserIfExists(req, res, next) {
+const getUserIfExists = async req => {
   let user = req.user;
-  if (!user) {
-    return next();
+  if (user) {
+    user = await db.one(sql("../sql/user_by_email.sql"), {
+      userEmail: user.email
+    });
+    user.id;
   } else {
-    db
-      .one(sql("../sql/user_by_email.sql"), {
-        userEmail: user.email
-      })
-      .then(function(user) {
-        next(user.id);
-      })
-      .catch(function() {
-        next();
-      });
+    null;
   }
-}
+};
 
 function ensureUser(req, res, next) {
   let user = req.user;
