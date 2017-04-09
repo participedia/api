@@ -65,7 +65,7 @@ describe("Search", () => {
           res.should.have.status(200);
           res.body.results.should.have.lengthOf(1);
           res.body.results[0].type.should.equal("organization");
-          // res.body.results[0].hits.should.have.lengthOf(17);
+          res.body.results[0].hits.should.have.lengthOf(17);
           done();
         });
     });
