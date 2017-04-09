@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let groups = require("../helpers/groups");
-let { db } = require("../helpers/db");
+let { db, as } = require("../helpers/db");
 let { userByEmail, ensureUser } = require("../helpers/user");
 let log = require("winston");
 
@@ -32,36 +32,38 @@ let log = require("winston");
  *
  */
 
-function lookupBookmarksById(req, res, userId, next) {
-  db
-    .any("SELECT * FROM bookmarks WHERE userid=$1", [userId])
-    .then(data => {
-      res.json({
-        success: true,
-        status: "success",
-        data: data,
-        message: "Retrieved ALL bookmarks for specified user"
-      });
-    })
-    .catch(function(error) {
-      res.json({
-        success: false,
-        error: error.message || error
-      });
-      log.error(error);
+async function lookupBookmarksById(req, res, userId) {
+  try {
+    const data = await db.any("SELECT * FROM bookmarks WHERE userid=$1", [
+      as.number(userId)
+    ]);
+    res.json({
+      success: true,
+      status: "success",
+      data: data,
+      message: "Retrieved ALL bookmarks for specified user"
     });
+  } catch (error) {
+    log.error(error);
+    res.json({ success: false, error: error.message || error });
+  }
 }
 
-function queryBookmarks(req, res, next) {
-  let userid = req.params.userid;
+function queryBookmarks(req, res) {
+  try {
+    let userid = as.number(req.params.userid);
 
-  if (!userid) {
-    ensureUser(req, res, function(req, res, next) {
-      userid = req.user.user_id; // put there by ensureUser
-      lookupBookmarksById(req, res, userid, next);
-    });
-  } else {
-    lookupBookmarksById(req, res, userid, next);
+    if (!userid) {
+      ensureUser(req, res, () => {
+        userid = req.user.user_id; // put there by ensureUser
+        lookupBookmarksById(req, res, userid);
+      });
+    } else {
+      lookupBookmarksById(req, res, userid);
+    }
+  } catch (error) {
+    log.error(error);
+    res.json({ success: false, error: error.message || error });
   }
 }
 
@@ -93,48 +95,47 @@ router.get("/list/:userid", queryBookmarks);
  *
  */
 
-router.post("/add", function addBookmark(req, res, next) {
-  if (!req.body.bookmarkType) {
-    log.error("Required parameter (bookmarkType) wasn't specified");
-    res.status(400).json({
-      message: "Required parameter (bookmarkType) wasn't specified"
-    });
-    return;
-  }
-  if (!req.body.thingID) {
-    log.error("Required parameter (thingID) wasn't specified");
-    res
-      .status(400)
-      .json({ error: "Required parameter (thingID) wasn't specified" });
-    return;
-  }
-  let userId = req.user.user_id;
-  if (!userId) {
-    log.error("No user");
-    res.status(400).json({ error: "User (userId) wasn't specified" });
-    return;
-  }
-  db
-    .one(
-      "insert into bookmarks(bookmarktype, thingid, userid) VALUES($1,$2,$3) returning id",
-      [req.body.bookmarkType, req.body.thingID, userId]
-    )
-    .then(function(data) {
-      res.json({
-        success: true,
-        status: "success",
-        data: data.id,
-        message: "Inserted bookmark, returning ID"
+router.post("/add", async function addBookmark(req, res) {
+  try {
+    if (!req.body.bookmarkType) {
+      log.error("Required parameter (bookmarkType) wasn't specified");
+      res.status(400).json({
+        message: "Required parameter (bookmarkType) wasn't specified"
       });
-    })
-    .catch(function(err) {
-      res.json({
-        success: false,
-        error: error.message || error
-      });
-      log.error("Exception in INSERT", err);
-      return next(err);
+      return;
+    }
+    if (!req.body.thingID) {
+      log.error("Required parameter (thingID) wasn't specified");
+      res
+        .status(400)
+        .json({ error: "Required parameter (thingID) wasn't specified" });
+      return;
+    }
+    if (!req.user.user_id) {
+      log.error("No user");
+      res.status(400).json({ error: "User (userId) wasn't specified" });
+      return;
+    }
+    let userId = as.number(req.user.user_id);
+    let thingId = as.number(req.body.thingID);
+    let bookmarkType = as.text(req.body.bookmarkType);
+    const data = await db.one(
+      "insert into bookmarks(bookmarktype, thingid, userid) VALUES(${bookmarkType},${thingId},${userId}) returning id",
+      { bookmarkType, thingId, userId }
+    );
+    res.json({
+      success: true,
+      status: "success",
+      data: data.id,
+      message: "Inserted bookmark, returning ID"
     });
+  } catch (error) {
+    log.error("Exception in INSERT", error);
+    res.json({
+      success: false,
+      error: error.message || error
+    });
+  }
 });
 
 /**
@@ -162,45 +163,32 @@ router.post("/add", function addBookmark(req, res, next) {
  *
  */
 
-router.delete("/delete", function updateUser(req, res, next) {
-  let userId = req.user.user_id;
-  let bookmarktype = req.body.bookmarkType;
-  let thingid = req.body.thingID;
-  db
-    .one(
-      "select * from bookmarks where bookmarktype = $1 AND thingid = $2 AND userid = $3",
-      [bookmarktype, thingid, userId]
-    )
-    .then(function(data) {
-      if (data.userid != userId) {
-        res.status(401).json({
-          message: "access denied - user is not the owner of the bookmark"
-        });
-      } else {
-        db
-          .none("delete from bookmarks where id = $1", data.id)
-          .then(function(data) {
-            res.status(200).json({
-              status: "success",
-              message: `Removed a bookmark`
-            });
-          })
-          .catch(function(err) {
-            log.error("error delete a bookmark", err);
-            res.json({
-              success: false,
-              error: err.message || err
-            });
-          });
-      }
-    })
-    .catch(function(err) {
-      log.error("error looking for bookmark to delete", err);
-      res.json({
-        success: false,
-        error: err.message || err
+router.delete("/delete", async function updateUser(req, res) {
+  try {
+    const userId = as.number(req.user.user_id);
+    const bookmarkType = as.number(req.body.bookmarkType);
+    const thingId = as.text(req.body.thingID);
+    let data = await db.one(
+      "select * from bookmarks where bookmarktype = ${bookmarkType} AND thingid = ${thingId} AND userid = ${userId}",
+      { bookmarkType, thingId, userId }
+    );
+    if (data.userid != userId) {
+      res.status(401).json({
+        message: "access denied - user is not the owner of the bookmark"
       });
+    } else {
+      data = await db.none("delete from bookmarks where id = $1", data.id);
+      res
+        .status(200)
+        .json({ status: "success", message: `Removed a bookmark` });
+    }
+  } catch (error) {
+    log.error("Error deleting bookmark", error);
+    res.json({
+      success: false,
+      error: error.message || error
     });
+  }
 });
 
 module.exports = router;

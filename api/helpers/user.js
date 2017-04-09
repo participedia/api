@@ -1,71 +1,59 @@
-let { db, sql } = require("../helpers/db");
+let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
 let unless = require("express-unless");
 
-function getUserIfExists(req, res, next) {
+const getUserIfExists = async req => {
   let user = req.user;
-  if (!user) {
-    return next();
-  } else {
-    db
-      .one(sql("../sql/user_by_email.sql"), {
-        userEmail: user.email
-      })
-      .then(function(user) {
-        next(user.id);
-      })
-      .catch(function() {
-        next();
-      });
-  }
-}
-
-function ensureUser(req, res, next) {
-  let user = req.user;
-  let name = req.header("X-Auth0-Name");
-  let auth0UserId = req.header("X-Auth0-UserId");
-  if (!user) {
-    res.status(401).json({
-      message: "User must be logged in to perform this function"
-    });
-  }
-  if (!okToEdit(user)) {
-    res.status(401).json({
-      message: "User is not authorized to add or edit content."
-    });
-  }
-  if (user.user_id) {
-    // all is well, carry on
-    return next();
-  }
-  db
-    .one(sql("../sql/user_by_email.sql"), {
+  if (user) {
+    user = await db.one(sql("../sql/user_by_email.sql"), {
       userEmail: user.email
-    })
-    .then(function(user) {
-      req.user.user_id = user.id;
-      next();
-    })
-    .catch(function(error) {
-      // get user.name and then create a new user in our database
-      db
-        .one(sql("../sql/create_user_id.sql"), {
-          userEmail: user.email,
-          userName: name,
-          auth0UserId: auth0UserId
-        })
-        .then(function(user) {
-          req.user.user_id = user.user_id;
-          next();
-        })
-        .catch(function(error) {
-          log.error("Problem creating user", error);
-          return res.status(500).json({
-            OK: false,
-            error: error
-          });
-        });
     });
+    user.id;
+  } else {
+    null;
+  }
+};
+
+async function ensureUser(req, res, next) {
+  try {
+    let user = req.user;
+    let name = req.header("X-Auth0-Name");
+    let auth0UserId = req.header("X-Auth0-UserId");
+    if (!user) {
+      return res.status(401).json({
+        message: "User must be logged in to perform this function"
+      });
+    }
+    if (!okToEdit(user)) {
+      res.status(401).json({
+        message: "User is not authorized to add or edit content."
+      });
+    }
+    if (user.user_id) {
+      // all is well, carry on, but make sure user_id is a number
+      user.user_id = as.number(user.user_id);
+      return next();
+    }
+    user = await db.one(sql("../sql/user_by_email.sql"), {
+      userEmail: user.email
+    });
+    if (user) {
+      req.user.user_id = user.id;
+    } else {
+      req.user.id = await db.one(sql("../sql/create_user_id.sql"), {
+        userEmail: user.email,
+        userName: name,
+        auth0UserId: auth0UserId
+      });
+    }
+    next();
+  } catch (error) {
+    log.error("Problem creating user", error);
+    return res.status(500).json({
+      OK: false,
+      error: error
+    });
+  }
 }
 
 function okToEdit(user) {

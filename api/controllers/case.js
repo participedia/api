@@ -73,29 +73,22 @@ const empty_case = {
 
 // TODO: figure out if the choropleth should show cases or all things
 
-router.get("/countsByCountry", function(req, res) {
-  db
-    .any(sql("../sql/cases_by_country.sql"))
-    .then(function(countries) {
-      // convert array to object
-      let countryCounts = {};
-      countries.forEach(function(row) {
-        countryCounts[row.country.toLowerCase()] = row.count;
-      });
-      res.status(200).json({
-        OK: true,
-        data: {
-          countryCounts: countryCounts
-        }
-      });
-    })
-    .catch(function(error) {
-      log.error("Exception in /case/countsByCountry => %s", error);
-      res.status(500).json({
-        OK: false,
-        error: error
-      });
+router.get("/countsByCountry", async function getCountsByCountry(req, res) {
+  try {
+    const countries = await db.any(sql("../sql/cases_by_country.sql"));
+    // convert array to object
+    let countryCounts = {};
+    countries.forEach(function(row) {
+      countryCounts[row.country.toLowerCase()] = row.count;
     });
+    res.status(200).json({
+      OK: true,
+      data: { countryCounts: countryCounts }
+    });
+  } catch (error) {
+    log.error("Exception in /case/countsByCountry => %s", error);
+    res.status(500).json({ OK: false, error: error });
+  }
 });
 
 /**
@@ -123,7 +116,7 @@ router.get("/countsByCountry", function(req, res) {
  *
  */
 
-router.post("/new", function(req, res, next) {
+router.post("/new", async function postNewCase(req, res) {
   // create new `case` in db
   // req.body:
   /*
@@ -203,22 +196,24 @@ router.post("/new", function(req, res, next) {
      }
   }
   */
-  let title = req.body.title;
-  let body = req.body.summary;
-  if (!(title && body)) {
-    return res.status(400).json({
-      message: "Cannot create Case, both title and summary are required"
-    });
-  }
-  let user_id = req.user.user_id;
-  let location = as.location(req.body.location);
-  let videos = as.videos(req.body.vidURL);
-  let lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-  let related_cases = as.related_list(req.body.related_cases);
-  let related_methods = as.related_list(req.body.related_methods);
-  let related_organizations = as.related_list(req.body.related_organizations);
-  db
-    .one(
+  try {
+    let title = req.body.title;
+    let body = req.body.summary;
+    if (!(title && body)) {
+      return res.status(400).json({
+        message: "Cannot create Case, both title and summary are required"
+      });
+    }
+    const user_id = req.user.user_id;
+    const location = as.location(req.body.location);
+    const videos = as.videos(req.body.vidURL);
+    const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
+    const related_cases = as.related_list(req.body.related_cases);
+    const related_methods = as.related_list(req.body.related_methods);
+    const related_organizations = as.related_list(
+      req.body.related_organizations
+    );
+    const case_id = await db.one(
       sql("../sql/create_case.sql"),
       Object.assign({}, empty_case, {
         title,
@@ -231,21 +226,12 @@ router.post("/new", function(req, res, next) {
         related_organizations,
         user_id
       })
-    )
-    .then(function(case_id) {
-      return res.status(201).json({
-        OK: true,
-        data: case_id
-      });
-    })
-    .catch(function(error) {
-      log.error("Exception in POST /case/new => %s", error);
-      console.error(error);
-      return res.status(500).json({
-        OK: false,
-        error: error
-      });
-    });
+    );
+    return res.status(201).json({ OK: true, data: case_id });
+  } catch (error) {
+    log.error("Exception in POST /case/new => %s", error);
+    return res.status(500).json({ OK: false, error: error });
+  }
 });
 
 /**
@@ -307,51 +293,28 @@ router.put("/:caseId", function editCaseById(req, res) {
  *
  */
 
-function getCaseById(req, res) {
-  db
-    .one(sql("../sql/case_by_id.sql"), {
-      caseId: req.params.caseId,
-      lang: req.params.language || "en"
-    })
-    .then(function(the_case) {
-      getUserIfExists(req, res, function(userId) {
-        if (userId) {
-          db
-            .one(
-              "select * from bookmarks where bookmarktype = $1 AND thingid = $2 AND userid = $3",
-              ["case", req.params.caseId, userId]
-            )
-            .then(function(data) {
-              console.info("CASE IS BOOKMARKED");
-              the_case["bookmarked"] = true;
-              res.status(200).json({
-                OK: true,
-                data: the_case
-              });
-            })
-            .catch(function() {
-              console.info("CASE IS NOT BOOKMARKED");
-              the_case["bookmarked"] = false;
-              res.status(200).json({
-                OK: true,
-                data: the_case
-              });
-            });
-        } else {
-          res.status(200).json({
-            OK: true,
-            data: the_case
-          });
-        }
-      });
-    })
-    .catch(function(error) {
-      log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
-      res.status(500).json({
-        OK: false,
-        error: error
-      });
+async function getCaseById(req, res) {
+  try {
+    const caseId = as.number(req.params.caseId);
+    const lang = as.value(req.params.language || "en");
+    const the_case = await db.one(sql("../sql/case_by_id.sql"), {
+      caseId,
+      lang
     });
+    const userId = await getUserIfExists(req);
+    the_case.bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
+      type: "case",
+      thingId: caseId,
+      userId: userId
+    });
+    res.status(200).json({ OK: true, data: the_case });
+  } catch (error) {
+    log.error("Exception in GET /case/%s => %s", caseId, error);
+    res.status(500).json({
+      OK: false,
+      error: error
+    });
+  }
 }
 
 // We want to extract the user ID from the auth token if it's there,

@@ -26,25 +26,17 @@ let { db, sql } = require("../helpers/db");
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.get("/:userId", function getUserById(req, res) {
-  db
-    .one(sql("../sql/user_by_id.sql"), {
+router.get("/:userId", async function getUserById(req, res) {
+  try {
+    const user = await db.one(sql("../sql/user_by_id.sql"), {
       userId: req.params.userId,
       language: req.params.language || "en"
-    })
-    .then(function(user) {
-      res.status(200).json({
-        OK: true,
-        data: user
-      });
-    })
-    .catch(function(error) {
-      log.error("Exception in GET /user/%s => %s", req.params.userId, error);
-      res.status(500).json({
-        OK: false,
-        error: error
-      });
     });
+    res.status(200).json({ OK: true, data: user });
+  } catch (error) {
+    log.error("Exception in GET /user/%s => %s", req.params.userId, error);
+    res.status(500).json({ OK: false, error: error });
+  }
 });
 
 /**

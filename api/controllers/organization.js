@@ -4,11 +4,8 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let log = require("winston");
 
-let {
-  db,
-  sql,
-  as
-} = require("../helpers/db");
+let { getUserIfExists } = require("../helpers/user");
+let { db, sql, as } = require("../helpers/db");
 
 const empty_organization = {
   title: "",
@@ -54,7 +51,7 @@ const empty_organization = {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.post("/new", function(req, res, next) {
+router.post("/new", async function(req, res) {
   // create new `organization` in db
   // req.body *should* contain:
   //   title
@@ -63,22 +60,24 @@ router.post("/new", function(req, res, next) {
   //   video
   //   location
   //   related organizations
-  let title = req.body.title;
-  let body = req.body.summary;
-  if (!(title && body)) {
-    return res.status(400).json({
-      message: "Cannot create Organization, both title and summary are required"
-    });
-  }
-  let user_id = req.user.user_id;
-  let location = as.location(req.body.location);
-  let videos = as.videos(req.body.vidURL);
-  let lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-  let related_cases = as.related_list(req.body.related_cases);
-  let related_methods = as.related_list(req.body.related_methods);
-  let related_organizations = as.related_list(req.body.related_organizations);
-  db
-    .one(
+  try {
+    let title = req.body.title;
+    let body = req.body.summary;
+    if (!(title && body)) {
+      return res.status(400).json({
+        message: "Cannot create Organization, both title and summary are required"
+      });
+    }
+    const user_id = req.user.user_id;
+    const location = as.location(req.body.location);
+    const videos = as.videos(req.body.vidURL);
+    const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
+    const related_cases = as.related_list(req.body.related_cases);
+    const related_methods = as.related_list(req.body.related_methods);
+    const related_organizations = as.related_list(
+      req.body.related_organizations
+    );
+    const organization_id = await db.one(
       sql("../sql/create_organization.sql"),
       Object.assign({}, empty_organization, {
         title,
@@ -91,20 +90,18 @@ router.post("/new", function(req, res, next) {
         related_organizations,
         user_id
       })
-    )
-    .then(function(organization_id) {
-      return res.status(201).json({
-        OK: true,
-        data: organization_id
-      });
-    })
-    .catch(function(error) {
-      log.error("Exception in POST /organization/new => %s", error);
-      return res.status(500).json({
-        OK: false,
-        error: error
-      });
+    );
+    return res.status(201).json({
+      OK: true,
+      data: organization_id
     });
+  } catch (error) {
+    log.error("Exception in POST /organization/new => %s", error);
+    return res.status(500).json({
+      OK: false,
+      error: error
+    });
+  }
 });
 
 /**
@@ -164,29 +161,27 @@ router.put("/:id", function editOrgById(req, res) {
  *
  */
 
-router.get("/:organizationId", function getorganizationById(req, res) {
-  db
-    .one(sql("../sql/organization_by_id.sql"), {
-      organizationId: req.params.organizationId,
+router.get("/:organizationId", async function getorganizationById(req, res) {
+  try {
+    const organizationId = as.number(req.params.organizationId);
+    const organization = await db.one(sql("../sql/organization_by_id.sql"), {
+      organizationId: organizationId,
       lang: req.params.language || "en"
-    })
-    .then(function(organization) {
-      res.status(200).json({
-        OK: true,
-        data: organization
-      });
-    })
-    .catch(function(error) {
-      log.error(
-        "Exception in GET /organization/%s => %s",
-        req.params.organizationId,
-        error
-      );
-      res.status(500).json({
-        OK: false,
-        error: error
-      });
     });
+    const userId = await getUserIfExists(req);
+    organization.bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
+      type: "organization",
+      thingId: organizationId,
+      userId: userId
+    });
+    res.status(200).json({
+      OK: true,
+      data: organization
+    });
+  } catch (error) {
+    log.error("Exception in GET /organization/%s => %s", organizationId, error);
+    res.status(500).json({ OK: false, error: error });
+  }
 });
 
 /**

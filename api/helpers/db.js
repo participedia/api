@@ -29,49 +29,52 @@ function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), { minify: true });
 }
 
+// as.number, enhances existing as.number to cope with numbers as strings
+function number(value) {
+  return pgp.as.number(Number(value));
+}
+
 // as.author
 function author(user_id, name) {
   // TODO: escape user_id and name to avoid injection attacks
   if (!(user_id && name)) {
     throw new Exception("Must have both user_id and name for an author");
   }
-  return `(${user_id}, "now", "${name}")::author`;
+  user_id = as.number(user_id);
+  name = as.text(name);
+  return `(${user_id}, 'now', ${name})::author`;
 }
 
 // as.attachment
 function attachment(url, title, size) {
-  // TODO: escape url, title, size to avoid injection attacks
   if (!url) {
     return "null";
   }
-  title = title || "";
-  if (size === undefined) {
-    size = "null";
-  }
-  return `('${url}', '${title}', ${size})::attachment`;
+  url = as.text(url);
+  title = as.text(title ? title : "");
+  size = size === undefined ? "null" : as.number(size);
+  return `(${url}, ${title}, ${size})::attachment`;
 }
 
 // as.attachments
 function attachments(url, title, size) {
-  // TODO: escape url, title, size to avoid injection attacks
-  if (!url) {
-    return "'{}'";
-  }
-  title = title || "";
+  url = as.text(url ? url : "{}");
+  title = as.text(title ? title : "");
+  size = size === undefined ? "null" : as.number(size);
   if (size === undefined) {
     size = "null";
   }
-  return `ARRAY[('${url}', '${title}', ${size})]::attachment[]`;
+  return `ARRAY[(${url}, ${title}, ${size})]::attachment[]`;
 }
 
 // as.videos
 function videos(url, title) {
-  // TODO: escape url, title to avoid injection attacks
   if (!url) {
-    return "{}";
+    return "'{}'";
   }
-  title = title || "";
-  return `ARRAY[('${url}', '${title}')]::video[]`;
+  url = as.text(url);
+  title = as.text(title ? title : "");
+  return `ARRAY[(${url}, ${title})]::video[]`;
 }
 
 // as.location
@@ -81,20 +84,22 @@ function location(location) {
     return "null";
   }
   let { label, lat, long, gmaps } = location;
-  let name = label;
-  let city = "";
-  let province = "";
-  let country = "";
+  let name = as.text(label);
+  lat = as.text(lat);
+  long = as.text(long);
+  let city = "''";
+  let province = "''";
+  let country = "''";
   gmaps.address_components.forEach(function(component) {
-    if (component.types.includes("city")) {
-      city = component.long_name;
+    if (component.types.includes("locality")) {
+      city = as.text(component.long_name);
     } else if (component.types.includes("administrative_area_level_1")) {
-      province = component.long_name; // could also be a state or territory
+      province = as.text(component.long_name); // could also be a state or territory
     } else if (component.types.includes("country")) {
-      country = component.long_name;
+      country = as.text(component.long_name);
     }
   });
-  return `('${name}', '', '', '${city}', '${province}', '${country}', '', '${lat}', '${long}')::geolocation`;
+  return `(${name}, '', '', ${city}, ${province}, ${country}, '', ${lat}, ${long})::geolocation`;
 }
 
 function related_list(owner, related, id_list) {
@@ -108,7 +113,14 @@ function related_list(owner, related, id_list) {
   if (isString(id_list)) {
     id_list = [id_list];
   }
-  let values = id_list.map(id => `(${id})`).join(", ");
+  owner = as.number(owner);
+  // case and related come from our code, we'll trust those
+  let values = id_list
+    .map(id => {
+      id = as.number(id);
+      `(${id})`;
+    })
+    .join(", ");
   return `
   INSERT INTO
     ${owner}__related_${related}s
@@ -127,7 +139,8 @@ var as = Object.assign({}, pgp.as, {
   attachments,
   location,
   videos,
-  related_list
+  related_list,
+  number
 });
 
 module.exports = { db, sql, as };
