@@ -128,10 +128,13 @@ function process_kind(reference, table, noun, cb) {
     },
     function(results) {
       Object.keys(choices).forEach(function(key) {
+        if (key === "null") return;
         let values = choices[key];
         values = Object.keys(values).map(function(value) {
           let nick = nickify(value);
-          english[nick] = value;
+          if (nick && value !== "null") {
+            english[nick] = value;
+          }
           return nick;
         });
         nick_choices[key] = values;
