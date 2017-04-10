@@ -94,6 +94,15 @@ const empty_organization = {
   // featured: false
 };
 
+function nickify(before) {
+  return before
+    .replace("&amp", "")
+    .replace("#039;", "")
+    .replace(/[.,\-()&$£;]/g, "")
+    .replace(/\s+/g, "_")
+    .toLowerCase();
+}
+
 function process_kind(reference, table, noun, cb) {
   let choices = {};
   let nick_choices = {};
@@ -121,12 +130,7 @@ function process_kind(reference, table, noun, cb) {
       Object.keys(choices).forEach(function(key) {
         let values = choices[key];
         values = Object.keys(values).map(function(value) {
-          let nick = value
-            .replace("&amp", "")
-            .replace("#039;", "")
-            .replace(/\s+/g, "_")
-            .replace(/[\.,\-()&\$£]/g, "")
-            .toLowerCase();
+          let nick = nickify(value);
           english[nick] = value;
           return nick;
         });
