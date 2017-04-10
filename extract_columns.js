@@ -135,7 +135,7 @@ function process_kind(reference, table, noun, cb) {
         values = Object.keys(values).map(function(value) {
           let nick = nickify(value);
           if (nick && value !== "null") {
-            english[nick] = value;
+            english[nick] = value.replace(/&amp;/g, "&");
           }
           return nick;
         });
