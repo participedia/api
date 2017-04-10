@@ -1,13 +1,11 @@
 {
   "best_for": [
     "achieving_public_goods",
-    "null",
     "addressing_identitybased_issues",
     "providing_social_goods",
     "distributing_individual_material_goods"
   ],
   "decision_method": [
-    "null",
     "aggregation_of_individual_preferences_to_create_survey_data",
     "n/a",
     "the_decision_was_made_through_public_deliberation_",
@@ -55,12 +53,10 @@
     "the_state_government_takes_the_publics_consensual_health_care_policy_concerns_into_consideration"
   ],
   "facilitated": [
-    "null",
     "true",
     "false"
   ],
   "governance_contribution": [
-    "null",
     "implementation",
     "decisionmaking",
     "coproduction",
@@ -70,7 +66,6 @@
     "agenda_formation"
   ],
   "issue_interdependency": [
-    "null",
     "4_often_interdependent_with_other_issues",
     "2_seldom_tied_to_other_issues",
     "3_sometimes_interdependent_on_other_issues",
@@ -79,14 +74,12 @@
   ],
   "issue_polarization": [
     "4_polarized",
-    "null",
     "1_not_polarized",
     "5_very_polarized",
     "2_not_very_polarized",
     "3_somewhat_polarized"
   ],
   "issue_technical_complexity": [
-    "null",
     "3_somewhat_complex",
     "1_very_simple",
     "5_highly_complex",
@@ -94,7 +87,6 @@
     "2_not_very_complex"
   ],
   "kind_of_influence": [
-    "null",
     "other",
     "community_building_eg_social_capital",
     "collaborative_delivery_of_services_with_public_authorities",
@@ -107,7 +99,6 @@
     "raise_public_awareness"
   ],
   "method_of_interaction": [
-    "null",
     "online_voting",
     "plenary_and_group_sessions",
     "facetoface",
@@ -152,7 +143,6 @@
     "moderators_announcements"
   ],
   "public_interaction_method": [
-    "null",
     "published_reports",
     "open_websites",
     "information_market:_users_are_both_pitching_new_proposals",
@@ -210,7 +200,6 @@
     "true"
   ],
   "typical_funding_source": [
-    "null",
     "not_applicable",
     "philanthropic_organization_ie_dedicated_to_making_monetary_grants_or_gifts",
     "national_government",
@@ -223,11 +212,8 @@
     "local_government_eg_village_town_city",
     "nongovernmental_organization_nonprofit"
   ],
-  "typical_implementing_entity": [
-    "null"
-  ],
+  "typical_implementing_entity": [],
   "typical_sponsoring_entity": [
-    "null",
     "governmentowned_corporation",
     "not_applicable",
     "philanthropic_organization_ie_dedicated_to_making_monetary_grants_or_gifts",

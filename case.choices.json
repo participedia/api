@@ -1,6 +1,5 @@
 {
   "communication_mode": [
-    "null",
     "express_opinions/preferences_only",
     "storytelling",
     "other",
@@ -16,7 +15,6 @@
     "acting/drama"
   ],
   "communication_with_audience": [
-    "null",
     "policy_recommendations",
     "public_hearings/meetings",
     "other",
@@ -25,7 +23,6 @@
     "traditional_media_ie_television_radio_newspapers"
   ],
   "decision_method": [
-    "null",
     "not_applicable",
     "voting",
     "other",
@@ -33,18 +30,15 @@
     "opinion_survey"
   ],
   "facetoface_online_or_both": [
-    "null",
     "both",
     "facetoface",
     "online"
   ],
   "facilitated": [
-    "null",
     "no",
     "yes"
   ],
   "issue": [
-    "null",
     "community_development",
     "environment",
     "international_trade_global_economy",
@@ -72,7 +66,6 @@
     "planning_eg_urban_planning_transportation_etc"
   ],
   "kind_of_influence": [
-    "null",
     "other",
     "community_building_eg_social_capital",
     "collaborative_delivery_of_services_with_public_authorities",
@@ -85,12 +78,10 @@
     "make_public_decisions_ie_exert_direct_authority"
   ],
   "ongoing": [
-    "null",
     "true",
     "false"
   ],
   "participant_selection": [
-    "null",
     "open_to_all",
     "open_to_all_with_targeted_recruitment",
     "random_selection",
@@ -99,7 +90,6 @@
     "appointment"
   ],
   "specific_topic": [
-    "null",
     "undefined",
     "consultation_on_city_council_agenda",
     "citizen_participation",
@@ -372,7 +362,6 @@
     "cycling_paths"
   ],
   "staff_type": [
-    "null",
     "government_officials",
     "volunteer",
     "student_employees",
@@ -448,7 +437,6 @@
     "experts_from_the_university_of_venice"
   ],
   "targeted_audience": [
-    "null",
     "general_public",
     "media",
     "elected_public_official",
@@ -457,7 +445,6 @@
     "appointed_public_servants_eg_bureaucrats"
   ],
   "targeted_participant_demographic": [
-    "null",
     "people_with_disabilities",
     "lowincome_earners",
     "women",
@@ -472,7 +459,6 @@
     "religious_groups"
   ],
   "targeted_participants_public_role": [
-    "null",
     "stakeholder_organizations_eg_ngos_neighbourhood_associations_industry_representatives",
     "elected_public_official",
     "appointed_public_servants_eg_bureaucrats",
@@ -481,7 +467,6 @@
     "experts_eg_scientists_engineers_criminologists_doctors_lawyers"
   ],
   "type_of_funding_entity": [
-    "null",
     "governmentowned_corporation",
     "not_applicable",
     "philanthropic_organization_ie_dedicated_to_making_monetary_grants_or_gifts",
@@ -498,7 +483,6 @@
     "nongovernmental_organization_nonprofit"
   ],
   "typical_implementing_entity": [
-    "null",
     "governmentowned_corporation",
     "national_government",
     "regional_government_eg_state_provincial_territorial",
@@ -512,7 +496,6 @@
     "local_government_eg_village_town_city"
   ],
   "typical_sponsoring_entity": [
-    "null",
     "governmentowned_corporation",
     "not_applicable",
     "philanthropic_organization_ie_dedicated_to_making_monetary_grants_or_gifts",

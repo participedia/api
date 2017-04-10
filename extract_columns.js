@@ -117,8 +117,10 @@ function process_kind(reference, table, noun, cb) {
         .then(data => {
           let values = {};
           data.forEach(function(options) {
-            values[options[key]] = true;
-            choices[key][options[key]] = true;
+            if (options[key] !== null) {
+              values[options[key]] = true;
+              choices[key][options[key]] = true;
+            }
           });
           next();
         })
