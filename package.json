@@ -13,6 +13,7 @@
   "dependencies": {
     "apicache": "^0.8.3",
     "apidoc": "^0.17.5",
+    "async": "^2.3.0",
     "aws_es": "^1.1.2",
     "babel": "^6.23.0",
     "babel-cli": "^6.23.0",
@@ -29,7 +30,7 @@
     "express-jwt": "^5.1.0",
     "faucet": "^0.0.1",
     "http-aws-es": "^1.1.3",
-    "json-pretty": "0.0.1",
+    "json-pretty": "^0.0.1",
     "method-override": "^2.3.7",
     "morgan": "^1.7.0",
     "nodemon": "^1.11.0",

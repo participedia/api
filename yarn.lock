@@ -228,6 +228,12 @@ async@1.x, async@^1.4.0, async@^1.4.2, async@^1.5.0, async@^1.5.2:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
+async@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.3.0.tgz#1013d1051047dd320fe24e494d5c66ecaf6147d9"
+  dependencies:
+    lodash "^4.14.0"
+
 async@~0.2.6:
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/async/-/async-0.2.10.tgz#b6bbe0b0674b9d719708ca38de8c237cb526c3d1"
@@ -2292,7 +2298,7 @@ jsesc@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-1.3.0.tgz#46c3fec8c1892b12b0833db9bc7622176dbab34b"
 
-json-pretty@0.0.1:
+json-pretty@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/json-pretty/-/json-pretty-0.0.1.tgz#e0a36567490838781f712d250c04a2fb96334265"
 
@@ -2557,7 +2563,7 @@ lodash@4.9.0:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.9.0.tgz#4c20d742f03ce85dc700e0dd7ab9bcab85e6fc14"
 
-lodash@^4.0.0, lodash@^4.12.0, lodash@^4.2.0, lodash@^4.3.0, lodash@~4.17.4:
+lodash@^4.0.0, lodash@^4.12.0, lodash@^4.14.0, lodash@^4.2.0, lodash@^4.3.0, lodash@~4.17.4:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -3187,9 +3193,9 @@ pg-minify@0.4:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/pg-minify/-/pg-minify-0.4.2.tgz#c75b4b5878960fb09c3b9a4d4eb1036aea7ea0e3"
 
-pg-promise@5.6.2:
-  version "5.6.2"
-  resolved "https://registry.yarnpkg.com/pg-promise/-/pg-promise-5.6.2.tgz#bdceb2936af10df5810600481e16955f12f32bb9"
+pg-promise@5.6.3:
+  version "5.6.3"
+  resolved "https://registry.yarnpkg.com/pg-promise/-/pg-promise-5.6.3.tgz#76b1948f34309e55e325d0130eaad46d81486b80"
   dependencies:
     manakin "0.4"
     pg "5.1"

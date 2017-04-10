@@ -270,7 +270,7 @@ router.get("/", function(req, res) {
       }
     }
   } catch (error) {
-    console.error("Error in search: %s", error);
+    console.error("Error in search: ", error);
     res.status(500).json({ error: error });
   }
 });
