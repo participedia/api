@@ -98,7 +98,7 @@ function nickify(before) {
   return before
     .replace("&amp", "")
     .replace("#039;", "")
-    .replace(/[.,\-()&$£;]/g, "")
+    .replace(/[.,\-()&$£;~]/g, "")
     .replace(/\s+/g, "_")
     .toLowerCase();
 }
