@@ -169,11 +169,12 @@ router.get("/:organizationId", async function getorganizationById(req, res) {
       lang: req.params.language || "en"
     });
     const userId = await getUserIfExists(req);
-    organization.bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
+    const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
       type: "organization",
       thingId: organizationId,
       userId: userId
     });
+    organization.bookmarked = bookmarked.organization;
     res.status(200).json({
       OK: true,
       data: organization

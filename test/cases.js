@@ -180,6 +180,7 @@ describe("Cases", () => {
           res.should.have.status(200);
           let the_case = res.body.data;
           the_case.tags.should.have.lengthOf(3);
+          the_case.bookmarked.should.equal(false);
           done();
         });
     });
