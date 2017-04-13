@@ -123,7 +123,7 @@ router.post("/new", async function postNewCase(req, res) {
   /*
   {
      "title":"Safer Jam",
-     "summary":"Dangerous Summary",
+     "body":"Dangerous Body",
      "vidURL":"https://www.youtube.com/watch?v=QF7g3rCnD-w",
      "location":{
         "label":"Cleveland, OH, United States",
@@ -199,10 +199,10 @@ router.post("/new", async function postNewCase(req, res) {
   */
   try {
     let title = req.body.title;
-    let body = req.body.summary;
+    let body = req.body.body || req.body.summary;
     if (!(title && body)) {
       return res.status(400).json({
-        message: "Cannot create Case, both title and summary are required"
+        message: "Cannot create Case, both title and body are required"
       });
     }
     const user_id = req.user.user_id;

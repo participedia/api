@@ -56,7 +56,7 @@ describe("Methods", () => {
         .send({
           // mandatory
           title: "Rhythm",
-          summary: "Never fails",
+          body: "Never fails",
           // optional
           lead_image: "https://cdn.thinglink.me/api/image/756598547733807104/",
           vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
