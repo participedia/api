@@ -43,7 +43,8 @@ const empty_case = {
   files: "{}",
   videos: "{}",
   tags: "{}",
-  featured: false
+  featured: false,
+  bookmarked: false
 };
 
 /**
@@ -302,11 +303,12 @@ async function getCaseById(req, res) {
       lang
     });
     const userId = await getUserIfExists(req);
-    the_case.bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
+    const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
       type: "case",
       thingId: caseId,
       userId: userId
     });
+    the_case.bookmarked = bookmarked.case;
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
     log.error("Exception in GET /case/%s => %s", caseId, error);
