@@ -34,15 +34,16 @@ async function ensureUser(req, res, next) {
       user.user_id = as.number(user.user_id);
       return next();
     }
-    user = await db.one(sql("../sql/user_by_email.sql"), {
+    userObj = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
       userEmail: user.email
     });
-    if (user) {
-      req.user.user_id = user.id;
+    if (userObj) {
+      req.user.user_id = userObj.id;
     } else {
       req.user.id = await db.one(sql("../sql/create_user_id.sql"), {
         userEmail: user.email,
         userName: name,
+        joinDate: user.created_at,
         auth0UserId: auth0UserId
       });
     }
