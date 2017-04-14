@@ -72,10 +72,10 @@ router.post("/new", async function(req, res) {
   //   related methods
   try {
     let title = req.body.title;
-    let body = req.body.summary;
+    let body = req.body.body || req.body.summary;
     if (!(title && body)) {
       return res.status(400).json({
-        message: "Cannot create Method, both title and summary are required"
+        message: "Cannot create Method, both title and body are required"
       });
     }
     const user_id = req.user.user_id;

@@ -112,7 +112,7 @@ describe("Cases", () => {
         .send({
           // mandatory
           title: "This is the first title of the rest of your post",
-          summary: "Eat this, it is my body",
+          body: "Eat this, it is my body",
           // optional
           lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
           vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
@@ -137,7 +137,7 @@ describe("Cases", () => {
       .send({
         // mandatory
         title: "This is the first'); drop table users; -- title of the rest of your post",
-        summary: "Eat this, '); drop table users; -- it is my body",
+        body: "Eat this, '); drop table users; -- it is my body",
         // optional
         lead_image: "CitizensAssembly_2.jpg'); drop table users; --", // key into S3 bucket
         vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w'); drop table users; --",

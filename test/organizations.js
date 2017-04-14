@@ -56,7 +56,7 @@ describe("Organizations", () => {
         .send({
           // mandatory
           title: "Up the organization",
-          summary: "Guerilla Marketing",
+          body: "Guerilla Marketing",
           // optional
           photo: "",
           vidURL: "https://www.youtube.com/watch?v=KVc6rywClWk&t=2078s",
