@@ -84,4 +84,60 @@ describe("Methods", () => {
         });
     });
   });
+  describe("Related Objects", () => {
+    it("test related objects empty", done => {
+      chai
+        .request(app)
+        .get("/method/163")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.related_cases.should.have.lengthOf(0);
+          res.body.data.related_methods.should.have.lengthOf(0);
+          res.body.data.related_organizations.should.have.lengthOf(0);
+          done();
+        });
+    });
+    it("test related objects with single item", done => {
+      chai
+        .request(app)
+        .get("/method/162")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.related_cases.should.have.lengthOf(1);
+          res.body.data.related_cases[0].id.should.equal(65);
+          res.body.data.related_methods.should.have.lengthOf(1);
+          res.body.data.related_methods[0].id.should.equal(165);
+          res.body.data.related_organizations.should.have.lengthOf(1);
+          res.body.data.related_organizations[0].id.should.equal(265);
+          done();
+        });
+    });
+    it("test related objects with multiple items", done => {
+      chai
+        .request(app)
+        .get("/method/161")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.related_cases.should.have.lengthOf(2);
+          res.body.data.related_cases[0].id.should.equal(47);
+          res.body.data.related_cases[1].id.should.equal(52);
+          res.body.data.related_methods.should.have.lengthOf(2);
+          res.body.data.related_methods[0].id.should.equal(147);
+          res.body.data.related_methods[1].id.should.equal(152);
+          res.body.data.related_organizations.should.have.lengthOf(2);
+          res.body.data.related_organizations[0].id.should.equal(247);
+          res.body.data.related_organizations[1].id.should.equal(252);
+          done();
+        });
+    });
+  });
 });

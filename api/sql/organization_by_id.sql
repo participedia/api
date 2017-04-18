@@ -17,7 +17,7 @@ WITH  related_cases AS (
    SELECT
       ARRAY(  SELECT
         ROW(organization__related_methods.related_method_id,
-        method__localized_texts.title)
+        method__localized_texts.title)::object_reference
       FROM
         organization__related_methods,
         method__localized_texts
@@ -31,7 +31,7 @@ related_organizations AS (
   SELECT
       ARRAY(  SELECT
         ROW(organization__related_organizations.related_organization_id,
-        organization__localized_texts.title)
+        organization__localized_texts.title)::object_reference
       FROM
         organization__related_organizations,
         organization__localized_texts

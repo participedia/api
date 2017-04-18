@@ -297,7 +297,6 @@ router.put("/:caseId", function editCaseById(req, res) {
 async function getCaseById(req, res) {
   try {
     const caseId = as.number(req.params.caseId);
-    console.log("caseId: %s", caseId);
     const lang = as.value(req.params.language || "en");
     const the_case = await db.one(sql("../sql/case_by_id.sql"), {
       caseId,
@@ -312,7 +311,7 @@ async function getCaseById(req, res) {
     the_case.bookmarked = bookmarked.case;
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
-    log.error("Exception in GET /case/%s => %s", res.params.caseId, error);
+    log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
     res.status(500).json({
       OK: false,
       error: error

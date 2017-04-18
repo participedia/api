@@ -85,4 +85,60 @@ describe("Organizations", () => {
         });
     });
   });
+  describe("Related Objects", () => {
+    it("test related objects empty", done => {
+      chai
+        .request(app)
+        .get("/organization/268")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.related_cases.should.have.lengthOf(0);
+          res.body.data.related_methods.should.have.lengthOf(0);
+          res.body.data.related_organizations.should.have.lengthOf(0);
+          done();
+        });
+    });
+    it("test related objects with single item", done => {
+      chai
+        .request(app)
+        .get("/organization/269")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.related_cases.should.have.lengthOf(1);
+          res.body.data.related_cases[0].id.should.equal(66);
+          res.body.data.related_methods.should.have.lengthOf(1);
+          res.body.data.related_methods[0].id.should.equal(166);
+          res.body.data.related_organizations.should.have.lengthOf(1);
+          res.body.data.related_organizations[0].id.should.equal(266);
+          done();
+        });
+    });
+    it("test related objects with multiple items", done => {
+      chai
+        .request(app)
+        .get("/organization/270")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.related_cases.should.have.lengthOf(2);
+          res.body.data.related_cases[0].id.should.equal(47);
+          res.body.data.related_cases[1].id.should.equal(55);
+          res.body.data.related_methods.should.have.lengthOf(2);
+          res.body.data.related_methods[0].id.should.equal(147);
+          res.body.data.related_methods[1].id.should.equal(155);
+          res.body.data.related_organizations.should.have.lengthOf(2);
+          res.body.data.related_organizations[0].id.should.equal(247);
+          res.body.data.related_organizations[1].id.should.equal(255);
+          done();
+        });
+    });
+  });
 });
