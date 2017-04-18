@@ -127,6 +127,41 @@ describe("Cases", () => {
         });
     });
   });
+  it("test related objects empty", done => {
+    chai
+      .request(app)
+      .get("/case/39")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + tokens.user_token)
+      .send({})
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.related_cases.should.have.lengthOf(0);
+        res.body.related_methods.should.have.lengthOf(0);
+        res.body.related_organizations.should.have.lengthOf(0);
+        done();
+      });
+  });
+  it("test related objects with single item", done => {
+    chai
+      .request(app)
+      .get("/case/38")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + tokens.user_token)
+      .send({})
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.related_cases.should.have.lengthOf(1);
+        res.body.related_cases[0].id.should.equal(70);
+        res.body.related_methods.should.have.lengthOf(1);
+        res.body.related_methods[0].id.should.equal(170);
+        res.body.related_organizations.should.have.lengthOf(1);
+        res.body.related_methods[0].id.should.equal(270);
+        done();
+      });
+  });
   it("test SQL santization", done => {
     chai
       .request(app)

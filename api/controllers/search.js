@@ -51,7 +51,6 @@ const query_nouns_by_type = async (
   orderBy
 ) => {
   try {
-    console.log("query_nouns_by_type");
     const objList = await db.any(sql("../sql/search_" + objType + "s.sql"), {
       query: query,
       facets: format_facet_string(facets, objType),
@@ -69,7 +68,6 @@ const query_nouns_by_type = async (
 
 const query_all_nouns = async (res, query, facets, page, language, orderBy) => {
   try {
-    console.log("query_all_nouns");
     const objLists = await db.task(t => {
       let dbqueries = ["case", "method", "organization"].map(objType => {
         return t.any(sql("../sql/search_" + objType + "s.sql"), {
@@ -114,7 +112,6 @@ const get_nouns_by_type = async (
   orderBy
 ) => {
   try {
-    console.log("get_nouns_by_type");
     const objList = await db.any(sql("../sql/list_" + objType + "s.sql"), {
       facets: format_facet_string(facets, objType),
       language: language,
@@ -131,7 +128,6 @@ const get_nouns_by_type = async (
 
 const get_all_nouns = async (res, facets, page, language, orderBy) => {
   try {
-    console.log("get_all_nouns");
     const objLists = await db.task(t => {
       let query = ["case", "method", "organization"].map(objType => {
         return t.any(sql("../sql/list_" + objType + "s.sql"), {

@@ -312,7 +312,7 @@ async function getCaseById(req, res) {
     the_case.bookmarked = bookmarked.case;
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
-    log.error("Exception in GET /case/undefined => %s", error);
+    log.error("Exception in GET /case/%s => %s", res.params.caseId, error);
     res.status(500).json({
       OK: false,
       error: error

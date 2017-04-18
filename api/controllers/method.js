@@ -178,7 +178,7 @@ router.get("/:methodId", async function getmethodById(req, res) {
     method.bookmarked = bookmarked.method;
     res.status(200).json({ OK: true, data: method });
   } catch (error) {
-    log.error("Exception in GET /method/id => %s", error);
+    log.error("Exception in GET /method/%s => %s", rew.params.methodId, error);
     res.status(500).json({ OK: false, error: error });
   }
 });
