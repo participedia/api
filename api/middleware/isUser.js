@@ -7,7 +7,7 @@ function isUser(req, res, next) {
       req,
       "Contributors",
       function(err) {
-        console.log(
+        console.warn(
           "in isUser, user doesn't have Contributors group membership"
         );
         res.status(401).json({

@@ -180,7 +180,11 @@ router.get("/:organizationId", async function getorganizationById(req, res) {
       data: organization
     });
   } catch (error) {
-    log.error("Exception in GET /organization/%s => %s", organizationId, error);
+    log.error(
+      "Exception in GET /organization/%s => %s",
+      req.params.organizationId,
+      error
+    );
     res.status(500).json({ OK: false, error: error });
   }
 });

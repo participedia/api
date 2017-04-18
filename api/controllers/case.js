@@ -311,7 +311,7 @@ async function getCaseById(req, res) {
     the_case.bookmarked = bookmarked.case;
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
-    log.error("Exception in GET /case/%s => %s", caseId, error);
+    log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
     res.status(500).json({
       OK: false,
       error: error

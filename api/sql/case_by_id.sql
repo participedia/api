@@ -1,3 +1,48 @@
+WITH  related_cases AS (
+  SELECT
+      ARRAY(  SELECT
+        ROW(case__related_cases.related_case_id,
+        case__localized_texts.title)::object_reference
+      FROM
+        case__related_cases,
+        case__localized_texts
+      WHERE
+        case__related_cases.case_id = ${caseId} AND
+        case__related_cases.related_case_id = case__localized_texts.case_id AND
+        case__localized_texts.language = ${lang}
+      )
+    ),
+
+ related_methods  AS (
+   SELECT
+      ARRAY(  SELECT
+        ROW(case__related_methods.related_method_id,
+        method__localized_texts.title)::object_reference
+      FROM
+        case__related_methods,
+        method__localized_texts
+      WHERE
+        case__related_methods.case_id = ${caseId} AND
+        case__related_methods.related_method_id = method__localized_texts.method_id AND
+        method__localized_texts.language = ${lang}
+      )
+    ),
+related_organizations AS (
+  SELECT
+      ARRAY(  SELECT
+        ROW(case__related_organizations.related_organization_id,
+        organization__localized_texts.title)::object_reference
+      FROM
+        case__related_organizations,
+        organization__localized_texts
+      WHERE
+        case__related_organizations.case_id = ${caseId} AND
+        case__related_organizations.related_organization_id = organization__localized_texts.organization_id AND
+        organization__localized_texts.language = ${lang}
+      )
+    )
+
+
 SELECT
     cases.id,
     'case' as type,
@@ -42,7 +87,10 @@ SELECT
     to_json(COALESCE(cases.videos, '{}')) AS videos,
     to_json(COALESCE(cases.tags, '{}')) AS tags,
     case__localized_texts.*,
-    to_json(author_list.authors) authors
+    to_json(author_list.authors) authors,
+    to_json(related_cases.array) related_cases,
+    to_json(related_methods.array) related_methods,
+    to_json(related_organizations.array) related_organizations
 FROM
     cases,
     case__localized_texts,
@@ -61,13 +109,13 @@ FROM
             case__authors.user_id = users.id
         GROUP BY
             case__authors.case_id
-    ) AS author_list
+    ) AS author_list,
+    related_cases,
+    related_methods,
+    related_organizations
 WHERE
     cases.id = case__localized_texts.case_id AND
     case__localized_texts.language = ${lang} AND
     author_list.case_id = cases.id AND
     cases.id = ${caseId}
 ;
-
-
--- SELECT case__methods.method_id, method__localized_texts.title FROM case__methods, method__localized_texts WHERE case__methods.case_id = ${caseId} AND case__methods.method_id = method__localized_texts.method_id;
