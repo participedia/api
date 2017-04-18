@@ -163,8 +163,8 @@ router.put("/:id", function editMethodById(req, res) {
  */
 
 router.get("/:methodId", async function getmethodById(req, res) {
-  const methodId = as.number(req.params.methodId);
   try {
+    const methodId = as.number(req.params.methodId);
     const method = await db.one(sql("../sql/method_by_id.sql"), {
       methodId: methodId,
       lang: req.params.language || "en"
@@ -178,7 +178,7 @@ router.get("/:methodId", async function getmethodById(req, res) {
     method.bookmarked = bookmarked.method;
     res.status(200).json({ OK: true, data: method });
   } catch (error) {
-    log.error("Exception in GET /method/%s => %s", methodId, error);
+    log.error("Exception in GET /method/id => %s", error);
     res.status(500).json({ OK: false, error: error });
   }
 });
