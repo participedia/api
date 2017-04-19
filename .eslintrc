@@ -1,5 +1,5 @@
 {
-"env": {
+    "env": {
         "browser": true,
         "node": true,
         "es6": true,
@@ -36,9 +36,7 @@
             "experimentalObjectRestSpread": true
         }
     },
-    "plugins": [
-        "react"
-    ],
+    "plugins": [],
     "rules": {
         "strict": 0
     }

@@ -21,13 +21,11 @@ Some environment variables need to be defined, either in the environment or in a
 in the root directory of the folder, defining the following environment variables:
  * `DATABASE_URL` points to a Postgres database (including username & password)
  * `AWS_REGION`, `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` for the usual AWS
-    purposes (used for now for DynamoDB/ElasticSearch and S3, but in the future just S3)
+    purposes (used for S3)
 
-`npm start` starts the API server.
+`yarn start` starts the API server.
 
-`npm test` runs the test suite.  These are written using
-[http://visionmedia.github.io/superagent/](superagent) and
-[https://github.com/substack/tape](tape).
+`yarn test` runs the test suite.  
 
 `swagger project editor` can be used (once `swagger` is installed) to edit the
 API definition file.
