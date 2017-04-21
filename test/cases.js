@@ -241,4 +241,19 @@ describe("Cases", () => {
         });
     });
   });
+  describe("Get case with authentication", () => {
+    it("should not faile when logged in", done => {
+      chai
+        .request(app)
+        .get("/case/100")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .end((err, res) => {
+          res.body.OK.should.equal(true);
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
 });

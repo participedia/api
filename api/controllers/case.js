@@ -261,11 +261,29 @@ router.post("/new", async function postNewCase(req, res) {
  *
  */
 
-router.put("/:caseId", function editCaseById(req, res) {
+router.put("/:caseId", async function editCaseById(req, res) {
   cache.clear();
   // let caseId = req.swagger.params.caseId.value;
   // let caseBody = req.body;
-  res.status(200).json(req.body);
+  console.log("edit received: %s", JSON.stringify(req.body));
+  try {
+    const theCase = await getCaseById(req);
+    /* DO ALL THE DIFFS */
+    // If the body or title have changed: add a record in case__localized_texts
+    // If related_cases has changed, update records in case__related_cases
+    // If related_methods has changed, update records in case__related_methods
+    // If related_organizations has changed, update records in case__related_organizations
+    // If any of the fields of case itself have changed, update record in cases
+    // If any changes are made: add a record to case__authors
+
+    res.status(200).json({ OK: true, data: the_case });
+  } catch (error) {
+    log.error("Exception in PUT /case/%s => %s", req.params.caseId, error);
+    res.status(500).json({
+      OK: false,
+      error: error
+    });
+  }
 });
 
 /**
@@ -294,21 +312,26 @@ router.put("/:caseId", function editCaseById(req, res) {
  *
  */
 
-async function getCaseById(req, res) {
+async function getCaseById(req) {
+  const caseId = as.number(req.params.caseId);
+  const lang = as.value(req.params.language || "en");
+  const the_case = await db.one(sql("../sql/case_by_id.sql"), {
+    caseId,
+    lang
+  });
+  const userId = await getUserIfExists(req);
+  const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
+    type: "case",
+    thingId: caseId,
+    userId: userId
+  });
+  the_case.bookmarked = bookmarked.case;
+  return the_case;
+}
+
+async function returnCaseById(req, res) {
   try {
-    const caseId = as.number(req.params.caseId);
-    const lang = as.value(req.params.language || "en");
-    const the_case = await db.one(sql("../sql/case_by_id.sql"), {
-      caseId,
-      lang
-    });
-    const userId = await getUserIfExists(req);
-    const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-      type: "case",
-      thingId: caseId,
-      userId: userId
-    });
-    the_case.bookmarked = bookmarked.case;
+    const the_case = await getCaseById(req);
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
     log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
@@ -328,7 +351,7 @@ router.get(
     credentialsRequired: false,
     algorithms: ["HS256"]
   }),
-  getCaseById
+  returnCaseById
 );
 
 /**
