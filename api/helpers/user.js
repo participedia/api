@@ -5,10 +5,14 @@ let unless = require("express-unless");
 const getUserIfExists = async req => {
   let user = req.user;
   if (user) {
-    user = await db.one(sql("../sql/user_by_email.sql"), {
+    user = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
       userEmail: user.email
     });
-    user.id;
+    if (user) {
+      return user.id;
+    } else {
+      return 0;
+    }
   } else {
     null;
   }
@@ -40,12 +44,14 @@ async function ensureUser(req, res, next) {
     if (userObj) {
       req.user.user_id = userObj.id;
     } else {
-      req.user.id = await db.one(sql("../sql/create_user_id.sql"), {
+      let newUser;
+      newUser = await db.one(sql("../sql/create_user_id.sql"), {
         userEmail: user.email,
         userName: name,
         joinDate: user.created_at,
         auth0UserId: auth0UserId
       });
+      req.user.user_id = newUser.user_id;
     }
     next();
   } catch (error) {
@@ -75,4 +81,4 @@ function okToEdit(user) {
 
 ensureUser.unless = unless;
 
-module.exports = (exports = { ensureUser, okToEdit, getUserIfExists });
+module.exports = exports = { ensureUser, okToEdit, getUserIfExists };
