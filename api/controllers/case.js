@@ -310,6 +310,8 @@ async function getCaseById(req, res) {
         userId: userId
       });
       the_case.bookmarked = bookmarked.case;
+    } else {
+      the_case.bookmarked = false;
     }
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
