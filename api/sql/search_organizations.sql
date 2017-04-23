@@ -69,9 +69,9 @@ FROM
             author_list.organization_id = organizations.id
     ) as docsearch
 WHERE
-    docsearch.document @@ to_tsquery(${query})
+    docsearch.document @@ plainto_tsquery(${query})
 ORDER BY
-    ts_rank(docsearch.document, to_tsquery(${query})) DESC
+    ts_rank(docsearch.document, plainto_tsquery(${query})) DESC
 LIMIT ${limit}
 OFFSET ${offset}
 ;
