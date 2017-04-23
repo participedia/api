@@ -282,13 +282,11 @@ const get_map_data = async (req, res) => {
       limit: RESPONSE_LIMIT,
       offset: offset
     });
-    console.log("CASES", cases);
     const orgs = await db.any(sql("../sql/list_map_orgs.sql"), {
       language: as.value(req.query.language || "en"),
       limit: RESPONSE_LIMIT,
       offset: offset
     });
-    console.log("ORGS", orgs);
 
     res.status(200).json({ data: { cases, orgs } });
   } catch (error) {
