@@ -12,7 +12,9 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     let page = parseInt(req.query.page || 1);
     let offset = (page - 1) * RESPONSE_LIMIT;
     if (
-      objType !== "organization" && objType !== "case" && objType !== "method"
+      objType !== "organization" &&
+      objType !== "case" &&
+      objType !== "method"
     ) {
       res.status(401).json({
         message: "Unsupported objType for getAllForType: " + objType
@@ -267,6 +269,36 @@ router.get("/", function(req, res) {
     }
   } catch (error) {
     console.error("Error in search: ", error);
+    res.status(500).json({ error: error });
+  }
+});
+
+const get_map_data = async (req, res) => {
+  try {
+    const RESPONSE_LIMIT = 1000;
+    const offset = 0;
+    const cases = await db.any(sql("../sql/list_map_cases.sql"), {
+      language: as.value(req.query.language || "en"),
+      limit: RESPONSE_LIMIT,
+      offset: offset
+    });
+    const orgs = await db.any(sql("../sql/list_map_orgs.sql"), {
+      language: as.value(req.query.language || "en"),
+      limit: RESPONSE_LIMIT,
+      offset: offset
+    });
+
+    res.status(200).json({ data: { cases, orgs } });
+  } catch (error) {
+    log.error("Exception in GET /search/map", error);
+    res.status(500).json({ error: error });
+  }
+};
+router.get("/map", function(req, res) {
+  try {
+    get_map_data(req, res);
+  } catch (error) {
+    console.error("Error in search/map: ", error);
     res.status(500).json({ error: error });
   }
 });
