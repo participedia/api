@@ -4,6 +4,7 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let jwt = require("express-jwt");
+let equals = require("deep-equal");
 
 let { getUserIfExists } = require("../helpers/user");
 let { db, sql, as } = require("../helpers/db");
@@ -263,12 +264,24 @@ router.post("/new", async function postNewCase(req, res) {
 
 router.put("/:caseId", async function editCaseById(req, res) {
   cache.clear();
-  // let caseId = req.swagger.params.caseId.value;
-  // let caseBody = req.body;
-  console.log("edit received: %s", JSON.stringify(req.body));
   try {
-    const theCase = await getCaseById(req);
+    const oldCase = await getCaseById(req);
+    const newCase = req.body;
     /* DO ALL THE DIFFS */
+    Object.keys(oldCase).forEach(key => {
+      if (newCase[key] !== undefined && !equals(oldCase[key], newCase[key])) {
+        if (key === "body") {
+          console.log("Change found in %s", key);
+        } else {
+          console.log(
+            "Change found in %s: %s != %s",
+            key,
+            oldCase[key],
+            newCase[key]
+          );
+        }
+      }
+    });
     // If the body or title have changed: add a record in case__localized_texts
     // If related_cases has changed, update records in case__related_cases
     // If related_methods has changed, update records in case__related_methods
@@ -276,7 +289,7 @@ router.put("/:caseId", async function editCaseById(req, res) {
     // If any of the fields of case itself have changed, update record in cases
     // If any changes are made: add a record to case__authors
 
-    res.status(200).json({ OK: true, data: the_case });
+    res.status(200).json({ OK: true, data: oldCase });
   } catch (error) {
     log.error("Exception in PUT /case/%s => %s", req.params.caseId, error);
     res.status(500).json({
