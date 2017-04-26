@@ -1,6 +1,8 @@
 CREATE TYPE object_reference AS (
     id INTEGER,
-    title TEXT
+    type TEXT,
+    title TEXT,
+    lead_image TEXT
 );
 INSERT INTO case__related_cases VALUES (45, 37);
 INSERT INTO case__related_cases VALUES (63, 37);

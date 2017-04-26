@@ -2,13 +2,17 @@ WITH  related_cases AS (
   SELECT
       ARRAY(  SELECT
         ROW(case__related_cases.related_case_id,
-        case__localized_texts.title)::object_reference
+        'case',
+        case__localized_texts.title,
+        cases.lead_image)::object_reference
       FROM
         case__related_cases,
-        case__localized_texts
+        case__localized_texts,
+        cases
       WHERE
         case__related_cases.case_id = ${caseId} AND
         case__related_cases.related_case_id = case__localized_texts.case_id AND
+        case__related_cases.related_case_id = cases.id AND
         case__localized_texts.language = ${lang}
       )
     ),
@@ -17,13 +21,17 @@ WITH  related_cases AS (
    SELECT
       ARRAY(  SELECT
         ROW(case__related_methods.related_method_id,
-        method__localized_texts.title)::object_reference
+        'method',
+        method__localized_texts.title,
+        methods.lead_image)::object_reference
       FROM
         case__related_methods,
-        method__localized_texts
+        method__localized_texts,
+        methods
       WHERE
         case__related_methods.case_id = ${caseId} AND
         case__related_methods.related_method_id = method__localized_texts.method_id AND
+        case__related_methods.related_method_id = methods.id AND
         method__localized_texts.language = ${lang}
       )
     ),
@@ -31,13 +39,16 @@ related_organizations AS (
   SELECT
       ARRAY(  SELECT
         ROW(case__related_organizations.related_organization_id,
-        organization__localized_texts.title)::object_reference
+        'organization',
+        organization__localized_texts.title,
+        organizations.lead_image)::object_reference
       FROM
         case__related_organizations,
         organization__localized_texts
       WHERE
         case__related_organizations.case_id = ${caseId} AND
         case__related_organizations.related_organization_id = organization__localized_texts.organization_id AND
+        case__related_organizations.related_organization_id = organizations.id AND
         organization__localized_texts.language = ${lang}
       )
     )
