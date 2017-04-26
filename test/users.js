@@ -36,5 +36,22 @@ describe("Users", () => {
           done();
         });
     });
+    it("This user should have 1 bookmarked case and two bookmarked methods", done => {
+      chai
+        .request(app)
+        .get("/user/100")
+        .set("Content-Type", "application.json")
+        .set("Accept", "application.json")
+        .end((err, res) => {
+          res.body.OK.should.equal(true);
+          res.should.have.status(200);
+          let user = res.body.data;
+          user.bookmarks.should.have.lengthOf(3);
+          user.bookmarks[0].type.should.equal("case");
+          user.bookmarks[1].type.should.equal("method");
+          user.bookmarks[2].type.should.equal("method");
+          done();
+        });
+    });
   });
 });
