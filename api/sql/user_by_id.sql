@@ -1,10 +1,61 @@
+WITH user_bookmarks AS (
+  SELECT
+    bookmarks.thingid as id,
+    bookmarks.bookmarktype AS type,
+    case__localized_texts.title,
+    cases.lead_image
+  FROM
+    bookmarks,
+    case__localized_texts,
+    cases
+  WHERE
+    bookmarks.userid = ${userId} AND
+    bookmarks.thingid = cases.id AND
+    bookmarks.thingid = case__localized_texts.case_id AND
+    case__localized_texts.language = ${language} AND
+    bookmarks.bookmarktype = 'case'
+UNION
+  SELECT
+    bookmarks.thingid as id,
+    bookmarks.bookmarktype AS type,
+    method__localized_texts.title,
+    methods.lead_image
+  FROM
+    bookmarks,
+    method__localized_texts,
+    methods
+  WHERE
+    bookmarks.userid = ${userId} AND
+    bookmarks.thingid = methods.id AND
+    bookmarks.thingid = method__localized_texts.method_id AND
+    method__localized_texts.language = ${language} AND
+    bookmarks.bookmarktype = 'method'
+UNION
+  SELECT
+    bookmarks.thingid as id,
+    bookmarks.bookmarktype as TYPE,
+    organization__localized_texts.title,
+    organizations.lead_image
+  FROM
+    bookmarks,
+    organization__localized_texts,
+    organizations
+  WHERE
+    bookmarks.userid = ${userId} AND
+    bookmarks.thingid = organizations.id AND
+    bookmarks.thingid = organization__localized_texts.organization_id AND
+    organization__localized_texts.language = ${language} AND
+    bookmarks.bookmarktype = 'organization'
+)
+
 SELECT
 	users.name,
 	users.id,
     'user' as type,
-	to_json(cases_authored) cases,
-	to_json(methods_authored) methods,
-	to_json(organizations_authored) organizations
+	to_json(COALESCE(cases_authored, '{}')) cases,
+	to_json(COALESCE(methods_authored, '{}')) methods,
+	to_json(COALESCE(organizations_authored, '{}')) organizations,
+  to_json(COALESCE(ARRAY(SELECT ROW(id, type, title, lead_image)::object_reference FROM user_bookmarks), '{}')) bookmarks
 FROM
 	users LEFT JOIN
 	(
