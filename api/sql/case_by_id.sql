@@ -44,7 +44,8 @@ related_organizations AS (
         organizations.lead_image)::object_reference
       FROM
         case__related_organizations,
-        organization__localized_texts
+        organization__localized_texts,
+        organizations
       WHERE
         case__related_organizations.case_id = ${caseId} AND
         case__related_organizations.related_organization_id = organization__localized_texts.organization_id AND

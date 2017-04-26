@@ -40,7 +40,7 @@ related_organizations AS (
       ARRAY(  SELECT
         ROW(method__related_organizations.related_organization_id,
         'organization',
-        organization__localized_texts.title
+        organization__localized_texts.title,
         organizations.lead_image)::object_reference
       FROM
         method__related_organizations,

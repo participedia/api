@@ -16,7 +16,7 @@ FROM
           cases
 	    WHERE
 	        texts.language = ${language} AND
-	        texts.case_id = authors.case_id,
+	        texts.case_id = authors.case_id AND
           texts.case_id = cases.id
 	    GROUP BY
 	    	authors.user_id
@@ -48,8 +48,8 @@ FROM
           organizations
 	    WHERE
 	        texts.language = ${language} AND
-	        texts.organization_id = authors.organization_id
-          texts.organization_id = organization.id
+	        texts.organization_id = authors.organization_id AND
+          texts.organization_id = organizations.id
 	    GROUP BY
 	    	authors.user_id
         HAVING
