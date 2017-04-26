@@ -89,7 +89,7 @@ describe("Search", () => {
         });
     });
   });
-  describe("Test search with multi-word tags'", () => {
+  describe("Test search with multi-word tags", () => {
     it("finds everything with the facet tag=animal welfare", done => {
       chai
         .request(app)
@@ -105,6 +105,17 @@ describe("Search", () => {
           res.body.results[0].type.should.equal("case");
           res.body.results[0].hits.should.have.lengthOf(2);
           done();
+        });
+    });
+  });
+  describe("Test full-text search", () => {
+    it("single-word search", done => {
+      chai
+        .request(app)
+        .get("/search?query=Cleveland")
+        .set({})
+        .end((err, res) => {
+          res.should.have.status(200);
         });
     });
   });
