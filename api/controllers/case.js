@@ -303,12 +303,16 @@ async function getCaseById(req, res) {
       lang
     });
     const userId = await getUserIfExists(req);
-    const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-      type: "case",
-      thingId: caseId,
-      userId: userId
-    });
-    the_case.bookmarked = bookmarked.case;
+    if (userId) {
+      const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
+        type: "case",
+        thingId: caseId,
+        userId: userId
+      });
+      the_case.bookmarked = bookmarked.case;
+    } else {
+      the_case.bookmarked = false;
+    }
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
     log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
