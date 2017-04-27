@@ -54,16 +54,18 @@ UNION
     bookmarks.bookmarktype = 'organization'
 )
 
+SELECT row_to_json(user_row) as user
+FROM (
 SELECT
 	users.name,
 	users.id,
   users.join_date,
   users.picture_url,
   'user' as type,
-	to_json(COALESCE(cases_authored, '{}')) cases,
-	to_json(COALESCE(methods_authored, '{}')) methods,
-	to_json(COALESCE(organizations_authored, '{}')) organizations,
-  to_json(COALESCE(ARRAY(SELECT ROW(id, type, title, lead_image, post_date, updated_date)::object_reference FROM user_bookmarks), '{}')) bookmarks
+	COALESCE(cases_authored, '{}') cases,
+	COALESCE(methods_authored, '{}') methods,
+	COALESCE(organizations_authored, '{}') organizations,
+  COALESCE(ARRAY(SELECT ROW(id, type, title, lead_image, post_date, updated_date)::object_reference FROM user_bookmarks), '{}') bookmarks
 FROM
 	users LEFT JOIN
 	(
@@ -116,4 +118,5 @@ FROM
 	) AS org_authors  ON org_authors.user_id = users.id
 WHERE
 	users.id = ${userId}
+) user_row
 ;
