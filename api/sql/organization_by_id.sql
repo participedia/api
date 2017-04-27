@@ -4,7 +4,9 @@ WITH  related_cases AS (
         ROW(organization__related_cases.related_case_id,
         'case',
         case__localized_texts.title,
-        cases.lead_image)::object_reference
+        cases.lead_image,
+        cases.post_date,
+        cases.updated_date)::object_reference
       FROM
         organization__related_cases,
         case__localized_texts,
@@ -23,7 +25,9 @@ WITH  related_cases AS (
         ROW(organization__related_methods.related_method_id,
         'method',
         method__localized_texts.title,
-        methods.lead_image)::object_reference
+        methods.lead_image,
+        methods.post_date,
+        methods.updated_date)::object_reference
       FROM
         organization__related_methods,
         method__localized_texts,
@@ -41,7 +45,9 @@ related_organizations AS (
         ROW(organization__related_organizations.related_organization_id,
         'organization',
         organization__localized_texts.title,
-        organizations.lead_image)::object_reference
+        organizations.lead_image,
+        organizations.post_date,
+        organizations.updated_date)::object_reference
       FROM
         organization__related_organizations,
         organization__localized_texts,
