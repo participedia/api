@@ -8,15 +8,18 @@ let { ensureUser } = require("../helpers/user");
 
 async function getUserById(req, userId, res) {
   try {
-    const user = await db.oneOrNone(sql("../sql/user_by_id.sql"), {
+    const result = await db.oneOrNone(sql("../sql/user_by_id.sql"), {
       userId: userId,
       language: req.params.language || "en"
     });
-    console.log("GOT USER", user);
-    res.status(200).json({ OK: true, data: user });
+    res.status(200).json({ OK: true, data: result.user });
   } catch (error) {
     log.error("Exception in GET /user/%s => %s", req.params.userId, error);
-    res.status(500).json({ OK: false, error: error });
+    if (error.message && error.message == "No data returned from the query.") {
+      res.status(404).json({ OK: false });
+    } else {
+      res.status(500).json({ OK: false, error: error });
+    }
   }
 }
 
