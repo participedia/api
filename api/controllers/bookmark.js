@@ -49,18 +49,15 @@ async function lookupBookmarksById(req, res, userId) {
   }
 }
 
-function queryBookmarks(req, res) {
+async function queryBookmarks(req, res) {
   try {
     let userid = as.number(req.params.userid);
 
     if (!userid) {
-      ensureUser(req, res, () => {
-        userid = req.user.user_id; // put there by ensureUser
-        lookupBookmarksById(req, res, userid);
-      });
-    } else {
-      lookupBookmarksById(req, res, userid);
+      await ensureUser(req, res);
+      userid = req.user.user_id; // put there by ensureUser
     }
+    lookupBookmarksById(req, res, userid);
   } catch (error) {
     log.error(error);
     res.json({ success: false, error: error.message || error });
@@ -118,7 +115,7 @@ router.post("/add", async function addBookmark(req, res) {
     }
     let userId = as.number(req.user.user_id);
     let thingId = as.number(req.body.thingID);
-    let bookmarkType = as.text(req.body.bookmarkType);
+    let bookmarkType = req.body.bookmarkType;
     const data = await db.one(
       "insert into bookmarks(bookmarktype, thingid, userid) VALUES(${bookmarkType},${thingId},${userId}) returning id",
       { bookmarkType, thingId, userId }
