@@ -4,6 +4,21 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let { db, sql } = require("../helpers/db");
+let { ensureUser } = require("../helpers/user");
+
+async function getUserById(req, userId, res) {
+  try {
+    const user = await db.oneOrNone(sql("../sql/user_by_id.sql"), {
+      userId: userId,
+      language: req.params.language || "en"
+    });
+    console.log("GOT USER", user);
+    res.status(200).json({ OK: true, data: user });
+  } catch (error) {
+    log.error("Exception in GET /user/%s => %s", req.params.userId, error);
+    res.status(500).json({ OK: false, error: error });
+  }
+}
 
 /**
  * @api {get} /user/:userId Retrieve a user
@@ -26,17 +41,13 @@ let { db, sql } = require("../helpers/db");
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.get("/:userId", async function getUserById(req, res) {
-  try {
-    const user = await db.one(sql("../sql/user_by_id.sql"), {
-      userId: req.params.userId,
-      language: req.params.language || "en"
-    });
-    res.status(200).json({ OK: true, data: user });
-  } catch (error) {
-    log.error("Exception in GET /user/%s => %s", req.params.userId, error);
-    res.status(500).json({ OK: false, error: error });
-  }
+router.get("/:userId", function(req, res) {
+  return getUserById(req, req.params.userId, res);
+});
+
+router.get("/", async function(req, res) {
+  await ensureUser(req, res);
+  return getUserById(req, req.user.user_id, res);
 });
 
 /**

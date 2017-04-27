@@ -4,7 +4,8 @@ INSERT into users (
   language_1,
   name,
   auth0_user_id,
-  join_date
+  join_date,
+  picture_url
 )
 VALUES
   (
@@ -12,6 +13,7 @@ VALUES
     'en', 'en',
     ${userName},
     ${auth0UserId},
-    ${joinDate}
+    ${joinDate},
+    ${pictureUrl}
   )
 RETURNING id as user_id;
