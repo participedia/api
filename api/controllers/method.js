@@ -170,12 +170,16 @@ router.get("/:methodId", async function getmethodById(req, res) {
       lang: req.params.language || "en"
     });
     const userId = await getUserIfExists(req);
-    const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-      type: "method",
-      thingId: methodId,
-      userId: userId
-    });
-    method.bookmarked = bookmarked.method;
+    if (userId) {
+      const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
+        type: "method",
+        thingId: methodId,
+        userId: userId
+      });
+      method.bookmarked = bookmarked.method;
+    } else {
+      method.bookmarked = false;
+    }
     res.status(200).json({ OK: true, data: method });
   } catch (error) {
     log.error("Exception in GET /method/%s => %s", req.params.methodId, error);
