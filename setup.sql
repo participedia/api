@@ -266,3 +266,5 @@ CREATE TABLE bookmarks (
 \include 'migrations/migration_012.sql'
 \include 'migrations/migration_013.sql'
 \include 'migrations/migration_015.sql'
+\include 'migrations/migration_016.sql'
+\include 'migrations/migration_017.sql'
