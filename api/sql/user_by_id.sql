@@ -3,7 +3,9 @@ WITH user_bookmarks AS (
     bookmarks.thingid as id,
     bookmarks.bookmarktype AS type,
     case__localized_texts.title,
-    cases.lead_image
+    cases.lead_image,
+    cases.post_date,
+    cases.updated_date
   FROM
     bookmarks,
     case__localized_texts,
@@ -19,7 +21,9 @@ UNION
     bookmarks.thingid as id,
     bookmarks.bookmarktype AS type,
     method__localized_texts.title,
-    methods.lead_image
+    methods.lead_image,
+    methods.post_date,
+    methods.updated_date
   FROM
     bookmarks,
     method__localized_texts,
@@ -35,7 +39,9 @@ UNION
     bookmarks.thingid as id,
     bookmarks.bookmarktype as TYPE,
     organization__localized_texts.title,
-    organizations.lead_image
+    organizations.lead_image,
+    organizations.post_date,
+    organizations.updated_date
   FROM
     bookmarks,
     organization__localized_texts,
@@ -51,16 +57,18 @@ UNION
 SELECT
 	users.name,
 	users.id,
-    'user' as type,
+  users.join_date,
+  users.picture_url,
+  'user' as type,
 	to_json(COALESCE(cases_authored, '{}')) cases,
 	to_json(COALESCE(methods_authored, '{}')) methods,
 	to_json(COALESCE(organizations_authored, '{}')) organizations,
-  to_json(COALESCE(ARRAY(SELECT ROW(id, type, title, lead_image)::object_reference FROM user_bookmarks), '{}')) bookmarks
+  to_json(COALESCE(ARRAY(SELECT ROW(id, type, title, lead_image, post_date, updated_date)::object_reference FROM user_bookmarks), '{}')) bookmarks
 FROM
 	users LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.case_id, 'case', texts.title, cases.lead_image)::object_reference) cases_authored, authors.user_id
+	         array_agg(ROW(authors.case_id, 'case', texts.title, cases.lead_image, cases.post_date, cases.updated_date)::object_reference) cases_authored, authors.user_id
 	    FROM
 	        case__localized_texts texts,
 	        case__authors authors,
@@ -76,7 +84,7 @@ FROM
 	) AS case_authors ON case_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.method_id, 'method', texts.title, methods.lead_image)::object_reference) methods_authored, authors.user_id
+	         array_agg(ROW(authors.method_id, 'method', texts.title, methods.lead_image, methods.post_date, methods.updated_date)::object_reference) methods_authored, authors.user_id
 	    FROM
 	        method__localized_texts texts,
 	        method__authors authors,
@@ -92,7 +100,7 @@ FROM
 	) AS method_authors ON method_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.organization_id, 'organization', texts.title, organizations.lead_image)::object_reference) organizations_authored, authors.user_id
+	         array_agg(ROW(authors.organization_id, 'organization', texts.title, organizations.lead_image, organizations.post_date, organizations.updated_date)::object_reference) organizations_authored, authors.user_id
 	    FROM
 	        organization__localized_texts texts,
 	        organization__authors authors,
