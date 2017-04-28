@@ -64,8 +64,8 @@ describe("Users", () => {
           res.should.have.status(200);
           let user = res.body.data;
           user.cases.should.have.lengthOf(42);
-          user.cases[3].lead_image.url.should.equal("Marrickville.JPG");
-          user.cases[4].lead_image.title.should.equal(
+          user.cases[10].lead_image.url.should.equal("Marrickville.JPG");
+          user.cases[11].lead_image.title.should.equal(
             "Noosa organic waste jury workshop 1"
           );
           done();
