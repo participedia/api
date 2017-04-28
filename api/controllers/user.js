@@ -49,13 +49,8 @@ router.get("/:userId", function(req, res) {
 });
 
 router.get("/", function(req, res) {
-  try {
-    ensureUser(req, res, function() {
-      return getUserById(req, req.user.user_id, res);
-    });
-  } catch (e) {
-    console.error(e);
-  }
+  ensureUser(req, res);
+  return getUserById(req, req.user.user_id, res);
 });
 
 /**
