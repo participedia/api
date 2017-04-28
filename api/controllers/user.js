@@ -48,8 +48,8 @@ router.get("/:userId", function(req, res) {
   return getUserById(req, req.params.userId, res);
 });
 
-router.get("/", function(req, res) {
-  ensureUser(req, res);
+router.get("/", async function(req, res) {
+  await ensureUser(req, res);
   return getUserById(req, req.user.user_id, res);
 });
 
