@@ -55,7 +55,11 @@ async function ensureUser(req, res, next) {
         userName: name,
         joinDate: user.created_at,
         auth0UserId: auth0UserId,
-        pictureUrl: pictureUrl
+        pictureUrl: pictureUrl,
+        title: "",
+        bio: "",
+        affiliation: "",
+        location: null
       });
       req.user.user_id = newUser.user_id;
     }
