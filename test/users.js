@@ -53,5 +53,23 @@ describe("Users", () => {
           done();
         });
     });
+    it("Make sure if there is a lead_image that it is an object with a url property", done => {
+      chai
+        .request(app)
+        .get("/user/134860")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .end((err, res) => {
+          res.body.OK.should.equal(true);
+          res.should.have.status(200);
+          let user = res.body.data;
+          user.cases.should.have.lengthOf(42);
+          user.cases[3].lead_image.url.should.equal("Marrickville.JPG");
+          user.cases[4].lead_image.title.should.equal(
+            "Noosa organic waste jury workshop 1"
+          );
+          done();
+        });
+    });
   });
 });
