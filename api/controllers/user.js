@@ -48,9 +48,63 @@ router.get("/:userId", function(req, res) {
   return getUserById(req, req.params.userId, res);
 });
 
-router.get("/", async function(req, res) {
-  await ensureUser(req, res);
-  return getUserById(req, req.user.user_id, res);
+router.get("/", function(req, res) {
+  try {
+    ensureUser(req, res, function() {
+      return getUserById(req, req.user.user_id, res);
+    });
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+/**
+ * @api {post} /user Update a user's own profile
+ * @apiGroup users
+ * @apiVersion 0.1.0
+ * @apiName getUserById
+ * @apiParam {Number} userId user ID
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {data} User object if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *        OK: true
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
+router.post("/", async function(req, res) {
+  try {
+    let body = req.body;
+    let user = req.user;
+    let pictureUrl = user.picture;
+    if (user.user_metadata && user.user_metadata.customPic) {
+      pictureUrl = user.user_metadata.customPic;
+    }
+    const result = await db.oneOrNone(sql("../sql/update_user.sql"), {
+      id: userId,
+      language: req.params.language || "en",
+      picture_url: pictureUrl,
+      bio: body["bio"] || "",
+      title: body["title"] || "",
+      affiliation: body["affiliation"] || "",
+      location: body["location"] || null
+    });
+    res.status(200).json({ OK: true, data: result.user });
+  } catch (error) {
+    log.error("Exception in POST /user/%s => %s", req.params.userId, error);
+    if (error.message && error.message == "No data returned from the query.") {
+      res.status(404).json({ OK: false });
+    } else {
+      res.status(500).json({ OK: false, error: error });
+    }
+  }
 });
 
 /**
