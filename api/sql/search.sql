@@ -7,8 +7,8 @@
 
 SELECT id, type, title, lead_image, updated_date
 FROM search_index_${language:raw}
-WHERE document @@ to_tsquery('english', ${query})
-ORDER BY ts_rank(search_index_${language:raw}.document, to_tsquery('english', ${query})) DESC
+WHERE document @@ plainto_tsquery('english', ${query})
+ORDER BY ts_rank(search_index_${language:raw}.document, plainto_tsquery('english', ${query})) DESC
 OFFSET ${offset}
 LIMIT ${limit}
 ;

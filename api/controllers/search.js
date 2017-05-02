@@ -238,7 +238,7 @@ async function full_text_search(res, query, language, page) {
     });
     res.status(200).json({ OK: true, results: objList });
   } catch (error) {
-    log.error("Exception in GET /search/v2/", error);
+    log.error("Exception in GET /search/", error);
     res.status(500).json({ OK: false, error: error });
   }
 }
