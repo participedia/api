@@ -6,8 +6,8 @@ let should = chai.should();
 chai.use(chaiHttp);
 
 describe("Search", () => {
-  describe("get first 30 cases", () => {
-    it("finds 30 case titles and ids", done => {
+  describe("get first 20 cases", () => {
+    it("finds 20 case titles and ids", done => {
       chai
         .request(app)
         .get("/search/getAllForType?objType=case&page=1")
@@ -16,13 +16,13 @@ describe("Search", () => {
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
-          should.equal(Object.keys(res.body).length, 30);
+          should.equal(Object.keys(res.body).length, 20);
           done();
         });
     });
   });
-  describe("get first 30 methods", () => {
-    it("finds 30 method titles and ids", done => {
+  describe("get first 20 methods", () => {
+    it("finds 20 method titles and ids", done => {
       chai
         .request(app)
         .get("/search/getAllForType?objType=method&page=1")
@@ -31,13 +31,13 @@ describe("Search", () => {
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
-          should.equal(Object.keys(res.body).length, 30);
+          should.equal(Object.keys(res.body).length, 20);
           done();
         });
     });
   });
-  describe("get first 30 organizations", () => {
-    it("finds 30 organization titles and ids", done => {
+  describe("get first 20 organizations", () => {
+    it("finds 20 organization titles and ids", done => {
       chai
         .request(app)
         .get("/search/getAllForType?objType=organization&page=1")
@@ -46,7 +46,7 @@ describe("Search", () => {
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
-          should.equal(Object.keys(res.body).length, 30);
+          should.equal(Object.keys(res.body).length, 20);
           done();
         });
     });
@@ -112,10 +112,27 @@ describe("Search", () => {
     it("single-word search", done => {
       chai
         .request(app)
-        .get("/search?query=Cleveland")
-        .set({})
+        .get("/search?query=Budget")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
         .end((err, res) => {
           res.should.have.status(200);
+          res.body.results.should.have.lengthOf(20);
+          done();
+        });
+    });
+    it("multi-word search", done => {
+      chai
+        .request(app)
+        .get("/search?query=Budget%20%26%20Participatory")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.results.should.have.lengthOf(20);
+          done();
         });
     });
   });
