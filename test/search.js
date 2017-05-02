@@ -63,9 +63,10 @@ describe("Search", () => {
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.results.should.have.lengthOf(1);
-          res.body.results[0].type.should.equal("organization");
-          res.body.results[0].hits.should.have.lengthOf(17);
+          res.body.OK.should.equal(true);
+          res.body.results.should.have.lengthOf(17);
+          res.body.results.forEach(obj =>
+            obj.type.should.equal("organization"));
           done();
         });
     });
@@ -82,9 +83,9 @@ describe("Search", () => {
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
+          res.body.OK.should.equal(true);
           res.body.results.should.have.lengthOf(1);
           res.body.results[0].type.should.equal("case");
-          res.body.results[0].hits.should.have.lengthOf(1);
           done();
         });
     });
@@ -101,9 +102,9 @@ describe("Search", () => {
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.results.should.have.lengthOf(3);
-          res.body.results[0].type.should.equal("case");
-          res.body.results[0].hits.should.have.lengthOf(2);
+          res.body.OK.should.equal(true);
+          res.body.results.should.have.lengthOf(2);
+          // more testing
           done();
         });
     });

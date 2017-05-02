@@ -57,7 +57,8 @@ const get_nouns_by_type = async (
       offset: (page - 1) * RESPONSE_LIMIT,
       order_by: orderBy
     });
-    res.status(200).json({ results: [{ type: objType, hits: objList }] });
+    objList.forEach(obj => obj.type = objType);
+    res.status(200).json({ OK: true, results: objList });
   } catch (error) {
     log.error("Exception in GET /search/getAllForType", error);
     res.status(500).json({ error: error });
@@ -78,22 +79,21 @@ const get_all_nouns = async (res, facets, page, language, orderBy) => {
       });
       return t.batch(query);
     });
-    res.status(200).json({
-      results: [
-        {
-          type: "case",
-          hits: objLists[0]
-        },
-        {
-          type: "method",
-          hits: objLists[1]
-        },
-        {
-          type: "organization",
-          hits: objLists[2]
-        }
-      ]
+    let results = objLists.map(typeList => {
+      if (!typeList) {
+        return [];
+      }
+      return typeList.map(function(obj) {
+        return {
+          id: obj.id,
+          type: obj.type,
+          title: obj.title,
+          lead_image: obj.lead_image,
+          updated_date: obj.updated_date
+        };
+      });
     });
+    res.status(200).json({ OK: true, results: [].concat.apply([], results) });
   } catch (error) {
     log.error("Exception in GET /search/getAllForType", error);
     res.status(500).json({ error: error });
