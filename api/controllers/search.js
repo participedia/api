@@ -4,7 +4,7 @@ let router = express.Router(); // eslint-disable-line new-cap
 let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
 
-const RESPONSE_LIMIT = 30;
+const RESPONSE_LIMIT = 20;
 
 router.get("/getAllForType", async function getAllForType(req, res) {
   try {
@@ -12,9 +12,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     let page = parseInt(req.query.page || 1);
     let offset = (page - 1) * RESPONSE_LIMIT;
     if (
-      objType !== "organization" &&
-      objType !== "case" &&
-      objType !== "method"
+      objType !== "organization" && objType !== "case" && objType !== "method"
     ) {
       res.status(401).json({
         message: "Unsupported objType for getAllForType: " + objType
@@ -101,7 +99,7 @@ const query_all_nouns = async (res, query, facets, page, language, orderBy) => {
     });
   } catch (error) {
     log.error("Exception in GET /search/getAllForType", error);
-    res.status(500).json({ error: error });
+    res.status(500).json({ OK: false, error: error });
   }
 };
 
@@ -270,6 +268,49 @@ router.get("/", function(req, res) {
   } catch (error) {
     console.error("Error in search: ", error);
     res.status(500).json({ error: error });
+  }
+});
+
+/**
+ * @api {get} /search/v2 Search through the cases
+ * @apiGroup Search
+ * @apiVersion 0.1.0
+ * @apiName search
+ *
+ * @apiParam  {String} query query term(s)
+ * @apiParam  {String} language language
+ * @apiParam  {Number} page
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object[]} list of matching objects
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *          ... (records) ...
+ *       }
+ *     }
+ *
+ */
+
+router.get("/v2/", async function(req, res) {
+  try {
+    const query = req.query.query;
+    const language = as.value(req.query.language || "en");
+    const page = as.number(req.query.page || 1);
+    const objList = await db.any(sql("../sql/search2.sql"), {
+      query: query,
+      language: language,
+      limit: RESPONSE_LIMIT,
+      offset: (page - 1) * RESPONSE_LIMIT
+    });
+    res.status(200).json({ OK: true, results: objList });
+  } catch (error) {
+    log.error("Exception in GET /search/getAllForType", error);
+    res.status(500).json({ OK: false, error: error });
   }
 });
 
