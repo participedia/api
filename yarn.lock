@@ -2670,9 +2670,9 @@ pg-minify@0.4:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/pg-minify/-/pg-minify-0.4.2.tgz#c75b4b5878960fb09c3b9a4d4eb1036aea7ea0e3"
 
-pg-promise@5.6.3:
-  version "5.6.3"
-  resolved "https://registry.yarnpkg.com/pg-promise/-/pg-promise-5.6.3.tgz#76b1948f34309e55e325d0130eaad46d81486b80"
+pg-promise@5.6.5:
+  version "5.6.5"
+  resolved "https://registry.yarnpkg.com/pg-promise/-/pg-promise-5.6.5.tgz#63e7d23c321e38d5c23ac4bab7c850b925509177"
   dependencies:
     manakin "0.4"
     pg "5.1"

@@ -2,13 +2,19 @@ WITH  related_cases AS (
   SELECT
       ARRAY(  SELECT
         ROW(organization__related_cases.related_case_id,
-        case__localized_texts.title)::object_reference
+        'case',
+        case__localized_texts.title,
+        cases.lead_image,
+        cases.post_date,
+        cases.updated_date)::object_reference
       FROM
         organization__related_cases,
-        case__localized_texts
+        case__localized_texts,
+        cases
       WHERE
         organization__related_cases.organization_id = ${organizationId} AND
         organization__related_cases.related_case_id = case__localized_texts.case_id AND
+        organization__related_cases.related_case_id = cases.id AND
         case__localized_texts.language = ${lang}
       )
     ),
@@ -17,13 +23,19 @@ WITH  related_cases AS (
    SELECT
       ARRAY(  SELECT
         ROW(organization__related_methods.related_method_id,
-        method__localized_texts.title)::object_reference
+        'method',
+        method__localized_texts.title,
+        methods.lead_image,
+        methods.post_date,
+        methods.updated_date)::object_reference
       FROM
         organization__related_methods,
-        method__localized_texts
+        method__localized_texts,
+        methods
       WHERE
         organization__related_methods.organization_id = ${organizationId} AND
         organization__related_methods.related_method_id = method__localized_texts.method_id AND
+        organization__related_methods.related_method_id = methods.id AND
         method__localized_texts.language = ${lang}
       )
     ),
@@ -31,13 +43,19 @@ related_organizations AS (
   SELECT
       ARRAY(  SELECT
         ROW(organization__related_organizations.related_organization_id,
-        organization__localized_texts.title)::object_reference
+        'organization',
+        organization__localized_texts.title,
+        organizations.lead_image,
+        organizations.post_date,
+        organizations.updated_date)::object_reference
       FROM
         organization__related_organizations,
-        organization__localized_texts
+        organization__localized_texts,
+        organizations
       WHERE
         organization__related_organizations.organization_id = ${organizationId} AND
         organization__related_organizations.related_organization_id = organization__localized_texts.organization_id AND
+        organization__related_organizations.related_organization_id = organizations.id AND
         organization__localized_texts.language = ${lang}
       )
     )
