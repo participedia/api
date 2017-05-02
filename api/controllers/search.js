@@ -204,7 +204,7 @@ router.get("/", function(req, res) {
 });
 
 /**
- * @api {get} /search/v2 Search through the cases
+ * @api {get} /search Search through the cases
  * @apiGroup Search
  * @apiVersion 0.1.0
  * @apiName search
