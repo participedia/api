@@ -4,7 +4,7 @@ let router = express.Router(); // eslint-disable-line new-cap
 let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
 
-const RESPONSE_LIMIT = 30;
+const RESPONSE_LIMIT = 20;
 
 router.get("/getAllForType", async function getAllForType(req, res) {
   try {
@@ -12,9 +12,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     let page = parseInt(req.query.page || 1);
     let offset = (page - 1) * RESPONSE_LIMIT;
     if (
-      objType !== "organization" &&
-      objType !== "case" &&
-      objType !== "method"
+      objType !== "organization" && objType !== "case" && objType !== "method"
     ) {
       res.status(401).json({
         message: "Unsupported objType for getAllForType: " + objType
@@ -42,68 +40,6 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     res.status(500).json({ error: error });
   }
 });
-
-const query_nouns_by_type = async (
-  res,
-  objType,
-  query,
-  facets,
-  page,
-  language,
-  orderBy
-) => {
-  try {
-    const objList = await db.any(sql("../sql/search_" + objType + "s.sql"), {
-      query: query,
-      facets: format_facet_string(facets, objType),
-      order_by: orderBy,
-      language: language,
-      limit: RESPONSE_LIMIT,
-      offset: (page - 1) * RESPONSE_LIMIT
-    });
-    res.status(200).json({ results: [{ type: objType, hits: objList }] });
-  } catch (error) {
-    log.error("Exception in GET /search/getAllForType", error);
-    res.status(500).json({ error: error });
-  }
-};
-
-const query_all_nouns = async (res, query, facets, page, language, orderBy) => {
-  try {
-    const objLists = await db.task(t => {
-      let dbqueries = ["case", "method", "organization"].map(objType => {
-        return t.any(sql("../sql/search_" + objType + "s.sql"), {
-          query: query,
-          facets: format_facet_string(facets, objType),
-          language: language,
-          limit: RESPONSE_LIMIT,
-          offset: (page - 1) * RESPONSE_LIMIT,
-          order_by: orderBy
-        });
-      });
-      return t.batch(dbqueries);
-    });
-    res.status(200).json({
-      results: [
-        {
-          type: "case",
-          hits: objLists[0]
-        },
-        {
-          type: "method",
-          hits: objLists[1]
-        },
-        {
-          type: "organization",
-          hits: objLists[2]
-        }
-      ]
-    });
-  } catch (error) {
-    log.error("Exception in GET /search/getAllForType", error);
-    res.status(500).json({ error: error });
-  }
-};
 
 const get_nouns_by_type = async (
   res,
@@ -250,14 +186,8 @@ router.get("/", function(req, res) {
     const { query, facets, orderBy, category, lang, page } = parseSearchReq(
       req
     );
-
     if (query) {
-      if (["case", "method", "organization"].includes(category)) {
-        query_nouns_by_type(res, category, query, facets, page, lang, orderBy);
-      } else {
-        // no category selected, search across all categories
-        query_all_nouns(res, query, facets, page, lang, orderBy);
-      }
+      full_text_search(res, query, lang, page);
     } else {
       // no query
       if (["case", "method", "organization"].includes(category)) {
@@ -272,6 +202,46 @@ router.get("/", function(req, res) {
     res.status(500).json({ error: error });
   }
 });
+
+/**
+ * @api {get} /search/v2 Search through the cases
+ * @apiGroup Search
+ * @apiVersion 0.1.0
+ * @apiName search
+ *
+ * @apiParam  {String} query query term(s)
+ * @apiParam  {String} language language
+ * @apiParam  {Number} page
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object[]} list of matching objects
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *          ... (records) ...
+ *       }
+ *     }
+ *
+ */
+
+async function full_text_search(res, query, language, page) {
+  try {
+    const objList = await db.any(sql("../sql/search.sql"), {
+      query: query,
+      language: language,
+      limit: RESPONSE_LIMIT,
+      offset: (page - 1) * RESPONSE_LIMIT
+    });
+    res.status(200).json({ OK: true, results: objList });
+  } catch (error) {
+    log.error("Exception in GET /search/v2/", error);
+    res.status(500).json({ OK: false, error: error });
+  }
+}
 
 const get_map_data = async (req, res) => {
   try {
@@ -294,6 +264,7 @@ const get_map_data = async (req, res) => {
     res.status(500).json({ error: error });
   }
 };
+
 router.get("/map", function(req, res) {
   try {
     get_map_data(req, res);
