@@ -47,9 +47,28 @@ describe("Users", () => {
           res.should.have.status(200);
           let user = res.body.data;
           user.bookmarks.should.have.lengthOf(3);
-          user.bookmarks[0].type.should.equal("case");
-          user.bookmarks[1].type.should.equal("method");
-          user.bookmarks[2].type.should.equal("method");
+          let bookmarks = user.bookmarks.map(bookmark => bookmark.type);
+          bookmarks.sort();
+          bookmarks.should.deep.equal(["case", "method", "method"]);
+          done();
+        });
+    });
+    it("Make sure if there is a lead_image that it is an object with a url property", done => {
+      chai
+        .request(app)
+        .get("/user/134860")
+        .set("Content-Type", "application/json")
+        .set("Accept", "application/json")
+        .end((err, res) => {
+          res.body.OK.should.equal(true);
+          res.should.have.status(200);
+          let user = res.body.data;
+          user.cases.should.have.lengthOf(42);
+          user.cases.forEach(theCase => {
+            if (theCase.lead_image) {
+              theCase.lead_image.url.should.be.a("string");
+            }
+          });
           done();
         });
     });

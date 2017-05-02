@@ -1,4 +1,5 @@
 WITH user_bookmarks AS (
+  SELECT * FROM (
   SELECT
     bookmarks.thingid as id,
     bookmarks.bookmarktype AS type,
@@ -52,7 +53,7 @@ UNION
     bookmarks.thingid = organization__localized_texts.organization_id AND
     organization__localized_texts.language = ${language} AND
     bookmarks.bookmarktype = 'organization'
-)
+) t ORDER BY updated_date )
 
 SELECT row_to_json(user_row) as user
 FROM (
@@ -87,7 +88,9 @@ FROM
 	    	authors.user_id
         HAVING
             authors.user_id = ${userId}
-	) AS case_authors ON case_authors.user_id = users.id LEFT JOIN
+	)
+    AS case_authors
+    ON case_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
 	         array_agg(ROW(authors.method_id, 'method', texts.title, methods.lead_image, methods.post_date, methods.updated_date)::object_reference) methods_authored, authors.user_id
@@ -103,7 +106,9 @@ FROM
 	    	authors.user_id
         HAVING
             authors.user_id = ${userId}
-	) AS method_authors ON method_authors.user_id = users.id LEFT JOIN
+	)
+  AS method_authors
+  ON method_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
 	         array_agg(ROW(authors.organization_id, 'organization', texts.title, organizations.lead_image, organizations.post_date, organizations.updated_date)::object_reference) organizations_authored, authors.user_id
@@ -119,7 +124,9 @@ FROM
 	    	authors.user_id
         HAVING
             authors.user_id = ${userId}
-	) AS org_authors  ON org_authors.user_id = users.id
+	)
+  AS org_authors
+  ON org_authors.user_id = users.id
 WHERE
 	users.id = ${userId}
 ) user_row
