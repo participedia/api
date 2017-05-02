@@ -79,14 +79,22 @@ const get_all_nouns = async (res, facets, page, language, orderBy) => {
       });
       return t.batch(query);
     });
-    let results = [].concat(
-      objLists.map(typeList => {
-        let objType = typeList.type;
-        typeList.hits.forEach(obj => obj.type = objType);
-        return typeList.hits;
-      })
-    );
-    res.status(200).json({ OK: true, results: results });
+    let results = objLists.map(typeList => {
+      if (!typeList) {
+        return [];
+      }
+      return typeList.map(function(obj) {
+        return {
+          id: obj.id,
+          type: obj.type,
+          title: obj.title,
+          lead_image: obj.lead_image,
+          updated_date: obj.updated_date
+        };
+      });
+    });
+    console.log("results: >> %s << ", JSON.stringify(results).slice(0, 100));
+    res.status(200).json({ OK: true, results: [].concat.apply([], results) });
   } catch (error) {
     log.error("Exception in GET /search/getAllForType", error);
     res.status(500).json({ error: error });
