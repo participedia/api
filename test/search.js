@@ -125,7 +125,7 @@ describe("Search", () => {
     it("multi-word search", done => {
       chai
         .request(app)
-        .get("/search?query=Budget%20%26%20Participatory")
+        .get("/search?query=Budget Participatory")
         .set("Content-Type", "application/json")
         .set("Accept", "application/json")
         .send({})
