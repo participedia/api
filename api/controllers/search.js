@@ -93,7 +93,6 @@ const get_all_nouns = async (res, facets, page, language, orderBy) => {
         };
       });
     });
-    console.log("results: >> %s << ", JSON.stringify(results).slice(0, 100));
     res.status(200).json({ OK: true, results: [].concat.apply([], results) });
   } catch (error) {
     log.error("Exception in GET /search/getAllForType", error);
