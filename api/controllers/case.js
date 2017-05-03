@@ -344,27 +344,7 @@ async function getCaseById(req) {
 
 async function returnCaseById(req, res) {
   try {
-<<<<<<< HEAD
     const the_case = await getCaseById(req);
-=======
-    const caseId = as.number(req.params.caseId);
-    const lang = as.value(req.params.language || "en");
-    const the_case = await db.one(sql("../sql/case_by_id.sql"), {
-      caseId,
-      lang
-    });
-    const userId = await getUserIfExists(req);
-    if (userId) {
-      const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-        type: "case",
-        thingId: caseId,
-        userId: userId
-      });
-      the_case.bookmarked = bookmarked.case;
-    } else {
-      the_case.bookmarked = false;
-    }
->>>>>>> ab26f4a00a297dbc1b7cd253a5bdbab8203f55c8
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
     log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
