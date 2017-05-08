@@ -288,6 +288,7 @@ router.put("/:caseId", async function editCaseById(req, res) {
     // If related_organizations has changed, update records in case__related_organizations
     // If any of the fields of case itself have changed, update record in cases
     // If any changes are made: add a record to case__authors
+    // Update (all) materialized views for search
 
     res.status(200).json({ OK: true, data: oldCase });
   } catch (error) {
