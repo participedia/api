@@ -229,7 +229,7 @@ router.post("/new", async function postNewCase(req, res) {
         user_id
       })
     );
-    return res.status(201).json({ OK: true, data: case_id });
+    return res.status(201).json({ OK: true, data: case_id, id: case_id });
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
@@ -267,11 +267,31 @@ router.put("/:caseId", async function editCaseById(req, res) {
   try {
     const oldCase = await getCaseById(req);
     const newCase = req.body;
+    const lang = as.value(req.params.language || "en");
+    let updatedText = {
+      body: oldCase.body,
+      title: oldCase.title,
+      language: lang
+    };
+    let isTextUpdated = false;
     /* DO ALL THE DIFFS */
     Object.keys(oldCase).forEach(key => {
-      if (newCase[key] !== undefined && !equals(oldCase[key], newCase[key])) {
-        if (key === "body") {
-          console.log("Change found in %s", key);
+      if (newCase[key] === undefined) {
+        console.log("Skipping missing %s", key);
+      } else if (!equals(oldCase[key], newCase[key])) {
+        if (key === "body" || key === "title") {
+          console.log("Text has changed %s", key);
+          updatedText[key] = newCase[key];
+          isTextUpdated = true;
+        } else if (
+          [
+            "related_cases",
+            "related_methods",
+            "related_organizations"
+          ].includes(key)
+        ) {
+          console.log("Update %s list", key);
+          // let newList  = await updateList(oldCase, newCase, key);
         } else {
           console.log(
             "Change found in %s: %s != %s",

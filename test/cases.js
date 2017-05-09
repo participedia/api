@@ -2,8 +2,10 @@ let tokens = require("./setupenv");
 let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
+let chaiHelpers = require("./helpers");
 chai.should();
 chai.use(chaiHttp);
+chai.use(chaiHelpers);
 
 let location = {
   label: "Cleveland, OH, United States",
@@ -64,37 +66,22 @@ let location = {
 describe("Cases", () => {
   describe("Lookup", () => {
     it("finds case 100", done => {
-      chai
-        .request(app)
-        .get("/case/100")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
-        .send({})
-        .end((err, res) => {
-          res.should.have.status(200);
-          done();
-        });
+      chai.getJSON("/case/100").send({}).end((err, res) => {
+        res.should.have.status(200);
+        done();
+      });
     });
   });
   describe("Adding", () => {
     it("fails without authentication", done => {
-      chai
-        .request(app)
-        .post("/case/new")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
-        .send({})
-        .end((err, res) => {
-          res.should.have.status(401);
-          done();
-        });
+      chai.postJSON("/case/new").send({}).end((err, res) => {
+        res.should.have.status(401);
+        done();
+      });
     });
     it("fails without content", done => {
       chai
-        .request(app)
-        .post("/case/new")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
+        .postJSON("/case/new")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({})
         .end((err, res) => {
@@ -104,10 +91,7 @@ describe("Cases", () => {
     });
     it("works with authentication", done => {
       chai
-        .request(app)
-        .post("/case/new")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
+        .postJSON("/case/new")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({
           // mandatory
@@ -123,72 +107,53 @@ describe("Cases", () => {
         })
         .end((err, res) => {
           res.should.have.status(201);
+          res.body.OK.should.be.true;
+          res.body.data.case_id.should.be.a("number");
           done();
         });
     });
   });
   describe("Related Objects", () => {
     it("test related objects empty", done => {
-      chai
-        .request(app)
-        .get("/case/39")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
-        .send({})
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.data.related_cases.should.have.lengthOf(0);
-          res.body.data.related_methods.should.have.lengthOf(0);
-          res.body.data.related_organizations.should.have.lengthOf(0);
-          done();
-        });
+      chai.getJSON("/case/39").send({}).end((err, res) => {
+        res.should.have.status(200);
+        res.body.data.related_cases.should.have.lengthOf(0);
+        res.body.data.related_methods.should.have.lengthOf(0);
+        res.body.data.related_organizations.should.have.lengthOf(0);
+        done();
+      });
     });
     it("test related objects with single item", done => {
-      chai
-        .request(app)
-        .get("/case/38")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
-        .send({})
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.data.related_cases.should.have.lengthOf(1);
-          res.body.data.related_cases[0].id.should.equal(70);
-          res.body.data.related_methods.should.have.lengthOf(1);
-          res.body.data.related_methods[0].id.should.equal(170);
-          res.body.data.related_organizations.should.have.lengthOf(1);
-          res.body.data.related_organizations[0].id.should.equal(270);
-          done();
-        });
+      chai.getJSON("/case/38").send({}).end((err, res) => {
+        res.should.have.status(200);
+        res.body.data.related_cases.should.have.lengthOf(1);
+        res.body.data.related_cases[0].id.should.equal(70);
+        res.body.data.related_methods.should.have.lengthOf(1);
+        res.body.data.related_methods[0].id.should.equal(170);
+        res.body.data.related_organizations.should.have.lengthOf(1);
+        res.body.data.related_organizations[0].id.should.equal(270);
+        done();
+      });
     });
     it("test related objects with multiple items", done => {
-      chai
-        .request(app)
-        .get("/case/37")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
-        .send({})
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.data.related_cases.should.have.lengthOf(2);
-          res.body.data.related_cases[0].id.should.equal(45);
-          res.body.data.related_cases[1].id.should.equal(63);
-          res.body.data.related_methods.should.have.lengthOf(2);
-          res.body.data.related_methods[0].id.should.equal(145);
-          res.body.data.related_methods[1].id.should.equal(163);
-          res.body.data.related_organizations.should.have.lengthOf(2);
-          res.body.data.related_organizations[0].id.should.equal(245);
-          res.body.data.related_organizations[1].id.should.equal(263);
-          done();
-        });
+      chai.getJSON("/case/37").send({}).end((err, res) => {
+        res.should.have.status(200);
+        res.body.data.related_cases.should.have.lengthOf(2);
+        res.body.data.related_cases[0].id.should.equal(45);
+        res.body.data.related_cases[1].id.should.equal(63);
+        res.body.data.related_methods.should.have.lengthOf(2);
+        res.body.data.related_methods[0].id.should.equal(145);
+        res.body.data.related_methods[1].id.should.equal(163);
+        res.body.data.related_organizations.should.have.lengthOf(2);
+        res.body.data.related_organizations[0].id.should.equal(245);
+        res.body.data.related_organizations[1].id.should.equal(263);
+        done();
+      });
     });
   });
   it("test SQL santization", done => {
     chai
-      .request(app)
-      .post("/case/new")
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json")
+      .postJSON("/case/new")
       .set("Authorization", "Bearer " + tokens.user_token)
       .send({
         // mandatory
@@ -211,10 +176,7 @@ describe("Cases", () => {
   describe("Counting by country", () => {
     it("returns stuff", done => {
       chai
-        .request(app)
-        .get("/case/countsByCountry")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
+        .getJSON("/case/countsByCountry")
         .set("Authorization", "Bearer " + tokens.user_token)
         .end((err, res) => {
           let countryCounts = res.body.data.countryCounts;
@@ -226,32 +188,47 @@ describe("Cases", () => {
   });
   describe("Get case with tags", () => {
     it("should have 3 tags", done => {
-      chai
-        .request(app)
-        .get("/case/39")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
-        .end((err, res) => {
-          res.body.OK.should.equal(true);
-          res.should.have.status(200);
-          let the_case = res.body.data;
-          the_case.tags.should.have.lengthOf(3);
-          the_case.bookmarked.should.equal(false);
-          done();
-        });
+      chai.getJSON("/case/39").end((err, res) => {
+        res.body.OK.should.equal(true);
+        res.should.have.status(200);
+        let the_case = res.body.data;
+        the_case.tags.should.have.lengthOf(3);
+        the_case.bookmarked.should.equal(false);
+        done();
+      });
     });
   });
   describe("Get case with authentication", () => {
-    it("should not faile when logged in", done => {
+    it("should not fail when logged in", done => {
       chai
-        .request(app)
-        .get("/case/100")
-        .set("Content-Type", "application/json")
-        .set("Accept", "application/json")
+        .getJSON("/case/100")
         .set("Authorization", "Bearer " + tokens.user_token)
         .end((err, res) => {
           res.body.OK.should.equal(true);
           res.should.have.status(200);
+          done();
+        });
+    });
+  });
+  describe("Test edit API", () => {
+    it("Add case, then modify it", done => {
+      chai
+        .postJSON("/case/new")
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({
+          // mandatory
+          title: "First Title",
+          body: "First Body",
+          // optional
+          lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
+          vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
+          location: location,
+          relatedCases: ["1", "2", "3", "4"],
+          relatedMethods: ["145", "146", "147"],
+          relatedOrganizations: ["199", "200", "201"]
+        })
+        .end((err, res) => {
+          res.should.have.status(201);
           done();
         });
     });
