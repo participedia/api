@@ -201,6 +201,7 @@ router.post("/new", async function postNewCase(req, res) {
   try {
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
+    let language = req.params.language || "en";
     if (!(title && body)) {
       return res.status(400).json({
         message: "Cannot create Case, both title and body are required"
@@ -229,7 +230,16 @@ router.post("/new", async function postNewCase(req, res) {
         user_id
       })
     );
-    return res.status(201).json({ OK: true, data: case_id, id: case_id });
+    const newCase = await getCaseById_lang_userId(
+      case_id.case_id,
+      language,
+      user_id
+    );
+    return res.status(201).json({
+      OK: true,
+      data: case_id,
+      object: newCase
+    });
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
@@ -265,24 +275,31 @@ router.post("/new", async function postNewCase(req, res) {
 router.put("/:caseId", async function editCaseById(req, res) {
   cache.clear();
   try {
-    const oldCase = await getCaseById(req);
+    const oldCase = await getCaseByRequest(req);
     const newCase = req.body;
     const lang = as.value(req.params.language || "en");
+    const userId = req.user.user_id;
     let updatedText = {
       body: oldCase.body,
       title: oldCase.title,
       language: lang
     };
     let isTextUpdated = false;
+    let anyChanges = false;
     /* DO ALL THE DIFFS */
     Object.keys(oldCase).forEach(key => {
       if (newCase[key] === undefined) {
         console.log("Skipping missing %s", key);
       } else if (!equals(oldCase[key], newCase[key])) {
+        anyChanges = true;
+        // If the body or title have changed: add a record in case__localized_texts
         if (key === "body" || key === "title") {
           console.log("Text has changed %s", key);
           updatedText[key] = newCase[key];
           isTextUpdated = true;
+          // If related_cases has changed, update records in case__related_cases
+          // If related_methods has changed, update records in case__related_methods
+          // If related_organizations has changed, update records in case__related_organizations
         } else if (
           [
             "related_cases",
@@ -292,6 +309,7 @@ router.put("/:caseId", async function editCaseById(req, res) {
         ) {
           console.log("Update %s list", key);
           // let newList  = await updateList(oldCase, newCase, key);
+          // If any of the fields of case itself have changed, update record in cases
         } else {
           console.log(
             "Change found in %s: %s != %s",
@@ -301,16 +319,17 @@ router.put("/:caseId", async function editCaseById(req, res) {
           );
         }
       }
-    });
-    // If the body or title have changed: add a record in case__localized_texts
-    // If related_cases has changed, update records in case__related_cases
-    // If related_methods has changed, update records in case__related_methods
-    // If related_organizations has changed, update records in case__related_organizations
-    // If any of the fields of case itself have changed, update record in cases
-    // If any changes are made: add a record to case__authors
-    // Update (all) materialized views for search
-
-    res.status(200).json({ OK: true, data: oldCase });
+    }); // end of for loop over object keys
+    if (anyChanges) {
+      // Add record for case__authors
+      // udate materialized view for search
+    }
+    const retCase = await getCaseById_lang_userId(
+      req.params.caseId,
+      lang,
+      userId
+    );
+    res.status(200).json({ OK: true, data: retCase });
   } catch (error) {
     log.error("Exception in PUT /case/%s => %s", req.params.caseId, error);
     res.status(500).json({
@@ -324,7 +343,7 @@ router.put("/:caseId", async function editCaseById(req, res) {
  * @api {get} /case/:caseId Get the last version of a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
- * @apiName getCaseById
+ * @apiName returnCaseById
  * @apiParam {Number} caseId Case ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
@@ -346,26 +365,30 @@ router.put("/:caseId", async function editCaseById(req, res) {
  *
  */
 
-async function getCaseById(req) {
-  const caseId = as.number(req.params.caseId);
-  const lang = as.value(req.params.language || "en");
-  const the_case = await db.one(sql("../sql/case_by_id.sql"), {
+async function getCaseById_lang_userId(caseId, lang, userId) {
+  const theCase = await db.one(sql("../sql/case_by_id.sql"), {
     caseId,
     lang
   });
-  const userId = await getUserIfExists(req);
   const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
     type: "case",
     thingId: caseId,
     userId: userId
   });
-  the_case.bookmarked = bookmarked.case;
-  return the_case;
+  theCase.bookmarked = bookmarked.case;
+  return theCase;
+}
+
+async function getCaseByRequest(req) {
+  const caseId = as.number(req.params.caseId);
+  const lang = as.value(req.params.language || "en");
+  const userId = await getUserIfExists(req);
+  return await getCaseById_lang_userId(caseId, lang, userId);
 }
 
 async function returnCaseById(req, res) {
   try {
-    const the_case = await getCaseById(req);
+    const the_case = await getCaseByRequest(req);
     res.status(200).json({ OK: true, data: the_case });
   } catch (error) {
     log.error("Exception in GET /case/%s => %s", req.params.caseId, error);

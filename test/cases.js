@@ -211,8 +211,8 @@ describe("Cases", () => {
     });
   });
   describe("Test edit API", () => {
-    it("Add case, then modify it", done => {
-      chai
+    it("Add case, then modify it", async () => {
+      const res1 = await chai
         .postJSON("/case/new")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({
@@ -226,11 +226,20 @@ describe("Cases", () => {
           relatedCases: ["1", "2", "3", "4"],
           relatedMethods: ["145", "146", "147"],
           relatedOrganizations: ["199", "200", "201"]
-        })
-        .end((err, res) => {
-          res.should.have.status(201);
-          done();
         });
+      res1.should.have.status(201);
+      res1.body.OK.should.be.true;
+      res1.body.data.case_id.should.be.a("number");
+      const origCase = res1.body.object;
+      origCase.id.should.be.a("number");
+      origCase.id.should.equal(res1.body.data.case_id);
+      const res2 = await chai
+        .putJSON("/case/" + res1.body.data.case_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({}); // empty update
+      res2.should.have.status(200);
+      const updatedCase1 = res2.body.data;
+      updatedCase1.should.deep.equal(origCase); // no changes saved
     });
   });
 });
