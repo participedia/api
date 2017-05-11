@@ -1,5 +1,5 @@
 let promise = require("bluebird");
-let { isString } = require("lodash");
+let { isString, isArray } = require("lodash");
 let options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
