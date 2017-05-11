@@ -2,7 +2,8 @@ let promise = require("bluebird");
 let { isString } = require("lodash");
 let options = {
   // Initialization Options
-  promiseLib: promise
+  promiseLib: promise, // use bluebird as promise library
+  capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
 };
 if (process.env.LOG_QUERY === "true") {
   options.query = evt => console.info("Executing query %s", evt.query);
@@ -133,7 +134,7 @@ function related_list(owner, related, id_list) {
     (${owner}_id, related_${related}_id) DO NOTHING;`;
 }
 
-var as = Object.assign({}, pgp.as, {
+const as = Object.assign({}, pgp.as, {
   author,
   attachment,
   attachments,
@@ -143,4 +144,6 @@ var as = Object.assign({}, pgp.as, {
   number
 });
 
-module.exports = { db, sql, as };
+const helpers = pgp.helpers;
+
+module.exports = { db, sql, as, helpers };

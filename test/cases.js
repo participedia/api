@@ -275,7 +275,7 @@ describe("Cases", () => {
         .putJSON("/case/" + res1.body.data.case_id)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" }); // empty update
-      res2.should.have.status(200);
+      res3.should.have.status(200);
       const updatedCase2 = res3.body.data;
       updatedCase2.title.should.equal("Second Title");
       updatedCase2.body.should.equal("Second Body");
@@ -283,10 +283,58 @@ describe("Cases", () => {
         .putJSON("/case/" + res1.body.data.case_id)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" }); // empty update
+      res4.should.have.status(200);
+      const updatedCase3 = res4.body.data;
+      updatedCase3.title.should.equal("Third Title");
+      updatedCase3.body.should.equal("Third Body");
+      updatedCase3.authors.length.should.equal(updatedCase2.authors.length + 1);
+    });
+    it("Add case, then modify title and/or body", async () => {
+      const res1 = await chai
+        .postJSON("/case/new")
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({
+          // mandatory
+          title: "First Title",
+          body: "First Body",
+          // optional
+          lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
+          vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
+          location: location,
+          relatedCases: ["1", "2", "3", "4"],
+          relatedMethods: ["145", "146", "147"],
+          relatedOrganizations: ["199", "200", "201"]
+        });
+      res1.should.have.status(201);
+      res1.body.OK.should.be.true;
+      res1.body.data.case_id.should.be.a("number");
+      const origCase = res1.body.object;
+      origCase.id.should.be.a("number");
+      origCase.id.should.equal(res1.body.data.case_id);
+      const res2 = await chai
+        .putJSON("/case/" + res1.body.data.case_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ title: "Second Title" }); // empty update
       res2.should.have.status(200);
+      const updatedCase1 = res2.body.data;
+      updatedCase1.title.should.equal("Second Title");
+      updatedCase1.body.should.equal("First Body");
+      const res3 = await chai
+        .putJSON("/case/" + res1.body.data.case_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ body: "Second Body" }); // empty update
+      res3.should.have.status(200);
       const updatedCase2 = res3.body.data;
-      updatedCase2.title.should.equal("Third Title");
-      updatedCase2.body.should.equal("Third Body");
+      updatedCase2.title.should.equal("Second Title");
+      updatedCase2.body.should.equal("Second Body");
+      const res4 = await chai
+        .putJSON("/case/" + res1.body.data.case_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ title: "Third Title", body: "Third Body" }); // empty update
+      res4.should.have.status(200);
+      const updatedCase3 = res4.body.data;
+      updatedCase3.title.should.equal("Third Title");
+      updatedCase3.body.should.equal("Third Body");
     });
   });
 });

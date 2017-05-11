@@ -7,7 +7,7 @@ let jwt = require("express-jwt");
 let equals = require("deep-equal");
 
 let { getUserIfExists } = require("../helpers/user");
-let { db, sql, as } = require("../helpers/db");
+let { db, sql, as, helpers } = require("../helpers/db");
 
 const empty_case = {
   title: "",
@@ -275,6 +275,7 @@ router.post("/new", async function postNewCase(req, res) {
 router.put("/:caseId", async function editCaseById(req, res) {
   cache.clear();
   try {
+    // FIXME: Figure out how to get all of this done as one transaction
     const oldCase = await getCaseByRequest(req);
     const newCase = req.body;
     const lang = as.value(req.params.language || "en");
@@ -282,14 +283,18 @@ router.put("/:caseId", async function editCaseById(req, res) {
     let updatedText = {
       body: oldCase.body,
       title: oldCase.title,
-      language: lang
+      language: lang,
+      type: "case",
+      id: oldCase.id
     };
+    let updatedCaseFields = [];
     let isTextUpdated = false;
     let anyChanges = false;
+    let retCase = null;
     /* DO ALL THE DIFFS */
     Object.keys(oldCase).forEach(key => {
       if (newCase[key] === undefined) {
-        console.log("Skipping missing %s", key);
+        // console.log("Skipping missing %s", key);
       } else if (!equals(oldCase[key], newCase[key])) {
         anyChanges = true;
         // If the body or title have changed: add a record in case__localized_texts
@@ -309,7 +314,19 @@ router.put("/:caseId", async function editCaseById(req, res) {
         ) {
           console.log("Update %s list", key);
           // let newList  = await updateList(oldCase, newCase, key);
+          // DELETE / INSERT any needed rows for X_related_Ys
+          // including duplicates for bi-directional mapping?
+          anyChanges = true;
           // If any of the fields of case itself have changed, update record in cases
+        } else if (["post_date", "updated_date"].includes(key)) {
+          console.warn(
+            "Trying to update a field users shouldn't update: %s",
+            key
+          );
+          // take no action
+        } else if (key === "featured" && !user.groups.includes("Curators")) {
+          console.warn("Non-curator trying to update Featured flag");
+          // take no action
         } else {
           console.log(
             "Change found in %s: %s != %s",
@@ -317,18 +334,39 @@ router.put("/:caseId", async function editCaseById(req, res) {
             oldCase[key],
             newCase[key]
           );
+          updatedCaseFields.push({
+            key: as.name(key),
+            value: as.value(newCase[key])
+          });
         }
       }
     }); // end of for loop over object keys
     if (anyChanges) {
-      // Add record for case__authors
-      // udate materialized view for search
+      // Actually make the changes
+      if (isTextUpdated) {
+        // INSERT new text row
+        await db.none(sql("../sql/insert_localized_text.sql"), updatedText);
+      }
+      // Update last_updated
+      updatedCaseFields.push({ key: "updated_date", value: "now" });
+      // UPDATE the case row
+      // await db.none(sql("../sql/update_noun.sql"), {
+      //   keys: Object.keys(updatedCaseFields),
+      //   values: Object.values(updatedCaseFields),
+      //   type: "case",
+      //   id: oldCase.id
+      // });
+      // INSERT row for case__authors
+      await db.none(sql("../sql/insert_author.sql"), {
+        user_id: userId,
+        type: "case",
+        id: oldCase.id
+      });
+      // update materialized view for search
+      retCase = await getCaseById_lang_userId(req.params.caseId, lang, userId);
+    } else {
+      retCase = oldCase;
     }
-    const retCase = await getCaseById_lang_userId(
-      req.params.caseId,
-      lang,
-      userId
-    );
     res.status(200).json({ OK: true, data: retCase });
   } catch (error) {
     log.error("Exception in PUT /case/%s => %s", req.params.caseId, error);
