@@ -3,7 +3,7 @@ let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
 let chaiHelpers = require("./helpers");
-chai.should();
+let should = chai.should();
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
 
@@ -289,7 +289,7 @@ describe("Cases", () => {
       updatedCase3.body.should.equal("Third Body");
       updatedCase3.authors.length.should.equal(updatedCase2.authors.length + 1);
     });
-    it("Add case, then modify title and/or body", async () => {
+    it("Add case, then modify lead image", async () => {
       const res1 = await chai
         .postJSON("/case/new")
         .set("Authorization", "Bearer " + tokens.user_token)
@@ -308,16 +308,31 @@ describe("Cases", () => {
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       const case1 = res1.body.object;
-      case1.lead_image.should.be("CitizensAssembly_2.jpg");
+      case1.lead_image.url.should.equal("CitizensAssembly_2.jpg");
       const res2 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + case1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ lead_image: "foobar.jpg" });
+        .send({ lead_image: { url: "foobar.jpg", title: "" } });
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
-      const case2 = res2.body.object;
-      case2.lead_image.should.be("foobar.jpg");
+      should.exist(res2.body.data);
+      const case2 = res2.body.data;
+      case2.lead_image.url.should.equal("foobar.jpg");
       case2.updated_date.should.be.above(case1.updated_date);
+      const res3 = await chai
+        .putJSON("/case/" + case1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({
+          lead_image: {
+            url: "howzaboutthemjpegs.png",
+            title: "Innocuous Title"
+          }
+        });
+      res3.should.have.status(200);
+      res3.body.OK.should.be.true;
+      const case3 = res3.body.data;
+      case3.lead_image.url.should.equal("howzaboutthemjpegs.png");
+      case3.lead_image.title.should.equal("Innocuous Title");
     });
   });
 });

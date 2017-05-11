@@ -276,10 +276,11 @@ router.put("/:caseId", async function editCaseById(req, res) {
   cache.clear();
   try {
     // FIXME: Figure out how to get all of this done as one transaction
-    const oldCase = await getCaseByRequest(req);
-    const newCase = req.body;
+    const caseId = as.number(req.params.caseId);
     const lang = as.value(req.params.language || "en");
     const userId = req.user.user_id;
+    const oldCase = await getCaseById_lang_userId(caseId, lang, userId);
+    const newCase = req.body;
     let updatedText = {
       body: oldCase.body,
       title: oldCase.title,
@@ -318,7 +319,7 @@ router.put("/:caseId", async function editCaseById(req, res) {
           // including duplicates for bi-directional mapping?
           anyChanges = true;
           // If any of the fields of case itself have changed, update record in cases
-        } else if (["post_date", "updated_date"].includes(key)) {
+        } else if (["id", "post_date", "updated_date"].includes(key)) {
           console.warn(
             "Trying to update a field users shouldn't update: %s",
             key
@@ -327,6 +328,22 @@ router.put("/:caseId", async function editCaseById(req, res) {
         } else if (key === "featured" && !user.groups.includes("Curators")) {
           console.warn("Non-curator trying to update Featured flag");
           // take no action
+        } else if (key === "location") {
+          updatedCaseFields.push({
+            key: as.name(key),
+            value: as.location(newCase[key])
+          });
+        } else if (key === "lead_image") {
+          var img = newCase[key];
+          updatedCaseFields.push({
+            key: as.name(key),
+            value: as.attachment(img.url, img.title, img.size)
+          });
+        } else if (["other_images", "files"].includes(key)) {
+          updatedCaseFields.push({
+            key: as.name(key),
+            value: as.attachments(newCase[key])
+          });
         } else {
           console.log(
             "Change found in %s: %s != %s",
@@ -348,14 +365,15 @@ router.put("/:caseId", async function editCaseById(req, res) {
         await db.none(sql("../sql/insert_localized_text.sql"), updatedText);
       }
       // Update last_updated
-      updatedCaseFields.push({ key: "updated_date", value: "now" });
+      updatedCaseFields.push({ key: "updated_date", value: as.text("now") });
       // UPDATE the case row
-      // await db.none(sql("../sql/update_noun.sql"), {
-      //   keys: Object.keys(updatedCaseFields),
-      //   values: Object.values(updatedCaseFields),
-      //   type: "case",
-      //   id: oldCase.id
-      // });
+      await db.none(sql("../sql/update_noun.sql"), {
+        keyvalues: updatedCaseFields
+          .map(field => field.key + " = " + field.value)
+          .join(", "),
+        type: "case",
+        id: oldCase.id
+      });
       // INSERT row for case__authors
       await db.none(sql("../sql/insert_author.sql"), {
         user_id: userId,
@@ -363,10 +381,15 @@ router.put("/:caseId", async function editCaseById(req, res) {
         id: oldCase.id
       });
       // update materialized view for search
-      retCase = await getCaseById_lang_userId(req.params.caseId, lang, userId);
+      retCase = await getCaseById_lang_userId(
+        as.number(req.params.caseId),
+        lang,
+        userId
+      );
     } else {
+      // end if anyChanges
       retCase = oldCase;
-    }
+    } // end if not anyChanges
     res.status(200).json({ OK: true, data: retCase });
   } catch (error) {
     log.error("Exception in PUT /case/%s => %s", req.params.caseId, error);
@@ -374,7 +397,7 @@ router.put("/:caseId", async function editCaseById(req, res) {
       OK: false,
       error: error
     });
-  }
+  } // end catch
 });
 
 /**
