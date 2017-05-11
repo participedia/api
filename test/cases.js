@@ -307,34 +307,17 @@ describe("Cases", () => {
         });
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.case_id.should.be.a("number");
-      const origCase = res1.body.object;
-      origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.case_id);
+      const case1 = res1.body.object;
+      case1.lead_image.should.be("CitizensAssembly_2.jpg");
       const res2 = await chai
         .putJSON("/case/" + res1.body.data.case_id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ title: "Second Title" }); // empty update
+        .send({ lead_image: "foobar.jpg" });
       res2.should.have.status(200);
-      const updatedCase1 = res2.body.data;
-      updatedCase1.title.should.equal("Second Title");
-      updatedCase1.body.should.equal("First Body");
-      const res3 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ body: "Second Body" }); // empty update
-      res3.should.have.status(200);
-      const updatedCase2 = res3.body.data;
-      updatedCase2.title.should.equal("Second Title");
-      updatedCase2.body.should.equal("Second Body");
-      const res4 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ title: "Third Title", body: "Third Body" }); // empty update
-      res4.should.have.status(200);
-      const updatedCase3 = res4.body.data;
-      updatedCase3.title.should.equal("Third Title");
-      updatedCase3.body.should.equal("Third Body");
+      res2.body.OK.should.be.true;
+      const case2 = res2.body.object;
+      case2.lead_image.should.be("foobar.jpg");
+      case2.updated_date.should.be.above(case1.updated_date);
     });
   });
 });
