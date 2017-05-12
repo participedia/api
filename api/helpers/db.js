@@ -59,6 +59,25 @@ function attachment(url, title, size) {
 
 // as.attachments
 function attachments(url, title, size) {
+  if (isArray(url)) {
+    let atts = url;
+    return "ARRAY[" +
+      atts
+        .map(
+          vid =>
+            "(" +
+              as.text(att.url) +
+              ", " +
+              as.text(att.title ? att.title : "") +
+              ", " +
+              att.size ===
+              undefined
+              ? "null"
+              : as.number(att.size) + ")"
+        )
+        .join(", ") +
+      "]::attachment[]";
+  }
   url = as.text(url ? url : "{}");
   title = as.text(title ? title : "");
   size = size === undefined ? "null" : as.number(size);
@@ -70,6 +89,21 @@ function attachments(url, title, size) {
 
 // as.videos
 function videos(url, title) {
+  if (isArray(url)) {
+    let vids = url;
+    return "ARRAY[" +
+      vids
+        .map(
+          vid =>
+            "(" +
+            as.text(vid.url) +
+            ", " +
+            as.text(vid.title ? vid.title : "") +
+            ")"
+        )
+        .join(", ") +
+      "]::video[]";
+  }
   if (!url) {
     return "'{}'";
   }
