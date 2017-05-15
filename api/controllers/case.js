@@ -211,11 +211,6 @@ router.post("/new", async function postNewCase(req, res) {
     const location = as.location(req.body.location);
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const related_cases = as.related_list(req.body.related_cases);
-    const related_methods = as.related_list(req.body.related_methods);
-    const related_organizations = as.related_list(
-      req.body.related_organizations
-    );
     const case_id = await db.one(
       sql("../sql/create_case.sql"),
       Object.assign({}, empty_case, {
@@ -224,12 +219,38 @@ router.post("/new", async function postNewCase(req, res) {
         location,
         lead_image,
         videos,
-        related_cases,
-        related_methods,
-        related_organizations,
         user_id
       })
     );
+    // save related objects (needs case_id)
+    const relCases = as.related_list(
+      "case",
+      case_id.case_id,
+      "case",
+      req.body.related_cases
+    );
+    if (relCases) {
+      await db.none(relCases);
+    }
+    const relMethods = as.related_list(
+      "case",
+      case_id.case_id,
+      "method",
+      req.body.related_methods
+    );
+    if (relMethods) {
+      await db.none(relMethods);
+    }
+    const relOrgs = as.related_list(
+      "case",
+      case_id.case_id,
+      "organization",
+      req.body.related_organizations
+    );
+    if (relOrgs) {
+      await db.none(relOrgs);
+    }
+
     const newCase = await getCaseById_lang_userId(
       case_id.case_id,
       language,

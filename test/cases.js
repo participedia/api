@@ -101,14 +101,18 @@ describe("Cases", () => {
           lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
           vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
           location: location,
-          relatedCases: ["1", "2", "3", "4"],
-          relatedMethods: ["145", "146", "147"],
-          relatedOrganizations: ["199", "200", "201"]
+          related_cases: ["1", "2", "3", "4"],
+          related_methods: ["145", "146", "147"],
+          related_organizations: ["199", "200", "201"]
         })
         .end((err, res) => {
           res.should.have.status(201);
           res.body.OK.should.be.true;
           res.body.data.case_id.should.be.a("number");
+          let returnedCase = res.body.object;
+          returnedCase.related_cases.length.should.equal(4);
+          returnedCase.related_methods.length.should.equal(3);
+          returnedCase.related_organizations.length.should.equal(3);
           done();
         });
     });

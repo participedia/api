@@ -137,35 +137,29 @@ function location(location) {
   return `(${name}, '', '', ${city}, ${province}, ${country}, '', ${lat}, ${long})::geolocation`;
 }
 
-function related_list(owner, related, id_list) {
+function related_list(owner_type, owner_id, related_type, id_list) {
   // TODO: escape id_list to avoid injection attacks
-  // owner == case for case__related_methods
-  // related == method for case__related_methods
-  // id_list is either a single identifier or an array of identifiers
   if (!id_list || !id_list.length) {
-    return "";
+    return null;
   }
   if (isString(id_list)) {
     id_list = [id_list];
   }
-  owner = as.number(owner);
+  owner_id = as.number(owner_id);
   // case and related come from our code, we'll trust those
   let values = id_list
     .map(id => {
-      id = as.number(id);
-      `(${id})`;
+      let escaped_id = as.number(id);
+      if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
+        return `('${owner_type}', ${owner_id}, '${related_type}', ${id})`;
+      } else {
+        return `('${related_type}', ${id}, '${owner_type}', ${owner_id})`;
+      }
     })
     .join(", ");
   return `
-  INSERT INTO
-    ${owner}__related_${related}s
-  SELECT
-    ${owner}_id, related_${related}_id
-  FROM
-    (select ${owner}_id FROM insert_${owner}),
-    (VALUES ${values}) as t (related_${related}_id)
-  ON CONFLICT
-    (${owner}_id, related_${related}_id) DO NOTHING;`;
+  INSERT INTO related_nouns (type_1, id_1, type_2, id_2)
+  VALUES ${values}`;
 }
 
 const as = Object.assign({}, pgp.as, {
