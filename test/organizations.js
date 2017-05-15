@@ -128,15 +128,9 @@ describe("Organizations", () => {
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.related_cases.should.have.lengthOf(2);
-          res.body.data.related_cases[0].id.should.equal(47);
-          res.body.data.related_cases[1].id.should.equal(55);
+          res.body.data.related_cases.should.have.lengthOf(3);
           res.body.data.related_methods.should.have.lengthOf(2);
-          res.body.data.related_methods[0].id.should.equal(147);
-          res.body.data.related_methods[1].id.should.equal(155);
           res.body.data.related_organizations.should.have.lengthOf(2);
-          res.body.data.related_organizations[0].id.should.equal(247);
-          res.body.data.related_organizations[1].id.should.equal(255);
           done();
         });
     });

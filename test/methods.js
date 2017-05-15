@@ -88,7 +88,7 @@ describe("Methods", () => {
     it("test related objects empty", done => {
       chai
         .request(app)
-        .get("/method/163")
+        .get("/method/172")
         .set("Content-Type", "application/json")
         .set("Accept", "application/json")
         .send({})
