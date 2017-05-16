@@ -63,174 +63,133 @@ let location = {
   }
 };
 
+async function addBasicCase() {
+  return chai
+    .postJSON("/case/new")
+    .set("Authorization", "Bearer " + tokens.user_token)
+    .send({
+      // mandatory
+      title: "First Title",
+      body: "First Body",
+      // optional
+      lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
+      vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
+      location: location,
+      related_cases: ["1", "2", "3", "4"],
+      related_methods: ["145", "146", "147"],
+      related_organizations: ["199", "200", "201"]
+    });
+}
+
 describe("Cases", () => {
   describe("Lookup", () => {
-    it("finds case 100", done => {
-      chai.getJSON("/case/100").send({}).end((err, res) => {
-        res.should.have.status(200);
-        done();
-      });
+    it("finds case 100", async () => {
+      const res = await chai.getJSON("/case/100").send({});
+      res.should.have.status(200);
     });
   });
   describe("Adding", () => {
-    it("fails without authentication", done => {
-      chai.postJSON("/case/new").send({}).end((err, res) => {
-        res.should.have.status(401);
-        done();
-      });
+    it("fails without authentication", async () => {
+      try {
+        const res = await chai.postJSON("/case/new").send({});
+        // fail if error not thrown
+        should.exist(res.status);
+      } catch (err) {
+        err.should.have.status(401);
+      }
     });
-    it("fails without content", done => {
-      chai
-        .postJSON("/case/new")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({})
-        .end((err, res) => {
-          res.should.have.status(400);
-          done();
-        });
+    it("fails without content", async () => {
+      try {
+        const res = await chai
+          .postJSON("/case/new")
+          .set("Authorization", "Bearer " + tokens.user_token)
+          .send({});
+        should.exist(res.status);
+      } catch (err) {
+        err.should.have.status(400);
+      }
     });
-    it("works with authentication", done => {
-      chai
-        .postJSON("/case/new")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          // mandatory
-          title: "This is the first title of the rest of your post",
-          body: "Eat this, it is my body",
-          // optional
-          lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
-          vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
-          location: location,
-          related_cases: ["1", "2", "3", "4"],
-          related_methods: ["145", "146", "147"],
-          related_organizations: ["199", "200", "201"]
-        })
-        .end((err, res) => {
-          res.should.have.status(201);
-          res.body.OK.should.be.true;
-          res.body.data.case_id.should.be.a("number");
-          let returnedCase = res.body.object;
-          returnedCase.related_cases.length.should.equal(4);
-          returnedCase.related_methods.length.should.equal(3);
-          returnedCase.related_organizations.length.should.equal(3);
-          done();
-        });
+    it("works with authentication", async () => {
+      const res = await addBasicCase();
+      res.should.have.status(201);
+      res.body.OK.should.be.true;
+      res.body.data.case_id.should.be.a("number");
+      let returnedCase = res.body.object;
+      returnedCase.related_cases.length.should.equal(4);
+      returnedCase.related_methods.length.should.equal(3);
+      returnedCase.related_organizations.length.should.equal(3);
     });
   });
   describe("Related Objects", () => {
-    it("test related objects empty", done => {
-      chai.getJSON("/case/39").send({}).end((err, res) => {
-        res.should.have.status(200);
-        res.body.data.related_cases.should.have.lengthOf(0);
-        res.body.data.related_methods.should.have.lengthOf(0);
-        res.body.data.related_organizations.should.have.lengthOf(0);
-        done();
-      });
+    it("test related objects empty", async () => {
+      const res = await chai.getJSON("/case/39").send({});
+      res.should.have.status(200);
+      res.body.data.related_cases.should.have.lengthOf(0);
+      res.body.data.related_methods.should.have.lengthOf(0);
+      res.body.data.related_organizations.should.have.lengthOf(0);
     });
-    it("test related objects with single item", done => {
-      chai.getJSON("/case/38").send({}).end((err, res) => {
-        res.should.have.status(200);
-        res.body.data.related_cases.should.have.lengthOf(1);
-        res.body.data.related_cases[0].id.should.equal(70);
-        res.body.data.related_methods.should.have.lengthOf(1);
-        res.body.data.related_methods[0].id.should.equal(170);
-        res.body.data.related_organizations.should.have.lengthOf(1);
-        res.body.data.related_organizations[0].id.should.equal(270);
-        done();
-      });
+    it("test related objects with single item", async () => {
+      const res = await chai.getJSON("/case/38").send({});
+      res.should.have.status(200);
+      res.body.data.related_cases.should.have.lengthOf(1);
+      res.body.data.related_cases[0].id.should.equal(70);
+      res.body.data.related_methods.should.have.lengthOf(1);
+      res.body.data.related_methods[0].id.should.equal(170);
+      res.body.data.related_organizations.should.have.lengthOf(1);
+      res.body.data.related_organizations[0].id.should.equal(270);
     });
-    it("test related objects with multiple items", done => {
-      chai.getJSON("/case/37").send({}).end((err, res) => {
-        res.should.have.status(200);
-        res.body.data.related_cases.should.have.lengthOf(2);
-        res.body.data.related_cases[0].id.should.equal(45);
-        res.body.data.related_cases[1].id.should.equal(63);
-        res.body.data.related_methods.should.have.lengthOf(2);
-        res.body.data.related_methods[0].id.should.equal(145);
-        res.body.data.related_methods[1].id.should.equal(163);
-        res.body.data.related_organizations.should.have.lengthOf(2);
-        res.body.data.related_organizations[0].id.should.equal(245);
-        res.body.data.related_organizations[1].id.should.equal(263);
-        done();
-      });
+    it("test related objects with multiple items", async () => {
+      const res = await chai.getJSON("/case/37").send({});
+      res.should.have.status(200);
+      res.body.data.related_cases.should.have.lengthOf(2);
+      res.body.data.related_cases[0].id.should.equal(45);
+      res.body.data.related_cases[1].id.should.equal(63);
+      res.body.data.related_methods.should.have.lengthOf(2);
+      res.body.data.related_methods[0].id.should.equal(145);
+      res.body.data.related_methods[1].id.should.equal(163);
+      res.body.data.related_organizations.should.have.lengthOf(2);
+      res.body.data.related_organizations[0].id.should.equal(245);
+      res.body.data.related_organizations[1].id.should.equal(263);
     });
   });
-  it("test SQL santization", done => {
-    chai
-      .postJSON("/case/new")
-      .set("Authorization", "Bearer " + tokens.user_token)
-      .send({
-        // mandatory
-        title: "This is the first'); drop table users; -- title of the rest of your post",
-        body: "Eat this, '); drop table users; -- it is my body",
-        // optional
-        lead_image: "CitizensAssembly_2.jpg'); drop table users; --", // key into S3 bucket
-        vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w'); drop table users; --",
-        location: location,
-        relatedCases: ["1", "2", "3", "4"],
-        relatedMethods: ["145", "146", "147"],
-        relatedOrganizations: ["199", "200", "201"]
-      })
-      .end((err, res) => {
-        res.should.have.status(201);
-        done();
-      });
+  it("test SQL santization", async () => {
+    const res = await addBasicCase();
+    res.should.have.status(201);
   });
+
   // let userID = tokens.user_payload.user_id;
   describe("Counting by country", () => {
-    it("returns stuff", done => {
-      chai
+    it("returns stuff", async () => {
+      const res = await chai
         .getJSON("/case/countsByCountry")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .end((err, res) => {
-          let countryCounts = res.body.data.countryCounts;
-          countryCounts.should.have.property("france");
-          res.should.have.status(200);
-          done();
-        });
+        .set("Authorization", "Bearer " + tokens.user_token);
+      let countryCounts = res.body.data.countryCounts;
+      countryCounts.should.have.property("france");
+      res.should.have.status(200);
     });
   });
   describe("Get case with tags", () => {
-    it("should have 3 tags", done => {
-      chai.getJSON("/case/39").end((err, res) => {
-        res.body.OK.should.equal(true);
-        res.should.have.status(200);
-        let the_case = res.body.data;
-        the_case.tags.should.have.lengthOf(3);
-        the_case.bookmarked.should.equal(false);
-        done();
-      });
+    it("should have 3 tags", async () => {
+      const res = await chai.getJSON("/case/39");
+      res.body.OK.should.equal(true);
+      res.should.have.status(200);
+      let the_case = res.body.data;
+      the_case.tags.should.have.lengthOf(3);
+      the_case.bookmarked.should.equal(false);
     });
   });
   describe("Get case with authentication", () => {
-    it("should not fail when logged in", done => {
-      chai
+    it("should not fail when logged in", async () => {
+      const res = await chai
         .getJSON("/case/100")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .end((err, res) => {
-          res.body.OK.should.equal(true);
-          res.should.have.status(200);
-          done();
-        });
+        .set("Authorization", "Bearer " + tokens.user_token);
+      res.body.OK.should.equal(true);
+      res.should.have.status(200);
     });
   });
   describe("Test edit API", () => {
     it("Add case, then null modify it", async () => {
-      const res1 = await chai
-        .postJSON("/case/new")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          // mandatory
-          title: "First Title",
-          body: "First Body",
-          // optional
-          lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
-          vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
-          location: location,
-          relatedCases: ["1", "2", "3", "4"],
-          relatedMethods: ["145", "146", "147"],
-          relatedOrganizations: ["199", "200", "201"]
-        });
+      const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       res1.body.data.case_id.should.be.a("number");
@@ -246,21 +205,7 @@ describe("Cases", () => {
       updatedCase1.should.deep.equal(origCase); // no changes saved
     });
     it("Add case, then modify title and/or body", async () => {
-      const res1 = await chai
-        .postJSON("/case/new")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          // mandatory
-          title: "First Title",
-          body: "First Body",
-          // optional
-          lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
-          vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
-          location: location,
-          relatedCases: ["1", "2", "3", "4"],
-          relatedMethods: ["145", "146", "147"],
-          relatedOrganizations: ["199", "200", "201"]
-        });
+      const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       res1.body.data.case_id.should.be.a("number");
@@ -294,21 +239,7 @@ describe("Cases", () => {
       updatedCase3.authors.length.should.equal(updatedCase2.authors.length + 1);
     });
     it("Add case, then modify lead image", async () => {
-      const res1 = await chai
-        .postJSON("/case/new")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          // mandatory
-          title: "First Title",
-          body: "First Body",
-          // optional
-          lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
-          vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
-          location: location,
-          relatedCases: ["1", "2", "3", "4"],
-          relatedMethods: ["145", "146", "147"],
-          relatedOrganizations: ["199", "200", "201"]
-        });
+      const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       const case1 = res1.body.object;
