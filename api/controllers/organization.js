@@ -3,9 +3,10 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let log = require("winston");
+let jwt = require("express-jwt");
 
+let { db, sql, as, helpers, getXByIdFns } = require("../helpers/db");
 let { getUserIfExists } = require("../helpers/user");
-let { db, sql, as } = require("../helpers/db");
 
 const empty_organization = {
   title: "",
@@ -26,6 +27,12 @@ const empty_organization = {
   tags: "{}",
   featured: false
 };
+
+const {
+  getOrganizationById_lang_userId,
+  getOrganizationByRequest,
+  returnOrganizationById
+} = getXByIdFns("organization", getUserIfExists);
 
 /**
  * @api {post} /organization/new Create new organization
@@ -63,6 +70,7 @@ router.post("/new", async function(req, res) {
   try {
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
+    let language = req.params.language || "en";
     if (!(title && body)) {
       return res.status(400).json({
         message: "Cannot create Organization, both title and body are required"
@@ -72,11 +80,6 @@ router.post("/new", async function(req, res) {
     const location = as.location(req.body.location);
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const related_cases = as.related_list(req.body.related_cases);
-    const related_methods = as.related_list(req.body.related_methods);
-    const related_organizations = as.related_list(
-      req.body.related_organizations
-    );
     const organization_id = await db.one(
       sql("../sql/create_organization.sql"),
       Object.assign({}, empty_organization, {
@@ -85,15 +88,46 @@ router.post("/new", async function(req, res) {
         location,
         lead_image,
         videos,
-        related_cases,
-        related_methods,
-        related_organizations,
         user_id
       })
     );
+    // save related objects (needs case_id)
+    const relCases = as.related_list(
+      "organization",
+      organization_id.organization_id,
+      "case",
+      req.body.related_cases
+    );
+    if (relCases) {
+      await db.none(relCases);
+    }
+    const relMethods = as.related_list(
+      "organization",
+      organization_id.organization_id,
+      "method",
+      req.body.related_methods
+    );
+    if (relMethods) {
+      await db.none(relMethods);
+    }
+    const relOrgs = as.related_list(
+      "organization",
+      organization_id.organization_id,
+      "organization",
+      req.body.related_organizations
+    );
+    if (relOrgs) {
+      await db.none(relOrgs);
+    }
+    const newOrganization = await getOrganizationById_lang_userId(
+      organization_id.organization_id,
+      language,
+      user_id
+    );
     return res.status(201).json({
       OK: true,
-      data: organization_id
+      data: organization_id,
+      object: newOrganization
     });
   } catch (error) {
     log.error("Exception in POST /organization/new => %s", error);
@@ -161,37 +195,15 @@ router.put("/:id", function editOrgById(req, res) {
  *
  */
 
-router.get("/:organizationId", async function getorganizationById(req, res) {
-  try {
-    const organizationId = as.number(req.params.organizationId);
-    const organization = await db.one(sql("../sql/organization_by_id.sql"), {
-      organizationId: organizationId,
-      lang: req.params.language || "en"
-    });
-    const userId = await getUserIfExists(req);
-    if (userId) {
-      const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-        type: "organization",
-        thingId: organizationId,
-        userId: userId
-      });
-      organization.bookmarked = bookmarked.organization;
-    } else {
-      organization.bookmarked = false;
-    }
-    res.status(200).json({
-      OK: true,
-      data: organization
-    });
-  } catch (error) {
-    log.error(
-      "Exception in GET /organization/%s => %s",
-      req.params.organizationId,
-      error
-    );
-    res.status(500).json({ OK: false, error: error });
-  }
-});
+router.get(
+  "/:organizationId",
+  jwt({
+    secret: process.env.AUTH0_CLIENT_SECRET,
+    credentialsRequired: false,
+    algorithms: ["HS256"]
+  }),
+  returnOrganizationById
+);
 
 /**
  * @api {delete} /organization/:id Delete an organization

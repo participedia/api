@@ -60,10 +60,18 @@ describe("Methods", () => {
           // optional
           lead_image: "https://cdn.thinglink.me/api/image/756598547733807104/",
           vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
-          relatedCases: ""
+          related_cases: [5, 6, 7, 8],
+          related_methods: [148, 149, 150],
+          related_organizations: [202, 203, 204]
         })
         .end((err, res) => {
           res.should.have.status(201);
+          res.body.OK.should.be.true;
+          res.body.data.method_id.should.be.a("number");
+          let returnedMethod = res.body.object;
+          returnedMethod.related_cases.length.should.equal(4);
+          returnedMethod.related_methods.length.should.equal(3);
+          returnedMethod.related_organizations.length.should.equal(3);
           done();
         });
     });

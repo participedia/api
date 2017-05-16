@@ -92,4 +92,4 @@ function okToEdit(user) {
 
 ensureUser.unless = unless;
 
-module.exports = exports = { ensureUser, okToEdit, getUserIfExists };
+module.exports = (exports = { ensureUser, okToEdit, getUserIfExists });

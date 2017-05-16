@@ -6,8 +6,8 @@ let log = require("winston");
 let jwt = require("express-jwt");
 let equals = require("deep-equal");
 
+let { db, sql, as, helpers, getXByIdFns } = require("../helpers/db");
 let { getUserIfExists } = require("../helpers/user");
-let { db, sql, as, helpers } = require("../helpers/db");
 
 const empty_case = {
   title: "",
@@ -47,6 +47,12 @@ const empty_case = {
   featured: false,
   bookmarked: false
 };
+
+const {
+  getCaseById_lang_userId,
+  getCaseByRequest,
+  returnCaseById
+} = getXByIdFns("case", getUserIfExists);
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -446,40 +452,6 @@ router.put("/:caseId", async function editCaseById(req, res) {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-
-async function getCaseById_lang_userId(caseId, lang, userId) {
-  const theCase = await db.one(sql("../sql/case_by_id.sql"), {
-    caseId,
-    lang
-  });
-  const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-    type: "case",
-    thingId: caseId,
-    userId: userId
-  });
-  theCase.bookmarked = bookmarked.case;
-  return theCase;
-}
-
-async function getCaseByRequest(req) {
-  const caseId = as.number(req.params.caseId);
-  const lang = as.value(req.params.language || "en");
-  const userId = await getUserIfExists(req);
-  return await getCaseById_lang_userId(caseId, lang, userId);
-}
-
-async function returnCaseById(req, res) {
-  try {
-    const the_case = await getCaseByRequest(req);
-    res.status(200).json({ OK: true, data: the_case });
-  } catch (error) {
-    log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
-    res.status(500).json({
-      OK: false,
-      error: error
-    });
-  }
-}
 
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.

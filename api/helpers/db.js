@@ -10,6 +10,7 @@ if (process.env.LOG_QUERY === "true") {
 }
 let pgp = require("pg-promise")(options);
 const path = require("path");
+let log = require("winston");
 let connectionString = process.env.DATABASE_URL;
 let parse = require("pg-connection-string").parse;
 let config;
@@ -172,6 +173,53 @@ const as = Object.assign({}, pgp.as, {
   number
 });
 
+function getXByIdFns(type, getUserIfExists) {
+  let retFns = {};
+  const typeUC = type[0].toUpperCase() + type.slice(1);
+  retFns[`get${typeUC}ById_lang_userId`] = async function(
+    thingId,
+    lang,
+    userId
+  ) {
+    const theThing = await db.one(sql(`../sql/${type}_by_id.sql`), {
+      thingId,
+      lang
+    });
+    const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
+      type,
+      thingId,
+      userId
+    });
+    theThing.bookmarked = bookmarked[type];
+    return theThing;
+  };
+
+  retFns[`get${typeUC}ByRequest`] = async function(req) {
+    const thingId = as.number(req.params[`${type}Id`]);
+    const lang = as.value(req.params.language || "en");
+    const userId = await getUserIfExists(req);
+    return await retFns[`get${typeUC}ById_lang_userId`](thingId, lang, userId);
+  };
+
+  retFns[`return${typeUC}ById`] = async function(req, res) {
+    try {
+      const thing = await retFns[`get${typeUC}ByRequest`](req);
+      res.status(200).json({ OK: true, data: thing });
+    } catch (error) {
+      log.error(
+        "Exception in GET /case/%s => %s",
+        req.params[`${type}Id`],
+        error
+      );
+      res.status(500).json({
+        OK: false,
+        error: error
+      });
+    }
+  };
+  return retFns;
+}
+
 const helpers = pgp.helpers;
 
-module.exports = { db, sql, as, helpers };
+module.exports = { db, sql, as, helpers, getXByIdFns };

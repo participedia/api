@@ -24,9 +24,9 @@ SELECT
     to_json(COALESCE(organizations.tags, '{}')) AS tags,
     organization__localized_texts.*,
     to_json(author_list.authors) AS authors,
-    to_json(get_related_nouns('case', 'organization', ${organizationId})) related_cases,
-    to_json(get_related_nouns('method', 'organization', ${organizationId})) related_methods,
-    to_json(get_related_nouns('organization', 'organization', ${organizationId})) related_organizations
+    to_json(get_related_nouns('case', 'organization', ${thingId})) related_cases,
+    to_json(get_related_nouns('method', 'organization', ${thingId})) related_methods,
+    to_json(get_related_nouns('organization', 'organization', ${thingId})) related_organizations
 
 FROM
     organizations,
@@ -51,5 +51,5 @@ WHERE
     organizations.id = organization__localized_texts.organization_id AND
     organization__localized_texts.language = ${lang} AND
     author_list.organization_id = organizations.id AND
-    organizations.id = ${organizationId}
+    organizations.id = ${thingId}
 ;
