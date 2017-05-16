@@ -2,8 +2,11 @@ let tokens = require("./setupenv");
 let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
+let chaiHelpers = require("./helpers");
+let should = chai.should();
 chai.should();
 chai.use(chaiHttp);
+chai.use(chaiHelpers);
 
 describe("Organizations", () => {
   describe("Lookup", () => {
