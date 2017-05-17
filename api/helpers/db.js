@@ -141,7 +141,7 @@ function location(location) {
 function related_list(owner_type, owner_id, related_type, id_list) {
   // TODO: escape id_list to avoid injection attacks
   if (!id_list || !id_list.length) {
-    return null;
+    return "";
   }
   if (isString(id_list)) {
     id_list = [id_list];
@@ -160,7 +160,46 @@ function related_list(owner_type, owner_id, related_type, id_list) {
     .join(", ");
   return `
   INSERT INTO related_nouns (type_1, id_1, type_2, id_2)
-  VALUES ${values}`;
+  VALUES ${values};`;
+}
+
+function remove_related_list(owner_type, owner_id, related_type, id_list) {
+  // TODO: escape id_list to avoid injection attacks
+  if (!id_list || !id_list.length) {
+    return "";
+  }
+  if (isString(id_list)) {
+    id_list = [id_list];
+  }
+  owner_id = as.number(owner_id);
+  // case and related come from our code, we'll trust those
+  return id_list
+    .map(id => {
+      let escaped_id = as.number(id);
+      if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
+        return `DELETE FROM related_nouns
+                WHERE type_1 = '${owner_type}' AND id_1 = ${owner_id} AND
+                      type_2 = '${related_type}' AND id_2 = ${id};`;
+      } else {
+        return `DELETE FROM related_nouns
+                WHERE type_1 = '${related_type}' AND id_1 = ${id} AND
+                      type_2 = '${owner_type}' AND id_2 = ${owner_id};`;
+      }
+    })
+    .join("");
+}
+
+const difference = (set1, set2) => new Set([...set1].filter(x => !set2.has(x)));
+
+function diffRelatedList(first, second) {
+  // both lists are related_item objects of the same type
+  const first_set = new Set(first.map(rel => rel.id));
+  const second_set = new Set(second.map(rel => rel.id));
+  remove_set = difference(first_set, second_set);
+  add_set = difference(second_set, first_set);
+  const remove = first.filter(x => remove_set.has(x.id));
+  const add = second.filter(x => add_set.has(x.id));
+  return { remove, add };
 }
 
 const as = Object.assign({}, pgp.as, {
@@ -170,6 +209,7 @@ const as = Object.assign({}, pgp.as, {
   location,
   videos,
   related_list,
+  remove_related_list,
   number
 });
 
@@ -222,4 +262,4 @@ function getXByIdFns(type, getUserIfExists) {
 
 const helpers = pgp.helpers;
 
-module.exports = { db, sql, as, helpers, getXByIdFns };
+module.exports = { db, sql, as, helpers, getXByIdFns, diffRelatedList };

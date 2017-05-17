@@ -269,5 +269,24 @@ describe("Cases", () => {
       case3.lead_image.url.should.equal("howzaboutthemjpegs.png");
       case3.lead_image.title.should.equal("Innocuous Title");
     });
+    it("Add case, then change related objects", async () => {
+      const res1 = await addBasicCase();
+      const case1 = res1.body.object;
+      case1.related_cases.should.have.lengthOf(4);
+      case1.related_cases.map(x => x.id).should.deep.equal([1, 2, 3, 4]);
+      const related_cases = case1.related_cases.slice();
+      related_cases.shift(); // remove first one
+      related_cases.push({ id: 5 }, { id: 6 });
+      const res2 = await chai
+        .putJSON("/case/" + case1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ related_cases });
+      const case2 = res2.body.data;
+      case2.related_cases.map(x => x.id).should.deep.equal([2, 3, 4, 5, 6]);
+      // test bidirectionality
+      const res3 = await chai.getJSON("/case/6").send({});
+      const case3 = res3.body.data;
+      case3.related_cases.map(x => x.id).should.include(case1.id);
+    });
   });
 });

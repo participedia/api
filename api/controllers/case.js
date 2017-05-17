@@ -5,8 +5,16 @@ let cache = require("apicache");
 let log = require("winston");
 let jwt = require("express-jwt");
 let equals = require("deep-equal");
+let moment = require("moment");
 
-let { db, sql, as, helpers, getXByIdFns } = require("../helpers/db");
+let {
+  db,
+  sql,
+  as,
+  helpers,
+  getXByIdFns,
+  diffRelatedList
+} = require("../helpers/db");
 let { getUserIfExists } = require("../helpers/user");
 
 const empty_case = {
@@ -320,19 +328,28 @@ router.put("/:caseId", async function editCaseById(req, res) {
     let anyChanges = false;
     let retCase = null;
     /* DO ALL THE DIFFS */
-    Object.keys(oldCase).forEach(key => {
-      if (newCase[key] === undefined) {
-        // console.log("Skipping missing %s", key);
+    Object.keys(oldCase).forEach(async key => {
+      if (
+        // All the ways to check if a value has not changed
+        newCase[key] === undefined ||
+        equals(oldCase[key], newCase[key]) ||
+        (/_date/.test(key) &&
+          moment(oldCase[key]).format() === moment(newCase[key]).format()) ||
+        (/related_/.test(key) &&
+          equals(
+            oldCase[key].map(x => x.id),
+            newCase[key].map(x => x.id || x.value)
+          ))
+      ) {
+        // skip, do nothing, no change for this key
       } else if (!equals(oldCase[key], newCase[key])) {
         anyChanges = true;
         // If the body or title have changed: add a record in case__localized_texts
         if (key === "body" || key === "title") {
-          console.log("Text has changed %s", key);
           updatedText[key] = newCase[key];
           isTextUpdated = true;
-          // If related_cases has changed, update records in case__related_cases
-          // If related_methods has changed, update records in case__related_methods
-          // If related_organizations has changed, update records in case__related_organizations
+          // If related_cases, related_methods, or related_organizations have changed
+          // update records in related_nouns
         } else if (
           [
             "related_cases",
@@ -340,10 +357,28 @@ router.put("/:caseId", async function editCaseById(req, res) {
             "related_organizations"
           ].includes(key)
         ) {
-          console.log("Update %s list", key);
-          // let newList  = await updateList(oldCase, newCase, key);
-          // DELETE / INSERT any needed rows for X_related_Ys
-          // including duplicates for bi-directional mapping?
+          // DELETE / INSERT any needed rows for related_nouns
+          const oldList = oldCase[key];
+          const newList = newCase[key];
+          newList.forEach(x => x.id = x.id || x.value); // handle client returning value vs. id
+          const diff = diffRelatedList(oldList, newList);
+          const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
+          const add = as.related_list(
+            oldCase.type,
+            oldCase.id,
+            relType,
+            diff.add.map(x => x.id)
+          );
+          const remove = as.remove_related_list(
+            oldCase.type,
+            oldCase.id,
+            relType,
+            diff.remove.map(x => x.id)
+          );
+          if (add || remove) {
+            console.log(">>>%s<<<", add + remove);
+            await db.none(add + remove);
+          }
           anyChanges = true;
           // If any of the fields of case itself have changed, update record in cases
         } else if (["id", "post_date", "updated_date"].includes(key)) {
@@ -373,14 +408,24 @@ router.put("/:caseId", async function editCaseById(req, res) {
           });
         } else {
           console.log(
-            "Change found in %s: %s != %s",
+            "Unspecified change found in %s: %s != %s",
             key,
             oldCase[key],
             newCase[key]
           );
+          let value = oldCase[key];
+          let asValue = as.text;
+          if (typeof value === "boolean") {
+            asValue = as.value;
+          } else if (value === null) {
+            value = "null";
+            asValue = as.value;
+          } else if (typeof value === "number") {
+            asValue = as.number;
+          }
           updatedCaseFields.push({
             key: as.name(key),
-            value: as.value(newCase[key])
+            value: asValue(value)
           });
         }
       }
