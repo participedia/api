@@ -4,8 +4,8 @@ let router = express.Router(); // eslint-disable-line new-cap
 let log = require("winston");
 let jwt = require("express-jwt");
 
-let { db, sql, as, helpers, getXByIdFns } = require("../helpers/db");
-let { getUserIfExists } = require("../helpers/user");
+let { db, sql, as, helpers } = require("../helpers/db");
+let { getXByIdFns } = require("../helpers/things");
 
 const empty_method = {
   title: "",
@@ -42,7 +42,7 @@ const {
   getMethodById_lang_userId,
   getMethodByRequest,
   returnMethodById
-} = getXByIdFns("method", getUserIfExists);
+} = getXByIdFns("method");
 
 /**
  * @api {post} /method/new Create new method

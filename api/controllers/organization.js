@@ -5,8 +5,8 @@ let router = express.Router(); // eslint-disable-line new-cap
 let log = require("winston");
 let jwt = require("express-jwt");
 
-let { db, sql, as, helpers, getXByIdFns } = require("../helpers/db");
-let { getUserIfExists } = require("../helpers/user");
+let { db, sql, as, helpers } = require("../helpers/db");
+const { getXByIdFns } = require("../helpers/things");
 
 const empty_organization = {
   title: "",
@@ -32,7 +32,7 @@ const {
   getOrganizationById_lang_userId,
   getOrganizationByRequest,
   returnOrganizationById
-} = getXByIdFns("organization", getUserIfExists);
+} = getXByIdFns("organization");
 
 /**
  * @api {post} /organization/new Create new organization
