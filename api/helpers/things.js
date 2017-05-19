@@ -163,16 +163,6 @@ function getEditXById(type) {
             ))
         ) {
           // skip, do nothing, no change for this key
-          if (key === "communication_mode") {
-            console.log(
-              "skipping %s: %s = %s",
-              key,
-              oldThing[key],
-              newThing[key]
-            );
-          } else {
-            console.log("skipping %s", key);
-          }
         } else if (!equals(oldThing[key], newThing[key])) {
           anyChanges = true;
           // If the body or title have changed: add a record in X__localized_texts
@@ -237,12 +227,6 @@ function getEditXById(type) {
               value: as.attachments(newThing[key])
             });
           } else {
-            console.log(
-              "Unspecified change found in %s: %s != %s",
-              key,
-              oldThing[key],
-              newThing[key]
-            );
             let value = oldThing[key];
             let asValue = as.text;
             if (typeof value === "boolean") {
@@ -269,16 +253,6 @@ function getEditXById(type) {
         // Update last_updated
         updatedThingFields.push({ key: "updated_date", value: as.text("now") });
         // UPDATE the thing row
-        // console.log(
-        //   "QUERY >>>%s<<<",
-        //   as.format(sql("../sql/update_noun.sql"), {
-        //     keyvalues: updatedThingFields
-        //       .map(field => field.key + " = " + field.value)
-        //       .join(", "),
-        //     type: type,
-        //     id: thingId
-        //   })
-        // );
         await db.none(sql("../sql/update_noun.sql"), {
           keyvalues: updatedThingFields
             .map(field => field.key + " = " + field.value)
@@ -298,6 +272,8 @@ function getEditXById(type) {
           lang,
           userId
         );
+        // update search index
+        await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
       } else {
         // end if anyChanges
         retThing = oldThing;

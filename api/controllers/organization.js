@@ -127,6 +127,8 @@ router.post("/new", async function(req, res) {
       language,
       user_id
     );
+    // Refresh search index
+    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
     return res.status(201).json({
       OK: true,
       data: organization_id,
