@@ -101,7 +101,7 @@ router.post("/new", async function(req, res) {
       })
     );
     // save related objects (needs case_id)
-    const relCases = as.related_list(
+    const relCases = addRelatedList(
       "method",
       method_id.method_id,
       "case",
@@ -110,7 +110,7 @@ router.post("/new", async function(req, res) {
     if (relCases) {
       await db.none(relCases);
     }
-    const relMethods = as.related_list(
+    const relMethods = addRelatedList(
       "method",
       method_id.method_id,
       "method",
@@ -119,7 +119,7 @@ router.post("/new", async function(req, res) {
     if (relMethods) {
       await db.none(relMethods);
     }
-    const relOrgs = as.related_list(
+    const relOrgs = addRelatedList(
       "method",
       method_id.method_id,
       "organization",
