@@ -167,10 +167,7 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:id", function editOrgById(req, res) {
-  // let orgId = req.swagger.params.id.value;
-  res.status(200).json(req.body);
-});
+router.put("/:organizationId", getEditXById("organization"));
 
 /**
  * @api {get} /organization/:id Get the last version of an organization

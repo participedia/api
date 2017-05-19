@@ -157,7 +157,6 @@ describe("Cases", () => {
     res.should.have.status(201);
   });
 
-  // let userID = tokens.user_payload.user_id;
   describe("Counting by country", () => {
     it("returns stuff", async () => {
       const res = await chai

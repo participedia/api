@@ -10,10 +10,7 @@ chai.use(chaiHelpers);
 
 async function addBasicMethod() {
   return chai
-    .request(app)
-    .post("/method/new")
-    .set("Content-Type", "application/json")
-    .set("Accept", "application/json")
+    .postJSON("/method/new")
     .set("Authorization", "Bearer " + tokens.user_token)
     .send({
       // mandatory
@@ -105,6 +102,110 @@ describe("Methods", () => {
       res.body.data.related_organizations.should.have.lengthOf(2);
       res.body.data.related_organizations[0].id.should.equal(247);
       res.body.data.related_organizations[1].id.should.equal(252);
+    });
+  });
+  describe("Test edit API", () => {
+    it("Add method, then null modify it", async () => {
+      const res1 = await addBasicMethod();
+      res1.should.have.status(201);
+      res1.body.OK.should.be.true;
+      res1.body.data.method_id.should.be.a("number");
+      const origMethod = res1.body.object;
+      origMethod.id.should.be.a("number");
+      origMethod.id.should.equal(res1.body.data.method_id);
+      const res2 = await chai
+        .putJSON("/method/" + res1.body.data.method_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({}); // empty update
+      res2.should.have.status(200);
+      const updatedMethod1 = res2.body.data;
+      updatedMethod1.should.deep.equal(origMethod); // no changes saved
+    });
+    it("Add method, then modify title and/or body", async () => {
+      const res1 = await addBasicMethod();
+      res1.should.have.status(201);
+      res1.body.OK.should.be.true;
+      res1.body.data.method_id.should.be.a("number");
+      const origMethod = res1.body.object;
+      origMethod.id.should.be.a("number");
+      origMethod.id.should.equal(res1.body.data.method_id);
+      const res2 = await chai
+        .putJSON("/method/" + res1.body.data.method_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ title: "Second Title" }); // empty update
+      res2.should.have.status(200);
+      const updatedMethod1 = res2.body.data;
+      updatedMethod1.title.should.equal("Second Title");
+      updatedMethod1.body.should.equal("First Body");
+      const res3 = await chai
+        .putJSON("/method/" + res1.body.data.method_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ body: "Second Body" }); // empty update
+      res3.should.have.status(200);
+      const updatedMethod2 = res3.body.data;
+      updatedMethod2.title.should.equal("Second Title");
+      updatedMethod2.body.should.equal("Second Body");
+      const res4 = await chai
+        .putJSON("/method/" + res1.body.data.method_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ title: "Third Title", body: "Third Body" }); // empty update
+      res4.should.have.status(200);
+      const updatedMethod3 = res4.body.data;
+      updatedMethod3.title.should.equal("Third Title");
+      updatedMethod3.body.should.equal("Third Body");
+      updatedMethod3.authors.length.should.equal(
+        updatedMethod2.authors.length + 1
+      );
+    });
+    it("Add method, then modify lead image", async () => {
+      const res1 = await addBasicMethod();
+      res1.should.have.status(201);
+      res1.body.OK.should.be.true;
+      const method1 = res1.body.object;
+      method1.lead_image.url.should.equal("CitizensAssembly_2.jpg");
+      const res2 = await chai
+        .putJSON("/method/" + method1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ lead_image: { url: "foobar.jpg", title: "" } });
+      res2.should.have.status(200);
+      res2.body.OK.should.be.true;
+      should.exist(res2.body.data);
+      const method2 = res2.body.data;
+      method2.lead_image.url.should.equal("foobar.jpg");
+      method2.updated_date.should.be.above(method1.updated_date);
+      const res3 = await chai
+        .putJSON("/method/" + method1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({
+          lead_image: {
+            url: "howzaboutthemjpegs.png",
+            title: "Innocuous Title"
+          }
+        });
+      res3.should.have.status(200);
+      res3.body.OK.should.be.true;
+      const method3 = res3.body.data;
+      method3.lead_image.url.should.equal("howzaboutthemjpegs.png");
+      method3.lead_image.title.should.equal("Innocuous Title");
+    });
+    it("Add method, then change related objects", async () => {
+      const res1 = await addBasicMethod();
+      const method1 = res1.body.object;
+      method1.related_cases.should.have.lengthOf(4);
+      method1.related_cases.map(x => x.id).should.deep.equal([1, 2, 3, 4]);
+      const related_cases = method1.related_cases.slice();
+      related_cases.shift(); // remove first one
+      related_cases.push({ id: 5 }, { id: 6 });
+      const res2 = await chai
+        .putJSON("/method/" + method1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ related_cases });
+      const method2 = res2.body.data;
+      method2.related_cases.map(x => x.id).should.deep.equal([2, 3, 4, 5, 6]);
+      // test bidirectionality
+      const res3 = await chai.getJSON("/method/6").send({});
+      const method3 = res3.body.data;
+      method3.related_cases.map(x => x.id).should.include(method1.id);
     });
   });
 });

@@ -168,11 +168,7 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:id", function editMethodById(req, res) {
-  // let methodId = req.swagger.params.id.value;
-  // let methodBody = req.body;
-  res.status(200).json(req.body);
-});
+router.put("/:methodId", getEditXById("method"));
 
 /**
  * @api {get} /method/:id Get the last version of a method
