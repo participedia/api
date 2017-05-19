@@ -162,7 +162,9 @@ describe("Methods", () => {
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       const method1 = res1.body.object;
-      method1.lead_image.url.should.equal("CitizensAssembly_2.jpg");
+      method1.lead_image.url.should.equal(
+        "https://cdn.thinglink.me/api/image/756598547733807104/"
+      );
       const res2 = await chai
         .putJSON("/method/" + method1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
@@ -192,20 +194,20 @@ describe("Methods", () => {
       const res1 = await addBasicMethod();
       const method1 = res1.body.object;
       method1.related_cases.should.have.lengthOf(4);
-      method1.related_cases.map(x => x.id).should.deep.equal([1, 2, 3, 4]);
+      method1.related_cases.map(x => x.id).should.deep.equal([5, 6, 7, 8]);
       const related_cases = method1.related_cases.slice();
       related_cases.shift(); // remove first one
-      related_cases.push({ id: 5 }, { id: 6 });
+      related_cases.push({ id: 9 }, { id: 10 });
       const res2 = await chai
         .putJSON("/method/" + method1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ related_cases });
       const method2 = res2.body.data;
-      method2.related_cases.map(x => x.id).should.deep.equal([2, 3, 4, 5, 6]);
+      method2.related_cases.map(x => x.id).should.deep.equal([6, 7, 8, 9, 10]);
       // test bidirectionality
-      const res3 = await chai.getJSON("/method/6").send({});
+      const res3 = await chai.getJSON("/case/8").send({});
       const method3 = res3.body.data;
-      method3.related_cases.map(x => x.id).should.include(method1.id);
+      method3.related_methods.map(x => x.id).should.include(method1.id);
     });
   });
 });

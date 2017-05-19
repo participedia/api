@@ -160,7 +160,9 @@ describe("Organizations", () => {
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       const organization1 = res1.body.object;
-      organization1.lead_image.url.should.equal("CitizensAssembly_2.jpg");
+      organization1.lead_image.url.should.equal(
+        "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg"
+      );
       const res2 = await chai
         .putJSON("/organization/" + organization1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
@@ -192,10 +194,10 @@ describe("Organizations", () => {
       organization1.related_cases.should.have.lengthOf(4);
       organization1.related_cases
         .map(x => x.id)
-        .should.deep.equal([1, 2, 3, 4]);
+        .should.deep.equal([9, 10, 11, 12]);
       const related_cases = organization1.related_cases.slice();
       related_cases.shift(); // remove first one
-      related_cases.push({ id: 5 }, { id: 6 });
+      related_cases.push({ id: 13 }, { id: 14 });
       const res2 = await chai
         .putJSON("/organization/" + organization1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
@@ -203,11 +205,11 @@ describe("Organizations", () => {
       const organization2 = res2.body.data;
       organization2.related_cases
         .map(x => x.id)
-        .should.deep.equal([2, 3, 4, 5, 6]);
+        .should.deep.equal([10, 11, 12, 13, 14]);
       // test bidirectionality
-      const res3 = await chai.getJSON("/organization/6").send({});
+      const res3 = await chai.getJSON("/case/13").send({});
       const organization3 = res3.body.data;
-      organization3.related_cases
+      organization3.related_organizations
         .map(x => x.id)
         .should.include(organization1.id);
     });
