@@ -14,8 +14,8 @@ async function addBasicOrganization() {
     .set("Authorization", "Bearer " + tokens.user_token)
     .send({
       // mandatory
-      title: "Unplanned Statehood",
-      body: "We're there for your tomorrow, today",
+      title: "First Title",
+      body: "First Body",
       // optional
       lead_image: "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg",
       vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
