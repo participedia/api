@@ -1,11 +1,18 @@
 "use strict";
-let express = require("express");
-let router = express.Router(); // eslint-disable-line new-cap
-let log = require("winston");
-let jwt = require("express-jwt");
+const express = require("express");
+const router = express.Router(); // eslint-disable-line new-cap
+const log = require("winston");
+const jwt = require("express-jwt");
 
-let { db, sql, as, helpers } = require("../helpers/db");
-let { getXByIdFns } = require("../helpers/things");
+const { db, sql, as, helpers } = require("../helpers/db");
+const {
+  getEditXById,
+  addRelatedList,
+  getByType_id
+} = require("../helpers/things");
+
+const returnMethodById = getByType_id["method"].returnById;
+const getMethodById_lang_userId = getByType_id["method"].getById_lang_userId;
 
 const empty_method = {
   title: "",
@@ -37,12 +44,6 @@ const empty_method = {
   tags: "{}",
   featured: false
 };
-
-const {
-  getMethodById_lang_userId,
-  getMethodByRequest,
-  returnMethodById
-} = getXByIdFns("method");
 
 /**
  * @api {post} /method/new Create new method

@@ -1,12 +1,21 @@
 "use strict";
 
-let express = require("express");
-let router = express.Router(); // eslint-disable-line new-cap
-let log = require("winston");
-let jwt = require("express-jwt");
+const express = require("express");
+const router = express.Router(); // eslint-disable-line new-cap
+const log = require("winston");
+const jwt = require("express-jwt");
 
-let { db, sql, as, helpers } = require("../helpers/db");
-const { getXByIdFns } = require("../helpers/things");
+const { db, sql, as, helpers } = require("../helpers/db");
+const {
+  getEditXById,
+  addRelatedList,
+  getByType_id
+} = require("../helpers/things");
+
+const returnOrganizationById = getByType_id["organization"].returnById;
+const getOrganizationById_lang_userId = getByType_id[
+  "organization"
+].getById_lang_userId;
 
 const empty_organization = {
   title: "",
@@ -27,12 +36,6 @@ const empty_organization = {
   tags: "{}",
   featured: false
 };
-
-const {
-  getOrganizationById_lang_userId,
-  getOrganizationByRequest,
-  returnOrganizationById
-} = getXByIdFns("organization");
 
 /**
  * @api {post} /organization/new Create new organization

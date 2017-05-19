@@ -1,26 +1,25 @@
 "use strict";
-let express = require("express");
-let router = express.Router(); // eslint-disable-line new-cap
-let cache = require("apicache");
-let log = require("winston");
-let jwt = require("express-jwt");
-let equals = require("deep-equal");
-let moment = require("moment");
+const express = require("express");
+const router = express.Router(); // eslint-disable-line new-cap
+const cache = require("apicache");
+const log = require("winston");
+const jwt = require("express-jwt");
 
-let {
+const {
   db,
   sql,
   as,
   helpers
 } = require("../helpers/db");
 
-let {
-  getXByIdFns,
-  diffRelatedList,
-  difference,
+const {
+  getEditXById,
   addRelatedList,
-  removeRelatedList
+  getByType_id
 } = require("../helpers/things");
+
+const returnCaseById = getByType_id["case"].returnById;
+const getCaseById_lang_userId = getByType_id["case"].getById_lang_userId;
 
 const empty_case = {
   title: "",
@@ -60,12 +59,6 @@ const empty_case = {
   featured: false,
   bookmarked: false
 };
-
-const {
-  getCaseById_lang_userId,
-  getCaseByRequest,
-  returnCaseById
-} = getXByIdFns("case");
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -312,191 +305,7 @@ router.post("/new", async function postNewCase(req, res) {
  *
  */
 
-router.put("/:caseId", async function editCaseById(req, res) {
-  cache.clear();
-  const type = "case";
-  const thingId = as.number(req.params[type + "Id"]);
-  try {
-    // FIXME: Figure out how to get all of this done as one transaction
-    const lang = as.value(req.params.language || "en");
-    const userId = req.user.user_id;
-    const oldThing = await getCaseById_lang_userId(thingId, lang, userId);
-    const newThing = req.body;
-    let updatedText = {
-      body: oldThing.body,
-      title: oldThing.title,
-      language: lang,
-      type: type,
-      id: thingId
-    };
-    let updatedThingFields = [];
-    let isTextUpdated = false;
-    let anyChanges = false;
-    let retThing = null;
-
-    /* DO ALL THE DIFFS */
-    Object.keys(oldThing).forEach(async key => {
-      if (
-        // All the ways to check if a value has not changed
-        newThing[key] === undefined ||
-        equals(oldThing[key], newThing[key]) ||
-        (/_date/.test(key) &&
-          moment(oldThing[key]).format() === moment(newThing[key]).format()) ||
-        (/related_/.test(key) &&
-          equals(
-            oldThing[key].map(x => x.id),
-            newThing[key].map(x => x.id || x.value)
-          ))
-      ) {
-        // skip, do nothing, no change for this key
-        if (key === "communication_mode") {
-          console.log(
-            "skipping %s: %s = %s",
-            key,
-            oldThing[key],
-            newThing[key]
-          );
-        } else {
-          console.log("skipping %s", key);
-        }
-      } else if (!equals(oldThing[key], newThing[key])) {
-        anyChanges = true;
-        // If the body or title have changed: add a record in case__localized_texts
-        if (key === "body" || key === "title") {
-          updatedText[key] = newThing[key];
-          isTextUpdated = true;
-          // If related_cases, related_methods, or related_organizations have changed
-          // update records in related_nouns
-        } else if (
-          [
-            "related_cases",
-            "related_methods",
-            "related_organizations"
-          ].includes(key)
-        ) {
-          // DELETE / INSERT any needed rows for related_nouns
-          const oldList = oldThing[key];
-          const newList = newThing[key];
-          newList.forEach(x => x.id = x.id || x.value); // handle client returning value vs. id
-          const diff = diffRelatedList(oldList, newList);
-          const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
-          const add = addRelatedList(
-            type,
-            thingId,
-            relType,
-            diff.add.map(x => x.id)
-          );
-          const remove = removeRelatedList(
-            type,
-            thingId,
-            relType,
-            diff.remove.map(x => x.id)
-          );
-          if (add || remove) {
-            await db.none(add + remove);
-          }
-          anyChanges = true;
-          // If any of the fields of thing itself have changed, update record in appropriate table
-        } else if (["id", "post_date", "updated_date"].includes(key)) {
-          console.warn(
-            "Trying to update a field users shouldn't update: %s",
-            key
-          );
-          // take no action
-        } else if (key === "featured" && !user.groups.includes("Curators")) {
-          console.warn("Non-curator trying to update Featured flag");
-          // take no action
-        } else if (key === "location") {
-          updatedThingFields.push({
-            key: as.name(key),
-            value: as.location(newThing[key])
-          });
-        } else if (key === "lead_image") {
-          var img = newThing[key];
-          updatedThingFields.push({
-            key: as.name(key),
-            value: as.attachment(img.url, img.title, img.size)
-          });
-        } else if (["other_images", "files"].includes(key)) {
-          updatedThingFields.push({
-            key: as.name(key),
-            value: as.attachments(newThing[key])
-          });
-        } else {
-          console.log(
-            "Unspecified change found in %s: %s != %s",
-            key,
-            oldThing[key],
-            newThing[key]
-          );
-          let value = oldThing[key];
-          let asValue = as.text;
-          if (typeof value === "boolean") {
-            asValue = as.value;
-          } else if (value === null) {
-            value = "null";
-            asValue = as.value;
-          } else if (typeof value === "number") {
-            asValue = as.number;
-          }
-          updatedThingFields.push({
-            key: as.name(key),
-            value: asValue(value)
-          });
-        }
-      }
-    }); // end of for loop over object keys
-    if (anyChanges) {
-      // Actually make the changes
-      if (isTextUpdated) {
-        // INSERT new text row
-        await db.none(sql("../sql/insert_localized_text.sql"), updatedText);
-      }
-      // Update last_updated
-      updatedThingFields.push({ key: "updated_date", value: as.text("now") });
-      // UPDATE the case row
-      // console.log(
-      //   "QUERY >>>%s<<<",
-      //   as.format(sql("../sql/update_noun.sql"), {
-      //     keyvalues: updatedThingFields
-      //       .map(field => field.key + " = " + field.value)
-      //       .join(", "),
-      //     type: type,
-      //     id: thingId
-      //   })
-      // );
-      await db.none(sql("../sql/update_noun.sql"), {
-        keyvalues: updatedThingFields
-          .map(field => field.key + " = " + field.value)
-          .join(", "),
-        type: type,
-        id: thingId
-      });
-      // INSERT row for case__authors
-      await db.none(sql("../sql/insert_author.sql"), {
-        user_id: userId,
-        type: type,
-        id: thingId
-      });
-      // update materialized view for search
-      retThing = await getCaseById_lang_userId(
-        as.number(thingId),
-        lang,
-        userId
-      );
-    } else {
-      // end if anyChanges
-      retThing = oldThing;
-    } // end if not anyChanges
-    res.status(200).json({ OK: true, data: retThing });
-  } catch (error) {
-    log.error("Exception in PUT /case/%s => %s", thingId, error);
-    res.status(500).json({
-      OK: false,
-      error: error
-    });
-  } // end catch
-});
+router.put("/:caseId", getEditXById("case"));
 
 /**
  * @api {get} /case/:caseId Get the last version of a case
