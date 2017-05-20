@@ -9,7 +9,7 @@ FROM
     case__localized_texts
 WHERE
     case__localized_texts.language = ${language} AND
-    case__localized_texts.case_id = id    
+    case__localized_texts.case_id = id
 LIMIT ${limit}
 OFFSET ${offset}
 ;

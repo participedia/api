@@ -1,12 +1,25 @@
 "use strict";
-let express = require("express");
-let router = express.Router(); // eslint-disable-line new-cap
-let cache = require("apicache");
-let log = require("winston");
-let jwt = require("express-jwt");
+const express = require("express");
+const router = express.Router(); // eslint-disable-line new-cap
+const cache = require("apicache");
+const log = require("winston");
+const jwt = require("express-jwt");
 
-let { getUserIfExists } = require("../helpers/user");
-let { db, sql, as } = require("../helpers/db");
+const {
+  db,
+  sql,
+  as,
+  helpers
+} = require("../helpers/db");
+
+const {
+  getEditXById,
+  addRelatedList,
+  getByType_id
+} = require("../helpers/things");
+
+const returnCaseById = getByType_id["case"].returnById;
+const getCaseById_lang_userId = getByType_id["case"].getById_lang_userId;
 
 const empty_case = {
   title: "",
@@ -200,6 +213,7 @@ router.post("/new", async function postNewCase(req, res) {
   try {
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
+    let language = req.params.language || "en";
     if (!(title && body)) {
       return res.status(400).json({
         message: "Cannot create Case, both title and body are required"
@@ -209,11 +223,6 @@ router.post("/new", async function postNewCase(req, res) {
     const location = as.location(req.body.location);
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const related_cases = as.related_list(req.body.related_cases);
-    const related_methods = as.related_list(req.body.related_methods);
-    const related_organizations = as.related_list(
-      req.body.related_organizations
-    );
     const case_id = await db.one(
       sql("../sql/create_case.sql"),
       Object.assign({}, empty_case, {
@@ -222,13 +231,50 @@ router.post("/new", async function postNewCase(req, res) {
         location,
         lead_image,
         videos,
-        related_cases,
-        related_methods,
-        related_organizations,
         user_id
       })
     );
-    return res.status(201).json({ OK: true, data: case_id });
+    // save related objects (needs case_id)
+    const relCases = addRelatedList(
+      "case",
+      case_id.case_id,
+      "case",
+      req.body.related_cases
+    );
+    if (relCases) {
+      await db.none(relCases);
+    }
+    const relMethods = addRelatedList(
+      "case",
+      case_id.case_id,
+      "method",
+      req.body.related_methods
+    );
+    if (relMethods) {
+      await db.none(relMethods);
+    }
+    const relOrgs = addRelatedList(
+      "case",
+      case_id.case_id,
+      "organization",
+      req.body.related_organizations
+    );
+    if (relOrgs) {
+      await db.none(relOrgs);
+    }
+
+    const newCase = await getCaseById_lang_userId(
+      case_id.case_id,
+      language,
+      user_id
+    );
+    // Refresh search index
+    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    return res.status(201).json({
+      OK: true,
+      data: case_id,
+      object: newCase
+    });
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
@@ -261,18 +307,13 @@ router.post("/new", async function postNewCase(req, res) {
  *
  */
 
-router.put("/:caseId", function editCaseById(req, res) {
-  cache.clear();
-  // let caseId = req.swagger.params.caseId.value;
-  // let caseBody = req.body;
-  res.status(200).json(req.body);
-});
+router.put("/:caseId", getEditXById("case"));
 
 /**
  * @api {get} /case/:caseId Get the last version of a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
- * @apiName getCaseById
+ * @apiName returnCaseById
  * @apiParam {Number} caseId Case ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
@@ -294,35 +335,6 @@ router.put("/:caseId", function editCaseById(req, res) {
  *
  */
 
-async function getCaseById(req, res) {
-  try {
-    const caseId = as.number(req.params.caseId);
-    const lang = as.value(req.params.language || "en");
-    const the_case = await db.one(sql("../sql/case_by_id.sql"), {
-      caseId,
-      lang
-    });
-    const userId = await getUserIfExists(req);
-    if (userId) {
-      const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-        type: "case",
-        thingId: caseId,
-        userId: userId
-      });
-      the_case.bookmarked = bookmarked.case;
-    } else {
-      the_case.bookmarked = false;
-    }
-    res.status(200).json({ OK: true, data: the_case });
-  } catch (error) {
-    log.error("Exception in GET /case/%s => %s", req.params.caseId, error);
-    res.status(500).json({
-      OK: false,
-      error: error
-    });
-  }
-}
-
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.
 router.get(
@@ -332,7 +344,7 @@ router.get(
     credentialsRequired: false,
     algorithms: ["HS256"]
   }),
-  getCaseById
+  returnCaseById
 );
 
 /**

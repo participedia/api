@@ -1,10 +1,18 @@
 "use strict";
-let express = require("express");
-let router = express.Router(); // eslint-disable-line new-cap
-let log = require("winston");
+const express = require("express");
+const router = express.Router(); // eslint-disable-line new-cap
+const log = require("winston");
+const jwt = require("express-jwt");
 
-let { getUserIfExists } = require("../helpers/user");
-let { db, sql, as } = require("../helpers/db");
+const { db, sql, as, helpers } = require("../helpers/db");
+const {
+  getEditXById,
+  addRelatedList,
+  getByType_id
+} = require("../helpers/things");
+
+const returnMethodById = getByType_id["method"].returnById;
+const getMethodById_lang_userId = getByType_id["method"].getById_lang_userId;
 
 const empty_method = {
   title: "",
@@ -73,6 +81,7 @@ router.post("/new", async function(req, res) {
   try {
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
+    let language = req.params.language || "en";
     if (!(title && body)) {
       return res.status(400).json({
         message: "Cannot create Method, both title and body are required"
@@ -81,11 +90,6 @@ router.post("/new", async function(req, res) {
     const user_id = req.user.user_id;
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const related_cases = as.related_list(req.body.related_cases);
-    const related_methods = as.related_list(req.body.related_methods);
-    const related_organizations = as.related_list(
-      req.body.related_organizations
-    );
     const method_id = await db.one(
       sql("../sql/create_method.sql"),
       Object.assign({}, empty_method, {
@@ -93,13 +97,47 @@ router.post("/new", async function(req, res) {
         body,
         lead_image,
         videos,
-        related_cases,
-        related_methods,
-        related_organizations,
         user_id
       })
     );
-    return res.status(201).json({ OK: true, data: method_id });
+    // save related objects (needs case_id)
+    const relCases = addRelatedList(
+      "method",
+      method_id.method_id,
+      "case",
+      req.body.related_cases
+    );
+    if (relCases) {
+      await db.none(relCases);
+    }
+    const relMethods = addRelatedList(
+      "method",
+      method_id.method_id,
+      "method",
+      req.body.related_methods
+    );
+    if (relMethods) {
+      await db.none(relMethods);
+    }
+    const relOrgs = addRelatedList(
+      "method",
+      method_id.method_id,
+      "organization",
+      req.body.related_organizations
+    );
+    if (relOrgs) {
+      await db.none(relOrgs);
+    }
+    const newMethod = await getMethodById_lang_userId(
+      method_id.method_id,
+      language,
+      user_id
+    );
+    // Refresh search index
+    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    return res
+      .status(201)
+      .json({ OK: true, data: method_id, object: newMethod });
   } catch (error) {
     log.error("Exception in POST /method/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
@@ -132,11 +170,7 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:id", function editMethodById(req, res) {
-  // let methodId = req.swagger.params.id.value;
-  // let methodBody = req.body;
-  res.status(200).json(req.body);
-});
+router.put("/:methodId", getEditXById("method"));
 
 /**
  * @api {get} /method/:id Get the last version of a method
@@ -162,30 +196,15 @@ router.put("/:id", function editMethodById(req, res) {
  *
  */
 
-router.get("/:methodId", async function getmethodById(req, res) {
-  try {
-    const methodId = as.number(req.params.methodId);
-    const method = await db.one(sql("../sql/method_by_id.sql"), {
-      methodId: methodId,
-      lang: req.params.language || "en"
-    });
-    const userId = await getUserIfExists(req);
-    if (userId) {
-      const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-        type: "method",
-        thingId: methodId,
-        userId: userId
-      });
-      method.bookmarked = bookmarked.method;
-    } else {
-      method.bookmarked = false;
-    }
-    res.status(200).json({ OK: true, data: method });
-  } catch (error) {
-    log.error("Exception in GET /method/%s => %s", req.params.methodId, error);
-    res.status(500).json({ OK: false, error: error });
-  }
-});
+router.get(
+  "/:methodId",
+  jwt({
+    secret: process.env.AUTH0_CLIENT_SECRET,
+    credentialsRequired: false,
+    algorithms: ["HS256"]
+  }),
+  returnMethodById
+);
 
 /**
  * @api {delete} /method/:id Delete a method

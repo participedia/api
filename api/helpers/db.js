@@ -1,14 +1,16 @@
 let promise = require("bluebird");
-let { isString } = require("lodash");
+let { isArray } = require("lodash");
 let options = {
   // Initialization Options
-  promiseLib: promise
+  promiseLib: promise, // use bluebird as promise library
+  capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
 };
 if (process.env.LOG_QUERY === "true") {
   options.query = evt => console.info("Executing query %s", evt.query);
 }
 let pgp = require("pg-promise")(options);
 const path = require("path");
+let log = require("winston");
 let connectionString = process.env.DATABASE_URL;
 let parse = require("pg-connection-string").parse;
 let config;
@@ -58,6 +60,25 @@ function attachment(url, title, size) {
 
 // as.attachments
 function attachments(url, title, size) {
+  if (isArray(url)) {
+    let atts = url;
+    return "ARRAY[" +
+      atts
+        .map(
+          vid =>
+            "(" +
+              as.text(att.url) +
+              ", " +
+              as.text(att.title ? att.title : "") +
+              ", " +
+              att.size ===
+              undefined
+              ? "null"
+              : as.number(att.size) + ")"
+        )
+        .join(", ") +
+      "]::attachment[]";
+  }
   url = as.text(url ? url : "{}");
   title = as.text(title ? title : "");
   size = size === undefined ? "null" : as.number(size);
@@ -69,6 +90,21 @@ function attachments(url, title, size) {
 
 // as.videos
 function videos(url, title) {
+  if (isArray(url)) {
+    let vids = url;
+    return "ARRAY[" +
+      vids
+        .map(
+          vid =>
+            "(" +
+            as.text(vid.url) +
+            ", " +
+            as.text(vid.title ? vid.title : "") +
+            ")"
+        )
+        .join(", ") +
+      "]::video[]";
+  }
   if (!url) {
     return "'{}'";
   }
@@ -102,45 +138,20 @@ function location(location) {
   return `(${name}, '', '', ${city}, ${province}, ${country}, '', ${lat}, ${long})::geolocation`;
 }
 
-function related_list(owner, related, id_list) {
-  // TODO: escape id_list to avoid injection attacks
-  // owner == case for case__related_methods
-  // related == method for case__related_methods
-  // id_list is either a single identifier or an array of identifiers
-  if (!id_list || !id_list.length) {
-    return "";
-  }
-  if (isString(id_list)) {
-    id_list = [id_list];
-  }
-  owner = as.number(owner);
-  // case and related come from our code, we'll trust those
-  let values = id_list
-    .map(id => {
-      id = as.number(id);
-      `(${id})`;
-    })
-    .join(", ");
-  return `
-  INSERT INTO
-    ${owner}__related_${related}s
-  SELECT
-    ${owner}_id, related_${related}_id
-  FROM
-    (select ${owner}_id FROM insert_${owner}),
-    (VALUES ${values}) as t (related_${related}_id)
-  ON CONFLICT
-    (${owner}_id, related_${related}_id) DO NOTHING;`;
-}
-
-var as = Object.assign({}, pgp.as, {
+const as = Object.assign({}, pgp.as, {
   author,
   attachment,
   attachments,
   location,
   videos,
-  related_list,
   number
 });
 
-module.exports = { db, sql, as };
+const helpers = pgp.helpers;
+
+module.exports = {
+  db,
+  sql,
+  as,
+  helpers
+};
