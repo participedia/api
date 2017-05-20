@@ -25,6 +25,30 @@ async function addBasicMethod() {
     });
 }
 
+async function setupRelatedObjectsSingle() {
+  // setup relations with exactly one item
+  await chai
+    .putJSON("/method/162")
+    .set("Authorization", "Bearer " + tokens.user_token)
+    .send({
+      related_cases: [{ id: 65 }],
+      related_methods: [{ id: 165 }],
+      related_organizations: [{ id: 265 }]
+    });
+}
+
+async function setupRelatedObjectsMultiple() {
+  // setup relations with multiple items
+  await chai
+    .putJSON("/method/161")
+    .set("Authorization", "Bearer " + tokens.user_token)
+    .send({
+      related_cases: [{ id: 47 }, { id: 52 }],
+      related_methods: [{ id: 147 }, { id: 152 }],
+      related_organizations: [{ id: 247 }, { id: 252 }]
+    });
+}
+
 describe("Methods", () => {
   describe("Lookup", () => {
     it("finds method 190", async () => {
@@ -81,6 +105,7 @@ describe("Methods", () => {
       res.body.data.related_organizations.should.have.lengthOf(0);
     });
     it("test related objects with single item", async () => {
+      await setupRelatedObjectsSingle();
       const res = await chai.getJSON("/method/162").send({});
       res.should.have.status(200);
       res.body.data.related_cases.should.have.lengthOf(1);
@@ -91,6 +116,7 @@ describe("Methods", () => {
       res.body.data.related_organizations[0].id.should.equal(265);
     });
     it("test related objects with multiple items", async () => {
+      await setupRelatedObjectsMultiple();
       const res = await chai.getJSON("/method/161").send({});
       res.should.have.status(200);
       res.body.data.related_cases.should.have.lengthOf(2);

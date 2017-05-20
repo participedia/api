@@ -81,6 +81,30 @@ async function addBasicCase() {
     });
 }
 
+async function setupRelatedObjectsSingle() {
+  // setup relations with exactly one item
+  await chai
+    .putJSON("/case/38")
+    .set("Authorization", "Bearer " + tokens.user_token)
+    .send({
+      related_cases: [{ id: 70 }],
+      related_methods: [{ id: 170 }],
+      related_organizations: [{ id: 270 }]
+    });
+}
+
+async function setupRelatedObjectsMultiple() {
+  // setup relations with multiple items
+  await chai
+    .putJSON("/case/37")
+    .set("Authorization", "Bearer " + tokens.user_token)
+    .send({
+      related_cases: [{ id: 45 }, { id: 63 }],
+      related_methods: [{ id: 145 }, { id: 163 }],
+      related_organizations: [{ id: 245 }, { id: 263 }]
+    });
+}
+
 describe("Cases", () => {
   describe("Lookup", () => {
     it("finds case 100", async () => {
@@ -129,6 +153,7 @@ describe("Cases", () => {
       res.body.data.related_organizations.should.have.lengthOf(0);
     });
     it("test related objects with single item", async () => {
+      await setupRelatedObjectsSingle();
       const res = await chai.getJSON("/case/38").send({});
       res.should.have.status(200);
       res.body.data.related_cases.should.have.lengthOf(1);
@@ -139,6 +164,7 @@ describe("Cases", () => {
       res.body.data.related_organizations[0].id.should.equal(270);
     });
     it("test related objects with multiple items", async () => {
+      await setupRelatedObjectsMultiple();
       const res = await chai.getJSON("/case/37").send({});
       res.should.have.status(200);
       res.body.data.related_cases.should.have.lengthOf(2);
