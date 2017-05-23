@@ -5,7 +5,7 @@ const equals = require("deep-equal");
 const moment = require("moment");
 
 const { as, db, sql } = require("./db");
-const { getUserIfExists } = require("../helpers/user");
+const { preferUser } = require("../helpers/user");
 
 function addRelatedList(owner_type, owner_id, related_type, id_list) {
   // TODO: escape id_list to avoid injection attacks
@@ -71,23 +71,26 @@ function diffRelatedList(first, second) {
 
 function getXByIdFns(type) {
   const getById_lang_userId = async function(thingId, lang, userId) {
-    const theThing = await db.one(sql(`../sql/${type}_by_id.sql`), {
+    const thing = await db.one(sql(`../sql/${type}_by_id.sql`), {
       thingId,
-      lang
-    });
-    const bookmarked = await db.one(sql("../sql/bookmarked.sql"), {
-      type,
-      thingId,
+      lang,
       userId
     });
-    theThing.bookmarked = bookmarked[type];
-    return theThing;
+    console.log(
+      "Returning thing with user: %s type: %s, id: %s, bookmarked: %s",
+      userId,
+      thing.type,
+      thing.id,
+      thing.bookmarked
+    );
+    return thing;
   };
 
   const getByRequest = async function(req) {
+    await preferUser(req);
     const thingId = as.number(req.params[`${type}Id`]);
     const lang = as.value(req.params.language || "en");
-    const userId = await getUserIfExists(req);
+    const userId = req.user ? req.user.user_id : null;
     return await getById_lang_userId(thingId, lang, userId);
   };
 
@@ -202,13 +205,13 @@ function getEditXById(type) {
             anyChanges = true;
             // If any of the fields of thing itself have changed, update record in appropriate table
           } else if (["id", "post_date", "updated_date"].includes(key)) {
-            console.warn(
+            log.warn(
               "Trying to update a field users shouldn't update: %s",
               key
             );
             // take no action
           } else if (key === "featured" && !user.groups.includes("Curators")) {
-            console.warn("Non-curator trying to update Featured flag");
+            log.warn("Non-curator trying to update Featured flag");
             // take no action
           } else if (key === "location") {
             updatedThingFields.push({

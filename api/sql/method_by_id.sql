@@ -28,7 +28,8 @@ SELECT
     to_json(author_list.authors) AS authors,
     to_json(get_related_nouns('case', 'method', ${thingId}, ${lang} )) related_cases,
     to_json(get_related_nouns('method', 'method', ${thingId}, ${lang} )) related_methods,
-    to_json(get_related_nouns('organization', 'method', ${thingId}, ${lang} )) related_organizations
+    to_json(get_related_nouns('organization', 'method', ${thingId}, ${lang} )) related_organizations,
+    bookmarked('case', ${thingId}, ${userId})
 FROM
     methods,
     method__localized_texts,
