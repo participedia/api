@@ -8,23 +8,18 @@ const preferUser = async req => {
     const name = req.header("X-Auth0-Name");
     const auth0UserId = req.header("X-Auth0-UserId");
     if (!user) {
-      log.warn("No user in request object");
       return;
     }
     if (user.user_id) {
       // all is well, carry on, but make sure user_id is a number
       user.user_id = as.number(user.user_id);
       return;
-    } else {
-      log.warn("No user id in user object");
     }
     const userObj = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
       userEmail: user.email
     });
     if (userObj) {
       user.user_id = userObj.id;
-    } else {
-      log.warn("No userObj in database for email %s", user.email);
     }
   } catch (error) {
     log.error("Problem with optional user", error);

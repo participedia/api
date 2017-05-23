@@ -2,8 +2,10 @@ let tokens = require("./setupenv"); // setupenv has to be imported before app
 let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
+let chaiHelpers = require("./helpers");
 let should = chai.should();
 chai.use(chaiHttp);
+chai.use(chaiHelpers);
 
 describe("Search", () => {
   describe("get first 20 cases", () => {
@@ -120,6 +122,14 @@ describe("Search", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.results.should.have.lengthOf(20);
+          const item = res.body.results[0];
+          item.title.should.be.a("string");
+          item.body.should.be.a("string");
+          item.id.should.be.a("number");
+          item.type.should.be.a("string");
+          item.updated_date.should.be.a("string");
+          item.bookmarked.should.be.a("boolean");
+          item.should.have.property("lead_image");
           done();
         });
     });

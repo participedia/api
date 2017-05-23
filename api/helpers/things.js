@@ -76,13 +76,6 @@ function getXByIdFns(type) {
       lang,
       userId
     });
-    console.log(
-      "Returning thing with user: %s type: %s, id: %s, bookmarked: %s",
-      userId,
-      thing.type,
-      thing.id,
-      thing.bookmarked
-    );
     return thing;
   };
 
