@@ -1,6 +1,4 @@
 -- Turn bookmarked into a function
-
--- One method to pick the right specific function defined above
 CREATE OR REPLACE FUNCTION bookmarked(type TEXT, thingId INTEGER, userId INTEGER)
 RETURNS BOOLEAN AS
 $$
