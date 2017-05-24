@@ -314,4 +314,36 @@ describe("Cases", () => {
       case3.related_cases.map(x => x.id).should.include(case1.id);
     });
   });
+  describe("Test bookmarked", () => {
+    let case1 = null;
+    it("Add case, should not be bookmarked", async () => {
+      const res1 = await addBasicCase();
+      res1.should.have.status(201);
+      res1.body.OK.should.be.true;
+      case1 = res1.body.object;
+      case1.bookmarked.should.be.false;
+      const booked = await chai
+        .postJSON("/bookmark/add")
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ bookmarkType: "case", thingID: case1.id });
+      booked.should.have.status(200);
+    });
+    it("Not authenticated, bookmarked should be false", async () => {
+      const res2 = await chai.getJSON("/case/" + case1.id).send({});
+      res2.should.have.status(200);
+      res2.body.OK.should.be.true;
+      const case2 = res2.body.data;
+      case2.bookmarked.should.be.false;
+    });
+    it("Bookmarked should be true", async () => {
+      const res3 = await chai
+        .getJSON("/case/" + case1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({});
+      res3.should.have.status(200);
+      res3.body.OK.should.be.true;
+      const case3 = res3.body.data;
+      case3.bookmarked.should.be.true;
+    });
+  });
 });

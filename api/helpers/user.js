@@ -2,19 +2,28 @@ let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
 let unless = require("express-unless");
 
-const getUserIfExists = async req => {
-  let user = req.user;
-  if (user) {
-    user = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
+const preferUser = async req => {
+  try {
+    const user = req.user;
+    const name = req.header("X-Auth0-Name");
+    const auth0UserId = req.header("X-Auth0-UserId");
+    if (!user) {
+      return;
+    }
+    if (user.user_id) {
+      // all is well, carry on, but make sure user_id is a number
+      user.user_id = as.number(user.user_id);
+      return;
+    }
+    const userObj = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
       userEmail: user.email
     });
-    if (user) {
-      return user.id;
-    } else {
-      return 0;
+    if (userObj) {
+      user.user_id = userObj.id;
     }
-  } else {
-    null;
+  } catch (error) {
+    log.error("Problem with optional user", error);
+    req.user = null;
   }
 };
 
@@ -92,4 +101,4 @@ function okToEdit(user) {
 
 ensureUser.unless = unless;
 
-module.exports = (exports = { ensureUser, okToEdit, getUserIfExists });
+module.exports = (exports = { ensureUser, okToEdit, preferUser });

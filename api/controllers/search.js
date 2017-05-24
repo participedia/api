@@ -3,6 +3,7 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
+const { preferUser } = require("../helpers/user");
 
 const RESPONSE_LIMIT = 20;
 
@@ -187,7 +188,7 @@ router.get("/", function(req, res) {
       req
     );
     if (query) {
-      full_text_search(res, query, lang, page);
+      full_text_search(req, res, query, lang, page);
     } else {
       // no query
       if (["case", "method", "organization"].includes(category)) {
@@ -228,13 +229,17 @@ router.get("/", function(req, res) {
  *
  */
 
-async function full_text_search(res, query, language, page) {
+async function full_text_search(req, res, query, language, page) {
   try {
+    await preferUser(req);
+    const userId = req.user ? req.user.user_id : null;
     const objList = await db.any(sql("../sql/search.sql"), {
       query: query,
       language: language,
       limit: RESPONSE_LIMIT,
-      offset: (page - 1) * RESPONSE_LIMIT
+      offset: (page - 1) * RESPONSE_LIMIT,
+      userId,
+      userId
     });
     res.status(200).json({ OK: true, results: objList });
   } catch (error) {
