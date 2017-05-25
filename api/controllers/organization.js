@@ -3,9 +3,9 @@
 const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
 const log = require("winston");
-const jwt = require("express-jwt");
+const { checkJwtOptional } = require("../helpers/checkJwt");
 
-const { db, sql, as, helpers } = require("../helpers/db");
+const { db, sql, as } = require("../helpers/db");
 const {
   getEditXById,
   addRelatedList,
@@ -13,9 +13,8 @@ const {
 } = require("../helpers/things");
 
 const returnOrganizationById = getByType_id["organization"].returnById;
-const getOrganizationById_lang_userId = getByType_id[
-  "organization"
-].getById_lang_userId;
+const getOrganizationById_lang_userId =
+  getByType_id["organization"].getById_lang_userId;
 
 const empty_organization = {
   title: "",
@@ -197,15 +196,7 @@ router.put("/:organizationId", getEditXById("organization"));
  *
  */
 
-router.get(
-  "/:organizationId",
-  jwt({
-    secret: process.env.AUTH0_CLIENT_SECRET,
-    credentialsRequired: false,
-    algorithms: ["HS256"]
-  }),
-  returnOrganizationById
-);
+router.get("/:organizationId", checkJwtOptional, returnOrganizationById);
 
 /**
  * @api {delete} /organization/:id Delete an organization
