@@ -68,7 +68,8 @@ describe("Search", () => {
           res.body.OK.should.equal(true);
           res.body.results.should.have.lengthOf(17);
           res.body.results.forEach(obj =>
-            obj.type.should.equal("organization"));
+            obj.type.should.equal("organization")
+          );
           done();
         });
     });

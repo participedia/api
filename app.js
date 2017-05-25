@@ -33,7 +33,10 @@ let bodyParser = require("body-parser");
 let methodOverride = require("method-override");
 let cors = require("cors");
 let isUser = require("./api/middleware/isUser");
-let jwt = require("express-jwt");
+const {
+  checkJwtRequired,
+  checkJwtOptional
+} = require("./api/helpers/checkJwt");
 let { ensureUser } = require("./api/helpers/user");
 
 app.set("port", port);
@@ -41,12 +44,7 @@ app.use(morgan("dev"));
 app.use(methodOverride());
 app.use(cors());
 app.use(bodyParser.json());
-const JWT = jwt({
-  secret: process.env.AUTH0_CLIENT_SECRET,
-  credentialsRequired: false,
-  algorithms: ["HS256"]
-});
-app.use(JWT.unless({ method: ["OPTIONS", "GET"] }));
+app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
@@ -59,16 +57,10 @@ app.use("/search", cache("5 minutes"), search);
 app.use("/case", case_);
 app.use("/organization", organization);
 app.use("/method", method);
-app.use("/user", [JWT, user]);
+app.use("/user", [checkJwtOptional, user]);
 app.use("/bookmark", bookmark);
 
-app.use(
-  "/s3/:path",
-  jwt({
-    secret: process.env.AUTH0_CLIENT_SECRET
-  }),
-  isUser
-);
+app.use("/s3/:path", checkJwtRequired, isUser);
 app.use(
   "/s3",
   require("react-dropzone-s3-uploader/s3router")({

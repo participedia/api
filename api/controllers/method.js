@@ -2,9 +2,9 @@
 const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
 const log = require("winston");
-const jwt = require("express-jwt");
+const { checkJwtOptional } = require("../helpers/checkJwt");
 
-const { db, sql, as, helpers } = require("../helpers/db");
+const { db, sql, as } = require("../helpers/db");
 const {
   getEditXById,
   addRelatedList,
@@ -196,15 +196,7 @@ router.put("/:methodId", getEditXById("method"));
  *
  */
 
-router.get(
-  "/:methodId",
-  jwt({
-    secret: process.env.AUTH0_CLIENT_SECRET,
-    credentialsRequired: false,
-    algorithms: ["HS256"]
-  }),
-  returnMethodById
-);
+router.get("/:methodId", checkJwtOptional, returnMethodById);
 
 /**
  * @api {delete} /method/:id Delete a method

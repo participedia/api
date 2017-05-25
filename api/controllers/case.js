@@ -3,14 +3,9 @@ const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
-const jwt = require("express-jwt");
+const { checkJwtOptional } = require("../helpers/checkJwt");
 
-const {
-  db,
-  sql,
-  as,
-  helpers
-} = require("../helpers/db");
+const { db, sql, as } = require("../helpers/db");
 
 const {
   getEditXById,
@@ -337,15 +332,7 @@ router.put("/:caseId", getEditXById("case"));
 
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.
-router.get(
-  "/:caseId",
-  jwt({
-    secret: process.env.AUTH0_CLIENT_SECRET,
-    credentialsRequired: false,
-    algorithms: ["HS256"]
-  }),
-  returnCaseById
-);
+router.get("/:caseId", checkJwtOptional, returnCaseById);
 
 /**
  * @api {delete} /case/:caseId Delete a case
