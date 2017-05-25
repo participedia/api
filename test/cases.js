@@ -1,27 +1,10 @@
 let tokens = require("./setupenv");
-let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
 let chaiHelpers = require("./helpers");
 let should = chai.should();
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
-
-// let jwt = require("jsonwebtoken");
-// let pem2jwk = require("pem-jwk").pem2jwk;
-// let keypair = require("keypair");
-// let nock = require("nock");
-// pair = keypair();
-
-// let publicJWK = pem2jwk(pair.public);
-// publicJWK.use = "sig";
-// publicJWK.kid = "this_is_a_constant";
-
-// nock("https://participedia.auth0.com/.well-known/jwks.json")
-//   .get("")
-//   .reply(200, {
-//     keys: [publicJWK]
-//   });
 
 let location = {
   label: "Cleveland, OH, United States",
@@ -221,7 +204,6 @@ describe("Cases", () => {
   });
   describe("Get case with authentication", () => {
     it("should not fail when logged in", async () => {
-      console.log("TOKEN", tokens.user_token);
       try {
         const res = await chai
           .getJSON("/case/100")
