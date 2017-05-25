@@ -33,7 +33,10 @@ let bodyParser = require("body-parser");
 let methodOverride = require("method-override");
 let cors = require("cors");
 let isUser = require("./api/middleware/isUser");
-const { checkJwtRequired } = require("./api/helpers/checkJwt");
+const {
+  checkJwtRequired,
+  checkJwtOptional
+} = require("./api/helpers/checkJwt");
 let { ensureUser } = require("./api/helpers/user");
 
 app.set("port", port);
@@ -54,7 +57,7 @@ app.use("/search", cache("5 minutes"), search);
 app.use("/case", case_);
 app.use("/organization", organization);
 app.use("/method", method);
-app.use("/user", [checkJwtRequired, user]);
+app.use("/user", [checkJwtOptional, user]);
 app.use("/bookmark", bookmark);
 
 app.use("/s3/:path", checkJwtRequired, isUser);

@@ -7,6 +7,22 @@ let should = chai.should();
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
 
+// let jwt = require("jsonwebtoken");
+// let pem2jwk = require("pem-jwk").pem2jwk;
+// let keypair = require("keypair");
+// let nock = require("nock");
+// pair = keypair();
+
+// let publicJWK = pem2jwk(pair.public);
+// publicJWK.use = "sig";
+// publicJWK.kid = "this_is_a_constant";
+
+// nock("https://participedia.auth0.com/.well-known/jwks.json")
+//   .get("")
+//   .reply(200, {
+//     keys: [publicJWK]
+//   });
+
 let location = {
   label: "Cleveland, OH, United States",
   placeId: "ChIJLWto4y7vMIgRQhhi91XLBO0",
@@ -205,11 +221,16 @@ describe("Cases", () => {
   });
   describe("Get case with authentication", () => {
     it("should not fail when logged in", async () => {
-      const res = await chai
-        .getJSON("/case/100")
-        .set("Authorization", "Bearer " + tokens.user_token);
-      res.body.OK.should.equal(true);
-      res.should.have.status(200);
+      console.log("TOKEN", tokens.user_token);
+      try {
+        const res = await chai
+          .getJSON("/case/100")
+          .set("Authorization", "Bearer " + tokens.user_token);
+        res.body.OK.should.equal(true);
+        res.should.have.status(200);
+      } catch (e) {
+        console.error(e);
+      }
     });
   });
   describe("Test edit API", () => {
