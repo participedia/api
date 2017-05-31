@@ -85,6 +85,124 @@ INSERT INTO authors SELECT * from case__authors;
 INSERT INTO authors SELECT * from method__authors;
 INSERT INTO authors SELECT * from organization__authors;
 
+ -- Modify Materialized view and index for English searches
+
+DROP MATERIALIZED VIEW search_index_en;
+
+ CREATE MATERIALIZED VIEW search_index_en AS
+
+ WITH case_authors AS (
+   SELECT cases.id thingid, string_agg(users.name, ' ') authors
+   FROM users, authors, cases
+   WHERE
+    authors.user_id = users.id AND
+    authors.thingid = cases.id
+   GROUP BY cases.id
+),
+method_authors as (
+   SELECT methods.id thingid, string_agg(users.name, ' ') authors
+   FROM users, authors, methods
+   WHERE
+    authors.user_id = users.id AND
+    authors.thingid = methods.id
+   GROUP BY methods.id
+),
+organization_authors as (
+   SELECT organizations.id thingid, string_agg(users.name, ' ') authors
+   FROM users, authors, organizations
+   WHERE
+    authors.user_id = users.id AND
+    authors.thingid = organizations.id
+   GROUP BY organizations.id
+),
+case_tags as (
+  SELECT
+	case_id,
+	string_agg(tags, ' ') tags
+  FROM
+  	(SELECT cases.id case_id, unnest(cases.tags) tags FROM cases) subtags
+  GROUP BY
+  	case_id
+),
+method_tags as (
+  SELECT
+	method_id,
+	string_agg(tags, ' ') tags
+  FROM
+  	(SELECT methods.id method_id, unnest(methods.tags) tags FROM methods) subtags
+  GROUP BY
+  	method_id
+),
+organization_tags as (
+  SELECT
+	organization_id,
+	string_agg(tags, ' ') tags
+  FROM
+  	(SELECT organizations.id organization_id, unnest(organizations.tags) tags FROM organizations) subcase
+  GROUP BY
+  	organization_id
+)
+
+SELECT
+		cases.id,
+		TEXT 'case' AS type,
+		case__localized_texts.title,
+    case__localized_texts.body,
+		cases.lead_image,
+		cases.updated_date,
+    setweight(to_tsvector('english'::regconfig, case__localized_texts.title), 'A') ||
+    setweight(to_tsvector('english'::regconfig, case__localized_texts.body), 'B') ||
+    setweight(to_tsvector('english'::regconfig, case_tags.tags), 'C') ||
+    setweight(to_tsvector('english'::regconfig, case_authors.authors), 'D') AS document
+	FROM
+		cases
+  JOIN case__localized_texts ON case__localized_texts.case_id = cases.id
+  JOIN case_authors ON case_authors.thingid = cases.id
+  JOIN case_tags ON case_tags.case_id = cases.id
+	WHERE
+		case__localized_texts.language = 'en'
+UNION
+	SELECT
+		methods.id,
+		TEXT 'method' AS type,
+		method__localized_texts.title,
+    method__localized_texts.body,
+		methods.lead_image,
+		methods.updated_date,
+    setweight(to_tsvector('english'::regconfig, method__localized_texts.title), 'A') ||
+    setweight(to_tsvector('english'::regconfig, method__localized_texts.body), 'B') ||
+    setweight(to_tsvector('english'::regconfig, method_tags.tags), 'C') ||
+    setweight(to_tsvector('english'::regconfig, method_authors.authors), 'D') AS document
+	FROM
+		methods
+	JOIN method__localized_texts ON method__localized_texts.method_id = methods.id
+  JOIN method_authors ON method_authors.thingid = methods.id
+  JOIN method_tags ON method_tags.method_id = methods.id
+	WHERE
+		method__localized_texts.language = 'en'
+UNION
+	SELECT
+		organizations.id,
+		TEXT 'organization' AS type,
+		organization__localized_texts.title,
+    organization__localized_texts.body,
+		organizations.lead_image,
+		organizations.updated_date,
+    setweight(to_tsvector('english'::regconfig, organization__localized_texts.title), 'A') ||
+    setweight(to_tsvector('english'::regconfig, organization__localized_texts.body), 'B') ||
+    setweight(to_tsvector('english'::regconfig, organization_tags.tags), 'C') ||
+    setweight(to_tsvector('english'::regconfig, organization_authors.authors), 'D') AS document
+	FROM
+		organizations
+	JOIN organization__localized_texts ON organization__localized_texts.organization_id = organizations.id
+  JOIN organization_authors ON organization_authors.thingid = organizations.id
+  JOIN organization_tags ON organization_tags.organization_id = organizations.id
+	WHERE
+		organization__localized_texts.language = 'en'
+;
+
+CREATE INDEX idx_fts_search_en ON search_index_en USING gin(document);
+
 DROP TABLE case__authors;
 DROP TABLE method__authors;
 DROP TABLE organization__authors;
