@@ -133,12 +133,12 @@ describe("Organizations", () => {
       const res1 = await addBasicOrganization();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.organization_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origOrganization = res1.body.object;
       origOrganization.id.should.be.a("number");
-      origOrganization.id.should.equal(res1.body.data.organization_id);
+      origOrganization.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/organization/" + res1.body.data.organization_id)
+        .putJSON("/organization/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({}); // empty update
       res2.should.have.status(200);
@@ -149,12 +149,12 @@ describe("Organizations", () => {
       const res1 = await addBasicOrganization();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.organization_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origOrganization = res1.body.object;
       origOrganization.id.should.be.a("number");
-      origOrganization.id.should.equal(res1.body.data.organization_id);
+      origOrganization.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/organization/" + res1.body.data.organization_id)
+        .putJSON("/organization/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Second Title" }); // empty update
       res2.should.have.status(200);
@@ -162,7 +162,7 @@ describe("Organizations", () => {
       updatedOrganization1.title.should.equal("Second Title");
       updatedOrganization1.body.should.equal("First Body");
       const res3 = await chai
-        .putJSON("/organization/" + res1.body.data.organization_id)
+        .putJSON("/organization/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" }); // empty update
       res3.should.have.status(200);
@@ -170,7 +170,7 @@ describe("Organizations", () => {
       updatedOrganization2.title.should.equal("Second Title");
       updatedOrganization2.body.should.equal("Second Body");
       const res4 = await chai
-        .putJSON("/organization/" + res1.body.data.organization_id)
+        .putJSON("/organization/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" }); // empty update
       res4.should.have.status(200);

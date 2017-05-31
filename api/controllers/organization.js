@@ -13,8 +13,9 @@ const {
 } = require("../helpers/things");
 
 const returnOrganizationById = getByType_id["organization"].returnById;
-const getOrganizationById_lang_userId =
-  getByType_id["organization"].getById_lang_userId;
+const getOrganizationById_lang_userId = getByType_id[
+  "organization"
+].getById_lang_userId;
 
 const empty_organization = {
   title: "",
@@ -82,7 +83,7 @@ router.post("/new", async function(req, res) {
     const location = as.location(req.body.location);
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const organization_id = await db.one(
+    const thing = await db.one(
       sql("../sql/create_organization.sql"),
       Object.assign({}, empty_organization, {
         title,
@@ -93,36 +94,37 @@ router.post("/new", async function(req, res) {
         user_id
       })
     );
-    // save related objects (needs case_id)
+    const thingid = thing.thingid;
+    // save related objects (needs thingid)
     const relCases = addRelatedList(
       "organization",
-      organization_id.organization_id,
+      thingid,
       "case",
       req.body.related_cases
     );
     if (relCases) {
-      await db.none(relCases);
+      await db.any(relCases);
     }
     const relMethods = addRelatedList(
       "organization",
-      organization_id.organization_id,
+      thingid,
       "method",
       req.body.related_methods
     );
     if (relMethods) {
-      await db.none(relMethods);
+      await db.any(relMethods);
     }
     const relOrgs = addRelatedList(
       "organization",
-      organization_id.organization_id,
+      thingid,
       "organization",
       req.body.related_organizations
     );
     if (relOrgs) {
-      await db.none(relOrgs);
+      await db.any(relOrgs);
     }
     const newOrganization = await getOrganizationById_lang_userId(
-      organization_id.organization_id,
+      thingid,
       language,
       user_id
     );
@@ -130,7 +132,7 @@ router.post("/new", async function(req, res) {
     await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
     return res.status(201).json({
       OK: true,
-      data: organization_id,
+      data: thing,
       object: newOrganization
     });
   } catch (error) {

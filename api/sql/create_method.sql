@@ -16,20 +16,20 @@ WITH insert_method as (
       null, null, null, 'now',
       ${lead_image:raw},
       '{}', '{}', ${videos:raw}, '{}', false
-    ) RETURNING id as method_id
+    ) RETURNING id as thingid
 ),
 insert_author as (
   INSERT into authors(user_id, timestamp, thingid)
   VALUES
-    (${user_id}, 'now', (select method_id from insert_method))
+    (${user_id}, 'now', (select thingid from insert_method))
 )
 
-INSERT INTO method__localized_texts(body, title, language, method_id)
+INSERT INTO localized_texts(body, title, language, thingid)
 VALUES
   (
     ${body},
     ${title},
     ${language},
-    (select method_id from insert_method)
-  ) RETURNING method_id
+    (select thingid from insert_method)
+  ) RETURNING thingid
 ;

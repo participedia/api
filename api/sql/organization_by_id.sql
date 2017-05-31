@@ -22,15 +22,16 @@ SELECT
     to_json(COALESCE(organizations.files, '{}')) AS files,
     to_json(COALESCE(organizations.videos, '{}')) AS videos,
     to_json(COALESCE(organizations.tags, '{}')) AS tags,
-    organization__localized_texts.*,
+    localized_texts.body,
+    localized_texts.title,
     to_json(author_list.authors) AS authors,
-    to_json(get_related_nouns('case', 'organization', ${thingId}, ${lang} )) related_cases,
-    to_json(get_related_nouns('method', 'organization', ${thingId}, ${lang} )) related_methods,
-    to_json(get_related_nouns('organization', 'organization', ${thingId}, ${lang} )) related_organizations,
-    bookmarked('case', ${thingId}, ${userId})
+    to_json(get_related_nouns('case', 'organization', ${thingid}, ${lang} )) related_cases,
+    to_json(get_related_nouns('method', 'organization', ${thingid}, ${lang} )) related_methods,
+    to_json(get_related_nouns('organization', 'organization', ${thingid}, ${lang} )) related_organizations,
+    bookmarked('case', ${thingid}, ${userId})
 FROM
     organizations,
-    organization__localized_texts,
+    localized_texts,
     (
         SELECT
             array_agg(CAST(ROW(
@@ -48,8 +49,8 @@ FROM
             authors.thingid
     ) AS author_list
 WHERE
-    organizations.id = organization__localized_texts.organization_id AND
-    organization__localized_texts.language = ${lang} AND
+    organizations.id = localized_texts.thingid AND
+    localized_texts.language = ${lang} AND
     author_list.thingid = organizations.id AND
-    organizations.id = ${thingId}
+    organizations.id = ${thingid}
 ;

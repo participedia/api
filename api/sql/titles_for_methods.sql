@@ -1,7 +1,7 @@
-SELECT title, method_id
-FROM method__localized_texts
-WHERE language = ${language}
-ORDER BY method_id ASC
+SELECT title, thingid
+FROM localized_texts, methods
+WHERE language = ${language} AND methods.id = localized_texts.thingid
+ORDER BY thingid ASC
 LIMIT ${limit}
 OFFSET ${offset}
 ;

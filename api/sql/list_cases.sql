@@ -1,6 +1,6 @@
 SELECT
     cases.id,
-    'case' as type,
+    cases.type,
     cases.original_language,
     cases.issue,
     cases.communication_mode,
@@ -36,11 +36,12 @@ SELECT
     to_json(COALESCE(cases.files, '{}')) AS files,
     to_json(COALESCE(cases.videos, '{}')) AS videos,
     to_json(COALESCE(cases.tags, '{}')) AS tags,
-    case__localized_texts.*,
+    localized_texts.body,
+    localized_texts.title,
     to_json(author_list.authors) authors
 FROM
     cases,
-    case__localized_texts,
+    localized_texts,
     (
         SELECT
             array_agg(CAST(ROW(
@@ -58,14 +59,11 @@ FROM
             authors.thingid
     ) AS author_list
 WHERE
-    cases.id = case__localized_texts.case_id AND
-    case__localized_texts.language = ${language} AND
+    cases.id = localized_texts.thingid AND
+    localized_texts.language = ${language} AND
     ${facets:raw}
     author_list.thingid = cases.id
 ${order_by:raw}
 LIMIT ${limit}
 OFFSET ${offset}
 ;
-
-
--- SELECT case__methods.method_id, method__localized_texts.title FROM case__methods, method__localized_texts WHERE case__methods.case_id = ${caseId} AND case__methods.method_id = method__localized_texts.method_id;

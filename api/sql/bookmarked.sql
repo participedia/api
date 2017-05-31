@@ -5,7 +5,7 @@ CASE
     SELECT 1
     FROM bookmarks
     WHERE bookmarktype = ${type}
-      AND thingid = ${thingId}
+      AND thingid = ${thingid}
       AND userid = ${userId}
   )
   THEN true

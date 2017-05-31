@@ -136,7 +136,7 @@ describe("Cases", () => {
       const res = await addBasicCase();
       res.should.have.status(201);
       res.body.OK.should.be.true;
-      res.body.data.case_id.should.be.a("number");
+      res.body.data.thingid.should.be.a("number");
       let returnedCase = res.body.object;
       returnedCase.related_cases.length.should.equal(4);
       returnedCase.related_methods.length.should.equal(3);
@@ -220,12 +220,12 @@ describe("Cases", () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.case_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origCase = res1.body.object;
       origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.case_id);
+      origCase.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({}); // empty update
       res2.should.have.status(200);
@@ -236,12 +236,12 @@ describe("Cases", () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.case_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origCase = res1.body.object;
       origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.case_id);
+      origCase.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Second Title" }); // empty update
       res2.should.have.status(200);
@@ -249,7 +249,7 @@ describe("Cases", () => {
       updatedCase1.title.should.equal("Second Title");
       updatedCase1.body.should.equal("First Body");
       const res3 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" }); // empty update
       res3.should.have.status(200);
@@ -257,7 +257,7 @@ describe("Cases", () => {
       updatedCase2.title.should.equal("Second Title");
       updatedCase2.body.should.equal("Second Body");
       const res4 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" }); // empty update
       res4.should.have.status(200);

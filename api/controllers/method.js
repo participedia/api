@@ -90,7 +90,7 @@ router.post("/new", async function(req, res) {
     const user_id = req.user.user_id;
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const method_id = await db.one(
+    const thing = await db.one(
       sql("../sql/create_method.sql"),
       Object.assign({}, empty_method, {
         title,
@@ -100,44 +100,43 @@ router.post("/new", async function(req, res) {
         user_id
       })
     );
-    // save related objects (needs case_id)
+    const thingid = thing.thingid;
+    // save related objects (needs thingid)
     const relCases = addRelatedList(
       "method",
-      method_id.method_id,
+      thingid,
       "case",
       req.body.related_cases
     );
     if (relCases) {
-      await db.none(relCases);
+      await db.any(relCases);
     }
     const relMethods = addRelatedList(
       "method",
-      method_id.method_id,
+      thingid,
       "method",
       req.body.related_methods
     );
     if (relMethods) {
-      await db.none(relMethods);
+      await db.any(relMethods);
     }
     const relOrgs = addRelatedList(
       "method",
-      method_id.method_id,
+      thingid,
       "organization",
       req.body.related_organizations
     );
     if (relOrgs) {
-      await db.none(relOrgs);
+      await db.any(relOrgs);
     }
     const newMethod = await getMethodById_lang_userId(
-      method_id.method_id,
+      thingid,
       language,
       user_id
     );
     // Refresh search index
     await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
-    return res
-      .status(201)
-      .json({ OK: true, data: method_id, object: newMethod });
+    return res.status(201).json({ OK: true, data: thingid, object: newMethod });
   } catch (error) {
     log.error("Exception in POST /method/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
