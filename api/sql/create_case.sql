@@ -28,7 +28,7 @@ WITH insert_case as (
     ) RETURNING id as case_id
 ),
 insert_author as (
-  INSERT into case__authors(user_id, timestamp, case_id)
+  INSERT into authors(user_id, timestamp, thingid)
   VALUES
     (${user_id}, 'now', (select case_id from insert_case))
 )

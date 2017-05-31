@@ -14,7 +14,7 @@ WITH insert_organization as (
     ) RETURNING id as organization_id
 ),
 insert_author as (
-  INSERT into organization__authors(user_id, timestamp, organization_id)
+  INSERT into authors(user_id, timestamp, thingid)
   VALUES
     (${user_id}, 'now', (select organization_id from insert_organization))
 )

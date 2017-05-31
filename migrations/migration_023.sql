@@ -134,5 +134,4 @@ UNION
 		organization__localized_texts.language = 'en'
 ;
 
-DROP INDEX IF EXISTS idx_fts_search_en;
 CREATE INDEX idx_fts_search_en ON search_index_en USING gin(document);

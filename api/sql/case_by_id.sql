@@ -53,22 +53,22 @@ FROM
     (
         SELECT
             array_agg((
-                case__authors.user_id,
-                case__authors.timestamp,
+                authors.user_id,
+                authors.timestamp,
                 users.name
             )::author) authors,
-            case__authors.case_id
+            authors.thingid
         FROM
-            case__authors,
+            authors,
             users
         WHERE
-            case__authors.user_id = users.id
+            authors.user_id = users.id
         GROUP BY
-            case__authors.case_id
+            authors.thingid
     ) AS author_list
 WHERE
     cases.id = case__localized_texts.case_id AND
     case__localized_texts.language = ${lang} AND
-    author_list.case_id = cases.id AND
+    author_list.thingid = cases.id AND
     cases.id = ${thingId}
 ;

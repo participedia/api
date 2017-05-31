@@ -19,7 +19,7 @@ WITH insert_method as (
     ) RETURNING id as method_id
 ),
 insert_author as (
-  INSERT into method__authors(user_id, timestamp, method_id)
+  INSERT into authors(user_id, timestamp, thingid)
   VALUES
     (${user_id}, 'now', (select method_id from insert_method))
 )

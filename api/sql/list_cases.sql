@@ -44,24 +44,24 @@ FROM
     (
         SELECT
             array_agg(CAST(ROW(
-                case__authors.user_id,
-                case__authors.timestamp,
+                authors.thingid,
+                authors.timestamp,
                 users.name
             ) AS author)) authors,
-            case__authors.case_id
+            authors.thingid
         FROM
-            case__authors,
+            authors,
             users
         WHERE
-            case__authors.user_id = users.id
+            authors.user_id = users.id
         GROUP BY
-            case__authors.case_id
+            authors.thingid
     ) AS author_list
 WHERE
     cases.id = case__localized_texts.case_id AND
     case__localized_texts.language = ${language} AND
     ${facets:raw}
-    author_list.case_id = cases.id
+    author_list.thingid = cases.id
 ${order_by:raw}
 LIMIT ${limit}
 OFFSET ${offset}

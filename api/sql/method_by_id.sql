@@ -36,22 +36,22 @@ FROM
     (
         SELECT
             array_agg(CAST(ROW(
-                method__authors.user_id,
-                method__authors.timestamp,
+                authors.user_id,
+                authors.timestamp,
                 users.name
             )as author)) authors,
-            method__authors.method_id
+            authors.thingid
         FROM
-            method__authors,
+            authors,
             users
         WHERE
-            method__authors.user_id = users.id
+            authors.user_id = users.id
         GROUP BY
-            method__authors.method_id
+            authors.thingid
     ) AS author_list
 WHERE
     methods.id = method__localized_texts.method_id AND
     method__localized_texts.language = ${lang} AND
-    author_list.method_id = methods.id AND
+    author_list.thingid = methods.id AND
     methods.id = ${thingId}
 ;
