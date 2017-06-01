@@ -33,7 +33,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     // Also, if we're going to use {OK: true, data: []} everywhere else
     // we should use it here too.
     titlelist.forEach(function(row) {
-      jtitlelist[row.title] = parseInt(row[objType + "_id"]);
+      jtitlelist[row.title] = Number(row.thingid);
     });
     res.status(200).json(jtitlelist);
   } catch (error) {
