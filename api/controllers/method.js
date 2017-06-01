@@ -150,7 +150,7 @@ router.post("/new", async function(req, res) {
  * @apiGroup Methods
  * @apiVersion 0.1.0
  * @apiName editMethodById
- * @apiParam {Number} methodId Method ID
+ * @apiParam {Number} thingid Method ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)

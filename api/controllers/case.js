@@ -302,7 +302,7 @@ router.post("/new", async function postNewCase(req, res) {
  *
  */
 
-router.put("/:caseId", getEditXById("case"));
+router.put("/:thingid", getEditXById("case"));
 
 /**
  * @api {get} /case/:thingid Get the last version of a case
@@ -355,7 +355,7 @@ router.get("/:thingid", checkJwtOptional, returnCaseById);
  *
  */
 
-router.delete("/:caseId", function editCaseById(req, res) {
+router.delete("/:thingid", function editCaseById(req, res) {
   cache.clear();
   // let caseId = req.swagger.params.caseId.value;
   // let caseBody = req.body;
