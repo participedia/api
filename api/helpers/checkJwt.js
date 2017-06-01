@@ -16,7 +16,7 @@ if (!secret) {
 
 let options = {
   secret: secret,
-  audience: "https://api.participedia.xyz",
+  // audience: "https://api.participedia.xyz",
   issuer: "https://participedia.auth0.com/",
   algorithms: ["RS256"]
 };
