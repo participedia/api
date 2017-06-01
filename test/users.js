@@ -47,10 +47,6 @@ describe("Users", () => {
           res.body.OK.should.equal(true);
           res.should.have.status(200);
           let user = res.body.data;
-          console.log(
-            "bokmarks: %s",
-            JSON.stringify(user.bookmarks.map(b => b.id))
-          );
           user.bookmarks.should.have.lengthOf(3);
           let bookmarks = user.bookmarks.map(bookmark => bookmark.type);
           bookmarks.sort();
