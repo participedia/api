@@ -18,6 +18,7 @@ const getOrganizationById_lang_userId = getByType_id[
 ].getById_lang_userId;
 
 const empty_organization = {
+  type: "organization",
   title: "",
   body: "",
   language: "en",
@@ -170,7 +171,7 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:organizationId", getEditXById("organization"));
+router.put("/:thingid", getEditXById("organization"));
 
 /**
  * @api {get} /organization/:id Get the last version of an organization
@@ -198,7 +199,7 @@ router.put("/:organizationId", getEditXById("organization"));
  *
  */
 
-router.get("/:organizationId", checkJwtOptional, returnOrganizationById);
+router.get("/:thingid", checkJwtOptional, returnOrganizationById);
 
 /**
  * @api {delete} /organization/:id Delete an organization

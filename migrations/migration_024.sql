@@ -211,3 +211,5 @@ LANGUAGE 'sql' STABLE;
 
 ALTER TABLE related_nouns DROP CONSTRAINT sorted;
 ALTER TABLE related_nouns ADD CONSTRAINT sorted CHECK(id_1 < id_2);
+
+select setval('things_id_seq', (select max(id) from things) + 1);

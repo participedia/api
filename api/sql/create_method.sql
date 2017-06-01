@@ -1,6 +1,6 @@
 WITH insert_method as (
   INSERT into methods (
-    original_language, best_for, communication_mode,
+    type, original_language, best_for, communication_mode,
     decision_method, facilitated, governance_contribution, issue_interdependency, issue_polarization,
     issue_technical_complexity, kind_of_influence, method_of_interaction,
     public_interaction_method, post_date,
@@ -11,7 +11,7 @@ WITH insert_method as (
   )
   VALUES
     (
-      ${language}, null, null, null, null, null, null,
+      'method', ${language}, null, null, null, null, null, null,
       null, null, null, null, null, 'now', true,
       null, null, null, 'now',
       ${lead_image:raw},

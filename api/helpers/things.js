@@ -39,10 +39,10 @@ function removeRelatedList(owner_type, owner_id, related_type, id_list) {
   if (isString(id_list)) {
     id_list = [id_list];
   }
-  owner_id = as.number(owner_id);
+  owner_id = Number(owner_id);
   return id_list
     .map(id => {
-      let escaped_id = as.number(id);
+      let escaped_id = Number(id);
       if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
         return `DELETE FROM related_nouns
                 WHERE type_1 = '${owner_type}' AND id_1 = ${owner_id} AND
@@ -95,7 +95,7 @@ function getXByIdFns(type) {
       log.error(
         "Exception in GET /%s/%s => %s",
         type,
-        req.params[`${type}Id`],
+        req.params.thingid,
         error
       );
       res.status(500).json({
@@ -120,7 +120,7 @@ const getByType_id = {
 function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
-    const thingid = as.number(req.params[type + "Id"]);
+    const thingid = as.number(req.params.thingid);
     try {
       // FIXME: Figure out how to get all of this done as one transaction
       const lang = as.value(req.params.language || "en");
@@ -277,6 +277,7 @@ function getEditXById(type) {
       res.status(200).json({ OK: true, data: retThing });
     } catch (error) {
       log.error("Exception in PUT /%s/%s => %s", type, thingid, error);
+      console.trace(error);
       res.status(500).json({
         OK: false,
         error: error

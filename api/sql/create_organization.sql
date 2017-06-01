@@ -1,6 +1,6 @@
 WITH insert_organization as (
   INSERT into organizations (
-    original_language, executive_director, issue,
+    type, original_language, executive_director, issue,
     post_date, published,
     sector, updated_date, location,
     lead_image, other_images,
@@ -8,7 +8,7 @@ WITH insert_organization as (
   )
   VALUES
     (
-      ${language}, null, null, 'now', true, null, 'now', ${location:raw},
+      'organization', ${language}, null, null, 'now', true, null, 'now', ${location:raw},
       ${lead_image:raw},
       '{}', '{}', ${videos:raw}, '{}', false
     ) RETURNING id as thingid

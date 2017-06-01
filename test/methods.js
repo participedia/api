@@ -80,6 +80,7 @@ describe("Methods", () => {
       const res = await addBasicMethod();
       res.should.have.status(201);
       res.body.OK.should.be.true;
+      log.info(JSON.stringify(res.body));
       res.body.data.thingid.should.be.a("number");
       let returnedMethod = res.body.object;
       returnedMethod.related_cases.length.should.equal(4);

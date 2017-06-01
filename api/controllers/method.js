@@ -15,6 +15,7 @@ const returnMethodById = getByType_id["method"].returnById;
 const getMethodById_lang_userId = getByType_id["method"].getById_lang_userId;
 
 const empty_method = {
+  type: "method",
   title: "",
   body: "",
   language: "en",
@@ -139,6 +140,7 @@ router.post("/new", async function(req, res) {
     return res.status(201).json({ OK: true, data: thingid, object: newMethod });
   } catch (error) {
     log.error("Exception in POST /method/new => %s", error);
+    console.trace(error);
     return res.status(500).json({ OK: false, error: error });
   }
 });
@@ -169,7 +171,7 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:methodId", getEditXById("method"));
+router.put("/:thingid", getEditXById("method"));
 
 /**
  * @api {get} /method/:id Get the last version of a method
@@ -195,7 +197,7 @@ router.put("/:methodId", getEditXById("method"));
  *
  */
 
-router.get("/:methodId", checkJwtOptional, returnMethodById);
+router.get("/:thingid", checkJwtOptional, returnMethodById);
 
 /**
  * @api {delete} /method/:id Delete a method
