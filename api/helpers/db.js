@@ -113,6 +113,16 @@ function videos(url, title) {
   return `ARRAY[(${url}, ${title})]::video[]`;
 }
 
+// as.strings / as.tags (could be used as as.strings too
+function strings(strList) {
+  if (!strList) {
+    return "null";
+  }
+  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
+}
+
+const tags = strings; // alias for descriptiveness
+
 // as.location
 function location(location) {
   // TODO: escape all values of location to avoid injection attacks
@@ -144,7 +154,9 @@ const as = Object.assign({}, pgp.as, {
   attachments,
   location,
   videos,
-  number
+  number,
+  strings,
+  tags
 });
 
 const helpers = pgp.helpers;

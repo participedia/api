@@ -211,6 +211,11 @@ function getEditXById(type) {
               key: as.name(key),
               value: as.location(newThing[key])
             });
+          } else if (key === "tags") {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.tags(newThing[key])
+            });
           } else if (key === "lead_image") {
             var img = newThing[key];
             updatedThingFields.push({

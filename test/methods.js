@@ -245,6 +245,7 @@ describe.only("Methods", () => {
         .send({ tags });
       const res3 = await chai.getJSON("/method/" + method1.id).send({});
       const method1_new = res3.body.data;
+      console.log(">>>> tags: %s", JSON.stringify(method1_new.tags));
       method1_new.tags.should.deep.equal(["foo", "bar"]);
     });
   });
