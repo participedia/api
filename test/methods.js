@@ -49,14 +49,14 @@ async function setupRelatedObjectsMultiple() {
     });
 }
 
-describe.only("Methods", () => {
+describe("Methods", () => {
   describe("Lookup", () => {
     it("finds method 190", async () => {
       const res = await chai.getJSON("/method/190").send({});
       res.should.have.status(200);
     });
   });
-  describe.only("Adding", () => {
+  describe("Adding", () => {
     it("fails without authentication", async () => {
       try {
         const res = await chai.postJSON("/method/new").send({});
@@ -235,7 +235,7 @@ describe.only("Methods", () => {
       const method3 = res3.body.data;
       method3.related_methods.map(x => x.id).should.include(method1.id);
     });
-    it.only("Add method, then change tags", async () => {
+    it("Add method, then change tags", async () => {
       const res1 = await addBasicMethod();
       const method1 = res1.body.object;
       const tags = ["foo", "bar"];
@@ -245,7 +245,6 @@ describe.only("Methods", () => {
         .send({ tags });
       const res3 = await chai.getJSON("/method/" + method1.id).send({});
       const method1_new = res3.body.data;
-      console.log(">>>> tags: %s", JSON.stringify(method1_new.tags));
       method1_new.tags.should.deep.equal(["foo", "bar"]);
     });
   });
