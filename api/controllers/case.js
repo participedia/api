@@ -218,7 +218,7 @@ router.post("/new", async function postNewCase(req, res) {
     const location = as.location(req.body.location);
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const case_id = await db.one(
+    const thing = await db.one(
       sql("../sql/create_case.sql"),
       Object.assign({}, empty_case, {
         title,
@@ -229,37 +229,37 @@ router.post("/new", async function postNewCase(req, res) {
         user_id
       })
     );
-    // save related objects (needs case_id)
+    // save related objects (needs thingid)
     const relCases = addRelatedList(
       "case",
-      case_id.case_id,
+      thing.thingid,
       "case",
       req.body.related_cases
     );
     if (relCases) {
-      await db.none(relCases);
+      await db.any(relCases);
     }
     const relMethods = addRelatedList(
       "case",
-      case_id.case_id,
+      thing.thingid,
       "method",
       req.body.related_methods
     );
     if (relMethods) {
-      await db.none(relMethods);
+      await db.any(relMethods);
     }
     const relOrgs = addRelatedList(
       "case",
-      case_id.case_id,
+      thing.thingid,
       "organization",
       req.body.related_organizations
     );
     if (relOrgs) {
-      await db.none(relOrgs);
+      await db.any(relOrgs);
     }
 
     const newCase = await getCaseById_lang_userId(
-      case_id.case_id,
+      thing.thingid,
       language,
       user_id
     );
@@ -267,7 +267,7 @@ router.post("/new", async function postNewCase(req, res) {
     await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
     return res.status(201).json({
       OK: true,
-      data: case_id,
+      data: thing,
       object: newCase
     });
   } catch (error) {
@@ -302,14 +302,14 @@ router.post("/new", async function postNewCase(req, res) {
  *
  */
 
-router.put("/:caseId", getEditXById("case"));
+router.put("/:thingid", getEditXById("case"));
 
 /**
- * @api {get} /case/:caseId Get the last version of a case
+ * @api {get} /case/:thingid Get the last version of a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
  * @apiName returnCaseById
- * @apiParam {Number} caseId Case ID
+ * @apiParam {Number} thingid Case ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -332,7 +332,7 @@ router.put("/:caseId", getEditXById("case"));
 
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.
-router.get("/:caseId", checkJwtOptional, returnCaseById);
+router.get("/:thingid", checkJwtOptional, returnCaseById);
 
 /**
  * @api {delete} /case/:caseId Delete a case
@@ -355,7 +355,7 @@ router.get("/:caseId", checkJwtOptional, returnCaseById);
  *
  */
 
-router.delete("/:caseId", function editCaseById(req, res) {
+router.delete("/:thingid", function editCaseById(req, res) {
   cache.clear();
   // let caseId = req.swagger.params.caseId.value;
   // let caseBody = req.body;

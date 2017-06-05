@@ -24,34 +24,35 @@ SELECT
     to_json(COALESCE(methods.files, '{}')) AS files,
     to_json(COALESCE(methods.videos, '{}')) AS videos,
     to_json(COALESCE(methods.tags, '{}')) AS tags,
-    method__localized_texts.*,
+    localized_texts.body,
+    localized_texts.title,
     to_json(author_list.authors) AS authors,
-    to_json(get_related_nouns('case', 'method', ${thingId}, ${lang} )) related_cases,
-    to_json(get_related_nouns('method', 'method', ${thingId}, ${lang} )) related_methods,
-    to_json(get_related_nouns('organization', 'method', ${thingId}, ${lang} )) related_organizations,
-    bookmarked('case', ${thingId}, ${userId})
+    to_json(get_related_nouns('case', 'method', ${thingid}, ${lang} )) related_cases,
+    to_json(get_related_nouns('method', 'method', ${thingid}, ${lang} )) related_methods,
+    to_json(get_related_nouns('organization', 'method', ${thingid}, ${lang} )) related_organizations,
+    bookmarked('case', ${thingid}, ${userId})
 FROM
     methods,
-    method__localized_texts,
+    localized_texts,
     (
         SELECT
             array_agg(CAST(ROW(
-                method__authors.user_id,
-                method__authors.timestamp,
+                authors.user_id,
+                authors.timestamp,
                 users.name
             )as author)) authors,
-            method__authors.method_id
+            authors.thingid
         FROM
-            method__authors,
+            authors,
             users
         WHERE
-            method__authors.user_id = users.id
+            authors.user_id = users.id
         GROUP BY
-            method__authors.method_id
+            authors.thingid
     ) AS author_list
 WHERE
-    methods.id = method__localized_texts.method_id AND
-    method__localized_texts.language = ${lang} AND
-    author_list.method_id = methods.id AND
-    methods.id = ${thingId}
+    methods.id = localized_texts.thingid AND
+    localized_texts.language = ${lang} AND
+    author_list.thingid = methods.id AND
+    methods.id = ${thingid}
 ;

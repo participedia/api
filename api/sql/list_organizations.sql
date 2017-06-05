@@ -14,32 +14,33 @@ SELECT
     to_json(COALESCE(organizations.files, '{}')) AS files,
     to_json(COALESCE(organizations.videos, '{}')) AS videos,
     to_json(COALESCE(organizations.tags, '{}')) AS tags,
-    organization__localized_texts.*,
+    localized_texts.body,
+    localized_texts.title,
     to_json(author_list.authors) AS authors
 FROM
     organizations,
-    organization__localized_texts,
+    localized_texts,
     (
         SELECT
             array_agg(CAST(ROW(
-                organization__authors.user_id,
-                organization__authors.timestamp,
+                authors.user_id,
+                authors.timestamp,
                 users.name
             ) AS author )) authors,
-            organization__authors.organization_id
+            authors.thingid
         FROM
-            organization__authors,
+            authors,
             users
         WHERE
-            organization__authors.user_id = users.id
+            authors.user_id = users.id
         GROUP BY
-            organization__authors.organization_id
+            authors.thingid
     ) AS author_list
 WHERE
-    organizations.id = organization__localized_texts.organization_id AND
-    organization__localized_texts.language = ${language} AND
+    organizations.id = localized_texts.thingid AND
+    localized_texts.language = ${language} AND
     ${facets:raw}
-    author_list.organization_id = organizations.id
+    author_list.thingid = organizations.id
 ${order_by:raw}
 LIMIT ${limit}
 OFFSET ${offset}

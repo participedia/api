@@ -3,56 +3,20 @@ WITH user_bookmarks AS (
   SELECT
     bookmarks.thingid as id,
     bookmarks.bookmarktype AS type,
-    case__localized_texts.title,
-    cases.lead_image,
-    cases.post_date,
-    cases.updated_date
+    localized_texts.title,
+    things.lead_image,
+    things.post_date,
+    things.updated_date
   FROM
     bookmarks,
-    case__localized_texts,
-    cases
+    localized_texts,
+    things
   WHERE
     bookmarks.userid = ${userId} AND
-    bookmarks.thingid = cases.id AND
-    bookmarks.thingid = case__localized_texts.case_id AND
-    case__localized_texts.language = ${language} AND
-    bookmarks.bookmarktype = 'case'
-UNION
-  SELECT
-    bookmarks.thingid as id,
-    bookmarks.bookmarktype AS type,
-    method__localized_texts.title,
-    methods.lead_image,
-    methods.post_date,
-    methods.updated_date
-  FROM
-    bookmarks,
-    method__localized_texts,
-    methods
-  WHERE
-    bookmarks.userid = ${userId} AND
-    bookmarks.thingid = methods.id AND
-    bookmarks.thingid = method__localized_texts.method_id AND
-    method__localized_texts.language = ${language} AND
-    bookmarks.bookmarktype = 'method'
-UNION
-  SELECT
-    bookmarks.thingid as id,
-    bookmarks.bookmarktype as TYPE,
-    organization__localized_texts.title,
-    organizations.lead_image,
-    organizations.post_date,
-    organizations.updated_date
-  FROM
-    bookmarks,
-    organization__localized_texts,
-    organizations
-  WHERE
-    bookmarks.userid = ${userId} AND
-    bookmarks.thingid = organizations.id AND
-    bookmarks.thingid = organization__localized_texts.organization_id AND
-    organization__localized_texts.language = ${language} AND
-    bookmarks.bookmarktype = 'organization'
+    bookmarks.thingid = things.id AND
+    bookmarks.thingid = localized_texts.thingid AND
+    localized_texts.language = ${language} AND
+    bookmarks.bookmarktype = things.type
 ) t ORDER BY updated_date )
 
 SELECT row_to_json(user_row) as user
@@ -75,15 +39,15 @@ FROM
 	users LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.case_id, 'case', texts.title, cases.lead_image, cases.post_date, cases.updated_date)::object_reference) cases_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, 'case', texts.title, cases.lead_image, cases.post_date, cases.updated_date)::object_reference) cases_authored, authors.user_id
 	    FROM
-	        case__localized_texts texts,
-	        case__authors authors,
+	        localized_texts texts,
+	        authors authors,
           cases
 	    WHERE
 	        texts.language = ${language} AND
-	        texts.case_id = authors.case_id AND
-          texts.case_id = cases.id
+	        texts.thingid = authors.thingid AND
+          texts.thingid = cases.id
 	    GROUP BY
 	    	authors.user_id
         HAVING
@@ -93,15 +57,15 @@ FROM
     ON case_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.method_id, 'method', texts.title, methods.lead_image, methods.post_date, methods.updated_date)::object_reference) methods_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, 'method', texts.title, methods.lead_image, methods.post_date, methods.updated_date)::object_reference) methods_authored, authors.user_id
 	    FROM
-	        method__localized_texts texts,
-	        method__authors authors,
+	        localized_texts texts,
+	        authors,
           methods
 	    WHERE
 	        texts.language = ${language} AND
-	        texts.method_id = authors.method_id AND
-          texts.method_id = methods.id
+	        texts.thingid = authors.thingid AND
+          texts.thingid = methods.id
 	    GROUP BY
 	    	authors.user_id
         HAVING
@@ -111,15 +75,15 @@ FROM
   ON method_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.organization_id, 'organization', texts.title, organizations.lead_image, organizations.post_date, organizations.updated_date)::object_reference) organizations_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, 'organization', texts.title, organizations.lead_image, organizations.post_date, organizations.updated_date)::object_reference) organizations_authored, authors.user_id
 	    FROM
-	        organization__localized_texts texts,
-	        organization__authors authors,
+	        localized_texts texts,
+	        authors,
           organizations
 	    WHERE
 	        texts.language = ${language} AND
-	        texts.organization_id = authors.organization_id AND
-          texts.organization_id = organizations.id
+	        texts.thingid = authors.thingid AND
+          texts.thingid = organizations.id
 	    GROUP BY
 	    	authors.user_id
         HAVING

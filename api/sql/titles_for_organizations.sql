@@ -1,7 +1,7 @@
-SELECT title, organization_id
-FROM organization__localized_texts
-WHERE language = ${language}
-ORDER BY organization_id ASC
+SELECT title, thingid
+FROM localized_texts, organizations
+WHERE language = ${language} AND organizations.id = localized_texts.thingid
+ORDER BY thingid ASC
 LIMIT ${limit}
 OFFSET ${offset}
 ;

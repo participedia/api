@@ -1,3 +1,4 @@
+let tokens = require("./setupenv");
 let app = require("../app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");

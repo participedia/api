@@ -80,7 +80,7 @@ describe("Methods", () => {
       const res = await addBasicMethod();
       res.should.have.status(201);
       res.body.OK.should.be.true;
-      res.body.data.method_id.should.be.a("number");
+      res.body.data.thingid.should.be.a("number");
       let returnedMethod = res.body.object;
       returnedMethod.related_cases.length.should.equal(4);
       returnedMethod.related_methods.length.should.equal(3);
@@ -135,12 +135,12 @@ describe("Methods", () => {
       const res1 = await addBasicMethod();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.method_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origMethod = res1.body.object;
       origMethod.id.should.be.a("number");
-      origMethod.id.should.equal(res1.body.data.method_id);
+      origMethod.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/method/" + res1.body.data.method_id)
+        .putJSON("/method/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({}); // empty update
       res2.should.have.status(200);
@@ -151,12 +151,12 @@ describe("Methods", () => {
       const res1 = await addBasicMethod();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.method_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origMethod = res1.body.object;
       origMethod.id.should.be.a("number");
-      origMethod.id.should.equal(res1.body.data.method_id);
+      origMethod.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/method/" + res1.body.data.method_id)
+        .putJSON("/method/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Second Title" }); // empty update
       res2.should.have.status(200);
@@ -164,7 +164,7 @@ describe("Methods", () => {
       updatedMethod1.title.should.equal("Second Title");
       updatedMethod1.body.should.equal("First Body");
       const res3 = await chai
-        .putJSON("/method/" + res1.body.data.method_id)
+        .putJSON("/method/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" }); // empty update
       res3.should.have.status(200);
@@ -172,7 +172,7 @@ describe("Methods", () => {
       updatedMethod2.title.should.equal("Second Title");
       updatedMethod2.body.should.equal("Second Body");
       const res4 = await chai
-        .putJSON("/method/" + res1.body.data.method_id)
+        .putJSON("/method/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" }); // empty update
       res4.should.have.status(200);

@@ -15,14 +15,14 @@ function addRelatedList(owner_type, owner_id, related_type, id_list) {
   if (isString(id_list)) {
     id_list = [id_list];
   }
-  owner_id = as.number(owner_id);
+  owner_id = Number(owner_id);
   let values = id_list
     .map(id => {
-      let escaped_id = as.number(id);
-      if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
-        return `('${owner_type}', ${owner_id}, '${related_type}', ${id})`;
+      let escaped_id = Number(id);
+      if (owner_id < escaped_id) {
+        return `('${owner_type}', ${owner_id}, '${related_type}', ${escaped_id})`;
       } else {
-        return `('${related_type}', ${id}, '${owner_type}', ${owner_id})`;
+        return `('${related_type}', ${escaped_id}, '${owner_type}', ${owner_id})`;
       }
     })
     .join(", ");
@@ -39,10 +39,10 @@ function removeRelatedList(owner_type, owner_id, related_type, id_list) {
   if (isString(id_list)) {
     id_list = [id_list];
   }
-  owner_id = as.number(owner_id);
+  owner_id = Number(owner_id);
   return id_list
     .map(id => {
-      let escaped_id = as.number(id);
+      let escaped_id = Number(id);
       if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
         return `DELETE FROM related_nouns
                 WHERE type_1 = '${owner_type}' AND id_1 = ${owner_id} AND
@@ -70,9 +70,9 @@ function diffRelatedList(first, second) {
 }
 
 function getXByIdFns(type) {
-  const getById_lang_userId = async function(thingId, lang, userId) {
+  const getById_lang_userId = async function(thingid, lang, userId) {
     const thing = await db.one(sql(`../sql/${type}_by_id.sql`), {
-      thingId,
+      thingid,
       lang,
       userId
     });
@@ -81,10 +81,10 @@ function getXByIdFns(type) {
 
   const getByRequest = async function(req) {
     await preferUser(req);
-    const thingId = as.number(req.params[`${type}Id`]);
+    const thingid = as.number(req.params.thingid);
     const lang = as.value(req.params.language || "en");
     const userId = req.user ? req.user.user_id : null;
-    return await getById_lang_userId(thingId, lang, userId);
+    return await getById_lang_userId(thingid, lang, userId);
   };
 
   const returnById = async function(req, res) {
@@ -95,7 +95,7 @@ function getXByIdFns(type) {
       log.error(
         "Exception in GET /%s/%s => %s",
         type,
-        req.params[`${type}Id`],
+        req.params.thingid,
         error
       );
       res.status(500).json({
@@ -120,13 +120,13 @@ const getByType_id = {
 function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
-    const thingId = as.number(req.params[type + "Id"]);
+    const thingid = as.number(req.params.thingid);
     try {
       // FIXME: Figure out how to get all of this done as one transaction
       const lang = as.value(req.params.language || "en");
       const userId = req.user.user_id;
       const oldThing = await getByType_id[type].getById_lang_userId(
-        thingId,
+        thingid,
         lang,
         userId
       );
@@ -136,7 +136,7 @@ function getEditXById(type) {
         title: oldThing.title,
         language: lang,
         type: type,
-        id: thingId
+        id: thingid
       };
       let updatedThingFields = [];
       let isTextUpdated = false;
@@ -161,7 +161,7 @@ function getEditXById(type) {
           // skip, do nothing, no change for this key
         } else if (!equals(oldThing[key], newThing[key])) {
           anyChanges = true;
-          // If the body or title have changed: add a record in X__localized_texts
+          // If the body or title have changed: add a record in localized_texts
           if (key === "body" || key === "title") {
             updatedText[key] = newThing[key];
             isTextUpdated = true;
@@ -182,13 +182,13 @@ function getEditXById(type) {
             const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
             const add = addRelatedList(
               type,
-              thingId,
+              thingid,
               relType,
               diff.add.map(x => x.id)
             );
             const remove = removeRelatedList(
               type,
-              thingId,
+              thingid,
               relType,
               diff.remove.map(x => x.id)
             );
@@ -259,17 +259,17 @@ function getEditXById(type) {
             .map(field => field.key + " = " + field.value)
             .join(", "),
           type: type,
-          id: thingId
+          id: thingid
         });
         // INSERT row for X__authors
         await db.none(sql("../sql/insert_author.sql"), {
           user_id: userId,
           type: type,
-          id: thingId
+          id: thingid
         });
         // update materialized view for search
         retThing = await getByType_id[type].getById_lang_userId(
-          as.number(thingId),
+          as.number(thingid),
           lang,
           userId
         );
@@ -281,7 +281,8 @@ function getEditXById(type) {
       } // end if not anyChanges
       res.status(200).json({ OK: true, data: retThing });
     } catch (error) {
-      log.error("Exception in PUT /%s/%s => %s", type, thingId, error);
+      log.error("Exception in PUT /%s/%s => %s", type, thingid, error);
+      console.trace(error);
       res.status(500).json({
         OK: false,
         error: error

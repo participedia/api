@@ -1,10 +1,11 @@
-UPDATE ${type:raw}__localized_texts
+UPDATE localized_texts
 SET
   body = ${body},
   title = ${title},
   language = ${language},
-  ${type:raw}_id = ${id}
+  timestamp = 'now',
+  thingid = ${id}
 WHERE
-  ${type:raw}_id = ${id} AND
+  thingid = ${id} AND
   language = ${language}
 ;

@@ -1,3 +1,4 @@
+let tokens = require("./setupenv");
 let app = require("../app");
 
 module.exports = function(chai, utils) {

@@ -1,6 +1,6 @@
 WITH insert_case as (
   INSERT into cases (
-    original_language, issue, communication_mode,
+    type, original_language, issue, communication_mode,
     communication_with_audience, content_country,
     decision_method, end_date, facetoface_online_or_both,
     facilitated, voting, number_of_meeting_days,
@@ -18,27 +18,27 @@ WITH insert_case as (
   )
   VALUES
     (
-      ${language}, null, null, null, null, null, null,
+      'case', ${language}, null, null, null, null, null, null,
       null, null, 'none', null, false, 'now',
       true, 'now', null, 'now', 'General Public',
       null, 'Lay Public', 'General Public',
       'Open to all', null, null, null, null,
       null, null, null, ${location:raw}, ${lead_image:raw},
       '{}', '{}', ${videos:raw}, '{}', false
-    ) RETURNING id as case_id
+    ) RETURNING id as thingid
 ),
 insert_author as (
-  INSERT into case__authors(user_id, timestamp, case_id)
+  INSERT into authors(user_id, timestamp, thingid)
   VALUES
-    (${user_id}, 'now', (select case_id from insert_case))
+    (${user_id}, 'now', (select thingid from insert_case))
 )
 
-INSERT INTO case__localized_texts(body, title, language, case_id)
+INSERT INTO localized_texts(body, title, language, thingid)
 VALUES
   (
     ${body},
     ${title},
     ${language},
-    (select case_id from insert_case)
-  ) RETURNING case_id
+    (select thingid from insert_case)
+  ) RETURNING thingid
 ;

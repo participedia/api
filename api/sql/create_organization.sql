@@ -1,6 +1,6 @@
 WITH insert_organization as (
   INSERT into organizations (
-    original_language, executive_director, issue,
+    type, original_language, executive_director, issue,
     post_date, published,
     sector, updated_date, location,
     lead_image, other_images,
@@ -8,23 +8,23 @@ WITH insert_organization as (
   )
   VALUES
     (
-      ${language}, null, null, 'now', true, null, 'now', ${location:raw},
+      'organization', ${language}, null, null, 'now', true, null, 'now', ${location:raw},
       ${lead_image:raw},
       '{}', '{}', ${videos:raw}, '{}', false
-    ) RETURNING id as organization_id
+    ) RETURNING id as thingid
 ),
 insert_author as (
-  INSERT into organization__authors(user_id, timestamp, organization_id)
+  INSERT into authors(user_id, timestamp, thingid)
   VALUES
-    (${user_id}, 'now', (select organization_id from insert_organization))
+    (${user_id}, 'now', (select thingid from insert_organization))
 )
 
-INSERT INTO organization__localized_texts(body, title, language, organization_id)
+INSERT INTO localized_texts(body, title, language, thingid)
 VALUES
   (
     ${body},
     ${title},
     ${language},
-    (select organization_id from insert_organization)
-  ) RETURNING organization_id
+    (select thingid from insert_organization)
+  ) RETURNING thingid
 ;

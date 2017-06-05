@@ -1,6 +1,6 @@
 WITH insert_method as (
   INSERT into methods (
-    original_language, best_for, communication_mode,
+    type, original_language, best_for, communication_mode,
     decision_method, facilitated, governance_contribution, issue_interdependency, issue_polarization,
     issue_technical_complexity, kind_of_influence, method_of_interaction,
     public_interaction_method, post_date,
@@ -11,25 +11,25 @@ WITH insert_method as (
   )
   VALUES
     (
-      ${language}, null, null, null, null, null, null,
+      'method', ${language}, null, null, null, null, null, null,
       null, null, null, null, null, 'now', true,
       null, null, null, 'now',
       ${lead_image:raw},
       '{}', '{}', ${videos:raw}, '{}', false
-    ) RETURNING id as method_id
+    ) RETURNING id as thingid
 ),
 insert_author as (
-  INSERT into method__authors(user_id, timestamp, method_id)
+  INSERT into authors(user_id, timestamp, thingid)
   VALUES
-    (${user_id}, 'now', (select method_id from insert_method))
+    (${user_id}, 'now', (select thingid from insert_method))
 )
 
-INSERT INTO method__localized_texts(body, title, language, method_id)
+INSERT INTO localized_texts(body, title, language, thingid)
 VALUES
   (
     ${body},
     ${title},
     ${language},
-    (select method_id from insert_method)
-  ) RETURNING method_id
+    (select thingid from insert_method)
+  ) RETURNING thingid
 ;

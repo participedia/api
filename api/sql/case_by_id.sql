@@ -1,6 +1,6 @@
 SELECT
     cases.id,
-    'case' as type,
+    cases.type,
     cases.original_language,
     cases.issue,
     cases.communication_mode,
@@ -41,34 +41,35 @@ SELECT
     to_json(COALESCE(cases.files, '{}')) AS files,
     to_json(COALESCE(cases.videos, '{}')) AS videos,
     to_json(COALESCE(cases.tags, '{}')) AS tags,
-    case__localized_texts.*,
+    localized_texts.body,
+    localized_texts.title,
     to_json(author_list.authors) authors,
-    to_json(get_related_nouns('case', 'case', ${thingId}, ${lang} )) related_cases,
-    to_json(get_related_nouns('method', 'case', ${thingId}, ${lang} )) related_methods,
-    to_json(get_related_nouns('organization', 'case', ${thingId}, ${lang} )) related_organizations,
-    bookmarked('case', ${thingId}, ${userId})
+    to_json(get_related_nouns('case', 'case', ${thingid}, ${lang} )) related_cases,
+    to_json(get_related_nouns('method', 'case', ${thingid}, ${lang} )) related_methods,
+    to_json(get_related_nouns('organization', 'case', ${thingid}, ${lang} )) related_organizations,
+    bookmarked('case', ${thingid}, ${userId})
 FROM
     cases,
-    case__localized_texts,
+    localized_texts,
     (
         SELECT
             array_agg((
-                case__authors.user_id,
-                case__authors.timestamp,
+                authors.user_id,
+                authors.timestamp,
                 users.name
             )::author) authors,
-            case__authors.case_id
+            authors.thingid
         FROM
-            case__authors,
+            authors,
             users
         WHERE
-            case__authors.user_id = users.id
+            authors.user_id = users.id
         GROUP BY
-            case__authors.case_id
+            authors.thingid
     ) AS author_list
 WHERE
-    cases.id = case__localized_texts.case_id AND
-    case__localized_texts.language = ${lang} AND
-    author_list.case_id = cases.id AND
-    cases.id = ${thingId}
+    cases.id = localized_texts.thingid AND
+    localized_texts.language = ${lang} AND
+    author_list.thingid = cases.id AND
+    cases.id = ${thingid}
 ;
