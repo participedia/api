@@ -104,7 +104,7 @@ async function setupRelatedObjectsMultiple() {
     });
 }
 
-describe.only("Cases", () => {
+describe("Cases", () => {
   describe("Lookup", () => {
     it("finds case 100", async () => {
       const res = await chai.getJSON("/case/100").send({});
@@ -202,7 +202,7 @@ describe.only("Cases", () => {
       the_case.bookmarked.should.equal(false);
     });
   });
-  describe.only("Get case with authentication", () => {
+  describe("Get case with authentication", () => {
     it("should not fail when logged in", async () => {
       try {
         const res = await chai
@@ -266,7 +266,7 @@ describe.only("Cases", () => {
       updatedCase3.body.should.equal("Third Body");
       updatedCase3.authors.length.should.equal(updatedCase2.authors.length + 1);
     });
-    it.only("Add case, then modify some fields", async () => {
+    it("Add case, then modify some fields", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
