@@ -270,12 +270,12 @@ describe("Cases", () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.case_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origCase = res1.body.object;
       origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.case_id);
+      origCase.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ issue: "new issue" }); // empty update
       res2.should.have.status(200);
