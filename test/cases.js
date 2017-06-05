@@ -266,6 +266,22 @@ describe("Cases", () => {
       updatedCase3.body.should.equal("Third Body");
       updatedCase3.authors.length.should.equal(updatedCase2.authors.length + 1);
     });
+    it("Add case, then modify some fields", async () => {
+      const res1 = await addBasicCase();
+      res1.should.have.status(201);
+      res1.body.OK.should.be.true;
+      res1.body.data.case_id.should.be.a("number");
+      const origCase = res1.body.object;
+      origCase.id.should.be.a("number");
+      origCase.id.should.equal(res1.body.data.case_id);
+      const res2 = await chai
+        .putJSON("/case/" + res1.body.data.case_id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ issue: "new issue" }); // empty update
+      res2.should.have.status(200);
+      const updatedCase1 = res2.body.data;
+      updatedCase1.issue.should.equal("new issue");
+    });
     it("Add case, then modify lead image", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);

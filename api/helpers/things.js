@@ -177,7 +177,7 @@ function getEditXById(type) {
             // DELETE / INSERT any needed rows for related_nouns
             const oldList = oldThing[key];
             const newList = newThing[key];
-            newList.forEach(x => x.id = x.id || x.value); // handle client returning value vs. id
+            newList.forEach(x => (x.id = x.id || x.value)); // handle client returning value vs. id
             const diff = diffRelatedList(oldList, newList);
             const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
             const add = addRelatedList(
@@ -228,7 +228,7 @@ function getEditXById(type) {
               value: as.attachments(newThing[key])
             });
           } else {
-            let value = oldThing[key];
+            let value = newThing[key];
             let asValue = as.text;
             if (typeof value === "boolean") {
               asValue = as.value;
