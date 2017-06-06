@@ -10,11 +10,9 @@ const { db, sql, as } = require("../helpers/db");
 const {
   getEditXById,
   addRelatedList,
-  getByType_id
+  returnThingByRequest,
+  getThingByType_id_lang_userId
 } = require("../helpers/things");
-
-const returnCaseById = getByType_id["case"].returnById;
-const getCaseById_lang_userId = getByType_id["case"].getById_lang_userId;
 
 const empty_case = {
   title: "",
@@ -258,7 +256,8 @@ router.post("/new", async function postNewCase(req, res) {
       await db.any(relOrgs);
     }
 
-    const newCase = await getCaseById_lang_userId(
+    const newCase = await getThingByType_id_lang_userId(
+      "case",
       thing.thingid,
       language,
       user_id
@@ -332,7 +331,8 @@ router.put("/:thingid", getEditXById("case"));
 
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.
-router.get("/:thingid", checkJwtOptional, returnCaseById);
+router.get("/:thingid", checkJwtOptional, (req, res) =>
+  returnThingByRequest("case", req, res));
 
 /**
  * @api {delete} /case/:caseId Delete a case

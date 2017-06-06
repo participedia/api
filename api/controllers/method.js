@@ -8,11 +8,9 @@ const { db, sql, as } = require("../helpers/db");
 const {
   getEditXById,
   addRelatedList,
-  getByType_id
+  returnThingByRequest,
+  getThingByType_id_lang_userId
 } = require("../helpers/things");
-
-const returnMethodById = getByType_id["method"].returnById;
-const getMethodById_lang_userId = getByType_id["method"].getById_lang_userId;
 
 const empty_method = {
   type: "method",
@@ -130,7 +128,8 @@ router.post("/new", async function(req, res) {
     if (relOrgs) {
       await db.any(relOrgs);
     }
-    const newMethod = await getMethodById_lang_userId(
+    const newMethod = await getThingByType_id_lang_userId(
+      "method",
       thingid,
       language,
       user_id
@@ -197,7 +196,8 @@ router.put("/:thingid", getEditXById("method"));
  *
  */
 
-router.get("/:thingid", checkJwtOptional, returnMethodById);
+router.get("/:thingid", checkJwtOptional, (req, res) =>
+  returnThingByRequest("method", req, res));
 
 /**
  * @api {delete} /method/:id Delete a method

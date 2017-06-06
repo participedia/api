@@ -69,52 +69,42 @@ function diffRelatedList(first, second) {
   return { remove, add };
 }
 
-function getXByIdFns(type) {
-  const getById_lang_userId = async function(thingid, lang, userId) {
-    const thing = await db.one(sql(`../sql/${type}_by_id.sql`), {
-      thingid,
-      lang,
-      userId
+const getThingByType_id_lang_userId = async function(
+  type,
+  thingid,
+  lang,
+  userId
+) {
+  let table = type + "s";
+  const thing = await db.one(sql(`../sql/thing_by_id.sql`), {
+    table,
+    type,
+    thingid,
+    lang,
+    userId
+  });
+  return thing.results;
+};
+
+const getThingByRequest = async function(type, req) {
+  await preferUser(req);
+  const thingid = as.number(req.params.thingid);
+  const lang = as.value(req.params.language || "en");
+  const userId = req.user ? req.user.user_id : null;
+  return await getThingByType_id_lang_userId(type, thingid, lang, userId);
+};
+
+const returnThingByRequest = async function(type, req, res) {
+  try {
+    const thing = await getThingByRequest(type, req);
+    res.status(200).json({ OK: true, data: thing });
+  } catch (error) {
+    log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
+    res.status(500).json({
+      OK: false,
+      error: error
     });
-    return thing;
-  };
-
-  const getByRequest = async function(req) {
-    await preferUser(req);
-    const thingid = as.number(req.params.thingid);
-    const lang = as.value(req.params.language || "en");
-    const userId = req.user ? req.user.user_id : null;
-    return await getById_lang_userId(thingid, lang, userId);
-  };
-
-  const returnById = async function(req, res) {
-    try {
-      const thing = await getByRequest(req);
-      res.status(200).json({ OK: true, data: thing });
-    } catch (error) {
-      log.error(
-        "Exception in GET /%s/%s => %s",
-        type,
-        req.params.thingid,
-        error
-      );
-      res.status(500).json({
-        OK: false,
-        error: error
-      });
-    }
-  };
-  return {
-    getById_lang_userId,
-    getByRequest,
-    returnById
-  };
-}
-
-const getByType_id = {
-  case: getXByIdFns("case"),
-  method: getXByIdFns("method"),
-  organization: getXByIdFns("organization")
+  }
 };
 
 function getEditXById(type) {
@@ -125,7 +115,8 @@ function getEditXById(type) {
       // FIXME: Figure out how to get all of this done as one transaction
       const lang = as.value(req.params.language || "en");
       const userId = req.user.user_id;
-      const oldThing = await getByType_id[type].getById_lang_userId(
+      const oldThing = await getThingByType_id_lang_userId(
+        type,
         thingid,
         lang,
         userId
@@ -177,7 +168,7 @@ function getEditXById(type) {
             // DELETE / INSERT any needed rows for related_nouns
             const oldList = oldThing[key];
             const newList = newThing[key];
-            newList.forEach(x => (x.id = x.id || x.value)); // handle client returning value vs. id
+            newList.forEach(x => x.id = x.id || x.value); // handle client returning value vs. id
             const diff = diffRelatedList(oldList, newList);
             const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
             const add = addRelatedList(
@@ -268,7 +259,8 @@ function getEditXById(type) {
           id: thingid
         });
         // update materialized view for search
-        retThing = await getByType_id[type].getById_lang_userId(
+        retThing = await getThingByType_id_lang_userId(
+          type,
           as.number(thingid),
           lang,
           userId
@@ -294,9 +286,10 @@ function getEditXById(type) {
 module.exports = {
   addRelatedList,
   removeRelatedList,
-  getXByIdFns,
+  getThingByType_id_lang_userId,
+  getThingByRequest,
+  returnThingByRequest,
   diffRelatedList,
   difference,
-  getEditXById,
-  getByType_id
+  getEditXById
 };

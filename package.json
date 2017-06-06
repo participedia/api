@@ -16,7 +16,6 @@
     "async": "^2.3.0",
     "aws-sdk": "^2.41.0",
     "babel": "^6.23.0",
-    "babel-cli": "^6.23.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
     "compression": "^1.6.2",
@@ -45,6 +44,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.1",
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
