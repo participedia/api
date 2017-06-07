@@ -15,6 +15,10 @@ WITH authors_list AS (
 full_thing AS (
   SELECT
     ${table:name}.*,
+    COALESCE(${table:name}.other_images, '{}') other_images,
+    COALESCE(${table:name}.files, '{}') files,
+    COALESCE(${table:name}.videos, '{}') videos,
+    COALESCE(${table:name}.tags, '{}') tags,
     localized_texts.body,
     localized_texts.title,
     authors_list.authors,
