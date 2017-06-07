@@ -3,42 +3,48 @@ let log = require("winston");
 let unless = require("express-unless");
 
 async function preferUser(req, res, next) {
-  return commonUserHandler(false, req);
+  commonUserHandler(false, req, res, next);
 }
 
 async function ensureUser(req, res, next) {
-  return commonUserHandler(true, req, res, next);
+  commonUserHandler(true, req, res, next);
 }
 
 async function commonUserHandler(required, req, res, next) {
   try {
     let user = req.user;
-    let name = req.header("X-Auth0-Name");
+    let email = req.header("X-Auth0-Name");
     let auth0UserId = req.header("X-Auth0-UserId");
     if (!user) {
-      if (require) {
+      if (required) {
         return res.status(401).json({
           message: "User must be logged in to perform this function"
         });
-      } else {
+      } else if (!email) {
         // nothing more we can do here without a user
         return next();
       }
     }
-    if (require && !okToEdit(user)) {
+    if (required && !okToEdit(user)) {
       res.status(401).json({
         message: "User is not authorized to add or edit content."
       });
     }
     if (user.user_id) {
       // all is well, carry on, but make sure user_id is a number
-      user.user_id = as.number(user.user_id);
+      user.user_id = Number(user.user_id);
       return next();
     }
+    console.log(
+      "finding user by user.email %s or header email %s",
+      user.email,
+      email
+    );
     userObj = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
-      userEmail: user.email
+      userEmail: user && user.email ? user.email : email
     });
     if (userObj) {
+      console.log("found user with id %s from <%s>", userObj.id, JSON);
       req.user.user_id = userObj.id;
     } else {
       let newUser;
@@ -57,11 +63,12 @@ async function commonUserHandler(required, req, res, next) {
         affiliation: "",
         location: null
       });
+      console.log("created user with id %s", newUser.user_id);
       req.user.user_id = newUser.user_id;
     }
     return next();
   } catch (error) {
-    log.error("Problem creating user", error);
+    console.trace("Problem creating user", error);
     return res.status(500).json({
       OK: false,
       error: error
@@ -86,5 +93,6 @@ function okToEdit(user) {
 }
 
 ensureUser.unless = unless;
+preferUser.unless = unless;
 
 module.exports = (exports = { ensureUser, okToEdit, preferUser });

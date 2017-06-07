@@ -47,8 +47,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
-app.get(checkJwtOptional);
-app.get(preferUser);
+app.use(
+  checkJwtOptional.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE"] })
+);
+app.use(preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE"] }));
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 

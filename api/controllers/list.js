@@ -33,7 +33,7 @@ router.get("/titles", async (req, res) => {
     const query = await db.one(sql("../sql/list_titles.sql"), { language });
     res.status(200).json({ OK: true, data: query.results });
   } catch (error) {
-    console.exception("Exception in POST /case/new => %s", error);
+    console.trace("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
   }
 });
@@ -44,7 +44,7 @@ router.get("/short", async (req, res) => {
     const query = await db.one(sql("../sql/list_short.sql"), { language });
     res.status(200).json({ OK: true, data: query.results });
   } catch (error) {
-    console.exception("Exception in POST /case/new => %s", error);
+    console.trace("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
   }
 });
@@ -55,7 +55,7 @@ router.get("/:type", async (req, res) => {
     const query = await db.one(sql("../sql/list_references.sql"), { language });
     res.status(200).json({ OK: true, data: query.results });
   } catch (error) {
-    console.exception("Exception in POST /case/new => %s", error);
+    console.trace("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
   }
 });

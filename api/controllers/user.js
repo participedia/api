@@ -5,15 +5,22 @@ let cache = require("apicache");
 let log = require("winston");
 let { db, sql } = require("../helpers/db");
 
-async function getUserById(req, userId, res) {
+async function getUserById(userId, req, res) {
+  console.log("Start of getUserById(%s)", userId);
   try {
     const result = await db.oneOrNone(sql("../sql/user_by_id.sql"), {
       userId: userId,
       language: req.params.language || "en"
     });
+    if (!result) {
+      return res
+        .status(404)
+        .json({ OK: false, error: `User not found for user_id ${userId}` });
+    }
     res.status(200).json({ OK: true, data: result.user });
   } catch (error) {
-    log.error("Exception in GET /user/%s => %s", req.params.userId, error);
+    log.error("Exception in GET /user/%s => %s", userId, error);
+    console.trace(error);
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
@@ -44,11 +51,28 @@ async function getUserById(req, userId, res) {
  *
  */
 router.get("/:userId", function(req, res) {
-  return getUserById(req, req.params.userId, res);
+  try {
+    return getUserById(req.params.userId || req.user.user_id, req, res);
+  } catch (error) {
+    console.error("Problem in /user/:userId");
+    console.trace(error);
+  }
 });
 
 router.get("/", async function(req, res) {
-  return getUserById(req, req.user.user_id, res);
+  try {
+    console.log("start of GET /user: %s", JSON.stringify(req.user));
+    if (!req.user) {
+      return res.status(404).json({
+        message: "No user found"
+      });
+    }
+    return getUserById(req.user.user_id, req, res);
+    console.log("end of GET /user");
+  } catch (error) {
+    console.error("Problem in /user/");
+    console.trace(error);
+  }
 });
 
 /**
