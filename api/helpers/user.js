@@ -2,42 +2,30 @@ let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
 let unless = require("express-unless");
 
-const preferUser = async req => {
-  try {
-    const user = req.user;
-    const name = req.header("X-Auth0-Name");
-    const auth0UserId = req.header("X-Auth0-UserId");
-    if (!user) {
-      return;
-    }
-    if (user.user_id) {
-      // all is well, carry on, but make sure user_id is a number
-      user.user_id = as.number(user.user_id);
-      return;
-    }
-    const userObj = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
-      userEmail: user.email
-    });
-    if (userObj) {
-      user.user_id = userObj.id;
-    }
-  } catch (error) {
-    log.error("Problem with optional user", error);
-    req.user = null;
-  }
-};
+async function preferUser(req, res, next) {
+  return commonUserHandler(false, req);
+}
 
 async function ensureUser(req, res, next) {
+  return commonUserHandler(true, req, res, next);
+}
+
+async function commonUserHandler(required, req, res, next) {
   try {
     let user = req.user;
     let name = req.header("X-Auth0-Name");
     let auth0UserId = req.header("X-Auth0-UserId");
     if (!user) {
-      return res.status(401).json({
-        message: "User must be logged in to perform this function"
-      });
+      if (require) {
+        return res.status(401).json({
+          message: "User must be logged in to perform this function"
+        });
+      } else {
+        // nothing more we can do here without a user
+        return next();
+      }
     }
-    if (!okToEdit(user)) {
+    if (require && !okToEdit(user)) {
       res.status(401).json({
         message: "User is not authorized to add or edit content."
       });
@@ -45,8 +33,7 @@ async function ensureUser(req, res, next) {
     if (user.user_id) {
       // all is well, carry on, but make sure user_id is a number
       user.user_id = as.number(user.user_id);
-      if (next) return next();
-      return;
+      return next();
     }
     userObj = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
       userEmail: user.email
@@ -72,8 +59,7 @@ async function ensureUser(req, res, next) {
       });
       req.user.user_id = newUser.user_id;
     }
-    if (next) return next();
-    return;
+    return next();
   } catch (error) {
     log.error("Problem creating user", error);
     return res.status(500).json({

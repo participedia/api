@@ -4,7 +4,6 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let { db, sql } = require("../helpers/db");
-let { ensureUser } = require("../helpers/user");
 
 async function getUserById(req, userId, res) {
   try {
@@ -49,7 +48,6 @@ router.get("/:userId", function(req, res) {
 });
 
 router.get("/", async function(req, res) {
-  await ensureUser(req, res);
   return getUserById(req, req.user.user_id, res);
 });
 

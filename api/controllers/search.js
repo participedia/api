@@ -3,7 +3,7 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
-const { preferUser } = require("../helpers/user");
+const { supportedTypes } = require("../helpers/things");
 
 const RESPONSE_LIMIT = 20;
 
@@ -11,22 +11,28 @@ router.get("/getAllForType", async function getAllForType(req, res) {
   try {
     let objType = req.query.objType.toLowerCase();
     let page = parseInt(req.query.page || 1);
-    let offset = (page - 1) * RESPONSE_LIMIT;
+    let offset = 0;
+    let response_limit = RESPONSE_LIMIT;
     if (
-      objType !== "organization" && objType !== "case" && objType !== "method"
+      req.query.response_limit &&
+      req.query.response_limit.toLowerCase() === "none"
     ) {
+      response_limit = Number.MAX_SAFE_INTEGER;
+    } else {
+      response_limit = parseInt(req.query.response_limit || RESPONSE_LIMIT);
+      offset = (page - 1) * response_limit;
+    }
+    if (!supportedTypes.includes(objType)) {
       res.status(401).json({
         message: "Unsupported objType for getAllForType: " + objType
       });
     }
-    const titlelist = await db.any(
-      sql("../sql/titles_for_" + objType + "s.sql"),
-      {
-        language: as.value(req.query.language || "en"),
-        limit: RESPONSE_LIMIT,
-        offset: offset
-      }
-    );
+    const titlelist = await db.any(sql("../sql/titles_for_things.sql"), {
+      language: as.value(req.query.language || "en"),
+      limit: RESPONSE_LIMIT,
+      offset: offset,
+      type: objType
+    });
     let jtitlelist = {};
     // FIXME: this is a dumb format but it is what front-end expects.
     // Switch both (and tests) to use array of {title: , id: } pairs.
@@ -231,7 +237,6 @@ router.get("/", function(req, res) {
 
 async function full_text_search(req, res, query, language, page) {
   try {
-    await preferUser(req);
     const userId = req.user ? req.user.user_id : null;
     const objList = await db.any(sql("../sql/search.sql"), {
       query: query,

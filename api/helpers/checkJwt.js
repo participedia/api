@@ -14,16 +14,18 @@ if (!secret) {
   });
 }
 
-let options = {
+let requiredOptions = {
   secret: secret,
   // audience: "https://api.participedia.xyz",
   issuer: "https://participedia.auth0.com/",
   algorithms: ["RS256"]
 };
-const checkJwtRequired = jwt(options);
+const checkJwtRequired = jwt(requiredOptions);
 
-options["credentialsRequired"] = false;
-const checkJwtOptional = jwt(options);
+// clone a new (shallow) copy so we don't accidentally over-ride options for checkJwtRequire
+let optionalOptions = Object.assign({}, requiredOptions);
+optionalOptions["credentialsRequired"] = false;
+const checkJwtOptional = jwt(optionalOptions);
 
 checkJwtOptional.unless = unless;
 checkJwtRequired.unless = unless;

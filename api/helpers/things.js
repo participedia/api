@@ -5,7 +5,6 @@ const equals = require("deep-equal");
 const moment = require("moment");
 
 const { as, db, sql } = require("./db");
-const { preferUser } = require("../helpers/user");
 
 function addRelatedList(owner_type, owner_id, related_type, id_list) {
   // TODO: escape id_list to avoid injection attacks
@@ -87,7 +86,6 @@ const getThingByType_id_lang_userId = async function(
 };
 
 const getThingByRequest = async function(type, req) {
-  await preferUser(req);
   const thingid = as.number(req.params.thingid);
   const lang = as.value(req.params.language || "en");
   const userId = req.user ? req.user.user_id : null;
@@ -283,6 +281,8 @@ function getEditXById(type) {
   };
 }
 
+const supportedTypes = ["case", "method", "organization"];
+
 module.exports = {
   addRelatedList,
   removeRelatedList,
@@ -291,5 +291,6 @@ module.exports = {
   returnThingByRequest,
   diffRelatedList,
   difference,
-  getEditXById
+  getEditXById,
+  supportedTypes
 };

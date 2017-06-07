@@ -3,7 +3,6 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let groups = require("../helpers/groups");
 let { db, as } = require("../helpers/db");
-let { userByEmail, ensureUser } = require("../helpers/user");
 let log = require("winston");
 
 /**
