@@ -1,7 +1,8 @@
 SELECT title, thingid
-FROM localized_texts, cases
+FROM localized_texts, things
 WHERE language = ${language} AND
-      cases.id = localized_texts.thingid
+      things.id = localized_texts.thingid
+      ${typelimit:raw}
 ORDER BY thingid ASC
 LIMIT ${limit}
 OFFSET ${offset}
