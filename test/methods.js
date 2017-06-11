@@ -254,7 +254,18 @@ describe("Methods", () => {
         .send({ tags });
       const res3 = await chai.getJSON("/method/" + method1.id).send({});
       const method1_new = res3.body.data;
-      method1_new.tags.should.deep.equal(["foo", "bar"]);
+      method1_new.tags.should.deep.equal(tags);
+    });
+    it("Add method, then change links", async () => {
+      const res1 = await addBasicMethod();
+      const method1 = res1.body.object;
+      const links = ["https://xkcd.com/", "http://girlgeniusonline.com/"];
+      const res2 = await chai
+        .putJSON("/method/" + method1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ links });
+      const method1_new = res2.body.data;
+      method1_new.links.should.deep.equal(links);
     });
   });
 });
