@@ -1,22 +1,12 @@
 WITH insert_method as (
   INSERT into methods (
-    type, original_language, best_for, communication_mode,
-    decision_method, facilitated, governance_contribution, issue_interdependency,
-    issue_polarization, issue_technical_complexity, kind_of_influence,
-    method_of_interaction, public_interaction_method, post_date,
-    published, typical_funding_source, typical_implementing_entity,
-    typical_sponsoring_entity, updated_date,
+    type, original_language, post_date, published, updated_date,
     lead_image, other_images, files, videos, tags, featured, links
   )
   VALUES
     (
-      'method', ${language}, null, null,
-      null, null, null, null,
-      null, null, null,
-      null, null, 'now',
-      true, null, null,
-      null, 'now',
-      ${lead_image:raw}, '{}', '{}', ${videos:raw}, '{}', false, '{}'
+      'method', ${language}, 'now', true, 'now',
+      ${lead_image:raw}, '{}', '{}', ${videos:raw}, '${tags:raw}', false, '{$links:raw}'
     ) RETURNING id as thingid
 ),
 insert_author as (

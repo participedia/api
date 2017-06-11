@@ -13,45 +13,6 @@ const {
   getThingByType_id_lang_userId
 } = require("../helpers/things");
 
-const empty_case = {
-  title: "",
-  body: "",
-  language: "en",
-  user_id: null,
-  original_language: "en",
-  issue: null,
-  communication_mode: null,
-  communication_with_audience: null,
-  content_country: null,
-  decision_method: null,
-  facetoface_online_or_both: null,
-  facilitated: null,
-  voting: "none",
-  number_of_meeting_days: null,
-  ongoing: false,
-  total_number_of_participants: null,
-  targeted_participant_demographic: "General Public",
-  kind_of_influence: null,
-  targeted_participants_public_role: "Lay Public",
-  targeted_audience: "General Public",
-  participant_selection: "Open to all",
-  specific_topic: null,
-  staff_type: null,
-  type_of_funding_entity: null,
-  typical_implementing_entity: null,
-  typical_sponsoring_entity: null,
-  who_else_supported_the_initiative: null,
-  who_was_primarily_responsible_for_organizing_the_initiative: null,
-  location: null,
-  lead_image_url: "",
-  other_images: "{}",
-  files: "{}",
-  videos: "{}",
-  tags: "{}",
-  featured: false,
-  bookmarked: false
-};
-
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
  * @apiGroup Cases
@@ -215,17 +176,23 @@ router.post("/new", async function postNewCase(req, res) {
     const location = as.location(req.body.location);
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const thing = await db.one(
-      sql("../sql/create_case.sql"),
-      Object.assign({}, empty_case, {
-        title,
-        body,
-        location,
-        lead_image,
-        videos,
-        user_id
-      })
-    );
+    const issue = as.text(req.body.issue);
+    const specific_topic = as.text(req.body.specific_topic);
+    const tags = as.strings(req.body.tags);
+    const links = as.strings(req.body.links);
+    const thing = await db.one(sql("../sql/create_case.sql"), {
+      title,
+      body,
+      language,
+      issue,
+      specific_topic,
+      tags,
+      links,
+      location,
+      lead_image,
+      videos,
+      user_id
+    });
     // save related objects (needs thingid)
     const relCases = addRelatedList(
       "case",

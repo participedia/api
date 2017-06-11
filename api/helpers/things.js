@@ -200,7 +200,7 @@ function getEditXById(type) {
               key: as.name(key),
               value: as.location(newThing[key])
             });
-          } else if (key === "tags") {
+          } else if (["tags", "links"].includes(key)) {
             updatedThingFields.push({
               key: as.name(key),
               value: as.tags(newThing[key])
