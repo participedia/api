@@ -14,17 +14,26 @@ WITH insert_case as (
     who_else_supported_the_initiative,
     who_was_primarily_responsible_for_organizing_the_initiative,
     location, lead_image, other_images,
-    files, videos, tags, featured
+    files, videos, tags, featured, links
   )
   VALUES
     (
-      'case', ${language}, null, null, null, null, null, null,
-      null, null, 'none', null, false, 'now',
-      true, 'now', null, 'now', 'General Public',
-      null, 'Lay Public', 'General Public',
-      'Open to all', null, null, null, null,
-      null, null, null, ${location:raw}, ${lead_image:raw},
-      '{}', '{}', ${videos:raw}, '{}', false
+      'case', ${language}, null, null,
+      null, null,
+      null, null,
+      null, null, 'none',
+      null, false, 'now',
+      true, 'now',
+      null, 'now',
+      null
+      null, null,
+      null, null, 
+      null, null, null,
+      null, null,
+      null,
+      null,
+      ${location:raw}, ${lead_image:raw}, '{}',
+      '{}', ${videos:raw}, '{}', false, '{}'
     ) RETURNING id as thingid
 ),
 insert_author as (

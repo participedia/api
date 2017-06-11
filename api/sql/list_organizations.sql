@@ -14,6 +14,8 @@ SELECT
     to_json(COALESCE(organizations.files, '{}')) AS files,
     to_json(COALESCE(organizations.videos, '{}')) AS videos,
     to_json(COALESCE(organizations.tags, '{}')) AS tags,
+    organizations.featured,
+    to_json(COALESCE(organizations.links, '{}')) AS links,
     localized_texts.body,
     localized_texts.title,
     to_json(author_list.authors) AS authors

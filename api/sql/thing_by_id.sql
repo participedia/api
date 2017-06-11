@@ -19,6 +19,7 @@ full_thing AS (
     COALESCE(${table:name}.files, '{}') files,
     COALESCE(${table:name}.videos, '{}') videos,
     COALESCE(${table:name}.tags, '{}') tags,
+    COALESCE(${table:name}.links, '{}') links,
     localized_texts.body,
     localized_texts.title,
     authors_list.authors,

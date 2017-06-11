@@ -1,16 +1,15 @@
 WITH insert_organization as (
   INSERT into organizations (
-    type, original_language, executive_director, issue,
-    post_date, published,
-    sector, updated_date, location,
-    lead_image, other_images,
-    files, videos, tags, featured
+    type, original_language, executive_director, issue, post_date, published,
+    sector, updated_date, location, lead_image, other_images, files, videos,
+    tags, featured, links
   )
   VALUES
     (
-      'organization', ${language}, null, null, 'now', true, null, 'now', ${location:raw},
-      ${lead_image:raw},
-      '{}', '{}', ${videos:raw}, '{}', false
+      'organization', ${language}, null, null, 'now', true,
+      null, 'now', ${location:raw},
+      ${lead_image:raw}, '{}', '{}', ${videos:raw}, 
+      '{}', false, '{}'
     ) RETURNING id as thingid
 ),
 insert_author as (
