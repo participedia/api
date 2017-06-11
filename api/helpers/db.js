@@ -116,7 +116,7 @@ function videos(url, title) {
 // as.strings / as.tags (could be used as as.strings too
 function strings(strList) {
   if (!strList) {
-    return "{}";
+    return "'{}'";
   }
   return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
 }
