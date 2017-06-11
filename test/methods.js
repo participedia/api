@@ -252,8 +252,7 @@ describe("Methods", () => {
         .putJSON("/method/" + method1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ tags });
-      const res3 = await chai.getJSON("/method/" + method1.id).send({});
-      const method1_new = res3.body.data;
+      const method1_new = res2.body.data;
       method1_new.tags.should.deep.equal(tags);
     });
     it("Add method, then change links", async () => {
