@@ -22,11 +22,12 @@ AWS.config.update({ region: "us-east-1" });
 app.use(compression());
 let port = process.env.PORT || 3001;
 let case_ = require("./api/controllers/case");
-let search = require("./api/controllers/search");
-let organization = require("./api/controllers/organization");
-let user = require("./api/controllers/user");
-let bookmark = require("./api/controllers/bookmark");
 let method = require("./api/controllers/method");
+let organization = require("./api/controllers/organization");
+let bookmark = require("./api/controllers/bookmark");
+let search = require("./api/controllers/search");
+let list = require("./api/controllers/list");
+let user = require("./api/controllers/user");
 let errorhandler = require("errorhandler");
 let morgan = require("morgan");
 let bodyParser = require("body-parser");
@@ -37,7 +38,7 @@ const {
   checkJwtRequired,
   checkJwtOptional
 } = require("./api/helpers/checkJwt");
-let { ensureUser } = require("./api/helpers/user");
+let { ensureUser, preferUser } = require("./api/helpers/user");
 
 app.set("port", port);
 app.use(morgan("dev"));
@@ -46,6 +47,10 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
+app.use(
+  checkJwtOptional.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE"] })
+);
+app.use(preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE"] }));
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 
@@ -57,7 +62,8 @@ app.use("/search", cache("5 minutes"), search);
 app.use("/case", case_);
 app.use("/organization", organization);
 app.use("/method", method);
-app.use("/user", [checkJwtOptional, user]);
+app.use("/list", list);
+app.use("/user", user);
 app.use("/bookmark", bookmark);
 
 app.use("/s3/:path", checkJwtRequired, isUser);

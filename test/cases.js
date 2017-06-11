@@ -177,6 +177,7 @@ describe("Cases", () => {
       res.body.data.related_organizations[1].id.should.equal(263);
     });
   });
+
   it("test SQL santization", async () => {
     const res = await addBasicCase();
     res.should.have.status(201);
@@ -192,6 +193,7 @@ describe("Cases", () => {
       res.should.have.status(200);
     });
   });
+
   describe("Get case with tags", () => {
     it("should have 3 tags", async () => {
       const res = await chai.getJSON("/case/39");
@@ -202,6 +204,7 @@ describe("Cases", () => {
       the_case.bookmarked.should.equal(false);
     });
   });
+
   describe("Get case with authentication", () => {
     it("should not fail when logged in", async () => {
       try {
@@ -215,6 +218,7 @@ describe("Cases", () => {
       }
     });
   });
+
   describe("Test edit API", () => {
     it("Add case, then null modify it", async () => {
       const res1 = await addBasicCase();
@@ -232,6 +236,7 @@ describe("Cases", () => {
       const updatedCase1 = res2.body.data;
       updatedCase1.should.deep.equal(origCase); // no changes saved
     });
+
     it("Add case, then modify title and/or body", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
@@ -266,6 +271,7 @@ describe("Cases", () => {
       updatedCase3.body.should.equal("Third Body");
       updatedCase3.authors.length.should.equal(updatedCase2.authors.length + 1);
     });
+
     it("Add case, then modify some fields", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
@@ -282,6 +288,7 @@ describe("Cases", () => {
       const updatedCase1 = res2.body.data;
       updatedCase1.issue.should.equal("new issue");
     });
+
     it("Add case, then modify lead image", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
@@ -313,6 +320,7 @@ describe("Cases", () => {
       case3.lead_image.url.should.equal("howzaboutthemjpegs.png");
       case3.lead_image.title.should.equal("Innocuous Title");
     });
+
     it("Add case, then change related objects", async () => {
       const res1 = await addBasicCase();
       const case1 = res1.body.object;
@@ -333,6 +341,7 @@ describe("Cases", () => {
       case3.related_cases.map(x => x.id).should.include(case1.id);
     });
   });
+
   describe("Test bookmarked", () => {
     let case1 = null;
     it("Add case, should not be bookmarked", async () => {

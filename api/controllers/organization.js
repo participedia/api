@@ -3,19 +3,14 @@
 const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
 const log = require("winston");
-const { checkJwtOptional } = require("../helpers/checkJwt");
 
 const { db, sql, as } = require("../helpers/db");
 const {
   getEditXById,
   addRelatedList,
-  getByType_id
+  returnThingByRequest,
+  getThingByType_id_lang_userId
 } = require("../helpers/things");
-
-const returnOrganizationById = getByType_id["organization"].returnById;
-const getOrganizationById_lang_userId = getByType_id[
-  "organization"
-].getById_lang_userId;
 
 const empty_organization = {
   type: "organization",
@@ -124,7 +119,8 @@ router.post("/new", async function(req, res) {
     if (relOrgs) {
       await db.any(relOrgs);
     }
-    const newOrganization = await getOrganizationById_lang_userId(
+    const newOrganization = await getThingByType_id_lang_userId(
+      "organization",
       thingid,
       language,
       user_id
@@ -199,7 +195,8 @@ router.put("/:thingid", getEditXById("organization"));
  *
  */
 
-router.get("/:thingid", checkJwtOptional, returnOrganizationById);
+router.get("/:thingid", (req, res) =>
+  returnThingByRequest("organization", req, res));
 
 /**
  * @api {delete} /organization/:id Delete an organization
