@@ -36,6 +36,8 @@ SELECT
     to_json(COALESCE(cases.files, '{}')) AS files,
     to_json(COALESCE(cases.videos, '{}')) AS videos,
     to_json(COALESCE(cases.tags, '{}')) AS tags,
+    cases.featured,
+    to_json(COALESCE(cases.links, '{}')) as links,
     localized_texts.body,
     localized_texts.title,
     to_json(author_list.authors) authors

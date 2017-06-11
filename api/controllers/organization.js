@@ -12,27 +12,6 @@ const {
   getThingByType_id_lang_userId
 } = require("../helpers/things");
 
-const empty_organization = {
-  type: "organization",
-  title: "",
-  body: "",
-  language: "en",
-  user_id: null,
-  original_language: "en",
-  executive_director: null,
-  post_date: "now",
-  published: true,
-  sector: null,
-  updated_date: "now",
-  location: null,
-  lead_image_url: "",
-  other_images: "{}",
-  files: "{}",
-  videos: "{}",
-  tags: "{}",
-  featured: false
-};
-
 /**
  * @api {post} /organization/new Create new organization
  * @apiGroup Organizations
@@ -77,19 +56,23 @@ router.post("/new", async function(req, res) {
     }
     const user_id = req.user.user_id;
     const location = as.location(req.body.location);
+    const issue = as.text(req.body.issue);
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const thing = await db.one(
-      sql("../sql/create_organization.sql"),
-      Object.assign({}, empty_organization, {
-        title,
-        body,
-        location,
-        lead_image,
-        videos,
-        user_id
-      })
-    );
+    const tags = as.strings(req.body.tags);
+    const links = as.strings(req.body.links);
+    const thing = await db.one(sql("../sql/create_organization.sql"), {
+      title,
+      body,
+      language,
+      issue,
+      location,
+      lead_image,
+      videos,
+      tags,
+      links,
+      user_id
+    });
     const thingid = thing.thingid;
     // save related objects (needs thingid)
     const relCases = addRelatedList(

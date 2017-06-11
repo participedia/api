@@ -11,38 +11,6 @@ const {
   getThingByType_id_lang_userId
 } = require("../helpers/things");
 
-const empty_method = {
-  type: "method",
-  title: "",
-  body: "",
-  language: "en",
-  user_id: null,
-  original_language: "en",
-  best_for: null,
-  communication_mode: null,
-  decision_method: null,
-  facilitated: null,
-  governance_contribution: null,
-  issue_interdependency: null,
-  issue_polarization: null,
-  issue_technical_complexity: null,
-  kind_of_influence: null,
-  method_of_interaction: null,
-  public_interaction_method: null,
-  post_date: "now",
-  published: true,
-  typical_funding_source: null,
-  typical_implementing_entity: null,
-  typical_sponsoring_entity: null,
-  updated_date: "now",
-  lead_image_url: "",
-  other_images: "{}",
-  files: "{}",
-  videos: "{}",
-  tags: "{}",
-  featured: false
-};
-
 /**
  * @api {post} /method/new Create new method
  * @apiGroup Methods
@@ -88,16 +56,18 @@ router.post("/new", async function(req, res) {
     const user_id = req.user.user_id;
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const thing = await db.one(
-      sql("../sql/create_method.sql"),
-      Object.assign({}, empty_method, {
-        title,
-        body,
-        lead_image,
-        videos,
-        user_id
-      })
-    );
+    const tags = as.strings(req.body.tags);
+    const links = as.strings(req.body.links);
+    const thing = await db.one(sql("../sql/create_method.sql"), {
+      title,
+      body,
+      language,
+      lead_image,
+      videos,
+      tags,
+      links,
+      user_id
+    });
     const thingid = thing.thingid;
     // save related objects (needs thingid)
     const relCases = addRelatedList(
