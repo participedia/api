@@ -21,7 +21,9 @@ async function addBasicMethod() {
       vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
       related_cases: [5, 6, 7, 8],
       related_methods: [148, 149, 150],
-      related_organizations: [202, 203, 204]
+      related_organizations: [202, 203, 204],
+      tags: ["OIDP2017", "Tag1", "Tag2"],
+      links: ["http://killsixbilliondemons.com/", "http://dresdencodak.com/"]
     });
 }
 
@@ -85,6 +87,13 @@ describe("Methods", () => {
       returnedMethod.related_cases.length.should.equal(4);
       returnedMethod.related_methods.length.should.equal(3);
       returnedMethod.related_organizations.length.should.equal(3);
+      returnedMethod.links.should.have.lengthOf(2);
+      returnedMethod.tags.should.have.lengthOf(3);
+      returnedMethod.links.should.deep.equal([
+        "http://killsixbilliondemons.com/",
+        "http://dresdencodak.com/"
+      ]);
+      returnedMethod.tags.should.deep.equal(["OIDP2017", "Tag1", "Tag2"]);
     });
   });
   describe("Get method with tags", () => {

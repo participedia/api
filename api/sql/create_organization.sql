@@ -9,7 +9,7 @@ WITH insert_organization as (
       'organization', ${language}, ${issue}, 'now', true,
       'now', ${location:raw},
       ${lead_image:raw}, '{}', '{}', ${videos:raw},
-      '${tags:raw}', false, '${links:raw}'
+      ${tags:raw}, false, ${links:raw}
     ) RETURNING id as thingid
 ),
 insert_author as (

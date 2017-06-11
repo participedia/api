@@ -6,7 +6,7 @@ WITH insert_method as (
   VALUES
     (
       'method', ${language}, 'now', true, 'now',
-      ${lead_image:raw}, '{}', '{}', ${videos:raw}, '${tags:raw}', false, '{$links:raw}'
+      ${lead_image:raw}, '{}', '{}', ${videos:raw}, ${tags:raw}, false, ${links:raw}
     ) RETURNING id as thingid
 ),
 insert_author as (

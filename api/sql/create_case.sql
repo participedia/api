@@ -7,8 +7,8 @@ WITH insert_case as (
   VALUES
     (
       'case', ${language}, ${issue}, 'now', true, 'now',
-      ${specific_topic}, ${location:raw}, ${lead_image:raw}, '{}', '{}', ${videos:raw}, '${tags:raw}', 
-      false, '${links:raw}'
+      ${specific_topic}, ${location:raw}, ${lead_image:raw}, '{}', '{}', ${videos:raw}, ${tags:raw},
+      false, ${links:raw}
     ) RETURNING id as thingid
 ),
 insert_author as (
