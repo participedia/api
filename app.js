@@ -63,7 +63,7 @@ app.use("/case", case_);
 app.use("/organization", organization);
 app.use("/method", method);
 app.use("/list", list);
-app.use("/user", [checkJwtOptional, user]);
+app.use("/user", user);
 app.use("/bookmark", bookmark);
 
 app.use("/s3/:path", checkJwtRequired, isUser);

@@ -35,16 +35,10 @@ async function commonUserHandler(required, req, res, next) {
       user.user_id = Number(user.user_id);
       return next();
     }
-    console.log(
-      "finding user by user.email %s or header email %s",
-      user.email,
-      email
-    );
     userObj = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
       userEmail: user && user.email ? user.email : email
     });
     if (userObj) {
-      console.log("found user with id %s from <%s>", userObj.id, JSON);
       req.user.user_id = userObj.id;
     } else {
       let newUser;
@@ -63,7 +57,6 @@ async function commonUserHandler(required, req, res, next) {
         affiliation: "",
         location: null
       });
-      console.log("created user with id %s", newUser.user_id);
       req.user.user_id = newUser.user_id;
     }
     return next();

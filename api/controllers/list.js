@@ -31,7 +31,17 @@ router.get("/titles", async (req, res) => {
   try {
     const language = req.params.language || "en";
     const query = await db.one(sql("../sql/list_titles.sql"), { language });
-    res.status(200).json({ OK: true, data: query.results });
+    // query.results.forEach(item =>
+    //   console.log("before munge: %s", Object.keys(item)));
+    let retVal = {};
+    query.results.forEach(thing => {
+      retVal[thing.type + "s"] = thing.array_agg;
+    });
+    // console.log("after munge: %s", Object.keys(retVal));
+    // console.log("cases: %s", retVal.cases.length);
+    // console.log("methods: %s", retVal.methods.length);
+    // console.log("organizations: %s", retVal.organizations.length);
+    res.status(200).json({ OK: true, data: retVal });
   } catch (error) {
     console.trace("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
@@ -42,7 +52,11 @@ router.get("/short", async (req, res) => {
   try {
     const language = req.params.language || "en";
     const query = await db.one(sql("../sql/list_short.sql"), { language });
-    res.status(200).json({ OK: true, data: query.results });
+    let retVal = {};
+    query.results.forEach(thing => {
+      retVal[thing.type + "s"] = thing.array_agg;
+    });
+    res.status(200).json({ OK: true, data: retVal });
   } catch (error) {
     console.trace("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });

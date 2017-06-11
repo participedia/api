@@ -26,20 +26,7 @@ const checkJwtRequired = jwt(requiredOptions);
 // clone a new (shallow) copy so we don't accidentally over-ride options for checkJwtRequire
 let optionalOptions = Object.assign({}, requiredOptions);
 optionalOptions["credentialsRequired"] = false;
-const checkJwtOptionalImpl = jwt(optionalOptions);
-
-const checkJwtOptional = (req, res, next) => {
-  console.log("before jwt user: %s", req.user);
-  try {
-    checkJwtOptionalImpl(req, res, () => {
-      console.log("after jwt user: %s", req.user);
-      next();
-    });
-  } catch (error) {
-    console.error("Error handling credentials");
-    console.trace(error);
-  }
-};
+const checkJwtOptional = jwt(optionalOptions);
 
 checkJwtOptional.unless = unless;
 checkJwtRequired.unless = unless;

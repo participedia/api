@@ -3,7 +3,6 @@
 const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
 const log = require("winston");
-const { checkJwtOptional } = require("../helpers/checkJwt");
 
 const { db, sql, as } = require("../helpers/db");
 const {
@@ -196,7 +195,7 @@ router.put("/:thingid", getEditXById("organization"));
  *
  */
 
-router.get("/:thingid", checkJwtOptional, (req, res) =>
+router.get("/:thingid", (req, res) =>
   returnThingByRequest("organization", req, res));
 
 /**

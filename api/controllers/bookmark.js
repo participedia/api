@@ -3,6 +3,7 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let groups = require("../helpers/groups");
 let { db, as } = require("../helpers/db");
+let { userByEmail } = require("../helpers/user");
 let log = require("winston");
 
 /**
@@ -53,8 +54,7 @@ async function queryBookmarks(req, res) {
     let userid = as.number(req.params.userid);
 
     if (!userid) {
-      await ensureUser(req, res);
-      userid = req.user.user_id; // put there by ensureUser
+      userid = req.user.user_id; // put there by preferUser
     }
     lookupBookmarksById(req, res, userid);
   } catch (error) {

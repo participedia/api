@@ -6,7 +6,6 @@ let log = require("winston");
 let { db, sql } = require("../helpers/db");
 
 async function getUserById(userId, req, res) {
-  console.log("Start of getUserById(%s)", userId);
   try {
     const result = await db.oneOrNone(sql("../sql/user_by_id.sql"), {
       userId: userId,
@@ -61,14 +60,12 @@ router.get("/:userId", function(req, res) {
 
 router.get("/", async function(req, res) {
   try {
-    console.log("start of GET /user: %s", JSON.stringify(req.user));
     if (!req.user) {
       return res.status(404).json({
         message: "No user found"
       });
     }
     return getUserById(req.user.user_id, req, res);
-    console.log("end of GET /user");
   } catch (error) {
     console.error("Problem in /user/");
     console.trace(error);
