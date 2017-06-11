@@ -1,0 +1,5 @@
+ALTER TABLE things
+  DROP COLUMN url;
+
+ALTER TABLE things
+  ADD COLUMN links TEXT[] DEFAULT '{}';
