@@ -53,13 +53,11 @@ describe("Search", () => {
         });
     });
   });
-  describe("get organizations in Canada", () => {
-    it("finds all Organizations with the facet geo_country=Canada", done => {
+  describe.skip("get organizations in Canada", () => {
+    it("finds all Organizations with the term Canada", done => {
       chai
         .request(app)
-        .get(
-          "/search?query=geo_country%3ACanada&selectedCategory=Organizations&sortingMethod=chronological"
-        )
+        .get("/search?query=Canada&selectedCategory=Organizations")
         .set("Content-Type", "application/json")
         .set("Accept", "application/json")
         .send({})
@@ -68,38 +66,33 @@ describe("Search", () => {
           res.body.OK.should.equal(true);
           res.body.results.should.have.lengthOf(17);
           res.body.results.forEach(obj =>
-            obj.type.should.equal("organization")
-          );
+            obj.type.should.equal("organization"));
           done();
         });
     });
   });
   describe("get cases tagged 'nuclear'", () => {
-    it("finds all Cases with the facet tag=nuclear", done => {
+    it("finds all Cases with the word nuclear", done => {
       chai
         .request(app)
-        .get(
-          "/search?query=tag%3Anuclear&selectedCategory=Cases&sortingMethod=chronological"
-        )
+        .get("/search?query=nuclear&selectedCategory=Cases")
         .set("Content-Type", "application/json")
         .set("Accept", "application/json")
         .send({})
         .end((err, res) => {
           res.should.have.status(200);
           res.body.OK.should.equal(true);
-          res.body.results.should.have.lengthOf(1);
+          res.body.results.should.have.lengthOf(3);
           res.body.results[0].type.should.equal("case");
           done();
         });
     });
   });
-  describe("Test search with multi-word tags", () => {
-    it("finds everything with the facet tag=animal welfare", done => {
+  describe.skip("Test search with multi-word tags", () => {
+    it("finds everything with the words animal welfare", done => {
       chai
         .request(app)
-        .get(
-          "/search?query=tag%3A%22animal%20welfare%22&selectedCategory=All&sortingMethod=chronological"
-        )
+        .get("/search?query=animal%20welfare")
         .set("Content-Type", "application/json")
         .set("Accept", "application/json")
         .send({})
@@ -137,7 +130,7 @@ describe("Search", () => {
     it("multi-word search", done => {
       chai
         .request(app)
-        .get("/search?query=Budget Participatory")
+        .get("/search?query=Budget%20Participatory")
         .set("Content-Type", "application/json")
         .set("Accept", "application/json")
         .send({})

@@ -33,11 +33,11 @@ SELECT
 		things.lead_image,
 		things.updated_date,
     setweight(to_tsvector('english'::regconfig, localized_texts.title), 'A') ||
-    setweight(to_tsvector('english'::regconfig, localized_texts.body), 'B') ||
-    setweight(to_tsvector('english'::regconfig, alltags.tagstring), 'B') ||
-    setweight(to_tsvector('english'::regconfig, allauthors.authorstring), 'B') ||
-    setweight(to_tsvector('english'::regconfig, (things.location).city), 'C') ||
-    setweight(to_tsvector('english'::regconfig, (things.location).country), 'C') AS document
+    setweight(to_tsvector('english'::regconfig, localized_texts.body), 'A') ||
+    setweight(to_tsvector('english'::regconfig, alltags.tagstring), 'A') ||
+    setweight(to_tsvector('english'::regconfig, allauthors.authorstring), 'A') ||
+    setweight(to_tsvector('english'::regconfig, (things.location).city), 'A') ||
+    setweight(to_tsvector('english'::regconfig, (things.location).country), 'A') AS document
 	FROM
 		things
   JOIN localized_texts ON localized_texts.thingid = things.id
