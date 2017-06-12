@@ -46,9 +46,10 @@ async function commonUserHandler(required, req, res, next) {
       if (user.user_metadata && user.user_metadata.customPic) {
         pictureUrl = user.user_metadata.customPic;
       }
+      console.log(JSON.stringify(req.user));
       newUser = await db.one(sql("../sql/create_user_id.sql"), {
         userEmail: user.email,
-        userName: name,
+        userName: user.name || user.email,
         joinDate: user.created_at,
         auth0UserId: auth0UserId,
         pictureUrl: pictureUrl,

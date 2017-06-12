@@ -48,9 +48,13 @@ app.use(bodyParser.json());
 app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
 app.use(
-  checkJwtOptional.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE"] })
+  checkJwtOptional.unless({
+    method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"]
+  })
 );
-app.use(preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE"] }));
+app.use(
+  preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
+);
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 
