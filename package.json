@@ -15,7 +15,6 @@
     "apidoc": "^0.17.5",
     "async": "^2.3.0",
     "aws-sdk": "^2.41.0",
-    "babel": "^6.23.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
     "compression": "^1.6.2",
