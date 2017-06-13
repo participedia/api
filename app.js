@@ -15,6 +15,17 @@ if (
   process.exit(1);
 }
 
+// Better logging of "unhandled" promise exceptions
+process.on("unhandledRejection", function(reason, p) {
+  console.log(
+    "Possibly Unhandled Rejection at: Promise ",
+    p,
+    " reason: ",
+    reason
+  );
+  // application specific logging here
+});
+
 let express = require("express");
 let compression = require("compression");
 let AWS = require("aws-sdk");
