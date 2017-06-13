@@ -59,7 +59,6 @@
     "start": "./node_modules/apidoc/bin/apidoc -i api -o swagger && nodemon ./node_modules/.bin/babel-node server.js",
     "start-dev": "nave use 6 bash -c 'node-dev server.js'",
     "lint": "eslint \"**.js\"",
-    "preinstall": "npm install",
     "postinstall": "./node_modules/apidoc/bin/apidoc -i api -o swagger",
     "deploy": "git push heroku",
     "coverage": "NODE_ENV=test istanbul cover _mocha -- -R spec && open coverage/lcov-report/index.html",
