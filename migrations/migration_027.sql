@@ -26,12 +26,12 @@ alltags as (
 
 SELECT
 		things.id,
-		things.type,
+    things.type,
     things.location,
-		localized_texts.title,
+    localized_texts.title,
     localized_texts.body,
-		things.lead_image,
-		things.updated_date,
+    things.lead_image,
+    things.updated_date,
     setweight(to_tsvector('english'::regconfig, localized_texts.title), 'A') ||
     setweight(to_tsvector('english'::regconfig, localized_texts.body), 'A') ||
     setweight(to_tsvector('english'::regconfig, alltags.tagstring), 'A') ||
