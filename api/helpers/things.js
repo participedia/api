@@ -188,7 +188,9 @@ function getEditXById(type) {
             }
             anyChanges = true;
             // If any of the fields of thing itself have changed, update record in appropriate table
-          } else if (["id", "post_date", "updated_date"].includes(key)) {
+          } else if (
+            ["id", "post_date", "updated_date", "authors"].includes(key)
+          ) {
             log.warn(
               "Trying to update a field users shouldn't update: %s",
               key
