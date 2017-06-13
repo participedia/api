@@ -4,6 +4,7 @@ const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
 
+const { okToFlipFeatured } = require("./user");
 const { as, db, sql } = require("./db");
 
 function addRelatedList(owner_type, owner_id, related_type, id_list) {
@@ -112,7 +113,8 @@ function getEditXById(type) {
     try {
       // FIXME: Figure out how to get all of this done as one transaction
       const lang = as.value(req.params.language || "en");
-      const userId = req.user.user_id;
+      const user = req.user;
+      const userId = user.user_id;
       const oldThing = await getThingByType_id_lang_userId(
         type,
         thingid,
@@ -186,15 +188,24 @@ function getEditXById(type) {
             }
             anyChanges = true;
             // If any of the fields of thing itself have changed, update record in appropriate table
-          } else if (["id", "post_date", "updated_date"].includes(key)) {
+          } else if (
+            ["id", "post_date", "updated_date", "authors"].includes(key)
+          ) {
             log.warn(
               "Trying to update a field users shouldn't update: %s",
               key
             );
             // take no action
-          } else if (key === "featured" && !user.groups.includes("Curators")) {
-            log.warn("Non-curator trying to update Featured flag");
-            // take no action
+          } else if (key === "featured") {
+            if (okToFlipFeatured(user)) {
+              updatedThingFields.push({
+                key: as.name(key),
+                value: Boolean(newThing[key])
+              });
+            } else {
+              log.warn("Non-curator trying to update Featured flag");
+              // take no action
+            }
           } else if (key === "location") {
             updatedThingFields.push({
               key: as.name(key),

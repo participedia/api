@@ -239,5 +239,16 @@ describe("Organizations", () => {
         .map(x => x.id)
         .should.include(organization1.id);
     });
+    it("Try to change featured flag", async () => {
+      const res1 = await addBasicOrganization();
+      const organization1 = res1.body.object;
+      organization1.featured.should.be.false;
+      const res2 = await chai
+        .putJSON("/organization/" + organization1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ featured: true });
+      const organization2 = res2.body.data;
+      organization2.featured.should.be.true;
+    });
   });
 });

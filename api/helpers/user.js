@@ -46,9 +46,10 @@ async function commonUserHandler(required, req, res, next) {
       if (user.user_metadata && user.user_metadata.customPic) {
         pictureUrl = user.user_metadata.customPic;
       }
+      console.log(JSON.stringify(req.user));
       newUser = await db.one(sql("../sql/create_user_id.sql"), {
         userEmail: user.email,
-        userName: name,
+        userName: user.name || user.email,
         joinDate: user.created_at,
         auth0UserId: auth0UserId,
         pictureUrl: pictureUrl,
@@ -79,13 +80,34 @@ function okToEdit(user) {
     // how do we have a user, but not this metadata?
     return false;
   }
-  if (user.app_metadata.authorization.groups.indexOf("Banned") !== -1) {
+  if (user.app_metadata.authorization.groups.includes("Banned")) {
     return false;
   }
   return true;
 }
 
+function okToFlipFeatured(user) {
+  // User should be logged in and be part of the Curators group
+  if (
+    !(user.app_metadata &&
+      user.app_metadata.authorization &&
+      user.app_metadata.authorization.groups)
+  ) {
+    // how do we have a user, but not this metadata?
+    return false;
+  }
+  if (user.app_metadata.authorization.groups.includes("Curators")) {
+    return true;
+  }
+  return false;
+}
+
 ensureUser.unless = unless;
 preferUser.unless = unless;
 
-module.exports = (exports = { ensureUser, okToEdit, preferUser });
+module.exports = (exports = {
+  ensureUser,
+  preferUser,
+  okToEdit,
+  okToFlipFeatured
+});

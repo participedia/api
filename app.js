@@ -15,6 +15,17 @@ if (
   process.exit(1);
 }
 
+// Better logging of "unhandled" promise exceptions
+process.on("unhandledRejection", function(reason, p) {
+  console.log(
+    "Possibly Unhandled Rejection at: Promise ",
+    p,
+    " reason: ",
+    reason
+  );
+  // application specific logging here
+});
+
 let express = require("express");
 let compression = require("compression");
 let AWS = require("aws-sdk");
@@ -48,9 +59,13 @@ app.use(bodyParser.json());
 app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
 app.use(
-  checkJwtOptional.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE"] })
+  checkJwtOptional.unless({
+    method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"]
+  })
 );
-app.use(preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE"] }));
+app.use(
+  preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
+);
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 
