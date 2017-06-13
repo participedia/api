@@ -4,6 +4,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 const log = require("winston");
 
 const { db, sql, as } = require("../helpers/db");
+const { supportedTypes } = require("../helpers/things");
 
 /**
  * @api {get} /list/titles Get title and id for all "things"
@@ -43,7 +44,7 @@ router.get("/titles", async (req, res) => {
     // console.log("organizations: %s", retVal.organizations.length);
     res.status(200).json({ OK: true, data: retVal });
   } catch (error) {
-    console.trace("Exception in POST /case/new => %s", error);
+    console.trace("Exception in POST /list/titles => %s", error);
     return res.status(500).json({ OK: false, error: error });
   }
 });
@@ -58,18 +59,23 @@ router.get("/short", async (req, res) => {
     });
     res.status(200).json({ OK: true, data: retVal });
   } catch (error) {
-    console.trace("Exception in POST /case/new => %s", error);
+    console.trace("Exception in POST /list/short => %s", error);
     return res.status(500).json({ OK: false, error: error });
   }
 });
 
 router.get("/:type", async (req, res) => {
   try {
+    if (!supportedTypes.includes(req.params.type.toLowerCase())) {
+      return res
+        .status(404)
+        .json({ OK: false, error: `Type ${req.params.type} is not supported` });
+    }
     const language = req.params.language || "en";
     const query = await db.one(sql("../sql/list_references.sql"), { language });
     res.status(200).json({ OK: true, data: query.results });
   } catch (error) {
-    console.trace("Exception in POST /case/new => %s", error);
+    console.trace("Exception in POST /list/%s => %s", req.params.type, error);
     return res.status(500).json({ OK: false, error: error });
   }
 });
