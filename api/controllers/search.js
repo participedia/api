@@ -57,7 +57,7 @@ const singularLowerCase = name => name.slice(0, -1).toLowerCase();
 // like it says on the tin
 const filterFromReq = req => {
   const cat = singularLowerCase(req.query.selectedCategory || "Alls");
-  return cat === "all" ? "" : `AND type = '${cat}'`;
+  return cat === "all" ? "" : `AND things.type = '${cat}'`;
 };
 
 const queryFileFromReq = req => {
