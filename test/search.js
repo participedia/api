@@ -36,7 +36,7 @@ describe("Search", () => {
       should.equal(Object.keys(res.body).length, 20);
     });
   });
-  describe.skip("get organizations in Canada", () => {
+  describe.only("get organizations in Canada", () => {
     it("finds all Organizations with the term Canada", async () => {
       const res = await chai
         .getJSON("/search?query=Canada&selectedCategory=Organizations")
