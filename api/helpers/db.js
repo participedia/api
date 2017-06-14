@@ -1,5 +1,5 @@
 let promise = require("bluebird");
-let { isArray } = require("lodash");
+let { isArray, isObject } = require("lodash");
 let options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -62,24 +62,21 @@ function attachment(url, title, size) {
 function attachments(url, title, size) {
   if (isArray(url)) {
     let atts = url;
-    return (
-      "ARRAY[" +
+    return "ARRAY[" +
       atts
-        .map(
-          att =>
-            ("(" +
-              as.text(att.url) +
-              ", " +
-              as.text(att.title ? att.title : "") +
-              ", " +
-              att.size ===
-              undefined
-              ? "null"
-              : as.number(att.size) + ")")
-        )
+        .map(vid => {
+          let url, title, size;
+          if (isObject(vid)) {
+            url = as.text(vid.url);
+            title = as.text(vid.title ? vid.title : "");
+            size = vid.size === undefined ? null : as.number(vid.size);
+            return `(${url}, ${title}, ${size})`;
+          } else {
+            return `(${vid}, '', null)::attachment`;
+          }
+        })
         .join(", ") +
-      "]::attachment[]"
-    );
+      "]::attachment[]";
   }
   url = as.text(url ? url : "{}");
   title = as.text(title ? title : "");
@@ -94,8 +91,7 @@ function attachments(url, title, size) {
 function videos(url, title) {
   if (isArray(url)) {
     let vids = url;
-    return (
-      "ARRAY[" +
+    return "ARRAY[" +
       vids
         .map(
           vid =>
@@ -106,8 +102,7 @@ function videos(url, title) {
             ")"
         )
         .join(", ") +
-      "]::video[]"
-    );
+      "]::video[]";
   }
   if (!url) {
     return "'{}'";
