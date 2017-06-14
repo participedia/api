@@ -46,7 +46,7 @@ router.post("/new", async function(req, res) {
   //   location
   //   related methods
   try {
-    const cache = require("apicache");
+    cache.clear();
 
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
