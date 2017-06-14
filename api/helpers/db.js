@@ -62,11 +62,12 @@ function attachment(url, title, size) {
 function attachments(url, title, size) {
   if (isArray(url)) {
     let atts = url;
-    return "ARRAY[" +
+    return (
+      "ARRAY[" +
       atts
         .map(
-          vid =>
-            "(" +
+          att =>
+            ("(" +
               as.text(att.url) +
               ", " +
               as.text(att.title ? att.title : "") +
@@ -74,10 +75,11 @@ function attachments(url, title, size) {
               att.size ===
               undefined
               ? "null"
-              : as.number(att.size) + ")"
+              : as.number(att.size) + ")")
         )
         .join(", ") +
-      "]::attachment[]";
+      "]::attachment[]"
+    );
   }
   url = as.text(url ? url : "{}");
   title = as.text(title ? title : "");
@@ -92,7 +94,8 @@ function attachments(url, title, size) {
 function videos(url, title) {
   if (isArray(url)) {
     let vids = url;
-    return "ARRAY[" +
+    return (
+      "ARRAY[" +
       vids
         .map(
           vid =>
@@ -103,7 +106,8 @@ function videos(url, title) {
             ")"
         )
         .join(", ") +
-      "]::video[]";
+      "]::video[]"
+    );
   }
   if (!url) {
     return "'{}'";
