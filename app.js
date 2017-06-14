@@ -81,7 +81,7 @@ app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
 
-app.use("/s3/:path", checkJwtRequired, isUser);
+app.use("/s3/:path", checkJwtRequired);
 app.use(
   "/s3",
   require("react-dropzone-s3-uploader/s3router")({

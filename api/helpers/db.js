@@ -1,5 +1,5 @@
 let promise = require("bluebird");
-let { isArray } = require("lodash");
+let { isArray, isObject } = require("lodash");
 let options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -64,18 +64,17 @@ function attachments(url, title, size) {
     let atts = url;
     return "ARRAY[" +
       atts
-        .map(
-          vid =>
-            "(" +
-              as.text(att.url) +
-              ", " +
-              as.text(att.title ? att.title : "") +
-              ", " +
-              att.size ===
-              undefined
-              ? "null"
-              : as.number(att.size) + ")"
-        )
+        .map(vid => {
+          let url, title, size;
+          if (isObject(vid)) {
+            url = as.text(vid.url);
+            title = as.text(vid.title ? vid.title : "");
+            size = vid.size === undefined ? null : as.number(vid.size);
+            return `(${url}, ${title}, ${size})`;
+          } else {
+            return `(${vid}, '', null)::attachment`;
+          }
+        })
         .join(", ") +
       "]::attachment[]";
   }
