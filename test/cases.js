@@ -375,3 +375,5 @@ describe("Cases", () => {
     });
   });
 });
+
+module.exports = { addBasicCase };
