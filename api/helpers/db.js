@@ -70,7 +70,7 @@ function attachments(url, title, size) {
             url = as.text(vid.url);
             title = as.text(vid.title ? vid.title : "");
             size = vid.size === undefined ? null : as.number(vid.size);
-            return `(${url}, ${title}, ${size})::attachment`;
+            return `(${url}, ${title}, ${size})`;
           } else {
             return `(${vid}, '', null)::attachment`;
           }
