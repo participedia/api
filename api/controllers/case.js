@@ -164,6 +164,8 @@ router.post("/new", async function postNewCase(req, res) {
   }
   */
   try {
+    const cache = require("apicache");
+
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
     let language = req.params.language || "en";

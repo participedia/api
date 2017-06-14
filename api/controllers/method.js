@@ -1,6 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
+const cache = require("apicache");
 const log = require("winston");
 
 const { db, sql, as } = require("../helpers/db");
@@ -45,6 +46,8 @@ router.post("/new", async function(req, res) {
   //   location
   //   related methods
   try {
+    const cache = require("apicache");
+
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
     let language = req.params.language || "en";
