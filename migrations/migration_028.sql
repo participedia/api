@@ -2,7 +2,7 @@
 
 UPDATE cases SET specific_topic = NULL WHERE specific_topic = 'null';
 UPDATE cases SET issue = NULL WHERE issue = 'null';
-UPDATE organization SET issue = NULL WHERE issue = 'null';
+UPDATE organizations SET issue = NULL WHERE issue = 'null';
 
 
  -- Modify Materialized view and index for English searches
