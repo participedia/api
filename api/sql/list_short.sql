@@ -6,8 +6,7 @@ WITH shorts AS (
       id,
       type,
       title,
-      to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
-      lead_image,
+      COALESCE(lead_image, '("","",0)'::attachment), 
       post_date,
       updated_date)::object_reference)
   FROM things, localized_texts
