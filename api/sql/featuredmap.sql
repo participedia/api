@@ -13,6 +13,7 @@ SELECT
   to_json(COALESCE(lead_image, '("","",0)'::attachment)) AS lead_image
 FROM things, localized_texts
 WHERE things.id = localized_texts.thingid AND
+      things.hidden = false AND
       localized_texts.language = ${language}
       ${filter:raw}
 ORDER BY things.featured, updated_date DESC

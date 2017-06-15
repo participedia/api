@@ -18,6 +18,7 @@ WITH all_featured  AS (
     bookmarked(type, id, ${userId})
   FROM things, localized_texts
   WHERE things.id = localized_texts.thingid AND
+        things.hidden = false AND
         localized_texts.language = ${language}
         ${filter:raw}
   ORDER BY featured DESC, updated_date DESC
