@@ -121,9 +121,12 @@ router.get("/", async function(req, res) {
       offset: offsetFromReq(req),
       userId: req.user ? req.user.user_id : null
     });
-    const total = objList.length ? objList[0].total : 0;
+    const total = Number(objList.length ? objList[0].total || 0 : 0);
+    const pages = Math.ceil(total / RESPONSE_LIMIT);
     objList.forEach(obj => delete obj.total);
-    res.status(200).json({ OK: true, total: total, results: objList });
+    res
+      .status(200)
+      .json({ OK: true, total: total, pages: pages, results: objList });
   } catch (error) {
     console.error("Error in search: ", error);
     console.trace(error);
