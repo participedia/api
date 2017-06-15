@@ -62,7 +62,7 @@
     "postinstall": "./node_modules/apidoc/bin/apidoc -i api -o swagger",
     "deploy": "git push heroku",
     "coverage": "NODE_ENV=test istanbul cover _mocha -- -R spec && open coverage/lcov-report/index.html",
-    "test": "NODE_ENV=test mocha --timeout 10000",
+    "test": "NODE_ENV=test mocha --timeout 50000",
     "watch": "tape-watch --watch -1 test/**/*.js | faucet "
   }
 }

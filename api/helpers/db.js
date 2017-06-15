@@ -147,6 +147,14 @@ function location(location) {
   return `(${name}, '', '', ${city}, ${province}, ${country}, '', ${lat}, ${long})::geolocation`;
 }
 
+// replace as.text, don't convert null to "null" because that's dumb
+function text(value) {
+  if (value === null) {
+    return value;
+  }
+  return pgp.as.text(value);
+}
+
 const as = Object.assign({}, pgp.as, {
   author,
   attachment,
@@ -155,7 +163,8 @@ const as = Object.assign({}, pgp.as, {
   videos,
   number,
   strings,
-  tags
+  tags,
+  text
 });
 
 const helpers = pgp.helpers;

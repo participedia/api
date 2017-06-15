@@ -57,7 +57,7 @@ const singularLowerCase = name => name.slice(0, -1).toLowerCase();
 // like it says on the tin
 const filterFromReq = req => {
   const cat = singularLowerCase(req.query.selectedCategory || "Alls");
-  return cat === "all" ? "" : `AND things.type = '${cat}'`;
+  return cat === "all" ? "" : `AND type = '${cat}'`;
 };
 
 const queryFileFromReq = req => {
@@ -121,7 +121,12 @@ router.get("/", async function(req, res) {
       offset: offsetFromReq(req),
       userId: req.user ? req.user.user_id : null
     });
-    res.status(200).json({ OK: true, results: objList });
+    const total = Number(objList.length ? objList[0].total || 0 : 0);
+    const pages = Math.ceil(total / RESPONSE_LIMIT);
+    objList.forEach(obj => delete obj.total);
+    res
+      .status(200)
+      .json({ OK: true, total: total, pages: pages, results: objList });
   } catch (error) {
     console.error("Error in search: ", error);
     console.trace(error);
