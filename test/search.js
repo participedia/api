@@ -36,14 +36,14 @@ describe("Search", () => {
       should.equal(Object.keys(res.body).length, 20);
     });
   });
-  describe.only("get organizations in Canada", () => {
+  describe("get organizations in Canada", () => {
     it("finds all Organizations with the term Canada", async () => {
       const res = await chai
         .getJSON("/search?query=Canada&selectedCategory=Organizations")
         .send({});
       res.should.have.status(200);
       res.body.OK.should.equal(true);
-      res.body.results.should.have.lengthOf(17);
+      res.body.results.should.have.lengthOf(20);
       res.body.results.forEach(obj => obj.type.should.equal("organization"));
     });
   });
@@ -54,16 +54,16 @@ describe("Search", () => {
         .send({});
       res.should.have.status(200);
       res.body.OK.should.equal(true);
-      res.body.results.should.have.lengthOf(3);
+      res.body.results.should.have.lengthOf(13);
       res.body.results[0].type.should.equal("case");
     });
   });
-  describe.skip("Test search with multi-word tags", () => {
+  describe("Test search with multi-word tags", () => {
     it("finds everything with the words animal welfare", async () => {
       const res = await chai.getJSON("/search?query=animal%20welfare").send({});
       res.should.have.status(200);
       res.body.OK.should.equal(true);
-      res.body.results.should.have.lengthOf(2);
+      res.body.results.should.have.lengthOf(6);
       // more testing
     });
   });
