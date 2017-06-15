@@ -1,3 +1,10 @@
+-- Fix instances of "null" vs. null
+
+UPDATE cases SET specific_topic = NULL WHERE specific_topic = 'null';
+UPDATE cases SET issue = NULL WHERE issue = 'null';
+UPDATE organization SET issue = NULL WHERE issue = 'null';
+
+
  -- Modify Materialized view and index for English searches
 
 DROP MATERIALIZED VIEW search_index_en;
@@ -34,7 +41,7 @@ SELECT
     things.updated_date,
     setweight(to_tsvector('english'::regconfig, localized_texts.title), 'A') ||
     setweight(to_tsvector('english'::regconfig, localized_texts.body), 'A') ||
-    setweight(to_tsvector('english'::regconfig, alltags.tagstring), 'A') ||
+    setweight(to_tsvector('english'::regconfig, COALESCE(alltags.tagstring, '')), 'A') ||
     setweight(to_tsvector('english'::regconfig, allauthors.authorstring), 'A') ||
     setweight(to_tsvector('english'::regconfig, COALESCE((things.location).city, '')), 'A') ||
     setweight(to_tsvector('english'::regconfig, COALESCE((things.location).country, '')), 'A') AS document
@@ -42,7 +49,7 @@ SELECT
 		things
   JOIN localized_texts ON localized_texts.thingid = things.id
   JOIN allauthors ON allauthors.thingid = things.id
-  JOIN alltags ON alltags.thingid = things.id
+  LEFT JOIN alltags ON alltags.thingid = things.id
 	WHERE
 		localized_texts.language = 'en' -- this is the english search view
 ;
