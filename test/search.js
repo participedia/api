@@ -107,4 +107,47 @@ describe("Search", () => {
       theCase.id.should.be.oneOf(searchResultIds);
     });
   });
+  describe("Test hidden results", () => {
+    it("Hiding an element removes it from featured (defaul) search", async () => {
+      const res1 = await chai.getJSON("/search").send({});
+      res1.should.have.status(200);
+      res1.body.results.should.have.lengthOf(20);
+      const res2 = await addBasicCase();
+      const theCase = res2.body.object;
+      await chai
+        .putJSON("/case/" + theCase.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ featured: true });
+      const res3 = await chai.getJSON("/search").send({});
+      const searchResultIds = res3.body.results.map(x => x.id);
+      theCase.id.should.be.oneOf(searchResultIds);
+      await chai
+        .putJSON("/case/" + theCase.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ hidden: true });
+      const res4 = await chai.getJSON("/search").send({});
+      const searchResultIds2 = res4.body.results.map(x => x.id);
+      theCase.id.should.not.be.oneOf(searchResultIds2);
+    });
+    it("Hiding an element removes it from full-text search results", async () => {
+      const res1 = await chai.getJSON("/search").send({});
+      res1.should.have.status(200);
+      res1.body.results.should.have.lengthOf(20);
+      const res2 = await addBasicCase();
+      const theCase = res2.body.object;
+      await chai
+        .putJSON("/case/" + theCase.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ tags: ["albino", "tiger"] });
+      const res3 = await chai.getJSON("/search?query=albino%20tiger").send({});
+      res3.body.results.should.have.lengthOf(1);
+      res3.body.results[0].id.should.equal(theCase.id);
+      await chai
+        .putJSON("/case/" + theCase.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ hidden: true });
+      const res4 = await chai.getJSON("/search?query=albino%20tiger").send({});
+      res4.body.results.should.have.lengthOf(0);
+    });
+  });
 });
