@@ -178,8 +178,8 @@ router.post("/new", async function postNewCase(req, res) {
     const location = as.location(req.body.location);
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const issue = as.text(req.body.issue);
-    const specific_topic = as.text(req.body.specific_topic);
+    const issue = req.body.issue;
+    const specific_topic = req.body.specific_topic;
     const tags = as.strings(req.body.tags);
     const links = as.strings(req.body.links);
     const thing = await db.one(sql("../sql/create_case.sql"), {

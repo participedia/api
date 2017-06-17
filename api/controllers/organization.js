@@ -59,7 +59,7 @@ router.post("/new", async function(req, res) {
     }
     const user_id = req.user.user_id;
     const location = as.location(req.body.location);
-    const issue = as.text(req.body.issue);
+    const issue = req.body.issue;
     const videos = as.videos(req.body.vidURL);
     const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
     const tags = as.strings(req.body.tags);

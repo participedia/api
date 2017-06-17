@@ -3,7 +3,8 @@ SELECT
 FROM
     cases
 WHERE
-	(location).country is not null
+	(location).country is not null AND
+  hidden = false
 GROUP BY
 	(location).country
 ORDER BY
