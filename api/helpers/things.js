@@ -274,13 +274,13 @@ function getEditXById(type) {
           lang,
           userId
         );
+        res.status(200).json({ OK: true, data: retThing });
         // update search index
         await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
       } else {
         // end if anyChanges
-        retThing = oldThing;
+        res.status(200).json({ OK: true, data: oldThing });
       } // end if not anyChanges
-      res.status(200).json({ OK: true, data: retThing });
     } catch (error) {
       log.error("Exception in PUT /%s/%s => %s", type, thingid, error);
       console.trace(error);

@@ -106,9 +106,9 @@ router.post("/new", async function(req, res) {
       language,
       user_id
     );
+    res.status(201).json({ OK: true, data: thing, object: newMethod });
     // Refresh search index
     await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
-    return res.status(201).json({ OK: true, data: thing, object: newMethod });
   } catch (error) {
     log.error("Exception in POST /method/new => %s", error);
     console.trace(error);
