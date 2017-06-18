@@ -300,7 +300,11 @@ function getEditXById(type) {
           res.status(200).json({ OK: true, data: retThing });
         }
         // update search index
-        await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+        try {
+          await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+        } catch (error) {
+          console.error("Problem refreshing materialized view: %s", error);
+        }
       } else {
         // end if anyChanges
         if (req.thingid) {

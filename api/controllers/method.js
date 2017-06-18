@@ -68,6 +68,12 @@ router.post("/new", async function(req, res) {
     log.error("Exception in POST /method/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
   }
+  // Refresh search index
+  try {
+    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+  } catch (error) {
+    log.error("Exception in POST /method/new => %s", error);
+  }
 });
 
 /**
