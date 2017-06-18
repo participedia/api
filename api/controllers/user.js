@@ -100,7 +100,6 @@ router.post("/", async function(req, res) {
     if (user.user_metadata && user.user_metadata.customPic) {
       pictureUrl = user.user_metadata.customPic;
     }
-    console.log(user);
     const result = await db.oneOrNone(sql("../sql/update_user.sql"), {
       id: user.id,
       name: user.name,
