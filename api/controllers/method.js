@@ -57,61 +57,15 @@ router.post("/new", async function(req, res) {
       });
     }
     const user_id = req.user.user_id;
-    const videos = as.videos(req.body.vidURL);
-    const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const tags = as.strings(req.body.tags);
-    const links = as.strings(req.body.links);
     const thing = await db.one(sql("../sql/create_method.sql"), {
       title,
       body,
-      language,
-      lead_image,
-      videos,
-      tags,
-      links,
-      user_id
+      language
     });
-    const thingid = thing.thingid;
-    // save related objects (needs thingid)
-    const relCases = addRelatedList(
-      "method",
-      thingid,
-      "case",
-      req.body.related_cases
-    );
-    if (relCases) {
-      await db.any(relCases);
-    }
-    const relMethods = addRelatedList(
-      "method",
-      thingid,
-      "method",
-      req.body.related_methods
-    );
-    if (relMethods) {
-      await db.any(relMethods);
-    }
-    const relOrgs = addRelatedList(
-      "method",
-      thingid,
-      "organization",
-      req.body.related_organizations
-    );
-    if (relOrgs) {
-      await db.any(relOrgs);
-    }
-    const newMethod = await getThingByType_id_lang_userId(
-      "method",
-      thingid,
-      language,
-      user_id
-    );
-    res.status(201).json({ OK: true, data: thing, object: newMethod });
-    // Refresh search index
-    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    req.thingid = thing.thingid;
+    return getEditXById("method")(req, res);
   } catch (error) {
     log.error("Exception in POST /method/new => %s", error);
-    console.trace(error);
     return res.status(500).json({ OK: false, error: error });
   }
 });

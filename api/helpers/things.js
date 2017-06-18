@@ -17,8 +17,8 @@ function addRelatedList(owner_type, owner_id, related_type, id_list) {
   }
   owner_id = Number(owner_id);
   let values = id_list
-    .map(id => {
-      let escaped_id = Number(id);
+    .map(item => {
+      let escaped_id = Number(item.id);
       if (owner_id < escaped_id) {
         return `('${owner_type}', ${owner_id}, '${related_type}', ${escaped_id})`;
       } else {
@@ -41,15 +41,15 @@ function removeRelatedList(owner_type, owner_id, related_type, id_list) {
   }
   owner_id = Number(owner_id);
   return id_list
-    .map(id => {
-      let escaped_id = Number(id);
-      if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
+    .map(item => {
+      let escaped_id = Number(item.id);
+      if (`${owner_type}${owner_id}` < `${related_type}${escaped_id}`) {
         return `DELETE FROM related_nouns
                 WHERE type_1 = '${owner_type}' AND id_1 = ${owner_id} AND
                       type_2 = '${related_type}' AND id_2 = ${id};`;
       } else {
         return `DELETE FROM related_nouns
-                WHERE type_1 = '${related_type}' AND id_1 = ${id} AND
+                WHERE type_1 = '${related_type}' AND id_1 = ${escaped_id} AND
                       type_2 = '${owner_type}' AND id_2 = ${owner_id};`;
       }
     })
@@ -167,7 +167,6 @@ function getEditXById(type) {
           ) {
             // DELETE / INSERT any needed rows for related_nouns
             let oldList = oldThing[key];
-            console.log("oldList %s", JSON.stringify(oldList));
             if (oldList.length && oldList[0].id === undefined) {
               oldList = oldList.map(x => {
                 id: x;
@@ -183,7 +182,6 @@ function getEditXById(type) {
                 return { id: Number(x) };
               });
             }
-            console.log("newList: %s", JSON.stringify(newList));
             newList.forEach(x => x.id = x.id || x.value); // handle client returning value vs. id
             const diff = diffRelatedList(oldList, newList);
             const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
@@ -194,6 +192,8 @@ function getEditXById(type) {
               relType,
               diff.remove
             );
+            console.log("add => %s", add);
+            console.log("remove => %s", remove);
             if (add || remove) {
               await db.none(add + remove);
             }
@@ -306,8 +306,8 @@ function getEditXById(type) {
         if (req.thingid) {
           res.status(201).json({
             OK: true,
-            data: { thingid: retThing.id },
-            object: retThing
+            data: { thingid: req.thingid },
+            object: oldThing
           });
         } else {
           res.status(200).json({ OK: true, data: oldThing });

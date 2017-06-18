@@ -322,7 +322,7 @@ describe("Cases", () => {
       case3.lead_image.title.should.equal("Innocuous Title");
     });
 
-    it.only("Add case, then change related objects", async () => {
+    it("Add case, then change related objects", async () => {
       const res1 = await addBasicCase();
       const case1 = res1.body.object;
       case1.related_cases.should.have.lengthOf(4);
