@@ -95,24 +95,25 @@ router.get("/", async function(req, res) {
  */
 router.post("/", async function(req, res) {
   try {
-    let body = req.body;
-    let user = req.user;
+    let user = req.body;
     let pictureUrl = user.picture;
     if (user.user_metadata && user.user_metadata.customPic) {
       pictureUrl = user.user_metadata.customPic;
     }
+    console.log(user);
     const result = await db.oneOrNone(sql("../sql/update_user.sql"), {
-      id: userId,
+      id: user.id,
+      name: user.name,
       language: req.params.language || "en",
       picture_url: pictureUrl,
-      bio: body["bio"] || "",
-      title: body["title"] || "",
-      affiliation: body["affiliation"] || "",
-      location: body["location"] || null
+      bio: user["bio"] || "",
+      title: user["title"] || "",
+      affiliation: user["affiliation"] || "",
+      location: user["location"] || null
     });
     res.status(200).json({ OK: true, data: result.user });
   } catch (error) {
-    log.error("Exception in POST /user/%s => %s", req.params.userId, error);
+    log.error("Exception in POST /user => %s", error);
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
