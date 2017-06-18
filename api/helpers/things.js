@@ -192,8 +192,6 @@ function getEditXById(type) {
               relType,
               diff.remove
             );
-            console.log("add => %s", add);
-            console.log("remove => %s", remove);
             if (add || remove) {
               await db.none(add + remove);
             }
