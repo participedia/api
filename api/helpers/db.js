@@ -48,14 +48,19 @@ function author(user_id, name) {
 }
 
 // as.attachment
-function attachment(url, title, size) {
-  if (!url) {
+function attachment(att) {
+  if (!att) {
     return "null";
   }
-  url = as.text(url);
-  title = as.text(title ? title : "");
-  size = size === undefined ? "null" : as.number(size);
-  return `(${url}, ${title}, ${size})::attachment`;
+  if (isObject(att)) {
+    const url = as.text(att.url);
+    const title = as.text(att.title);
+    const size = att.size === undefined ? "null" : as.number(size);
+    return `(${url}, ${title}, ${size})::attachment`;
+  } else {
+    const urlOnly = as.text(att);
+    return `(${urlOnly}, '', null)::attachment`;
+  }
 }
 
 // as.attachments
@@ -72,7 +77,7 @@ function attachments(url, title, size) {
             size = vid.size === undefined ? null : as.number(vid.size);
             return `(${url}, ${title}, ${size})`;
           } else {
-            return `(${vid}, '', null)::attachment`;
+            return `('${vid}', '', null)`;
           }
         })
         .join(", ") +
@@ -93,14 +98,17 @@ function videos(url, title) {
     let vids = url;
     return "ARRAY[" +
       vids
-        .map(
-          vid =>
+        .map(vid => {
+          if (isObject(vid)) {
             "(" +
-            as.text(vid.url) +
-            ", " +
-            as.text(vid.title ? vid.title : "") +
-            ")"
-        )
+              as.text(vid.url) +
+              ", " +
+              as.text(vid.title ? vid.title : "") +
+              ")";
+          } else {
+            "(" + as.text(vid) + ", '')";
+          }
+        })
         .join(", ") +
       "]::video[]";
   }
