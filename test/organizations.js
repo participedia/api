@@ -17,7 +17,8 @@ async function addBasicOrganization() {
       title: "First Title",
       body: "First Body",
       // optional
-      lead_image: "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg",
+      lead_image:
+        "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg",
       vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
       related_cases: [9, 10, 11, 12],
       related_methods: [151, 152, 153],
@@ -129,22 +130,6 @@ describe("Organizations", () => {
     });
   });
   describe("Test edit API", () => {
-    it("Add organization, then null modify it", async () => {
-      const res1 = await addBasicOrganization();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      res1.body.data.thingid.should.be.a("number");
-      const origOrganization = res1.body.object;
-      origOrganization.id.should.be.a("number");
-      origOrganization.id.should.equal(res1.body.data.thingid);
-      const res2 = await chai
-        .putJSON("/organization/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({}); // empty update
-      res2.should.have.status(200);
-      const updatedOrganization1 = res2.body.data;
-      updatedOrganization1.should.deep.equal(origOrganization); // no changes saved
-    });
     it("Add organization, then modify title and/or body", async () => {
       const res1 = await addBasicOrganization();
       res1.should.have.status(201);
