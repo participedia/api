@@ -182,7 +182,7 @@ function getEditXById(type) {
                 return { id: Number(x) };
               });
             }
-            newList.forEach(x => x.id = x.id || x.value); // handle client returning value vs. id
+            newList.forEach(x => (x.id = x.id || x.value)); // handle client returning value vs. id
             const diff = diffRelatedList(oldList, newList);
             const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
             const add = addRelatedList(type, thingid, relType, diff.add);
@@ -259,7 +259,7 @@ function getEditXById(type) {
           }
         }
       }); // end of for loop over object keys
-      if (anyChanges) {
+      if (true) {
         // Actually make the changes
         if (isTextUpdated) {
           // INSERT new text row
@@ -297,24 +297,7 @@ function getEditXById(type) {
         } else {
           res.status(200).json({ OK: true, data: retThing });
         }
-        // update search index
-        try {
-          await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
-        } catch (error) {
-          console.error("Problem refreshing materialized view: %s", error);
-        }
-      } else {
-        // end if anyChanges
-        if (req.thingid) {
-          res.status(201).json({
-            OK: true,
-            data: { thingid: req.thingid },
-            object: oldThing
-          });
-        } else {
-          res.status(200).json({ OK: true, data: oldThing });
-        }
-      } // end if not anyChanges
+      }
     } catch (error) {
       log.error(
         "Exception in PUT /%s/%s => %s",
@@ -328,6 +311,12 @@ function getEditXById(type) {
         error: error
       });
     } // end catch
+    // update search index
+    try {
+      await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    } catch (error) {
+      console.error("Problem refreshing materialized view: %s", error);
+    }
   };
 }
 
