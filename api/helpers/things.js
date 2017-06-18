@@ -275,8 +275,13 @@ function getEditXById(type) {
           userId
         );
         res.status(200).json({ OK: true, data: retThing });
-        // update search index
-        await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+        // Refresh search index
+        try {
+          await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+        } catch (error) {
+          log.error("Exception in PUT /%s/%s => %s", type, thingid, error);
+          return;
+        }
       } else {
         // end if anyChanges
         res.status(200).json({ OK: true, data: oldThing });
