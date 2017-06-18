@@ -72,7 +72,7 @@ async function addBasicCase() {
       body: "First Body",
       // optional
       lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
-      vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
+      videos: ["https://www.youtube.com/watch?v=QF7g3rCnD-w"],
       location: location,
       related_cases: ["1", "2", "3", "4"],
       related_methods: ["145", "146", "147"],
@@ -109,6 +109,7 @@ describe("Cases", () => {
     it("finds case 100", async () => {
       const res = await chai.getJSON("/case/100").send({});
       res.should.have.status(200);
+      res.body.data.id.should.be.a("number");
     });
   });
   describe("Adding", () => {
@@ -372,6 +373,44 @@ describe("Cases", () => {
       res3.body.OK.should.be.true;
       const case3 = res3.body.data;
       case3.bookmarked.should.be.true;
+    });
+  });
+  describe("More case creation tests", () => {
+    it("Create with array of URLs", async () => {
+      const res = await chai
+        .postJSON("/case/new")
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({
+          // mandatory
+          title: "First Title",
+          body: "First Body",
+          // optional
+          other_images: [
+            "https://s-media-cache-ak0.pinimg.com/736x/3d/2b/bf/3d2bbfd73ccaf488ab88d298ab7bc2d8.jpg",
+            "https://ocs-pl.oktawave.com/v1/AUTH_e1d5d90a-20b9-49c9-a9cd-33fc2cb68df3/mrgugu-products/20150901170519_1afZHYJgZTruGxEc_1000-1000.jpg"
+          ]
+        });
+      res.should.have.status(201);
+      res.body.OK.should.be.true;
+      const theCase = res.body.object;
+      theCase.other_images.should.have.lengthOf(2);
+    });
+    it("Create case with array of attachment objects", async () => {
+      const res = await chai
+        .postJSON("/case/new")
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({
+          title: "Earth First",
+          body: "Mars Second",
+          other_images: [
+            { url: "http://placekitten.com/200/300" },
+            { url: "http://placekitten.com/300/200" }
+          ]
+        });
+      res.should.have.status(201);
+      res.body.OK.should.be.true;
+      const theCase = res.body.object;
+      theCase.other_images.should.have.lengthOf(2);
     });
   });
 });

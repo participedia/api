@@ -17,8 +17,8 @@ function addRelatedList(owner_type, owner_id, related_type, id_list) {
   }
   owner_id = Number(owner_id);
   let values = id_list
-    .map(id => {
-      let escaped_id = Number(id);
+    .map(item => {
+      let escaped_id = Number(item.id);
       if (owner_id < escaped_id) {
         return `('${owner_type}', ${owner_id}, '${related_type}', ${escaped_id})`;
       } else {
@@ -41,15 +41,15 @@ function removeRelatedList(owner_type, owner_id, related_type, id_list) {
   }
   owner_id = Number(owner_id);
   return id_list
-    .map(id => {
-      let escaped_id = Number(id);
-      if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
+    .map(item => {
+      let escaped_id = Number(item.id);
+      if (`${owner_type}${owner_id}` < `${related_type}${escaped_id}`) {
         return `DELETE FROM related_nouns
                 WHERE type_1 = '${owner_type}' AND id_1 = ${owner_id} AND
                       type_2 = '${related_type}' AND id_2 = ${id};`;
       } else {
         return `DELETE FROM related_nouns
-                WHERE type_1 = '${related_type}' AND id_1 = ${id} AND
+                WHERE type_1 = '${related_type}' AND id_1 = ${escaped_id} AND
                       type_2 = '${owner_type}' AND id_2 = ${owner_id};`;
       }
     })
@@ -109,7 +109,7 @@ const returnThingByRequest = async function(type, req, res) {
 function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
-    const thingid = as.number(req.params.thingid);
+    const thingid = req.thingid || as.number(req.params.thingid);
     try {
       // FIXME: Figure out how to get all of this done as one transaction
       const lang = as.value(req.params.language || "en");
@@ -166,22 +166,31 @@ function getEditXById(type) {
             ].includes(key)
           ) {
             // DELETE / INSERT any needed rows for related_nouns
-            const oldList = oldThing[key];
-            const newList = newThing[key];
+            let oldList = oldThing[key];
+            if (oldList.length && oldList[0].id === undefined) {
+              oldList = oldList.map(x => {
+                id: x;
+              });
+            }
+            let newList = newThing[key];
+            if (
+              newList.length &&
+              newList[0].id === undefined &&
+              newList[0].value === undefined
+            ) {
+              newList = newList.map(function(x) {
+                return { id: Number(x) };
+              });
+            }
             newList.forEach(x => x.id = x.id || x.value); // handle client returning value vs. id
             const diff = diffRelatedList(oldList, newList);
             const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
-            const add = addRelatedList(
-              type,
-              thingid,
-              relType,
-              diff.add.map(x => x.id)
-            );
+            const add = addRelatedList(type, thingid, relType, diff.add);
             const remove = removeRelatedList(
               type,
               thingid,
               relType,
-              diff.remove.map(x => x.id)
+              diff.remove
             );
             if (add || remove) {
               await db.none(add + remove);
@@ -216,11 +225,16 @@ function getEditXById(type) {
               key: as.name(key),
               value: as.tags(newThing[key])
             });
+          } else if (key === "videos") {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.videos(newThing[key])
+            });
           } else if (key === "lead_image") {
             var img = newThing[key];
             updatedThingFields.push({
               key: as.name(key),
-              value: as.attachment(img.url, img.title, img.size)
+              value: as.attachment(img)
             });
           } else if (["other_images", "files"].includes(key)) {
             updatedThingFields.push({
@@ -274,20 +288,40 @@ function getEditXById(type) {
           lang,
           userId
         );
-        res.status(200).json({ OK: true, data: retThing });
-        // Refresh search index
+        if (req.thingid) {
+          res.status(201).json({
+            OK: true,
+            data: { thingid: retThing.id },
+            object: retThing
+          });
+        } else {
+          res.status(200).json({ OK: true, data: retThing });
+        }
+        // update search index
         try {
           await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
         } catch (error) {
-          log.error("Exception in PUT /%s/%s => %s", type, thingid, error);
-          return;
+          console.error("Problem refreshing materialized view: %s", error);
         }
       } else {
         // end if anyChanges
-        res.status(200).json({ OK: true, data: oldThing });
+        if (req.thingid) {
+          res.status(201).json({
+            OK: true,
+            data: { thingid: req.thingid },
+            object: oldThing
+          });
+        } else {
+          res.status(200).json({ OK: true, data: oldThing });
+        }
       } // end if not anyChanges
     } catch (error) {
-      log.error("Exception in PUT /%s/%s => %s", type, thingid, error);
+      log.error(
+        "Exception in PUT /%s/%s => %s",
+        type,
+        req.thingid || thingid,
+        error
+      );
       console.trace(error);
       res.status(500).json({
         OK: false,

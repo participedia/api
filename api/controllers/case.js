@@ -175,66 +175,13 @@ router.post("/new", async function postNewCase(req, res) {
       });
     }
     const user_id = req.user.user_id;
-    const location = as.location(req.body.location);
-    const videos = as.videos(req.body.vidURL);
-    const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const issue = req.body.issue;
-    const specific_topic = req.body.specific_topic;
-    const tags = as.strings(req.body.tags);
-    const links = as.strings(req.body.links);
     const thing = await db.one(sql("../sql/create_case.sql"), {
       title,
       body,
-      language,
-      issue,
-      specific_topic,
-      tags,
-      links,
-      location,
-      lead_image,
-      videos,
-      user_id
+      language
     });
-    // save related objects (needs thingid)
-    const relCases = addRelatedList(
-      "case",
-      thing.thingid,
-      "case",
-      req.body.related_cases
-    );
-    if (relCases) {
-      await db.any(relCases);
-    }
-    const relMethods = addRelatedList(
-      "case",
-      thing.thingid,
-      "method",
-      req.body.related_methods
-    );
-    if (relMethods) {
-      await db.any(relMethods);
-    }
-    const relOrgs = addRelatedList(
-      "case",
-      thing.thingid,
-      "organization",
-      req.body.related_organizations
-    );
-    if (relOrgs) {
-      await db.any(relOrgs);
-    }
-
-    const newCase = await getThingByType_id_lang_userId(
-      "case",
-      thing.thingid,
-      language,
-      user_id
-    );
-    res.status(201).json({
-      OK: true,
-      data: thing,
-      object: newCase
-    });
+    req.thingid = thing.thingid;
+    return getEditXById("case")(req, res);
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });

@@ -58,71 +58,16 @@ router.post("/new", async function(req, res) {
       });
     }
     const user_id = req.user.user_id;
-    const location = as.location(req.body.location);
-    const issue = req.body.issue;
-    const videos = as.videos(req.body.vidURL);
-    const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const tags = as.strings(req.body.tags);
-    const links = as.strings(req.body.links);
     const thing = await db.one(sql("../sql/create_organization.sql"), {
       title,
       body,
-      language,
-      issue,
-      location,
-      lead_image,
-      videos,
-      tags,
-      links,
-      user_id
+      language
     });
-    const thingid = thing.thingid;
-    // save related objects (needs thingid)
-    const relCases = addRelatedList(
-      "organization",
-      thingid,
-      "case",
-      req.body.related_cases
-    );
-    if (relCases) {
-      await db.any(relCases);
-    }
-    const relMethods = addRelatedList(
-      "organization",
-      thingid,
-      "method",
-      req.body.related_methods
-    );
-    if (relMethods) {
-      await db.any(relMethods);
-    }
-    const relOrgs = addRelatedList(
-      "organization",
-      thingid,
-      "organization",
-      req.body.related_organizations
-    );
-    if (relOrgs) {
-      await db.any(relOrgs);
-    }
-    const newOrganization = await getThingByType_id_lang_userId(
-      "organization",
-      thingid,
-      language,
-      user_id
-    );
-    res.status(201).json({
-      OK: true,
-      data: thing,
-      object: newOrganization
-    });
-    // Refresh search index
+    req.thingid = thing.thingid;
+    return getEditXById("organization")(req, res);
   } catch (error) {
     log.error("Exception in POST /organization/new => %s", error);
-    return res.status(500).json({
-      OK: false,
-      error: error
-    });
+    return res.status(500).json({ OK: false, error: error });
   }
   // Refresh search index
   try {
