@@ -221,23 +221,6 @@ describe("Cases", () => {
   });
 
   describe("Test edit API", () => {
-    it("Add case, then null modify it", async () => {
-      const res1 = await addBasicCase();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      res1.body.data.thingid.should.be.a("number");
-      const origCase = res1.body.object;
-      origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.thingid);
-      const res2 = await chai
-        .putJSON("/case/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({}); // empty update
-      res2.should.have.status(200);
-      const updatedCase1 = res2.body.data;
-      updatedCase1.should.deep.equal(origCase); // no changes saved
-    });
-
     it("Add case, then modify title and/or body", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);

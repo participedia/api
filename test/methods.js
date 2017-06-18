@@ -140,22 +140,6 @@ describe("Methods", () => {
     });
   });
   describe("Test edit API", () => {
-    it("Add method, then null modify it", async () => {
-      const res1 = await addBasicMethod();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      res1.body.data.thingid.should.be.a("number");
-      const origMethod = res1.body.object;
-      origMethod.id.should.be.a("number");
-      origMethod.id.should.equal(res1.body.data.thingid);
-      const res2 = await chai
-        .putJSON("/method/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({}); // empty update
-      res2.should.have.status(200);
-      const updatedMethod1 = res2.body.data;
-      updatedMethod1.should.deep.equal(origMethod); // no changes saved
-    });
     it("Add method, then modify title and/or body", async () => {
       const res1 = await addBasicMethod();
       res1.should.have.status(201);
