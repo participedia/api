@@ -3,7 +3,29 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
-let { db, sql } = require("../helpers/db");
+let { db, sql, as } = require("../helpers/db");
+
+function conform_location(location) {
+  let {
+    name,
+    postal_code,
+    city,
+    province,
+    country,
+    address_1,
+    address_2
+  } = location;
+  name = as.text(name || "");
+  postal_code = as.text(postal_code || "");
+  city = as.text(city || "");
+  province = as.text(province || "");
+  country = as.text(country || "");
+  address_1 = as.text(address_1 || "");
+  address_2 = as.text(address_2 || "");
+  const latitude = as.text(String(location.latitude));
+  const longitude = as.text(String(location.longitude));
+  return `(${name}, ${address_1}, ${address_2}, ${city}, ${province}, ${country}, ${postal_code}, ${latitude}, ${longitude})::geolocation`;
+}
 
 async function getUserById(userId, req, res) {
   try {
@@ -100,7 +122,8 @@ router.post("/", async function(req, res) {
     if (user.user_metadata && user.user_metadata.customPic) {
       pictureUrl = user.user_metadata.customPic;
     }
-    const result = await db.oneOrNone(sql("../sql/update_user.sql"), {
+    let location = conform_location(user.location);
+    await db.none(sql("../sql/update_user.sql"), {
       id: user.id,
       name: user.name,
       language: req.params.language || "en",
@@ -108,9 +131,9 @@ router.post("/", async function(req, res) {
       bio: user["bio"] || "",
       title: user["title"] || "",
       affiliation: user["affiliation"] || "",
-      location: user["location"] || null
+      location: location
     });
-    res.status(200).json({ OK: true, data: result.user });
+    res.status(200).json({ OK: true });
   } catch (error) {
     log.error("Exception in POST /user => %s", error);
     if (error.message && error.message == "No data returned from the query.") {
