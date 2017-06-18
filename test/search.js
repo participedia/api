@@ -108,7 +108,7 @@ describe("Search", () => {
     });
   });
   describe("Test hidden results", () => {
-    it("Hiding an element removes it from featured (defaul) search", async () => {
+    it("Hiding an element removes it from featured (default) search", async () => {
       const res1 = await chai.getJSON("/search").send({});
       res1.should.have.status(200);
       res1.body.results.should.have.lengthOf(20);
