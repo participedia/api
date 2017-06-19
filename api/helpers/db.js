@@ -1,5 +1,5 @@
 let promise = require("bluebird");
-let { isArray } = require("lodash");
+let { isArray, isObject } = require("lodash");
 let options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -48,36 +48,42 @@ function author(user_id, name) {
 }
 
 // as.attachment
-function attachment(url, title, size) {
-  if (!url) {
+function attachment(att) {
+  if (!att) {
     return "null";
   }
-  url = as.text(url);
-  title = as.text(title ? title : "");
-  size = size === undefined ? "null" : as.number(size);
-  return `(${url}, ${title}, ${size})::attachment`;
+  if (isObject(att)) {
+    const url = as.text(att.url);
+    const title = as.text(att.title);
+    const size = att.size === undefined ? "null" : as.number(size);
+    return `(${url}, ${title}, ${size})::attachment`;
+  } else {
+    const urlOnly = as.text(att);
+    return `(${urlOnly}, '', null)::attachment`;
+  }
 }
 
 // as.attachments
 function attachments(url, title, size) {
   if (isArray(url)) {
     let atts = url;
-    return "ARRAY[" +
+    return (
+      "ARRAY[" +
       atts
-        .map(
-          vid =>
-            "(" +
-              as.text(att.url) +
-              ", " +
-              as.text(att.title ? att.title : "") +
-              ", " +
-              att.size ===
-              undefined
-              ? "null"
-              : as.number(att.size) + ")"
-        )
+        .map(vid => {
+          let url, title, size;
+          if (isObject(vid)) {
+            url = as.text(vid.url);
+            title = as.text(vid.title ? vid.title : "");
+            size = vid.size === undefined ? null : as.number(vid.size);
+            return `(${url}, ${title}, ${size})`;
+          } else {
+            return `('${vid}', '', null)`;
+          }
+        })
         .join(", ") +
-      "]::attachment[]";
+      "]::attachment[]"
+    );
   }
   url = as.text(url ? url : "{}");
   title = as.text(title ? title : "");
@@ -92,18 +98,23 @@ function attachments(url, title, size) {
 function videos(url, title) {
   if (isArray(url)) {
     let vids = url;
-    return "ARRAY[" +
+    return (
+      "ARRAY[" +
       vids
-        .map(
-          vid =>
+        .map(vid => {
+          if (isObject(vid)) {
             "(" +
-            as.text(vid.url) +
-            ", " +
-            as.text(vid.title ? vid.title : "") +
-            ")"
-        )
+              as.text(vid.url) +
+              ", " +
+              as.text(vid.title ? vid.title : "") +
+              ")";
+          } else {
+            "(" + as.text(vid) + ", '')";
+          }
+        })
         .join(", ") +
-      "]::video[]";
+      "]::video[]"
+    );
   }
   if (!url) {
     return "'{}'";
@@ -113,29 +124,49 @@ function videos(url, title) {
   return `ARRAY[(${url}, ${title})]::video[]`;
 }
 
+// as.strings / as.tags (could be used as as.strings too
+function strings(strList) {
+  if (!strList) {
+    return "'{}'";
+  }
+  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
+}
+
+const tags = strings; // alias for descriptiveness
+
 // as.location
 function location(location) {
   // TODO: escape all values of location to avoid injection attacks
   if (!location) {
     return "null";
   }
-  let { label, lat, long, gmaps } = location;
+  let { label, lat, long, gmaps, city, province, country } = location;
   let name = as.text(label);
   lat = as.text(lat);
   long = as.text(long);
-  let city = "''";
-  let province = "''";
-  let country = "''";
-  gmaps.address_components.forEach(function(component) {
-    if (component.types.includes("locality")) {
-      city = as.text(component.long_name);
-    } else if (component.types.includes("administrative_area_level_1")) {
-      province = as.text(component.long_name); // could also be a state or territory
-    } else if (component.types.includes("country")) {
-      country = as.text(component.long_name);
-    }
-  });
+  city = as.text(city);
+  province = as.text(province);
+  country = as.text(country);
+  if (gmaps) {
+    gmaps.address_components.forEach(function(component) {
+      if (component.types.includes("locality")) {
+        city = as.text(component.long_name);
+      } else if (component.types.includes("administrative_area_level_1")) {
+        province = as.text(component.long_name); // could also be a state or territory
+      } else if (component.types.includes("country")) {
+        country = as.text(component.long_name);
+      }
+    });
+  }
   return `(${name}, '', '', ${city}, ${province}, ${country}, '', ${lat}, ${long})::geolocation`;
+}
+
+// replace as.text, don't convert null to "null" because that's dumb
+function text(value) {
+  if (value === null) {
+    return value;
+  }
+  return pgp.as.text(value);
 }
 
 const as = Object.assign({}, pgp.as, {
@@ -144,7 +175,10 @@ const as = Object.assign({}, pgp.as, {
   attachments,
   location,
   videos,
-  number
+  number,
+  strings,
+  tags,
+  text
 });
 
 const helpers = pgp.helpers;

@@ -2,39 +2,16 @@
 
 const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
+const cache = require("apicache");
 const log = require("winston");
-const { checkJwtOptional } = require("../helpers/checkJwt");
 
 const { db, sql, as } = require("../helpers/db");
 const {
   getEditXById,
   addRelatedList,
-  getByType_id
+  returnThingByRequest,
+  getThingByType_id_lang_userId
 } = require("../helpers/things");
-
-const returnOrganizationById = getByType_id["organization"].returnById;
-const getOrganizationById_lang_userId =
-  getByType_id["organization"].getById_lang_userId;
-
-const empty_organization = {
-  title: "",
-  body: "",
-  language: "en",
-  user_id: null,
-  original_language: "en",
-  executive_director: null,
-  post_date: "now",
-  published: true,
-  sector: null,
-  updated_date: "now",
-  location: null,
-  lead_image_url: "",
-  other_images: "{}",
-  files: "{}",
-  videos: "{}",
-  tags: "{}",
-  featured: false
-};
 
 /**
  * @api {post} /organization/new Create new organization
@@ -70,6 +47,8 @@ router.post("/new", async function(req, res) {
   //   location
   //   related organizations
   try {
+    cache.clear();
+
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
     let language = req.params.language || "en";
@@ -79,66 +58,22 @@ router.post("/new", async function(req, res) {
       });
     }
     const user_id = req.user.user_id;
-    const location = as.location(req.body.location);
-    const videos = as.videos(req.body.vidURL);
-    const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const organization_id = await db.one(
-      sql("../sql/create_organization.sql"),
-      Object.assign({}, empty_organization, {
-        title,
-        body,
-        location,
-        lead_image,
-        videos,
-        user_id
-      })
-    );
-    // save related objects (needs case_id)
-    const relCases = addRelatedList(
-      "organization",
-      organization_id.organization_id,
-      "case",
-      req.body.related_cases
-    );
-    if (relCases) {
-      await db.none(relCases);
-    }
-    const relMethods = addRelatedList(
-      "organization",
-      organization_id.organization_id,
-      "method",
-      req.body.related_methods
-    );
-    if (relMethods) {
-      await db.none(relMethods);
-    }
-    const relOrgs = addRelatedList(
-      "organization",
-      organization_id.organization_id,
-      "organization",
-      req.body.related_organizations
-    );
-    if (relOrgs) {
-      await db.none(relOrgs);
-    }
-    const newOrganization = await getOrganizationById_lang_userId(
-      organization_id.organization_id,
-      language,
-      user_id
-    );
-    // Refresh search index
-    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
-    return res.status(201).json({
-      OK: true,
-      data: organization_id,
-      object: newOrganization
+    const thing = await db.one(sql("../sql/create_organization.sql"), {
+      title,
+      body,
+      language
     });
+    req.thingid = thing.thingid;
+    return getEditXById("organization")(req, res);
   } catch (error) {
     log.error("Exception in POST /organization/new => %s", error);
-    return res.status(500).json({
-      OK: false,
-      error: error
-    });
+    return res.status(500).json({ OK: false, error: error });
+  }
+  // Refresh search index
+  try {
+    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+  } catch (error) {
+    log.error("Exception in POST /organization/new => %s", error);
   }
 });
 
@@ -168,7 +103,7 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:organizationId", getEditXById("organization"));
+router.put("/:thingid", getEditXById("organization"));
 
 /**
  * @api {get} /organization/:id Get the last version of an organization
@@ -196,7 +131,8 @@ router.put("/:organizationId", getEditXById("organization"));
  *
  */
 
-router.get("/:organizationId", checkJwtOptional, returnOrganizationById);
+router.get("/:thingid", (req, res) =>
+  returnThingByRequest("organization", req, res));
 
 /**
  * @api {delete} /organization/:id Delete an organization

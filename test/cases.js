@@ -72,7 +72,7 @@ async function addBasicCase() {
       body: "First Body",
       // optional
       lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
-      vidURL: "https://www.youtube.com/watch?v=QF7g3rCnD-w",
+      videos: ["https://www.youtube.com/watch?v=QF7g3rCnD-w"],
       location: location,
       related_cases: ["1", "2", "3", "4"],
       related_methods: ["145", "146", "147"],
@@ -109,6 +109,7 @@ describe("Cases", () => {
     it("finds case 100", async () => {
       const res = await chai.getJSON("/case/100").send({});
       res.should.have.status(200);
+      res.body.data.id.should.be.a("number");
     });
   });
   describe("Adding", () => {
@@ -136,7 +137,7 @@ describe("Cases", () => {
       const res = await addBasicCase();
       res.should.have.status(201);
       res.body.OK.should.be.true;
-      res.body.data.case_id.should.be.a("number");
+      res.body.data.thingid.should.be.a("number");
       let returnedCase = res.body.object;
       returnedCase.related_cases.length.should.equal(4);
       returnedCase.related_methods.length.should.equal(3);
@@ -177,6 +178,7 @@ describe("Cases", () => {
       res.body.data.related_organizations[1].id.should.equal(263);
     });
   });
+
   it("test SQL santization", async () => {
     const res = await addBasicCase();
     res.should.have.status(201);
@@ -192,6 +194,7 @@ describe("Cases", () => {
       res.should.have.status(200);
     });
   });
+
   describe("Get case with tags", () => {
     it("should have 3 tags", async () => {
       const res = await chai.getJSON("/case/39");
@@ -202,6 +205,7 @@ describe("Cases", () => {
       the_case.bookmarked.should.equal(false);
     });
   });
+
   describe("Get case with authentication", () => {
     it("should not fail when logged in", async () => {
       try {
@@ -215,33 +219,18 @@ describe("Cases", () => {
       }
     });
   });
+
   describe("Test edit API", () => {
-    it("Add case, then null modify it", async () => {
-      const res1 = await addBasicCase();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      res1.body.data.case_id.should.be.a("number");
-      const origCase = res1.body.object;
-      origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.case_id);
-      const res2 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({}); // empty update
-      res2.should.have.status(200);
-      const updatedCase1 = res2.body.data;
-      updatedCase1.should.deep.equal(origCase); // no changes saved
-    });
     it("Add case, then modify title and/or body", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.case_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origCase = res1.body.object;
       origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.case_id);
+      origCase.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Second Title" }); // empty update
       res2.should.have.status(200);
@@ -249,7 +238,7 @@ describe("Cases", () => {
       updatedCase1.title.should.equal("Second Title");
       updatedCase1.body.should.equal("First Body");
       const res3 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" }); // empty update
       res3.should.have.status(200);
@@ -257,7 +246,7 @@ describe("Cases", () => {
       updatedCase2.title.should.equal("Second Title");
       updatedCase2.body.should.equal("Second Body");
       const res4 = await chai
-        .putJSON("/case/" + res1.body.data.case_id)
+        .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" }); // empty update
       res4.should.have.status(200);
@@ -266,6 +255,24 @@ describe("Cases", () => {
       updatedCase3.body.should.equal("Third Body");
       updatedCase3.authors.length.should.equal(updatedCase2.authors.length + 1);
     });
+
+    it("Add case, then modify some fields", async () => {
+      const res1 = await addBasicCase();
+      res1.should.have.status(201);
+      res1.body.OK.should.be.true;
+      res1.body.data.thingid.should.be.a("number");
+      const origCase = res1.body.object;
+      origCase.id.should.be.a("number");
+      origCase.id.should.equal(res1.body.data.thingid);
+      const res2 = await chai
+        .putJSON("/case/" + res1.body.data.thingid)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ issue: "new issue" }); // empty update
+      res2.should.have.status(200);
+      const updatedCase1 = res2.body.data;
+      updatedCase1.issue.should.equal("new issue");
+    });
+
     it("Add case, then modify lead image", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
@@ -297,6 +304,7 @@ describe("Cases", () => {
       case3.lead_image.url.should.equal("howzaboutthemjpegs.png");
       case3.lead_image.title.should.equal("Innocuous Title");
     });
+
     it("Add case, then change related objects", async () => {
       const res1 = await addBasicCase();
       const case1 = res1.body.object;
@@ -317,6 +325,7 @@ describe("Cases", () => {
       case3.related_cases.map(x => x.id).should.include(case1.id);
     });
   });
+
   describe("Test bookmarked", () => {
     let case1 = null;
     it("Add case, should not be bookmarked", async () => {
@@ -328,7 +337,7 @@ describe("Cases", () => {
       const booked = await chai
         .postJSON("/bookmark/add")
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ bookmarkType: "case", thingID: case1.id });
+        .send({ bookmarkType: "case", thingid: case1.id });
       booked.should.have.status(200);
     });
     it("Not authenticated, bookmarked should be false", async () => {
@@ -349,4 +358,44 @@ describe("Cases", () => {
       case3.bookmarked.should.be.true;
     });
   });
+  describe("More case creation tests", () => {
+    it("Create with array of URLs", async () => {
+      const res = await chai
+        .postJSON("/case/new")
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({
+          // mandatory
+          title: "First Title",
+          body: "First Body",
+          // optional
+          other_images: [
+            "https://s-media-cache-ak0.pinimg.com/736x/3d/2b/bf/3d2bbfd73ccaf488ab88d298ab7bc2d8.jpg",
+            "https://ocs-pl.oktawave.com/v1/AUTH_e1d5d90a-20b9-49c9-a9cd-33fc2cb68df3/mrgugu-products/20150901170519_1afZHYJgZTruGxEc_1000-1000.jpg"
+          ]
+        });
+      res.should.have.status(201);
+      res.body.OK.should.be.true;
+      const theCase = res.body.object;
+      theCase.other_images.should.have.lengthOf(2);
+    });
+    it("Create case with array of attachment objects", async () => {
+      const res = await chai
+        .postJSON("/case/new")
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({
+          title: "Earth First",
+          body: "Mars Second",
+          other_images: [
+            { url: "http://placekitten.com/200/300" },
+            { url: "http://placekitten.com/300/200" }
+          ]
+        });
+      res.should.have.status(201);
+      res.body.OK.should.be.true;
+      const theCase = res.body.object;
+      theCase.other_images.should.have.lengthOf(2);
+    });
+  });
 });
+
+module.exports = { addBasicCase };

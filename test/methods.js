@@ -21,7 +21,9 @@ async function addBasicMethod() {
       vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
       related_cases: [5, 6, 7, 8],
       related_methods: [148, 149, 150],
-      related_organizations: [202, 203, 204]
+      related_organizations: [202, 203, 204],
+      tags: ["OIDP2017", "Tag1", "Tag2"],
+      links: ["http://killsixbilliondemons.com/", "http://dresdencodak.com/"]
     });
 }
 
@@ -80,11 +82,18 @@ describe("Methods", () => {
       const res = await addBasicMethod();
       res.should.have.status(201);
       res.body.OK.should.be.true;
-      res.body.data.method_id.should.be.a("number");
+      res.body.data.thingid.should.be.a("number");
       let returnedMethod = res.body.object;
       returnedMethod.related_cases.length.should.equal(4);
       returnedMethod.related_methods.length.should.equal(3);
       returnedMethod.related_organizations.length.should.equal(3);
+      returnedMethod.links.should.have.lengthOf(2);
+      returnedMethod.tags.should.have.lengthOf(3);
+      returnedMethod.links.should.deep.equal([
+        "http://killsixbilliondemons.com/",
+        "http://dresdencodak.com/"
+      ]);
+      returnedMethod.tags.should.deep.equal(["OIDP2017", "Tag1", "Tag2"]);
     });
   });
   describe("Get method with tags", () => {
@@ -131,32 +140,16 @@ describe("Methods", () => {
     });
   });
   describe("Test edit API", () => {
-    it("Add method, then null modify it", async () => {
-      const res1 = await addBasicMethod();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      res1.body.data.method_id.should.be.a("number");
-      const origMethod = res1.body.object;
-      origMethod.id.should.be.a("number");
-      origMethod.id.should.equal(res1.body.data.method_id);
-      const res2 = await chai
-        .putJSON("/method/" + res1.body.data.method_id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({}); // empty update
-      res2.should.have.status(200);
-      const updatedMethod1 = res2.body.data;
-      updatedMethod1.should.deep.equal(origMethod); // no changes saved
-    });
     it("Add method, then modify title and/or body", async () => {
       const res1 = await addBasicMethod();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.method_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origMethod = res1.body.object;
       origMethod.id.should.be.a("number");
-      origMethod.id.should.equal(res1.body.data.method_id);
+      origMethod.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/method/" + res1.body.data.method_id)
+        .putJSON("/method/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Second Title" }); // empty update
       res2.should.have.status(200);
@@ -164,7 +157,7 @@ describe("Methods", () => {
       updatedMethod1.title.should.equal("Second Title");
       updatedMethod1.body.should.equal("First Body");
       const res3 = await chai
-        .putJSON("/method/" + res1.body.data.method_id)
+        .putJSON("/method/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" }); // empty update
       res3.should.have.status(200);
@@ -172,7 +165,7 @@ describe("Methods", () => {
       updatedMethod2.title.should.equal("Second Title");
       updatedMethod2.body.should.equal("Second Body");
       const res4 = await chai
-        .putJSON("/method/" + res1.body.data.method_id)
+        .putJSON("/method/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" }); // empty update
       res4.should.have.status(200);
@@ -234,6 +227,28 @@ describe("Methods", () => {
       const res3 = await chai.getJSON("/case/8").send({});
       const method3 = res3.body.data;
       method3.related_methods.map(x => x.id).should.include(method1.id);
+    });
+    it("Add method, then change tags", async () => {
+      const res1 = await addBasicMethod();
+      const method1 = res1.body.object;
+      const tags = ["foo", "bar"];
+      const res2 = await chai
+        .putJSON("/method/" + method1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ tags });
+      const method1_new = res2.body.data;
+      method1_new.tags.should.deep.equal(tags);
+    });
+    it("Add method, then change links", async () => {
+      const res1 = await addBasicMethod();
+      const method1 = res1.body.object;
+      const links = ["https://xkcd.com/", "http://girlgeniusonline.com/"];
+      const res2 = await chai
+        .putJSON("/method/" + method1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ links });
+      const method1_new = res2.body.data;
+      method1_new.links.should.deep.equal(links);
     });
   });
 });

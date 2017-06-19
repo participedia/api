@@ -3,57 +3,15 @@ const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
-const { checkJwtOptional } = require("../helpers/checkJwt");
 
 const { db, sql, as } = require("../helpers/db");
 
 const {
   getEditXById,
   addRelatedList,
-  getByType_id
+  returnThingByRequest,
+  getThingByType_id_lang_userId
 } = require("../helpers/things");
-
-const returnCaseById = getByType_id["case"].returnById;
-const getCaseById_lang_userId = getByType_id["case"].getById_lang_userId;
-
-const empty_case = {
-  title: "",
-  body: "",
-  language: "en",
-  user_id: null,
-  original_language: "en",
-  issue: null,
-  communication_mode: null,
-  communication_with_audience: null,
-  content_country: null,
-  decision_method: null,
-  facetoface_online_or_both: null,
-  facilitated: null,
-  voting: "none",
-  number_of_meeting_days: null,
-  ongoing: false,
-  total_number_of_participants: null,
-  targeted_participant_demographic: "General Public",
-  kind_of_influence: null,
-  targeted_participants_public_role: "Lay Public",
-  targeted_audience: "General Public",
-  participant_selection: "Open to all",
-  specific_topic: null,
-  staff_type: null,
-  type_of_funding_entity: null,
-  typical_implementing_entity: null,
-  typical_sponsoring_entity: null,
-  who_else_supported_the_initiative: null,
-  who_was_primarily_responsible_for_organizing_the_initiative: null,
-  location: null,
-  lead_image_url: "",
-  other_images: "{}",
-  files: "{}",
-  videos: "{}",
-  tags: "{}",
-  featured: false,
-  bookmarked: false
-};
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -206,6 +164,8 @@ router.post("/new", async function postNewCase(req, res) {
   }
   */
   try {
+    cache.clear();
+
     let title = req.body.title;
     let body = req.body.body || req.body.summary;
     let language = req.params.language || "en";
@@ -215,64 +175,22 @@ router.post("/new", async function postNewCase(req, res) {
       });
     }
     const user_id = req.user.user_id;
-    const location = as.location(req.body.location);
-    const videos = as.videos(req.body.vidURL);
-    const lead_image = as.attachment(req.body.lead_image); // frontend isn't sending this yet
-    const case_id = await db.one(
-      sql("../sql/create_case.sql"),
-      Object.assign({}, empty_case, {
-        title,
-        body,
-        location,
-        lead_image,
-        videos,
-        user_id
-      })
-    );
-    // save related objects (needs case_id)
-    const relCases = addRelatedList(
-      "case",
-      case_id.case_id,
-      "case",
-      req.body.related_cases
-    );
-    if (relCases) {
-      await db.none(relCases);
-    }
-    const relMethods = addRelatedList(
-      "case",
-      case_id.case_id,
-      "method",
-      req.body.related_methods
-    );
-    if (relMethods) {
-      await db.none(relMethods);
-    }
-    const relOrgs = addRelatedList(
-      "case",
-      case_id.case_id,
-      "organization",
-      req.body.related_organizations
-    );
-    if (relOrgs) {
-      await db.none(relOrgs);
-    }
-
-    const newCase = await getCaseById_lang_userId(
-      case_id.case_id,
-      language,
-      user_id
-    );
-    // Refresh search index
-    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
-    return res.status(201).json({
-      OK: true,
-      data: case_id,
-      object: newCase
+    const thing = await db.one(sql("../sql/create_case.sql"), {
+      title,
+      body,
+      language
     });
+    req.thingid = thing.thingid;
+    return getEditXById("case")(req, res);
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
     return res.status(500).json({ OK: false, error: error });
+  }
+  // Refresh search index
+  try {
+    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+  } catch (error) {
+    log.error("Exception in POST /case/new => %s", error);
   }
 });
 
@@ -302,14 +220,14 @@ router.post("/new", async function postNewCase(req, res) {
  *
  */
 
-router.put("/:caseId", getEditXById("case"));
+router.put("/:thingid", getEditXById("case"));
 
 /**
- * @api {get} /case/:caseId Get the last version of a case
+ * @api {get} /case/:thingid Get the last version of a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
  * @apiName returnCaseById
- * @apiParam {Number} caseId Case ID
+ * @apiParam {Number} thingid Case ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -332,7 +250,7 @@ router.put("/:caseId", getEditXById("case"));
 
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.
-router.get("/:caseId", checkJwtOptional, returnCaseById);
+router.get("/:thingid", (req, res) => returnThingByRequest("case", req, res));
 
 /**
  * @api {delete} /case/:caseId Delete a case
@@ -355,7 +273,7 @@ router.get("/:caseId", checkJwtOptional, returnCaseById);
  *
  */
 
-router.delete("/:caseId", function editCaseById(req, res) {
+router.delete("/:thingid", function editCaseById(req, res) {
   cache.clear();
   // let caseId = req.swagger.params.caseId.value;
   // let caseBody = req.body;

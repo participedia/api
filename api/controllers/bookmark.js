@@ -3,7 +3,7 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let groups = require("../helpers/groups");
 let { db, as } = require("../helpers/db");
-let { userByEmail, ensureUser } = require("../helpers/user");
+let { userByEmail } = require("../helpers/user");
 let log = require("winston");
 
 /**
@@ -54,8 +54,7 @@ async function queryBookmarks(req, res) {
     let userid = as.number(req.params.userid);
 
     if (!userid) {
-      await ensureUser(req, res);
-      userid = req.user.user_id; // put there by ensureUser
+      userid = req.user.user_id; // put there by preferUser
     }
     lookupBookmarksById(req, res, userid);
   } catch (error) {
@@ -73,7 +72,7 @@ router.get("/list/:userid", queryBookmarks);
  * @apiVersion 0.1.0
  * @apiName addBookmark
  * @apiParam {String[]} bookmarkType Bookmark type (case,method, etc.)
- * @apiParam {Number} thingID ID of the thing (case ID, etc.)
+ * @apiParam {Number} thingid ID of the thing (case ID, etc.)
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -101,11 +100,11 @@ router.post("/add", async function addBookmark(req, res) {
       });
       return;
     }
-    if (!req.body.thingID) {
-      log.error("Required parameter (thingID) wasn't specified");
+    if (!req.body.thingid) {
+      log.error("Required parameter (thingid) wasn't specified");
       res
         .status(400)
-        .json({ error: "Required parameter (thingID) wasn't specified" });
+        .json({ error: "Required parameter (thingid) wasn't specified" });
       return;
     }
     if (!req.user.user_id) {
@@ -114,11 +113,11 @@ router.post("/add", async function addBookmark(req, res) {
       return;
     }
     let userId = as.number(req.user.user_id);
-    let thingId = as.number(req.body.thingID);
+    let thingid = as.number(req.body.thingid);
     let bookmarkType = req.body.bookmarkType;
     const data = await db.one(
-      "insert into bookmarks(bookmarktype, thingid, userid) VALUES(${bookmarkType},${thingId},${userId}) returning id",
-      { bookmarkType, thingId, userId }
+      "insert into bookmarks(bookmarktype, thingid, userid) VALUES(${bookmarkType},${thingid},${userId}) returning id",
+      { bookmarkType, thingid, userId }
     );
     res.json({
       success: true,
@@ -141,7 +140,7 @@ router.post("/add", async function addBookmark(req, res) {
  * @apiVersion 0.1.0
  * @apiName updateUser
  * @apiParam {String[]} bookmarkType Bookmark type (case,method, etc.)
- * @apiParam {Number} thingID ID of the thing (case ID, etc.)
+ * @apiParam {Number} thingid ID of the thing (case ID, etc.)
  *
  * @apiSuccess {Boolean} OK true if call was successful
  *
@@ -164,10 +163,10 @@ router.delete("/delete", async function updateUser(req, res) {
   try {
     const userId = as.number(req.user.user_id);
     const bookmarkType = as.number(req.body.bookmarkType);
-    const thingId = as.text(req.body.thingID);
+    const thingid = as.text(req.body.thingid);
     let data = await db.one(
-      "select * from bookmarks where bookmarktype = ${bookmarkType} AND thingid = ${thingId} AND userid = ${userId}",
-      { bookmarkType, thingId, userId }
+      "select * from bookmarks where bookmarktype = ${bookmarkType} AND thingid = ${thingid} AND userid = ${userId}",
+      { bookmarkType, thingid, userId }
     );
     if (data.userid != userId) {
       res.status(401).json({

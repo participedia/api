@@ -1,4 +1,4 @@
-INSERT into ${type:raw}__authors(user_id, timestamp, ${type:raw}_id)
+INSERT into authors(user_id, timestamp, thingid)
 VALUES
   (${user_id}, 'now', ${id})
 ;

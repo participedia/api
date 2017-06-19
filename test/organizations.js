@@ -17,7 +17,8 @@ async function addBasicOrganization() {
       title: "First Title",
       body: "First Body",
       // optional
-      lead_image: "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg",
+      lead_image:
+        "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg",
       vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
       related_cases: [9, 10, 11, 12],
       related_methods: [151, 152, 153],
@@ -129,32 +130,16 @@ describe("Organizations", () => {
     });
   });
   describe("Test edit API", () => {
-    it("Add organization, then null modify it", async () => {
-      const res1 = await addBasicOrganization();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      res1.body.data.organization_id.should.be.a("number");
-      const origOrganization = res1.body.object;
-      origOrganization.id.should.be.a("number");
-      origOrganization.id.should.equal(res1.body.data.organization_id);
-      const res2 = await chai
-        .putJSON("/organization/" + res1.body.data.organization_id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({}); // empty update
-      res2.should.have.status(200);
-      const updatedOrganization1 = res2.body.data;
-      updatedOrganization1.should.deep.equal(origOrganization); // no changes saved
-    });
     it("Add organization, then modify title and/or body", async () => {
       const res1 = await addBasicOrganization();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      res1.body.data.organization_id.should.be.a("number");
+      res1.body.data.thingid.should.be.a("number");
       const origOrganization = res1.body.object;
       origOrganization.id.should.be.a("number");
-      origOrganization.id.should.equal(res1.body.data.organization_id);
+      origOrganization.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/organization/" + res1.body.data.organization_id)
+        .putJSON("/organization/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Second Title" }); // empty update
       res2.should.have.status(200);
@@ -162,7 +147,7 @@ describe("Organizations", () => {
       updatedOrganization1.title.should.equal("Second Title");
       updatedOrganization1.body.should.equal("First Body");
       const res3 = await chai
-        .putJSON("/organization/" + res1.body.data.organization_id)
+        .putJSON("/organization/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" }); // empty update
       res3.should.have.status(200);
@@ -170,7 +155,7 @@ describe("Organizations", () => {
       updatedOrganization2.title.should.equal("Second Title");
       updatedOrganization2.body.should.equal("Second Body");
       const res4 = await chai
-        .putJSON("/organization/" + res1.body.data.organization_id)
+        .putJSON("/organization/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" }); // empty update
       res4.should.have.status(200);
@@ -238,6 +223,17 @@ describe("Organizations", () => {
       organization3.related_organizations
         .map(x => x.id)
         .should.include(organization1.id);
+    });
+    it("Try to change featured flag", async () => {
+      const res1 = await addBasicOrganization();
+      const organization1 = res1.body.object;
+      organization1.featured.should.be.false;
+      const res2 = await chai
+        .putJSON("/organization/" + organization1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ featured: true });
+      const organization2 = res2.body.data;
+      organization2.featured.should.be.true;
     });
   });
 });

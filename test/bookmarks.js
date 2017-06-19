@@ -16,7 +16,7 @@ describe("Bookmarks", () => {
         .set("Accept", "application/json")
         .send({
           bookmarkType: "case",
-          thingID: 1
+          thingid: 1
         })
         .end((err, res) => {
           res.should.have.status(401);
@@ -32,7 +32,7 @@ describe("Bookmarks", () => {
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({
           bookmarkType: "case",
-          thingID: 1
+          thingid: 1
         })
         .end((err, res) => {
           res.should.have.status(200);

@@ -4,8 +4,8 @@ const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
 
+const { okToFlipFeatured } = require("./user");
 const { as, db, sql } = require("./db");
-const { preferUser } = require("../helpers/user");
 
 function addRelatedList(owner_type, owner_id, related_type, id_list) {
   // TODO: escape id_list to avoid injection attacks
@@ -15,14 +15,14 @@ function addRelatedList(owner_type, owner_id, related_type, id_list) {
   if (isString(id_list)) {
     id_list = [id_list];
   }
-  owner_id = as.number(owner_id);
+  owner_id = Number(owner_id);
   let values = id_list
-    .map(id => {
-      let escaped_id = as.number(id);
-      if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
-        return `('${owner_type}', ${owner_id}, '${related_type}', ${id})`;
+    .map(item => {
+      let escaped_id = Number(item.id);
+      if (owner_id < escaped_id) {
+        return `('${owner_type}', ${owner_id}, '${related_type}', ${escaped_id})`;
       } else {
-        return `('${related_type}', ${id}, '${owner_type}', ${owner_id})`;
+        return `('${related_type}', ${escaped_id}, '${owner_type}', ${owner_id})`;
       }
     })
     .join(", ");
@@ -39,17 +39,17 @@ function removeRelatedList(owner_type, owner_id, related_type, id_list) {
   if (isString(id_list)) {
     id_list = [id_list];
   }
-  owner_id = as.number(owner_id);
+  owner_id = Number(owner_id);
   return id_list
-    .map(id => {
-      let escaped_id = as.number(id);
-      if (`${owner_type}${owner_id}` < `${related_type}${id}`) {
+    .map(item => {
+      let escaped_id = Number(item.id);
+      if (`${owner_type}${owner_id}` < `${related_type}${escaped_id}`) {
         return `DELETE FROM related_nouns
                 WHERE type_1 = '${owner_type}' AND id_1 = ${owner_id} AND
                       type_2 = '${related_type}' AND id_2 = ${id};`;
       } else {
         return `DELETE FROM related_nouns
-                WHERE type_1 = '${related_type}' AND id_1 = ${id} AND
+                WHERE type_1 = '${related_type}' AND id_1 = ${escaped_id} AND
                       type_2 = '${owner_type}' AND id_2 = ${owner_id};`;
       }
     })
@@ -69,64 +69,55 @@ function diffRelatedList(first, second) {
   return { remove, add };
 }
 
-function getXByIdFns(type) {
-  const getById_lang_userId = async function(thingId, lang, userId) {
-    const thing = await db.one(sql(`../sql/${type}_by_id.sql`), {
-      thingId,
-      lang,
-      userId
+const getThingByType_id_lang_userId = async function(
+  type,
+  thingid,
+  lang,
+  userId
+) {
+  let table = type + "s";
+  const thing = await db.one(sql(`../sql/thing_by_id.sql`), {
+    table,
+    type,
+    thingid,
+    lang,
+    userId
+  });
+  return thing.results;
+};
+
+const getThingByRequest = async function(type, req) {
+  const thingid = as.number(req.params.thingid);
+  const lang = as.value(req.params.language || "en");
+  const userId = req.user ? req.user.user_id : null;
+  return await getThingByType_id_lang_userId(type, thingid, lang, userId);
+};
+
+const returnThingByRequest = async function(type, req, res) {
+  try {
+    const thing = await getThingByRequest(type, req);
+    res.status(200).json({ OK: true, data: thing });
+  } catch (error) {
+    log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
+    res.status(500).json({
+      OK: false,
+      error: error
     });
-    return thing;
-  };
-
-  const getByRequest = async function(req) {
-    await preferUser(req);
-    const thingId = as.number(req.params[`${type}Id`]);
-    const lang = as.value(req.params.language || "en");
-    const userId = req.user ? req.user.user_id : null;
-    return await getById_lang_userId(thingId, lang, userId);
-  };
-
-  const returnById = async function(req, res) {
-    try {
-      const thing = await getByRequest(req);
-      res.status(200).json({ OK: true, data: thing });
-    } catch (error) {
-      log.error(
-        "Exception in GET /%s/%s => %s",
-        type,
-        req.params[`${type}Id`],
-        error
-      );
-      res.status(500).json({
-        OK: false,
-        error: error
-      });
-    }
-  };
-  return {
-    getById_lang_userId,
-    getByRequest,
-    returnById
-  };
-}
-
-const getByType_id = {
-  case: getXByIdFns("case"),
-  method: getXByIdFns("method"),
-  organization: getXByIdFns("organization")
+  }
 };
 
 function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
-    const thingId = as.number(req.params[type + "Id"]);
+    const thingid = req.thingid || as.number(req.params.thingid);
     try {
       // FIXME: Figure out how to get all of this done as one transaction
       const lang = as.value(req.params.language || "en");
-      const userId = req.user.user_id;
-      const oldThing = await getByType_id[type].getById_lang_userId(
-        thingId,
+      const user = req.user;
+      const userId = user.user_id;
+      const oldThing = await getThingByType_id_lang_userId(
+        type,
+        thingid,
         lang,
         userId
       );
@@ -136,7 +127,7 @@ function getEditXById(type) {
         title: oldThing.title,
         language: lang,
         type: type,
-        id: thingId
+        id: thingid
       };
       let updatedThingFields = [];
       let isTextUpdated = false;
@@ -161,7 +152,7 @@ function getEditXById(type) {
           // skip, do nothing, no change for this key
         } else if (!equals(oldThing[key], newThing[key])) {
           anyChanges = true;
-          // If the body or title have changed: add a record in X__localized_texts
+          // If the body or title have changed: add a record in localized_texts
           if (key === "body" || key === "title") {
             updatedText[key] = newThing[key];
             isTextUpdated = true;
@@ -175,47 +166,75 @@ function getEditXById(type) {
             ].includes(key)
           ) {
             // DELETE / INSERT any needed rows for related_nouns
-            const oldList = oldThing[key];
-            const newList = newThing[key];
-            newList.forEach(x => x.id = x.id || x.value); // handle client returning value vs. id
+            let oldList = oldThing[key];
+            if (oldList.length && oldList[0].id === undefined) {
+              oldList = oldList.map(x => {
+                id: x;
+              });
+            }
+            let newList = newThing[key];
+            if (
+              newList.length &&
+              newList[0].id === undefined &&
+              newList[0].value === undefined
+            ) {
+              newList = newList.map(function(x) {
+                return { id: Number(x) };
+              });
+            }
+            newList.forEach(x => (x.id = x.id || x.value)); // handle client returning value vs. id
             const diff = diffRelatedList(oldList, newList);
             const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
-            const add = addRelatedList(
-              type,
-              thingId,
-              relType,
-              diff.add.map(x => x.id)
-            );
+            const add = addRelatedList(type, thingid, relType, diff.add);
             const remove = removeRelatedList(
               type,
-              thingId,
+              thingid,
               relType,
-              diff.remove.map(x => x.id)
+              diff.remove
             );
             if (add || remove) {
               await db.none(add + remove);
             }
             anyChanges = true;
             // If any of the fields of thing itself have changed, update record in appropriate table
-          } else if (["id", "post_date", "updated_date"].includes(key)) {
+          } else if (
+            ["id", "post_date", "updated_date", "authors"].includes(key)
+          ) {
             log.warn(
               "Trying to update a field users shouldn't update: %s",
               key
             );
             // take no action
-          } else if (key === "featured" && !user.groups.includes("Curators")) {
-            log.warn("Non-curator trying to update Featured flag");
-            // take no action
+          } else if (key === "featured") {
+            if (okToFlipFeatured(user)) {
+              updatedThingFields.push({
+                key: as.name(key),
+                value: Boolean(newThing[key])
+              });
+            } else {
+              log.warn("Non-curator trying to update Featured flag");
+              // take no action
+            }
           } else if (key === "location") {
             updatedThingFields.push({
               key: as.name(key),
               value: as.location(newThing[key])
             });
+          } else if (["tags", "links"].includes(key)) {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.tags(newThing[key])
+            });
+          } else if (key === "videos") {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.videos(newThing[key])
+            });
           } else if (key === "lead_image") {
             var img = newThing[key];
             updatedThingFields.push({
               key: as.name(key),
-              value: as.attachment(img.url, img.title, img.size)
+              value: as.attachment(img)
             });
           } else if (["other_images", "files"].includes(key)) {
             updatedThingFields.push({
@@ -223,7 +242,7 @@ function getEditXById(type) {
               value: as.attachments(newThing[key])
             });
           } else {
-            let value = oldThing[key];
+            let value = newThing[key];
             let asValue = as.text;
             if (typeof value === "boolean") {
               asValue = as.value;
@@ -240,7 +259,7 @@ function getEditXById(type) {
           }
         }
       }); // end of for loop over object keys
-      if (anyChanges) {
+      if (true) {
         // Actually make the changes
         if (isTextUpdated) {
           // INSERT new text row
@@ -254,43 +273,63 @@ function getEditXById(type) {
             .map(field => field.key + " = " + field.value)
             .join(", "),
           type: type,
-          id: thingId
+          id: thingid
         });
         // INSERT row for X__authors
         await db.none(sql("../sql/insert_author.sql"), {
           user_id: userId,
           type: type,
-          id: thingId
+          id: thingid
         });
         // update materialized view for search
-        retThing = await getByType_id[type].getById_lang_userId(
-          as.number(thingId),
+        retThing = await getThingByType_id_lang_userId(
+          type,
+          as.number(thingid),
           lang,
           userId
         );
-        // update search index
-        await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
-      } else {
-        // end if anyChanges
-        retThing = oldThing;
-      } // end if not anyChanges
-      res.status(200).json({ OK: true, data: retThing });
+        if (req.thingid) {
+          res.status(201).json({
+            OK: true,
+            data: { thingid: retThing.id },
+            object: retThing
+          });
+        } else {
+          res.status(200).json({ OK: true, data: retThing });
+        }
+      }
     } catch (error) {
-      log.error("Exception in PUT /%s/%s => %s", type, thingId, error);
+      log.error(
+        "Exception in PUT /%s/%s => %s",
+        type,
+        req.thingid || thingid,
+        error
+      );
+      console.trace(error);
       res.status(500).json({
         OK: false,
         error: error
       });
     } // end catch
+    // update search index
+    try {
+      await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    } catch (error) {
+      console.error("Problem refreshing materialized view: %s", error);
+    }
   };
 }
+
+const supportedTypes = ["case", "method", "organization"];
 
 module.exports = {
   addRelatedList,
   removeRelatedList,
-  getXByIdFns,
+  getThingByType_id_lang_userId,
+  getThingByRequest,
+  returnThingByRequest,
   diffRelatedList,
   difference,
   getEditXById,
-  getByType_id
+  supportedTypes
 };

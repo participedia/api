@@ -3,18 +3,45 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
-let { db, sql } = require("../helpers/db");
-let { ensureUser } = require("../helpers/user");
+let { db, sql, as } = require("../helpers/db");
 
-async function getUserById(req, userId, res) {
+function conform_location(location) {
+  let {
+    name,
+    postal_code,
+    city,
+    province,
+    country,
+    address_1,
+    address_2
+  } = location;
+  name = as.text(name || "");
+  postal_code = as.text(postal_code || "");
+  city = as.text(city || "");
+  province = as.text(province || "");
+  country = as.text(country || "");
+  address_1 = as.text(address_1 || "");
+  address_2 = as.text(address_2 || "");
+  const latitude = as.text(String(location.latitude));
+  const longitude = as.text(String(location.longitude));
+  return `(${name}, ${address_1}, ${address_2}, ${city}, ${province}, ${country}, ${postal_code}, ${latitude}, ${longitude})::geolocation`;
+}
+
+async function getUserById(userId, req, res) {
   try {
     const result = await db.oneOrNone(sql("../sql/user_by_id.sql"), {
       userId: userId,
       language: req.params.language || "en"
     });
+    if (!result) {
+      return res
+        .status(404)
+        .json({ OK: false, error: `User not found for user_id ${userId}` });
+    }
     res.status(200).json({ OK: true, data: result.user });
   } catch (error) {
-    log.error("Exception in GET /user/%s => %s", req.params.userId, error);
+    log.error("Exception in GET /user/%s => %s", userId, error);
+    console.trace(error);
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
@@ -45,12 +72,26 @@ async function getUserById(req, userId, res) {
  *
  */
 router.get("/:userId", function(req, res) {
-  return getUserById(req, req.params.userId, res);
+  try {
+    return getUserById(req.params.userId || req.user.user_id, req, res);
+  } catch (error) {
+    console.error("Problem in /user/:userId");
+    console.trace(error);
+  }
 });
 
 router.get("/", async function(req, res) {
-  await ensureUser(req, res);
-  return getUserById(req, req.user.user_id, res);
+  try {
+    if (!req.user) {
+      return res.status(404).json({
+        message: "No user found"
+      });
+    }
+    return getUserById(req.user.user_id, req, res);
+  } catch (error) {
+    console.error("Problem in /user/");
+    console.trace(error);
+  }
 });
 
 /**
@@ -76,24 +117,25 @@ router.get("/", async function(req, res) {
  */
 router.post("/", async function(req, res) {
   try {
-    let body = req.body;
-    let user = req.user;
+    let user = req.body;
     let pictureUrl = user.picture;
     if (user.user_metadata && user.user_metadata.customPic) {
       pictureUrl = user.user_metadata.customPic;
     }
-    const result = await db.oneOrNone(sql("../sql/update_user.sql"), {
-      id: userId,
+    let location = conform_location(user.location);
+    await db.none(sql("../sql/update_user.sql"), {
+      id: user.id,
+      name: user.name,
       language: req.params.language || "en",
       picture_url: pictureUrl,
-      bio: body["bio"] || "",
-      title: body["title"] || "",
-      affiliation: body["affiliation"] || "",
-      location: body["location"] || null
+      bio: user["bio"] || "",
+      title: user["title"] || "",
+      affiliation: user["affiliation"] || "",
+      location: location
     });
-    res.status(200).json({ OK: true, data: result.user });
+    res.status(200).json({ OK: true });
   } catch (error) {
-    log.error("Exception in POST /user/%s => %s", req.params.userId, error);
+    log.error("Exception in POST /user => %s", error);
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
