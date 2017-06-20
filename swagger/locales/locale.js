@@ -9,8 +9,6 @@ define([
     './locales/pt_br.js',
     './locales/ro.js',
     './locales/ru.js',
-    './locales/tr.js',
-    './locales/vi.js',
     './locales/zh.js',
     './locales/zh_cn.js'
 ], function() {

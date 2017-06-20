@@ -4,6 +4,7 @@ let chai = require("chai");
 let chaiHttp = require("chai-http");
 let chaiHelpers = require("./helpers");
 let should = chai.should();
+let expect = chai.expect;
 chai.should();
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
@@ -183,7 +184,8 @@ describe("Organizations", () => {
       should.exist(res2.body.data);
       const organization2 = res2.body.data;
       organization2.lead_image.url.should.equal("foobar.jpg");
-      organization2.updated_date.should.be.above(organization1.updated_date);
+      expect(organization2.updated_date > organization1.updated_date).to.be
+        .true;
       const res3 = await chai
         .putJSON("/organization/" + organization1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
