@@ -3,6 +3,7 @@ let chai = require("chai");
 let chaiHttp = require("chai-http");
 let chaiHelpers = require("./helpers");
 let should = chai.should();
+let expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
 
@@ -288,7 +289,7 @@ describe("Cases", () => {
       should.exist(res2.body.data);
       const case2 = res2.body.data;
       case2.lead_image.url.should.equal("foobar.jpg");
-      case2.updated_date.should.be.above(case1.updated_date);
+      expect(case2.updated_date > case1.updated_date).to.be.true;
       const res3 = await chai
         .putJSON("/case/" + case1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
