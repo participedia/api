@@ -14,7 +14,7 @@
     "apicache": "^0.8.3",
     "apidoc": "^0.17.5",
     "async": "^2.3.0",
-    "aws-sdk": "^2.41.0",
+    "aws-sdk": "^2.70.0",
     "babel-cli": "^6.24.1",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
