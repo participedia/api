@@ -22,14 +22,8 @@ WITH user_bookmarks AS (
 SELECT row_to_json(user_row) as user
 FROM (
 SELECT
-	users.name,
-	users.id,
-  users.join_date,
-  users.picture_url,
-  users.title,
-  users.affiliation,
-  users.bio,
-  users.location,
+	users.*,
+  COALESCE(users.location, ('','','','','','','','','')::geolocation) AS location,
   'user' as type,
 	COALESCE(cases_authored, '{}') cases,
 	COALESCE(methods_authored, '{}') methods,

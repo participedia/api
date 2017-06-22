@@ -5,6 +5,9 @@ let cache = require("apicache");
 let log = require("winston");
 let { db, sql, as } = require("../helpers/db");
 
+const USER_BY_ID = sql("../sql/user_by_id.sql");
+const UPDATE_USER = sql("../sql/update_user.sql");
+
 function conform_location(location) {
   let {
     name,
@@ -29,7 +32,7 @@ function conform_location(location) {
 
 async function getUserById(userId, req, res) {
   try {
-    const result = await db.oneOrNone(sql("../sql/user_by_id.sql"), {
+    const result = await db.oneOrNone(USER_BY_ID, {
       userId: userId,
       language: req.params.language || "en"
     });
@@ -118,20 +121,23 @@ router.get("/", async function(req, res) {
 router.post("/", async function(req, res) {
   try {
     let user = req.body;
-    let pictureUrl = user.picture;
+    let pictureUrl = user.picture_url || user.picture;
     if (user.user_metadata && user.user_metadata.customPic) {
       pictureUrl = user.user_metadata.customPic;
     }
     let location = conform_location(user.location);
-    await db.none(sql("../sql/update_user.sql"), {
+    await db.none(UPDATE_USER, {
       id: user.id,
       name: user.name,
       language: req.params.language || "en",
       picture_url: pictureUrl,
-      bio: user["bio"] || "",
-      title: user["title"] || "",
-      affiliation: user["affiliation"] || "",
-      location: location
+      bio: user.bio || "",
+      title: user.title || "",
+      affiliation: user.affiliation || "",
+      location: location,
+      department: user.department || "",
+      website: user.website || "",
+      organization: user.organization || null
     });
     res.status(200).json({ OK: true });
   } catch (error) {
@@ -140,6 +146,7 @@ router.post("/", async function(req, res) {
       res.status(404).json({ OK: false });
     } else {
       res.status(500).json({ OK: false, error: error });
+      console.trace(error);
     }
   }
 });
