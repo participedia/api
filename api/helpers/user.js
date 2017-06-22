@@ -2,6 +2,9 @@ let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
 let unless = require("express-unless");
 
+const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
+const CREATE_USER_ID = sql("../sql/create_user_id.sql");
+
 async function preferUser(req, res, next) {
   commonUserHandler(false, req, res, next);
 }
@@ -35,7 +38,7 @@ async function commonUserHandler(required, req, res, next) {
       user.user_id = Number(user.user_id);
       return next();
     }
-    userObj = await db.oneOrNone(sql("../sql/user_by_email.sql"), {
+    userObj = await db.oneOrNone(USER_BY_EMAIL, {
       userEmail: user && user.email ? user.email : email
     });
     if (userObj) {
@@ -47,7 +50,7 @@ async function commonUserHandler(required, req, res, next) {
         pictureUrl = user.user_metadata.customPic;
       }
       console.log(JSON.stringify(req.user));
-      newUser = await db.one(sql("../sql/create_user_id.sql"), {
+      newUser = await db.one(CREATE_USER_ID, {
         userEmail: user.email,
         userName: user.name || user.email,
         joinDate: user.created_at,
@@ -73,9 +76,11 @@ async function commonUserHandler(required, req, res, next) {
 function okToEdit(user) {
   // User should be logged in and not be part of the Banned group
   if (
-    !(user.app_metadata &&
+    !(
+      user.app_metadata &&
       user.app_metadata.authorization &&
-      user.app_metadata.authorization.groups)
+      user.app_metadata.authorization.groups
+    )
   ) {
     // how do we have a user, but not this metadata?
     return false;
@@ -89,9 +94,11 @@ function okToEdit(user) {
 function okToFlipFeatured(user) {
   // User should be logged in and be part of the Curators group
   if (
-    !(user.app_metadata &&
+    !(
+      user.app_metadata &&
       user.app_metadata.authorization &&
-      user.app_metadata.authorization.groups)
+      user.app_metadata.authorization.groups
+    )
   ) {
     // how do we have a user, but not this metadata?
     return false;
@@ -105,9 +112,9 @@ function okToFlipFeatured(user) {
 ensureUser.unless = unless;
 preferUser.unless = unless;
 
-module.exports = (exports = {
+module.exports = exports = {
   ensureUser,
   preferUser,
   okToEdit,
   okToFlipFeatured
-});
+};
