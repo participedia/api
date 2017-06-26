@@ -103,17 +103,13 @@ function videos(url, title) {
       vids
         .map(vid => {
           if (isObject(vid)) {
-            "(" +
-              as.text(vid.url) +
-              ", " +
-              as.text(vid.title ? vid.title : "") +
-              ")";
+            as.text(vid.url);
           } else {
-            "(" + as.text(vid) + ", '')";
+            as.text(vid);
           }
         })
         .join(", ") +
-      "]::video[]"
+      "]::text[]"
     );
   }
   if (!url) {
