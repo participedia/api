@@ -18,7 +18,7 @@ async function addBasicMethod() {
       title: "First Title",
       body: "First Body",
       // optional
-      lead_image: "https://cdn.thinglink.me/api/image/756598547733807104/",
+      images: ["https://cdn.thinglink.me/api/image/756598547733807104/"],
       vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
       related_cases: [5, 6, 7, 8],
       related_methods: [148, 149, 150],
@@ -182,33 +182,27 @@ describe("Methods", () => {
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       const method1 = res1.body.object;
-      method1.lead_image.url.should.equal(
+      method1.images.should.deep.equal([
         "https://cdn.thinglink.me/api/image/756598547733807104/"
-      );
+      ]);
       const res2 = await chai
         .putJSON("/method/" + method1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ lead_image: { url: "foobar.jpg", title: "" } });
+        .send({ images: ["foobar.jpg"] });
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
       should.exist(res2.body.data);
       const method2 = res2.body.data;
-      method2.lead_image.url.should.equal("foobar.jpg");
+      method2.images.should.deep.equal(["foobar.jpg"]);
       expect(method2.updated_date > method1.updated_date).to.be.true;
       const res3 = await chai
         .putJSON("/method/" + method1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          lead_image: {
-            url: "howzaboutthemjpegs.png",
-            title: "Innocuous Title"
-          }
-        });
+        .send({ images: ["howzaboutthemjpegs.png"] });
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
       const method3 = res3.body.data;
-      method3.lead_image.url.should.equal("howzaboutthemjpegs.png");
-      method3.lead_image.title.should.equal("Innocuous Title");
+      method3.images.should.deep.equal(["howzaboutthemjpegs.png"]);
     });
     it("Add method, then change related objects", async () => {
       const res1 = await addBasicMethod();

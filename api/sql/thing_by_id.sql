@@ -16,8 +16,7 @@ full_thing AS (
   SELECT
     ${table:name}.*,
     COALESCE(location, '("","","","","","","","","")'::geolocation) AS location,
-    COALESCE(lead_image, '("","",0)'::attachment) AS lead_image,
-    COALESCE(${table:name}.other_images, '{}') other_images,
+    COALESCE(images, '{}') AS images,
     COALESCE(${table:name}.files, '{}') files,
     COALESCE(${table:name}.videos, '{}') videos,
     COALESCE(${table:name}.tags, '{}') tags,

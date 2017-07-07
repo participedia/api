@@ -10,7 +10,7 @@ SELECT
   things.featured,
   title,
   to_json(COALESCE(things.location, '("","","","","","","","","")'::geolocation)) AS location,
-  to_json(COALESCE(things.lead_image, '("","",0)'::attachment)) AS lead_image
+  to_json(COALESCE(things.images, '{}')) AS images
 FROM search_index_${language:raw}, things
 WHERE document @@ plainto_tsquery('english', ${query}) ${filter:raw} AND
       search_index_${language:raw}.id = things.id

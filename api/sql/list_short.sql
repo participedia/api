@@ -6,7 +6,7 @@ WITH shorts AS (
       id,
       type,
       title,
-      COALESCE(lead_image, '("","",0)'::attachment), 
+      COALESCE(images, '{}'), 
       post_date,
       updated_date)::object_reference)
   FROM things, localized_texts

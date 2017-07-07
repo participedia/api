@@ -13,7 +13,7 @@ WITH all_featured  AS (
     title,
     substring(body for 500) AS body,
     to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
-    to_json(COALESCE(lead_image, '("","",0)'::attachment)) AS lead_image,
+    to_json(COALESCE(images, '{}')) AS images,
     updated_date,
     bookmarked(type, id, ${userId})
   FROM things, localized_texts

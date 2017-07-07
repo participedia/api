@@ -79,7 +79,7 @@ describe("Search", () => {
       item.type.should.be.a("string");
       item.updated_date.should.be.a("string");
       item.bookmarked.should.be.a("boolean");
-      item.should.have.property("lead_image");
+      item.should.have.property("images");
     });
     it("multi-word search", async () => {
       const res = await chai

@@ -41,18 +41,6 @@ describe("Users", () => {
       bookmarks.sort();
       bookmarks.should.deep.equal(["case", "method", "method"]);
     });
-    it("Make sure if there is a lead_image that it is an object with a url property", async () => {
-      const res = await chai.getJSON("/user/134860").send({});
-      res.body.OK.should.equal(true);
-      res.should.have.status(200);
-      let user = res.body.data;
-      user.cases.should.have.lengthOf(42);
-      user.cases.forEach(theCase => {
-        if (theCase.lead_image) {
-          theCase.lead_image.url.should.be.a("string");
-        }
-      });
-    });
   });
   describe("modify user", () => {
     it("change department, website, organization", async () => {

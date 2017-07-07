@@ -4,7 +4,8 @@ WITH user_bookmarks AS (
     bookmarks.thingid as id,
     bookmarks.bookmarktype AS type,
     localized_texts.title,
-    things.lead_image,
+    things.images,
+--    COALLESCE(things.images, '{}') AS images,
     things.post_date,
     things.updated_date
   FROM
@@ -28,12 +29,12 @@ SELECT
 	COALESCE(cases_authored, '{}') cases,
 	COALESCE(methods_authored, '{}') methods,
 	COALESCE(organizations_authored, '{}') organizations,
-  COALESCE(ARRAY(SELECT ROW(id, type, title, lead_image, post_date, updated_date)::object_reference FROM user_bookmarks), '{}') bookmarks
+  COALESCE(ARRAY(SELECT ROW(id, type, title, images, post_date, updated_date)::object_reference FROM user_bookmarks), '{}') bookmarks
 FROM
 	users LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, 'case', texts.title, cases.lead_image, cases.post_date, cases.updated_date)::object_reference) cases_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, 'case', texts.title, cases.images, cases.post_date, cases.updated_date)::object_reference) cases_authored, authors.user_id
 	    FROM
 	        localized_texts texts,
 	        authors authors,
@@ -51,7 +52,7 @@ FROM
     ON case_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, 'method', texts.title, methods.lead_image, methods.post_date, methods.updated_date)::object_reference) methods_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, 'method', texts.title, methods.images, methods.post_date, methods.updated_date)::object_reference) methods_authored, authors.user_id
 	    FROM
 	        localized_texts texts,
 	        authors,
@@ -69,7 +70,7 @@ FROM
   ON method_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, 'organization', texts.title, organizations.lead_image, organizations.post_date, organizations.updated_date)::object_reference) organizations_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, 'organization', texts.title, organizations.images, organizations.post_date, organizations.updated_date)::object_reference) organizations_authored, authors.user_id
 	    FROM
 	        localized_texts texts,
 	        authors,
