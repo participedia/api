@@ -167,11 +167,11 @@ router.post("/new", async function postNewCase(req, res) {
     cache.clear();
 
     let title = req.body.title;
-    let body = req.body.body || req.body.summary;
+    let body = req.body.body || req.body.summary || "";
     let language = req.params.language || "en";
-    if (!(title && body)) {
+    if (!title) {
       return res.status(400).json({
-        message: "Cannot create Case, both title and body are required"
+        message: "Cannot create Case without at least a title"
       });
     }
     const user_id = req.user.user_id;
