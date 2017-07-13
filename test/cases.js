@@ -72,8 +72,11 @@ async function addBasicCase() {
       title: "First Title",
       body: "First Body",
       // optional
-      lead_image: "CitizensAssembly_2.jpg", // key into S3 bucket
-      videos: ["https://www.youtube.com/watch?v=QF7g3rCnD-w"],
+      images: ["CitizensAssembly_2.jpg"], // key into S3 bucket
+      videos: [
+        "https://www.youtube.com/watch?v=QF7g3rCnD-w",
+        "https://www.youtube.com/watch?v=w44lApffH30"
+      ],
       location: location,
       related_cases: ["1", "2", "3", "4"],
       related_methods: ["145", "146", "147"],
@@ -143,6 +146,7 @@ describe("Cases", () => {
       returnedCase.related_cases.length.should.equal(4);
       returnedCase.related_methods.length.should.equal(3);
       returnedCase.related_organizations.length.should.equal(3);
+      returnedCase.videos.length.should.equal(2);
     });
   });
   describe("Related Objects", () => {
@@ -279,31 +283,25 @@ describe("Cases", () => {
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       const case1 = res1.body.object;
-      case1.lead_image.url.should.equal("CitizensAssembly_2.jpg");
+      case1.images.should.deep.equal(["CitizensAssembly_2.jpg"]);
       const res2 = await chai
         .putJSON("/case/" + case1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ lead_image: { url: "foobar.jpg", title: "" } });
+        .send({ images: ["foobar.jpg"] });
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
       should.exist(res2.body.data);
       const case2 = res2.body.data;
-      case2.lead_image.url.should.equal("foobar.jpg");
+      case2.images.should.deep.equal(["foobar.jpg"]);
       expect(case2.updated_date > case1.updated_date).to.be.true;
       const res3 = await chai
         .putJSON("/case/" + case1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          lead_image: {
-            url: "howzaboutthemjpegs.png",
-            title: "Innocuous Title"
-          }
-        });
+        .send({ images: ["howzaboutthemjpegs.png"] });
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
       const case3 = res3.body.data;
-      case3.lead_image.url.should.equal("howzaboutthemjpegs.png");
-      case3.lead_image.title.should.equal("Innocuous Title");
+      case3.images.should.deep.equal(["howzaboutthemjpegs.png"]);
     });
 
     it("Add case, then change related objects", async () => {
@@ -369,7 +367,7 @@ describe("Cases", () => {
           title: "First Title",
           body: "First Body",
           // optional
-          other_images: [
+          images: [
             "https://s-media-cache-ak0.pinimg.com/736x/3d/2b/bf/3d2bbfd73ccaf488ab88d298ab7bc2d8.jpg",
             "https://ocs-pl.oktawave.com/v1/AUTH_e1d5d90a-20b9-49c9-a9cd-33fc2cb68df3/mrgugu-products/20150901170519_1afZHYJgZTruGxEc_1000-1000.jpg"
           ]
@@ -377,24 +375,7 @@ describe("Cases", () => {
       res.should.have.status(201);
       res.body.OK.should.be.true;
       const theCase = res.body.object;
-      theCase.other_images.should.have.lengthOf(2);
-    });
-    it("Create case with array of attachment objects", async () => {
-      const res = await chai
-        .postJSON("/case/new")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          title: "Earth First",
-          body: "Mars Second",
-          other_images: [
-            { url: "http://placekitten.com/200/300" },
-            { url: "http://placekitten.com/300/200" }
-          ]
-        });
-      res.should.have.status(201);
-      res.body.OK.should.be.true;
-      const theCase = res.body.object;
-      theCase.other_images.should.have.lengthOf(2);
+      theCase.images.should.have.lengthOf(2);
     });
   });
 });

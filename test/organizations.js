@@ -18,8 +18,9 @@ async function addBasicOrganization() {
       title: "First Title",
       body: "First Body",
       // optional
-      lead_image:
-        "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg",
+      images: [
+        "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg"
+      ],
       vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
       related_cases: [9, 10, 11, 12],
       related_methods: [151, 152, 153],
@@ -172,34 +173,28 @@ describe("Organizations", () => {
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       const organization1 = res1.body.object;
-      organization1.lead_image.url.should.equal(
+      organization1.images.should.deep.equal([
         "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg"
-      );
+      ]);
       const res2 = await chai
         .putJSON("/organization/" + organization1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ lead_image: { url: "foobar.jpg", title: "" } });
+        .send({ images: ["foobar.jpg"] });
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
       should.exist(res2.body.data);
       const organization2 = res2.body.data;
-      organization2.lead_image.url.should.equal("foobar.jpg");
+      organization2.images.should.deep.equal(["foobar.jpg"]);
       expect(organization2.updated_date > organization1.updated_date).to.be
         .true;
       const res3 = await chai
         .putJSON("/organization/" + organization1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          lead_image: {
-            url: "howzaboutthemjpegs.png",
-            title: "Innocuous Title"
-          }
-        });
+        .send({ images: ["howzaboutthemjpegs.png"] });
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
       const organization3 = res3.body.data;
-      organization3.lead_image.url.should.equal("howzaboutthemjpegs.png");
-      organization3.lead_image.title.should.equal("Innocuous Title");
+      organization3.images.should.deep.equal(["howzaboutthemjpegs.png"]);
     });
     it("Add organization, then change related objects", async () => {
       const res1 = await addBasicOrganization();

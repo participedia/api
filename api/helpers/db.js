@@ -94,32 +94,6 @@ function attachments(url, title, size) {
   return `ARRAY[(${url}, ${title}, ${size})]::attachment[]`;
 }
 
-// as.videos
-function videos(url, title) {
-  if (isArray(url)) {
-    let vids = url;
-    return (
-      "ARRAY[" +
-      vids
-        .map(vid => {
-          if (isObject(vid)) {
-            as.text(vid.url);
-          } else {
-            as.text(vid);
-          }
-        })
-        .join(", ") +
-      "]::text[]"
-    );
-  }
-  if (!url) {
-    return "'{}'";
-  }
-  url = as.text(url);
-  title = as.text(title ? title : "");
-  return `ARRAY[(${url}, ${title})]::video[]`;
-}
-
 // as.strings / as.tags (could be used as as.strings too
 function strings(strList) {
   if (!strList) {
@@ -129,6 +103,7 @@ function strings(strList) {
 }
 
 const tags = strings; // alias for descriptiveness
+const videos = strings;
 
 // as.location
 function location(location) {

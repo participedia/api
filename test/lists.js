@@ -4,76 +4,17 @@ let chai = require("chai");
 let chaiHttp = require("chai-http");
 let chaiHelpers = require("./helpers");
 let should = chai.should();
+const {
+  titleKeys,
+  shortKeys,
+  mediumKeys,
+  thingKeys,
+  caseKeys,
+  methodKeys,
+  organizationKeys
+} = require("../api/helpers/things");
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
-
-// Define the keys we're testing (move these to helper/things.js ?
-const titleKeys = ["id", "title"];
-const shortKeys = titleKeys.concat([
-  "type",
-  "lead_image",
-  "post_date",
-  "updated_date"
-]);
-const medKeys = shortKeys.concat(["body", "bookmarked", "location"]);
-const thingKeys = medKeys.concat([
-  "original_language",
-  "published",
-  "other_images",
-  "files",
-  "videos",
-  "featured",
-  "tags",
-  "url"
-]);
-const caseKeys = thingKeys.concat([
-  "issue",
-  "communication_mode",
-  "communication_with_audience",
-  "content_country",
-  "decision_method",
-  "end_date",
-  "facetoface_online_or_both",
-  "facilitated",
-  "voting",
-  "number_of_meeting_days",
-  "ongoing",
-  "start_date",
-  "total_number_of_participants",
-  "targeted_participant_demographic",
-  "kind_of_influence",
-  "targeted_participants_public_role",
-  "targeted_audience",
-  "participant_selection",
-  "specific_topic",
-  "staff_type",
-  "type_of_funding_entity",
-  "typical_implementing_entity",
-  "typical_sponsoring_entity",
-  "who_else_supported_the_initiative",
-  "who_was_primarily_responsible_for_organizing_the_initiative"
-]);
-const methodKeys = thingKeys.concat([
-  "best_for",
-  "communication_mode",
-  "decision_mode",
-  "facilitated",
-  "governance_contribution",
-  "issue_interdependency",
-  "issue_polarization",
-  "issue_technical_complexity",
-  "kind_of_influence",
-  "method_of_interaction",
-  "public_interaction_method",
-  "typical_funding_source",
-  "typical_implementing_entity",
-  "typical_sponsoring_entity"
-]);
-const organizationKeys = thingKeys.concat([
-  "executive_director",
-  "issue",
-  "sector"
-]);
 
 describe("Lists", () => {
   describe("basics", () => {
