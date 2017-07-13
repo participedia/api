@@ -73,7 +73,10 @@ async function addBasicCase() {
       body: "First Body",
       // optional
       images: ["CitizensAssembly_2.jpg"], // key into S3 bucket
-      videos: ["https://www.youtube.com/watch?v=QF7g3rCnD-w"],
+      videos: [
+        "https://www.youtube.com/watch?v=QF7g3rCnD-w",
+        "https://www.youtube.com/watch?v=w44lApffH30"
+      ],
       location: location,
       related_cases: ["1", "2", "3", "4"],
       related_methods: ["145", "146", "147"],
@@ -143,6 +146,7 @@ describe("Cases", () => {
       returnedCase.related_cases.length.should.equal(4);
       returnedCase.related_methods.length.should.equal(3);
       returnedCase.related_organizations.length.should.equal(3);
+      returnedCase.videos.length.should.equal(2);
     });
   });
   describe("Related Objects", () => {
