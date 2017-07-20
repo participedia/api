@@ -7,6 +7,11 @@ const moment = require("moment");
 const { okToFlipFeatured } = require("./user");
 const { as, db, sql } = require("./db");
 
+const THING_BY_ID = sql(`../sql/thing_by_id.sql`);
+const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
+const UPDATE_NOUN = sql("../sql/update_noun.sql");
+const INSERT_AUTHOR = sql("../sql/insert_author.sql");
+
 // Define the keys we're testing (move these to helper/things.js ?
 const titleKeys = ["id", "title"];
 const shortKeys = titleKeys.concat([
@@ -143,7 +148,7 @@ const getThingByType_id_lang_userId = async function(
   userId
 ) {
   let table = type + "s";
-  const thing = await db.one(sql(`../sql/thing_by_id.sql`), {
+  const thing = await db.one(THING_BY_ID, {
     table,
     type,
     thingid,
@@ -329,12 +334,12 @@ function getEditXById(type) {
         // Actually make the changes
         if (isTextUpdated) {
           // INSERT new text row
-          await db.none(sql("../sql/insert_localized_text.sql"), updatedText);
+          await db.none(INSERT_LOCALIZED_TEXT, updatedText);
         }
         // Update last_updated
         updatedThingFields.push({ key: "updated_date", value: as.text("now") });
         // UPDATE the thing row
-        await db.none(sql("../sql/update_noun.sql"), {
+        await db.none(UPDATE_NOUN, {
           keyvalues: updatedThingFields
             .map(field => field.key + " = " + field.value)
             .join(", "),
@@ -342,7 +347,7 @@ function getEditXById(type) {
           id: thingid
         });
         // INSERT row for X__authors
-        await db.none(sql("../sql/insert_author.sql"), {
+        await db.none(INSERT_AUTHOR, {
           user_id: userId,
           type: type,
           id: thingid

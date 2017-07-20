@@ -13,6 +13,9 @@ const {
   getThingByType_id_lang_userId
 } = require("../helpers/things");
 
+const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
+const CREATE_CASE = sql("../sql/create_case.sql");
+
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
  * @apiGroup Cases
@@ -42,7 +45,7 @@ const {
 
 router.get("/countsByCountry", async function getCountsByCountry(req, res) {
   try {
-    const countries = await db.any(sql("../sql/cases_by_country.sql"));
+    const countries = await db.any(CASES_BY_COUNTRY);
     // convert array to object
     let countryCounts = {};
     countries.forEach(function(row) {
@@ -175,7 +178,7 @@ router.post("/new", async function postNewCase(req, res) {
       });
     }
     const user_id = req.user.user_id;
-    const thing = await db.one(sql("../sql/create_case.sql"), {
+    const thing = await db.one(CREATE_CASE, {
       title,
       body,
       language

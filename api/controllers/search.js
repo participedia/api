@@ -5,6 +5,14 @@ let { db, sql, as } = require("../helpers/db");
 let log = require("winston");
 const { supportedTypes } = require("../helpers/things");
 
+const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
+const SEARCH = sql("../sql/search.sql");
+const FEATURED_MAP = sql("../sql/featuredmap.sql");
+const FEATURED = sql("../sql/featured.sql");
+const SEARCH_MAP = sql("../sql/searchmap.sql");
+const LIST_MAP_CASES = sql("../sql/list_map_cases.sql");
+const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
+
 const RESPONSE_LIMIT = 20;
 
 /**
@@ -31,7 +39,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
         message: "Unsupported objType for getAllForType: " + objType
       });
     }
-    const titlelist = await db.any(sql("../sql/titles_for_things.sql"), {
+    const titlelist = await db.any(TITLES_FOR_THINGS, {
       language: as.value(req.query.language || "en"),
       limit: RESPONSE_LIMIT,
       offset: offset,
@@ -61,16 +69,16 @@ const filterFromReq = req => {
 };
 
 const queryFileFromReq = req => {
-  const featuredOnly = !req.query.query ||
-    (req.query.query || "").toLowerCase() === "featured";
+  const featuredOnly =
+    !req.query.query || (req.query.query || "").toLowerCase() === "featured";
   const resultType = (req.query.resultType || "").toLowerCase();
-  let queryfile = "../sql/search.sql";
+  let queryfile = SEARCH;
   if (featuredOnly && resultType === "map") {
-    queryfile = "../sql/featuredmap.sql";
+    queryfile = FEATURED_MAP;
   } else if (featuredOnly) {
-    queryfile = "../sql/featured.sql";
+    queryfile = FEATURED;
   } else if (resultType == "map") {
-    queryfile = "../sql/searchmap.sql";
+    queryfile = SEARCH_MAP;
   }
   return queryfile;
 };
@@ -113,7 +121,7 @@ const offsetFromReq = req => {
 
 router.get("/", async function(req, res) {
   try {
-    const objList = await db.any(sql(queryFileFromReq(req)), {
+    const objList = await db.any(queryFileFromReq(req), {
       query: req.query.query,
       language: as.value(req.query.language || "en"),
       filter: filterFromReq(req),
@@ -142,12 +150,12 @@ router.get("/map", async function(req, res) {
   try {
     const RESPONSE_LIMIT = 1000;
     const offset = 0;
-    const cases = await db.any(sql("../sql/list_map_cases.sql"), {
+    const cases = await db.any(LIST_MAP_CASES, {
       language: as.value(req.query.language || "en"),
       limit: RESPONSE_LIMIT,
       offset: offset
     });
-    const orgs = await db.any(sql("../sql/list_map_orgs.sql"), {
+    const orgs = await db.any(LIST_MAP_ORGANIZATIONS, {
       language: as.value(req.query.language || "en"),
       limit: RESPONSE_LIMIT,
       offset: offset
