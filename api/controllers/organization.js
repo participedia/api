@@ -50,11 +50,11 @@ router.post("/new", async function(req, res) {
     cache.clear();
 
     let title = req.body.title;
-    let body = req.body.body || req.body.summary;
+    let body = req.body.body || req.body.summary || "";
     let language = req.params.language || "en";
-    if (!(title && body)) {
+    if (!title) {
       return res.status(400).json({
-        message: "Cannot create Organization, both title and body are required"
+        message: "Cannot create Organization without at least a title"
       });
     }
     const user_id = req.user.user_id;
@@ -132,7 +132,8 @@ router.put("/:thingid", getEditXById("organization"));
  */
 
 router.get("/:thingid", (req, res) =>
-  returnThingByRequest("organization", req, res));
+  returnThingByRequest("organization", req, res)
+);
 
 /**
  * @api {delete} /organization/:id Delete an organization
