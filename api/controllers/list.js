@@ -6,6 +6,10 @@ const log = require("winston");
 const { db, sql, as } = require("../helpers/db");
 const { supportedTypes } = require("../helpers/things");
 
+const LIST_TITLES = sql("../sql/list_titles.sql");
+const LIST_SHORT = sql("../sql/list_short.sql");
+//const LIST_REFERENCES = sql("../sql/list_references.sql");
+
 /**
  * @api {get} /list/titles Get title and id for all "things"
  * @apiGroup List
@@ -31,7 +35,7 @@ const { supportedTypes } = require("../helpers/things");
 router.get("/titles", async (req, res) => {
   try {
     const language = req.params.language || "en";
-    const query = await db.one(sql("../sql/list_titles.sql"), { language });
+    const query = await db.one(LIST_TITLES, { language });
     // query.results.forEach(item =>
     //   console.log("before munge: %s", Object.keys(item)));
     let retVal = {};
@@ -52,7 +56,7 @@ router.get("/titles", async (req, res) => {
 router.get("/short", async (req, res) => {
   try {
     const language = req.params.language || "en";
-    const query = await db.one(sql("../sql/list_short.sql"), { language });
+    const query = await db.one(LIST_SHORT, { language });
     let retVal = {};
     query.results.forEach(thing => {
       retVal[thing.type + "s"] = thing.array_agg;
@@ -72,7 +76,7 @@ router.get("/:type", async (req, res) => {
         .json({ OK: false, error: `Type ${req.params.type} is not supported` });
     }
     const language = req.params.language || "en";
-    const query = await db.one(sql("../sql/list_references.sql"), { language });
+    const query = await db.one(LIST_REFERENCES, { language });
     res.status(200).json({ OK: true, data: query.results });
   } catch (error) {
     console.trace("Exception in POST /list/%s => %s", req.params.type, error);

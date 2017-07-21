@@ -5,6 +5,9 @@ const cache = require("apicache");
 const log = require("winston");
 
 const { db, sql, as } = require("../helpers/db");
+
+const CREATE_METHOD = sql("../sql/create_method.sql");
+
 const {
   getEditXById,
   addRelatedList,
@@ -57,7 +60,7 @@ router.post("/new", async function(req, res) {
       });
     }
     const user_id = req.user.user_id;
-    const thing = await db.one(sql("../sql/create_method.sql"), {
+    const thing = await db.one(CREATE_METHOD, {
       title,
       body,
       language
