@@ -6,6 +6,9 @@ const cache = require("apicache");
 const log = require("winston");
 
 const { db, sql, as } = require("../helpers/db");
+
+const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
+
 const {
   getEditXById,
   addRelatedList,
@@ -58,7 +61,7 @@ router.post("/new", async function(req, res) {
       });
     }
     const user_id = req.user.user_id;
-    const thing = await db.one(sql("../sql/create_organization.sql"), {
+    const thing = await db.one(CREATE_ORGANIZATION, {
       title,
       body,
       language

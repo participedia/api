@@ -76,9 +76,11 @@ async function commonUserHandler(required, req, res, next) {
 function okToEdit(user) {
   // User should be logged in and not be part of the Banned group
   if (
-    !(user.app_metadata &&
+    !(
+      user.app_metadata &&
       user.app_metadata.authorization &&
-      user.app_metadata.authorization.groups)
+      user.app_metadata.authorization.groups
+    )
   ) {
     // how do we have a user, but not this metadata?
     // Because that's the way OAuth is configured, duh. No metatdata
@@ -94,9 +96,11 @@ function okToEdit(user) {
 function okToFlipFeatured(user) {
   // User should be logged in and be part of the Curators group
   if (
-    !(user.app_metadata &&
+    !(
+      user.app_metadata &&
       user.app_metadata.authorization &&
-      user.app_metadata.authorization.groups)
+      user.app_metadata.authorization.groups
+    )
   ) {
     // how do we have a user, but not this metadata?
     return false;

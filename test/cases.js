@@ -323,6 +323,17 @@ describe("Cases", () => {
       const case3 = res3.body.data;
       case3.related_cases.map(x => x.id).should.include(case1.id);
     });
+    it.skip("Add case, then bookmark, see what we get back", async () => {
+      const res1 = await addBasicCase();
+      const case1 = res1.body.object;
+      case1.bookmarked.should.be.false;
+      const res2 = await chai
+        .putJSON("/case/" + case1.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ bookmarked: true });
+      const case2 = res2.body.data;
+      case2.bookmarked.should.be.false;
+    });
   });
 
   describe("Test bookmarked", () => {
