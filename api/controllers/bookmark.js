@@ -162,22 +162,17 @@ router.post("/add", async function addBookmark(req, res) {
 router.delete("/delete", async function updateUser(req, res) {
   try {
     const userId = as.number(req.user.user_id);
-    const bookmarkType = as.number(req.body.bookmarkType);
-    const thingid = as.text(req.body.thingid);
-    let data = await db.one(
+    const bookmarkType = req.body.bookmarkType;
+    const thingid = as.number(req.body.thingid);
+    const data1 = await db.one(
       "select * from bookmarks where bookmarktype = ${bookmarkType} AND thingid = ${thingid} AND userid = ${userId}",
       { bookmarkType, thingid, userId }
     );
-    if (data.userid != userId) {
-      res.status(401).json({
-        message: "access denied - user is not the owner of the bookmark"
-      });
-    } else {
-      data = await db.none("delete from bookmarks where id = $1", data.id);
-      res
-        .status(200)
-        .json({ status: "success", message: `Removed a bookmark` });
-    }
+    const data2 = await db.none(
+      "delete from bookmarks where id = $1",
+      data1.id
+    );
+    res.status(200).json({ status: "success", message: `Removed a bookmark` });
   } catch (error) {
     log.error("Error deleting bookmark", error);
     res.json({
