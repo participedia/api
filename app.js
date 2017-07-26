@@ -17,7 +17,7 @@ if (
 
 // Better logging of "unhandled" promise exceptions
 process.on("unhandledRejection", function(reason, p) {
-  console.log(
+  console.warn(
     "Possibly Unhandled Rejection at: Promise ",
     p,
     " reason: ",

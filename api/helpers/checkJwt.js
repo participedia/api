@@ -24,8 +24,9 @@ let requiredOptions = {
 const checkJwtRequired = jwt(requiredOptions);
 
 // clone a new (shallow) copy so we don't accidentally over-ride options for checkJwtRequire
-let optionalOptions = Object.assign({}, requiredOptions);
-optionalOptions["credentialsRequired"] = false;
+let optionalOptions = Object.assign({}, requiredOptions, {
+  credentialsRequired: false
+});
 const checkJwtOptional = jwt(optionalOptions);
 
 checkJwtOptional.unless = unless;

@@ -148,6 +148,7 @@ const getThingByType_id_lang_userId = async function(
   userId
 ) {
   let table = type + "s";
+
   const thing = await db.one(THING_BY_ID, {
     table,
     type,

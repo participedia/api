@@ -37,15 +37,10 @@ router.get("/titles", async (req, res) => {
     const language = req.params.language || "en";
     const query = await db.one(LIST_TITLES, { language });
     // query.results.forEach(item =>
-    //   console.log("before munge: %s", Object.keys(item)));
     let retVal = {};
     query.results.forEach(thing => {
       retVal[thing.type + "s"] = thing.array_agg;
     });
-    // console.log("after munge: %s", Object.keys(retVal));
-    // console.log("cases: %s", retVal.cases.length);
-    // console.log("methods: %s", retVal.methods.length);
-    // console.log("organizations: %s", retVal.organizations.length);
     res.status(200).json({ OK: true, data: retVal });
   } catch (error) {
     console.trace("Exception in POST /list/titles => %s", error);

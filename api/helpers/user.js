@@ -42,6 +42,9 @@ async function commonUserHandler(required, req, res, next) {
       userEmail: user && user.email ? user.email : email
     });
     if (userObj) {
+      if (!req.user) {
+        req.user = {};
+      }
       req.user.user_id = userObj.id;
     } else {
       let newUser;
@@ -49,7 +52,6 @@ async function commonUserHandler(required, req, res, next) {
       if (user.user_metadata && user.user_metadata.customPic) {
         pictureUrl = user.user_metadata.customPic;
       }
-      console.log(JSON.stringify(req.user));
       newUser = await db.one(CREATE_USER_ID, {
         userEmail: user.email,
         userName: user.name || user.email,
