@@ -115,19 +115,31 @@ router.post("/add", async function addBookmark(req, res) {
     let userId = as.number(req.user.user_id);
     let thingid = as.number(req.body.thingid);
     let bookmarkType = req.body.bookmarkType;
-    const data = await db.one(
+    const data1 = await db.oneOrNone(
+      "select * from bookmarks where bookmarktype = ${bookmarkType} AND thingid = ${thingid} AND userid = ${userId}",
+      { bookmarkType, thingid, userId }
+    );
+    if (data1) {
+      return res.status(304).json({
+        success: true,
+        status: "success",
+        data: data1.id,
+        message: "bookmark already exists, no action"
+      });
+    }
+    const data2 = await db.one(
       "insert into bookmarks(bookmarktype, thingid, userid) VALUES(${bookmarkType},${thingid},${userId}) returning id",
       { bookmarkType, thingid, userId }
     );
-    res.json({
+    res.status(201).json({
       success: true,
       status: "success",
-      data: data.id,
+      data: data2.id,
       message: "Inserted bookmark, returning ID"
     });
   } catch (error) {
     log.error("Exception in INSERT", error);
-    res.json({
+    res.status(500).json({
       success: false,
       error: error.message || error
     });

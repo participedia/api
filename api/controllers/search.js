@@ -132,7 +132,7 @@ router.get("/", async function(req, res) {
     const total = Number(objList.length ? objList[0].total || 0 : 0);
     const pages = Math.ceil(total / RESPONSE_LIMIT);
     objList.forEach(obj => delete obj.total);
-    res
+    return res
       .status(200)
       .json({ OK: true, total: total, pages: pages, results: objList });
   } catch (error) {

@@ -111,6 +111,7 @@ describe("Search", () => {
     it("Hiding an element removes it from featured (default) search", async () => {
       const res1 = await chai.getJSON("/search").send({});
       res1.should.have.status(200);
+      res1.should.be.json;
       res1.body.results.should.have.lengthOf(20);
       const res2 = await addBasicCase();
       const theCase = res2.body.object;
@@ -131,7 +132,9 @@ describe("Search", () => {
     });
     it("Hiding an element removes it from full-text search results", async () => {
       const res1 = await chai.getJSON("/search").send({});
+      // const body = JSON.parse(res1.text);
       res1.should.have.status(200);
+      res1.should.be.json;
       res1.body.results.should.have.lengthOf(20);
       const res2 = await addBasicCase();
       const theCase = res2.body.object;
