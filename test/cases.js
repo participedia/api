@@ -348,7 +348,7 @@ describe("Cases", () => {
         .postJSON("/bookmark/add")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ bookmarkType: "case", thingid: case1.id });
-      booked.should.have.status(200);
+      booked.should.have.status(201);
     });
     it("Not authenticated, bookmarked should be false", async () => {
       const res2 = await chai.getJSON("/case/" + case1.id).send({});

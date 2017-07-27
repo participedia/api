@@ -69,7 +69,13 @@ app.use(
 app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 
-let cache = require("apicache").middleware;
+const apicache = require("apicache");
+const cache = apicache.middleware;
+apicache.options({
+  debug: true,
+  enabled: false,
+  successCodes: [200, 201]
+});
 // TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
 
 app.use("/search", cache("5 minutes"), search);

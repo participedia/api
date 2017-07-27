@@ -65,7 +65,7 @@ async function commonUserHandler(required, req, res, next) {
       });
       req.user.user_id = newUser.user_id;
     }
-    return next();
+    next();
   } catch (error) {
     console.trace("Problem creating user", error);
     return res.status(500).json({
