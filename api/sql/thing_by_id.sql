@@ -1,16 +1,27 @@
-WITH authors_list AS (
-  SELECT
-      array_agg((
-          authors.user_id,
-          authors.timestamp,
-          users.name
-      )::author) authors
-  FROM
+WITH a2 AS (
+    SELECT DISTINCT ON (authors.user_id)
+      authors.user_id,
+      authors.timestamp,
+      users.name
+    FROM
       authors,
       users
-  WHERE
+    WHERE
       authors.user_id = users.id AND
       authors.thingid = ${thingid}
+    ORDER BY
+      authors.user_id,
+      authors.timestamp
+),
+ authors_list AS (
+  SELECT
+    array_agg((
+      a2.user_id,
+      a2.timestamp,
+      a2.name
+    )::author) authors
+  FROM
+    a2
 ),
 full_thing AS (
   SELECT
