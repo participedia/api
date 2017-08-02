@@ -173,9 +173,7 @@ describe("Methods", () => {
       const updatedMethod3 = res4.body.data;
       updatedMethod3.title.should.equal("Third Title");
       updatedMethod3.body.should.equal("Third Body");
-      updatedMethod3.authors.length.should.equal(
-        updatedMethod2.authors.length + 1
-      );
+      updatedMethod3.authors.length.should.equal(updatedMethod2.authors.length);
     });
     it("Add method, then modify lead image", async () => {
       const res1 = await addBasicMethod();

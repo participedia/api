@@ -165,7 +165,7 @@ describe("Organizations", () => {
       updatedOrganization3.title.should.equal("Third Title");
       updatedOrganization3.body.should.equal("Third Body");
       updatedOrganization3.authors.length.should.equal(
-        updatedOrganization2.authors.length + 1
+        updatedOrganization2.authors.length
       );
     });
     it("Add organization, then modify lead image", async () => {
