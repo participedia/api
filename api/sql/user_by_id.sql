@@ -34,7 +34,7 @@ FROM
 	users LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, 'case', texts.title, cases.images, cases.post_date, cases.updated_date)::object_short) cases_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, texts.title, 'case', cases.images, cases.post_date, cases.updated_date)::object_short) cases_authored, authors.user_id
 	    FROM
 	        localized_texts texts,
 	        authors authors,
@@ -52,7 +52,7 @@ FROM
     ON case_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, 'method', texts.title, methods.images, methods.post_date, methods.updated_date)::object_short) methods_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, texts.title, 'method', methods.images, methods.post_date, methods.updated_date)::object_short) methods_authored, authors.user_id
 	    FROM
 	        localized_texts texts,
 	        authors,
@@ -70,7 +70,7 @@ FROM
   ON method_authors.user_id = users.id LEFT JOIN
 	(
 	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, 'organization', texts.title, organizations.images, organizations.post_date, organizations.updated_date)::object_short) organizations_authored, authors.user_id
+	         array_agg(ROW(authors.thingid, texts.title, 'organization', organizations.images, organizations.post_date, organizations.updated_date)::object_short) organizations_authored, authors.user_id
 	    FROM
 	        localized_texts texts,
 	        authors,
