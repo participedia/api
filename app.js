@@ -55,7 +55,7 @@ app.set("port", port);
 app.use(morgan("dev"));
 app.use(methodOverride());
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "5mb" }));
 app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
 app.use(
