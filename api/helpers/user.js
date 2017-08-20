@@ -67,7 +67,7 @@ async function commonUserHandler(required, req, res, next) {
     }
     next();
   } catch (error) {
-    console.trace("Problem creating user", error);
+    console.trace("Problem creating user", JSON.stringify(error));
     return res.status(500).json({
       OK: false,
       error: error
