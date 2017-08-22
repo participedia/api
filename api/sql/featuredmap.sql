@@ -10,7 +10,8 @@ SELECT
   featured,
   title,
   to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
-  to_json(COALESCE(images, '{}')) AS images
+  to_json(COALESCE(images, '{}')) AS images,
+  to_json(COALESCE(videos, '{}')) AS videos
 FROM things, localized_texts
 WHERE things.id = localized_texts.thingid AND
       things.hidden = false AND

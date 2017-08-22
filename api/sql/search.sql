@@ -26,6 +26,7 @@ SELECT
   all_selections.body,
   to_json(COALESCE(things.location, '("","","","","","","","","")'::geolocation)) AS location,
   to_json(COALESCE(things.images, '{}')) AS images,
+  to_json(COALESCE(things.videos, '{}')) AS videos,
   things.updated_date,
   bookmarked(things.type, things.id, ${userId}),
   total_selections.total
