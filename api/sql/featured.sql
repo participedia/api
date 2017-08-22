@@ -14,6 +14,7 @@ WITH all_featured  AS (
     substring(body for 500) AS body,
     to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
     to_json(COALESCE(images, '{}')) AS images,
+    to_json(COALESCE(videos, '{}')) as videos,
     updated_date,
     bookmarked(type, id, ${userId})
   FROM things, localized_texts
