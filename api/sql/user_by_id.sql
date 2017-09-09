@@ -1,24 +1,68 @@
-WITH user_bookmarks AS (
+WITH
+texts AS (
+  SELECT * FROM localized_texts
+  WHERE localized_texts.language = ${language}
+),
+user_bookmarks AS (
   SELECT * FROM (
-  SELECT
-    bookmarks.thingid as id,
-    bookmarks.bookmarktype AS type,
-    localized_texts.title,
-    things.images,
---    COALLESCE(things.images, '{}') AS images,
-    things.post_date,
+    SELECT
+      bookmarks.thingid as id,
+      bookmarks.bookmarktype AS type,
+      texts.title,
+      things.images,
+      things.post_date,
+      things.updated_date
+    FROM
+      bookmarks,
+      texts,
+      things
+    WHERE
+      bookmarks.userid = ${userId} AND
+      bookmarks.thingid = things.id AND
+      bookmarks.thingid = texts.thingid AND
+      bookmarks.bookmarktype = things.type
+  ) t ORDER BY updated_date
+),
+authored_things AS (
+  SELECT DISTINCT
+    authors.user_id author,
+    (authors.thingid, texts.title, things.type, things.images, things.post_date, things.updated_date)::object_short thing,
+    authors.thingid,
     things.updated_date
   FROM
-    bookmarks,
-    localized_texts,
+    texts,
+    authors,
     things
   WHERE
-    bookmarks.userid = ${userId} AND
-    bookmarks.thingid = things.id AND
-    bookmarks.thingid = localized_texts.thingid AND
-    localized_texts.language = ${language} AND
-    bookmarks.bookmarktype = things.type
-) t ORDER BY updated_date )
+    texts.thingid = authors.thingid AND
+    texts.thingid = things.id AND
+    authors.user_id = ${userId}
+  ORDER BY authors.thingid, things.updated_date
+),
+authored_cases AS (
+  SELECT
+     array_agg(thing) cases,
+     author
+  FROM authored_things
+  WHERE (thing).type = 'case'
+  GROUP BY author
+),
+authored_methods AS (
+  SELECT
+    array_agg(thing) methods,
+    author
+  FROM authored_things
+  WHERE (thing).type = 'method'
+  GROUP BY author
+),
+authored_organizations AS (
+  SELECT
+    array_agg(thing) organizations,
+    author
+  FROM authored_things
+  WHERE (thing).type = 'organization'
+  GROUP BY author
+)
 
 SELECT row_to_json(user_row) as user
 FROM (
@@ -26,66 +70,15 @@ SELECT
 	users.*,
   COALESCE(users.location, ('','','','','','','','','')::geolocation) AS location,
   'user' as type,
-	COALESCE(cases_authored, '{}') cases,
-	COALESCE(methods_authored, '{}') methods,
-	COALESCE(organizations_authored, '{}') organizations,
+	COALESCE(authored_cases.cases, '{}') cases,
+	COALESCE(authored_methods.methods, '{}') methods,
+	COALESCE(authored_organizations.organizations, '{}') organizations,
   COALESCE(ARRAY(SELECT ROW(id, title, type, images, post_date, updated_date)::object_short FROM user_bookmarks), '{}') bookmarks
 FROM
-	users LEFT JOIN
-	(
-	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, texts.title, 'case', cases.images, cases.post_date, cases.updated_date)::object_short) cases_authored, authors.user_id
-	    FROM
-	        localized_texts texts,
-	        authors authors,
-          cases
-	    WHERE
-	        texts.language = ${language} AND
-	        texts.thingid = authors.thingid AND
-          texts.thingid = cases.id
-	    GROUP BY
-	    	authors.user_id
-        HAVING
-            authors.user_id = ${userId}
-	)
-    AS case_authors
-    ON case_authors.user_id = users.id LEFT JOIN
-	(
-	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, texts.title, 'method', methods.images, methods.post_date, methods.updated_date)::object_short) methods_authored, authors.user_id
-	    FROM
-	        localized_texts texts,
-	        authors,
-          methods
-	    WHERE
-	        texts.language = ${language} AND
-	        texts.thingid = authors.thingid AND
-          texts.thingid = methods.id
-	    GROUP BY
-	    	authors.user_id
-        HAVING
-            authors.user_id = ${userId}
-	)
-  AS method_authors
-  ON method_authors.user_id = users.id LEFT JOIN
-	(
-	    SELECT DISTINCT
-	         array_agg(ROW(authors.thingid, texts.title, 'organization', organizations.images, organizations.post_date, organizations.updated_date)::object_short) organizations_authored, authors.user_id
-	    FROM
-	        localized_texts texts,
-	        authors,
-          organizations
-	    WHERE
-	        texts.language = ${language} AND
-	        texts.thingid = authors.thingid AND
-          texts.thingid = organizations.id
-	    GROUP BY
-	    	authors.user_id
-        HAVING
-            authors.user_id = ${userId}
-	)
-  AS org_authors
-  ON org_authors.user_id = users.id
+  users
+  LEFT JOIN authored_cases ON users.id = authored_cases.author
+  LEFT JOIN authored_methods ON users.id = authored_methods.author
+  LEFT JOIN authored_organizations ON users.id = authored_organizations.author
 WHERE
 	users.id = ${userId}
 ) user_row
