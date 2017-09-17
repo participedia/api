@@ -33,6 +33,9 @@ const tokenize = function*(query, inside_quotes = false) {
       last_token = "CONNECT";
       yield "|";
     } else if (token === "not" || token === "!") {
+      if (last_token === "WORD") {
+        yield "&"; // cannot have a bare NOT, needs a connector
+      }
       last_token = "CONNECT";
       yield "!";
     } else if (token === "<->") {

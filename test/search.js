@@ -38,6 +38,15 @@ describe("Search", () => {
         "second"
       ]);
     });
+    it("simple not", () => {
+      [...tokenize("first not second")].should.deep.equal([
+        "",
+        "first",
+        "!",
+        "",
+        "second"
+      ]);
+    });
     it("parentheses", () => {
       [...tokenize("first or (second and third)")].should.deep.equal([
         "",
@@ -137,6 +146,9 @@ describe("Search", () => {
     });
     it("simple or", () => {
       preparse_query("first or second").should.equal("first|second");
+    });
+    it("simple not", () => {
+      preparse_query("first not second").should.equal("first!second");
     });
     it("parentheses", () => {
       preparse_query("first or (second and third)").should.equal(
