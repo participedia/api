@@ -13,7 +13,7 @@ SELECT
   to_json(COALESCE(things.images, '{}')) AS images,
   to_json(COALESCE(things.videos, '{}')) AS videos
 FROM search_index_${language:raw}, things
-WHERE document @@ plainto_tsquery('english', ${query}) ${filter:raw} AND
+WHERE document @@ to_tsquery('english', ${query}) ${filter:raw} AND
       search_index_${language:raw}.id = things.id
-ORDER BY ts_rank(search_index_${language:raw}.document, plainto_tsquery('english', ${query})) DESC
+ORDER BY ts_rank(search_index_${language:raw}.document, to_tsquery('english', ${query})) DESC
 ;

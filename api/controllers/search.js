@@ -2,6 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let { db, sql, as } = require("../helpers/db");
+let { preparse_query } = require("../helpers/search");
 let log = require("winston");
 const { supportedTypes } = require("../helpers/things");
 
@@ -120,9 +121,11 @@ const offsetFromReq = req => {
 // One further item: need an alternative search which returns only map-level items and has no pagination
 
 router.get("/", async function(req, res) {
+  const user_query = req.query.query || "";
+  const parsed_query = preparse_query(user_query);
   try {
-    const objList = await db.any(queryFileFromReq(req), {
-      query: req.query.query,
+    const results = await db.any(queryFileFromReq(req), {
+      query: parsed_query,
       language: as.value(req.query.language || "en"),
       filter: filterFromReq(req),
       limit: RESPONSE_LIMIT,
@@ -130,16 +133,18 @@ router.get("/", async function(req, res) {
       userId: req.user ? req.user.user_id : null
     });
     // These will be zero for resultType=map and that's OK
-    const total = Number(objList.length ? objList[0].total || 0 : 0);
+    const total = Number(results.length ? results[0].total || 0 : 0);
     const pages = Math.ceil(total / RESPONSE_LIMIT);
-    objList.forEach(obj => delete obj.total);
+    results.forEach(obj => delete obj.total);
+    let OK = true;
+    log.error("here I am");
     return res
       .status(200)
-      .json({ OK: true, total: total, pages: pages, results: objList });
+      .json({ OK, total, pages, results, user_query, parsed_query });
   } catch (error) {
     console.error("Error in search: ", error);
     console.trace(error);
-    res.status(500).json({ error: error });
+    res.status(500).json({ error });
   }
 });
 

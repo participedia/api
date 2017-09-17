@@ -9,9 +9,9 @@ WITH all_selections AS (SELECT
   title,
   substring(body for 500) AS body
 FROM search_index_${language:raw}
-WHERE document @@ plainto_tsquery('english', ${query})
+WHERE document @@ to_tsquery('english', ${query})
   ${filter:raw}
-ORDER BY ts_rank(search_index_${language:raw}.document, plainto_tsquery('english', ${query})) DESC
+ORDER BY ts_rank(search_index_${language:raw}.document, to_tsquery('english', ${query})) DESC
 ),
 total_selections AS (
   SELECT count(all_selections.id) AS total
