@@ -18,7 +18,7 @@ describe("Search", () => {
       should.equal(Object.keys(res.body).length, 20);
     });
   });
-  describe.only("confirm query tokenizing", () => {
+  describe("confirm query tokenizing", () => {
     let { tokenize } = require("../api/helpers/search");
     it("simple and", () => {
       [...tokenize("first and second")].should.deep.equal([
@@ -42,6 +42,7 @@ describe("Search", () => {
       [...tokenize("first not second")].should.deep.equal([
         "",
         "first",
+        "&",
         "!",
         "",
         "second"
@@ -139,7 +140,7 @@ describe("Search", () => {
       ]);
     });
   });
-  describe.only("confirm query parsing", () => {
+  describe("confirm query parsing", () => {
     let { preparse_query } = require("../api/helpers/search");
     it("simple and", () => {
       preparse_query("first and second").should.equal("first&second");
@@ -148,7 +149,7 @@ describe("Search", () => {
       preparse_query("first or second").should.equal("first|second");
     });
     it("simple not", () => {
-      preparse_query("first not second").should.equal("first!second");
+      preparse_query("first not second").should.equal("first&!second");
     });
     it("parentheses", () => {
       preparse_query("first or (second and third)").should.equal(
