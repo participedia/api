@@ -18,6 +18,152 @@ describe("Search", () => {
       should.equal(Object.keys(res.body).length, 20);
     });
   });
+  describe.only("confirm query tokenizing", () => {
+    let { tokenize } = require("../api/helpers/search");
+    it("simple and", () => {
+      [...tokenize("first and second")].should.deep.equal([
+        "",
+        "first",
+        "&",
+        "",
+        "second"
+      ]);
+    });
+    it("simple or", () => {
+      [...tokenize("first or second")].should.deep.equal([
+        "",
+        "first",
+        "|",
+        "",
+        "second"
+      ]);
+    });
+    it("parentheses", () => {
+      [...tokenize("first or (second and third)")].should.deep.equal([
+        "",
+        "first",
+        "|",
+        "",
+        "(",
+        "",
+        "second",
+        "&",
+        "",
+        "third",
+        ")"
+      ]);
+    });
+    it("quoted string", () => {
+      [...tokenize('first and "second third"')].should.deep.equal([
+        "",
+        "first",
+        "&",
+        "",
+        "",
+        "second",
+        "<->",
+        "third"
+      ]);
+    });
+    it("handle whitespace", () => {
+      [...tokenize('first second "third fourth" fifth')].should.deep.equal([
+        "",
+        "first",
+        "&",
+        "second",
+        "&",
+        "",
+        "third",
+        "<->",
+        "fourth",
+        "&",
+        "fifth"
+      ]);
+    });
+    it("drop punctuation, etc.", () => {
+      [
+        ...tokenize("first 123, inject's some ;drop table *bs")
+      ].should.deep.equal([
+        "",
+        "first",
+        "&",
+        "inject",
+        "&",
+        "s",
+        "&",
+        "some",
+        "&",
+        "drop",
+        "&",
+        "table",
+        "&",
+        "bs"
+      ]);
+    });
+    it("complex query", () => {
+      [
+        ...tokenize('first and (second or third) and ("fourth fifth" or sixth)')
+      ].should.deep.equal([
+        "",
+        "first",
+        "&",
+        "",
+        "(",
+        "",
+        "second",
+        "|",
+        "",
+        "third",
+        ")",
+        "&",
+        "",
+        "(",
+        "",
+        "",
+        "fourth",
+        "<->",
+        "fifth",
+        "|",
+        "",
+        "sixth",
+        ")"
+      ]);
+    });
+  });
+  describe.only("confirm query parsing", () => {
+    let { preparse_query } = require("../api/helpers/search");
+    it("simple and", () => {
+      preparse_query("first and second").should.equal("first&second");
+    });
+    it("simple or", () => {
+      preparse_query("first or second").should.equal("first|second");
+    });
+    it("parentheses", () => {
+      preparse_query("first or (second and third)").should.equal(
+        "first|(second&third)"
+      );
+    });
+    it("quoted string", () => {
+      preparse_query('first and "second third"').should.equal(
+        "first&second<->third"
+      );
+    });
+    it("handle whitespace", () => {
+      preparse_query('first second "third fourth" fifth').should.equal(
+        "first&second&third<->fourth&fifth"
+      );
+    });
+    it("drop punctuation, etc.", () => {
+      preparse_query("first 123, inject's some ;drop table *bs").should.equal(
+        "first&inject&s&some&drop&table&bs"
+      );
+    });
+    it("complex query", () => {
+      preparse_query(
+        'first and (second or third) and ("fourth fifth" or sixth)'
+      ).should.equal("first&(second|third)&(fourth<->fifth|sixth)");
+    });
+  });
   describe("get first 20 methods", () => {
     it("finds 20 method titles and ids", async () => {
       const res = await chai
