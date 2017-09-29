@@ -17,5 +17,5 @@ WHERE things.id = localized_texts.thingid AND
       things.hidden = false AND
       localized_texts.language = ${language}
       ${filter:raw}
-ORDER BY things.featured, updated_date DESC
+ORDER BY things.featured DESC, updated_date DESC
 ;
