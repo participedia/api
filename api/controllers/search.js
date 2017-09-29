@@ -133,7 +133,9 @@ router.get("/", async function(req, res) {
       userId: req.user ? req.user.user_id : null
     });
     // These will be zero for resultType=map and that's OK
-    const total = Number(results.length ? results[0].total || 0 : 0);
+    const total = Number(
+      results.length ? results[0].total || results.length : 0
+    );
     const pages = Math.ceil(total / RESPONSE_LIMIT);
     results.forEach(obj => delete obj.total);
     let OK = true;
