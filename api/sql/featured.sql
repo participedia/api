@@ -30,6 +30,7 @@ total_featured AS (
 )
 SELECT all_featured.*, total_featured.total
 FROM all_featured, total_featured
+ORDER BY featured DESC, updated_date DESC
 OFFSET ${offset}
 LIMIT ${limit}
 ;

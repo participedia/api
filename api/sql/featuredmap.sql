@@ -8,6 +8,7 @@ SELECT
   id,
   type,
   featured,
+  true searchmatched,
   title,
   to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
   to_json(COALESCE(images, '{}')) AS images,
@@ -17,5 +18,5 @@ WHERE things.id = localized_texts.thingid AND
       things.hidden = false AND
       localized_texts.language = ${language}
       ${filter:raw}
-ORDER BY things.featured, updated_date DESC
+ORDER BY things.featured DESC, updated_date DESC
 ;

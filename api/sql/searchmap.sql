@@ -4,16 +4,24 @@
 -- offset (defaults to 1)
 -- limit (20 for now)
 -- userid (may be null)
+WITH searchresults AS (
+  SELECT id
+  FROM search_index_${language:raw}
+  WHERE document @@ to_tsquery('english', ${query}) ${filter:raw}
+)
+
 SELECT
-  things.id,
-  things.type,
-  things.featured,
+  id,
+  type,
+  featured,
+  EXISTS (SELECT 1 FROM searchresults WHERE things.id = searchresults.id) searchmatched,
   title,
-  to_json(COALESCE(things.location, '("","","","","","","","","")'::geolocation)) AS location,
-  to_json(COALESCE(things.images, '{}')) AS images,
-  to_json(COALESCE(things.videos, '{}')) AS videos
-FROM search_index_${language:raw}, things
-WHERE document @@ to_tsquery('english', ${query}) ${filter:raw} AND
-      search_index_${language:raw}.id = things.id
-ORDER BY ts_rank(search_index_${language:raw}.document, to_tsquery('english', ${query})) DESC
+  to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
+  to_json(COALESCE(images, '{}')) AS images,
+  to_json(COALESCE(videos, '{}')) AS videos
+FROM things, localized_texts
+WHERE
+  things.id = localized_texts.thingid AND
+  localized_texts.language = 'en'
+ORDER BY searchmatched DESC
 ;
