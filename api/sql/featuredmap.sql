@@ -8,6 +8,7 @@ SELECT
   id,
   type,
   featured,
+  true searchmatched,
   title,
   to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
   to_json(COALESCE(images, '{}')) AS images,
