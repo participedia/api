@@ -59,7 +59,7 @@ describe("Users", () => {
       const website = origUser.website
         ? ""
         : "https://pirateparty.ca/platforms/";
-      const organization = origUser.organization === 204 ? 209 : 204;
+      const organization = origUser.organization.id === 204 ? 209 : 204;
       await chai
         .postJSON("/user/")
         .set("Authorization", "Bearer " + tokens.user_token)
@@ -78,7 +78,7 @@ describe("Users", () => {
       const newUser = res2.body.data;
       newUser.department.should.equal(department);
       newUser.website.should.equal(website);
-      newUser.organization.should.equal(organization);
+      newUser.organization.id.should.equal(organization);
     });
   });
 });
