@@ -87,7 +87,6 @@ const queryFileFromReq = req => {
 
 const offsetFromReq = req => {
   const page = as.number(req.query.page || 1);
-  const limit = limitFromReq(req);
   return (page - 1) * limitFromReq(req);
 };
 
