@@ -8,6 +8,25 @@ const should = chai.should();
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
 
+async function setupIndividualFeatured(type, id) {
+  console.log(`featuring /${type}/${id}`);
+  await chai
+    .putJSON(`/${type}/${id}`)
+    .set("Authorization", "Bearer " + tokens.user_token)
+    .send({
+      featured: true
+    });
+}
+
+async function setupFeatured() {
+  // make sure there are some featured articles
+  await setupIndividualFeatured("case", 4557);
+  await setupIndividualFeatured("case", 4554);
+  await setupIndividualFeatured("case", 4548);
+  await setupIndividualFeatured("method", 4546);
+  await setupIndividualFeatured("organization", 4540);
+}
+
 describe("Search", () => {
   describe("get first 20 cases", () => {
     it("finds 20 case titles and ids", async () => {
@@ -310,6 +329,32 @@ describe("Search", () => {
         .send({ hidden: true });
       const res4 = await chai.getJSON("/search?query=albino%20tiger").send({});
       res4.body.results.should.have.lengthOf(0);
+    });
+  });
+  describe.only("Test resultType=map", () => {
+    it("setup", setupFeatured);
+    console.log("featured should be good to go");
+    it("find featured results", async () => {
+      const res = await chai.getJSON("/search?resultType=map").send({});
+      res.should.have.status(200);
+      res.body.results
+        .filter(result => result.searchmatched)
+        .should.have.lengthOf(5);
+      res.body.results
+        .filter(result => result.featured)
+        .should.have.lengthOf(5);
+    });
+    it("find featured cases", async () => {
+      const res = await chai
+        .getJSON("/search?resultType=map&selectedCategory=Cases")
+        .send({});
+      res.should.have.status(200);
+      res.body.results
+        .filter(result => result.searchmatched)
+        .should.have.lengthOf(3);
+      res.body.results
+        .filter(result => result.featured && result.type === "case")
+        .should.have.lengthOf(3);
     });
   });
 });

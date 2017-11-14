@@ -154,17 +154,15 @@ router.get("/", async function(req, res) {
     const pages = limit ? Math.ceil(total / limit) : 1; // Don't divide by zero limit, don't return page 1 of 0
     results.forEach(obj => delete obj.total);
     let OK = true;
-    return res
-      .status(200)
-      .json({
-        OK,
-        total,
-        pages,
-        searchhits,
-        results,
-        user_query,
-        parsed_query
-      });
+    return res.status(200).json({
+      OK,
+      total,
+      pages,
+      searchhits,
+      results,
+      user_query,
+      parsed_query
+    });
   } catch (error) {
     console.error("Error in search: ", error);
     console.trace(error);

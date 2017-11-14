@@ -92,9 +92,13 @@ function addRelatedList(owner_type, owner_id, related_type, id_list) {
     .map(item => {
       let escaped_id = Number(item.id);
       if (owner_id < escaped_id) {
-        return `('${owner_type}', ${owner_id}, '${related_type}', ${escaped_id})`;
+        return `('${owner_type}', ${owner_id}, '${related_type}', ${
+          escaped_id
+        })`;
       } else {
-        return `('${related_type}', ${escaped_id}, '${owner_type}', ${owner_id})`;
+        return `('${related_type}', ${escaped_id}, '${owner_type}', ${
+          owner_id
+        })`;
       }
     })
     .join(", ");
