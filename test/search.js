@@ -9,7 +9,6 @@ chai.use(chaiHttp);
 chai.use(chaiHelpers);
 
 async function setupIndividualFeatured(type, id) {
-  console.log(`featuring /${type}/${id}`);
   await chai
     .putJSON(`/${type}/${id}`)
     .set("Authorization", "Bearer " + tokens.user_token)
@@ -333,7 +332,6 @@ describe("Search", () => {
   });
   describe.only("Test resultType=map", () => {
     it("setup", setupFeatured);
-    console.log("featured should be good to go");
     it("find featured results", async () => {
       const res = await chai.getJSON("/search?resultType=map").send({});
       res.should.have.status(200);
@@ -355,6 +353,24 @@ describe("Search", () => {
       res.body.results
         .filter(result => result.featured && result.type === "case")
         .should.have.lengthOf(3);
+    });
+    it("find queried articles", async () => {
+      const res = await chai
+        .getJSON("/search?resultType=map&query=fraud")
+        .send();
+      res.should.have.status(200);
+      res.body.results
+        .filter(result => result.searchmatched)
+        .should.have.lengthOf(4);
+    });
+    it("find queried cases", async () => {
+      const res = await chai
+        .getJSON("/search?resultType=map&query=fraud&selectedCategory=Cases")
+        .send();
+      res.should.have.status(200);
+      res.body.results
+        .filter(result => result.searchmatched)
+        .should.have.lengthOf(1);
     });
   });
 });

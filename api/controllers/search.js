@@ -82,7 +82,6 @@ const queryFileFromReq = req => {
   } else if (resultType == "map") {
     queryfile = SEARCH_MAP;
   }
-  console.log("query file: %s", queryfile.file.split("/").pop());
   return queryfile;
 };
 
@@ -136,8 +135,6 @@ router.get("/", async function(req, res) {
   const user_query = req.query.query || "";
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
-  console.log("filter: %s", filterFromReq(req));
-  console.log("limit: %s", limit);
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
