@@ -62,7 +62,8 @@ router.get("/getAllForType", async function getAllForType(req, res) {
 });
 
 // strip off final character (assumed to be "s")
-const singularLowerCase = name => name.slice(0, -1).toLowerCase();
+const singularLowerCase = name =>
+  (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
 // like it says on the tin
 const filterFromReq = req => {
   const cat = singularLowerCase(req.query.selectedCategory || "Alls");
@@ -86,7 +87,16 @@ const queryFileFromReq = req => {
 
 const offsetFromReq = req => {
   const page = as.number(req.query.page || 1);
-  return (page - 1) * RESPONSE_LIMIT;
+  return (page - 1) * limitFromReq(req);
+};
+
+const limitFromReq = req => {
+  let limit = parseInt(req.query.limit || RESPONSE_LIMIT);
+  const resultType = (req.query.resultType || "").toLowerCase();
+  if (resultType === "map") {
+    limit = 0; // return all
+  }
+  return limit;
 };
 
 /**
@@ -123,30 +133,37 @@ const offsetFromReq = req => {
 router.get("/", async function(req, res) {
   const user_query = req.query.query || "";
   const parsed_query = preparse_query(user_query);
+  const limit = limitFromReq(req);
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
       language: as.value(req.query.language || "en"),
       filter: filterFromReq(req),
-      limit: RESPONSE_LIMIT,
+      limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
       userId: req.user ? req.user.user_id : null
     });
-    // These will be zero for resultType=map and that's OK
     const total = Number(
       results.length ? results[0].total || results.length : 0
     );
-    const pages = Math.ceil(total / RESPONSE_LIMIT);
+    const searchhits = results.filter(result => result.searchmatched).length;
+    const pages = limit ? Math.ceil(total / limit) : 1; // Don't divide by zero limit, don't return page 1 of 0
     results.forEach(obj => delete obj.total);
     let OK = true;
-    log.error("here I am");
-    return res
-      .status(200)
-      .json({ OK, total, pages, results, user_query, parsed_query });
+    return res.status(200).json({
+      OK,
+      total,
+      pages,
+      searchhits,
+      results,
+      user_query,
+      parsed_query
+    });
   } catch (error) {
     console.error("Error in search: ", error);
     console.trace(error);
-    res.status(500).json({ error });
+    let OK = false;
+    res.status(500).json({ OK, error });
   }
 });
 

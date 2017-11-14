@@ -23,5 +23,5 @@ FROM things, localized_texts
 WHERE
   things.id = localized_texts.thingid AND
   localized_texts.language = 'en'
-ORDER BY searchmatched DESC
+ORDER BY searchmatched DESC, featured DESC, updated_date DESC
 ;
