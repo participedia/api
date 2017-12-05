@@ -16,8 +16,10 @@
     "async": "^2.3.0",
     "aws-sdk": "^2.70.0",
     "babel-cli": "^6.24.1",
+    "bibutils.js": "^2.0.1",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
+    "citation-js": "^0.3.4",
     "compression": "^1.6.2",
     "cors": "^2.8.1",
     "dotenv": "^4.0.0",
@@ -53,7 +55,8 @@
     "eslint-plugin-prettier": "^2.0.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
-    "prettier": "^1.7.0"
+    "prettier": "^1.7.0",
+    "xml2js": "^0.4.19"
   },
   "scripts": {
     "start": "./node_modules/apidoc/bin/apidoc -i api -o swagger && nodemon ./node_modules/.bin/babel-node server.js",

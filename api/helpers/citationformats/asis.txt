@@ -1,0 +1,5 @@
+// This file is used by bibutils.
+// It ensures that 'Participedia Contributors' is not interpretted as
+// a human name.
+// Sadly bibutils requires this to be its own file.
+Participedia contributors

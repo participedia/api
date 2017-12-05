@@ -39,6 +39,7 @@ let bookmark = require("./api/controllers/bookmark");
 let search = require("./api/controllers/search");
 let list = require("./api/controllers/list");
 let user = require("./api/controllers/user");
+let citation = require("./api/controllers/citation");
 let errorhandler = require("errorhandler");
 let morgan = require("morgan");
 let bodyParser = require("body-parser");
@@ -86,6 +87,7 @@ app.use("/method", method);
 app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
+app.use("/citation", citation);
 
 app.use("/s3/:path", checkJwtRequired);
 app.use(
