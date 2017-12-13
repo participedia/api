@@ -282,6 +282,11 @@ describe("Search", () => {
       // now be in the featured search results (the default search)
       const searchResultIds = res3.body.results.map(x => x.id);
       theCase.id.should.be.oneOf(searchResultIds);
+      // reset so we don't throw off later tests
+      await chai
+        .putJSON("/case/" + theCase.id)
+        .set("Authorization", "Bearer " + tokens.user_token)
+        .send({ featured: false });
     });
   });
   describe("Test hidden results", () => {
@@ -330,7 +335,7 @@ describe("Search", () => {
       res4.body.results.should.have.lengthOf(0);
     });
   });
-  describe.only("Test resultType=map", () => {
+  describe("Test resultType=map", () => {
     it("setup", setupFeatured);
     it("find featured results", async () => {
       const res = await chai.getJSON("/search?resultType=map").send({});
