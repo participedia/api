@@ -342,10 +342,11 @@ describe("Search", () => {
       res.should.have.status(200);
       res.body.results
         .filter(result => result.searchmatched)
-        .should.have.lengthOf(5);
+        .should.have.lengthOf.at.least(5);
+      let len = res.body.results.filter(result => result.searchmatched).length;
       res.body.results
         .filter(result => result.featured)
-        .should.have.lengthOf(5);
+        .should.have.lengthOf(len);
     });
     it("find featured cases", async () => {
       const res = await chai
@@ -354,10 +355,11 @@ describe("Search", () => {
       res.should.have.status(200);
       res.body.results
         .filter(result => result.searchmatched)
-        .should.have.lengthOf(3);
+        .should.have.lengthOf.at.least(3);
+      let len = res.body.results.filter(result => result.searchmatched).length;
       res.body.results
         .filter(result => result.featured && result.type === "case")
-        .should.have.lengthOf(3);
+        .should.have.lengthOf(len);
     });
     it("find queried articles", async () => {
       const res = await chai
