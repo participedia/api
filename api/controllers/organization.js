@@ -6,6 +6,7 @@ const cache = require("apicache");
 const log = require("winston");
 
 const { db, sql, as } = require("../helpers/db");
+const { returnTemplate } = require("../helpers/template");
 
 const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
 
@@ -13,8 +14,9 @@ const {
   getEditXById,
   addRelatedList,
   returnThingByRequest,
-  getThingByType_id_lang_userId
+  getThingByType_id_lang_userId,
 } = require("../helpers/things");
+
 
 /**
  * @api {post} /organization/new Create new organization
@@ -109,15 +111,48 @@ router.post("/new", async function(req, res) {
 router.put("/:thingid", getEditXById("organization"));
 
 /**
- * @api {get} /organization/:id Get the last version of an organization
+ * @api {get} /organization/template Get the template for organizations
  * @apiGroup Organizations
  * @apiVersion 0.1.0
- * @apiName getOrgById
- * @apiParam {Number} id Organization ID
+ * @apiName returnOrganizationTemplate
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} Organization data
+ * @apiSuccess {Object} data organization template
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "id": "int",
+ *         "type": "string",
+ *         "original_language": "string",
+ *           ...
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
+
+router.get("/template", (req, res) => returnTemplate("organization", req, res));
+
+/**
+ * @api {get} /organization/:thingid?filter=:filter Get the last version of a organization
+ * @apiGroup Organizations
+ * @apiVersion 0.1.0
+ * @apiName returnOrganizationById
+ * @apiParam {Number} thingid Organization ID, can be 'all'.
+ * @apiParam {Object} filter URL-encoded JSON object of fields that should not
+ *      be returned with the data. Key of field name, value of false
+ *      eg A value of %7B%22title%22%3Afalse%7D ({"title":false}) specifies
+ *      that the title field should not be included.
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data organization data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -134,9 +169,7 @@ router.put("/:thingid", getEditXById("organization"));
  *
  */
 
-router.get("/:thingid", (req, res) =>
-  returnThingByRequest("organization", req, res)
-);
+router.get("/:thingid", (req, res, next) => returnThingByRequest("organization", req, res, next));
 
 /**
  * @api {delete} /organization/:id Delete an organization

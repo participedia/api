@@ -26,6 +26,7 @@
     "express-jwt": "^5.1.0",
     "express-unless": "^0.3.0",
     "faucet": "^0.0.1",
+    "js2xmlparser": "^3.0.0",
     "json-pretty": "^0.0.1",
     "jsonwebtoken": "^7.3.0",
     "jwks-rsa": "^1.1.1",
@@ -47,13 +48,15 @@
     "babel-eslint": "^7.2.1",
     "chai": "^4.0.2",
     "chai-http": "^3.0.0",
+    "csv-parse": "^1.2.0",
     "eslint": "^4.1.1",
     "eslint-config-google": "^0.9.1",
     "eslint-config-prettier": "^2.2.0",
     "eslint-plugin-prettier": "^2.0.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
-    "prettier": "^1.7.0"
+    "prettier": "^1.7.0",
+    "xml2js": "^0.4.19"
   },
   "scripts": {
     "start": "./node_modules/apidoc/bin/apidoc -i api -o swagger && nodemon ./node_modules/.bin/babel-node server.js",

@@ -5,6 +5,7 @@ const cache = require("apicache");
 const log = require("winston");
 
 const { db, sql, as } = require("../helpers/db");
+const { returnTemplate } = require("../helpers/template");
 
 const {
   getEditXById,
@@ -226,11 +227,44 @@ router.post("/new", async function postNewCase(req, res) {
 router.put("/:thingid", getEditXById("case"));
 
 /**
- * @api {get} /case/:thingid Get the last version of a case
+ * @api {get} /case/template Get the template for cases
+ * @apiGroup Cases
+ * @apiVersion 0.1.0
+ * @apiName returnCaseTemplate
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data case template
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "id": "int",
+ *         "type": "string",
+ *         "original_language": "string",
+ *           ...
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
+
+router.get("/template", (req, res) => returnTemplate("case", req, res));
+
+/**
+ * @api {get} /case/:thingid?filter=:filter Get the last version of a case
  * @apiGroup Cases
  * @apiVersion 0.1.0
  * @apiName returnCaseById
- * @apiParam {Number} thingid Case ID
+ * @apiParam {Number} thingid Case ID, can be 'all'.
+ * @apiParam {Object} filter URL-encoded JSON object of fields that should not
+ *      be returned with the data. Key of field name, value of false
+ *      eg A value of %7B%22title%22%3Afalse%7D ({"title":false}) specifies
+ *      that the title field should not be included.
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -253,7 +287,7 @@ router.put("/:thingid", getEditXById("case"));
 
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.
-router.get("/:thingid", (req, res) => returnThingByRequest("case", req, res));
+router.get("/:thingid", (req, res, next) => returnThingByRequest("case", req, res, next));
 
 /**
  * @api {delete} /case/:caseId Delete a case
@@ -282,5 +316,6 @@ router.delete("/:thingid", function editCaseById(req, res) {
   // let caseBody = req.body;
   res.status(200).json(req.body);
 });
+
 
 module.exports = router;

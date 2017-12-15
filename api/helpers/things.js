@@ -7,10 +7,20 @@ const moment = require("moment");
 const { okToFlipFeatured } = require("./user");
 const { as, db, sql } = require("./db");
 
+const {
+  filterFields,
+  getDataHeader,
+  getObjectConverter,
+  getDataFooter,
+} = require("./data_converters");
+
+const templates = require("./template");
+
 const THING_BY_ID = sql(`../sql/thing_by_id.sql`);
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
+const IDS_FOR_TYPE = sql("../sql/ids_for_type.sql");
 
 // Define the keys we're testing (move these to helper/things.js ?
 const titleKeys = ["id", "title"];
@@ -170,17 +180,90 @@ const getThingByRequest = async function(type, req) {
   return await getThingByType_id_lang_userId(type, thingid, lang, userId);
 };
 
-const returnThingByRequest = async function(type, req, res) {
+/* When requesting all things, each thing is processed and streamed independently.
+ * This uses less memory for the server than processing all objects at once
+ */
+const returnThingByRequest = async function(type, req, res, next) {
   try {
-    const thing = await getThingByRequest(type, req);
-    res.status(200).json({ OK: true, data: thing });
+    const id = req.params.thingid;
+    const isAllThings = id === "all";
+
+    // Filter our template - mostly used for csv stuff.
+    const filterRaw = req.query.filter;
+    const filter = filterRaw ? JSON.parse(req.query.filter) : {};
+    // We need a copy of the template
+    const template = Object.assign({}, templates[type + "Template"]);
+    const filteredTemplate = filterFields(template, filter);
+
+    // Content negotiate - prefer JSON if available
+    const json = "application/json";
+    const xml = "application/xml";
+    const csv = "text/csv"
+    // JSON if acceptable, otherwise fallback to xml and csv
+    const mimetype = req.accepts([json]) === json ? json : req.accepts([xml, csv]);
+    // Select the converter we'll use later
+    let convertObjectToFormat;
+    if (mimetype) {
+      convertObjectToDataFormat = getObjectConverter(mimetype);
+    } else {
+      return res.status(406).send([json, xml, csv]);
+    }
+
+    // Set the HTTP headers for the "file" we're sending.
+    let ext = "." + mimetype.split("/")[1];
+    const filename = type + "-" + id + ext;
+    setHeadersForFile(res, filename, mimetype);
+
+    // CSV needs header row, XML needs declaration, XML & JSON need start of container
+    res.write(getDataHeader(mimetype, isAllThings, type, filteredTemplate));
+
+    if (!isAllThings) {
+      const thing = await getThingByRequest(type, req);
+      res.write(convertObjectToDataFormat(thing, type, filteredTemplate, filter));
+      // XML & JSON need end of enclosing object
+      res.write(getDataFooter(mimetype, isAllThings, type));
+      return res.status(200).end();
+    } else {
+      // Process each thing sequentially
+      const ids = await db.any(IDS_FOR_TYPE, { type });
+      let conversions = ids.reduce((prevPromise, entry) => {
+        return prevPromise.then((wasPrevious) => new Promise(async (resolve) => {
+          // Get the next thing
+          req.params.thingid = Number(entry.id);
+          const thing = await getThingByRequest(type, req);
+          // JSON objects need the delimiter comma
+          if (wasPrevious && mimetype === json) res.write(",");
+          // Convert the object and write it
+          res.write(convertObjectToDataFormat(thing, type, filteredTemplate, filter));
+          resolve(true);
+        }));
+      }, Promise.resolve(false));
+
+      conversions.then(() => {
+        // XML & JSON need end of enclosing object
+        res.write(getDataFooter(mimetype, isAllThings, type));
+        return res.status(200).end();
+      });
+    }
   } catch (error) {
     log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
-    res.status(500).json({
+    // If error encountered whilst streaming response, abort the response.
+    if (res.headersSent) {
+        return next(error);
+    }
+    return res.status(500).json({
       OK: false,
       error: error
     });
   }
+};
+
+/* Sets the res headers for content-type and the attachment file name.
+ */
+const setHeadersForFile = function(res, filename, mimetype) {
+  res.set("Content-Type", mimetype);
+  res.set("Content-Disposition", "inline; filename=\"" + filename + "\"");
+  res.set("Access-Control-Expose-Headers", "Content-Disposition");
 };
 
 function getEditXById(type) {
