@@ -129,7 +129,9 @@ function location(location) {
       }
     });
   }
-  return `(${name}, '', '', ${city}, ${province}, ${country}, '', ${lat}, ${long})::geolocation`;
+  return `(${name}, '', '', ${city}, ${province}, ${country}, '', ${lat}, ${
+    long
+  })::geolocation`;
 }
 
 // replace as.text, don't convert null to "null" because that's dumb
@@ -158,5 +160,6 @@ module.exports = {
   db,
   sql,
   as,
-  helpers
+  helpers,
+  pgp
 };
