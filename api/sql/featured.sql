@@ -10,17 +10,18 @@ WITH all_featured  AS (
     id,
     type,
     featured,
-    title,
-    substring(body for 500) AS body,
-    to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
+    texts.title,
+    texts.description,
+    substring(texts.body for 500) AS body,
+    to_json(get_location(things.id)) AS location,
     to_json(COALESCE(images, '{}')) AS images,
     to_json(COALESCE(videos, '{}')) as videos,
     updated_date,
     bookmarked(type, id, ${userId})
-  FROM things, localized_texts
-  WHERE things.id = localized_texts.thingid AND
-        things.hidden = false AND
-        localized_texts.language = ${language}
+  FROM
+    things,
+    get_localized_texts(things.id, ${language}) AS texts
+  WHERE things.hidden = false
         ${filter:raw}
   ORDER BY featured DESC, updated_date DESC
 ),

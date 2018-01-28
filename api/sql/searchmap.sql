@@ -15,15 +15,15 @@ SELECT
   type,
   featured,
   EXISTS (SELECT 1 FROM searchresults WHERE things.id = searchresults.id) searchmatched,
-  title,
-  substring(body for 500) AS body,
-  to_json(COALESCE(location, '("","","","","","","","","")'::geolocation)) AS location,
+  texts.title,
+  texts.description,
+  substring(texts.body for 500) AS body,
+  to_json(get_location(things.id)) AS location,
   to_json(COALESCE(images, '{}')) AS images,
   to_json(COALESCE(videos, '{}')) AS videos,
   updated_date
-FROM things, localized_texts
-WHERE
-  things.id = localized_texts.thingid AND
-  localized_texts.language = 'en'
+FROM
+  things,
+  get_localized_texts(things.id, ${language}) AS texts
 ORDER BY searchmatched DESC, featured DESC, updated_date DESC
 ;

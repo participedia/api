@@ -1,11 +1,5 @@
-UPDATE localized_texts
-SET
-  body = ${body},
-  title = ${title},
-  language = ${language},
-  timestamp = 'now',
-  thingid = ${id}
-WHERE
-  thingid = ${id} AND
-  language = ${language}
-;
+INSERT INTO localized_texts (
+  body, title, description, language, "timestamp", thingid
+) VALUES (
+  ${body}, ${title}, ${description}, ${language}, 'now', ${id}
+);

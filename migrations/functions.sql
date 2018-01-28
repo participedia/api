@@ -39,39 +39,64 @@ SELECT
 $_$;
 
 
---
--- Name: get_related_nouns(text, text, integer, text); Type: FUNCTION; Schema: public; Owner: -
---
+---
+--- Name: get_location(id integer); Type: FUNCTION; Schema: public; Owner: -
+---
 
-CREATE FUNCTION get_related_nouns(related_type text, source_type text, source_id integer, language text) RETURNS object_short[]
-    LANGUAGE sql STABLE
-    AS $_$
-SELECT ARRAY(SELECT ROW(rel.*)::object_short FROM related_nouns_of_type_for_type($1, $2, $3, $4) rel);
+CREATE FUNCTION get_location(id integer) RETURNS geolocation
+  LANGUAGE sql STABLE
+  AS $_$
+SELECT
+  ROW(location_name, address1, address2, city, province, postal_code, country, latitude, longitude)::geolocation
+FROM
+  things
+WHERE
+  things.id = $1
 $_$;
 
+---
+--- Name: get_localized_text(thingid, language); Type: FUNCTION; Schema: public; Owner: -
+---
 
---
--- Name: related_nouns_of_type_for_type(text, text, integer, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION related_nouns_of_type_for_type(related_type text, source_type text, source_id integer, language text) RETURNS TABLE(reference object_short)
-    LANGUAGE sql STABLE
-    AS $_$
-SELECT get_object_short(id_2, $4)
-FROM related_nouns
-WHERE type_1 = $2 AND
-    id_1 = $3 AND
-    type_2 = $1
-UNION
-SELECT get_object_short(id_1, $4)
-FROM related_nouns
-WHERE type_1 = $1 AND
-    id_2 = $3 AND
-    type_2 = $2
+CREATE FUNCTION get_localized_texts(thingid integer, language text) RETURNS localized_texts
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT body, title, description, language, "timestamp", thingid FROM (
+    SELECT body, title, description, language, "timestamp", thingid,
+    ROW_NUMBER() OVER (PARTITION BY thingid ORDER BY "timestamp" DESC) rn
+    FROM localized_texts
+    WHERE thingid = $1 AND language = $2
+  ) tmp WHERE rn = 1
 $_$;
 
---
--- Name: search_index_en; Type: MATERIALIZED VIEW DATA; Schema: public; Owner: -
---
+---
+--- Name: get_authors(thingid); Type: FUNCTION: Schema: public; Owner: -
+---
 
-REFRESH MATERIALIZED VIEW search_index_en;
+CREATE FUNCTION get_authors(thingid integer) RETURNS author[]
+  LANGUAGE sql STABLE
+  AS $_$
+WITH a2 AS (
+    SELECT DISTINCT ON (authors.user_id)
+      authors.user_id,
+      authors.timestamp,
+      users.name
+    FROM
+      authors,
+      users
+    WHERE
+      authors.user_id = users.id AND
+      authors.thingid = $1
+    ORDER BY
+      authors.user_id,
+      authors.timestamp
+)
+SELECT
+    array_agg((
+      a2.user_id,
+      a2.timestamp,
+      a2.name
+    )::author) authors
+FROM
+    a2
+$_$;

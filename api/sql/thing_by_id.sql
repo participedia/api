@@ -26,26 +26,22 @@ WITH a2 AS (
 full_thing AS (
   SELECT
     ${table:name}.*,
-    COALESCE(location, '("","","","","","","","","")'::geolocation) AS location,
     COALESCE(images, '{}') AS images,
     COALESCE(${table:name}.files, '{}') files,
     COALESCE(${table:name}.videos, '{}') videos,
     COALESCE(${table:name}.tags, '{}') tags,
     COALESCE(${table:name}.links, '{}') links,
-    localized_texts.body,
-    localized_texts.title,
+    texts.body,
+    texts.title,
+    texts.description,
     authors_list.authors,
-    get_related_nouns('case', ${type}, ${thingid}, ${lang} ) AS related_cases,
-    get_related_nouns('method', ${type}, ${thingid}, ${lang} ) AS related_methods,
-    get_related_nouns('organization', ${type}, ${thingid}, ${lang} ) AS related_organizations,
+    get_location(${thingid}) AS location,
     bookmarked(${table:name}.type, ${thingid}, ${userId})
 FROM
     ${table:name},
-    localized_texts,
+    get_localized_texts(${thingid}, ${lang}) AS texts,
     authors_list
 WHERE
-    ${table:name}.id = localized_texts.thingid AND
-    localized_texts.language = ${lang} AND
     ${table:name}.id = ${thingid}
 )
 SELECT to_json(full_thing.*) results FROM full_thing
