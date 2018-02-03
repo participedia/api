@@ -13,6 +13,8 @@ Todo
 * [ ] Move index to end of tables
 * [ ] Find components in cases
 * [ ] API to find potential child/parent components
-* [ ] Fields sending both localization key and localized value need to fucking stop sending the localized value
-* [ ] Fields that send only the localized value (tags) need to fucking grow up
+* [ ] Fields sending both localization key and localized value should only send localization tags as list
+* [ ] Fields that send only the localized value (tags) should be sending localization tag instead
 * [ ] Uploading a file for `evaluation_reports` causes it to be duplicated into `evaluation_links`
+* [ ] Why does the form lose half its values on error? Does it do that on success too? Or, y'know, all its values.
+* [x] Frontend: Targeted Participants should allow user to pick 3, only allows 1
