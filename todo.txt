@@ -1,0 +1,18 @@
+Todo
+
+* [x] Import images as needed
+* [x] Update urls for images
+* [ ] Update tests
+* [ ] Update remaining queries
+* [ ] Update save changes
+* [ ] Update client-side to sync naming
+* [ ] Localize strings in search
+* [ ] Return localized strings, sync with client
+* [ ] Fix location pins
+* [ ] Map values
+* [ ] Move index to end of tables
+* [ ] Find components in cases
+* [ ] API to find potential child/parent components
+* [ ] Fields sending both localization key and localized value need to fucking stop sending the localized value
+* [ ] Fields that send only the localized value (tags) need to fucking grow up
+* [ ] Uploading a file for `evaluation_reports` causes it to be duplicated into `evaluation_links`
