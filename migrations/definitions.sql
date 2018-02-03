@@ -198,7 +198,7 @@ CREATE TABLE things (
     country text DEFAULT ''::text,
     latitude text DEFAULT ''::text,
     longitude text DEFAULT ''::text,
-    files attachment[] DEFAULT '{}'::attachment[],
+    files text[] DEFAULT '{}'::text[],
     tags text[] DEFAULT '{}'::text[],
     featured boolean DEFAULT false,
     links text[] DEFAULT '{}'::text[],
@@ -247,7 +247,7 @@ CREATE TABLE cases (
     impact_evidence text DEFAULT '',
     change_types text[] DEFAULT '{}'::text[],
     implementers_of_change text[] DEFAULT '{}'::text[],
-    formal_evaluations text[] DEFAULT '{}'::text[],
+    formal_evaluation text DEFAULT ''::text,
     evaluation_reports text[] DEFAULT '{}'::text[],
     evaluation_links text[] DEFAULT '{}'::text[]
 )
@@ -387,7 +387,7 @@ SELECT
     setweight(to_tsvector('english'::regconfig, COALESCE(cases.impact_evidence, '')), 'B') ||
     setweight(to_tsvector('english'::regconfig, array_to_string(COALESCE(cases.change_types,  '{}'::text[]), '')), 'B') ||
     setweight(to_tsvector('english'::regconfig, array_to_string(COALESCE(cases.implementers_of_change, '{}'::text[]), '')), 'B') ||
-    setweight(to_tsvector('english'::regconfig, array_to_string(COALESCE(cases.formal_evaluations, '{}'::text[]), '')), 'B')
+    setweight(to_tsvector('english'::regconfig, COALESCE(cases.formal_evaluation, ''::text)), 'B')
     AS document
 	FROM
 		cases

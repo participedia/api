@@ -54,6 +54,7 @@ router.post("/new", async function(req, res) {
 
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
+    let description = req.body.description;
     let language = req.params.language || "en";
     if (!title) {
       return res.status(400).json({
@@ -64,6 +65,7 @@ router.post("/new", async function(req, res) {
     const thing = await db.one(CREATE_ORGANIZATION, {
       title,
       body,
+      description,
       language
     });
     req.thingid = thing.thingid;

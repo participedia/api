@@ -27,6 +27,7 @@ SELECT
   all_selections.body,
   to_json(get_location(things.id)) AS location,
   to_json(COALESCE(things.images, '{}')) AS images,
+  to_json(COALESCE(things.images, '{}')) AS photos,
   to_json(COALESCE(things.videos, '{}')) AS videos,
   things.updated_date,
   bookmarked(things.type, things.id, ${userId}),

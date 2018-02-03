@@ -64,7 +64,7 @@ function attachment(att) {
 }
 
 // as.attachments
-function attachments(url, title, size) {
+function old_attachments(url, title, size) {
   if (isArray(url)) {
     let atts = url;
     return (
@@ -94,44 +94,44 @@ function attachments(url, title, size) {
   return `ARRAY[(${url}, ${title}, ${size})]::attachment[]`;
 }
 
-// as.strings / as.tags (could be used as as.strings too
+// as.ids, strip [{text,value}] down to [value], then format as array of numbers
+function ids(idList) {
+  if (!idList) {
+    return "'{}'";
+  }
+  return (
+    "ARRAY[" + idList.map(s => as.number(s.value)).join(", ") + "]::integer[]"
+  );
+}
+
+// as.strings
 function strings(strList) {
   if (!strList) {
+    return "'{}'";
+  }
+  if (!strList.map) {
+    console.error(
+      "What kind of array does not have a map()? This kind: %o",
+      strList
+    );
     return "'{}'";
   }
   return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
 }
 
-const tags = strings; // alias for descriptiveness
-const videos = strings;
+function localed(strList) {
+  // localed strings come in as as list of objects with {text, value}, we want value (the localization key)
+  if (!strList) {
+    return "'{}'";
+  }
+  return "ARRAY[" + strList.map(s => as.text(s.value)).join(", ") + "]::text[]";
+}
 
-// as.location
-function location(location) {
-  // TODO: escape all values of location to avoid injection attacks
-  if (!location) {
-    return "null";
+function attachments(attList) {
+  if (!attList) {
+    return "'{}'";
   }
-  let { label, lat, long, gmaps, city, province, country } = location;
-  let name = as.text(label);
-  lat = as.text(lat);
-  long = as.text(long);
-  city = as.text(city);
-  province = as.text(province);
-  country = as.text(country);
-  if (gmaps) {
-    gmaps.address_components.forEach(function(component) {
-      if (component.types.includes("locality")) {
-        city = as.text(component.long_name);
-      } else if (component.types.includes("administrative_area_level_1")) {
-        province = as.text(component.long_name); // could also be a state or territory
-      } else if (component.types.includes("country")) {
-        country = as.text(component.long_name);
-      }
-    });
-  }
-  return `(${name}, '', '', ${city}, ${province}, ${country}, '', ${lat}, ${
-    long
-  })::geolocation`;
+  return "ARRAY[" + attList.map(s => as.text(s.url)).join(", ") + "]::text[]";
 }
 
 // replace as.text, don't convert null to "null" because that's dumb
@@ -146,11 +146,10 @@ const as = Object.assign({}, pgp.as, {
   author,
   attachment,
   attachments,
-  location,
-  videos,
+  ids,
+  localed,
   number,
   strings,
-  tags,
   text
 });
 
