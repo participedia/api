@@ -7,6 +7,7 @@
 WITH all_selections AS (SELECT
   id,
   title,
+  description,
   substring(body for 500) AS body
 FROM search_index_${language:raw}
 WHERE document @@ to_tsquery('english', ${query})

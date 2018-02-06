@@ -121,17 +121,20 @@ function strings(strList) {
 
 function localed(strList) {
   // localed strings come in as as list of objects with {text, value}, we want value (the localization key)
-  if (!strList) {
-    return "'{}'";
+  if (strList.length && typeof strList[0] === "object") {
+    return strings(strList.map(s => s.value));
+  } else {
+    // someone passes us a list of strings, yay!
+    return strings(strList);
   }
-  return "ARRAY[" + strList.map(s => as.text(s.value)).join(", ") + "]::text[]";
 }
 
 function attachments(attList) {
-  if (!attList) {
-    return "'{}'";
+  if (attList.length && typeof attList[0] === "object") {
+    return strings(attList.map(a => a.url));
+  } else {
+    return strings(attList);
   }
-  return "ARRAY[" + attList.map(s => as.text(s.url)).join(", ") + "]::text[]";
 }
 
 // replace as.text, don't convert null to "null" because that's dumb

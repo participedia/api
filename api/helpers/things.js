@@ -288,11 +288,10 @@ function getEditXById(type) {
       /* DO ALL THE DIFFS */
       normalizeLocation(oldThing, newThing);
       normalizeFields(oldThing, newThing);
-      console.error("normalized location");
-      compareItems(oldThing, newThing);
-      console.error("compared items");
+      // compareItems(oldThing, newThing);
+      // FIXME: Does this need to be async?
       Object.keys(oldThing).forEach(async key => {
-        console.error("checking key %s", key);
+        // console.error("checking key %s", key);
         if (
           // All the ways to check if a value has not changed
           // Fixme, check list of ids vs. list of {id, title} pairs
@@ -367,9 +366,14 @@ function getEditXById(type) {
               value: as.localed(newThing[key])
             });
           } else if (key === "has_components") {
+            /* FIXME: allow has_components to update those other cases */
             /* trickier, need to make current component the is_comonent_of for each id */
             /* objects are {label, text, value} where value is the id */
             console.error("has_componenets: %o", newThing[key]);
+          } else if (key === "bookmarked") {
+            /* FIXME: Move bookmarked API to be a normal update */
+            /* stored in a separate table, tied to user */
+            console.error("bookmarked: %s", newThing[key]);
           } else if (key === "primary_organizers") {
             updatedThingFields.push({
               key: as.name(key),
@@ -393,18 +397,15 @@ function getEditXById(type) {
           }
         }
       }); // end of for loop over object keys
-      console.error("looped through all keys");
+      // console.error("looped through all keys");
       if (true) {
-        console.error("any changes: %s", anyChanges);
         // Actually make the changes
         if (isTextUpdated) {
           // INSERT new text row
           await db.none(INSERT_LOCALIZED_TEXT, updatedText);
-          console.error("inserted localized text");
         }
         // Update last_updated
         updatedThingFields.push({ key: "updated_date", value: as.text("now") });
-        console.error("last updated");
         // UPDATE the thing row
         await db.none(UPDATE_NOUN, {
           keyvalues: updatedThingFields
@@ -413,14 +414,12 @@ function getEditXById(type) {
           type: type,
           id: thingid
         });
-        console.error("updated main thing");
         // INSERT row for X__authors
         await db.none(INSERT_AUTHOR, {
           user_id: userId,
           type: type,
           id: thingid
         });
-        console.error("updated authors");
         // update materialized view for search
         retThing = await getThingByType_id_lang_userId(
           type,
@@ -428,7 +427,6 @@ function getEditXById(type) {
           lang,
           userId
         );
-        console.error("get thing to return to client");
         if (req.thingid) {
           res.status(201).json({
             OK: true,

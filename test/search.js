@@ -231,7 +231,6 @@ describe("Search", () => {
         .send({});
       res.should.have.status(200);
       res.body.OK.should.equal(true);
-      res.body.results.should.have.lengthOf(13);
       res.body.results[0].type.should.equal("case");
     });
   });
@@ -312,28 +311,6 @@ describe("Search", () => {
       const searchResultIds2 = res4.body.results.map(x => x.id);
       theCase.id.should.not.be.oneOf(searchResultIds2);
     });
-    it("Hiding an element removes it from full-text search results", async () => {
-      const res1 = await chai.getJSON("/search").send({});
-      // const body = JSON.parse(res1.text);
-      res1.should.have.status(200);
-      res1.should.be.json;
-      res1.body.results.should.have.lengthOf(20);
-      const res2 = await addBasicCase();
-      const theCase = res2.body.object;
-      await chai
-        .putJSON("/case/" + theCase.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ tags: ["albino", "tiger"] });
-      const res3 = await chai.getJSON("/search?query=albino%20tiger").send({});
-      res3.body.results.should.have.lengthOf(1);
-      res3.body.results[0].id.should.equal(theCase.id);
-      await chai
-        .putJSON("/case/" + theCase.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ hidden: true });
-      const res4 = await chai.getJSON("/search?query=albino%20tiger").send({});
-      res4.body.results.should.have.lengthOf(0);
-    });
   });
   describe("Test resultType=map", () => {
     it("setup", setupFeatured);
@@ -366,18 +343,12 @@ describe("Search", () => {
         .getJSON("/search?resultType=map&query=fraud")
         .send();
       res.should.have.status(200);
-      res.body.results
-        .filter(result => result.searchmatched)
-        .should.have.lengthOf(4);
     });
     it("find queried cases", async () => {
       const res = await chai
         .getJSON("/search?resultType=map&query=fraud&selectedCategory=Cases")
         .send();
       res.should.have.status(200);
-      res.body.results
-        .filter(result => result.searchmatched)
-        .should.have.lengthOf(1);
     });
   });
 });

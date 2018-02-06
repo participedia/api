@@ -68,7 +68,6 @@ SELECT row_to_json(user_row) as user
 FROM (
 SELECT
 	users.*,
-  COALESCE(users.location, ('','','','','','','','','')::geolocation) AS location,
   'user' as type,
 	COALESCE(authored_cases.cases, '{}') cases,
 	COALESCE(authored_methods.methods, '{}') methods,

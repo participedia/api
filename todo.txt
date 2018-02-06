@@ -4,13 +4,15 @@ Todo
 * [x] Update urls for images
 * [ ] Update tests
 * [ ] Update remaining queries
-* [ ] Update save changes
+* [x] Update save changes
+  * [ ] Save components
+  * [ ] Bookmarked
 * [ ] Update client-side to sync naming
 * [ ] Localize strings in search
 * [ ] Return localized strings, sync with client
-* [ ] Fix location pins
-* [ ] Map values
-* [ ] Move index to end of tables
+* [x] Fix location pins
+* [ ] Map values from .net to .xyz
+* [x] Move index to end of tables
 * [ ] Find components in cases
 * [ ] API to find potential child/parent components
 * [ ] Fields sending both localization key and localized value should only send localization tags as list

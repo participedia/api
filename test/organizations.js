@@ -28,30 +28,6 @@ async function addBasicOrganization() {
     });
 }
 
-async function setupRelatedObjectsSingle() {
-  // setup relations with exactly one item
-  await chai
-    .putJSON("/organization/269")
-    .set("Authorization", "Bearer " + tokens.user_token)
-    .send({
-      related_cases: [{ id: 66 }],
-      related_methods: [{ id: 166 }],
-      related_organizations: [{ id: 266 }]
-    });
-}
-
-async function setupRelatedObjectsMultiple() {
-  // setup relations with multiple items
-  await chai
-    .putJSON("/organization/270")
-    .set("Authorization", "Bearer " + tokens.user_token)
-    .send({
-      related_cases: [{ id: 47 }, { id: 55 }],
-      related_methods: [{ id: 147 }, { id: 155 }],
-      related_organizations: [{ id: 247 }, { id: 255 }]
-    });
-}
-
 describe("Organizations", () => {
   describe("Lookup", () => {
     it("finds organization 307", async () => {
@@ -88,8 +64,7 @@ describe("Organizations", () => {
           title: "Up the organization",
           body: "Guerilla Marketing",
           // optional
-          vidURL: "https://www.youtube.com/watch?v=KVc6rywClWk&t=2078s",
-          related_cases: []
+          vidURL: "https://www.youtube.com/watch?v=KVc6rywClWk&t=2078s"
         });
       res.should.have.status(201);
     });
@@ -101,34 +76,6 @@ describe("Organizations", () => {
       res.should.have.status(200);
       let the_organization = res.body.data;
       the_organization.tags.should.have.lengthOf(5);
-    });
-  });
-  describe("Related Objects", () => {
-    it("test related objects empty", async () => {
-      const res = await chai.getJSON("/organization/268").send({});
-      res.should.have.status(200);
-      res.body.data.related_cases.should.have.lengthOf(0);
-      res.body.data.related_methods.should.have.lengthOf(0);
-      res.body.data.related_organizations.should.have.lengthOf(0);
-    });
-    it("test related objects with single item", async () => {
-      await setupRelatedObjectsSingle();
-      const res = await chai.getJSON("/organization/269").send({});
-      res.should.have.status(200);
-      res.body.data.related_cases.should.have.lengthOf(1);
-      res.body.data.related_cases[0].id.should.equal(66);
-      res.body.data.related_methods.should.have.lengthOf(1);
-      res.body.data.related_methods[0].id.should.equal(166);
-      res.body.data.related_organizations.should.have.lengthOf(1);
-      res.body.data.related_organizations[0].id.should.equal(266);
-    });
-    it("test related objects with multiple items", async () => {
-      await setupRelatedObjectsMultiple();
-      const res = await chai.getJSON("/organization/270").send({});
-      res.should.have.status(200);
-      res.body.data.related_cases.should.have.lengthOf(2);
-      res.body.data.related_methods.should.have.lengthOf(2);
-      res.body.data.related_organizations.should.have.lengthOf(2);
     });
   });
   describe("Test edit API", () => {
@@ -195,31 +142,6 @@ describe("Organizations", () => {
       res3.body.OK.should.be.true;
       const organization3 = res3.body.data;
       organization3.images.should.deep.equal(["howzaboutthemjpegs.png"]);
-    });
-    it("Add organization, then change related objects", async () => {
-      const res1 = await addBasicOrganization();
-      const organization1 = res1.body.object;
-      organization1.related_cases.should.have.lengthOf(4);
-      organization1.related_cases
-        .map(x => x.id)
-        .should.deep.equal([9, 10, 11, 12]);
-      const related_cases = organization1.related_cases.slice();
-      related_cases.shift(); // remove first one
-      related_cases.push({ id: 13 }, { id: 14 });
-      const res2 = await chai
-        .putJSON("/organization/" + organization1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ related_cases });
-      const organization2 = res2.body.data;
-      organization2.related_cases
-        .map(x => x.id)
-        .should.deep.equal([10, 11, 12, 13, 14]);
-      // test bidirectionality
-      const res3 = await chai.getJSON("/case/13").send({});
-      const organization3 = res3.body.data;
-      organization3.related_organizations
-        .map(x => x.id)
-        .should.include(organization1.id);
     });
     it("Try to change featured flag", async () => {
       const res1 = await addBasicOrganization();
