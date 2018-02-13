@@ -125,7 +125,6 @@ describe("Cases", () => {
       const origCase = res1.body.object;
       origCase.id.should.be.a("number");
       origCase.id.should.equal(res1.body.data.thingid);
-      console.error("first update");
       const res2 = await chai
         .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
@@ -134,7 +133,6 @@ describe("Cases", () => {
       const updatedCase1 = res2.body.data;
       updatedCase1.title.should.equal("Second Title");
       updatedCase1.body.should.equal("First Body");
-      console.error("second update");
       const res3 = await chai
         .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
@@ -143,7 +141,6 @@ describe("Cases", () => {
       const updatedCase2 = res3.body.data;
       updatedCase2.title.should.equal("Second Title");
       updatedCase2.body.should.equal("Second Body");
-      console.error("third update");
       const res4 = await chai
         .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)

@@ -2,7 +2,7 @@
 -- Name: bookmarked(text, integer, integer); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION bookmarked(type text, thingid integer, userid integer) RETURNS boolean
+CREATE OR REPLACE FUNCTION bookmarked(type text, thingid integer, userid integer) RETURNS boolean
     LANGUAGE sql STABLE
     AS $_$
 SELECT CASE
@@ -24,7 +24,7 @@ $_$;
 -- Name: get_object_short(integer, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION get_object_short(id integer, language text) RETURNS object_short
+CREATE OR REPLACE FUNCTION get_object_short(id integer, language text) RETURNS object_short
     LANGUAGE sql STABLE
     AS $_$
 SELECT
@@ -43,7 +43,7 @@ $_$;
 --- Name: get_location(id integer); Type: FUNCTION; Schema: public; Owner: -
 ---
 
-CREATE FUNCTION get_location(id integer) RETURNS geolocation
+CREATE OR REPLACE FUNCTION get_location(id integer) RETURNS geolocation
   LANGUAGE sql STABLE
   AS $_$
 SELECT
@@ -58,7 +58,7 @@ $_$;
 --- Name: get_localized_text(thingid, language); Type: FUNCTION; Schema: public; Owner: -
 ---
 
-CREATE FUNCTION get_localized_texts(thingid integer, language text) RETURNS localized_texts
+CREATE OR REPLACE FUNCTION get_localized_texts(thingid integer, language text) RETURNS localized_texts
   LANGUAGE sql STABLE
   AS $_$
   SELECT body, title, description, language, "timestamp", thingid FROM (
@@ -73,7 +73,7 @@ $_$;
 --- Name: get_authors(thingid); Type: FUNCTION: Schema: public; Owner: -
 ---
 
-CREATE FUNCTION get_authors(thingid integer) RETURNS author[]
+CREATE OR REPLACE FUNCTION get_authors(thingid integer) RETURNS author[]
   LANGUAGE sql STABLE
   AS $_$
 WITH a2 AS (

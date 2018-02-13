@@ -58,7 +58,6 @@ async function commonUserHandler(required, req, res, next) {
         joinDate: user.created_at,
         auth0UserId: auth0UserId,
         pictureUrl: pictureUrl,
-        title: "",
         bio: ""
       });
       req.user.user_id = newUser.user_id;
