@@ -272,6 +272,7 @@ function getEditXById(type) {
         userId
       );
       const newThing = req.body;
+      console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
       let updatedText = {
         body: oldThing.body,
         title: oldThing.title,

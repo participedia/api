@@ -75,8 +75,9 @@
     "resetlocaldb":
       "dropdb participedia; createdb participedia; psql -d participedia -f setup.sql; DATABASE_URL=postgres://dethe@localhost:5432/participedia node migrations/import_json.js",
     "resetproddb":
-      "psql -d \"${DATABASE_PROD_URL}\" -f setup.sql; DATABASE_URL=${DATABASE_STAGE_URL} node migrations/import_json.js",
-    "resetstagedb": "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql",
+      "psql -d \"${DATABASE_PROD_URL}\" -f setup.sql; DATABASE_URL=${DATABASE_PROD_URL} node migrations/import_json.js",
+    "resetstagedb":
+      "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql; DATABASE_URL=${DATABASE_STAGE_URL} node migrations/import_json.js",
     "textdump":
       "pg_dump --format=p --file=one_schema.sql --clean --create --no-owner --if-exists --dbname=participedia",
     "migrateprod":
