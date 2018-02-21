@@ -23,7 +23,7 @@ const RESPONSE_LIMIT = 20;
 router.get("/getAllForType", async function getAllForType(req, res) {
   try {
     let objType = req.query.objType.toLowerCase();
-    let page = parseInt(req.query.page || 1);
+    let page = Math.max(parseInt(req.query.page || 1), 1);
     let offset = 0;
     let response_limit = RESPONSE_LIMIT;
     if (
@@ -33,7 +33,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
       response_limit = Number.MAX_SAFE_INTEGER;
     } else {
       response_limit = parseInt(req.query.response_limit || RESPONSE_LIMIT);
-      offset = (page - 1) * response_limit;
+      offset = Math.max(page - 1, 0) * response_limit;
     }
     if (!supportedTypes.includes(objType)) {
       res.status(401).json({
@@ -86,7 +86,7 @@ const queryFileFromReq = req => {
 };
 
 const offsetFromReq = req => {
-  const page = as.number(req.query.page || 1);
+  const page = Math.max(as.number(req.query.page || 1), 1);
   return (page - 1) * limitFromReq(req);
 };
 
@@ -147,7 +147,7 @@ router.get("/", async function(req, res) {
       results.length ? results[0].total || results.length : 0
     );
     const searchhits = results.filter(result => result.searchmatched).length;
-    const pages = limit ? Math.ceil(total / limit) : 1; // Don't divide by zero limit, don't return page 1 of 0
+    const pages = Math.max(limit ? Math.ceil(total / limit) : 1, 1); // Don't divide by zero limit, don't return page 1 of 1
     results.forEach(obj => delete obj.total);
     let OK = true;
     return res.status(200).json({
