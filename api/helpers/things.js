@@ -22,6 +22,7 @@ const shortKeys = titleKeys.concat([
 ]);
 const mediumKeys = shortKeys.concat(["body", "bookmarked", "location"]);
 const thingKeys = mediumKeys.concat([
+  "description",
   "original_language",
   "published",
   "files",
@@ -30,120 +31,127 @@ const thingKeys = mediumKeys.concat([
   "tags",
   "url"
 ]);
-const caseKeys = thingKeys.concat([
-  "issue",
-  "communication_mode",
-  "communication_with_audience",
+const caseKeys = [
+  "id",
+  "type",
+  "hidden",
+  "post_date",
+  "published",
+  "updated_date",
+  "featured",
+  "original_language",
   "content_country",
-  "decision_method",
-  "end_date",
-  "facetoface_online_or_both",
-  "facilitated",
-  "voting",
-  "number_of_meeting_days",
-  "ongoing",
+  "title",
+  "description",
+  "body",
+  "links",
+  "tags",
+  "location_name",
+  "address1",
+  "address2",
+  "city",
+  "province",
+  "postal_code",
+  "country",
+  "latitude",
+  "longitude",
+  "relationships",
+  "issues",
+  "special_topics",
+  "is_component_of",
+  "scope_of_influence",
+  "images",
+  "videos",
+  "files",
   "start_date",
-  "total_number_of_participants",
-  "targeted_participant_demographic",
-  "kind_of_influence",
-  "targeted_participants_public_role",
-  "targeted_audience",
-  "participant_selection",
-  "specific_topic",
-  "staff_type",
-  "type_of_funding_entity",
-  "typical_implementing_entity",
-  "typical_sponsoring_entity",
-  "who_else_supported_the_initiative",
-  "who_was_primarily_responsible_for_organizing_the_initiative"
-]);
-const methodKeys = thingKeys.concat([
-  "best_for",
-  "communication_mode",
-  "decision_mode",
+  "end_date",
+  "ongoing",
+  "time_limited",
+  "purpose",
+  "approaches",
+  "public_spectrum",
+  "number_of_participants",
+  "open_limited",
+  "recruitment_method",
+  "targeted_participants",
+  "process_methods",
+  "legality",
+  "facilitators",
+  "facilitator_training",
+  "facetoface_online_or_both",
+  "participants_interactions",
+  "learning_resources",
+  "decision_methods",
+  "if_voting",
+  "insights_outcomes",
+  "primary_organizers",
+  "organizer_types",
+  "funder",
+  "funder_types",
+  "staff",
+  "volunteers",
+  "impact_evidence",
+  "change_types",
+  "implementers_of_change",
+  "formal_evaluations",
+  "evaluation_reports",
+  "evaluation_links"
+];
+const methodKeys = [
+  "id",
+  "type",
+  "hidden",
+  "post_date",
+  "published",
+  "updated_date",
+  "featured",
+  "original_language",
+  "content_country",
+  "title",
+  "description",
+  "body",
+  "links",
+  "tags",
+  "completeness",
   "facilitated",
-  "governance_contribution",
-  "issue_interdependency",
+  "geographical_scope",
+  "participants_selections",
+  "recruitment_method",
+  "communication_modes",
+  "decision_methods",
+  "if_voting",
+  "public_interaction_methods",
   "issue_polarization",
   "issue_technical_complexity",
-  "kind_of_influence",
-  "method_of_interaction",
-  "public_interaction_method",
-  "typical_funding_source",
-  "typical_implementing_entity",
-  "typical_sponsoring_entity"
-]);
-const organizationKeys = thingKeys.concat([
-  "executive_director",
-  "issue",
-  "sector"
-]);
-
-function addRelatedList(owner_type, owner_id, related_type, id_list) {
-  // TODO: escape id_list to avoid injection attacks
-  if (!id_list || !id_list.length) {
-    return "";
-  }
-  if (isString(id_list)) {
-    id_list = [id_list];
-  }
-  owner_id = Number(owner_id);
-  let values = id_list
-    .map(item => {
-      let escaped_id = Number(item.id);
-      if (owner_id < escaped_id) {
-        return `('${owner_type}', ${owner_id}, '${related_type}', ${
-          escaped_id
-        })`;
-      } else {
-        return `('${related_type}', ${escaped_id}, '${owner_type}', ${
-          owner_id
-        })`;
-      }
-    })
-    .join(", ");
-  return `
-  INSERT INTO related_nouns (type_1, id_1, type_2, id_2)
-  VALUES ${values};`;
-}
-
-function removeRelatedList(owner_type, owner_id, related_type, id_list) {
-  // TODO: escape id_list to avoid injection attacks
-  if (!id_list || !id_list.length) {
-    return "";
-  }
-  if (isString(id_list)) {
-    id_list = [id_list];
-  }
-  owner_id = Number(owner_id);
-  return id_list
-    .map(item => {
-      let escaped_id = Number(item.id);
-      if (`${owner_type}${owner_id}` < `${related_type}${escaped_id}`) {
-        return `DELETE FROM related_nouns
-                WHERE type_1 = '${owner_type}' AND id_1 = ${owner_id} AND
-                      type_2 = '${related_type}' AND id_2 = ${id};`;
-      } else {
-        return `DELETE FROM related_nouns
-                WHERE type_1 = '${related_type}' AND id_1 = ${escaped_id} AND
-                      type_2 = '${owner_type}' AND id_2 = ${owner_id};`;
-      }
-    })
-    .join("");
-}
-
-const difference = (set1, set2) => new Set([...set1].filter(x => !set2.has(x)));
-
-function diffRelatedList(first, second) {
-  // both lists are related_item objects of the same type
-  const first_set = new Set(first.map(rel => rel.id));
-  const second_set = new Set(second.map(rel => rel.id));
-  remove_set = difference(first_set, second_set);
-  add_set = difference(second_set, first_set);
-  const remove = first.filter(x => remove_set.has(x.id));
-  const add = second.filter(x => add_set.has(x.id));
-  return { remove, add };
-}
+  "issue_inerdependency"
+];
+const organizationKeys = [
+  "id",
+  "type",
+  "hidden",
+  "post_date",
+  "published",
+  "updated_date",
+  "featured",
+  "original_language",
+  "content_country",
+  "title",
+  "description",
+  "body",
+  "links",
+  "tags",
+  "location_name",
+  "address1",
+  "address2",
+  "city",
+  "province",
+  "postal_code",
+  "country",
+  "latitude",
+  "longitude",
+  "sector",
+  "methods"
+];
 
 const getThingByType_id_lang_userId = async function(
   type,
@@ -183,6 +191,71 @@ const returnThingByRequest = async function(type, req, res) {
   }
 };
 
+/* I can't believe basic set operations are not part of ES5 Sets */
+Set.prototype.difference = function(setB) {
+  var difference = new Set(this);
+  for (var elem of setB) {
+    difference.delete(elem);
+  }
+  return difference;
+};
+
+function compareItems(a, b) {
+  const aKeys = new Set(Object.keys(a));
+  const bKeys = new Set(Object.keys(b));
+  const keysNotInA = bKeys.difference(aKeys);
+  if (keysNotInA.size) {
+    console.error("Keys in update not found in original: %o", keysNotInA);
+  }
+  const keysNotInB = aKeys.difference(bKeys);
+  if (keysNotInB.size) {
+    console.error("Keys in original not found in update: %o", keysNotInB);
+  }
+}
+
+function normalizeLocation(oldThing, newThing) {
+  const oldKeys = Object.keys(oldThing);
+  const newKeys = Object.keys(newThing);
+  if (oldKeys.includes("location")) {
+    delete oldThing.location;
+  }
+  if (newKeys.includes("primary_location")) {
+    newThing.location = newThing.primary_location;
+    newThing.primary_location = null;
+    delete newThing.primary_location;
+  }
+  if (newKeys.includes("location")) {
+    if (typeof newThing.location === "object") {
+      let location = newThing.location;
+      newThing.location_name = location.name;
+      newThing.address1 = location.address1;
+      newThing.address2 = location.address2;
+      newThing.city = location.city;
+      newThing.postal_code = location.postal_code;
+      newThing.province = location.province;
+      newThing.country = location.country;
+      newThing.latitude = location.latitude;
+      newThing.longitude = location.longitude;
+    }
+    delete newThing.location;
+  }
+}
+
+function normalize(thing, bad, good) {
+  if (thing[bad]) {
+    thing[good] = thing[bad];
+    delete thing[bad];
+  }
+}
+
+function normalizeFields(oldThing, newThing) {
+  normalize(oldThing, "photos", "images");
+  normalize(newThing, "brief_description", "description");
+  normalize(newThing, "photos", "images");
+  normalize(newThing, "approach", "approaches");
+  normalize(newThing, "purpose", "purposes");
+}
+
 function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
@@ -199,9 +272,11 @@ function getEditXById(type) {
         userId
       );
       const newThing = req.body;
+      console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
       let updatedText = {
         body: oldThing.body,
         title: oldThing.title,
+        description: oldThing.description,
         language: lang,
         type: type,
         id: thingid
@@ -212,67 +287,27 @@ function getEditXById(type) {
       let retThing = null;
 
       /* DO ALL THE DIFFS */
+      normalizeLocation(oldThing, newThing);
+      normalizeFields(oldThing, newThing);
+      // compareItems(oldThing, newThing);
+      // FIXME: Does this need to be async?
       Object.keys(oldThing).forEach(async key => {
+        // console.error("checking key %s", key);
         if (
           // All the ways to check if a value has not changed
+          // Fixme, check list of ids vs. list of {id, title} pairs
           newThing[key] === undefined ||
           equals(oldThing[key], newThing[key]) ||
           (/_date/.test(key) &&
-            moment(oldThing[key]).format() ===
-              moment(newThing[key]).format()) ||
-          (/related_/.test(key) &&
-            equals(
-              oldThing[key].map(x => x.id),
-              newThing[key].map(x => x.id || x.value)
-            ))
+            moment(oldThing[key]).format() === moment(newThing[key]).format())
         ) {
           // skip, do nothing, no change for this key
         } else if (!equals(oldThing[key], newThing[key])) {
           anyChanges = true;
-          // If the body or title have changed: add a record in localized_texts
-          if (key === "body" || key === "title") {
+          // If the body, title, or description have changed: add a record in localized_texts
+          if (key === "body" || key === "title" || key == "description") {
             updatedText[key] = newThing[key];
             isTextUpdated = true;
-            // If related_cases, related_methods, or related_organizations have changed
-            // update records in related_nouns
-          } else if (
-            [
-              "related_cases",
-              "related_methods",
-              "related_organizations"
-            ].includes(key)
-          ) {
-            // DELETE / INSERT any needed rows for related_nouns
-            let oldList = oldThing[key];
-            if (oldList.length && oldList[0].id === undefined) {
-              oldList = oldList.map(x => {
-                id: x;
-              });
-            }
-            let newList = newThing[key];
-            if (
-              newList.length &&
-              newList[0].id === undefined &&
-              newList[0].value === undefined
-            ) {
-              newList = newList.map(function(x) {
-                return { id: Number(x) };
-              });
-            }
-            newList.forEach(x => (x.id = x.id || x.value)); // handle client returning value vs. id
-            const diff = diffRelatedList(oldList, newList);
-            const relType = key.split("_")[1].slice(0, -1); // related_Xs => X
-            const add = addRelatedList(type, thingid, relType, diff.add);
-            const remove = removeRelatedList(
-              type,
-              thingid,
-              relType,
-              diff.remove
-            );
-            if (add || remove) {
-              await db.none(add + remove);
-            }
-            anyChanges = true;
             // If any of the fields of thing itself have changed, update record in appropriate table
           } else if (
             ["id", "post_date", "updated_date", "authors"].includes(key)
@@ -282,40 +317,68 @@ function getEditXById(type) {
               key
             );
             // take no action
-          } else if (key === "featured") {
+          } else if (key === "featured" || key === "hidden") {
             if (okToFlipFeatured(user)) {
               updatedThingFields.push({
                 key: as.name(key),
                 value: Boolean(newThing[key])
               });
             } else {
-              log.warn("Non-curator trying to update Featured flag");
+              log.warn("Non-curator trying to update Featured/hidden flag");
               // take no action
             }
-          } else if (key === "location") {
-            updatedThingFields.push({
-              key: as.name(key),
-              value: as.location(newThing[key])
-            });
-          } else if (["tags", "links"].includes(key)) {
-            updatedThingFields.push({
-              key: as.name(key),
-              value: as.tags(newThing[key])
-            });
-          } else if (key === "videos") {
-            updatedThingFields.push({
-              key: as.name(key),
-              value: as.videos(newThing[key])
-            });
-          } else if (key === "images") {
+          } else if (
+            [
+              "tags",
+              "links",
+              "images",
+              "videos",
+              "files",
+              "participants_interactions",
+              "if_voting",
+              "evaluation_reports",
+              "evaluation_links"
+            ].includes(key)
+          ) {
             updatedThingFields.push({
               key: as.name(key),
               value: as.strings(newThing[key])
             });
-          } else if (key === "files") {
+          } else if (
+            [
+              "issues",
+              "relationships",
+              "specific_topics",
+              "approaches",
+              "change_types",
+              "decision_methods",
+              "funder_types",
+              "implementers_of_change",
+              "insights_outcomes",
+              "learning_resources",
+              "organizer_types",
+              "process_methods",
+              "purposes",
+              "targeted_participants"
+            ].includes(key)
+          ) {
             updatedThingFields.push({
               key: as.name(key),
-              value: as.attachments(newThing[key])
+              value: as.localed(newThing[key])
+            });
+          } else if (key === "has_components") {
+            /* FIXME: allow has_components to update those other cases */
+            /* trickier, need to make current component the is_comonent_of for each id */
+            /* objects are {label, text, value} where value is the id */
+            console.error("has_componenets: %o", newThing[key]);
+          } else if (key === "bookmarked") {
+            /* FIXME: Move bookmarked API to be a normal update */
+            /* stored in a separate table, tied to user */
+            console.error("bookmarked: %s", newThing[key]);
+          } else if (key === "primary_organizers") {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.ids(newThing[key])
             });
           } else {
             let value = newThing[key];
@@ -335,6 +398,7 @@ function getEditXById(type) {
           }
         }
       }); // end of for loop over object keys
+      // console.error("looped through all keys");
       if (true) {
         // Actually make the changes
         if (isTextUpdated) {
@@ -399,13 +463,9 @@ function getEditXById(type) {
 const supportedTypes = ["case", "method", "organization"];
 
 module.exports = {
-  addRelatedList,
-  removeRelatedList,
   getThingByType_id_lang_userId,
   getThingByRequest,
   returnThingByRequest,
-  diffRelatedList,
-  difference,
   getEditXById,
   supportedTypes,
   titleKeys,

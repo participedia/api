@@ -8,59 +8,14 @@ chai.use(chaiHttp);
 chai.use(chaiHelpers);
 
 let location = {
-  label: "Cleveland, OH, United States",
+  name: "Cleveland, OH, United States",
   placeId: "ChIJLWto4y7vMIgRQhhi91XLBO0",
-  isFixture: false,
-  gmaps: {
-    address_components: [
-      {
-        long_name: "Cleveland",
-        short_name: "Cleveland",
-        types: ["locality", "political"]
-      },
-      {
-        long_name: "Cuyahoga County",
-        short_name: "Cuyahoga County",
-        types: ["administrative_area_level_2", "political"]
-      },
-      {
-        long_name: "Ohio",
-        short_name: "OH",
-        types: ["administrative_area_level_1", "political"]
-      },
-      {
-        long_name: "United States",
-        short_name: "US",
-        types: ["country", "political"]
-      }
-    ],
-    formatted_address: "Cleveland, OH, USA",
-    geometry: {
-      bounds: {
-        south: 41.390628,
-        west: -81.87897599999997,
-        north: 41.604436,
-        east: -81.53274390000001
-      },
-      location: {
-        lat: 41.49932,
-        lng: -81.69436050000002
-      },
-      location_type: "APPROXIMATE",
-      viewport: {
-        south: 41.390628,
-        west: -81.87897599999997,
-        north: 41.5992571,
-        east: -81.53274390000001
-      }
-    },
-    place_id: "ChIJLWto4y7vMIgRQhhi91XLBO0",
-    types: ["locality", "political"]
-  },
-  location: {
-    lat: 41.49932,
-    lng: -81.69436050000002
-  }
+  city: "Cleveland",
+  province: "Ohio",
+  country: "United States",
+  postal_code: "45701",
+  latitude: 41.49932,
+  longitude: -81.69436050000002
 };
 
 async function addBasicCase() {
@@ -77,34 +32,7 @@ async function addBasicCase() {
         "https://www.youtube.com/watch?v=QF7g3rCnD-w",
         "https://www.youtube.com/watch?v=w44lApffH30"
       ],
-      location: location,
-      related_cases: ["1", "2", "3", "4"],
-      related_methods: ["145", "146", "147"],
-      related_organizations: ["199", "200", "201"]
-    });
-}
-
-async function setupRelatedObjectsSingle() {
-  // setup relations with exactly one item
-  await chai
-    .putJSON("/case/38")
-    .set("Authorization", "Bearer " + tokens.user_token)
-    .send({
-      related_cases: [{ id: 70 }],
-      related_methods: [{ id: 170 }],
-      related_organizations: [{ id: 270 }]
-    });
-}
-
-async function setupRelatedObjectsMultiple() {
-  // setup relations with multiple items
-  await chai
-    .putJSON("/case/37")
-    .set("Authorization", "Bearer " + tokens.user_token)
-    .send({
-      related_cases: [{ id: 45 }, { id: 63 }],
-      related_methods: [{ id: 145 }, { id: 163 }],
-      related_organizations: [{ id: 245 }, { id: 263 }]
+      location: location
     });
 }
 
@@ -143,44 +71,7 @@ describe("Cases", () => {
       res.body.OK.should.be.true;
       res.body.data.thingid.should.be.a("number");
       let returnedCase = res.body.object;
-      returnedCase.related_cases.length.should.equal(4);
-      returnedCase.related_methods.length.should.equal(3);
-      returnedCase.related_organizations.length.should.equal(3);
       returnedCase.videos.length.should.equal(2);
-    });
-  });
-  describe("Related Objects", () => {
-    it("test related objects empty", async () => {
-      const res = await chai.getJSON("/case/39").send({});
-      res.should.have.status(200);
-      res.body.data.related_cases.should.have.lengthOf(0);
-      res.body.data.related_methods.should.have.lengthOf(0);
-      res.body.data.related_organizations.should.have.lengthOf(0);
-    });
-    it("test related objects with single item", async () => {
-      await setupRelatedObjectsSingle();
-      const res = await chai.getJSON("/case/38").send({});
-      res.should.have.status(200);
-      res.body.data.related_cases.should.have.lengthOf(1);
-      res.body.data.related_cases[0].id.should.equal(70);
-      res.body.data.related_methods.should.have.lengthOf(1);
-      res.body.data.related_methods[0].id.should.equal(170);
-      res.body.data.related_organizations.should.have.lengthOf(1);
-      res.body.data.related_organizations[0].id.should.equal(270);
-    });
-    it("test related objects with multiple items", async () => {
-      await setupRelatedObjectsMultiple();
-      const res = await chai.getJSON("/case/37").send({});
-      res.should.have.status(200);
-      res.body.data.related_cases.should.have.lengthOf(2);
-      res.body.data.related_cases[0].id.should.equal(45);
-      res.body.data.related_cases[1].id.should.equal(63);
-      res.body.data.related_methods.should.have.lengthOf(2);
-      res.body.data.related_methods[0].id.should.equal(145);
-      res.body.data.related_methods[1].id.should.equal(163);
-      res.body.data.related_organizations.should.have.lengthOf(2);
-      res.body.data.related_organizations[0].id.should.equal(245);
-      res.body.data.related_organizations[1].id.should.equal(263);
     });
   });
 
@@ -237,7 +128,7 @@ describe("Cases", () => {
       const res2 = await chai
         .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ title: "Second Title" }); // empty update
+        .send({ title: "Second Title" });
       res2.should.have.status(200);
       const updatedCase1 = res2.body.data;
       updatedCase1.title.should.equal("Second Title");
@@ -245,7 +136,7 @@ describe("Cases", () => {
       const res3 = await chai
         .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ body: "Second Body" }); // empty update
+        .send({ body: "Second Body" });
       res3.should.have.status(200);
       const updatedCase2 = res3.body.data;
       updatedCase2.title.should.equal("Second Title");
@@ -253,7 +144,7 @@ describe("Cases", () => {
       const res4 = await chai
         .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ title: "Third Title", body: "Third Body" }); // empty update
+        .send({ title: "Third Title", body: "Third Body" });
       res4.should.have.status(200);
       const updatedCase3 = res4.body.data;
       updatedCase3.title.should.equal("Third Title");
@@ -272,10 +163,10 @@ describe("Cases", () => {
       const res2 = await chai
         .putJSON("/case/" + res1.body.data.thingid)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ issue: "new issue" }); // empty update
+        .send({ issues: ["new issue"] });
       res2.should.have.status(200);
       const updatedCase1 = res2.body.data;
-      updatedCase1.issue.should.equal("new issue");
+      updatedCase1.issues.should.deep.equal(["new issue"]);
     });
 
     it("Add case, then modify lead image", async () => {
@@ -302,37 +193,6 @@ describe("Cases", () => {
       res3.body.OK.should.be.true;
       const case3 = res3.body.data;
       case3.images.should.deep.equal(["howzaboutthemjpegs.png"]);
-    });
-
-    it("Add case, then change related objects", async () => {
-      const res1 = await addBasicCase();
-      const case1 = res1.body.object;
-      case1.related_cases.should.have.lengthOf(4);
-      case1.related_cases.map(x => x.id).should.deep.equal([1, 2, 3, 4]);
-      const related_cases = case1.related_cases.slice();
-      related_cases.shift(); // remove first one
-      related_cases.push({ id: 5 }, { id: 6 });
-      const res2 = await chai
-        .putJSON("/case/" + case1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ related_cases });
-      const case2 = res2.body.data;
-      case2.related_cases.map(x => x.id).should.deep.equal([2, 3, 4, 5, 6]);
-      // test bidirectionality
-      const res3 = await chai.getJSON("/case/6").send({});
-      const case3 = res3.body.data;
-      case3.related_cases.map(x => x.id).should.include(case1.id);
-    });
-    it.skip("Add case, then bookmark, see what we get back", async () => {
-      const res1 = await addBasicCase();
-      const case1 = res1.body.object;
-      case1.bookmarked.should.be.false;
-      const res2 = await chai
-        .putJSON("/case/" + case1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ bookmarked: true });
-      const case2 = res2.body.data;
-      case2.bookmarked.should.be.false;
     });
   });
 

@@ -6,10 +6,7 @@ INSERT into users (
   auth0_user_id,
   join_date,
   picture_url,
-  title,
-  affiliation,
-  bio,
-  location
+  bio
 )
 VALUES
   (
@@ -19,9 +16,6 @@ VALUES
     ${auth0UserId},
     ${joinDate},
     ${pictureUrl},
-    ${title},
-    ${affiliation},
-    ${bio},
-    ${location}
+    ${bio}
   )
 RETURNING id as user_id;

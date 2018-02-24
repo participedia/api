@@ -1,0 +1,135 @@
+# Canonical Field List
+
+## Cases
+
+id - int
+type - text
+hidden - boolean
+post_date - timestamp
+published - boolean
+updated_date - timestamp
+featured - boolean
+original_language - text
+content_country - text
+links - text[]
+tags - text[]
+images (nee photos) - text[]
+videos - text[]
+files - text[]
+title (localized texts) - text
+description (nee brief description) (localized texts) - text
+body (localized texts) - text
+location_name - text
+address1 - text
+address2 - text
+city - text
+postal_code - text
+province - text
+country - text
+latitude - text
+longitude - text
+location (nee primary location)(calculated)
+relationships - text[]
+issues - text[]
+specific_topics text[]
+is_component_of - int
+has_components (calculated)
+start_date - timestamp
+end_date - timestamp
+ongoing - boolean
+time_limited - text
+purposes - text[]
+approaches - text[]
+public_spectrum - text
+number_of_participants - int
+open_limited - text
+recruitment_method - text
+targeted_participants - text[]
+process_methods - text[]
+legality - text
+facilitators - text
+facilitator_training - text
+facetoface_online_or_both - text
+participants_interactions - text[]
+learning_resources - text[]
+decision_methods - text[]
+if_voting - text[]
+insights_outcomes - text[]
+primary_organizers - ids[]
+organizer_types - text[]
+funder - text
+funder_types - text[]
+staff - boolean
+volunteers - boolean
+impact_evidence - text
+change_types - text[]
+implementers_of_change - text[]
+formal_evaluation - text
+evaluation_reports - text[]
+evaluation_links - text[]
+
+## Methods
+
+id - int
+type - text
+hidden - boolean
+post_date - timestamp
+published - boolean
+updated_date - timestamp
+featured - boolean
+original_language - text
+content_country - text
+links - text[]
+tags - text[]
+images (nee photos) - text[]
+videos - text[]
+files - text[]
+title (localized texts) - text
+description (nee brief description) (localized texts) - text
+body (localized texts) - text
+completeness - text
+facilitated - boolean
+geographical_scope - text
+participants_selections - text[]
+recruitment_method - text
+communication_modes - text[]
+decision_method - text (hidden)
+if_voting - text
+public_interaction_methods - text[]
+issue_polarization - text
+issue_technical_complexity - text
+issue_interdependency - text
+
+## Organizations
+
+id - int
+type - text
+hidden - boolean
+post_date - timestamp
+published - boolean
+updated_date - timestamp
+featured - boolean
+original_language - text
+content_country - text
+links - text[]
+tags - text[]
+images (nee photos) - text[]
+videos - text[]
+files - text[]
+title (localized texts) - text
+description (nee brief description) (localized texts) - text
+body (localized texts) - text
+location_name - text
+address1 - text
+address2 - text
+city - text
+postal_code - text
+province - text
+country - text
+latitude - text
+longitude - text
+location (calculated)
+language - text (???)
+content_language -text (???)
+sector - text
+methods - ids[]

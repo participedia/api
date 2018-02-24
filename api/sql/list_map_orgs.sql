@@ -1,7 +1,7 @@
 SELECT
     organizations.id,
     'organization' as type,
-    to_json(organizations.location) AS location,
+    to_json(get_location(things.id)) AS location,
     to_json(COALESCE(organizations.images, '{}')) AS images,
     localized_texts.title AS title
 FROM

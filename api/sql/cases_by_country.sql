@@ -1,12 +1,12 @@
 SELECT
-    (location).country, count((location).country)
+    country, count(country)
 FROM
     cases
 WHERE
-	(location).country is not null AND
+	country is not null AND
   hidden = false
 GROUP BY
-	(location).country
+	country
 ORDER BY
-	(location).country
+	country
 ;

@@ -8,11 +8,12 @@ WITH insert_organization as (
     ) RETURNING id as thingid
 )
 
-INSERT INTO localized_texts(body, title, language, thingid)
+INSERT INTO localized_texts(body, title, description, language, thingid)
 VALUES
   (
     ${body},
     ${title},
+    ${description},
     ${language},
     (select thingid from insert_organization)
   ) RETURNING thingid

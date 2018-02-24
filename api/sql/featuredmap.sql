@@ -16,6 +16,7 @@ SELECT
   substring(texts.body for 500) AS body,
   to_json(get_location(things.id)) AS location,
   to_json(COALESCE(images, '{}')) AS images,
+  to_json(COALESCE(images, '{}')) AS photos,
   to_json(COALESCE(videos, '{}')) AS videos,
   updated_date
 FROM
