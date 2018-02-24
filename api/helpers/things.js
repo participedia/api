@@ -241,21 +241,6 @@ function normalizeLocation(oldThing, newThing) {
   }
 }
 
-function normalize(thing, bad, good) {
-  if (thing[bad]) {
-    thing[good] = thing[bad];
-    delete thing[bad];
-  }
-}
-
-function normalizeFields(oldThing, newThing) {
-  normalize(oldThing, "photos", "images");
-  normalize(newThing, "brief_description", "description");
-  normalize(newThing, "photos", "images");
-  normalize(newThing, "approach", "approaches");
-  normalize(newThing, "purpose", "purposes");
-}
-
 function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
@@ -288,7 +273,6 @@ function getEditXById(type) {
 
       /* DO ALL THE DIFFS */
       normalizeLocation(oldThing, newThing);
-      normalizeFields(oldThing, newThing);
       // compareItems(oldThing, newThing);
       // FIXME: Does this need to be async?
       Object.keys(oldThing).forEach(async key => {
