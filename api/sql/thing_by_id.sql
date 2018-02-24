@@ -27,7 +27,6 @@ full_thing AS (
   SELECT
     ${table:name}.*,
     COALESCE(images, '{}') AS images,
-    COALESCE(images, '{}') AS photos,
     COALESCE(${table:name}.files, '{}') files,
     COALESCE(${table:name}.videos, '{}') videos,
     COALESCE(${table:name}.tags, '{}') tags,
