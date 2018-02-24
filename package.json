@@ -68,12 +68,12 @@
     "test": "NODE_ENV=test mocha --timeout 100000",
     "watch": "tape-watch --watch -1 test/**/*.js | faucet ",
     "resettestdb":
-      "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://dethe@localhost:5432/participedia-test node migrations/import_json.js",
+      "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js",
     "resettestfunctions":
       "psql -d participedia-test -f migrations/functions.sql",
     "resetlocalfunctions": "psql -d participedia -f migrations/functions.sql",
     "resetlocaldb":
-      "dropdb participedia; createdb participedia; psql -d participedia -f setup.sql; DATABASE_URL=postgres://dethe@localhost:5432/participedia node migrations/import_json.js",
+      "dropdb participedia; createdb participedia; psql -d participedia -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia node migrations/import_json.js",
     "resetproddb":
       "psql -d \"${DATABASE_PROD_URL}\" -f setup.sql; DATABASE_URL=${DATABASE_PROD_URL} node migrations/import_json.js",
     "resetstagedb":
