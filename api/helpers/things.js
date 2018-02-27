@@ -181,6 +181,11 @@ const getThingByRequest = async function(type, req) {
 const returnThingByRequest = async function(type, req, res) {
   try {
     const thing = await getThingByRequest(type, req);
+    Object.keys(thing).forEach(key => {
+      if (thing[key] === "{}") {
+        thing[key] = [];
+      }
+    });
     res.status(200).json({ OK: true, data: thing });
   } catch (error) {
     log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
