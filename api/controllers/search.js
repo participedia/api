@@ -25,7 +25,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     let objType = req.query.objType.toLowerCase();
     let page = Math.max(parseInt(req.query.page || 1), 1);
     let offset = 0;
-    let response_limit = RESPONSE_LIMIT;
+    let response_limit = Number.MAX_SAFE_INTEGER;
     if (
       req.query.response_limit &&
       req.query.response_limit.toLowerCase() === "none"
