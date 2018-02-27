@@ -25,8 +25,10 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     let objType = req.query.objType.toLowerCase();
     let page = Math.max(parseInt(req.query.page || 1), 1);
     let offset = 0;
-    let response_limit = RESPONSE_LIMIT;
-    if (
+    let response_limit = Number.MAX_SAFE_INTEGER;
+    if (!req.query.response_limit) {
+      // do nothing, return everything
+    } else if (
       req.query.response_limit &&
       req.query.response_limit.toLowerCase() === "none"
     ) {
@@ -42,7 +44,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     }
     const titlelist = await db.any(TITLES_FOR_THINGS, {
       language: as.value(req.query.language || "en"),
-      limit: RESPONSE_LIMIT,
+      limit: response_limit,
       offset: offset,
       type: objType
     });
