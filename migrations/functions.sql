@@ -19,6 +19,51 @@ SELECT CASE
 END
 $_$;
 
+--
+-- Name: get_components(integer, text): Type: FUNCTION, Schema: public: Owner: -
+--
+CREATE OR REPLACE FUNCTION get_components(id integer, language text) RETURNS object_title[]
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT COALESCE(array_agg((cases.id, localized_texts.title)::object_title), '{}'::object_title[])
+FROM cases, localized_texts
+WHERE cases.is_component_of = $1 AND
+      localized_texts.thingid = cases.id AND
+      localized_texts.language = $2
+$_$;
+
+--
+-- Name: get_methods(case, text): Type: FUNCTION, Schema: public: Owner: -
+--
+CREATE OR REPLACE FUNCTION get_methods(thing cases, language text) RETURNS object_title[]
+    LANGUAGE sql STABLE
+    AS $_$
+    with mids as (select unnest($1.process_methods) as id)
+    SELECT
+      COALESCE(array_agg((mids.id, title)::object_title), '{}'::object_title[])
+    FROM
+      localized_texts, mids
+    WHERE
+      localized_texts.thingid = mids.id and
+      localized_texts.language = $2
+$_$;
+
+--
+-- Name: get_organizations(case, text): Type: FUNCTION, Schema: public: Owner: -
+--
+CREATE OR REPLACE FUNCTION get_organizations(thing cases, language text) RETURNS object_title[]
+    LANGUAGE sql STABLE
+    AS $_$
+    with mids as (select unnest($1.primary_organizers) as id)
+    SELECT
+      COALESCE(array_agg((mids.id, title)::object_title), '{}'::object_title[])
+    FROM
+      localized_texts, mids
+    WHERE
+      localized_texts.thingid = mids.id and
+      localized_texts.language = $2
+$_$;
+
 
 --
 -- Name: get_object_short(integer, text); Type: FUNCTION; Schema: public; Owner: -
@@ -38,6 +83,23 @@ SELECT
     things.id = $1
 $_$;
 
+--
+-- Name: get_object_title(integer, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION get_object_title(id integer, language text) RETURNS object_title
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT
+    ROW(id, title)::object_title
+  FROM
+    localized_texts,
+    things
+  WHERE
+    localized_texts.thingid = $1 AND
+    localized_texts.language = $2 AND
+    things.id = $1
+$_$;
 
 ---
 --- Name: get_location(id integer); Type: FUNCTION; Schema: public; Owner: -

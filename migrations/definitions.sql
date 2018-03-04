@@ -238,6 +238,7 @@ CREATE TABLE cases (
     decision_methods text[] DEFAULT '{}'::text[],
     if_voting text[] DEFAULT '{}'::text[],
     insights_outcomes text[] DEFAULT '{}'::text[],
+    process_methods integer[] DEFAULT '{}'::integer[],
     primary_organizers integer[] DEFAULT '{}'::integer[],
     organizer_types text[] DEFAULT '{}'::text[],
     funder text DEFAULT ''::text,
