@@ -359,7 +359,6 @@ function getEditXById(type) {
               "insights_outcomes",
               "learning_resources",
               "organizer_types",
-              "process_methods",
               "purposes",
               "targeted_participants"
             ].includes(key)
@@ -391,6 +390,11 @@ function getEditXById(type) {
                 { thingid, component_id }
               );
             }
+          } else if (["process_methods", "primary_organizers"].includes(key)) {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.array(value.map(x => x.value))
+            });
           } else if (key === "bookmarked") {
             /* FIXME: Move bookmarked API to be a normal update */
             /* stored in a separate table, tied to user */
