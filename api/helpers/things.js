@@ -160,13 +160,21 @@ const getThingByType_id_lang_userId = async function(
   userId
 ) {
   let table = type + "s";
+  let case_only = "";
+  if (type === "case") {
+    case_only =
+      `get_components(${thingid}, '${lang}') AS has_components,\n` +
+      `get_methods(cases, '${lang}') AS process_methods,\n` +
+      `get_organizations(cases, '${lang}') AS primary_organizers,`;
+  }
 
   const thing = await db.one(THING_BY_ID, {
     table,
     type,
     thingid,
     lang,
-    userId
+    userId,
+    case_only
   });
   return thing.results;
 };
@@ -282,20 +290,25 @@ function getEditXById(type) {
       // FIXME: Does this need to be async?
       Object.keys(oldThing).forEach(async key => {
         // console.error("checking key %s", key);
+        const prevValue = oldThing[key];
+        let value = newThing[key];
+        if (key === "body" && value === "case_body_placeholder") {
+          value = "";
+        }
         if (
           // All the ways to check if a value has not changed
           // Fixme, check list of ids vs. list of {id, title} pairs
-          newThing[key] === undefined ||
-          equals(oldThing[key], newThing[key]) ||
+          value === undefined ||
+          equals(prevValue, value) ||
           (/_date/.test(key) &&
-            moment(oldThing[key]).format() === moment(newThing[key]).format())
+            moment(prevValue).format() === moment(value).format())
         ) {
           // skip, do nothing, no change for this key
-        } else if (!equals(oldThing[key], newThing[key])) {
+        } else if (!equals(prevValue, value)) {
           anyChanges = true;
           // If the body, title, or description have changed: add a record in localized_texts
           if (key === "body" || key === "title" || key == "description") {
-            updatedText[key] = newThing[key];
+            updatedText[key] = value;
             isTextUpdated = true;
             // If any of the fields of thing itself have changed, update record in appropriate table
           } else if (
@@ -310,7 +323,7 @@ function getEditXById(type) {
             if (okToFlipFeatured(user)) {
               updatedThingFields.push({
                 key: as.name(key),
-                value: Boolean(newThing[key])
+                value: Boolean(value)
               });
             } else {
               log.warn("Non-curator trying to update Featured/hidden flag");
@@ -331,7 +344,7 @@ function getEditXById(type) {
           ) {
             updatedThingFields.push({
               key: as.name(key),
-              value: as.strings(newThing[key])
+              value: as.strings(value)
             });
           } else if (
             [
@@ -346,20 +359,42 @@ function getEditXById(type) {
               "insights_outcomes",
               "learning_resources",
               "organizer_types",
-              "process_methods",
               "purposes",
               "targeted_participants"
             ].includes(key)
           ) {
             updatedThingFields.push({
               key: as.name(key),
-              value: as.localed(newThing[key])
+              value: as.localed(value)
             });
+          } else if (key === "is_component_of") {
+            if (typeof value === "number") {
+              updatedThingFields.push({
+                key: as.name(key),
+                value: as.number(value)
+              });
+            } else {
+              updatedThingFields.push({
+                key: as.name(key),
+                value: as.number(value.value)
+              });
+            }
           } else if (key === "has_components") {
-            /* FIXME: allow has_components to update those other cases */
-            /* trickier, need to make current component the is_comonent_of for each id */
+            /* Allow has_components to update those other cases */
+            /* trickier, need to make current component the is_component_of for each id */
             /* objects are {label, text, value} where value is the id */
-            console.error("has_componenets: %o", newThing[key]);
+            for (let i = 0; i < value.length; i++) {
+              let component_id = value[i].value;
+              await db.none(
+                "update cases set is_component_of = ${thingid} where id = ${component_id};",
+                { thingid, component_id }
+              );
+            }
+          } else if (["process_methods", "primary_organizers"].includes(key)) {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.array(value.map(x => x.value))
+            });
           } else if (key === "bookmarked") {
             /* FIXME: Move bookmarked API to be a normal update */
             /* stored in a separate table, tied to user */
