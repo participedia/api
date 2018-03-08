@@ -36,7 +36,6 @@ full_thing AS (
     texts.description,
     authors_list.authors,
     get_location(${thingid}) AS location,
-    get_object_title(cases.is_component_of, ${lang}) AS is_component_of,
     ${case_only:raw}
     bookmarked(${table:name}.type, ${thingid}, ${userId})
 FROM
