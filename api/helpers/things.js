@@ -163,6 +163,7 @@ const getThingByType_id_lang_userId = async function(
   let case_only = "";
   if (type === "case") {
     case_only =
+      `get_object_title(cases.is_component_of, ${lang}) AS is_component_of\n` +
       `get_components(${thingid}, '${lang}') AS has_components,\n` +
       `get_methods(cases, '${lang}') AS process_methods,\n` +
       `get_organizations(cases, '${lang}') AS primary_organizers,`;
