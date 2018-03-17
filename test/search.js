@@ -27,15 +27,6 @@ async function setupFeatured() {
 }
 
 describe("Search", () => {
-  describe("get first 20 cases", () => {
-    it("finds 20 case titles and ids", async () => {
-      const res = await chai
-        .getJSON("/search/getAllForType?objType=case&page=1")
-        .send({});
-      res.should.have.status(200);
-      should.equal(Object.keys(res.body).length, 20);
-    });
-  });
   describe("confirm query tokenizing", () => {
     let { tokenize } = require("../api/helpers/search");
     it("simple and", () => {
@@ -195,24 +186,7 @@ describe("Search", () => {
       ).should.equal("first&(second|third)&(fourth<->fifth|sixth)");
     });
   });
-  describe("get first 20 methods", () => {
-    it("finds 20 method titles and ids", async () => {
-      const res = await chai
-        .getJSON("/search/getAllForType?objType=method&page=1")
-        .send({});
-      res.should.have.status(200);
-      should.equal(Object.keys(res.body).length, 20);
-    });
-  });
-  describe("get first 20 organizations", () => {
-    it("finds 20 organization titles and ids", async () => {
-      const res = await chai
-        .getJSON("/search/getAllForType?objType=organization&page=1")
-        .send({});
-      res.should.have.status(200);
-      should.equal(Object.keys(res.body).length, 20);
-    });
-  });
+
   describe("get organizations in Canada", () => {
     it("finds all Organizations with the term Canada", async () => {
       const res = await chai
@@ -224,6 +198,7 @@ describe("Search", () => {
       res.body.results.forEach(obj => obj.type.should.equal("organization"));
     });
   });
+
   describe("get cases tagged 'nuclear'", () => {
     it("finds all Cases with the word nuclear", async () => {
       const res = await chai
@@ -234,15 +209,7 @@ describe("Search", () => {
       res.body.results[0].type.should.equal("case");
     });
   });
-  describe("Test search with multi-word tags", () => {
-    it("finds everything with the words animal welfare", async () => {
-      const res = await chai.getJSON("/search?query=animal%20welfare").send({});
-      res.should.have.status(200);
-      res.body.OK.should.equal(true);
-      res.body.results.should.have.lengthOf(6);
-      // more testing
-    });
-  });
+
   describe("Test full-text search", () => {
     it("single-word search", async () => {
       const res = await chai.getJSON("/search?query=Budget").send({});
@@ -257,6 +224,7 @@ describe("Search", () => {
       item.bookmarked.should.be.a("boolean");
       item.should.have.property("images");
     });
+
     it("multi-word search", async () => {
       const res = await chai
         .getJSON("/search?query=Budget%20Participatory")
@@ -265,6 +233,7 @@ describe("Search", () => {
       res.body.results.should.have.lengthOf(20);
     });
   });
+
   describe("Test cacheing", () => {
     it("Will only be correct if cache is cleared", async () => {
       const res1 = await chai.getJSON("/search").send({});
@@ -288,6 +257,7 @@ describe("Search", () => {
         .send({ featured: false });
     });
   });
+
   describe("Test hidden results", () => {
     it("Hiding an element removes it from featured (default) search", async () => {
       const res1 = await chai.getJSON("/search").send({});
@@ -312,8 +282,10 @@ describe("Search", () => {
       theCase.id.should.not.be.oneOf(searchResultIds2);
     });
   });
+
   describe("Test resultType=map", () => {
     it("setup", setupFeatured);
+
     it("find featured results", async () => {
       const res = await chai.getJSON("/search?resultType=map").send({});
       res.should.have.status(200);
@@ -325,6 +297,7 @@ describe("Search", () => {
         .filter(result => result.featured)
         .should.have.lengthOf(len);
     });
+
     it("find featured cases", async () => {
       const res = await chai
         .getJSON("/search?resultType=map&selectedCategory=Cases")
@@ -338,12 +311,14 @@ describe("Search", () => {
         .filter(result => result.featured && result.type === "case")
         .should.have.lengthOf(len);
     });
+
     it("find queried articles", async () => {
       const res = await chai
         .getJSON("/search?resultType=map&query=fraud")
         .send();
       res.should.have.status(200);
     });
+
     it("find queried cases", async () => {
       const res = await chai
         .getJSON("/search?resultType=map&query=fraud&selectedCategory=Cases")

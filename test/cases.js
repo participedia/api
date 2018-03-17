@@ -91,17 +91,6 @@ describe("Cases", () => {
     });
   });
 
-  describe("Get case with tags", () => {
-    it("should have 3 tags", async () => {
-      const res = await chai.getJSON("/case/39");
-      res.body.OK.should.equal(true);
-      res.should.have.status(200);
-      let the_case = res.body.data;
-      the_case.tags.should.have.lengthOf(3);
-      the_case.bookmarked.should.equal(false);
-    });
-  });
-
   describe("Get case with authentication", () => {
     it("should not fail when logged in", async () => {
       try {
