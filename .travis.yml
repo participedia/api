@@ -14,6 +14,7 @@ services:
 before_script:
 - psql -a -U postgres -c 'create database participedia;'
 - psql -a -U postgres -d participedia -f setup.sql
+- node migrations/import_json.js
 # deploy:
 #   provider: heroku
 #   api_key:
