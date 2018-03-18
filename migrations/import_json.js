@@ -33,17 +33,17 @@ const columns = {
 const filename = f => `migrations/${f}.json`;
 
 async function load_table(table) {
-  let data = JSON.parse(fs.readFileSync(filename(table)));
+  // Only load the real users file if it exists, otherwise use fake users for testing
+  let data;
+  if (table === "users" && !fs.existsSync(filename(table))) {
+    console.log("loading fake users from %s", filename("fake_users"));
+    data = JSON.parse(fs.readFileSync(filename("fake_users")));
+  } else {
+    data = JSON.parse(fs.readFileSync(filename(table)));
+  }
   // Creating a reusable / static ColumnSet for generating INSERT queries:
   const cs = new helpers.ColumnSet(columns[table], { table });
-  // if (table === "methods") {
-  // data = data.slice(0, 1);
-  // console.log("before pg_promise: %o", data);
-  // }
   const insert = helpers.insert(data, cs);
-  // if (table == "methods") {
-  // console.log("after pg_promise: %o", insert);
-  // }
   return db
     .none(insert)
     .then(() => console.log(`success inserting ${table}`))

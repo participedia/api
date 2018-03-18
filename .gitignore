@@ -6,6 +6,7 @@ swagger/api_project.json
 swagger/api_project.js
 swagger/api_data.js
 swagger/api_data.json
+migrations/users.json
 
 .DS_Store
 # Logs
