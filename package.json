@@ -46,7 +46,7 @@
   "devDependencies": {
     "babel-eslint": "^8.0.3",
     "chai": "^4.0.2",
-    "chai-http": "^3.0.0",
+    "chai-http": "^4.0.0",
     "eslint": "^4.1.1",
     "eslint-config-google": "^0.9.1",
     "eslint-config-prettier": "^2.2.0",
