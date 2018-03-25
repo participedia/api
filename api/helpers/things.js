@@ -339,7 +339,6 @@ function getEditXById(type) {
               "images",
               "videos",
               "files",
-              "participants_interactions",
               "if_voting",
               "evaluation_reports",
               "evaluation_links"
@@ -363,6 +362,7 @@ function getEditXById(type) {
               "learning_resources",
               "organizer_types",
               "purposes",
+              "participants_interactions",
               "targeted_participants"
             ].includes(key)
           ) {
