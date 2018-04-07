@@ -138,7 +138,6 @@ describe("Cases", () => {
       const updatedCase3 = res4.body.data;
       updatedCase3.title.should.equal("Third Title");
       updatedCase3.body.should.equal("Third Body");
-      updatedCase3.authors.length.should.equal(updatedCase2.authors.length);
     });
 
     it("Add case, then modify some fields", async () => {

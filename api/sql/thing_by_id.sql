@@ -1,29 +1,4 @@
-WITH a2 AS (
-    SELECT DISTINCT ON (authors.user_id)
-      authors.user_id,
-      authors.timestamp,
-      users.name
-    FROM
-      authors,
-      users
-    WHERE
-      authors.user_id = users.id AND
-      authors.thingid = ${thingid}
-    ORDER BY
-      authors.user_id,
-      authors.timestamp
-),
- authors_list AS (
-  SELECT
-    array_agg((
-      a2.user_id,
-      a2.timestamp,
-      a2.name
-    )::author) authors
-  FROM
-    a2
-),
-full_thing AS (
+WITH full_thing AS (
   SELECT
     ${table:name}.*,
     COALESCE(images, '{}') AS images,
@@ -34,14 +9,14 @@ full_thing AS (
     texts.body,
     texts.title,
     texts.description,
-    authors_list.authors,
+    first_author(${thingid}) AS creator,
+    last_author(${thingid}) AS last_updated_by,
     get_location(${thingid}) AS location,
     ${case_only:raw}
     bookmarked(${table:name}.type, ${thingid}, ${userId})
 FROM
     ${table:name},
-    get_localized_texts(${thingid}, ${lang}) AS texts,
-    authors_list
+    get_localized_texts(${thingid}, ${lang}) AS texts
 WHERE
     ${table:name}.id = ${thingid}
 )

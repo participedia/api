@@ -162,3 +162,47 @@ SELECT
 FROM
     a2
 $_$;
+
+---
+--- Name: first_author(thingid); Type: FUNCTION: Schema: public; Owner: -
+---
+
+CREATE OR REPLACE FUNCTION first_author(thingid integer) RETURNS author
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    authors.user_id,
+    authors.timestamp,
+    users.name
+  FROM
+    authors,
+    users
+  WHERE
+    authors.user_id = users.id AND
+    authors.thingid = $1
+  ORDER BY
+    authors.timestamp ASC
+  LIMIT 1
+$_$;
+
+---
+--- Name: last_author(thingid); Type: FUNCTION: Schema: public; Owner: -
+---
+
+CREATE OR REPLACE FUNCTION last_author(thingid integer) RETURNS author
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    authors.user_id,
+    authors.timestamp,
+    users.name
+  FROM
+    authors,
+    users
+  WHERE
+    authors.user_id = users.id AND
+    authors.thingid = $1
+  ORDER BY
+    authors.timestamp DESC
+  LIMIT 1
+$_$;

@@ -111,9 +111,6 @@ describe("Organizations", () => {
       const updatedOrganization3 = res4.body.data;
       updatedOrganization3.title.should.equal("Third Title");
       updatedOrganization3.body.should.equal("Third Body");
-      updatedOrganization3.authors.length.should.equal(
-        updatedOrganization2.authors.length
-      );
     });
     it("Add organization, then modify lead image", async () => {
       const res1 = await addBasicOrganization();
