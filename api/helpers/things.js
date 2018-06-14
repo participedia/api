@@ -381,7 +381,9 @@ function getEditXById(type) {
                 key: as.name(key),
                 value: as.localed(value)
               });
-            } catch (error) {}
+            } catch (error) {
+              console.error(">>> SCREAM <<<");
+            }
           } else if (key === "is_component_of") {
             if (typeof value === "number") {
               updatedThingFields.push({
