@@ -340,6 +340,7 @@ function getEditXById(type) {
               // take no action
             }
           } else if (
+            // fields that are lists of strings
             [
               "tags",
               "links",
@@ -356,6 +357,7 @@ function getEditXById(type) {
               value: as.strings(value)
             });
           } else if (
+            // fields that are arrays of text (localized), value pairs
             [
               "issues",
               "relationships",
@@ -370,13 +372,18 @@ function getEditXById(type) {
               "organizer_types",
               "purposes",
               "participants_interactions",
-              "targeted_participants"
+              "targeted_participants",
+              "typical_purposes"
             ].includes(key)
           ) {
-            updatedThingFields.push({
-              key: as.name(key),
-              value: as.localed(value)
-            });
+            try {
+              updatedThingFields.push({
+                key: as.name(key),
+                value: as.localed(value)
+              });
+            } catch (error) {
+              console.error(">>> SCREAM <<<");
+            }
           } else if (key === "is_component_of") {
             if (typeof value === "number") {
               updatedThingFields.push({
