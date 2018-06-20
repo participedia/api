@@ -376,14 +376,10 @@ function getEditXById(type) {
               "typical_purposes"
             ].includes(key)
           ) {
-            try {
-              updatedThingFields.push({
-                key: as.name(key),
-                value: as.localed(value)
-              });
-            } catch (error) {
-              console.error(">>> SCREAM <<<");
-            }
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.localed(value)
+            });
           } else if (key === "is_component_of") {
             if (typeof value === "number") {
               updatedThingFields.push({
