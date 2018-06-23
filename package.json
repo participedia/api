@@ -48,7 +48,7 @@
     "babel-eslint": "^8.0.3",
     "chai": "^4.0.2",
     "chai-http": "^3.0.0",
-    "eslint": "^4.1.1",
+    "eslint": "^5.0.0",
     "eslint-config-google": "^0.9.1",
     "eslint-config-prettier": "^2.2.0",
     "eslint-plugin-prettier": "^2.0.1",
