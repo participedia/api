@@ -118,12 +118,14 @@ const methodKeys = [
   "participants_selections",
   "recruitment_method",
   "communication_modes",
+  "communication_outcomes",
   "decision_methods",
   "if_voting",
   "public_interaction_methods",
   "issue_polarization",
   "issue_technical_complexity",
-  "issue_inerdependency"
+  "issue_interdependency",
+  "typical_purposes"
 ];
 const organizationKeys = [
   "id",
@@ -373,7 +375,9 @@ function getEditXById(type) {
               "purposes",
               "participants_interactions",
               "targeted_participants",
-              "typical_purposes"
+              "typical_purposes",
+              "communication_outcomes",
+              "communication_modes"
             ].includes(key)
           ) {
             updatedThingFields.push({
@@ -381,28 +385,30 @@ function getEditXById(type) {
               value: as.localed(value)
             });
           } else if (key === "is_component_of") {
-            if (typeof value === "number") {
-              updatedThingFields.push({
-                key: as.name(key),
-                value: as.number(value)
-              });
+            let component_id = value;
+            if (value === null) {
+              // delete any existing value
+            } else if (typeof value !== "number") {
+              component_id = value.value;
+            }
+            if (component_id !== thingid) {
+              if (oldThing.is_component_of !== component_id) {
+                updatedThingFields.push({
+                  key: as.name(key),
+                  value: component_id ? as.number(component_id) : null
+                });
+              }
             } else {
-              updatedThingFields.push({
-                key: as.name(key),
-                value: as.number(value.value)
-              });
+              console.warn(
+                "Do NOT try to add an element as a component of itself or I WILL smack you."
+              );
             }
           } else if (key === "has_components") {
             /* Allow has_components to update those other cases */
             /* trickier, need to make current component the is_component_of for each id */
             /* objects are {label, text, value} where value is the id */
-            for (let i = 0; i < value.length; i++) {
-              let component_id = value[i].value;
-              await db.none(
-                "update cases set is_component_of = ${thingid} where id = ${component_id};",
-                { thingid, component_id }
-              );
-            }
+            /* FUCK this gets hard when trying to remove items, and is easily broken by multiple users, remove it */
+            // DO NOTHING
           } else if (["process_methods", "primary_organizers"].includes(key)) {
             updatedThingFields.push({
               key: as.name(key),
