@@ -319,7 +319,8 @@ CREATE TABLE users (
     auth0_user_id text,
     join_date timestamp,
     picture_url text,
-    bio text
+    bio text,
+    isadmin boolean DEFAULT false
 );
 
 

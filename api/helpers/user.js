@@ -3,6 +3,7 @@ let log = require("winston");
 let unless = require("express-unless");
 
 const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
+const USER_BY_ID = sql("../sql/user_by_id.sql");
 const CREATE_USER_ID = sql("../sql/create_user_id.sql");
 
 async function preferUser(req, res, next) {
@@ -18,6 +19,7 @@ async function commonUserHandler(required, req, res, next) {
     let user = req.user;
     let email = req.header("X-Auth0-Name");
     let auth0UserId = req.header("X-Auth0-UserId");
+    const language = as.value(req.params.language || "en");
     if (!user) {
       if (required) {
         return res.status(401).json({
@@ -33,20 +35,33 @@ async function commonUserHandler(required, req, res, next) {
         message: "User is not authorized to add or edit content."
       });
     }
-    if (user.user_id) {
-      // all is well, carry on, but make sure user_id is a number
-      user.user_id = Number(user.user_id);
-      return next();
-    }
-    userObj = await db.oneOrNone(USER_BY_EMAIL, {
+    // if (user.user_id) {
+    //   // all is well, carry on, but make sure user_id is a number
+    //   user.user_id = Number(user.user_id);
+    //   return next();
+    // }
+    // get user id from email
+    let userIdObj = await db.oneOrNone(USER_BY_EMAIL, {
       userEmail: user && user.email ? user.email : email
     });
+    // get full user object
+    let userObj = null;
+    if (userIdObj) {
+      userObj = await db.oneOrNone(USER_BY_ID, {
+        userId: userIdObj.id,
+        language
+      });
+    }
     if (userObj) {
+      console.warn("the bloody userObj is %s", JSON.stringify(userObj));
+      userObj = userObj.user;
       if (!req.user) {
         req.user = {};
       }
+      req.user.isadmin = userObj.isadmin;
       req.user.user_id = userObj.id;
     } else {
+      console.warn("no userObj found for %s", JSON.stringify(req.user));
       let newUser;
       let pictureUrl = user.picture;
       if (user.user_metadata && user.user_metadata.customPic) {
@@ -92,30 +107,11 @@ function okToEdit(user) {
   return true;
 }
 
-function okToFlipFeatured(user) {
-  // User should be logged in and be part of the Curators group
-  if (
-    !(
-      user.app_metadata &&
-      user.app_metadata.authorization &&
-      user.app_metadata.authorization.groups
-    )
-  ) {
-    // how do we have a user, but not this metadata?
-    return false;
-  }
-  if (user.app_metadata.authorization.groups.includes("Curators")) {
-    return true;
-  }
-  return false;
-}
-
 ensureUser.unless = unless;
 preferUser.unless = unless;
 
 module.exports = exports = {
   ensureUser,
   preferUser,
-  okToEdit,
-  okToFlipFeatured
+  okToEdit
 };

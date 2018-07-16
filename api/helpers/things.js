@@ -4,7 +4,6 @@ const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
 
-const { okToFlipFeatured } = require("./user");
 const { as, db, sql } = require("./db");
 
 const THING_BY_ID = sql(`../sql/thing_by_id.sql`);
@@ -125,7 +124,8 @@ const methodKeys = [
   "issue_polarization",
   "issue_technical_complexity",
   "issue_interdependency",
-  "typical_purposes"
+  "typical_purposes",
+  "communication_outcomes"
 ];
 const organizationKeys = [
   "id",
@@ -275,7 +275,8 @@ function getEditXById(type) {
         userId
       );
       const newThing = req.body;
-      console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
+      // console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
+      // console.log("User: %s", JSON.stringify(user));
       let updatedText = {
         body: oldThing.body,
         title: oldThing.title,
@@ -332,13 +333,16 @@ function getEditXById(type) {
             );
             // take no action
           } else if (key === "featured" || key === "hidden") {
-            if (okToFlipFeatured(user)) {
+            if (user.isadmin) {
               updatedThingFields.push({
                 key: as.name(key),
                 value: Boolean(value)
               });
             } else {
-              log.warn("Non-curator trying to update Featured/hidden flag");
+              log.warn(
+                "Non-admin trying to update Featured/hidden flag: %s",
+                JSON.stringify(user)
+              );
               // take no action
             }
           } else if (
