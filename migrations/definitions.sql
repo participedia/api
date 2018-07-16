@@ -320,7 +320,7 @@ CREATE TABLE users (
     join_date timestamp,
     picture_url text,
     bio text,
-    isadmin boolean
+    isadmin boolean DEFAULT false
 );
 
 
