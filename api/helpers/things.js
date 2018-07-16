@@ -124,7 +124,8 @@ const methodKeys = [
   "issue_polarization",
   "issue_technical_complexity",
   "issue_interdependency",
-  "typical_purposes"
+  "typical_purposes",
+  "communication_outcomes"
 ];
 const organizationKeys = [
   "id",
@@ -338,7 +339,10 @@ function getEditXById(type) {
                 value: Boolean(value)
               });
             } else {
-              log.warn("Non-curator trying to update Featured/hidden flag");
+              log.warn(
+                "Non-admin trying to update Featured/hidden flag: %s",
+                JSON.stringify(user)
+              );
               // take no action
             }
           } else if (

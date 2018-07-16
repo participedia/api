@@ -35,11 +35,11 @@ async function commonUserHandler(required, req, res, next) {
         message: "User is not authorized to add or edit content."
       });
     }
-    if (user.user_id) {
-      // all is well, carry on, but make sure user_id is a number
-      user.user_id = Number(user.user_id);
-      return next();
-    }
+    // if (user.user_id) {
+    //   // all is well, carry on, but make sure user_id is a number
+    //   user.user_id = Number(user.user_id);
+    //   return next();
+    // }
     // get user id from email
     let userIdObj = await db.oneOrNone(USER_BY_EMAIL, {
       userEmail: user && user.email ? user.email : email
@@ -53,6 +53,7 @@ async function commonUserHandler(required, req, res, next) {
       });
     }
     if (userObj) {
+      console.warn("the bloody userObj is %s", JSON.stringify(userObj));
       userObj = userObj.user;
       if (!req.user) {
         req.user = {};
@@ -60,6 +61,7 @@ async function commonUserHandler(required, req, res, next) {
       req.user.isadmin = userObj.isadmin;
       req.user.user_id = userObj.id;
     } else {
+      console.warn("no userObj found for %s", JSON.stringify(req.user));
       let newUser;
       let pictureUrl = user.picture;
       if (user.user_metadata && user.user_metadata.customPic) {

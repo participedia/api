@@ -28,6 +28,7 @@ let userPayload = {
   name: "asdasasd Doe",
   email: "joe@example.com",
   user_id: "123",
+  isadmin: true,
   app_metadata: {
     authorization: {
       groups: ["Contributors", "Curators"]
