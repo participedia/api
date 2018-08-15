@@ -19,6 +19,51 @@ SELECT CASE
 END
 $_$;
 
+
+--
+-- Get most recent title for a thing
+--
+CREATE OR REPLACE FUNCTION get_title(thingid integer, language text) RETURNS text
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT title
+FROM localized_texts
+WHERE thingid = $1 AND language = $2
+ORDER BY timestamp DESC
+LIMIT 1
+END
+$_$;
+
+--
+-- Get most recent description for a thing
+--
+CREATE OR REPLACE FUNCTION get_description(thingid integer, language text) RETURNS text
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT description
+FROM localized_texts
+WHERE thingid = $1 AND language = $2
+ORDER BY timestamp DESC
+LIMIT 1
+END
+$_$;
+
+--
+-- Get most recent body for a thing
+--
+CREATE OR REPLACE FUNCTION get_body(thingid integer, language text) RETURNS text
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT body
+FROM localized_texts
+WHERE thingid = $1 AND language = $2
+ORDER BY timestamp DESC
+LIMIT 1
+END
+$_$;
+
+
+
 --
 -- Name: get_components(integer, text): Type: FUNCTION, Schema: public: Owner: -
 --
