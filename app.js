@@ -4,6 +4,28 @@ let path = require("path");
 let process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
 let app = require("express")();
+var exphbs = require("express-handlebars");
+const fs = require("fs");
+
+app.engine(".html", exphbs({ defaultLayout: "main", extname: ".html" }));
+app.set("view engine", ".html");
+// function loadTemplates(pathname) {
+//   var template = {};
+//   fs.readdirSync(pathname).forEach(filename => {
+//     if (filename.endsWith(".html")) {
+//       var name = filename.split(".")[0]; // take off .html
+//       if (template[name]) {
+//         console.error("Duplicate template: %s", name);
+//         process.exit();
+//       }
+//       template[name] = fs.readFileSync(pathname + filename);
+//     }
+//     return template;
+//   });
+// }
+//
+// app.locals.template = loadTemplates("api/template/");
+// app.locals.partial = loadTemplates("api/template/partial/");
 
 if (
   process.env.NODE_ENV === "test" &&
@@ -32,6 +54,8 @@ let AWS = require("aws-sdk");
 AWS.config.update({ region: "us-east-1" });
 app.use(compression());
 let port = process.env.PORT || 3001;
+
+// Actual Participedia APIS vs. Nodejs gunk
 let case_ = require("./api/controllers/case");
 let method = require("./api/controllers/method");
 let organization = require("./api/controllers/organization");
@@ -39,6 +63,7 @@ let bookmark = require("./api/controllers/bookmark");
 let search = require("./api/controllers/search");
 let list = require("./api/controllers/list");
 let user = require("./api/controllers/user");
+
 let errorhandler = require("errorhandler");
 let morgan = require("morgan");
 let bodyParser = require("body-parser");
@@ -52,8 +77,8 @@ const {
 let { ensureUser, preferUser } = require("./api/helpers/user");
 
 app.set("port", port);
-app.use(morgan("dev"));
-app.use(methodOverride());
+app.use(morgan("dev")); // request logging
+app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
@@ -66,7 +91,6 @@ app.use(
 app.use(
   preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
 );
-app.use(express.static(path.join(__dirname, "swagger")));
 app.use(errorhandler());
 
 const apicache = require("apicache");

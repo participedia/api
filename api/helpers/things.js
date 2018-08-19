@@ -191,6 +191,36 @@ const getThingByRequest = async function(type, req) {
   return await getThingByType_id_lang_userId(type, thingid, lang, userId);
 };
 
+const returnByType = req => {
+  // handle json requests from old client or tests
+  let returnType = req.query.returns;
+  if (req.accepts("json", "html") === "json") {
+    returnType = "json";
+  }
+  switch (returnType) {
+    case "htmlfrag":
+      return (res, type, thing) =>
+        res
+          .status(200)
+          .render(type + "_view", Object.assign(thing, { layout: false }));
+    case "json":
+      return (res, type, thing) =>
+        res.status(200).json({ OK: true, data: thing });
+    case "csv":
+      // TODO: implement CSV
+      return (res, type, thing) =>
+        res.status(500, "CSV not implemented yet").render();
+    case "xml":
+      // TODO: implement XML
+      return (res, type, thing) =>
+        res.status(500, "XML not implemented yet").render();
+    case "html": // fall through
+    default:
+      return (res, type, thing) =>
+        res.status(200).render(type + "_view", thing);
+  }
+};
+
 const returnThingByRequest = async function(type, req, res) {
   try {
     const thing = await getThingByRequest(type, req);
@@ -199,7 +229,7 @@ const returnThingByRequest = async function(type, req, res) {
         thing[key] = [];
       }
     });
-    res.status(200).json({ OK: true, data: thing });
+    returnByType(req)(res, type, thing);
   } catch (error) {
     log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
     res.status(500).json({
