@@ -9,23 +9,6 @@ const fs = require("fs");
 
 app.engine(".html", exphbs({ defaultLayout: "main", extname: ".html" }));
 app.set("view engine", ".html");
-// function loadTemplates(pathname) {
-//   var template = {};
-//   fs.readdirSync(pathname).forEach(filename => {
-//     if (filename.endsWith(".html")) {
-//       var name = filename.split(".")[0]; // take off .html
-//       if (template[name]) {
-//         console.error("Duplicate template: %s", name);
-//         process.exit();
-//       }
-//       template[name] = fs.readFileSync(pathname + filename);
-//     }
-//     return template;
-//   });
-// }
-//
-// app.locals.template = loadTemplates("api/template/");
-// app.locals.partial = loadTemplates("api/template/partial/");
 
 if (
   process.env.NODE_ENV === "test" &&
@@ -77,6 +60,7 @@ const {
 let { ensureUser, preferUser } = require("./api/helpers/user");
 
 app.set("port", port);
+app.use(express.static("public", { index: false }));
 app.use(morgan("dev")); // request logging
 app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());

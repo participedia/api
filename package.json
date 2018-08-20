@@ -62,6 +62,8 @@
     "coverage":
       "NODE_ENV=test istanbul cover _mocha -- -R spec && open coverage/lcov-report/index.html",
     "test": "NODE_ENV=test mocha --timeout 100000",
+    "resettestdb":
+      "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js",
     "resettestfunctions":
       "psql -d participedia-test -f migrations/functions.sql",
     "resetlocalfunctions": "psql -d participedia -f migrations/functions.sql",
