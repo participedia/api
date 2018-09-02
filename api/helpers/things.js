@@ -530,7 +530,7 @@ function getEditXById(type) {
     } // end catch
     // update search index
     try {
-      await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+      db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
     } catch (error) {
       console.error("Problem refreshing materialized view: %s", error);
     }
