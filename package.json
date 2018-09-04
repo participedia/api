@@ -42,7 +42,7 @@
     "react-dropzone-s3-uploader": "^1.0.0-rc.3",
     "tape": "^4.6.3",
     "tape-watch": "^2.2.4",
-    "winston": "^2.3.1"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.3",
