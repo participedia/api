@@ -1,0 +1,443 @@
+language,en
+quick_submit_sectionlabel,Quick Submit
+overview_sectionlabel,Overview
+location_sectionlabel,Location
+media_sectionlabel,Media
+date_sectionlabel,Date & Duration
+purpose_sectionlabel,Purpose & Approach
+participants_sectionlabel,Participants
+process_sectionlabel,Process
+organizers_sectionlabel,Organizers
+resources_sectionlabel,Resources
+evidence_sectionlabel,Evidence of Impact
+title_label,Title of Case
+title_instructional,Give this public participation project or event a descriptive title in 10 words or less. For example, “Brazilian Dialogue on Diversity" or "New York City Public Issues Forum."
+title_info,null
+title_placeholder,Enter title in 10 words or less
+general_issues_label,General Issues
+general_issues_instructional,Rank order up to three of the most relevant issues addressed, with "1" indicating the most relevant issue. You will be asked to provide more detailed information in the Specific Topics field below.
+general_issues_info,null
+general_issues_placeholder,Select & rank up to 3 issues
+brief_description_label,Brief Description
+brief_description_instructional,Enter tweet-length (280 characters or less) description of this case.
+brief_description_info,null
+brief_description_placeholder,Enter tweet-length description
+body_label,Narrative
+body_instructional,The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our guidelines as you prepare your case entry.
+body_info,null
+body_placeholder,Problems and Purpose Background History and Context Organizing, Supporting, and Funding Entities Participant Recruitment and Selection Methods and Tools Used Deliberation, Decisions, and Public Interaction Influence, Outcomes, and Effects Analysis and Lessons Learned See Also References External Links Notes
+tags_label,Tags
+tags_instructional,Select the tags that best describe this case.
+tags_info,null
+tags_placeholder,Enter one or more tags
+location_label,Primary Location
+location_instructional,Type to select an address, city or country where the primary case activities occurred. List any additional locations in the case narrative under "Originating Entities and Funding". You may also want to create separate case components for the locations of other case activities.
+location_info,null
+location_placeholder,Type to search for a known location
+scope_label,Scope of Influence
+scope_instructional,Select geographical or jurisdictional scope
+scope_info,null
+scope_placeholder,Select geographical or jurisdictional scope
+scope_value_organization,Organization (e.g. a local business or cooperative using participatory methods to manage and govern itself)
+scope_value_neighbourhood,Neighbourhood
+scope_value_city,City/Town
+scope_value_metropolitan,Metropolitan Area
+scope_value_regional,Regional (e.g. State, Province, Autonomous Region)
+scope_value_national,National
+scope_value_multinational,Multinational
+scope_value_no_limit,No Geographical Limits (e.g. online environment where anyone from any place can take part)
+has_components_label,Add Components to this Case
+has_components_instructional,A case can have multiple components, but they must already be published cases on Participedia. Type to search for an existing case in Participedia to label it as a component of this case. Select one or more.
+has_components_info,If you cannot find the case you are looking for, first publish this entry to save your work. Next use quick submit to publish the component case entry. Then return to this case entry and add your new case entry as a component.
+has_components_placeholder,Search for existing case/component
+is_component_of_label,Make This Case a Component of Another Case
+is_component_of_instructional,A case can only be a component of one other case, and the other case must already be published on Participedia. Type to search for an existing case in Participedia to label this case as a component of it. Select one.
+is_component_of_info,If you cannot find the case you are looking for, first publish this entry to save your work. Next use quick submit to publish the ‘parent’ case entry. Then return to this case entry and label this case as a component of the new ‘parent’ case.
+is_component_of_placeholder,Search for existing case/parent
+file_upload_label,Files
+file_upload_instructional,Upload relevant documents here. Supported file types include: rtf, txt, doc, docx, xls, xlsx, pdf, ppt, pptx, pps, ppsx, odt, ods and odp.
+file_upload_info,null
+file_upload_placeholder,Add file
+file_link_label,Source Link
+file_link_instructional,If applicable, provide a link to where the original file was sourced.
+file_link_info,null
+file_link_placeholder,Link to Original
+file_attribution_label,Attribution
+file_attribution_instructional,Who is the original owner or creator of this file?
+file_attribution_info,null
+file_attribution_placeholder,Owner or creator
+file_title_label,Title or Description
+file_title_instructional,Provide the original title or description of this file in ten words or less.
+file_title_info,null,
+file_title_placeholder,Title or description
+link_label,Links
+link_instructional,If there is a main website for this case, enter it here. Add links to additional sources so that readers and editors can find more information about this case online.
+link_info,null
+link_placeholder,Add link
+link_attribution_label,Attribution
+link_attribution_instructional,Who is the original owner or creator of this linked content?
+link_attribution_info,null
+link_attribution_placeholder,Owner or creator
+link_title_label,Title or Description
+link_title_instructional,Provide the original title or description of this linked content in ten words or less.
+link_title_info,null
+link_title_placeholder,Title or description
+photo_upload_label,Photos
+photo_upload_instructional,Select a photo from your device
+photo_upload_info,null
+photo_upload_placeholder,Select a photo from your device
+photo_link_label,Source Link
+photo_link_instructional,If applicable, provide a link to where the original photo was sourced.
+photo_link_info,null
+photo_link_placeholder,Link to original
+photo_attribution_label,Attribution
+photo_attribution_instructional,Who is the original owner or creator of this photo?
+photo_attribution_info,null
+photo_attribution_placeholder,Owner or creator
+photo_title_label,Title or Description
+photo_title_instructional,Provide the original title or description of this photo in ten words or less.
+photo_title_info,null,
+photo_title_placeholder,Title or description
+video_link_label,Videos
+video_link_instructional,Add a video link from Vimeo or YouTube.
+video_link_info,null
+video_link_placeholder,Add a video link (Vimeo or YouTube)
+video_attribution_label,Attribution
+video_attribution_instructional,Who is the original owner or creator of this video?
+video_attribution_info,null
+video_attribution_placeholder,Owner or creator
+video_title_label,Title or Description
+video_title_instructional,Provide the original title or description of this video.
+video_title_info,null
+video_title_placeholder,Title or description
+audio_link_label,Audio
+audio_link_instructional,Add a link to audio
+audio_link_info,null
+audio_link_placeholder,Add link to audio
+audio_attribution_label,Attribution
+audio_attribution_instructional,Owner or creator
+audio_attribution_info,null
+audio_attribution_placeholder,Owner or creator
+audio_title_label,Title or Description
+audio_title_instructional,Provide the original title or description of the audio.
+audio_title_info,null
+audio_title_placeholder,Title or description
+start_date_label,Start Date
+start_date_instructional,Select a start date or date of single event.
+start_date_info,null
+start_date_placeholder,Select a start date or date of single event
+end_date_label,End Date
+end_date_instructional,Select an end date if applicable
+end_date_info,null
+end_date_placeholder,Select an end date if applicable
+ongoing_label,This case is ongoing
+ongoing_instructional,null
+ongoing_info,null
+ongoing_placeholder,null
+time_limited_label,Time Limited or Repeated?
+time_limited_instructional,Did this case take place over a single, defined period of days, weeks or months? Or was the entire process repeated over time? Select one.
+time_limited_info,null
+time_limited_placeholder,Was this time limited or repeated?
+time_limited_value_single,A single, defined period of time
+time_limited_value_repeated,Repeated over time
+purpose_label,Purpose/Goal
+purpose_instructional,Select and rank up to three purposes, with "1" indicating the most relevant.
+purpose_info,null
+purpose_placeholder,Select & rank up to 3 purposes/goals
+purpose_value_public,Make, influence, or challenge decisions of government and public bodies
+purpose_value_private,Make, influence, or challenge decisions of private organizations (e.g., civil society organizations; corporations)
+purpose_value_goods,Deliver goods and services (e.g., co-production of public safety by police and community)
+purpose_value_civic,Develop the civic capacities of individuals, communities, and/or civil society organizations (e.g., increase understanding of public issues; strengthen social capital)
+purpose_value_research,Research
+approach_label,Approach
+approach_instructional,Select and rank up to three approaches, with “1” indicating the most relevant.
+approach_info,null
+approach_placeholder,Select & rank up to 3 approaches
+approach_value_advocacy,Advocacy (e.g. lobbying; petitioning)
+approach_value_citizenship,Citizenship building (e.g. opportunities for people to learn about their rights & claim them)
+approach_value_civil,Civil society building (e.g. network building across governmental & social boundaries)
+approach_value_cogovernance,Co-governance (e.g. collaboration in decision making with government and public bodies)
+approach_value_public_partner,Co-production in form of partnership and/or contract with government and/or public bodies (e.g. collaboration with government to provide affordable housing)
+approach_value_private_partner,Co-production in form of partnership and/or contract with private organisations (e.g. collaboration with business or civil society)
+approach_value_consultation,Consultation (e.g. public hearings)
+approach_value_decision,Direct decision making (e.g. referenda)
+approach_value_independent,Independent action (without the participation of government or private bodies)
+approach_value_nongovernmental,Informal engagement by intermediaries with nongovernmental authorities (e.g. bargaining & negotiation on behalf of marginalized sectors)
+approach_value_political,Informal engagement by intermediaries with political authorities (e.g. bargaining & negotiation on behalf of marginalized sectors)
+approach_value_leadership,Leadership development (e.g. individual & group capacity for civic engagement)
+approach_value_auditing,Evaluation, oversight, & social auditing (e.g. measuring & reporting organizational performance)
+approach_value_protest,Protest (e.g. demonstrations; marches; pickets)
+approach_value_research,Research (e.g., public opinion surveys; focus groups; participatory action research)
+approach_value_mobilization,Social mobilization (e.g. community organizing; consciousness raising; political consumerism)
+public_spectrum_label,Spectrum of Public Participation
+public_spectrum_instructional,Which type of goal from the IAP2 Spectrum of Public Participation does this case best represent?
+public_spectrum_info,null
+public_spectrum_placeholder,Select one goal
+public_spectrum_value_inform,Inform (provide the public with balanced and objective information to assist in understanding the problem, alternatives, opportunities, and/or solutions)
+public_spectrum_value_consult,Consult (obtain feedback on analyses, alternatives, and/or decisions)
+public_spectrum_value_involve,Involve (work directly with the public throughout the process to ensure that public concerns are understood & considered)
+public_spectrum_value_collaborate,Collaborate (partner with the public in each aspect of the decision including the development of alternatives & the identification of the preferred solution)
+public_spectrum_value_empower,Empower (place final decision-making in the hands of the public)
+public_spectrum_value_na,Not applicable or not relevant
+number_of_participants_label,Total Number of Participants
+number_of_participants_instructional,Roughly how many people participated?
+number_of_participants_info,null
+number_of_participants_placeholder,How many people participated?
+open_limited_label,Open to All or Limited to Some?
+open_limited_instructional,Was this open to all or limited to a subset of the population?
+open_limited_info,null
+open_limited_placeholder,Was this open to all or limited to some?
+open_limited_value_all,Open to All
+open_limited_value_special,Open to All With Special Effort to Recruit Some Groups (e.g. community organizing to recruit low-income earners)
+open_limited_value_limited,Limited to Only Some Groups or Individuals
+open_limited_value_both,Both (i.e. some aspects are open to all and others are limited to some)
+recruitment_method_label,Recruitment Method for Limited Subset of Population
+recruitment_method_instructional,If relevant to this case, select the method used to recruit a limited subset of the population.
+recruitment_method_info,null
+recruitment_method_placeholder,Select recruitment method
+recruitment_method_value_captive,Captive Sample (e.g. required classroom participation)
+recruitment_method_value_random,Random Sample (i.e. each member of targeted population has equal chance of being either invited or overlooked)
+recruitment_method_value_stratified,Stratified Random Sample (i.e. participants are selected to reflect the diversity of the population)
+recruitment_method_value_appointment,Appointment (e.g. city selects members of a consultative council)
+recruitment_method_value_election,Election (e.g. consultative council chosen by election)
+recruitment_method_value_na,Not Applicable
+targeted_participants_label,Targeted Demographics
+targeted_participants_instructional,Select up to three of the most heavily recruited groups
+targeted_participants_info,null
+targeted_participants_placeholder,Identify up to 3 recruited groups
+targeted_participants_value_appointed,Appointed Public Servants (e.g. bureaucrats)
+targeted_participants_value_lgbt,Gay/Lesbian/Bisexual/Transgender (i.e. LGBT)
+targeted_participants_value_elderly,Elderly
+targeted_participants_value_elected,Elected Public Officials
+targeted_participants_value_experts,Experts (e.g. scientists)
+targeted_participants_value_indigenous,Indigenous People
+targeted_participants_value_immigrants,Immigrants
+targeted_participants_value_low_income,Low-Income Earners
+targeted_participants_value_men,Men
+targeted_participants_value_disabilities,People with Disabilities
+targeted_participants_value_ethnic,Racial/Ethnic Groups
+targeted_participants_value_religious,Religious Groups
+targeted_participants_value_stakeholders,Stakeholder Organizations (e.g. NGOs, business interests)
+targeted_participants_value_students,Students
+targeted_participants_value_women,Women
+targeted_participants_value_youth,Youth
+method_types_label,General Types of Methods
+method_types_instructional,Select and rank up to three types that best describe the methods used in this case, with "1" indicating the most relevant.
+method_types_info,There is huge variety in the range of participatory methods. To help narrow it down, select and rank up to three of the following types of methods used in this case. Specifying what types of methods were used makes it easier for Participedia users to find similar cases.
+method_types_placeholder,Select & rank up to 3 types
+method_types_value_,Collaborative approaches (i.e. two or more stakeholders work together to address a common problem)
+method_types_value_community,Community development, organizing, and mobilization (i.e. empowering communities to drive, implement, and effect change)
+method_types_value_deliberative,Deliberative and dialogic process (i.e. structured processes that involve deliberation and/or dialogue as a central aspect)
+method_types_value_democracy,Direct democracy (i.e. formal processes by which citizens exert direct authority over decisions)
+method_types_value_auditing,Evaluation, oversight, and social auditing (i.e.monitoring public bodies and services to hold officials and authorities to account)
+method_types_value_education,Experiential and immersive education (i.e. alternative approaches to teaching and learning)
+method_types_value_conversation,Informal conversation spaces (i.e. spaces where deliberation and discussion may take place in an informal or unstructured way)
+method_types_value_participation,Informal participation (i.e. extra-institutional attempts to secure access to resources, rights and political representation without using formal governmental channels)
+method_types_value_management,Internal management or organization (i.e. systems of internal communication, representation, or decision-making)
+method_types_value_civic,Long-term civic bodies (i.e. sustained efforts to provide the public with opportunities for input and decision-making, typically at the local level)
+method_types_value_participant_meetings,Participant-led meetings (i.e. participants shape the agenda and process)
+method_types_value_arts,Participatory arts (i.e. processes that engage audiences as participants in the artistic  production or endeavour)
+method_types_value_planning,Planning (i.e. comprehensive approaches to establish goals, policies, and procedures for a social or governmental unit)
+method_types_value_protest,Protest (i.e. direct confrontation with public and/or private institutions)
+method_types_value_budgeting,Public budgeting (i.e. designed to help decide how public funds should be spent)
+method_types_value_public_meetings,Public meetings (i.e. government-sponsored meetings open to the general public where public officials may also be present)
+method_types_value_research,Research or experimental method (i.e. forms of academic research, or participatory approaches tested as part of a research project)
+tool_types_label,General Types of Tools/Techniques
+tool_types_instructional,Select and rank up to three types that best describe the tools/techniques used in this case, with “1” indicating the most relevant.
+tool_types_info,There is huge variety in the range of participatory tools/techniques. To help narrow it down, select and rank up to three of the following types that best describe the specific tools/techniques used in this case. Specifying what types of tools/techniques were used is makes it easier for Participedia users to find similar cases.
+tool_types_placeholder,Select & rank up to 3 types
+tool_types_value_money,Manage and/or allocate money or resources (e.g. mobile budgeting applications)
+tool_types_value_feedback,Collect, analyze, and/or solicit feedback (e.g. questionnaire; keypad polling)
+tool_types_value_dialogue,Facilitate dialogue, discussion, and/or deliberation (e.g. active listening; managing conflict)
+tool_types_value_decisions,Facilitate decision-making (e.g. ranking; multi-voting)
+tool_types_value_legislation,Legislation, policy, or frameworks (e.g. arrangements that formally embed public participation)
+tool_types_value_recruit,Recruit or select participants (e.g. community outreach; random selection)
+tool_types_value_map,Plan, map and/or visualize options and proposals (e.g.GIS mapping)
+tool_types_value_policies,Propose and/or develop policies, ideas, and recommendations (e.g. brainstorming; nominal group technique)
+tool_types_value_educate,Inform, educate and/or raise awareness (e.g. discussion guide; Q&A with experts)
+specific_tools_label,Specific Methods, Tools & Techniques
+specific_tools_instructional,What specific methods, tools and techniques were used in this case? Type to select from entries already in the Participedia database.
+specific_tools_info,null
+specific_tools_placeholder,Type to search & generate possible database matches
+legality_label,Legality
+legality_instructional,Is the overall method used in this case considered legal by judicial authorities?
+legality_info,null
+legality_placeholder,Was this considered legal?
+legality_value_yes,Yes
+legality_value_no,No
+legality_value_idk,Don’t know
+facilitators_label,Facilitators
+facilitators_instructional,Did facilitators help guide part or all of this case?
+facilitators_info,null
+facilitators_placeholder,Was this considered legal?
+facilitators_value_yes,Yes
+facilitators_value_no,No
+facilitators_value_na,Not Applicable
+facilitator_training_label,Facilitator Training
+facilitator_training_instructional,What level of training did facilitators have?
+facilitator_training_info,null
+facilitator_training_placeholder,Select the type of facilitators
+facilitator_training_value_professional,Professional Facilitators
+facilitator_training_value_trained,Trained, Nonprofessional Facilitators
+facilitator_training_value_untrained,Untrained, Nonprofessional Facilitators
+facetoface_label,Face-to-Face, Online, or Both
+facetoface_instructional,Did participants interact face-to-face, online, or both?
+facetoface_info,null
+facetoface_placeholder,Was interaction face-to-face or online?
+facetoface_value_facetoface,Face-to-Face
+facetoface_value_online,Online
+facetoface_value_both,Both
+participants_interaction_label,Types of Interaction Among Participants
+participants_interaction_instructional,Select and rank up to three types of interactions in order of relevance, with with “1” indicating the most often used form of interaction.
+participants_interaction_info,null
+participants_interaction_placeholder,Select & rank up to 3 types of interaction
+participants_interaction_value_drama,Acting, Drama, or Roleplay
+participants_interaction_value_questions,Ask & Answer Questions
+participants_interaction_value_dialogue,Discussion, Dialogue, or Deliberation
+participants_interaction_value_opinions,Express Opinions/Preferences Only
+participants_interaction_value_testimony,Formal Testimony
+participants_interaction_value_social,Informal Social Activities
+participants_interaction_value_spectator,Listen/Watch as Spectator
+participants_interaction_value_bargaining,Negotiation & Bargaining
+participants_interaction_value_storytelling,Storytelling
+participants_interaction_value_teaching,Teaching/Instructing
+participants_interaction_value_none,No Interaction Among Participants
+learning_resources_label,Information & Learning Resources
+learning_resources_instructional,What types of background information were provided for participants?
+learning_resources_info,null
+learning_resources_placeholder,Identify information (if any) provided
+learning_resources_value_expert,Expert Presentations
+learning_resources_value_participant,Participant Presentations
+learning_resources_value_visits,Site Visits
+learning_resources_value_teach,Teach-ins
+learning_resources_value_video,Video Presentations (online or in-person)
+learning_resources_value_written,Written Briefing Materials (online or as handouts)
+learning_resources_value_none,No Information Was Provided to Participants
+learning_resources_value_na,Not Relevant to this Type of Initiative
+decision_methods_label,Decision Methods
+decision_methods_instructional,How did participants in this case make group decisions?
+decision_methods_info,null
+decision_methods_placeholder,How were group decisions made?
+decision_methods_value_opinion,Opinion Survey (i.e. taken before and/or after participants convened)
+decision_methods_value_ideas,Idea Generation (i.e. potential solutions were generated, but no priorities were decided)
+decision_methods_value_agreement,General Agreement/Consensus (i.e. broad acceptance of decisions; unanimous agreement desired but not necessary)
+decision_methods_value_voting,Voting (i.e. any type of formal vote; please provide more detail in next field)
+decision_methods_value_na,Not Applicable (e.g. votes are not typically taken at protest demonstrations)
+decision_methods_value_idk,Don’t Know
+if_voting_label,If Voting
+if_voting_instructional,What voting methods were used by participants?
+if_voting_info,null
+if_voting_placeholder,What voting methods were used?
+if_voting_value_preferential,Preferential Voting (i.e. ranked preferences)
+if_voting_value_plurality,Plurality (i.e. highest percentage wins, even if the proposal receives fewer than 50.1% votes)
+if_voting_value_majoritarian,Majoritarian Voting (i.e. 50% +1)
+if_voting_value_super,Super-Majoritarian (i.e. threshold more than 50% +1)
+if_voting_value_unanimous,Unanimous Decision (i.e. full agreement by all participants)
+if_voting_value_dk,Don’t Know
+insights_outcomes_label,Communication of Insights & Outcomes
+insights_outcomes_instructional,Select up to three ways that insights and outcomes from this case were communicated to the intended audiences.
+insights_outcomes_info,null
+insights_outcomes_placeholder,How were insights & outcomes communicated?
+insights_outcomes_value_artistic,Artistic Expression (e.g. political rap, street theater)
+insights_outcomes_value_media,Traditional Media (i.e. television, radio, newspapers)
+insights_outcomes_value_social,New Media (e.g. social media, blogging, texting)
+insights_outcomes_value_independent,Independent Media (i.e. free of corporate or government influence)
+insights_outcomes_value_report,Public Report
+insights_outcomes_value_minority,Minority Report (i.e. a dissenting opinion)
+insights_outcomes_value_petitions,Petitions
+insights_outcomes_value_protests,Protests/Public Demonstrations
+insights_outcomes_value_hearings,Public Hearings/Meetings
+insights_outcomes_value_wordofmouth,Word of Mouth
+insights_outcomes_value_na,Not Applicable
+primary_organizer_label,Primary Organizer/Manager
+primary_organizer_instructional,Who was primarily responsible for organizing / managing the initiative? Type to select name of any organization that already exists on Participedia. For new organizations, first publish this case to save your work then publish a new organization. To add your new organization, return to edit this case.
+primary_organizer_info,Provide information about additional organizers and sponsors of the initiative in the 'Originating Entities and Funding' section of the case narrative.
+primary_organizer_placeholder,Type to search & generate possible database matches
+organizer_type_label,Type of Organizer/Manager
+organizer_type_instructional,Select up to three types of organizers or managers.
+organizer_type_info,null
+organizer_type_placeholder,Select up to 3 types of organizers or managers
+organizer_type_value_academic,Academic Institution
+organizer_type_value_activist,Activist Network
+organizer_type_value_community,Community Based Organization
+organizer_type_value_faith,Faith-Based Organization
+organizer_type_value_business,For-Profit Business
+organizer_type_value_government_corp,Government-Owned Corporation
+organizer_type_value_individual,Individual
+organizer_type_value_international,International Organization
+organizer_type_value_local_government,Local Government (e.g. Village, Town, City)
+organizer_type_value_national_government,National Government
+organizer_type_value_ngo,Non-Governmental Organization (Non-profit)
+organizer_type_value_philanthropic,Philanthropic Organization (i.e. dedicated to making monetary grants or gifts)
+organizer_type_value_regional_government,Regional Government (e.g. State, Provincial, Territorial)
+organizer_type_value_social,Social Movement
+organizer_type_value_labour,Labor/Trade Union
+organizer_type_value_na,Not Applicable
+funder_label,Funder
+funder_instructional,Who funded this case of public participation? Provide names of the organizations, government agencies, or individuals who paid for this initiative.
+funder_info,Provide additional information about funders of the initiative in the 'Originating Entities and Funding' section of the case narrative.
+funder_placeholder,Who funded this case?
+funder_types_label,Types of Funder
+funder_types_instructional,null
+funder_types_info,null
+funder_types_placeholder,null
+funder_types_value_academic,Academic Institution
+funder_types_value_activist,Activist Network
+funder_types_value_community,Community Based Organization
+funder_types_value_faith,Faith-Based Organization
+funder_types_value_business,For-Profit Business
+funder_types_value_government_corp,Government-Owned Corporation
+funder_types_value_individual,Individual
+funder_types_value_international,International Organization
+funder_types_value_local_government,Local Government (e.g. Village, Town, City)
+funder_types_value_national_government,National Government
+funder_types_value_ngo,Non-Governmental Organization (Non-profit)
+funder_types_value_philanthropic,Philanthropic Organization (i.e. dedicated to making monetary grants or gifts)
+funder_types_value_regional_government,Regional Government (e.g. State, Provincial, Territorial)
+funder_types_value_social,Social Movement
+funder_types_value_labour,Labor/Trade Union
+funder_types_value_na,Not Applicable
+staff_label,Staff
+staff_instructional,Were any paid staff or consultants involved in this case?
+staff_info,null
+staff_placeholder,Were paid staff or consultants involved?
+volunteers_label,Volunteers
+volunteers_instructional,Did unpaid volunteers help implement this case?
+volunteers_info,null
+volunteers_placeholder,Were unpaid volunteers involved?
+impact_evidence_label,Evidence of Impact
+impact_evidence_instructional,Did this initiative contribute to social and/or political change?
+impact_evidence_info,null
+impact_evidence_placeholder,Did this work contribute to social or political change?
+change_types_label,Types of Change
+change_types_instructional,Select and rank up to five types of change to which this case contributed, in order of relevance, with "1" being the most relevant type of change.
+change_types_info,Provide additional detail in the "Influence, Outcomes, and Effects" section of the case narrative.
+change_types_placeholder,Select & rank up to 5 types of change to which this case contributed
+change_types_value_behaviour,Changes in people’s knowledge, attitudes, and behavior
+change_types_value_capacities,Changes in civic capacities (e.g. improved community problem solving)
+change_types_value_policy,Changes in public policy (e.g. new laws or regulations)
+change_types_value_operations,Changes in how institutions operate (e.g. improved decision making)
+change_types_value_transformation,Conflict transformation
+implementers_of_change_label,Implementers of Change
+implementers_of_change_instructional,Select up to three types of actors who played roles in implementing ideas that emerged from this initiative.
+implementers_of_change_info,null
+implementers_of_change_placeholder,Select & rank up to 3 types of implementers of change
+implementers_of_change_value_public,Lay Public (i.e. people with no professional stake in the issues)
+implementers_of_change_value_stakeholders,Stakeholder Organizations (e.g. community groups, NGOs, business interests)
+implementers_of_change_value_elected,Elected Public Officials
+implementers_of_change_value_appointed,Appointed Public Servants (e.g. bureaucrats)
+implementers_of_change_value_experts,Experts (e.g. scientists, engineers, criminologists, doctors, lawyers)
+implementers_of_change_value_corporations,Corporations
+implementers_of_change_value_idk,Don’t Know
+formal_evaluation_label,Formal Evaluation
+formal_evaluation_instructional,Was a formal evaluation of this initiative conducted?
+formal_evaluation_info,null
+formal_evaluation_placeholder,Was there a formal evaluation of this case?
+evaluation_reports_label,Evaluation Report Document
+evaluation_reports_instructional,Upload evaluation report from your device.
+evaluation_reports_info,null
+evaluation_reports_placeholder,Upload relevant documents
+evaluation_links_label,Evaluation Report Link
+evaluation_links_instructional,Provide a link to the evaluation report here.
+evaluation_links_info,null
+evaluation_links_placeholder,Add a link
