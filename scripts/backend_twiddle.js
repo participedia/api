@@ -166,17 +166,6 @@ function cleanupValueStaticTables() {
   });
 }
 
-// console.log("## fields\n");
-// all_labels.forEach(str => console.log("* %s", str.slice(0, -6)));
-// console.log("\n## sections\n");
-// all_sections.forEach(str => console.log("* %s", str.slice(0, -13)));
-// Object.keys(value_fields).forEach(field => {
-//   console.log("\n## %s\n", field);
-//   value_fields[field].forEach(value => {
-//     console.log("* %s", value);
-//   });
-// });
-
 function migration8() {
   createCaseStaticTable();
   createSectionsStaticTable();
@@ -192,5 +181,21 @@ function migration10() {
   importValueStaticTables();
 }
 
-//cleanupValueStaticTables();
-migration10();
+// cleanupValueStaticTables();
+// migration10();
+
+function migration8_v2() {
+  // define table
+  console.log("CREATE TABLE case_static_localized (");
+  pairs.forEach(pair =>
+    console.log("  %s TEXT DEFAULT 'Localized %s',", pair[0], pair[0])
+  );
+  console.log(");\n");
+  console.log("INSERT INTO case_static_localized VALUES (");
+  pairs.forEach(pair =>
+    console.log("  '%s',", pair[1].replace("'", "''").replace("null", ""))
+  );
+  console.log(");\n");
+}
+
+migration8_v2();
