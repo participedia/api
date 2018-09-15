@@ -199,13 +199,15 @@ const returnByType = req => {
   }
   switch (returnType) {
     case "htmlfrag":
-      return (res, type, thing) =>
-        res
-          .status(200)
-          .render(type + "_view", Object.assign(thing, { layout: false }));
+      return (res, type, thing, staticText) =>
+        res.status(200).render(type + "_view", {
+          article: thing,
+          static: staticText,
+          layout: false
+        });
     case "json":
-      return (res, type, thing) =>
-        res.status(200).json({ OK: true, data: thing });
+      return (res, type, thing, staticText) =>
+        res.status(200).json({ OK: true, article: thing, static: staticText });
     case "csv":
       // TODO: implement CSV
       return (res, type, thing) =>
@@ -217,19 +219,25 @@ const returnByType = req => {
     case "html": // fall through
     default:
       return (res, type, thing) =>
-        res.status(200).render(type + "_view", thing);
+        res
+          .status(200)
+          .render(type + "_view", { article: thing, static: staticText });
   }
 };
 
 const returnThingByRequest = async function(type, req, res) {
   try {
+    const lang = as.value(req.params.language || "en");
     const thing = await getThingByRequest(type, req);
+    const staticText = await db.one(
+      `select * from ${type}_static_localized where language = '${lang}';`
+    );
     Object.keys(thing).forEach(key => {
       if (thing[key] === "{}") {
         thing[key] = [];
       }
     });
-    returnByType(req)(res, type, thing);
+    returnByType(req)(res, type, thing, staticText);
   } catch (error) {
     log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
     res.status(500).json({
