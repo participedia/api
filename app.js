@@ -7,7 +7,20 @@ let app = require("express")();
 var exphbs = require("express-handlebars");
 const fs = require("fs");
 
-app.engine(".html", exphbs({ defaultLayout: "main", extname: ".html" }));
+var hbs = exphbs.create({
+  // Specify helpers which are only registered on this instance.
+  defaultLayout: "main",
+  extname: ".html",
+  helpers: {
+    label: (staticText, name) => staticText[name + "_label"],
+    info: (staticText, name) => staticText[name + "_info"],
+    instructional: (staticText, name) => staticText[name + "_instructional"],
+    placeholder: (staticText, name) => staticText[name + "_placeholder"],
+    value: (article, name) => article[name]
+  }
+});
+
+app.engine(".html", hbs.engine);
 app.set("view engine", ".html");
 
 if (

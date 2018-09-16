@@ -18,13 +18,13 @@
 <article>
   <!-- Body of the article, description, body, images, etc. -->
   <hgroup>
-    <h2>{{thing.type}}</h2>
-    <h1>{{thing.title}}</h1>
+    <h2>{{article.type}}</h2>
+    <h1>{{article.title}}</h1>
   </hgroup>
   {{> view-slideshow }}
   {{> view-authors }}
-  {{ thing.description }}
-  {{{ thing.body }}}
+  {{ article.description }}
+  {{{ article.body }}}
 </article>
 <nav>
   {{> view-socialmedia }}
