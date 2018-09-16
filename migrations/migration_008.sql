@@ -1,4 +1,4 @@
-CREATE TABLE case_static_localized (
+CREATE TABLE case_edit_localized (
   language TEXT DEFAULT 'Localized language',
   quick_submit_sectionlabel TEXT DEFAULT 'Localized quick_submit_sectionlabel',
   overview_sectionlabel TEXT DEFAULT 'Localized overview_sectionlabel',
@@ -444,7 +444,7 @@ CREATE TABLE case_static_localized (
   evaluation_links_placeholder TEXT DEFAULT 'Localized evaluation_links_placeholder'
 );
 
-INSERT INTO case_static_localized VALUES (
+INSERT INTO case_edit_localized VALUES (
   'en',
   'Quick Submit',
   'Overview',

@@ -229,8 +229,9 @@ const returnThingByRequest = async function(type, req, res) {
   try {
     const lang = as.value(req.params.language || "en");
     const thing = await getThingByRequest(type, req);
+    // FIXME: Specify 'edit' or 'view' for static text
     const staticText = await db.one(
-      `select * from ${type}_static_localized where language = '${lang}';`
+      `select * from ${type}_view_localized where language = '${lang}';`
     );
     Object.keys(thing).forEach(key => {
       if (thing[key] === "{}") {

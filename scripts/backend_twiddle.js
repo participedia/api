@@ -1,4 +1,5 @@
 const fs = require("fs");
+const parse = require("csv-parse/lib/sync");
 
 const splitOnce = (str, sep) => {
   let vals = str.split(sep);
@@ -8,61 +9,85 @@ const splitOnce = (str, sep) => {
   return ret;
 };
 
-const original = fs.readFileSync("migrations/backend_case_edit.csv", "utf8");
-const lines = original.split("\n");
-lines.pop(); // get rid of blank trailing line
-const lookup = {};
-pairs = lines.map(line => splitOnce(line, ","));
-for (let i = 0; i < pairs.length; i++) {
-  if (pairs[i].length !== 2) {
-    throw new Exception();
+function fileToPairs(filename) {
+  const original = fs.readFileSync(filename, "utf8");
+  const lines = original.split("\n");
+  lines.pop(); // get rid of blank trailing line
+  const lookup = {};
+  pairs = lines.map(line => splitOnce(line, ","));
+  for (let i = 0; i < pairs.length; i++) {
+    if (pairs[i].length !== 2) {
+      throw new Exception();
+    }
+    let [key, value] = pairs[i];
+    if (lookup[key]) {
+      throw new Exception(`Duplicate key: ${key}`);
+    }
+    lookup[key] = value;
   }
-  let [key, value] = pairs[i];
-  if (lookup[key]) {
-    throw new Exception(`Duplicate key: ${key}`);
-  }
-  lookup[key] = value;
+  return { pairs, lookup };
 }
 
-const all_keys = pairs.map(pair => pair[0]);
-
-const all_labels = all_keys.filter(key => key.endsWith("_label"));
-const all_instructional = all_keys.filter(key =>
-  key.endsWith("_instructional")
-);
-const all_info = all_keys.filter(key => key.endsWith("_info"));
-const all_placeholder = all_keys.filter(key => key.endsWith("_placeholder"));
-const all_sections = all_keys.filter(key => key.endsWith("_sectionlabel"));
-const all_values = all_keys.filter(key => key.includes("_value_"));
-const value_fields = {};
-all_values.forEach(key => {
-  let [field, name] = key.split("_value_");
-  if (!value_fields[field]) {
-    value_fields[field] = [];
+function group(list, number) {
+  let ret = [];
+  while (list.length) {
+    let row = [];
+    for (let i = 0; i < number; i++) {
+      row.push(list.shift());
+    }
+    ret.push(row);
   }
-  value_fields[field].push(name);
-});
-const other = all_keys.filter(
-  key =>
-    !all_labels.includes(key) &&
-    !all_instructional.includes(key) &&
-    !all_info.includes(key) &&
-    !all_placeholder.includes(key) &&
-    !all_sections.includes(key) &&
-    !all_values.includes(key)
-);
-// console.log("other: %o", other);
+  return ret;
+}
 
-// console.log("all keys: %s", all_keys.length);
-// console.log(
-//   "all subsets: %s",
-//   all_labels.length +
-//     all_instructional.length +
-//     all_info.length +
-//     all_placeholder.length +
-//     all_sections.length +
-//     all_values.length
-// );
+function readCSV(filename) {
+  const original = fs.readFileSync(filename, "utf8");
+  const tuples = parse(original, {
+    from: 2,
+    cast: true,
+    skip_lines_with_empty_values: true
+  });
+  // console.log("Headers: %s", tuples[0]);
+  let headers = tuples.shift();
+  tuples.forEach(t => {
+    if (t.length !== 4) {
+      console.log("Expected length 4, got length %s: %s", t.length, t);
+    }
+  });
+  return tuples;
+}
+
+function prepCaseEdit() {
+  let { pairs, lookup } = fileToPairs("migrations/backend_case_edit.csv");
+
+  const all_keys = pairs.map(pair => pair[0]);
+
+  const all_labels = all_keys.filter(key => key.endsWith("_label"));
+  const all_instructional = all_keys.filter(key =>
+    key.endsWith("_instructional")
+  );
+  const all_info = all_keys.filter(key => key.endsWith("_info"));
+  const all_placeholder = all_keys.filter(key => key.endsWith("_placeholder"));
+  const all_sections = all_keys.filter(key => key.endsWith("_sectionlabel"));
+  const all_values = all_keys.filter(key => key.includes("_value_"));
+  const value_fields = {};
+  all_values.forEach(key => {
+    let [field, name] = key.split("_value_");
+    if (!value_fields[field]) {
+      value_fields[field] = [];
+    }
+    value_fields[field].push(name);
+  });
+  const other = all_keys.filter(
+    key =>
+      !all_labels.includes(key) &&
+      !all_instructional.includes(key) &&
+      !all_info.includes(key) &&
+      !all_placeholder.includes(key) &&
+      !all_sections.includes(key) &&
+      !all_values.includes(key)
+  );
+}
 
 function createCaseStaticTable() {
   console.log("CREATE TABLE case_static_localized (");
@@ -198,4 +223,72 @@ function migration8_v2() {
   console.log(");\n");
 }
 
-migration8_v2();
+function value_mapper(dbname) {
+  let valuekeys = {};
+  let memo = {};
+  value_mapping = value => {
+    if (!memo[value]) {
+      let ret;
+      if (value === "Don't Know") {
+        ret = "dk";
+      } else if (value === "Not Applicable") {
+        ret = "na";
+      } else {
+        let v = value
+          .toLowerCase()
+          .replace(/[^A-Za-z0-9_ ]+/, "")
+          .replace(/ in /, " ")
+          .split(/\s+/g);
+        if (valuekeys[v[0]]) {
+          ret = v[0] + "_" + v[1];
+        } else {
+          ret = v[0];
+        }
+      }
+      ret = ret.replace(/\W+/g, ""); // remove non-word characters
+      valuekeys[ret] = true;
+      memo[value] = `${dbname}_value_${ret}`;
+    }
+    return memo[value];
+  };
+  return value_mapping;
+}
+
+function migration9_v2() {
+  const tuples = readCSV("csv/case_view_fields.csv");
+  console.log("CREATE TABLE case_view_localized (");
+  console.log("  language TEXT NOT NULL,");
+  tuples.forEach(t => {
+    [dbname, editTitle, viewTitle, values] = t;
+    console.log("  %s TEXT DEFAULT 'Localized %s',", dbname, dbname);
+    if (values && values.includes("\n")) {
+      let value_mapping = value_mapper(dbname.replace("_label", ""));
+      // remove double quotes around multi-line values, then split lines
+      values
+        .replace(/^"(.*)"$/, "$1")
+        .split("\n")
+        .forEach(value => {
+          let key = value_mapping(value.trim());
+          console.log("  %s TEXT DEFAULT 'Localized %s',", key, key);
+        });
+    }
+  });
+  console.log(");\n");
+  console.log("INSERT INTO case_view_localized VALUES (");
+  console.log("  'en',");
+  tuples.forEach(t => {
+    [dbname, editTitle, viewTitle, values] = t;
+    console.log("  '%s',", viewTitle.replace("NONE", "").replace("'", "''"));
+    if (values && values.includes("\n")) {
+      values
+        .replace(/^"(.*)"$/, "$1")
+        .split("\n")
+        .forEach(value => {
+          console.log("  '%s',", value.trim().replace("'", "''"));
+        });
+    }
+  });
+  console.log(");\n");
+}
+
+migration9_v2();
