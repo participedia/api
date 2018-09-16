@@ -1,0 +1,480 @@
+dbname,Editing Label,View Label,View Values
+first_submitted_label,First submitted by,First submitted by,
+most_recent_label,Most recent changes by,Most recent changes by,
+title_label,Title of Case,NONE,
+general_issues_label,General Issues,General Issues,"Agriculture, Forestry, Fishing & Mining Industries
+Arts, Culture, & Recreation
+Business
+Economics
+Education
+Energy
+Environment
+Governance & Political Institutions
+Health
+Housing
+Human Rights & Civil Rights
+Identity & Diversity
+Immigration & Migration
+International Affairs
+Labor & Work
+Law Enforcement, Criminal Justice & Corrections
+Media, Telecommunications & Information
+National Security
+Planning & Development
+Science & Technology
+Social Welfare
+Transportation"
+specific_topics_label,Specific Topics,Specific Topics,"Ability/Disability Issues
+Abortion
+Access to Radio & Television Frequencies
+Addiction Treatment & Management
+Administration of Campaigns and Elections
+Affordable Housing
+Age Discrimination
+Aging
+Aging Issues
+Agricultural Biotechnology
+Air Quality
+Air Travel
+Alternative & Renewable Energy
+Alternative Education
+Animal Welfare
+Arms Control
+Artificial Intelligence
+Bankruptcy
+Biomedical Research & Development
+Birth Control
+Budget - Local
+Budget - National
+Budget - Provincial, Regional, State
+Bureaucracy
+Carbon Capture & Sequestration
+Censorship
+Child Care
+Citizenship & Role of Citizens
+Civil Law
+Climate Change
+Coal
+Cohousing
+Community & Police Relations
+Community Resettlement
+Concentration of Media Ownership
+Constitutional Reform
+Consumer Protection
+Copyrights & Patents
+Corporate Subsidies
+Court Systems
+Criminal Law
+Cultural Assimilation or Integration
+Curriculum & Standards
+Cyber Security
+Cycling
+Diplomacy
+Disability Rights
+Disabled Assistance
+Disaster Preparedness
+Disease Prevention
+Drug Coverage & Cost
+Drug Testing & Regulation
+Early Childhood Education
+Eco-Housing
+Economic Development
+Economic Inequality
+Elderly Assistance
+Elderly Housing
+Electricity
+Elementary & Secondary Education
+Employee Benefits
+Energy Conservation
+Energy Efficiency & Storage
+Energy Siting & Transmission
+Environmental Conservation
+Ethnic/Racial Equality & Equity
+Ethnic/Racial Relations
+Fair Labor Standards
+Financing of Political Campaigns
+Fisheries & Fishing
+Food & Nutrition
+Food Assistance
+Food Inspection & Safety
+Foreign Aid
+Freedom of Information
+Freedom of Speech
+Funding
+Gender Equality & Equity
+Gender Identity
+Geopolitics
+Geotechnology
+Government Corruption
+Government Funding of Education
+Government Spending
+Government Subsidies
+Government Transparency
+Hazardous Waste
+Health Care Reform
+Health Insurance
+Higher Education
+Highway Safety
+Homelessness
+Housing Planning
+Human Rights
+Human Trafficking
+Identity Politics
+Immigration
+Indigenous Issues
+Indigenous Planning
+Industrial Policy
+Industrial Siting Guidelines
+Information & Communications Technology
+Infrastructure
+Intellectual Property Rights
+Intelligence Gathering
+Intergovernmental Relations
+International Law
+Internet Access
+Internet Governance
+Jails and Prisons
+Judicial Reform
+Labor Unions
+Land Use
+LGBTQ Issues
+Libraries
+Long-Term Care
+Low-income Assistance
+Maritime
+Mass/Public Transport
+Medical Liability
+Mental Health
+Migrant and Seasonal Labor
+Military and Defense
+Monetary Policy
+Museums
+Nanotechnology
+Natural Gas & Oil
+Natural Resource Management
+Nuclear Energy
+Open Data
+Pensions & Retirement
+Police
+Political Parties
+Political Rights
+Poverty
+Public Amenities
+Public Art
+Public Participation
+Public Safety
+Quality of Health Care
+Railroads
+Recycling
+Refugee Resettlement
+Refugee Rights
+Regional & Global Governance
+Regionalism
+Regulation
+Regulatory Policy
+Religious Rights
+Research & Development
+Resilience Planning & Design
+Right to Adequate Housing
+Right to Representation
+Roads and Highways
+Rural Housing
+School Governance
+Self-Driving Vehicles
+Sentencing Guidelines
+Social Determinants of Health
+Space Exploration
+Special Education
+Species Protection
+Sports
+Substance Abuse
+Sustainable Development
+Taxation
+Teacher Training & Accountability
+Telephone Access
+Terrorism
+Torture
+Tourism
+Trade and Tariffs
+Transparency
+Transportation Planning
+Treaties
+Unemployment
+Unofficial (Track II) Diplomacy
+Vocational Education & Training
+Wage Standards
+Walking/Pedestrian Mobility
+Waste Disposal
+Water Quality
+Weather Forecasting
+Wilderness Protection
+Worker Health & Safety
+Workforce Education
+Youth Employment
+Youth Issues"
+brief_description_label,Brief Description,NONE,
+body_label,Narrative,NONE,
+tags_label,Tags,Tags,"Accessibility
+Activism
+Agenda Formation
+Animal Protection & Welfare
+Architecture & Design
+Capacity Building
+Civic Infrastructure
+Civic Roles & Powers
+Civil Infrastructure
+Conflict Resolution
+Decision-Making
+Democratic Innovation
+Dialogue & Deliberation
+Digital/New Technologies
+Direct Action
+Educational Resources & Opportunities
+Empowerment
+Environment
+Formal/Structured Participation
+Gender
+Global Affairs
+Human Rights
+Inclusiveness
+Indigenous Issues
+Informal Participation
+Internal- & Self-Management
+Initiative Process
+Mapping & Analysis
+Online
+Oversight & Monitoring
+Participatory Budgeting
+Planning & Development
+Political Institutions
+Public Opinion
+Public Services
+Race
+Research/Study
+Rural
+Science Communication
+Social Media
+Social Welfare
+Stakeholder Engagement
+Storytelling
+Sustainability & Green Living
+Transparency & Accountability
+Urban
+Youth & Student Engagement"
+location_label,Primary Location,Primary Location,
+scope_label,Scope of Influence,Scope of Influence,"Organization
+Neighbourhood
+City/Town
+Metropolitan Area
+Regional
+National
+Multinational
+No Geographical Limits"
+has_components_label,Add Components to this Case,Components of this Case,
+is_component_of_label,Make This Case a Component of Another Case,Parent of this Case,
+file_uploads_label,Files,Files,
+file_links_label,Links,Links,
+photos_label,Photos,NONE,
+photo_link_label,Source Link,,
+photo_attribution_label,Attribution,,
+photo_title_label,Title or Description,,
+videos_label,Videos,NONE,
+video_attribution_label,Attribution,,
+video_title_label,Title,,
+audio_label,Audio,,
+audio_attribution_label,Attribution,,
+audio_title_label,Title or Description,,
+start_date_label,Start Date,Start Date,
+end_date_label,End Date,End Date,
+ongoing_label,[No Label],[No Label],"Ongoing
+Not Ongoing"
+time_limited_label,Time Limited or Repeated?,Time Limited or Repeated,"A single, defined period of time
+Repeated over time"
+purpose_label,Purpose/Goal,Purpose/Goal,"Make, influence, or challenge decisions of government and public bodies
+Make, influence, or challenge decisions of private organizations
+Deliver goods & services
+Develop the civic capacities of individuals, communities, and/or civil society organizations
+Academic research"
+approach_label,Approach,Approach,"Advocacy
+Citizenship building
+Civil society building
+Co-governance
+Co-production in form of partnership and/or contract with government and/or public bodies
+Co-production in form of partnership and/or contract with private organisations
+Consultation
+Direct decision making
+Independent action
+Informal engagement by intermediaries with nongovernmental authorities
+Informal engagement by intermediaries with political authorities
+Leadership development
+Evaluation, oversight, & social auditing
+Protest
+Research
+Social mobilization
+"
+public_spectrum_label,Spectrum of Public Participation,Spectrum of Public Participation,"Inform
+Consult
+Involve
+Collaborate
+Empower
+Not applicable or not relevant "
+number_of_participants_label,Total Number of Participants,Total Number of Participants,
+open_limited_label,Open to All of Limited to Some?,Open to All of Limited to Some,"Open to All
+Open to All With Special Effort to Recruit Some Groups
+Limited to Only Some Groups or Individuals
+Both"
+recruitment_method_label,Recruitment Method for Limited Subset of Population,Recruitment Method for Limited Subset of Population,"Captive Sample
+Random Sample
+Stratified Random Sample
+Appointment
+Election
+Not Applicables"
+targeted_participants_label,Targeted Demographics,Targeted Demographics,"Appointed Public Servants
+Gay/Lesbian/Bisexual/Transgender
+Elderly
+Elected Public Officials
+Experts
+Indigenous People
+Immigrants
+Low-Income Earners
+Men
+People with Disabilities
+Racial/Ethnic Groups
+Religious Groups
+Stakeholder Organizations
+Students
+Women
+Youth"
+method_types_label,General Types of Methods,General Types of Methods,"Collaborative approaches
+Community development, organizing, and mobilization
+Deliberative and dialogic process
+Direct democracy
+Evaluation, oversight, and social auditing
+Experiential and immersive education
+Informal conversation spaces
+Informal participation
+Internal management or organization
+Long-term civic bodies
+Participant-led meetings
+Participatory arts
+Planning
+Protest
+Public budgeting
+Public meetings
+Research or experimental method"
+tool_types_label,General Types of Tools/Techniques,General Types of Tools/Techniques,"Manage and/or allocate money or resources
+Collect, analyse and/or solicit feedback
+Facilitate dialogue, discussion, and/or deliberation
+Facilitate decision-making
+Legislation, policy, or frameworks
+Recruit or select participants
+Plan, map and/or visualise options and proposals
+Propose and/or develop policies, ideas, and recommendations
+Inform, educate and/or raise awareness"
+specific_tools_label,"Specific Methods, Tools & Techniques","Specific Methods, Tools & Techniques",
+legality_label,Legality,Legality,"Yes
+No
+Don’t Know"
+facilitators_label,Facilitators,Facilitators,"Yes
+No
+Not Applicable"
+facilitator_training_label,Facilitator Training,Facilitator Training,"Professional Facilitators
+Trained, Nonprofessional Facilitators
+Untrained, Nonprofessional Facilitators"
+facetoface_online_or_both_label,"Face-to-Face, Online, or Both","Face-to-Face, Online, or Both","Face-to-Face
+Online
+Both"
+participants_interaction_label,Types of Interaction Among Participants,Types of Interaction Among Participants,"Acting, Drama, or Roleplay
+Ask & Answer Questions
+Discussion, Dialogue, or Deliberation
+Express Opinions/Preferences Only
+Formal Testimony
+Informal Social Activities
+Listen/Watch as Spectator
+Negotiation & Bargaining
+Storytelling
+Teaching/Instructing
+No Interaction Among Participants"
+learning_resources_label,Information & Learning Resources,Information & Learning Resources,"Expert Presentations
+Participant Presentations
+Site Visits
+Teach-ins
+Video Presentations
+Written Briefing Materials
+No Information Was Provided to Participants
+Not Relevant to this Type of Initiative"
+decision_methods_label,Decision Methods,Decision Methods,"Opinion Survey
+Idea Generation
+General Agreement/Consensus
+Voting
+Not Applicable
+Don’t Know"
+if_voting_label,If Voting,If Voting,"Preferential Voting
+Plurality
+Majoritarian Voting
+Super-Majoritarian
+Unanimous Decision
+Don’t Know"
+insights_outcomes_label,Communication of Insights & Outcomes,Communication of Insights & Outcomes,"Artistic Expression
+Traditional Media
+New Media
+Independent Media
+Public Report
+Minority Report
+Petitions
+Protests/Public Demonstrations
+Public Hearings/Meetings
+Word of Mouth
+Not Applicable"
+primary_organizer_label,Primary Organizer/Manager,Primary Organizer/Manager,
+organizer_types_label,Type of Organizer/Manager,Type of Organizer/Manager,"Academic Institution
+Activist Network
+Community Based Organization
+Faith-Based Organization
+For-Profit Business
+Government-Owned Corporation
+Individual
+International Organization
+Local Government
+National Government
+Non-Governmental Organization
+Philanthropic Organization
+Regional Government
+Social Movement
+Labor/Trade Union
+Not Applicable"
+funder_label,Funder,Funder,
+funder_types_label,Type of Funder,Type of Funder,"Academic Institution
+Activist Network
+Community Based Organization
+Faith-Based Organization
+For-Profit Business
+Government-Owned Corporation
+Individual
+International Organization
+Local Government
+National Government
+Non-Governmental Organization
+Philanthropic Organization
+Regional Government
+Social Movement
+Labor/Trade Union
+Not Applicable"
+staff_label,Staff,Staff,
+volunteers_label,Volunteers,Volunteers,
+impact_evidence_label,Evidence of Impact,Evidence of Impact,
+change_types_label,Types of Change,Types of Change,"Changes in people’s knowledge, attitudes, and behavior
+Changes in civic capacities
+Changes in public policy
+Changes in how institutions operate
+Conflict transformation"
+implementers_of_change_label,Implementers of Change,Implementers of Change,"Lay Public
+Stakeholder Organizations
+Elected Public Officials
+Appointed Public Servants
+Experts
+Corporations
+Don’t Know"
+formal_evaluation_label,Formal Evaluation,Formal Evaluation,
+evaluation_reports_label,Evaluation Report Document,Evaluation Report Document,
+evaluation_links_label,Evaluation Report Link,Evaluation Report Link,
