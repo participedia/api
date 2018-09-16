@@ -218,7 +218,7 @@ const returnByType = req => {
         res.status(500, "XML not implemented yet").render();
     case "html": // fall through
     default:
-      return (res, type, thing) =>
+      return (res, type, thing, staticText) =>
         res
           .status(200)
           .render(type + "_view", { article: thing, static: staticText });
