@@ -1,6 +1,8 @@
+{{#if (value article name) }}
 <dl>
-  <dt>{{ static.[name + "_label"] }}</dt>
-  {{#each  article.[name] }}
-  <dt>{{ this }}</dt>
+  <dt>{{label static name}}</dt>
+  {{#each  (value article name) }}
+  <dd>{{ this }}</dd>
   {{/each}}
 </dl>
+{{/if}}
