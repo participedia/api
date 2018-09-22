@@ -99,7 +99,7 @@ apicache.options({
 });
 // TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
 
-app.use("/search", cache("5 minutes"), search);
+app.use("/", cache("5 minutes"), search);
 
 app.use("/case", case_);
 app.use("/organization", organization);

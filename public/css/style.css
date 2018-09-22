@@ -91,7 +91,6 @@ main,
 footer,
 article {
   position: relative;
-  max-width: 40rem;
   margin: 0 auto;
 }
 
@@ -101,19 +100,22 @@ section {
 }
 
 aside {
-  flex-basis: 20em;
+  flex: 0 0 25%;
+  max-width: 25%;
   background-color: cornsilk;
   order: 1;
 }
 
 nav {
-  flex-basis: 20em;
+  flex: 0 0 25%;
+  max-width: 25%;
   background-color: palegreen;
   order: 3;
 }
 
 article {
   background-color: lightcyan;
+  flex: 0 0 50%;
   order: 2;
 }
 
@@ -134,30 +136,6 @@ body > footer {
   padding-bottom: 1.5em;
   text-align: center;
   color: #aaa;
-}
-
-nav {
-  margin: 1em 0;
-}
-
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-nav li {
-  display: inline-block;
-  margin-right: 1em;
-  margin-bottom: 0.25em;
-}
-
-nav a:visited {
-  color: #0064c1;
-}
-
-nav a:hover {
-  color: #3000c1;
 }
 
 ul,
