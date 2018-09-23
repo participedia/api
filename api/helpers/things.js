@@ -284,34 +284,6 @@ function compareItems(a, b) {
   }
 }
 
-function normalizeLocation(oldThing, newThing) {
-  const oldKeys = Object.keys(oldThing);
-  const newKeys = Object.keys(newThing);
-  if (oldKeys.includes("location")) {
-    delete oldThing.location;
-  }
-  if (newKeys.includes("primary_location")) {
-    newThing.location = newThing.primary_location;
-    newThing.primary_location = null;
-    delete newThing.primary_location;
-  }
-  if (newKeys.includes("location")) {
-    if (typeof newThing.location === "object") {
-      let location = newThing.location;
-      newThing.location_name = location.name;
-      newThing.address1 = location.address1;
-      newThing.address2 = location.address2;
-      newThing.city = location.city;
-      newThing.postal_code = location.postal_code;
-      newThing.province = location.province;
-      newThing.country = location.country;
-      newThing.latitude = location.latitude;
-      newThing.longitude = location.longitude;
-    }
-    delete newThing.location;
-  }
-}
-
 function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
@@ -344,8 +316,6 @@ function getEditXById(type) {
       let retThing = null;
 
       /* DO ALL THE DIFFS */
-      normalizeLocation(oldThing, newThing);
-      // compareItems(oldThing, newThing);
       // FIXME: Does this need to be async?
       Object.keys(oldThing).forEach(async key => {
         // console.error("checking key %s", key);
@@ -456,9 +426,9 @@ function getEditXById(type) {
                 });
               }
             } else {
-              console.warn(
-                "Do NOT try to add an element as a component of itself or I WILL smack you."
-              );
+              // console.warn(
+              //   "Do NOT try to add an element as a component of itself or I WILL smack you."
+              // );
             }
           } else if (key === "has_components") {
             /* Allow has_components to update those other cases */
