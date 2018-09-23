@@ -16,6 +16,11 @@ const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
 
 const RESPONSE_LIMIT = 20;
 
+function randomTexture() {
+  let index = Math.floor(Math.random() * 6) + 1;
+  return `/images/texture_${index}.svg`;
+}
+
 /**
  *  Deprecated, use /list/* methods instead
  *
@@ -154,7 +159,17 @@ router.get("/", async function(req, res) {
     );
     const searchhits = results.filter(result => result.searchmatched).length;
     const pages = Math.max(limit ? Math.ceil(total / limit) : 1, 1); // Don't divide by zero limit, don't return page 1 of 1
-    results.forEach(obj => delete obj.total);
+    results.forEach(obj => {
+      // massage results for display
+      if (obj.images.length) {
+        obj.images = obj.images.map(
+          img => process.env.AWS_UPLOADS_URL + encodeURIComponent(img)
+        );
+      } else {
+        obj.images = [randomTexture()];
+      }
+      delete obj.total;
+    });
     let OK = true;
     let returnType = req.query.returns;
     if (req.accepts("json", "html") === "json") {
@@ -169,7 +184,7 @@ router.get("/", async function(req, res) {
           results,
           user_query,
           parsed_query,
-          staticText
+          static: staticText
         });
       case "htmlfrag":
         return res.status(200).render("home-list", {
@@ -177,7 +192,7 @@ router.get("/", async function(req, res) {
           pages,
           searchhits,
           results,
-          staticText
+          static: staticText
         });
       case "csv":
         return res.status(500, "CSV not implemented yet").render();
@@ -191,7 +206,7 @@ router.get("/", async function(req, res) {
           pages,
           searchhits,
           results,
-          staticText
+          static: staticText
         });
     }
   } catch (error) {

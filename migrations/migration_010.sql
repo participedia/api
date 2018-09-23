@@ -23,7 +23,12 @@ CREATE TABLE layout_localized (
   page_label TEXT DEFAULT 'Localized page_label',
   page_count_label TEXT DEFAULT 'Localized page_count_label',
   experiments_label TEXT DEFAULT 'Localized experiments_label',
-  tagline TEXT DEFAULT 'Localized tagline'
+  tagline TEXT DEFAULT 'Localized tagline',
+  grid_layout TEXT DEFAULT 'Localized grid_layout',
+  list_layout TEXT DEFAULT 'Localized list_layout',
+  download_label TEXT DEFAULT 'Localized download_label',
+  updated_date_label TEXT DEFAULT 'Localized updated_date_label',
+  submitted_date_label TEXT DEFAULT 'Localized submitted_date_label'
 );
 
 INSERT INTO layout_localized VALUES (
@@ -51,5 +56,10 @@ INSERT INTO layout_localized VALUES (
   'Page',
   'of',
   'Experiments',
-  'A global community sharing knowledge and stories about public participation'
+  'A global community sharing knowledge and stories about public participation',
+  'grid',
+  'list',
+  'Download',
+  'Submitted',
+  'Last Updated'
 );
