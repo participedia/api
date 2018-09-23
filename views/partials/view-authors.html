@@ -1,0 +1,16 @@
+<div class="authors">
+  {{#with article.creator }}
+  <p>
+    <strong>{{../static.first_submitted_label}}</strong>
+    <a href="/users/{{id}}">{{name}}</a><br />
+    <time datetime="{{timestamp}}">{{timestamp}}</time>
+  </p>
+  {{/with}}
+  {{#with article.last_updated_by}}
+  <p>
+    <strong>{{../static.most_recent_label}}</strong>
+    <a href="/users/{{id}}">{{name}}</a><br />
+    <time datetime="{{timestamp}}">{{timestamp}}</time>
+  </p>
+  {{/with}}
+</div>

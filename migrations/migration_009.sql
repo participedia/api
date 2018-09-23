@@ -1,6 +1,7 @@
 CREATE TABLE case_view_localized (
   language TEXT NOT NULL,
   data_sectionlabel TEXT DEFAULT 'Localized data_sectionlabel',
+  first_submitted_label TEXT DEFAULT 'Localized first_submitted_by',
   most_recent_label TEXT DEFAULT 'Localized most_recent_label',
   title_label TEXT DEFAULT 'Localized title_label',
   general_issues_label TEXT DEFAULT 'Localized general_issues_label',
@@ -511,6 +512,7 @@ CREATE TABLE case_view_localized (
 INSERT INTO case_view_localized VALUES (
   'en',
   'Data',
+  'First submitted by',
   'Most recent changes by',
   '',
   'General Issues',
