@@ -1,0 +1,15 @@
+<a href="/{{type}}/{{id}}">
+  <article class="card">
+    <img src="{{images[0]}}" alt="article main image" />
+    <button type="button" class="bookmark">
+      {{#if bookmarked }}
+        <img src="/images/bookmark-ribbon" alt="bookmarked" />
+      {{else}}
+        <img src="/images/bookmark-outline" alt="not bookmarked" />
+     {{/if}}
+    </button>
+    <h2>{{type}}</h2>
+    <h1>{{this.title}}</h1>
+    <p>{{static.updated_date_label}} <time datetime="{{updated_date}}">{{updated_date}}</time></p>
+  </article>
+</a>
