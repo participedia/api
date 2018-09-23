@@ -173,7 +173,7 @@ const getThingByType_id_lang_userId = async function(
       `get_organizations(cases, '${lang}') AS primary_organizers,`;
   }
 
-  const thing = await db.one(THING_BY_ID, {
+  const thingRow = await db.one(THING_BY_ID, {
     table,
     type,
     thingid,
@@ -181,7 +181,21 @@ const getThingByType_id_lang_userId = async function(
     userId,
     case_only
   });
-  return thing.results;
+  const thing = thingRow.results;
+  // massage results for display
+  if (thing.images.length) {
+    thing.images = thing.images.map(
+      img => process.env.AWS_UPLOADS_URL + encodeURIComponent(img)
+    );
+  }
+  if (thing.longitude.startsWith("0° 0' 0\"")) {
+    thing.longitude = "";
+  }
+  if (thing.latitude.startsWith("0° 0' 0\"")) {
+    thing.latitude = "";
+  }
+
+  return thing;
 };
 
 const getThingByRequest = async function(type, req) {
