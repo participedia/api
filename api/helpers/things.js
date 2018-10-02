@@ -162,30 +162,33 @@ const getThingByType_id_lang_userId = async function(
   userId
 ) {
   let table = type + "s";
-  let case_only = "";
+  let thingRow;
   if (type === "case") {
-    case_only =
-      `get_object_title(cases.is_component_of, '${
-        lang
-      }') AS is_component_of,\n` +
-      `get_components(${thingid}, '${lang}') AS has_components,\n` +
-      `get_methods(cases, '${lang}') AS process_methods,\n` +
-      `get_organizations(cases, '${lang}') AS primary_organizers,`;
+    thingRow = await db.one(
+      "select row_to_json(get_case_by_id(${thingid}, ${lang}, ${userId})) as results;",
+      { thingid, lang, userId }
+    );
+  } else {
+    thingRow = await db.one(THING_BY_ID, {
+      table,
+      type,
+      thingid,
+      lang,
+      userId
+    });
   }
-
-  const thingRow = await db.one(THING_BY_ID, {
-    table,
-    type,
-    thingid,
-    lang,
-    userId,
-    case_only
-  });
   const thing = thingRow.results;
   // massage results for display
-  if (thing.images.length) {
-    thing.images = thing.images.map(
-      img => process.env.AWS_UPLOADS_URL + encodeURIComponent(img)
+  if (thing.photos && thing.photos.length) {
+    thing.photos.forEach(
+      img =>
+        (img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url))
+    );
+  }
+  if (thing.files && thing.files.length) {
+    thing.files.forEach(
+      file =>
+        (file.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(file.url))
     );
   }
   if (thing.longitude.startsWith("0° 0' 0\"")) {
