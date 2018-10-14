@@ -1,6 +1,4 @@
 
-ALTER TABLE cases ADD COLUMN primary_organizer integer;
-
 --
 -- Name: get_components(integer, text): Type: FUNCTION, Schema: public: Owner: -
 --
@@ -103,13 +101,13 @@ CREATE TYPE full_case AS (
 CREATE OR REPLACE FUNCTION get_case_localized_value(field text, key text, lookup json) RETURNS localized_value
   LANGUAGE sql STABLE
   AS $_$
-SELECT (key, concat(field, '_value_', key), lookup->concat(field, '_value_', key))::localized_value as value
+SELECT (key, concat(field, '_value_', key), trim('"' from (lookup->concat(field, '_value_', key))::text))::localized_value as value
 $_$;
 
 CREATE OR REPLACE FUNCTION get_case_localized_list(field text, keys text[], lookup json) RETURNS localized_value[]
   LANGUAGE sql STABLE
   AS $_$
-  SELECT array_agg((key, concat(field, '_value_', key), lookup->concat(field, '_value_', key))::localized_value) as values from (
+  SELECT array_agg((key, concat(field, '_value_', key), trim('"' from (lookup->concat(field, '_value_', key))::text))::localized_value) as values from (
     SELECT field, unnest(keys) as key
   ) as a group by field
 $_$;

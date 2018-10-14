@@ -2,7 +2,11 @@
 <dl>
   <dt>{{label static name}}</dt>
   {{#each  (value article name) }}
-  <dd>{{ this }}</dd>
+    {{#if value }}
+      <dd>{{ value }}</dd>
+    {{else}}
+      <dd>"Error: no value for key {{ key }}</dd>
+    {{/if}}
   {{/each}}
 </dl>
 {{/if}}
