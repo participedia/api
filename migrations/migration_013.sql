@@ -1,0 +1,15 @@
+update cases set general_issues = array_remove(general_issues, 'other');
+update cases set general_issues = array_replace(general_issues, 'agriculture_forestry_fishing_mining_industries', 'agriculture');
+update cases set general_issues = array_replace(general_issues, 'arts_culture_recreation', 'arts');
+update cases set general_issues = array_replace(general_issues, 'governance_political_institutions_eg_constitutions_legal_systems_electoral_systems', 'governance');
+update cases set general_issues = array_replace(general_issues, 'human_rights_civil_rights', 'human');
+update cases set general_issues = array_replace(general_issues, 'identity_diversity', 'identity');
+update cases set general_issues = array_replace(general_issues, 'immigration_migration', 'immigration');
+update cases set general_issues = array_replace(general_issues, 'international_affairs', 'international');
+update cases set general_issues = array_replace(general_issues, 'labor_work', 'labor');
+update cases set general_issues = array_replace(general_issues, 'law_enforcement_criminal_justice_corrections', 'law');
+update cases set general_issues = array_replace(general_issues, 'media_telecommunications_information', 'media');
+update cases set general_issues = array_replace(general_issues, 'national_security', 'national');
+update cases set general_issues = array_replace(general_issues, 'planning_development', 'planning');
+update cases set general_issues = array_replace(general_issues, 'science_technology', 'science');
+update cases set general_issues = array_replace(general_issues, 'social_welfare', 'social');
