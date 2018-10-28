@@ -246,3 +246,55 @@ CREATE OR REPLACE FUNCTION last_author(thingid integer) RETURNS author
     authors.timestamp DESC
   LIMIT 1;
 $_$;
+
+
+---
+--- Name: list_cases();
+---
+
+CREATE OR REPLACE FUNCTION list_cases(OUT id INTEGER, OUT title TEXT) RETURNS SETOF record
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    (a.b).thingid AS id,
+    (a.b).title
+  FROM (
+    SELECT get_localized_texts(id, 'en') b
+    FROM cases
+  ) AS a
+  ORDER BY id;
+$_$;
+
+---
+--- Name: list_cases();
+---
+
+CREATE OR REPLACE FUNCTION list_cases(OUT id INTEGER, OUT title TEXT) RETURNS SETOF record
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    (a.b).thingid AS id,
+    (a.b).title
+  FROM (
+    SELECT get_localized_texts(id, 'en') b
+    FROM methods
+  ) AS a
+  ORDER BY id;
+$_$;
+
+---
+--- Name: list_cases();
+---
+
+CREATE OR REPLACE FUNCTION list_cases(OUT id INTEGER, OUT title TEXT) RETURNS SETOF record
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    (a.b).thingid AS id,
+    (a.b).title
+  FROM (
+    SELECT get_localized_texts(id, 'en') b
+    FROM organizations
+  ) AS a
+  ORDER BY id;
+$_$;

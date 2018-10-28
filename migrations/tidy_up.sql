@@ -39,7 +39,7 @@ ALTER TABLE ONLY authors
 ALTER TABLE ONLY bookmarks
     ADD CONSTRAINT bookmarks_userid_fkey FOREIGN KEY (userid) REFERENCES users(id);
 
-REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;
+REFRESH MATERIALIZED VIEW search_index_en;
 
 
 --
