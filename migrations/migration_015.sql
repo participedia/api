@@ -1,12 +1,22 @@
-CREATE OR REPLACE FUNCTION get_localized_tags(language text, keys text[]) RETURNS localized_value[]
+CREATE OR REPLACE FUNCTION local_tag(tag text, lookup json) RETURNS text
   LANGUAGE sql STABLE
   AS $_$
-  WITH localized AS (
+  SELECT trim('"' from (lookup->>tag)::text);
+$_$;
+
+
+CREATE OR REPLACE FUNCTION get_localized_tags(language text, tags text[]) RETURNS localized_value[]
+  LANGUAGE sql STABLE
+  AS $_$
+WITH localized AS (
     SELECT to_json(tags_localized.*) as lookup FROM tags_localized WHERE language = language
   )
-  SELECT array_agg((key, key, trim('"' from (lookup->key) )::localized_value) as values from (
-    SELECT unnest(keys) as key
-  ) as a
+  SELECT array_agg((tag, tag, local_tag(tag, lookup))::localized_value) as values from (
+    SELECT
+       unnest(tags) as tag
+  ) as a,
+  localized
+  group by language
 $_$;
 
 
@@ -24,7 +34,7 @@ SELECT
   get_case_localized_list('specific_topics', specific_topics, lookup) as specific_topics,
   description,
   body,
-  get_localized_tags('tags', tags, lookup) as tags,
+  get_localized_tags($2, tags) as tags,
   location_name,
   address1,
   address2,

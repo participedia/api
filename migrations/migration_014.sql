@@ -50,7 +50,7 @@ CREATE TABLE tags_localized (
 );
 
 INSERT INTO tags_localized VALUES(
-  'en'
+  'en',
   'Accessibility',
   'Activism',
   'Agenda Formation',
@@ -103,7 +103,7 @@ INSERT INTO tags_localized VALUES(
 update things set tags = array_remove(tags, '1st amendment');
 update things set tags = array_remove(tags, 'airesis');
 update things set tags = array_remove(tags, 'alpine environment');
-update things set tags = array_remove(tags, $_$'Americans Elect' 'Colton Schweitzer' 'Tony Elia'$_$);
+update things set tags = array_remove(tags, '$_$'Americans Elect' 'Colton Schweitzer' 'Tony Elia'$_$');
 update things set tags = array_remove(tags, 'applied innovation');
 update things set tags = array_remove(tags, 'art');
 update things set tags = array_remove(tags, 'assembly');
@@ -124,7 +124,6 @@ update things set tags = array_remove(tags, 'canadian');
 update things set tags = array_remove(tags, 'change');
 update things set tags = array_remove(tags, 'changeagent');
 update things set tags = array_remove(tags, 'changeagents');
-update things set tags = array_remove(tags, 'children');
 update things set tags = array_remove(tags, 'CIR');
 update things set tags = array_remove(tags, 'Citizen Deliberation');
 update things set tags = array_remove(tags, 'citizen engagement');
@@ -472,3 +471,4 @@ update things set tags = array_replace(tags, 'youth engagement', 'youth');
 update things set tags = array_replace(tags, 'Youth Participation', 'youth');
 update things set tags = array_replace(tags, 'Youth & Student Engagement', 'youth');
 update things set tags = array_replace(tags, 'Youth & Student Engagment', 'youth');
+update things set tags = array_replace(tags, 'children', 'youth');
