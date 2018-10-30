@@ -1,12 +1,3 @@
--- Take a localization table and return a table of key/value pairs
--- Probably better as a view or materialized view?
-CREATE OR REPLACE FUNCTION rotate_table(input table, language text) RETURNS table
-  LANGUAGE sql STABLE
-  AS $_$
-WITH localized as
-  (SELECT to_json(input.*) as lookup FROM input WHERE language = language)
-select key,value from (select (json_each_text(lookup)).* from localized) as a;
-$_$;
 
 update cases set scope_of_influence = 'citytown' where scope_of_influence = 'city/town';
 update cases set scope_of_influence = 'regional' where scope_of_influence = 'regional_eg_state_province_autonomous_region';
