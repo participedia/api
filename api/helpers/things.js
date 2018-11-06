@@ -20,140 +20,6 @@ const shortKeys = titleKeys.concat([
   "updated_date"
 ]);
 const mediumKeys = shortKeys.concat(["body", "bookmarked", "location"]);
-const thingKeys = mediumKeys.concat([
-  "description",
-  "original_language",
-  "published",
-  "files",
-  "videos",
-  "featured",
-  "tags",
-  "url"
-]);
-const caseKeys = [
-  "id",
-  "type",
-  "hidden",
-  "post_date",
-  "published",
-  "updated_date",
-  "featured",
-  "original_language",
-  "content_country",
-  "title",
-  "description",
-  "body",
-  "links",
-  "tags",
-  "location_name",
-  "address1",
-  "address2",
-  "city",
-  "province",
-  "postal_code",
-  "country",
-  "latitude",
-  "longitude",
-  "relationships",
-  "issues",
-  "special_topics",
-  "is_component_of",
-  "scope_of_influence",
-  "images",
-  "videos",
-  "files",
-  "start_date",
-  "end_date",
-  "ongoing",
-  "time_limited",
-  "purpose",
-  "approaches",
-  "public_spectrum",
-  "number_of_participants",
-  "open_limited",
-  "recruitment_method",
-  "targeted_participants",
-  "process_methods",
-  "legality",
-  "facilitators",
-  "facilitator_training",
-  "facetoface_online_or_both",
-  "participants_interactions",
-  "learning_resources",
-  "decision_methods",
-  "if_voting",
-  "insights_outcomes",
-  "primary_organizers",
-  "organizer_types",
-  "funder",
-  "funder_types",
-  "staff",
-  "volunteers",
-  "impact_evidence",
-  "change_types",
-  "implementers_of_change",
-  "formal_evaluations",
-  "evaluation_reports",
-  "evaluation_links"
-];
-const methodKeys = [
-  "id",
-  "type",
-  "hidden",
-  "post_date",
-  "published",
-  "updated_date",
-  "featured",
-  "original_language",
-  "content_country",
-  "title",
-  "description",
-  "body",
-  "links",
-  "tags",
-  "completeness",
-  "facilitated",
-  "geographical_scope",
-  "participants_selections",
-  "recruitment_method",
-  "communication_modes",
-  "communication_outcomes",
-  "decision_methods",
-  "if_voting",
-  "public_interaction_methods",
-  "issue_polarization",
-  "issue_technical_complexity",
-  "issue_interdependency",
-  "typical_purposes",
-  "communication_outcomes"
-];
-const organizationKeys = [
-  "id",
-  "type",
-  "hidden",
-  "post_date",
-  "published",
-  "updated_date",
-  "featured",
-  "original_language",
-  "content_country",
-  "title",
-  "description",
-  "body",
-  "links",
-  "tags",
-  "location_name",
-  "address1",
-  "address2",
-  "city",
-  "province",
-  "postal_code",
-  "country",
-  "latitude",
-  "longitude",
-  "sector",
-  "methods"
-];
 
 const getThingByType_id_lang_userId = async function(
   type,
@@ -210,6 +76,12 @@ const getThingByRequest = async function(type, req) {
 
 const returnByType = req => {
   // handle json requests from old client or tests
+  let view = req.params.view || "view";
+  // ONly allow supported views
+  console.log("View: %s", view);
+  if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
+    return res => res.status(404, "View type not found").render();
+  }
   let returnType = req.query.returns;
   if (req.accepts("json", "html") === "json") {
     returnType = "json";
@@ -217,7 +89,7 @@ const returnByType = req => {
   switch (returnType) {
     case "htmlfrag":
       return (res, type, thing, staticText) =>
-        res.status(200).render(type + "_view", {
+        res.status(200).render(type + "-" + view, {
           article: thing,
           static: staticText,
           layout: false
@@ -238,7 +110,7 @@ const returnByType = req => {
       return (res, type, thing, staticText) =>
         res
           .status(200)
-          .render(type + "_view", { article: thing, static: staticText });
+          .render(type + "-" + view, { article: thing, static: staticText });
   }
 };
 
@@ -285,6 +157,78 @@ function compareItems(a, b) {
   if (keysNotInB.size) {
     console.error("Keys in original not found in update: %o", keysNotInB);
   }
+}
+
+function editCaseById(req, res) {
+  // id, integer, immutable
+  // type, 'case', immutable
+  // title, plain text, new entry in localized_textx
+  // general issues => convert to list of ids
+  // specific topics => convert to list of ids
+  // description plain text, new entry in localized texts
+  // body, html needing sanitization, new entry in localized texts
+  // tags, convert to list of keys
+  // location_name
+  // address1,
+  // address2,
+  // city,
+  // province,
+  // postal_code,
+  // country,
+  // latitude => null if 0'0"
+  // longitude => null if 0'0"
+  // scope, conert to key
+  // has_components, immutable for now, discard
+  // is_component_of, convert to id
+  // files => full_files
+  // links => full_links,
+  // photos,
+  // viceos => full_videos,
+  // audio,
+  // start_date,
+  // end_date,
+  // ongoing,
+  // tieme_limited, convert to list of keys
+  // purposes, convert to list of keys
+  // approaches, convert to list of keys
+  // public_spectrum, convert to key
+  // number_of_participants,
+  // open_limited, convert to list of tags
+  // recruitment_method, convert to tag
+  // targeted_participants, convert to list of tags
+  // method_types, convert to list of tags
+  // tools_techniques, types, convert to list of tags
+  // specific_methods_tools_techniques, convert to list of ids
+  // legality, convert to tag
+  // facilitators, convert to tag
+  // facilitator_training, convert to tag
+  // facetoface_online_or_both, convert to tag
+  // participants_interactions, convert to list of tags
+  // learning_resources, convert to list of tags
+  // decision_methods, convert to list of tags
+  // if_voting, convert to list of tags
+  // insights_outcomes, convert to list of tags
+  // primary_organizer, convert to id
+  // organizer_types, convert to list of tags
+  // funder, plain text
+  // funder_types, convert to list of tags
+  // staff, boolean
+  // volunteers, boolean
+  // impact_evidence, yes or no
+  // change_types, convert to list of tags
+  // implementers_of_change, convert to list of tags
+  // formal_evaluation, yes or no
+  // evaluation_reports, list of urls, strip off prefix
+  // evaluation_links, list of urls, strip off prefix
+  // bookmarked, list on user
+  // creator, immutable, discard
+  // last_updated_by, automatic, discard
+  // original_language, immutable unless changed by admin
+  // post_date, immutable unless changed by admin
+  // published, true/false
+  // updated_date, automatic, discard
+  // featured, immutable unless changed by admin
+  // hidden, immutable unless changed by admin
 }
 
 function getEditXById(type) {
@@ -543,9 +487,5 @@ module.exports = {
   supportedTypes,
   titleKeys,
   shortKeys,
-  mediumKeys,
-  thingKeys,
-  caseKeys,
-  methodKeys,
-  organizationKeys
+  mediumKeys
 };

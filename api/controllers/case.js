@@ -177,7 +177,9 @@ router.put("/:thingid", getEditXById("case"));
 
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.
-router.get("/:thingid", (req, res) => returnThingByRequest("case", req, res));
+router.get("/:thingid/:view?", (req, res) =>
+  returnThingByRequest("case", req, res)
+);
 
 /**
  * @api {delete} /case/:caseId Delete a case
