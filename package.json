@@ -50,7 +50,7 @@
     "chai-http": "^3.0.0",
     "eslint": "^4.1.1",
     "eslint-config-google": "^0.9.1",
-    "eslint-config-prettier": "^2.2.0",
+    "eslint-config-prettier": "^3.2.0",
     "eslint-plugin-prettier": "^2.0.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
