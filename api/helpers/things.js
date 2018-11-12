@@ -118,9 +118,13 @@ const returnThingByRequest = async function(type, req, res) {
   try {
     const lang = as.value(req.params.language || "en");
     const thing = await getThingByRequest(type, req);
-    // FIXME: Specify 'edit' or 'view' for static text
+    let view = req.params.view || "view";
+    // ONly allow supported views
+    if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
+      return res => res.status(404, "View type not found").render();
+    }
     const staticText = await db.one(
-      `select * from ${type}_view_localized where language = '${lang}';`
+      `select * from ${type}_${view}_localized where language = '${lang}';`
     );
     Object.keys(thing).forEach(key => {
       if (thing[key] === "{}") {

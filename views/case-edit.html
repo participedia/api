@@ -1,25 +1,93 @@
 <article>
-  <h2 class="quickonly">{{ static.quick_submit_sectionlabel }}</h2>
-  <h2 class="full">{{ static.overview_sectionlabel }}</h2>
   <form action="/case/{{thing.id}}" method="PUT">
-
-  <h2 class="full">{{ static.location_sectionlabel }}</h2>
-
-  <h2 class="full">{{ static.media_sectionlabel }}</h2>
-
-  <h2 class="full">{{ static.date_sectionlabel }}</h2>
-
-  <h2 class="full">{{ static.purpose_sectionlabel }}</h2>
-
-  <h2 class="full">{{ static.participants_sectionlabel }}</h2>
-
-  <h2 class="full">{{ static.process_sectionlabel }}</h2>
-
-  <h2 class="full">{{ static.organizers_sectionlabel }}</h2>
-
-  <h2 class="full">{{ static.resources_sectionlabel }}</h2>
-
-  <h2 class="full">{{ static.evidence_sectionlabel }}</h2>
+    <fieldset class="overview">
+      {{#if thing.fullview }}
+      <h2 class="full">{{ static.overview_sectionlabel }}</h2>
+      {{ else }}
+      <h2 class="quickonly">{{ static.quick_submit_sectionlabel }}</h2>
+      {{/if}}
+    <!-- title, text input -->
+    <h2>{{ static.title_label }}</h2>
+    <!-- general_issues, list_rank_3 -->
+    <!-- specific_topics, list_rank_3 -->
+    <!-- brief_description, textarea -->
+    <!-- body, rich text area -->
+    <!-- tags, unordered list -->
+  </fieldset>
+  <fieldset class="location">
+    <h2 class="full">{{ static.location_sectionlabel }}</h2>
+    <!-- location -->
+    <!-- scope_of_influence -->
+  </fieldset>
+  <fieldset class="components">
+    <h2 class="full">{{ static.components_sectionlabel }}</h2>
+    <!-- add components to this case -->
+    <!-- make this case a component of another case -->
+  </fieldset>
+  <fieldset class="media">
+    <h2 class="full">{{ static.media_sectionlabel }}</h2>
+    <!-- links -->
+    <!-- files -->
+    <!-- photos -->
+    <!-- videos -->
+    <!-- audio -->
+  </fieldset>
+  <fieldset class="date_and_duration">
+    <h2 class="full">{{ static.date_sectionlabel }}</h2>
+    <!-- start_date -->
+    <!-- end_date -->
+    <!-- ongoing -->
+    <!-- time_limited -->
+  </fieldset>
+  <fieldset class="purpose_and_approach">
+    <h2 class="full">{{ static.purpose_sectionlabel }}</h2>
+    <!-- purposes -->
+    <!-- approaches -->
+    <!-- spectrum_of_public_participation -->
+  </fieldset>
+  <fieldset class="participants">
+    <h2 class="full">{{ static.participants_sectionlabel }}</h2>
+    <!-- number_of_participants -->
+    <!-- open_or_limited -->
+    <!-- recruitment_for_limited -->
+    <!-- targeted_demographics -->
+  </fieldset>
+  <fieldset class="process">
+    <h2 class="full">{{ static.process_sectionlabel }}</h2>
+    <!-- types_of_methods -->
+    <!-- types_of_tools_techniques -->
+    <!-- specific_methods_tools_techniques -->
+    <!-- legality -->
+    <!-- facilitators -->
+    <!-- facilitator_training -->
+    <!-- facetoface_online_or_both -->
+    <!-- participants_interactsion -->
+    <!-- information_resources -->
+    <!-- decision_methods -->
+    <!-- if_voting -->
+    <!-- insights_outcomes -->
+  </fieldset>
+  <fieldset class="organizations_and_supporters">
+    <h2 class="full">{{ static.organizers_sectionlabel }}</h2>
+    <!-- primary_organizer -->
+    <!-- type_of_organizer -->
+  </fieldset>
+  <fieldset class="resources">
+    <h2 class="full">{{ static.resources_sectionlabel }}</h2>
+    <!-- funder -->
+    <!-- type_of_funder -->
+    <!-- staff -->
+    <!-- volunteers -->
+  </fieldset>
+  <fieldset class="evidende_of_impact">
+    <h2 class="full">{{ static.evidence_sectionlabel }}</h2>
+    <!-- impact_evidence -->
+    <!-- types_of_change -->
+    <!-- implementers_of_change -->
+    <!-- formal_evaluation -->
+    <!-- evaluation_report_documents -->
+    <!-- evaluation_report_link -->
+  </fieldset>
   </form>
 </article>
 
