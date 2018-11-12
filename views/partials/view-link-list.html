@@ -1,0 +1,8 @@
+{{#if (getvalue article name) }}
+<dl>
+  <dt>{{label static name}}</dt>
+  {{#each  (getvalue article name) }}
+    <dd><a href="{{this}}">{{ this }}</a></dd>
+  {{/each}}
+</dl>
+{{/if}}

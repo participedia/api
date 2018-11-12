@@ -6,51 +6,84 @@
       {{ else }}
       <h2 class="quickonly">{{ static.quick_submit_sectionlabel }}</h2>
       {{/if}}
+  {{> view-media-list name="files" }}
+  {{> view-media-list name="audio" }}
+  {{> view-date name="start_date" }}
+  {{> view-date name="end_date" }}
+  {{> view-boolean name="ongoing" }}
+  {{> view-boolean name="time_limited" }}
+  {{> view-list name="purpose" }}
+  {{> view-list name="approach" }}
+  {{> view-text name="public_spectrum" }}
+  {{> view-number name="number_participants" }}
+  {{> view-text name="open_limited" }}
+  {{> view-text name="recruitment_method" }}
+  {{> view-text name="targeted_participants" }}
+  {{> view-text name="specific_tools" }}
+  {{> view-text name="legality" }}
+  {{> view-text name="facilitators" }}
+  {{> view-text name="facilitator_training" }}
+  {{> view-text name="facetoface_online_or_both" }}
+  {{> view-list name="participants_interactions" }}
+  {{> view-list name="learning_resources" }}
+  {{> view-list name="decision_methods" }}
+  {{> view-list name="if_voting" }}
+  {{> view-list name="insights_outcomes" }}
+  {{> view-text name="primary_organizer" }}
+  {{> view-list name="organizer_types" }}
+  {{> view-text name="funder" }}
+  {{> view-boolean name="staff" }}
+  {{> view-boolean name="volunteers" }}
+  {{> view-list name="impact_evidence" }}
+  {{> view-list name="change_types" }}
+  {{> view-list name="implementers_of_change" }}
+  {{> view-list name="formal_evaluation" }}
+  {{> view-link-list name="evaluation_reports" }}
     <!-- title, text input -->
     <h2>{{ static.title_label }}</h2>
-    <!-- general_issues, list_rank_3 -->
-    <!-- specific_topics, list_rank_3 -->
-    <!-- brief_description, textarea -->
-    <!-- body, rich text area -->
-    <!-- tags, unordered list -->
+      {{> edit-list-ranked name="general_issues" }}
+      {{> edit-list-ranked name="specific_topics" }}
+      {{> edit-textarea name="brief_description" }}
+      {{> edit-richtext name="body" }}
+      {{> edit-list name="tags" }}
   </fieldset>
   <fieldset class="location">
     <h2 class="full">{{ static.location_sectionlabel }}</h2>
-    <!-- location -->
-    <!-- scope_of_influence -->
+      {{> edit-location }}
+      {{> edit-selection name="scope" }}
   </fieldset>
   <fieldset class="components">
     <h2 class="full">{{ static.components_sectionlabel }}</h2>
-    <!-- add components to this case -->
-    <!-- make this case a component of another case -->
+      {{> edit-reference-list name="has_components" type="cases" }}
+      {{> edit-reference name="is_component_of" type="cases" }}
   </fieldset>
   <fieldset class="media">
     <h2 class="full">{{ static.media_sectionlabel }}</h2>
-    <!-- links -->
-    <!-- files -->
-    <!-- photos -->
-    <!-- videos -->
-    <!-- audio -->
+    {{> edit-media name="links" }}
+    {{> edit-media name="files" }}
+    {{> edit-media name="photos" }}
+    {{> edit-media name="videos" }}
+    {{> edit-media name="audio" }}
   </fieldset>
   <fieldset class="date_and_duration">
     <h2 class="full">{{ static.date_sectionlabel }}</h2>
-    <!-- start_date -->
-    <!-- end_date -->
-    <!-- ongoing -->
-    <!-- time_limited -->
+    {{> edit-date name="start_date" }}
+    {{> edit-date name="end_date" }}
+    {{> edit-boolean name="ongoing" }}
+    {{> edit-selection name="time_limited" }}
   </fieldset>
   <fieldset class="purpose_and_approach">
     <h2 class="full">{{ static.purpose_sectionlabel }}</h2>
-    <!-- purposes -->
-    <!-- approaches -->
-    <!-- spectrum_of_public_participation -->
+    {{> edit-list-ranked name="purpose" }}
+    {{> edit-list-ranked name="approach" }}
+    {{> edit-selection name="public_spectrum" }}
   </fieldset>
   <fieldset class="participants">
     <h2 class="full">{{ static.participants_sectionlabel }}</h2>
-    <!-- number_of_participants -->
-    <!-- open_or_limited -->
-    <!-- recruitment_for_limited -->
-    <!-- targeted_demographics -->
+    {{> edit-number name="number_of_participants" }}
+    {{> edit-selection name="open_or_limited" }}
+    {{> edit-selection name="recruitment_method" }}
+    {{> edit-list-ranked name="targeted_participants" }}
   </fieldset>
   <fieldset class="process">
     <h2 class="full">{{ static.process_sectionlabel }}</h2>

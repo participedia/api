@@ -1,7 +1,7 @@
 {{! label and value are custom helpers, see app.js }}
-{{#if (value article name) }}
+{{#if (getvalue article name) }}
 <dl>
   <dt>{{label static name}}</dt>
-  <dd>{{value article name}}</dd>
+  <dd>{{getvalue article name}}</dd>
 </dl>
 {{/if}}

@@ -1,7 +1,7 @@
-{{#if (value article name) }}
+{{#if (getvalue article name) }}
 <dl>
   <dt>{{label static name}}</dt>
-  {{#each  (value article name) }}
+  {{#each  (getvalue article name) }}
     {{#if value }}
       <dd>{{ value }}</dd>
     {{else}}

@@ -229,9 +229,9 @@ function value_mapper(dbname) {
   value_mapping = value => {
     if (!memo[value]) {
       let ret;
-      if (value === "Don't Know") {
+      if (getvalue === "Don't Know") {
         ret = "dk";
-      } else if (value === "Not Applicable") {
+      } else if (getvalue === "Not Applicable") {
         ret = "na";
       } else {
         let v = value

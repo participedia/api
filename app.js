@@ -16,7 +16,8 @@ var hbs = exphbs.create({
     info: (staticText, name) => staticText[name + "_info"],
     instructional: (staticText, name) => staticText[name + "_instructional"],
     placeholder: (staticText, name) => staticText[name + "_placeholder"],
-    value: (article, name) => article[name]
+    getvalue: (article, name) => article[name],
+    textvalue: (article, name) => article[name].value
   }
 });
 
