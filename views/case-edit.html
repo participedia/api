@@ -6,41 +6,8 @@
       {{ else }}
       <h2 class="quickonly">{{ static.quick_submit_sectionlabel }}</h2>
       {{/if}}
-  {{> view-media-list name="files" }}
-  {{> view-media-list name="audio" }}
-  {{> view-date name="start_date" }}
-  {{> view-date name="end_date" }}
-  {{> view-boolean name="ongoing" }}
-  {{> view-boolean name="time_limited" }}
-  {{> view-list name="purpose" }}
-  {{> view-list name="approach" }}
-  {{> view-text name="public_spectrum" }}
-  {{> view-number name="number_participants" }}
-  {{> view-text name="open_limited" }}
-  {{> view-text name="recruitment_method" }}
-  {{> view-text name="targeted_participants" }}
-  {{> view-text name="specific_tools" }}
-  {{> view-text name="legality" }}
-  {{> view-text name="facilitators" }}
-  {{> view-text name="facilitator_training" }}
-  {{> view-text name="facetoface_online_or_both" }}
-  {{> view-list name="participants_interactions" }}
-  {{> view-list name="learning_resources" }}
-  {{> view-list name="decision_methods" }}
-  {{> view-list name="if_voting" }}
-  {{> view-list name="insights_outcomes" }}
-  {{> view-text name="primary_organizer" }}
-  {{> view-list name="organizer_types" }}
-  {{> view-text name="funder" }}
-  {{> view-boolean name="staff" }}
-  {{> view-boolean name="volunteers" }}
-  {{> view-list name="impact_evidence" }}
-  {{> view-list name="change_types" }}
-  {{> view-list name="implementers_of_change" }}
-  {{> view-list name="formal_evaluation" }}
-  {{> view-link-list name="evaluation_reports" }}
     <!-- title, text input -->
-    <h2>{{ static.title_label }}</h2>
+      {{> edit-text name="title" }}
       {{> edit-list-ranked name="general_issues" }}
       {{> edit-list-ranked name="specific_topics" }}
       {{> edit-textarea name="brief_description" }}
@@ -85,6 +52,28 @@
     {{> edit-selection name="recruitment_method" }}
     {{> edit-list-ranked name="targeted_participants" }}
   </fieldset>
+
+  {{> view-text name="specific_tools" }}
+  {{> view-text name="legality" }}
+  {{> view-text name="facilitators" }}
+  {{> view-text name="facilitator_training" }}
+  {{> view-text name="facetoface_online_or_both" }}
+  {{> view-list name="participants_interactions" }}
+  {{> view-list name="learning_resources" }}
+  {{> view-list name="decision_methods" }}
+  {{> view-list name="if_voting" }}
+  {{> view-list name="insights_outcomes" }}
+  {{> view-text name="primary_organizer" }}
+  {{> view-list name="organizer_types" }}
+  {{> view-text name="funder" }}
+  {{> view-boolean name="staff" }}
+  {{> view-boolean name="volunteers" }}
+  {{> view-list name="impact_evidence" }}
+  {{> view-list name="change_types" }}
+  {{> view-list name="implementers_of_change" }}
+  {{> view-list name="formal_evaluation" }}
+  {{> view-link-list name="evaluation_reports" }}
+
   <fieldset class="process">
     <h2 class="full">{{ static.process_sectionlabel }}</h2>
     <!-- types_of_methods -->
@@ -112,7 +101,7 @@
     <!-- staff -->
     <!-- volunteers -->
   </fieldset>
-  <fieldset class="evidende_of_impact">
+  <fieldset class="evidence_of_impact">
     <h2 class="full">{{ static.evidence_sectionlabel }}</h2>
     <!-- impact_evidence -->
     <!-- types_of_change -->
@@ -123,5 +112,3 @@
   </fieldset>
   </form>
 </article>
-
-quick_submit,overview,location,media,date,purpose,participants,process,organizers,resources,evidence
