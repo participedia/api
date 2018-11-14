@@ -52,28 +52,6 @@
     {{> edit-selection name="recruitment_method" }}
     {{> edit-list-ranked name="targeted_participants" }}
   </fieldset>
-
-  {{> view-text name="specific_tools" }}
-  {{> view-text name="legality" }}
-  {{> view-text name="facilitators" }}
-  {{> view-text name="facilitator_training" }}
-  {{> view-text name="facetoface_online_or_both" }}
-  {{> view-list name="participants_interactions" }}
-  {{> view-list name="learning_resources" }}
-  {{> view-list name="decision_methods" }}
-  {{> view-list name="if_voting" }}
-  {{> view-list name="insights_outcomes" }}
-  {{> view-text name="primary_organizer" }}
-  {{> view-list name="organizer_types" }}
-  {{> view-text name="funder" }}
-  {{> view-boolean name="staff" }}
-  {{> view-boolean name="volunteers" }}
-  {{> view-list name="impact_evidence" }}
-  {{> view-list name="change_types" }}
-  {{> view-list name="implementers_of_change" }}
-  {{> view-list name="formal_evaluation" }}
-  {{> view-link-list name="evaluation_reports" }}
-
   <fieldset class="process">
     <h2 class="full">{{ static.process_sectionlabel }}</h2>
     {{> edit-list-ranked name="method_types" }}
@@ -108,7 +86,7 @@
     {{> edit-list-ranked name="implementers_of_change" }}
     {{> edit-select name="formal_evaluation" }}
     {{> edit-media name="evaluation_reports" }}
-    {{> edit-links-list="evaluation_links" }}
+    {{> edit-link-list name="evaluation_links" }}
   </fieldset>
   </form>
 </article>
