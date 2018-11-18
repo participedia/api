@@ -1,0 +1,10 @@
+<div>
+{{> tabnav }}
+{{> pagecount }}
+<section>
+  {{#each results }}
+    {{> search-grid-card }}
+  {{/each}}
+</section>
+{{> pagecount }}
+</div>

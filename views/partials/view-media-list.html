@@ -1,0 +1,25 @@
+{{#if (getvalue article name) }}
+<dl>
+  <dt>{{label static name}}</dt>
+  {{#each  (getvalue article name) }}
+    {{#if url }}
+      {{#if title }}
+        <dd><a href="{{url}}">{{ title }}</a></dd>
+      {{else}}
+        <dd><a href="{{url}}">{{ url }}</a></dd>
+      {{/if}}
+    {{/if}}
+    {{#if source_url}}
+      {{#if attribution}}
+        <dd><a href="{{source_url}}">{{attribution}}</a></dd>
+      {{else}}
+        <dd><a href="{{source_url}}">Source</a></dd>
+      {{/if}}
+    {{else}}
+      {{#if attribution}}
+        <dd>{{attribution}}</dd>
+      {{/if}}
+    {{/if}}
+  {{/each}}
+</dl>
+{{/if}}

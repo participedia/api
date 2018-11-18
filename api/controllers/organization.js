@@ -76,7 +76,7 @@ router.post("/new", async function(req, res) {
   }
   // Refresh search index
   try {
-    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
   } catch (error) {
     log.error("Exception in POST /organization/new => %s", error);
   }

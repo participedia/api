@@ -20,14 +20,14 @@ let location = {
 
 async function addBasicCase() {
   return chai
-    .postJSON("/case/new")
+    .postJSON("/case/new?returns=json")
     .set("Authorization", "Bearer " + tokens.user_token)
     .send({
       // mandatory
       title: "First Title",
       body: "First Body",
       // optional
-      images: ["CitizensAssembly_2.jpg"], // key into S3 bucket
+      photos: ["CitizensAssembly_2.jpg"], // key into S3 bucket
       videos: [
         "https://www.youtube.com/watch?v=QF7g3rCnD-w",
         "https://www.youtube.com/watch?v=w44lApffH30"
@@ -39,15 +39,15 @@ async function addBasicCase() {
 describe("Cases", () => {
   describe("Lookup", () => {
     it("finds case 100", async () => {
-      const res = await chai.getJSON("/case/100").send({});
+      const res = await chai.getJSON("/case/100?returns=json").send({});
       res.should.have.status(200);
-      res.body.data.id.should.be.a("number");
+      res.body.article.id.should.be.a("number");
     });
   });
   describe("Adding", () => {
     it("fails without authentication", async () => {
       try {
-        const res = await chai.postJSON("/case/new").send({});
+        const res = await chai.postJSON("/case/new?returns=json").send({});
         // fail if error not thrown
         should.exist(res.status);
       } catch (err) {
@@ -57,7 +57,7 @@ describe("Cases", () => {
     it("fails without content", async () => {
       try {
         const res = await chai
-          .postJSON("/case/new")
+          .postJSON("/case/new?returns=json")
           .set("Authorization", "Bearer " + tokens.user_token)
           .send({});
         should.exist(res.status);
@@ -83,7 +83,7 @@ describe("Cases", () => {
   describe("Counting by country", () => {
     it("returns stuff", async () => {
       const res = await chai
-        .getJSON("/case/countsByCountry")
+        .getJSON("/case/countsByCountry?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token);
       let countryCounts = res.body.data.countryCounts;
       countryCounts.should.have.property("france");
@@ -95,7 +95,7 @@ describe("Cases", () => {
     it("should not fail when logged in", async () => {
       try {
         const res = await chai
-          .getJSON("/case/100")
+          .getJSON("/case/100?returns=json")
           .set("Authorization", "Bearer " + tokens.user_token);
         res.body.OK.should.equal(true);
         res.should.have.status(200);
@@ -115,7 +115,7 @@ describe("Cases", () => {
       origCase.id.should.be.a("number");
       origCase.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
-        .putJSON("/case/" + res1.body.data.thingid)
+        .putJSON("/case/" + res1.body.data.thingid + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Second Title" });
       res2.should.have.status(200);
@@ -123,7 +123,7 @@ describe("Cases", () => {
       updatedCase1.title.should.equal("Second Title");
       updatedCase1.body.should.equal("First Body");
       const res3 = await chai
-        .putJSON("/case/" + res1.body.data.thingid)
+        .putJSON("/case/" + res1.body.data.thingid + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" });
       res3.should.have.status(200);
@@ -131,7 +131,7 @@ describe("Cases", () => {
       updatedCase2.title.should.equal("Second Title");
       updatedCase2.body.should.equal("Second Body");
       const res4 = await chai
-        .putJSON("/case/" + res1.body.data.thingid)
+        .putJSON("/case/" + res1.body.data.thingid + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" });
       res4.should.have.status(200);
@@ -153,7 +153,7 @@ describe("Cases", () => {
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ issues: ["new issue"] });
       res2.should.have.status(200);
-      const updatedCase1 = res2.body.data;
+      const updatedCase1 = res2.body.article;
       updatedCase1.issues.should.deep.equal(["new issue"]);
     });
 
@@ -161,26 +161,26 @@ describe("Cases", () => {
       const res1 = await addBasicCase();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      const case1 = res1.body.object;
-      case1.images.should.deep.equal(["CitizensAssembly_2.jpg"]);
+      const case1 = res1.body.data;
+      case1.photos.should.deep.equal(["CitizensAssembly_2.jpg"]);
       const res2 = await chai
-        .putJSON("/case/" + case1.id)
+        .putJSON("/case/" + case1.id + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ images: ["foobar.jpg"] });
+        .send({ photos: ["foobar.jpg"] });
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
-      should.exist(res2.body.data);
-      const case2 = res2.body.data;
-      case2.images.should.deep.equal(["foobar.jpg"]);
+      should.exist(res2.body.article);
+      const case2 = res2.body.article;
+      case2.photos.should.deep.equal(["foobar.jpg"]);
       expect(case2.updated_date > case1.updated_date).to.be.true;
       const res3 = await chai
-        .putJSON("/case/" + case1.id)
+        .putJSON("/case/" + case1.id + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ images: ["howzaboutthemjpegs.png"] });
+        .send({ photos: ["howzaboutthemjpegs.png"] });
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
-      const case3 = res3.body.data;
-      case3.images.should.deep.equal(["howzaboutthemjpegs.png"]);
+      const case3 = res3.body.article;
+      case3.photos.should.deep.equal(["howzaboutthemjpegs.png"]);
     });
   });
 
@@ -193,48 +193,50 @@ describe("Cases", () => {
       case1 = res1.body.object;
       case1.bookmarked.should.be.false;
       const booked = await chai
-        .postJSON("/bookmark/add")
+        .postJSON("/bookmark/add?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ bookmarkType: "case", thingid: case1.id });
       booked.should.have.status(201);
     });
     it("Not authenticated, bookmarked should be false", async () => {
-      const res2 = await chai.getJSON("/case/" + case1.id).send({});
+      const res2 = await chai
+        .getJSON("/case/" + case1.id + "?returns=json")
+        .send({});
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
-      const case2 = res2.body.data;
+      const case2 = res2.body.article;
       case2.bookmarked.should.be.false;
     });
     it("Bookmarked should be true", async () => {
       const res3 = await chai
-        .getJSON("/case/" + case1.id)
+        .getJSON("/case/" + case1.id + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({});
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
-      const case3 = res3.body.data;
+      const case3 = res3.body.article;
       case3.bookmarked.should.be.true;
     });
   });
   describe("More case creation tests", () => {
     it("Create with array of URLs", async () => {
       const res = await chai
-        .postJSON("/case/new")
+        .postJSON("/case/new?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({
           // mandatory
           title: "First Title",
           body: "First Body",
           // optional
-          images: [
+          photos: [
             "https://s-media-cache-ak0.pinimg.com/736x/3d/2b/bf/3d2bbfd73ccaf488ab88d298ab7bc2d8.jpg",
             "https://ocs-pl.oktawave.com/v1/AUTH_e1d5d90a-20b9-49c9-a9cd-33fc2cb68df3/mrgugu-products/20150901170519_1afZHYJgZTruGxEc_1000-1000.jpg"
           ]
         });
       res.should.have.status(201);
       res.body.OK.should.be.true;
-      const theCase = res.body.object;
-      theCase.images.should.have.lengthOf(2);
+      const theCase = res.body.data;
+      theCase.photos.should.have.lengthOf(2);
     });
   });
 });

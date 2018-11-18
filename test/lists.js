@@ -4,15 +4,7 @@ let chai = require("chai");
 let chaiHttp = require("chai-http");
 let chaiHelpers = require("./helpers");
 let should = chai.should();
-const {
-  titleKeys,
-  shortKeys,
-  mediumKeys,
-  thingKeys,
-  caseKeys,
-  methodKeys,
-  organizationKeys
-} = require("../api/helpers/things");
+const { titleKeys, shortKeys, mediumKeys } = require("../api/helpers/things");
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
 

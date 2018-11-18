@@ -1,0 +1,12 @@
+{{#if (getvalue article name) }}
+<dl>
+  <dt>{{label static name}}</dt>
+  {{#each  (getvalue article name) }}
+    {{#if value }}
+      <dd>{{ value }}</dd>
+    {{else}}
+      <dd>"Error: no value for key {{ key }}</dd>
+    {{/if}}
+  {{/each}}
+</dl>
+{{/if}}

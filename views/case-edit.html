@@ -1,0 +1,92 @@
+<article>
+  <form action="/case/{{thing.id}}" method="PUT">
+    <fieldset class="overview">
+      {{#if thing.fullview }}
+      <h2 class="full">{{ static.overview_sectionlabel }}</h2>
+      {{ else }}
+      <h2 class="quickonly">{{ static.quick_submit_sectionlabel }}</h2>
+      {{/if}}
+    <!-- title, text input -->
+      {{> edit-text name="title" }}
+      {{> edit-list-ranked name="general_issues" }}
+      {{> edit-list-ranked name="specific_topics" }}
+      {{> edit-textarea name="brief_description" }}
+      {{> edit-richtext name="body" }}
+      {{> edit-list name="tags" }}
+  </fieldset>
+  <fieldset class="location">
+    <h2 class="full">{{ static.location_sectionlabel }}</h2>
+      {{> edit-location }}
+      {{> edit-selection name="scope" }}
+  </fieldset>
+  <fieldset class="components">
+    <h2 class="full">{{ static.components_sectionlabel }}</h2>
+      {{> edit-reference-list name="has_components" type="cases" }}
+      {{> edit-reference name="is_component_of" type="cases" }}
+  </fieldset>
+  <fieldset class="media">
+    <h2 class="full">{{ static.media_sectionlabel }}</h2>
+    {{> edit-media name="links" }}
+    {{> edit-media name="files" }}
+    {{> edit-media name="photos" }}
+    {{> edit-media name="videos" }}
+    {{> edit-media name="audio" }}
+  </fieldset>
+  <fieldset class="date_and_duration">
+    <h2 class="full">{{ static.date_sectionlabel }}</h2>
+    {{> edit-date name="start_date" }}
+    {{> edit-date name="end_date" }}
+    {{> edit-boolean name="ongoing" }}
+    {{> edit-selection name="time_limited" }}
+  </fieldset>
+  <fieldset class="purpose_and_approach">
+    <h2 class="full">{{ static.purpose_sectionlabel }}</h2>
+    {{> edit-list-ranked name="purpose" }}
+    {{> edit-list-ranked name="approach" }}
+    {{> edit-selection name="public_spectrum" }}
+  </fieldset>
+  <fieldset class="participants">
+    <h2 class="full">{{ static.participants_sectionlabel }}</h2>
+    {{> edit-number name="number_of_participants" }}
+    {{> edit-selection name="open_or_limited" }}
+    {{> edit-selection name="recruitment_method" }}
+    {{> edit-list-ranked name="targeted_participants" }}
+  </fieldset>
+  <fieldset class="process">
+    <h2 class="full">{{ static.process_sectionlabel }}</h2>
+    {{> edit-list-ranked name="method_types" }}
+    {{> edit-list-ranked name="tools_techniques_types" }}
+    {{> edit-reference-list name="specific_methods_tools_techniques" type="method_tools" }}
+    {{> edit-select name="legality" }}
+    {{> edit-select name="facilitators" }}
+    {{> edit-select name="facilitator_training" }}
+    {{> edit-select name="facetoface_online_or_both" }}
+    {{> edit-list-ranked name="participants_interaction" }}
+    {{> edit-list name="learning_resources" }}
+    {{> edit-list name="decision_methods" }}
+    {{> edit-list name="if_voting" }}
+    {{> edit-list-ranked name="insights_outcomes" }}
+  </fieldset>
+  <fieldset class="organizations_and_supporters">
+    <h2 class="full">{{ static.organizers_sectionlabel }}</h2>
+    {{> edit-reference name="primary_organizer" type="organizations" }}
+    {{> edit-list-ranked name="organizer_types" }}
+  </fieldset>
+  <fieldset class="resources">
+    <h2 class="full">{{ static.resources_sectionlabel }}</h2>
+    {{> edit-text name="funder" }}
+    {{> edit-list-ranked name="funder_types" }}
+    {{> edit-select name="staff" }}
+    {{> edit-select name="volunteers" }}
+  </fieldset>
+  <fieldset class="evidence_of_impact">
+    <h2 class="full">{{ static.evidence_sectionlabel }}</h2>
+    {{> edit-select name="impact_evidence" }}
+    {{> edit-list-ranked name="change_types" }}
+    {{> edit-list-ranked name="implementers_of_change" }}
+    {{> edit-select name="formal_evaluation" }}
+    {{> edit-media name="evaluation_reports" }}
+    {{> edit-link-list name="evaluation_links" }}
+  </fieldset>
+  </form>
+</article>

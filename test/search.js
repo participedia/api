@@ -258,7 +258,7 @@ describe("Search", () => {
     });
   });
 
-  describe("Test hidden results", () => {
+  describe.skip("Test hidden results", () => {
     it("Hiding an element removes it from featured (default) search", async () => {
       const res1 = await chai.getJSON("/search").send({});
       res1.should.have.status(200);
@@ -286,7 +286,7 @@ describe("Search", () => {
   describe("Test resultType=map", () => {
     it("setup", setupFeatured);
 
-    it("find featured results", async () => {
+    it.skip("find featured results", async () => {
       const res = await chai.getJSON("/search?resultType=map").send({});
       res.should.have.status(200);
       res.body.results
@@ -298,7 +298,7 @@ describe("Search", () => {
         .should.have.lengthOf(len);
     });
 
-    it("find featured cases", async () => {
+    it.skip("find featured cases", async () => {
       const res = await chai
         .getJSON("/search?resultType=map&selectedCategory=Cases")
         .send({});

@@ -16,6 +16,11 @@ const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
 
 const RESPONSE_LIMIT = 20;
 
+function randomTexture() {
+  let index = Math.floor(Math.random() * 6) + 1;
+  return `/images/texture_${index}.svg`;
+}
+
 /**
  *  Deprecated, use /list/* methods instead
  *
@@ -136,13 +141,17 @@ router.get("/", async function(req, res) {
   const user_query = req.query.query || "";
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
+  const lang = as.value(req.query.language || "en");
+  const staticText = await db.one(
+    `select * from layout_localized where language = '${lang}';`
+  );
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
-      language: as.value(req.query.language || "en"),
       filter: filterFromReq(req),
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
+      language: lang,
       userId: req.user ? req.user.user_id : null
     });
     const total = Number(
@@ -150,17 +159,56 @@ router.get("/", async function(req, res) {
     );
     const searchhits = results.filter(result => result.searchmatched).length;
     const pages = Math.max(limit ? Math.ceil(total / limit) : 1, 1); // Don't divide by zero limit, don't return page 1 of 1
-    results.forEach(obj => delete obj.total);
-    let OK = true;
-    return res.status(200).json({
-      OK,
-      total,
-      pages,
-      searchhits,
-      results,
-      user_query,
-      parsed_query
+    results.forEach(obj => {
+      // massage results for display
+      if (obj.images.length) {
+        obj.images = obj.images.map(
+          img => process.env.AWS_UPLOADS_URL + encodeURIComponent(img)
+        );
+      } else {
+        obj.images = [randomTexture()];
+      }
+      delete obj.total;
     });
+    let OK = true;
+    let returnType = req.query.returns;
+    if (req.accepts("json", "html") === "json") {
+      returnType = "json";
+    }
+    switch (returnType) {
+      case "json":
+        return res.status(200).json({
+          total,
+          pages,
+          searchhits,
+          results,
+          user_query,
+          parsed_query,
+          static: staticText
+        });
+      case "htmlfrag":
+        return res.status(200).render("home-list", {
+          total,
+          pages,
+          searchhits,
+          results,
+          static: staticText
+        });
+      case "csv":
+        return res.status(500, "CSV not implemented yet").render();
+      case "xml":
+        return res.status(500, "XML not implemented yet").render();
+      case "html": // fall through
+      default:
+        return res.status(200).render("home-list", {
+          OK,
+          total,
+          pages,
+          searchhits,
+          results,
+          static: staticText
+        });
+    }
   } catch (error) {
     console.error("Error in search: ", error);
     console.trace(error);

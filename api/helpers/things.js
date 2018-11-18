@@ -20,140 +20,6 @@ const shortKeys = titleKeys.concat([
   "updated_date"
 ]);
 const mediumKeys = shortKeys.concat(["body", "bookmarked", "location"]);
-const thingKeys = mediumKeys.concat([
-  "description",
-  "original_language",
-  "published",
-  "files",
-  "videos",
-  "featured",
-  "tags",
-  "url"
-]);
-const caseKeys = [
-  "id",
-  "type",
-  "hidden",
-  "post_date",
-  "published",
-  "updated_date",
-  "featured",
-  "original_language",
-  "content_country",
-  "title",
-  "description",
-  "body",
-  "links",
-  "tags",
-  "location_name",
-  "address1",
-  "address2",
-  "city",
-  "province",
-  "postal_code",
-  "country",
-  "latitude",
-  "longitude",
-  "relationships",
-  "issues",
-  "special_topics",
-  "is_component_of",
-  "scope_of_influence",
-  "images",
-  "videos",
-  "files",
-  "start_date",
-  "end_date",
-  "ongoing",
-  "time_limited",
-  "purpose",
-  "approaches",
-  "public_spectrum",
-  "number_of_participants",
-  "open_limited",
-  "recruitment_method",
-  "targeted_participants",
-  "process_methods",
-  "legality",
-  "facilitators",
-  "facilitator_training",
-  "facetoface_online_or_both",
-  "participants_interactions",
-  "learning_resources",
-  "decision_methods",
-  "if_voting",
-  "insights_outcomes",
-  "primary_organizers",
-  "organizer_types",
-  "funder",
-  "funder_types",
-  "staff",
-  "volunteers",
-  "impact_evidence",
-  "change_types",
-  "implementers_of_change",
-  "formal_evaluations",
-  "evaluation_reports",
-  "evaluation_links"
-];
-const methodKeys = [
-  "id",
-  "type",
-  "hidden",
-  "post_date",
-  "published",
-  "updated_date",
-  "featured",
-  "original_language",
-  "content_country",
-  "title",
-  "description",
-  "body",
-  "links",
-  "tags",
-  "completeness",
-  "facilitated",
-  "geographical_scope",
-  "participants_selections",
-  "recruitment_method",
-  "communication_modes",
-  "communication_outcomes",
-  "decision_methods",
-  "if_voting",
-  "public_interaction_methods",
-  "issue_polarization",
-  "issue_technical_complexity",
-  "issue_interdependency",
-  "typical_purposes",
-  "communication_outcomes"
-];
-const organizationKeys = [
-  "id",
-  "type",
-  "hidden",
-  "post_date",
-  "published",
-  "updated_date",
-  "featured",
-  "original_language",
-  "content_country",
-  "title",
-  "description",
-  "body",
-  "links",
-  "tags",
-  "location_name",
-  "address1",
-  "address2",
-  "city",
-  "province",
-  "postal_code",
-  "country",
-  "latitude",
-  "longitude",
-  "sector",
-  "methods"
-];
 
 const getThingByType_id_lang_userId = async function(
   type,
@@ -162,26 +28,43 @@ const getThingByType_id_lang_userId = async function(
   userId
 ) {
   let table = type + "s";
-  let case_only = "";
+  let thingRow;
   if (type === "case") {
-    case_only =
-      `get_object_title(cases.is_component_of, '${
-        lang
-      }') AS is_component_of,\n` +
-      `get_components(${thingid}, '${lang}') AS has_components,\n` +
-      `get_methods(cases, '${lang}') AS process_methods,\n` +
-      `get_organizations(cases, '${lang}') AS primary_organizers,`;
+    thingRow = await db.one(
+      "select row_to_json(get_case_by_id(${thingid}, ${lang}, ${userId})) as results;",
+      { thingid, lang, userId }
+    );
+  } else {
+    thingRow = await db.one(THING_BY_ID, {
+      table,
+      type,
+      thingid,
+      lang,
+      userId
+    });
+  }
+  const thing = thingRow.results;
+  // massage results for display
+  if (thing.photos && thing.photos.length) {
+    thing.photos.forEach(
+      img =>
+        (img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url))
+    );
+  }
+  if (thing.files && thing.files.length) {
+    thing.files.forEach(
+      file =>
+        (file.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(file.url))
+    );
+  }
+  if (thing.longitude.startsWith("0° 0' 0\"")) {
+    thing.longitude = "";
+  }
+  if (thing.latitude.startsWith("0° 0' 0\"")) {
+    thing.latitude = "";
   }
 
-  const thing = await db.one(THING_BY_ID, {
-    table,
-    type,
-    thingid,
-    lang,
-    userId,
-    case_only
-  });
-  return thing.results;
+  return thing;
 };
 
 const getThingByRequest = async function(type, req) {
@@ -191,15 +74,64 @@ const getThingByRequest = async function(type, req) {
   return await getThingByType_id_lang_userId(type, thingid, lang, userId);
 };
 
+const returnByType = req => {
+  // handle json requests from old client or tests
+  let view = req.params.view || "view";
+  // ONly allow supported views
+  console.log("View: %s", view);
+  if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
+    return res => res.status(404, "View type not found").render();
+  }
+  let returnType = req.query.returns;
+  if (req.accepts("json", "html") === "json") {
+    returnType = "json";
+  }
+  switch (returnType) {
+    case "htmlfrag":
+      return (res, type, thing, staticText) =>
+        res.status(200).render(type + "-" + view, {
+          article: thing,
+          static: staticText,
+          layout: false
+        });
+    case "json":
+      return (res, type, thing, staticText) =>
+        res.status(200).json({ OK: true, article: thing, static: staticText });
+    case "csv":
+      // TODO: implement CSV
+      return (res, type, thing) =>
+        res.status(500, "CSV not implemented yet").render();
+    case "xml":
+      // TODO: implement XML
+      return (res, type, thing) =>
+        res.status(500, "XML not implemented yet").render();
+    case "html": // fall through
+    default:
+      return (res, type, thing, staticText) =>
+        res
+          .status(200)
+          .render(type + "-" + view, { article: thing, static: staticText });
+  }
+};
+
 const returnThingByRequest = async function(type, req, res) {
   try {
+    const lang = as.value(req.params.language || "en");
     const thing = await getThingByRequest(type, req);
+    let view = req.params.view || "view";
+    // ONly allow supported views
+    if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
+      return res => res.status(404, "View type not found").render();
+    }
+    const staticText = await db.one(
+      `select * from ${type}_${view}_localized where language = '${lang}';`
+    );
     Object.keys(thing).forEach(key => {
       if (thing[key] === "{}") {
         thing[key] = [];
       }
     });
-    res.status(200).json({ OK: true, data: thing });
+    returnByType(req)(res, type, thing, staticText);
   } catch (error) {
     log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
     res.status(500).json({
@@ -231,32 +163,76 @@ function compareItems(a, b) {
   }
 }
 
-function normalizeLocation(oldThing, newThing) {
-  const oldKeys = Object.keys(oldThing);
-  const newKeys = Object.keys(newThing);
-  if (oldKeys.includes("location")) {
-    delete oldThing.location;
-  }
-  if (newKeys.includes("primary_location")) {
-    newThing.location = newThing.primary_location;
-    newThing.primary_location = null;
-    delete newThing.primary_location;
-  }
-  if (newKeys.includes("location")) {
-    if (typeof newThing.location === "object") {
-      let location = newThing.location;
-      newThing.location_name = location.name;
-      newThing.address1 = location.address1;
-      newThing.address2 = location.address2;
-      newThing.city = location.city;
-      newThing.postal_code = location.postal_code;
-      newThing.province = location.province;
-      newThing.country = location.country;
-      newThing.latitude = location.latitude;
-      newThing.longitude = location.longitude;
-    }
-    delete newThing.location;
-  }
+function editCaseById(req, res) {
+  // id, integer, immutable
+  // type, 'case', immutable
+  // title, plain text, new entry in localized_textx
+  // general issues => convert to list of ids
+  // specific topics => convert to list of ids
+  // description plain text, new entry in localized texts
+  // body, html needing sanitization, new entry in localized texts
+  // tags, convert to list of keys
+  // location_name
+  // address1,
+  // address2,
+  // city,
+  // province,
+  // postal_code,
+  // country,
+  // latitude => null if 0'0"
+  // longitude => null if 0'0"
+  // scope, conert to key
+  // has_components, immutable for now, discard
+  // is_component_of, convert to id
+  // files => full_files
+  // links => full_links,
+  // photos,
+  // viceos => full_videos,
+  // audio,
+  // start_date,
+  // end_date,
+  // ongoing,
+  // tieme_limited, convert to list of keys
+  // purposes, convert to list of keys
+  // approaches, convert to list of keys
+  // public_spectrum, convert to key
+  // number_of_participants,
+  // open_limited, convert to list of tags
+  // recruitment_method, convert to tag
+  // targeted_participants, convert to list of tags
+  // method_types, convert to list of tags
+  // tools_techniques, types, convert to list of tags
+  // specific_methods_tools_techniques, convert to list of ids
+  // legality, convert to tag
+  // facilitators, convert to tag
+  // facilitator_training, convert to tag
+  // facetoface_online_or_both, convert to tag
+  // participants_interactions, convert to list of tags
+  // learning_resources, convert to list of tags
+  // decision_methods, convert to list of tags
+  // if_voting, convert to list of tags
+  // insights_outcomes, convert to list of tags
+  // primary_organizer, convert to id
+  // organizer_types, convert to list of tags
+  // funder, plain text
+  // funder_types, convert to list of tags
+  // staff, boolean
+  // volunteers, boolean
+  // impact_evidence, yes or no
+  // change_types, convert to list of tags
+  // implementers_of_change, convert to list of tags
+  // formal_evaluation, yes or no
+  // evaluation_reports, list of urls, strip off prefix
+  // evaluation_links, list of urls, strip off prefix
+  // bookmarked, list on user
+  // creator, immutable, discard
+  // last_updated_by, automatic, discard
+  // original_language, immutable unless changed by admin
+  // post_date, immutable unless changed by admin
+  // published, true/false
+  // updated_date, automatic, discard
+  // featured, immutable unless changed by admin
+  // hidden, immutable unless changed by admin
 }
 
 function getEditXById(type) {
@@ -291,8 +267,6 @@ function getEditXById(type) {
       let retThing = null;
 
       /* DO ALL THE DIFFS */
-      normalizeLocation(oldThing, newThing);
-      // compareItems(oldThing, newThing);
       // FIXME: Does this need to be async?
       Object.keys(oldThing).forEach(async key => {
         // console.error("checking key %s", key);
@@ -403,9 +377,9 @@ function getEditXById(type) {
                 });
               }
             } else {
-              console.warn(
-                "Do NOT try to add an element as a component of itself or I WILL smack you."
-              );
+              // console.warn(
+              //   "Do NOT try to add an element as a component of itself or I WILL smack you."
+              // );
             }
           } else if (key === "has_components") {
             /* Allow has_components to update those other cases */
@@ -500,7 +474,7 @@ function getEditXById(type) {
     } // end catch
     // update search index
     try {
-      await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+      db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
     } catch (error) {
       console.error("Problem refreshing materialized view: %s", error);
     }
@@ -517,9 +491,5 @@ module.exports = {
   supportedTypes,
   titleKeys,
   shortKeys,
-  mediumKeys,
-  thingKeys,
-  caseKeys,
-  methodKeys,
-  organizationKeys
+  mediumKeys
 };

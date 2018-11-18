@@ -16,8 +16,50 @@ SELECT CASE
   )
   THEN true
   ELSE false
-END
+END;
 $_$;
+
+
+--
+-- Get most recent title for a thing
+--
+CREATE OR REPLACE FUNCTION get_title(thingid integer, language text) RETURNS text
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT title
+FROM localized_texts
+WHERE thingid = $1 AND language = $2
+ORDER BY timestamp DESC
+LIMIT 1;
+$_$;
+
+--
+-- Get most recent description for a thing
+--
+CREATE OR REPLACE FUNCTION get_description(thingid integer, language text) RETURNS text
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT description
+FROM localized_texts
+WHERE thingid = $1 AND language = $2
+ORDER BY timestamp DESC
+LIMIT 1;
+$_$;
+
+--
+-- Get most recent body for a thing
+--
+CREATE OR REPLACE FUNCTION get_body(thingid integer, language text) RETURNS text
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT body
+FROM localized_texts
+WHERE thingid = $1 AND language = $2
+ORDER BY timestamp DESC
+LIMIT 1;
+$_$;
+
+
 
 --
 -- Name: get_components(integer, text): Type: FUNCTION, Schema: public: Owner: -
@@ -25,11 +67,9 @@ $_$;
 CREATE OR REPLACE FUNCTION get_components(id integer, language text) RETURNS object_title[]
     LANGUAGE sql STABLE
     AS $_$
-SELECT COALESCE(array_agg((cases.id, localized_texts.title)::object_title), '{}'::object_title[])
-FROM cases, localized_texts
-WHERE cases.is_component_of = $1 AND
-      localized_texts.thingid = cases.id AND
-      localized_texts.language = $2
+SELECT COALESCE(array_agg((cases.id, get_title($1, $2))::object_title), '{}'::object_title[])
+FROM cases
+WHERE cases.is_component_of = $1;
 $_$;
 
 --
@@ -45,7 +85,7 @@ CREATE OR REPLACE FUNCTION get_methods(thing cases, language text) RETURNS objec
       localized_texts, mids
     WHERE
       localized_texts.thingid = mids.id and
-      localized_texts.language = $2
+      localized_texts.language = $2;
 $_$;
 
 --
@@ -61,7 +101,7 @@ CREATE OR REPLACE FUNCTION get_organizations(thing cases, language text) RETURNS
       localized_texts, mids
     WHERE
       localized_texts.thingid = mids.id and
-      localized_texts.language = $2
+      localized_texts.language = $2;
 $_$;
 
 
@@ -80,7 +120,7 @@ SELECT
   WHERE
     localized_texts.thingid = $1 AND
     localized_texts.language = $2 AND
-    things.id = $1
+    things.id = $1;
 $_$;
 
 --
@@ -98,7 +138,7 @@ SELECT
   WHERE
     localized_texts.thingid = $1 AND
     localized_texts.language = $2 AND
-    things.id = $1
+    things.id = $1;
 $_$;
 
 ---
@@ -113,7 +153,7 @@ SELECT
 FROM
   things
 WHERE
-  things.id = $1
+  things.id = $1;
 $_$;
 
 ---
@@ -128,7 +168,7 @@ CREATE OR REPLACE FUNCTION get_localized_texts(thingid integer, language text) R
     ROW_NUMBER() OVER (PARTITION BY thingid ORDER BY "timestamp" DESC) rn
     FROM localized_texts
     WHERE thingid = $1 AND language = $2
-  ) tmp WHERE rn = 1
+  ) tmp WHERE rn = 1;
 $_$;
 
 ---
@@ -160,7 +200,7 @@ SELECT
       a2.name
     )::author) authors
 FROM
-    a2
+    a2;
 $_$;
 
 ---
@@ -182,7 +222,7 @@ CREATE OR REPLACE FUNCTION first_author(thingid integer) RETURNS author
     authors.thingid = $1
   ORDER BY
     authors.timestamp ASC
-  LIMIT 1
+  LIMIT 1;
 $_$;
 
 ---
@@ -204,5 +244,57 @@ CREATE OR REPLACE FUNCTION last_author(thingid integer) RETURNS author
     authors.thingid = $1
   ORDER BY
     authors.timestamp DESC
-  LIMIT 1
+  LIMIT 1;
+$_$;
+
+
+---
+--- Name: list_cases();
+---
+
+CREATE OR REPLACE FUNCTION list_cases(OUT id INTEGER, OUT title TEXT) RETURNS SETOF record
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    (a.b).thingid AS id,
+    (a.b).title
+  FROM (
+    SELECT get_localized_texts(id, 'en') b
+    FROM cases
+  ) AS a
+  ORDER BY id;
+$_$;
+
+---
+--- Name: list_cases();
+---
+
+CREATE OR REPLACE FUNCTION list_cases(OUT id INTEGER, OUT title TEXT) RETURNS SETOF record
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    (a.b).thingid AS id,
+    (a.b).title
+  FROM (
+    SELECT get_localized_texts(id, 'en') b
+    FROM methods
+  ) AS a
+  ORDER BY id;
+$_$;
+
+---
+--- Name: list_cases();
+---
+
+CREATE OR REPLACE FUNCTION list_cases(OUT id INTEGER, OUT title TEXT) RETURNS SETOF record
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    (a.b).thingid AS id,
+    (a.b).title
+  FROM (
+    SELECT get_localized_texts(id, 'en') b
+    FROM organizations
+  ) AS a
+  ORDER BY id;
 $_$;

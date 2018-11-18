@@ -1,0 +1,523 @@
+key,XYZ label,Instructional Text,Info Bubble,Placeholder,Values,Section,Field Type
+title,Title of Case,"Give this public participation project or event a descriptive title in 10 words or less. For example, “Brazilian Dialogue on Diversity"" or ""New York City Public Issues Forum.""",N/A,Enter title in 10 words or less,No default value,"1. Overview
+Quick Submit",Plain text
+general_issues,General Issues,"Rank order up to three of the most relevant issues addressed, with “1” indicating the most relevant issue. You will be asked to provide more detailed information in the Specific Topics field below.",N/A,Select & rank up to 3 issues,"Agriculture, Forestry, Fishing & Mining Industries
+Arts, Culture, & Recreation
+Business
+Economics
+Education
+Energy
+Environment
+Governance & Political Institutions (e.g. constitutions, legal systems, electoral systems)
+Health
+Housing
+Human Rights & Civil Rights
+Identity & Diversity
+Immigration & Migration
+International Affairs
+Labor & Work
+Law Enforcement, Criminal Justice & Corrections
+Media, Telecommunications & Information
+National Security
+Planning & Development
+Science & Technology
+Social Welfare
+Transportation","1. Overview
+Quick Submit",Multi-select ; type to search + drop down list ; rank order up to three﻿
+specific_topics,Specific Topics,"Rank order up to three of the most relevant, specific topics, with “1” indicating the most relevant topic.",N/A,Select & rank up to 3 topics,"Ability/Disability Issues
+Abortion
+Access to Radio & Television Frequencies
+Addiction Treatment & Management
+Administration of Campaigns and Elections
+Affordable Housing
+Age Discrimination
+Aging
+Aging Issues
+Agricultural Biotechnology
+Air Quality
+Air Travel
+Alternative & Renewable Energy
+Alternative Education
+Animal Welfare
+Arms Control
+Artificial Intelligence
+Bankruptcy
+Biomedical Research & Development
+Birth Control
+Budget - Local
+Budget - National
+Budget - Provincial, Regional, State
+Bureaucracy
+Carbon Capture & Sequestration
+Censorship
+Child Care
+Citizenship & Role of Citizens
+Civil Law
+Climate Change
+Coal
+Cohousing
+Community & Police Relations
+Community Resettlement
+Concentration of Media Ownership
+Constitutional Reform
+Consumer Protection
+Copyrights & Patents
+Corporate Subsidies
+Court Systems
+Criminal Law
+Cultural Assimilation or Integration
+Curriculum & Standards
+Cyber Security
+Cycling
+Diplomacy
+Disability Rights
+Disabled Assistance
+Disaster Preparedness
+Disease Prevention
+Drug Coverage & Cost
+Drug Testing & Regulation
+Early Childhood Education
+Eco-Housing
+Economic Development
+Economic Inequality
+Elderly Assistance
+Elderly Housing
+Electricity
+Elementary & Secondary Education
+Employee Benefits
+Energy Conservation
+Energy Efficiency & Storage
+Energy Siting & Transmission
+Environmental Conservation
+Ethnic/Racial Equality & Equity
+Ethnic/Racial Relations
+Fair Labor Standards
+Financing of Political Campaigns
+Fisheries & Fishing
+Food & Nutrition
+Food Assistance
+Food Inspection & Safety
+Foreign Aid
+Freedom of Information
+Freedom of Speech
+Funding
+Gender Equality & Equity
+Gender Identity
+Geopolitics
+Geotechnology
+Government Corruption
+Government Funding of Education
+Government Spending
+Government Subsidies
+Government Transparency
+Hazardous Waste
+Health Care Reform
+Health Insurance
+Higher Education
+Highway Safety
+Homelessness
+Housing Planning
+Human Rights
+Human Trafficking
+Identity Politics
+Immigration
+Indigenous Issues
+Indigenous Planning
+Industrial Policy
+Industrial Siting Guidelines
+Information & Communications Technology
+Infrastructure
+Intellectual Property Rights
+Intelligence Gathering
+Intergovernmental Relations
+International Law
+Internet Access
+Internet Governance
+Jails and Prisons
+Judicial Reform
+Labor Unions
+Land Use
+LGBTQ Issues
+Libraries
+Long-Term Care
+Low-income Assistance
+Maritime
+Mass/Public Transport
+Medical Liability
+Mental Health
+Migrant and Seasonal Labor
+Military and Defense
+Monetary Policy
+Museums
+Nanotechnology
+Natural Gas & Oil
+Natural Resource Management
+Nuclear Energy
+Open Data
+Pensions & Retirement
+Police
+Political Parties
+Political Rights
+Poverty
+Public Amenities
+Public Art
+Public Participation
+Public Safety
+Quality of Health Care
+Railroads
+Recycling
+Refugee Resettlement
+Refugee Rights
+Regional & Global Governance
+Regionalism
+Regulation
+Regulatory Policy
+Religious Rights
+Research & Development
+Resilience Planning & Design
+Right to Adequate Housing
+Right to Representation
+Roads and Highways
+Rural Housing
+School Governance
+Self-Driving Vehicles
+Sentencing Guidelines
+Social Determinants of Health
+Space Exploration
+Special Education
+Species Protection
+Sports
+Substance Abuse
+Sustainable Development
+Taxation
+Teacher Training & Accountability
+Telephone Access
+Terrorism
+Torture
+Tourism
+Trade and Tariffs
+Transparency
+Transportation Planning
+Treaties
+Unemployment
+Unofficial (Track II) Diplomacy
+Vocational Education & Training
+Wage Standards
+Walking/Pedestrian Mobility
+Waste Disposal
+Water Quality
+Weather Forecasting
+Wilderness Protection
+Worker Health & Safety
+Workforce Education
+Youth Employment
+Youth Issues","1. Overview
+Quick Submit",Multi-select ; type to search + drop down list ; rank order up to three﻿
+brief_description,Brief Description,Enter tweet-length (280 characters or less) description of this case.,N/A,Enter tweet-length description,No default value,"1. Overview
+Quick Submit",Plain text (280 character limit)
+body,Narrative,The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our guidelines as you prepare your case entry.,N/A,"Problems and Purpose
+Background History and Context
+Organizing, Supporting, and Funding Entities
+Participant Recruitment and Selection
+Methods and Tools Used
+Deliberation, Decisions, and Public Interaction
+Influence, Outcomes, and Effects
+Analysis and Lessons Learned
+See Also
+References
+External Links
+Notes",Same as placeholder + user entered text,1. Overview,Rich text
+tags,Tags,Select the tags that best describe this case. ,N/A,Enter one or more tags,"Accessibility
+Activism
+Agenda Formation
+Animal Protection & Welfare
+Architecture & Design
+Capacity Building
+Civic Infrastructure
+Civic Roles & Powers
+Civil Infrastructure
+Conflict Resolution
+Decision-Making
+Democratic Innovation
+Dialogue & Deliberation
+Digital/New Technologies
+Direct Action
+Educational Resources & Opportunities 
+Empowerment
+Environment
+Formal/Structured Participation
+Gender
+Global Affairs
+Human Rights
+Inclusiveness 
+Indigenous Issues
+Informal Participation
+Internal- & Self-Management
+Initiative Process
+Mapping & Analysis
+Online
+Oversight & Monitoring
+Participatory Budgeting
+Planning & Development
+Political Institutions
+Public Opinion
+Public Services
+Race
+Research/Study
+Rural
+Science Communication
+Social Media
+Social Welfare
+Stakeholder Engagement
+Storytelling
+Sustainability & Green Living
+Transparency & Accountability
+Urban
+Youth & Student Engagement",1. Overview,
+location,Primary Location,"Type to select an address, city or country where the primary case activities occurred. List any additional locations in the case narrative under ""Originating Entities and Funding"". You may also want to create separate case components for the locations of other case activities.",N/A,Type to search for a known location,No default value,"2. Location
+Quick Submit","Auto-complete (address, city, country - any location)"
+scope_of_influence,Scope of Influence,What is the geographical or jurisdictional scope of this case?,N/A,Select geographical or jurisdictional scope,"Organization (e.g. a local business or cooperative using participatory methods to manage and govern itself)
+Neighbourhood
+City/Town
+Metropolitan Area
+Regional (e.g. State, Province, Autonomous Region)
+National 
+Multinational
+No Geographical Limits (e.g. online environment where anyone from any place can take part)",2. Location,Single-select ; drop down list
+has_components,Add Components to this Case,"A case can have multiple components, but they must already be published cases on Participedia. Type to search for an existing case in Participedia to label it as a component of this case. Select one or more.","If you cannot find the case you are looking for, first publish this entry to save your work. Next use quick submit to publish the component case entry. Then return to this case entry and add your new case entry as a component.",Search for existing case/component,All cases in Participedia,3. Components,Type to search + drop down list of all cases (selected case title appears below the field and can be removed with an “x”)
+is_component_of,Make This Case a Component of Another Case,"A case can only be a component of one other case, and the other case must already be published on Participedia. Type to search for an existing case in Participedia to label this case as a component of it. Select one. ","If you cannot find the case you are looking for, first publish this entry to save your work. Next use quick submit to publish the ‘parent’ case entry. Then return to this case entry and label this case as a component of the new ‘parent’ case.",Search for existing case/parent,All cases in Participedia,3. Components,Type to search + drop down list of all cases (selected case title appears below the field and can be removed with an “x”)
+file_upload,Files,"Upload relevant documents here. Supported file types include: rtf, txt, doc, docx, xls, xlsx, pdf, ppt, pptx, pps, ppsx, odt, ods and odp. Max file size is 5MB.",N/A,Click to select or drag and drop files here,No default value,"4. Media
+Quick Submit",Upload area (from device)
+file_link,N/A,"If applicable, provide a link to where the original file was sourced.",N/A,Link to original,No default value,"4. Media
+Quick Submit",URL - in 'attribution box' for each file uploaded
+file_attribution,N/A,Who is the original owner or creator of this file?,N/A,Owner or creator,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each file uploaded
+file_title,N/A ,Provide a title or description of this file in 10 words or less.,N/A,Title or description,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each file uploaded
+link,Links,"If there is a main website for this case, enter it here. Add links to additional sources so that readers and editors can find more information about this case online. ",N/A,Add link,No default value,"4. Media
+Quick Submit","URL - in 'attribution box' for each link added / ""+ add another link"" button below attribution box"
+link_attribution,N/A,Who is the original owner or creator of this linked content?,N/A,Owner or creator,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each link added
+link_title,N/A,Provide a title or description of this linked content in 10 words or less.,N/A,Title or description,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each link added
+photo_upload,Images,"Upload images here. Supported file types include: jpg, png, gif and tiff. Max file size is 5MB. ",N/A,Click to select or drag and drop images here,No default value,"4. Media
+Quick Submit",Upload area (from device)
+photo_link,N/A,"If applicable, provide a link to where the original image was sourced.",N/A,Link to original,No default value,"4. Media
+Quick Submit",URL - in 'attribution box' for each image uploaded
+photo_attribution,N/A,Who is the original owner or creator of this image?,N/A,Owner or creator,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each image uploaded
+photo_title,N/A,Provide a title or description of this image in 10 words or less.,N/A,Title or description,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each image uploaded
+video_link,Videos,Add a video link from Vimeo or YouTube.,N/A,Add video link (Vimeo or YouTube),No default value,"4. Media
+Quick Submit",URL - in 'attribution box' for each video link added / “+ add another video link” button
+video_attribution,N/A,Who is the original owner or creator of this video?,N/A,Owner or creator,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each video link added
+video_title,N/A,Provide a title or description of this video in 10 words or less.,N/A,Title or description,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each video link added
+audio_link,Audio,"Add links to audio, such as podcasts.",N/A,Add link to audio,No default value,"4. Media
+Quick Submit",URL - in 'attribution box' for each audio link added / “+ add another audio link” button
+audio_attribution,N/A,Who is the original owner or creator of this audio?,N/A,Owner or creator,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each audio link added
+audio_title,N/A,Provide a title or description of this audio in 10 words or less.,N/A,Title or description,No default value,"4. Media
+Quick Submit",Plain text - in 'attribution box' for each audio link added
+start_date,Start Date,Select a start date or date of single event.,N/A,Select a start date or date of single event,,"5. Date & Duration
+Quick Submit",Calendar
+end_date,End Date,Select an end date if applicable,N/A,Select an end date if applicable,,"5. Date & Duration
+Quick Submit",Calendar
+ongoing,[No Label],This case is ongoing,N/A,,"No default values; check = ongoing, uncheck = not ongoing","5. Date & Duration
+Quick Submit",Checkbox
+time_limited,Time Limited or Repeated?,"Did this case take place over a single, defined period of days, weeks or months? Or was the entire process repeated over time? Select one.",N/A,Was this time limited or repeated?,"A single, defined period of time
+Repeated over time",5. Date & Duration,Single-select ; drop down list
+purpose,Purpose/Goal,"Select and rank up to three purposes, with “1” indicating the most relevant.",N/A,Select & rank up to 3 purposes/goals,"Make, influence, or challenge decisions of government and public bodies
+Make, influence, or challenge decisions of private organizations (e.g., civil society organizations; corporations) 
+Deliver goods and services (e.g., co-production of public safety by police and community)
+Develop the civic capacities of individuals, communities, and/or civil society organizations (e.g., increase understanding of public issues; strengthen social capital)
+Research",6. Purpose & Approach,Multi-select ; type to search + drop down list ; rank order up to three
+approach,Approach,"Select and rank up to three approaches, with “1” indicating the most relevant.",N/A,Select & rank up to 3 approaches,"Advocacy (e.g. lobbying; petitioning)
+Citizenship building (e.g. opportunities for people to learn about their rights & claim them)
+Civil society building (e.g. network building across governmental & social boundaries)
+Co-governance (e.g. collaboration in decision making with government and public bodies)
+Co-production in form of partnership and/or contract with government and/or public bodies (e.g. collaboration with government to provide affordable housing)
+Co-production in form of partnership and/or contract with private organisations (e.g. collaboration with business or civil society)
+Consultation (e.g. public hearings)
+Direct decision making (e.g. referenda)
+Independent action (without the participation of government or private bodies)
+Informal engagement by intermediaries with nongovernmental authorities (e.g. bargaining & negotiation on behalf of marginalized sectors)
+Informal engagement by intermediaries with political authorities (e.g. bargaining & negotiation on behalf of marginalized sectors)
+Leadership development (e.g. individual & group capacity for civic engagement)
+Evaluation, oversight, & social auditing (e.g. measuring & reporting organizational performance)
+Protest (e.g. demonstrations; marches; pickets) 
+Research (e.g., public opinion surveys; focus groups; participatory action research)
+Social mobilization (e.g. community organizing; consciousness raising; political consumerism) 
+",6. Purpose & Approach,Multi-select ; type to search + drop down list ; rank order up to three
+public_spectrum,Spectrum of Public Participation,Which type of goal from the IAP2 Spectrum of Public Participation does this case best represent?,N/A,Select one goal,"Inform (provide the public with balanced and objective information to assist in understanding the problem, alternatives, opportunities, and/or solutions)
+Consult (obtain feedback on analyses, alternatives, and/or decisions)
+Involve (work directly with the public throughout the process to ensure that public concerns are understood & considered)
+Collaborate (partner with the public in each aspect of the decision including the development of alternatives & the identification of the preferred solution)
+Empower (place final decision-making in the hands of the public)
+Not applicable or not relevant ",6. Purpose & Approach,Single-select ; drop down list
+number_of_participants,Total Number of Participants,Roughly how many people participated? ,N/A,How many people participated?,,7. Participants,Open integer
+open_limited,Open to All of Limited to Some?,Was this open to all or limited to a subset of the population?,N/A,Was this open to all or limited to some?,"Open to All
+Open to All With Special Effort to Recruit Some Groups (e.g. community organizing to recruit low-income earners)
+Limited to Only Some Groups or Individuals
+Both (i.e. some aspects are open to all and others are limited to some)",7. Participants,Single-select ; drop down list
+recruitment_method,Recruitment Method for Limited Subset of Population,"If relevant to this case, select the method used to recruit a limited subset of the population.",N/A,Select recruitment method,"Captive Sample (e.g. required classroom participation)
+Random Sample (i.e. each member of targeted population has equal chance of being either invited or overlooked)
+Stratified Random Sample (i.e. participants are selected to reflect the diversity of the population) 
+Appointment (e.g. city selects members of a consultative council)
+Election (e.g. consultative council chosen by election)
+Not Applicable",7. Participants,Single-select ; drop down list
+targeted_participants,Targeted Demographics,Select up to three of the most heavily recruited groups.,N/A,Identify up to 3 recruited groups,"Appointed Public Servants (e.g. bureaucrats)
+Gay/Lesbian/Bisexual/Transgender (i.e. LGBT)
+Elderly
+Elected Public Officials
+Experts (e.g. scientists)
+Indigenous People
+Immigrants
+Low-Income Earners
+Men
+People with Disabilities
+Racial/Ethnic Groups
+Religious Groups
+Stakeholder Organizations (e.g. NGOs, business interests)
+Students
+Women
+Youth",7. Participants,Multi-select up to three; drop down list
+method_types,General Types of Methods,"Select and rank up to three types that best describe the methods used in this case, with “1” indicating the most relevant.","There is huge variety in the range of participatory methods. To help narrow it down, select and rank up to three of the following types of methods used in this case. Specifying what types of methods were used makes it easier for Participedia users to find similar cases. ",Select & rank up to 3 types,"Collaborative approaches (i.e. two or more stakeholders work together to address a common problem)
+Community development, organizing, and mobilization (i.e. empowering communities to drive, implement, and effect change)
+Deliberative and dialogic process (i.e. structured processes that involve deliberation and/or dialogue as a central aspect)
+Direct democracy (i.e. formal processes by which citizens exert direct authority over decisions)
+Evaluation, oversight, and social auditing (i.e.monitoring public bodies and services to hold officials and authorities to account)
+Experiential and immersive education (i.e. alternative approaches to teaching and learning) 
+Informal conversation spaces (i.e. spaces where deliberation and discussion may take place in an informal or unstructured way)
+Informal participation (i.e. extra-institutional attempts to secure access to resources, rights and political representation without using formal governmental channels)
+Internal management or organization (i.e. systems of internal communication, representation, or decision-making)
+Long-term civic bodies (i.e. sustained efforts to provide the public with opportunities for input and decision-making, typically at the local level)
+Participant-led meetings (i.e. participants shape the agenda and process) 
+Participatory arts (i.e. processes that engage audiences as participants in the artistic  production or endeavour)
+Planning (i.e. comprehensive approaches to establish goals, policies, and procedures for a social or governmental unit)
+Protest (i.e. direct confrontation with public and/or private institutions)
+Public budgeting (i.e. designed to help decide how public funds should be spent)
+Public meetings (i.e. government-sponsored meetings open to the general public where public officials may also be present)
+Research or experimental method (i.e. forms of academic research, or participatory approaches tested as part of a research project)",8. Process,Multi-select ; type to search + drop down list ; rank order up to three﻿
+tool_technique_types,General Types of Tools/Techniques,"Select and rank up to three types that best describe the tools/techniques used in this case, with “1” indicating the most relevant.","There is huge variety in the range of participatory tools/techniques. To help narrow it down, select and rank up to three of the following types that best describe the specific tools/techniques used in this case. Specifying what types of tools/techniques were used is makes it easier for Participedia users to find similar cases. ",Select & rank up to 3 types,"Manage and/or allocate money or resources (e.g. mobile budgeting applications)
+Collect, analyze, and/or solicit feedback (e.g. questionnaire; keypad polling)
+Facilitate dialogue, discussion, and/or deliberation (e.g. active listening; managing conflict)
+Facilitate decision-making (e.g. ranking; multi-voting)
+Legislation, policy, or frameworks (e.g. arrangements that formally embed public participation)
+Recruit or select participants (e.g. community outreach; random selection)
+Plan, map and/or visualize options and proposals (e.g.GIS mapping)
+Propose and/or develop policies, ideas, and recommendations (e.g. brainstorming; nominal group technique)
+Inform, educate and/or raise awareness (e.g. discussion guide; Q&A with experts)",8. Process,Multi-select ; type to search + drop down list ; rank order up to three
+specific_methods_tools_techniques,"Specific Methods, Tools & Techniques","What specific methods, tools and techniques were used in this case? Type to select from entries already in the Participedia database.","If you cannot find your method, tool or technique, first publish this entry to save your work. Next add a new method, tool or technique entry. Then return to this case entry and add your new method, tool, or technique. ",Type to search & generate possible database matches,All methods/tools/techniques on Participedia,8. Process,"Array of {method id, tool id, title}"
+legality,Legality,Is the overall method used in this case considered legal by judicial authorities?,N/A,Was this considered legal?,"Yes
+No
+Don’t Know",8. Process,Single-select ; drop down list
+facilitators,Facilitators,Did facilitators help guide part or all of this case?,N/A,Did facilitators help guide participants?,"Yes
+No
+Not Applicable",8. Process,Single-select ; drop down list
+facilitator_training,Facilitator Training,What level of training did facilitators have?,N/A,Select the type of facilitators,"Professional Facilitators
+Trained, Nonprofessional Facilitators
+Untrained, Nonprofessional Facilitators",8. Process,Single-select ; drop down list
+facetoface_online_or_both,"Face-to-Face, Online, or Both","Did participants interact face-to-face, online, or both?",N/A,Was interaction face-to-face or online?,"Face-to-Face
+Online
+Both",8. Process,Single-select ; drop down list
+participants_interaction,Types of Interaction Among Participants,"Select and rank up to three types of interactions in order of relevance, with with “1” indicating the most often used form of interaction.",N/A,Select & rank up to 3 types of interaction,"Acting, Drama, or Roleplay
+Ask & Answer Questions
+Discussion, Dialogue, or Deliberation
+Express Opinions/Preferences Only
+Formal Testimony
+Informal Social Activities
+Listen/Watch as Spectator
+Negotiation & Bargaining
+Storytelling
+Teaching/Instructing
+No Interaction Among Participants",8. Process,Multi-select ; type to search + drop down list ; rank order up to three
+learning_resources,Information & Learning Resources,What types of background information were provided for participants?,N/A,Identify information (if any) provided,"Expert Presentations
+Participant Presentations
+Site Visits
+Teach-ins
+Video Presentations (online or in-person)
+Written Briefing Materials (online or as handouts)
+No Information Was Provided to Participants
+Not Relevant to this Type of Initiative",8. Process,Multi-select ; type to search + drop down list
+decision_methods,Decision Methods,How did participants in this case make group decisions?,N/A,How were group decisions made?,"Opinion Survey (i.e. taken before and/or after participants convened)
+Idea Generation (i.e. potential solutions were generated, but no priorities were decided)
+General Agreement/Consensus (i.e. broad acceptance of decisions; unanimous agreement desired but not necessary)
+Voting (i.e. any type of formal vote; please provide more detail in next field)
+Not Applicable (e.g. votes are not typically taken at protest demonstrations)
+Don’t Know",8. Process,Multi-select ; type to search + drop down list
+if_voting,If Voting,What voting methods were used by participants?,N/A,What voting methods were used?,"Preferential Voting (i.e. ranked preferences)
+Plurality (i.e. highest percentage wins, even if the proposal receives fewer than 50.1% votes)
+Majoritarian Voting (i.e. 50% +1)
+Super-Majoritarian (i.e. threshold more than 50% +1)
+Unanimous Decision (i.e. full agreement by all participants)
+Don’t Know",8. Process,Multi-select ; type to search + drop down list
+insights_outcomes,Communication of Insights & Outcomes,Select up to three ways that insights and outcomes from this case were communicated to the intended audiences.,N/A,How were insights & outcomes communicated?,"ets.)
+Artistic Expression (e.g. political rap, street theater)
+Traditional Media (i.e. television, radio, newspapers)
+New Media (e.g. social media, blogging, texting)
+Independent Media (i.e. free of corporate or government influence)
+Public Report
+Minority Report (i.e. a dissenting opinion)
+Petitions
+Protests/Public Demonstrations
+Public Hearings/Meetings
+Word of Mouth
+Not Applicable",8. Process,Multi-select up to three; drop down list
+primary_organizer,Primary Organizer/Manager,"Who was primarily responsible for organizing / managing the initiative? Type to select name of any organization that already exists on Participedia. For new organizations, first publish this case to save your work then publish a new organization. To add your new organization, return to edit this case.",Provide information about additional organizers and sponsors of the initiative in the 'Originating Entities and Funding' section of the case narrative.,Type to search & generate possible database matches,All organization entries in Participedia,9. Organizers & Supporters,
+organizer_types,Type of Organizer/Manager,Select up to three types of organizers or managers.,N/A,Select up to 3 types of organizers or managers,"Academic Institution
+Activist Network  
+Community Based Organization
+Faith-Based Organization
+For-Profit Business
+Government-Owned Corporation
+Individual
+International Organization
+Local Government (e.g. Village, Town, City)
+National Government
+Non-Governmental Organization (Non-profit)
+Philanthropic Organization (i.e. dedicated to making monetary grants or gifts)
+Regional Government (e.g. State, Provincial, Territorial)
+Social Movement  
+Labor/Trade Union
+Not Applicable",9. Organizers & Supporters,Multi-select up to three; drop down list
+funder,Funder,"Who funded this case of public participation? Provide names of the organizations, government agencies, or individuals who paid for this initiative.",Provide additional information about funders of the initiative in the 'Originating Entities and Funding' section of the case narrative.,Who funded this case?,No default values,10. Resources,
+funder_types *,Type of Funder,,N/A,,"Academic Institution
+Activist Network  
+Community Based Organization
+Faith-Based Organization
+For-Profit Business
+Government-Owned Corporation
+Individual
+International Organization
+Local Government (e.g. Village, Town, City)
+National Government
+Non-Governmental Organization (Non-profit)
+Philanthropic Organization (i.e. dedicated to making monetary grants or gifts)
+Regional Government (e.g. State, Provincial, Territorial)
+Social Movement  
+Labor/Trade Union
+Not Applicable",10. Resources,Multi-select up to three; drop down list
+staff,Staff,Were any paid staff or consultants involved in this case?,N/A,Were paid staff or consultants involved?,"Yes
+No",10. Resources,Single-select ; drop down list
+volunteers,Volunteers,Did unpaid volunteers help implement this case?,N/A,Were unpaid volunteers involved?,"Yes
+No",10. Resources,Single-select ; drop down list
+impact_evidence,Evidence of Impact,Did this initiative contribute to social and/or political change?,N/A,Did this work contribute to social or political change?,"Yes
+No",11. Evidence of Impact,Single-select ; drop down list
+change_types *,Types of Change,"Select and rank up to five types of change to which this case contributed, in order of relevance, with “1” being the most relevant type of change.","Provide additional detail in the ""Influence, Outcomes, and Effects"" section of the case narrative. ",Select & rank up to 5 types of change to which this case contributed,"Changes in people’s knowledge, attitudes, and behavior
+Changes in civic capacities (e.g. improved community problem solving)
+Changes in public policy (e.g. new laws or regulations)
+Changes in how institutions operate (e.g. improved decision making)
+Conflict transformation",11. Evidence of Impact,Multi-select ; type to search + drop down list ; rank order up to five
+implementers_of_change *,Implementers of Change,Select up to three types of actors who played roles in implementing ideas that emerged from this initiative.,N/A,Select & rank up to 3 types of implementers of change,"Lay Public (i.e. people with no professional stake in the issues) 
+Stakeholder Organizations (e.g. community groups, NGOs, business interests)
+Elected Public Officials
+Appointed Public Servants (e.g. bureaucrats)
+Experts (e.g. scientists, engineers, criminologists, doctors, lawyers)
+Corporations
+Don’t Know",11. Evidence of Impact,Multi-select ; type to search + drop down list ; rank order up to three﻿
+formal_evaluation,Formal Evaluation,Was a formal evaluation of this initiative conducted?,N/A,Was there a formal evaluation of this case?,"Yes
+No",11. Evidence of Impact,Single-select ; drop down list
+evaluation_reports *,Evaluation Report Document,Upload evaluation report from your device.,N/A,Upload relevant documents,No default values,11. Evidence of Impact,Upload from device ( + add more)
+evaluation_links *,Evaluation Report Link,Provide a link to the evaluation report here.,N/A,Add a link,No default values,,URL

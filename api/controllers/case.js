@@ -115,7 +115,7 @@ router.post("/new", async function postNewCase(req, res) {
   }
   // Refresh search index
   try {
-    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
   }
@@ -177,7 +177,9 @@ router.put("/:thingid", getEditXById("case"));
 
 // We want to extract the user ID from the auth token if it's there,
 // but not fail if not.
-router.get("/:thingid", (req, res) => returnThingByRequest("case", req, res));
+router.get("/:thingid/:view?", (req, res) =>
+  returnThingByRequest("case", req, res)
+);
 
 /**
  * @api {delete} /case/:caseId Delete a case
