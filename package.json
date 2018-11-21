@@ -9,7 +9,7 @@
   "license": "MIT",
   "main": "app.js",
   "engines": {
-    "node": "9.3.0"
+    "node": "11.2.0"
   },
   "dependencies": {
     "apicache": "^1.1.1",
