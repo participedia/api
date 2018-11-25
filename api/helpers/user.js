@@ -53,7 +53,6 @@ async function commonUserHandler(required, req, res, next) {
       });
     }
     if (userObj) {
-      console.warn("the bloody userObj is %s", JSON.stringify(userObj));
       userObj = userObj.user;
       if (!req.user) {
         req.user = {};

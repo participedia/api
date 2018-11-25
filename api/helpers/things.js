@@ -239,21 +239,31 @@ function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
     const thingid = req.thingid || as.number(req.params.thingid);
+    let lang,
+      user,
+      userId,
+      oldThing,
+      newThing,
+      updatedText,
+      updatedThingFields = [],
+      isTextUpdated = false,
+      anyChanges = false,
+      retThing = null;
     try {
       // FIXME: Figure out how to get all of this done as one transaction
-      const lang = as.value(req.params.language || "en");
-      const user = req.user;
-      const userId = user.user_id;
-      const oldThing = await getThingByType_id_lang_userId(
+      lang = as.value(req.params.language || "en");
+      user = req.user;
+      userId = user.user_id;
+      oldThing = await getThingByType_id_lang_userId(
         type,
         thingid,
         lang,
         userId
       );
-      const newThing = req.body;
+      newThing = req.body;
       // console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
       // console.log("User: %s", JSON.stringify(user));
-      let updatedText = {
+      updatedText = {
         body: oldThing.body,
         title: oldThing.title,
         description: oldThing.description,
@@ -261,10 +271,6 @@ function getEditXById(type) {
         type: type,
         id: thingid
       };
-      let updatedThingFields = [];
-      let isTextUpdated = false;
-      let anyChanges = false;
-      let retThing = null;
 
       /* DO ALL THE DIFFS */
       // FIXME: Does this need to be async?
@@ -452,11 +458,11 @@ function getEditXById(type) {
         if (req.thingid) {
           res.status(201).json({
             OK: true,
-            data: { thingid: retThing.id },
-            object: retThing
+            object: retThing,
+            data: { thingid: retThing.id }
           });
         } else {
-          res.status(200).json({ OK: true, data: retThing });
+          res.status(200).json({ OK: true, object: retThing });
         }
       }
     } catch (error) {
@@ -474,7 +480,7 @@ function getEditXById(type) {
     } // end catch
     // update search index
     try {
-      db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
+      db.none("REFRESH MATERIALIZED VIEW search_index_en;");
     } catch (error) {
       console.error("Problem refreshing materialized view: %s", error);
     }

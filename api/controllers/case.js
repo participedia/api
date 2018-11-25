@@ -115,7 +115,7 @@ router.post("/new", async function postNewCase(req, res) {
   }
   // Refresh search index
   try {
-    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
+    db.none("REFRESH MATERIALIZED VIEW search_index_en;");
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
   }
