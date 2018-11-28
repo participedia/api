@@ -114,8 +114,9 @@ router.post("/new", async function postNewCase(req, res) {
     return res.status(500).json({ OK: false, error: error });
   }
   // Refresh search index
+  // FIXME: This will never get called as we have already returned ff
   try {
-    db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
   }

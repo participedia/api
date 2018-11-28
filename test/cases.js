@@ -25,13 +25,7 @@ async function addBasicCase() {
   return chai
     .postJSON("/case/new?returns=json")
     .set("Authorization", "Bearer " + tokens.user_token)
-    .send({
-      // mandatory
-      title: "First Title",
-      body: "First Body",
-      // optional
-      location: location
-    });
+    .send(example_case);
 }
 
 describe("Cases", () => {

@@ -489,6 +489,17 @@ function getEditXById(type) {
 
 const supportedTypes = ["case", "method", "organization"];
 
+/** uniq ::: return a list with no repeated items. Items will be in the order they first appear in the list. **/
+const uniq = list => {
+  let newList = [];
+  list.forEach(item => {
+    if (!newList.includes(item)) {
+      newList.push(item);
+    }
+  });
+  return newList;
+};
+
 module.exports = {
   getThingByType_id_lang_userId,
   getThingByRequest,
@@ -497,5 +508,6 @@ module.exports = {
   supportedTypes,
   titleKeys,
   shortKeys,
-  mediumKeys
+  mediumKeys,
+  uniq
 };
