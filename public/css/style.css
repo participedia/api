@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: "Fakt";
-  src: url("fonts/FaktPro-Medium.ttf");
+  src: url("/fonts/FaktPro-Medium.8732d1af.ttf");
   font-weight: 600;
   font-style: bold;
   font-display: swap;
@@ -12,7 +12,7 @@
 /* Do we need this? We don't have font-weight 500 anywhere */
 @font-face {
   font-family: "Fakt";
-  src: url("fonts/FaktPro-Normal.ttf");
+  src: url("/fonts/FaktPro-Normal.1694c764.ttf");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -20,7 +20,7 @@
 
 @font-face {
   font-family: "Fakt";
-  src: url("fonts/FaktPro-Blond.ttf");
+  src: url("/fonts/FaktPro-Blond.9338e173.ttf");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
