@@ -23,6 +23,7 @@ footer a:hover {
 
 footer section {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .footer-main-nav {
@@ -78,4 +79,14 @@ footer section {
 
 .footer-description h3 {
   margin-top: 0px;
+}
+
+@media (max-width: 980px) {
+  .footer-main-nav {
+    width: 100%;
+  }
+
+  .footer-description {
+    padding: 0px;
+  }
 }
