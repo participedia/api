@@ -1,7 +1,18 @@
-/* The following is a modofied version of Igor Damenko's awsm.css: https://github.com/igoradamenko/awsm.css */
+/*
+
+todos:
+- [ ] remove unneeded styles from awsm.css
+- [ ] fix styling for footer main nav links
+- [ ] make footer responsive, add mobile layout breakpoint
+
+*/
+
+/* The following is a modified version of Igor Damenko's awsm.css: https://github.com/igoradamenko/awsm.css */
 @charset "UTF-8";
 
 @import url("/css/vendor/normalize.css");
+
+@import url("/css/footer.css");
 
 @font-face {
   font-family: "Fakt";
@@ -39,7 +50,6 @@ html {
 
 /* Participedia Typography */
 body {
-  margin: 1em;
   font-size: 1rem; /* 16px */
   font-weight: 300;
   line-height: 1.5; /* 24px */
@@ -96,7 +106,7 @@ article {
   margin: 0 auto;
 }
 
-section {
+main section {
   display: flex;
   justify-content: center;
 }
@@ -133,12 +143,12 @@ body > header p {
   margin: 0;
 }
 
-body > footer {
+/*body > footer {
   margin-top: 4.5em;
   padding-bottom: 1.5em;
   text-align: center;
-  color: #aaa;
-}
+  color: #ffffff;
+}*/
 
 ul,
 ol {
@@ -306,15 +316,15 @@ h6 {
   color: #aaa;
 }
 
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+/*@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   article header h1 a,
   article header h2 a {
     background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="2"%3E%3Crect x="0" y="1" width="1" height="1" fill="rgba(0, 0, 0, 0.35)"/%3E%3C/svg%3E')
       left bottom repeat-x;
   }
-}
+}*/
 
-article header h1 a:visited,
+/*article header h1 a:visited,
 article header h2 a:visited {
   color: #aaa;
   background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="1"%3E%3Crect x="0" y="0.5" width="1" height="0.5" fill="rgba(170, 170, 170, 0.35)"/%3E%3C/svg%3E')
@@ -327,7 +337,7 @@ article header h2 a:visited {
     background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="2"%3E%3Crect x="0" y="1" width="1" height="1" fill="rgba(170, 170, 170, 0.35)"/%3E%3C/svg%3E')
       left bottom repeat-x;
   }
-}
+}*/
 
 article header h1 a:visited:hover,
 article header h2 a:visited:hover {
@@ -341,17 +351,15 @@ article > footer {
 a {
   text-decoration: none;
   color: #0064c1;
-  transition: color 300ms ease-out, box-shadow 300ms ease-out;
-  background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="1"%3E%3Crect x="0" y="0.5" width="1" height="0.5" fill="rgba(0, 100, 193, 0.35)"/%3E%3C/svg%3E')
-    left bottom repeat-x;
+  /*transition: color 300ms ease-out, box-shadow 300ms ease-out;*/
 }
 
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+/*@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   a {
     background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="2"%3E%3Crect x="0" y="1" width="1" height="1" fill="rgba(0, 100, 193, 0.35)"/%3E%3C/svg%3E')
       left bottom repeat-x;
   }
-}
+}*/
 
 a:visited {
   color: #80b2e0;
@@ -380,7 +388,6 @@ img,
 picture {
   display: block;
   max-width: 100%;
-  margin: 0 auto;
 }
 
 audio,
