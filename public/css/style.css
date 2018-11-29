@@ -1,7 +1,7 @@
 /* The following is a modofied version of Igor Damenko's awsm.css: https://github.com/igoradamenko/awsm.css */
 @charset "UTF-8";
 
-@import url("/css/normalize.css");
+@import url("/css/vendor/normalize.css");
 
 @font-face {
   font-family: "Fakt";
