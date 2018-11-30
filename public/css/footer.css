@@ -4,26 +4,24 @@ footer {
   color: #fff;
 }
 
-.nav-list {
-  padding-left: 0px;
-  list-style-type: none;
-}
-
 footer a {
   color: #ffffff;
   font-weight: bold;
   text-decoration: none;
-  background-image: none;
 }
 
 footer a:hover {
   text-decoration: underline;
-  background-image: none;
 }
 
 footer section {
   display: flex;
   flex-wrap: wrap;
+}
+
+.nav-list {
+  padding-left: 0px;
+  list-style-type: none;
 }
 
 .footer-main-nav {
@@ -73,7 +71,6 @@ footer section {
 
 .footer-description {
   padding: 0 15px;
-  flex-grow: 0;
   max-width: 315px;
 }
 
