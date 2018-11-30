@@ -7,8 +7,16 @@
 @font-face {
   font-family: "Fakt";
   src: url("/fonts/FaktPro-Medium.8732d1af.ttf");
-  font-weight: 600;
+  font-weight: 800;
   font-style: bold;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fakt";
+  src: url("/fonts/FaktPro-Normal.1694c764.ttf");
+  font-weight: 600;
+  font-style: normal;
   font-display: swap;
 }
 
