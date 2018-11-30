@@ -2,19 +2,31 @@
 
 @import url("/css/vendor/normalize.css");
 
+@import url("/css/icons.css");
+
+@import url("/css/header.css");
+
 @import url("/css/footer.css");
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Medium.8732d1af.ttf");
-  font-weight: 600;
+  src: url("/fonts/FaktPro-Medium.ttf");
+  font-weight: 800;
   font-style: bold;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Blond.9338e173.ttf");
+  src: url("/fonts/FaktPro-Normal.ttf");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fakt";
+  src: url("/fonts/FaktPro-Blond.ttf");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -29,7 +41,7 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Participedia Typography */
+/* Typography */
 body {
   font-size: 1rem; /* 16px */
   font-weight: 300;
@@ -76,10 +88,7 @@ strong {
   font-weight: 600;
 }
 
-/* Participedia Layout */
-
-/* Below are all subject to review and modification, they are just there as reasonable defaults */
-
+/* Layout */
 main section {
   display: flex;
   justify-content: center;
@@ -105,14 +114,50 @@ article {
   order: 2;
 }
 
-body > header {
-  margin-bottom: 3.5em;
+.map-container {
+  margin-top: 66px;
 }
 
-body > header h1 {
-  margin: 0;
+@media (max-width: 1000px) {
+  .map-container {
+    margin-top: 132px;
+  }
 }
 
-body > header p {
-  margin: 0;
+.sr-only {
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  top: -10px;
+}
+
+/* Buttons */
+.button {
+  background-color: #fff;
+  color: #222;
+  border-radius: 2px;
+  padding: 5px 15px;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  min-width: 60px;
+}
+
+.button i {
+  font-size: .75em;
+  padding-right: .5em;
+  height: 1.15em;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.white-button {
+  background-color: #fff;
+  color: #222;
+}
+
+.dark-grey-button {
+  background-color: #4D4D4D;
+  color: #fff;
 }

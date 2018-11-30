@@ -6,8 +6,9 @@ footer {
 
 footer a {
   color: #ffffff;
-  font-weight: bold;
+  font-weight: 600;
   text-decoration: none;
+  font-size: .875rem;
 }
 
 footer a:hover {
@@ -22,6 +23,8 @@ footer section {
 .nav-list {
   padding-left: 0px;
   list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
 }
 
 .footer-main-nav {
@@ -35,10 +38,6 @@ footer section {
 
 .footer-main-nav .nav-list:last-child {
   padding-right: 0px;
-}
-
-.footer-main-nav li {
-  padding-bottom: 5px;
 }
 
 .footer-social-nav {
@@ -65,61 +64,79 @@ footer section {
   margin-top: 90px;
 }
 
+.footer-copyright-area span {
+  font-size: .875rem;
+}
+
 .footer-copyright-area img {
-  padding-right: 15px;
+  padding-right: 10px;
+  padding-top: 3px;
 }
 
 .footer-description {
   padding: 0 15px;
-  max-width: 315px;
+  max-width: 300px;
+}
+
+.footer-description p {
+  margin-block-start: 9px;
 }
 
 .footer-description h3 {
   margin-top: 0px;
+  margin-block-end: 0px;
 }
 
-@media (max-width: 980px) {
-  footer section {
-    width: 50%;
-    margin: 0 auto;
+@media (max-width: 1020px) {
+  footer section:first-child {
+    flex-direction: column;
   }
 
   .footer-main-nav {
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .footer-main-nav .nav-list {
-    padding-right: 0px;
-    width: 50%;
-  }
-
-  .footer-main-nav .nav-list:nth-child(2) {
-    padding-right: 0px;
+    order: 2;
   }
 
   .footer-description {
-    display: none;
+    padding: 0px;
   }
 
   .footer-social-nav {
-    margin-top: -100px;
-    justify-content: unset;
-    margin-left: 50%
+    margin-top: -105px;
+    margin-bottom: 80px;
   }
 
   .footer-copyright-area {
-    margin-top: -50px;
-    margin-left: 50%;
-    flex-wrap: unset;
-    justify-content: unset;
-    width: 50%;
+    margin-top: -20px;
   }
 }
 
+@media (max-width: 640px) {
+  .footer-copyright-area {
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
 
-@media (max-width: 650px) {
-  footer section {
-    width: 100%;
+  .footer-social-nav {
+    order: 3;
+    justify-content: flex-start;
+    margin: 30px 0px 0px 0px;
+  }
+
+  .footer-description {
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-main-nav {
+    flex-direction: column;
+  }
+
+  .footer-main-nav .nav-list {
+    margin-bottom: 15px;
+  }
+
+  .footer-main-nav .nav-list:last-child {
+    margin-bottom: 0px;
   }
 }
