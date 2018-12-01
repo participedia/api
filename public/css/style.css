@@ -6,7 +6,7 @@
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Medium.8732d1af.ttf");
+  src: url("/fonts/FaktPro-Medium.ttf");
   font-weight: 800;
   font-style: bold;
   font-display: swap;
@@ -14,7 +14,7 @@
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Normal.1694c764.ttf");
+  src: url("/fonts/FaktPro-Normal.ttf");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Blond.9338e173.ttf");
+  src: url("/fonts/FaktPro-Blond.ttf");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
