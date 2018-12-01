@@ -1,0 +1,142 @@
+footer {
+  padding: 30px;
+  background-color: #222222;
+  color: #fff;
+}
+
+footer a {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: .875rem;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+footer section {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.nav-list {
+  padding-left: 0px;
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+.footer-main-nav {
+  display: flex;
+  flex-grow: 2;
+}
+
+.footer-main-nav .nav-list {
+  padding-right: 60px;
+}
+
+.footer-main-nav .nav-list:last-child {
+  padding-right: 0px;
+}
+
+.footer-social-nav {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  min-width: 130px;
+}
+
+.footer-social-nav .nav-list {
+  display: flex;
+}
+
+.footer-social-nav .nav-list li {
+  padding-right: 15px;
+}
+
+.footer-social-nav .nav-list li:last-child {
+  padding-right: 0px;
+}
+
+.footer-copyright-area {
+  justify-content: flex-end;
+  margin-top: 90px;
+}
+
+.footer-copyright-area span {
+  font-size: .875rem;
+}
+
+.footer-copyright-area img {
+  padding-right: 10px;
+  padding-top: 3px;
+}
+
+.footer-description {
+  padding: 0 15px;
+  max-width: 300px;
+}
+
+.footer-description p {
+  margin-block-start: 9px;
+}
+
+.footer-description h3 {
+  margin-top: 0px;
+  margin-block-end: 0px;
+}
+
+@media (max-width: 1020px) {
+  footer section:first-child {
+    flex-direction: column;
+  }
+
+  .footer-main-nav {
+    order: 2;
+  }
+
+  .footer-description {
+    padding: 0px;
+  }
+
+  .footer-social-nav {
+    margin-top: -105px;
+    margin-bottom: 80px;
+  }
+
+  .footer-copyright-area {
+    margin-top: -20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-copyright-area {
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
+
+  .footer-social-nav {
+    order: 3;
+    justify-content: flex-start;
+    margin: 30px 0px 0px 0px;
+  }
+
+  .footer-description {
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-main-nav {
+    flex-direction: column;
+  }
+
+  .footer-main-nav .nav-list {
+    margin-bottom: 15px;
+  }
+
+  .footer-main-nav .nav-list:last-child {
+    margin-bottom: 0px;
+  }
+}

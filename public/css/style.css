@@ -1,26 +1,28 @@
-/* The following is a modofied version of Igor Damenko's awsm.css: https://github.com/igoradamenko/awsm.css */
 @charset "UTF-8";
+
+@import url("/css/vendor/normalize.css");
+
+@import url("/css/footer.css");
 
 @font-face {
   font-family: "Fakt";
-  src: url("fonts/FaktPro-Medium.ttf");
-  font-weight: 600;
+  src: url("/fonts/FaktPro-Medium.ttf");
+  font-weight: 800;
   font-style: bold;
   font-display: swap;
 }
 
-/* Do we need this? We don't have font-weight 500 anywhere */
 @font-face {
   font-family: "Fakt";
-  src: url("fonts/FaktPro-Normal.ttf");
-  font-weight: 500;
+  src: url("/fonts/FaktPro-Normal.ttf");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Fakt";
-  src: url("fonts/FaktPro-Blond.ttf");
+  src: url("/fonts/FaktPro-Blond.ttf");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -37,7 +39,6 @@ html {
 
 /* Participedia Typography */
 body {
-  margin: 1em;
   font-size: 1rem; /* 16px */
   font-weight: 300;
   line-height: 1.5; /* 24px */
@@ -86,15 +87,8 @@ strong {
 /* Participedia Layout */
 
 /* Below are all subject to review and modification, they are just there as reasonable defaults */
-header,
-main,
-footer,
-article {
-  position: relative;
-  margin: 0 auto;
-}
 
-section {
+main section {
   display: flex;
   justify-content: center;
 }
@@ -106,7 +100,7 @@ aside {
   order: 1;
 }
 
-nav {
+.case-nav {
   flex: 0 0 25%;
   max-width: 25%;
   background-color: palegreen;
@@ -129,415 +123,4 @@ body > header h1 {
 
 body > header p {
   margin: 0;
-}
-
-body > footer {
-  margin-top: 4.5em;
-  padding-bottom: 1.5em;
-  text-align: center;
-  color: #aaa;
-}
-
-ul,
-ol {
-  margin-top: 0;
-  padding-top: 0;
-  padding-left: 2.5em;
-}
-
-p {
-  margin: 1em 0;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
-  hyphens: auto;
-}
-
-p:first-child {
-  margin-top: 0;
-}
-
-p:last-child {
-  margin-bottom: 0;
-}
-
-p + ul,
-p + ol {
-  margin-top: -0.75em;
-}
-
-p img,
-p picture {
-  float: right;
-  margin-bottom: 0.5em;
-  margin-left: 0.5em;
-}
-
-p picture img {
-  float: none;
-  margin: 0;
-}
-
-blockquote {
-  margin: 0;
-  padding-left: 2.5em;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 1.25em 0 0;
-}
-
-h1:hover > a[href^="#"][id],
-h1:focus > a[href^="#"][id],
-h2:hover > a[href^="#"][id],
-h2:focus > a[href^="#"][id],
-h3:hover > a[href^="#"][id],
-h3:focus > a[href^="#"][id],
-h4:hover > a[href^="#"][id],
-h4:focus > a[href^="#"][id],
-h5:hover > a[href^="#"][id],
-h5:focus > a[href^="#"][id],
-h6:hover > a[href^="#"][id],
-h6:focus > a[href^="#"][id] {
-  opacity: 1;
-  transition: opacity 0s, color 300ms ease-out;
-}
-
-h1 + p,
-h1 + details,
-h2 + p,
-h2 + details,
-h3 + p,
-h3 + details,
-h4 + p,
-h4 + details,
-h5 + p,
-h5 + details,
-h6 + p,
-h6 + details {
-  margin-top: 0.5em;
-}
-
-h1 > a[href^="#"][id],
-h2 > a[href^="#"][id],
-h3 > a[href^="#"][id],
-h4 > a[href^="#"][id],
-h5 > a[href^="#"][id],
-h6 > a[href^="#"][id] {
-  position: absolute;
-  left: -0.5em;
-  opacity: 0;
-  background: none;
-  color: rgba(0, 0, 0, 0.5);
-  transition: opacity 300ms ease-out;
-}
-
-h1 > a[href^="#"][id]:target,
-h1 > a[href^="#"][id]:hover,
-h1 > a[href^="#"][id]:focus,
-h2 > a[href^="#"][id]:target,
-h2 > a[href^="#"][id]:hover,
-h2 > a[href^="#"][id]:focus,
-h3 > a[href^="#"][id]:target,
-h3 > a[href^="#"][id]:hover,
-h3 > a[href^="#"][id]:focus,
-h4 > a[href^="#"][id]:target,
-h4 > a[href^="#"][id]:hover,
-h4 > a[href^="#"][id]:focus,
-h5 > a[href^="#"][id]:target,
-h5 > a[href^="#"][id]:hover,
-h5 > a[href^="#"][id]:focus,
-h6 > a[href^="#"][id]:target,
-h6 > a[href^="#"][id]:hover,
-h6 > a[href^="#"][id]:focus {
-  opacity: 1;
-  box-shadow: none;
-  color: #000;
-  transition: opacity 0s, color 0s;
-}
-
-h1 > a[href^="#"][id]:target:focus,
-h2 > a[href^="#"][id]:target:focus,
-h3 > a[href^="#"][id]:target:focus,
-h4 > a[href^="#"][id]:target:focus,
-h5 > a[href^="#"][id]:target:focus,
-h6 > a[href^="#"][id]:target:focus {
-  outline: none;
-}
-
-h1 > a[href^="#"][id]::before,
-h2 > a[href^="#"][id]::before,
-h3 > a[href^="#"][id]::before,
-h4 > a[href^="#"][id]::before,
-h5 > a[href^="#"][id]::before,
-h6 > a[href^="#"][id]::before {
-  content: "•";
-}
-
-h1 {
-  font-size: 2em;
-}
-
-h2 {
-  font-size: 1.75em;
-}
-
-h3 {
-  font-size: 1.25em;
-}
-
-h4 {
-  font-size: 1.15em;
-}
-
-h5 {
-  font-size: 1em;
-}
-
-h6 {
-  margin-top: 1em;
-  font-size: 1em;
-  color: #aaa;
-}
-
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  article header h1 a,
-  article header h2 a {
-    background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="2"%3E%3Crect x="0" y="1" width="1" height="1" fill="rgba(0, 0, 0, 0.35)"/%3E%3C/svg%3E')
-      left bottom repeat-x;
-  }
-}
-
-article header h1 a:visited,
-article header h2 a:visited {
-  color: #aaa;
-  background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="1"%3E%3Crect x="0" y="0.5" width="1" height="0.5" fill="rgba(170, 170, 170, 0.35)"/%3E%3C/svg%3E')
-    left bottom repeat-x;
-}
-
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  article header h1 a:visited,
-  article header h2 a:visited {
-    background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="2"%3E%3Crect x="0" y="1" width="1" height="1" fill="rgba(170, 170, 170, 0.35)"/%3E%3C/svg%3E')
-      left bottom repeat-x;
-  }
-}
-
-article header h1 a:visited:hover,
-article header h2 a:visited:hover {
-  color: #3000c1;
-}
-
-article > footer {
-  margin-top: 1.5em;
-}
-
-a {
-  text-decoration: none;
-  color: #0064c1;
-  transition: color 300ms ease-out, box-shadow 300ms ease-out;
-  background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="1"%3E%3Crect x="0" y="0.5" width="1" height="0.5" fill="rgba(0, 100, 193, 0.35)"/%3E%3C/svg%3E')
-    left bottom repeat-x;
-}
-
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  a {
-    background: url('data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="2"%3E%3Crect x="0" y="1" width="1" height="1" fill="rgba(0, 100, 193, 0.35)"/%3E%3C/svg%3E')
-      left bottom repeat-x;
-  }
-}
-
-a:visited {
-  color: #80b2e0;
-}
-
-a:hover,
-a:active {
-  outline-width: 0;
-}
-
-a:hover {
-  box-shadow: inset 0px -1px #3000c1;
-  color: #3000c1;
-  transition: color 0s, box-shadow 0s;
-}
-
-abbr {
-  margin-right: -0.075em;
-  -webkit-hyphens: none;
-  -ms-hyphens: none;
-  hyphens: none;
-  letter-spacing: 0.075em;
-}
-
-img,
-picture {
-  display: block;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-audio,
-video {
-  width: 100%;
-  max-width: 100%;
-}
-
-video {
-  -o-object-position: 0 -1px;
-  object-position: 0 -1px;
-}
-
-figure {
-  margin: 1em 0 0.5em;
-  padding: 0;
-}
-
-figure + p {
-  margin-top: 0.5em;
-}
-
-figure figcaption {
-  opacity: 0.65;
-}
-
-table {
-  display: inline-block;
-  border-spacing: 0;
-  border-collapse: collapse;
-  overflow-x: auto;
-  max-width: 100%;
-  text-align: left;
-  vertical-align: top;
-  background: linear-gradient(rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%)
-      0 0,
-    linear-gradient(rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%) 100% 0;
-  background-attachment: scroll, scroll;
-  background-size: 1px 100%, 1px 100%;
-  background-repeat: no-repeat, no-repeat;
-}
-
-table caption {
-  background: #fff;
-}
-
-table td,
-table th {
-  padding: 0.35em 0.75em;
-  vertical-align: top;
-  border: 1px solid #f2f2f2;
-  border-top: 0;
-  border-left: 0;
-}
-
-table td:first-child,
-table th:first-child {
-  padding-left: 0;
-  background-image: linear-gradient(
-    to right,
-    white 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-}
-
-table td:last-child,
-table th:last-child {
-  padding-right: 0;
-  border-right: 0;
-  background-image: linear-gradient(
-    to left,
-    white 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  background-position: 100% 0;
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-}
-
-table td:only-child,
-table th:only-child {
-  background-image: linear-gradient(
-      to right,
-      white 50%,
-      rgba(255, 255, 255, 0) 100%
-    ),
-    linear-gradient(to left, white 50%, rgba(255, 255, 255, 0) 100%);
-  background-position: 0 0, 100% 0;
-  background-size: 2px 100%, 2px 100%;
-  background-repeat: no-repeat, no-repeat;
-}
-
-table th {
-  /* line-height: 1.2; */
-}
-
-code,
-kbd,
-var,
-samp {
-  font-family: Consolas, "Lucida Console", Monaco, monospace;
-  font-style: normal;
-}
-
-pre {
-  overflow-x: auto;
-  background: linear-gradient(rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%)
-      0 0,
-    linear-gradient(rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.15) 100%) 100% 0;
-  background-attachment: scroll, scroll;
-  background-size: 1px 100%, 1px 100%;
-  background-repeat: no-repeat, no-repeat;
-}
-
-pre > code {
-  display: inline-block;
-  overflow-x: visible;
-  box-sizing: border-box;
-  min-width: 100%;
-  border-right: 3px solid #fff;
-  border-left: 1px solid #fff;
-}
-
-hr {
-  height: 1px;
-  margin: 2em 0;
-  border: 0;
-  background: #f2f2f2;
-}
-
-details {
-  margin: 1em 0;
-}
-
-details[open] {
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid #f2f2f2;
-}
-
-summary {
-  display: inline-block;
-  border-bottom: 1px dashed;
-  cursor: pointer;
-}
-
-summary::-webkit-details-marker {
-  display: none;
-}
-
-noscript {
-  color: #d00000;
-}
-
-::-moz-selection {
-  background: rgba(0, 100, 193, 0.15);
-}
-
-::selection {
-  background: rgba(0, 100, 193, 0.15);
 }
