@@ -115,13 +115,7 @@ article {
 }
 
 .map-container {
-  margin-top: 66px;
-}
-
-@media (max-width: 1000px) {
-  .map-container {
-    margin-top: 132px;
-  }
+  margin-top: 61px;
 }
 
 .sr-only {
@@ -137,11 +131,13 @@ article {
   background-color: #fff;
   color: #222;
   border-radius: 2px;
-  padding: 5px 15px;
-  display: inline-block;
   text-decoration: none;
-  text-align: center;
   min-width: 60px;
+  align-items: center;
+  justify-content: center;
+  height: 39px;
+  padding: 0 15px;
+  display: flex;
 }
 
 .button i {
