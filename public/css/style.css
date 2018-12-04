@@ -2,8 +2,6 @@
 
 @import url("/css/vendor/normalize.css");
 
-@import url("/css/icons.css");
-
 @import url("/css/header.css");
 
 @import url("/css/footer.css");
@@ -136,12 +134,8 @@ article {
   display: flex;
 }
 
-.button i {
-  font-size: .75em;
+.button svg {
   padding-right: .5em;
-  height: 1.15em;
-  vertical-align: middle;
-  display: inline-block;
 }
 
 .white-button {

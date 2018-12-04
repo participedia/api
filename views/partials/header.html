@@ -14,8 +14,7 @@
     <ul class="nav-list">
       <li class="menu-icon-container">
         <a href="#sidebar-menu">
-          <span class="sr-only">open menu</span>
-          <i class="icon-hamburger"></i>
+          {{> icon-hamburger }}
         </a>
       </li>
       <li class="header-logo-container"><a href="/">Participedia</a></li>
@@ -23,13 +22,13 @@
         <form action="/">
           <input name="query" type="text" placeholder="Search" />
           <div class="icon-container">
-            <i class="icon-search"></i>
+            {{> icon-search }}
           </div>
         </form>
       </li>
       <li class="quick-submit-container">
         <a href="/new" class="button white-button">
-          <i class="icon-add"></i> Quick Submit
+          {{> icon-add }} Quick Submit
         </a>
       </li>
       <li>
