@@ -1,7 +1,7 @@
 {{#> case-edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
   <select name="{{name}}">
     <option value="">{{placeholder static name}}</option>
-    {{#each (getOptions static name)}}
+    {{#each (getStaticOptions static name)}}
       <option
         value="{{this.key}}"
         {{#if (isSelected ../article ../name this.key)}}selected{{/if}}

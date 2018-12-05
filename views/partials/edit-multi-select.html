@@ -1,0 +1,37 @@
+{{#> case-edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
+  <select
+    name="{{name}}"
+    class="edit-multi-select js-edit-multi-select"
+    {{#if ranked}}data-ranked="true"{{/if}}
+  >
+    <option value="">{{placeholder static name}}</option>
+    {{#each (getStaticOptions static name)}}
+      <option
+        value="{{this.key}}"
+      >
+        {{this.value}}
+      </option>
+    {{/each}}
+  </select>
+  <ol
+    class="unstyled-list edit-multi-select-list js-edit-multi-select-list"
+    data-name="{{name}}"
+    {{#if max}}data-max="{{max}}"{{/if}}
+  >
+    {{#each (getOptions article name)}}
+      {{#if (isSelectedInArray ../article ../name this.key)}}
+        {{> edit-multi-select-li
+          name=../name
+          key=this.key
+          ranked=../ranked
+          index=@index
+        }}
+      {{/if}}
+    {{/each}}
+  </ol>
+  <script type="text/template" id="js-edit-multi-select-list-item">
+    {{> edit-multi-select-li
+      ranked=false
+    }}
+  </script>
+{{/ case-edit-form-group}}

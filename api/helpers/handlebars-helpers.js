@@ -24,6 +24,15 @@ function staticMediaText(staticText, name, attr, type) {
   return staticText[key] || key;
 }
 
+function mapIdTitleToKeyValue(options) {
+  return options.map(item => {
+    return {
+      key: item.id,
+      value: item.title,
+    };
+  });
+}
+
 module.exports = {
   label: (staticText, name) => staticText[name + "_label"] || name + "_label",
   info: (staticText, name) => staticText[name + "_info"] || name + "_info",
@@ -64,36 +73,19 @@ module.exports = {
       return options.key === optionKey;
     }
   },
+  getStaticOptions: (staticText, name) => {
+    // has_components and is_component_of fields use the cases options
+    // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
+    if (name === "has_components" || name === "is_component_of") {
+      return mapIdTitleToKeyValue(staticText["cases"]);
+    } else if (name === "specific_methods_tools_techniques") {
+      return mapIdTitleToKeyValue(staticText["methods"]);
+    } else {
+      return staticText[name];
+    }
+  },
   getOptions: (article, name) => {
-    // todo replace with options from article object once they are added
-    const tempOptions = [
-      {
-        "key": "public",
-        "lookup_key": "insights_outcomes_value_public",
-        "value": "Public Report"
-      },
-      {
-        "key": "public_hearingsmeetings",
-        "lookup_key": "insights_outcomes_value_public_hearingsmeetings",
-        "value": "Public Hearings/Meetings"
-      },
-      {
-        "key": "traditional",
-        "lookup_key": "insights_outcomes_value_traditional",
-        "value": "Traditional Media"
-      },
-      {
-        "key": "new",
-        "lookup_key": "insights_outcomes_value_new",
-        "value": "New Media"
-      },
-      {
-        "key": "both",
-        "lookup_key": "facetoface_online_or_both_value_both",
-        "value": "Both"
-      }
-    ];
-    return tempOptions;
+    return article[name];
   },
   getMediaLinkValue(article, name, index, attr) {
     if (!article[name]) return;
