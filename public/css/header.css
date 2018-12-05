@@ -68,7 +68,11 @@ header a {
 
 .header-search-container input:focus + .icon-container {
   background-color: #fff;
-  color: #222;
+}
+
+/* when search input is focused, change icon color to #222 */
+.header-search-container input:focus + .icon-container svg g g {
+  fill: #222;
 }
 
 .icon-container {
