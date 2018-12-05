@@ -1,0 +1,154 @@
+article.case-edit {
+  width: 45%;
+  margin: 0 auto 120px auto;
+  background-color: #fff;
+}
+
+article.case-edit fieldset h2 {
+  margin-bottom: 30px;
+}
+
+[data-submit-type=quick] .fullonly {
+  display: none;
+}
+
+[data-submit-type=full] .quickonly {
+  display: none;
+}
+
+[data-submit-type=quick] .quickonly {
+  display: block;
+}
+
+[data-submit-type=quick] .button.quickonly {
+  display: inline-flex;
+}
+
+[data-submit-type=quick] fieldset h2 {
+  display: none;
+}
+
+[data-submit-type=quick] fieldset h2.quickonly {
+  display: block;
+}
+
+/* by default, don't show any form groups */
+.form-group {
+  display: none;
+}
+
+/* if it's quick submit, show quick submit form groups only */
+.form-group[data-quick-submit=true] {
+  display: block;
+}
+
+/* if it's full submit, show all form groups */
+[data-submit-type=full] .form-group {
+  display: block;
+}
+
+.case-edit-author-info {
+  margin-bottom: 30px;
+}
+
+.case-edit-author-info h4 {
+  font-weight: 300;
+}
+
+.case-edit-author-info h4:first-child {
+  margin-bottom: 15px;
+}
+
+.case-edit-author-info time {
+  display: block;
+}
+
+.case-edit-buttons {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.case-edit-buttons button {
+  margin-right: 30px;
+}
+
+.case-edit-buttons .floating-publish-button {
+  margin: 0;
+  border-radius: 2em;
+  padding: 1em;
+  position: fixed;
+  bottom: 300px;
+  right: 15%;
+}
+
+.case-edit-buttons .floating-publish-button svg {
+  padding: .5em;
+  transform: scale(2);
+}
+
+.edit-link-list li {
+  margin-bottom: 15px;
+}
+
+.edit-media-link-set {
+  border: 1px solid #E0E0E0;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.edit-media-link-set label {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.edit-media-link-set li {
+  margin-bottom: 15px;
+}
+
+.edit-media-link-set li:last-child,
+.edit-link-list li:last-child  {
+  margin-bottom: 0;
+}
+
+.edit-media-link-set + a,
+.edit-link-list + a {
+  color: #000;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 15px;
+}
+
+.edit-list-ranked {
+  margin-top: 15px;
+}
+
+.edit-list-ranked li {
+  border: 1px solid #e6e6e6;
+  margin-left: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  height: 33px;
+}
+
+.edit-list-ranked li:last-child {
+  margin-bottom: 0;
+}
+
+.edit-list-ranked .reorder-handle {
+  width: 31px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  margin-right: 15px;
+}
+
+.edit-list-ranked li span {
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+}
+
+.edit-list-ranked li .icon-fill {
+  fill: #808080;
+}

@@ -4,6 +4,7 @@ header {
   color: #fff;
   width: 100%;
   top: 0px;
+  z-index: 2;
 }
 
 header a {
@@ -45,15 +46,15 @@ header a {
 .header-search-container form {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
 }
 
 .header-search-container input {
   width: 100%;
   border: 0px;
+  border-radius: 0px;
   background-color: #4D4D4D;
   color: #fff;
-  height: 39px;
 }
 
 .header-search-container input::placeholder {
@@ -79,8 +80,8 @@ header a {
   background-color: #4D4D4D;
   order: -1;
   display: flex;
-  height: 41px;
-  width: 41px;
+  height: 40px;
+  width: 40px;
   align-items: center;
   justify-content: center;
 }

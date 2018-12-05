@@ -1,0 +1,24 @@
+{{#> case-edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
+<!-- needs to support selecting only up to a max amount, otherwise can select as many as you want -->
+  <select name="{{name}}">
+    <option value="">{{placeholder static name}}</option>
+    {{#each (getOptions article name)}}
+      <option
+        value="{{this.key}}"
+      >
+        {{this.value}}
+      </option>
+    {{/each}}
+  </select>
+  <ol class="unstyled-list edit-list-ranked">
+    {{#each (getOptions article name)}}
+      {{#if (isSelectedInArray ../article ../name this.key)}}
+        <li draggable="true">
+          <div class="striped-bg reorder-handle">{{> icon-reorder }}</div>
+          <span>{{this.key}}</span>
+          <button class="icon-only">{{> icon-close }}</button>
+        </li>
+      {{/if}}
+    {{/each}}
+  </ol>
+{{/ case-edit-form-group}}

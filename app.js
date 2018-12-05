@@ -6,19 +6,19 @@ require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
 let app = require("express")();
 var exphbs = require("express-handlebars");
 const fs = require("fs");
+const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: "main",
   extname: ".html",
-  helpers: {
-    label: (staticText, name) => staticText[name + "_label"],
-    info: (staticText, name) => staticText[name + "_info"],
-    instructional: (staticText, name) => staticText[name + "_instructional"],
-    placeholder: (staticText, name) => staticText[name + "_placeholder"],
-    getvalue: (article, name) => article[name],
-    textvalue: (article, name) => article[name].value
-  }
+  helpers: handlebarsHelpers,
+});
+
+// make the req var available as local var in templates
+app.use((req, res, next) => {
+  res.locals.req = req;
+  next();
 });
 
 app.engine(".html", hbs.engine);

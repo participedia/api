@@ -1,0 +1,32 @@
+<!--
+  - this form group expects an array of strings ['this-is-a-url.com', 'this-is-a-url2.com']
+  - if it is an empty array, display a single text field
+    with the name of {{name}}[{{@index}}] (ie: evaluation_links[0])
+-->
+
+{{#> case-edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
+  <ul class="unstyled-list edit-link-list">
+    {{#if (isEmptyArray article name)}}
+      <li>
+        <input
+          type="url"
+          placeholder="{{placeholder static name}}"
+          name="{{name}}[0]"
+          value=""
+        />
+      </li>
+    {{else}}
+      {{#each (getvalue article name)}}
+        <li>
+          <input
+            type="url"
+            placeholder="{{placeholder ../static ../name}}"
+            name="{{../name}}[{{@index}}]"
+            value="{{this}}"
+          />
+        </li>
+      {{/each}}
+    {{/if}}
+  </ul>
+  <a href="#">+ Add another link</a>
+{{/ case-edit-form-group}}

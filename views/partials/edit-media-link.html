@@ -1,0 +1,30 @@
+<div
+  class="form-group"
+  {{#if quick-submit}}data-quick-submit="{{quick-submit}}"{{/if}}
+>
+  <label for="{{name}}" {{#if is_required}}data-required={{is_required}}{{/if}}>
+    {{mediaLinkLabel static name 'link'}}
+  </label>
+  {{#if (mediaLinkInstructional static name 'link')}}
+    <p>{{mediaLinkInstructional static name 'link'}}</p>
+  {{/if}}
+
+  {{#if (isEmptyArray article name)}}
+    {{> edit-media-link-inputs
+      name=name
+      article=article
+      static=static
+      index=0
+    }}
+  {{else}}
+    {{#each (getvalue article name)}}
+      {{> edit-media-link-inputs
+        name=../name
+        article=../article
+        static=../static
+        index=@index
+      }}
+    {{/each}}
+  {{/if}}
+  <a href="#">+ Add another {{name}} link</a>
+</div>
