@@ -1,7 +1,6 @@
 <header>
   <nav class="sidebar-menu" id="sidebar-menu">
     <ul class="nav-list">
-      <li><a href="#" class="close-menu-link">close</a></li>
       <li><a href="/">Home</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/teaching">Teaching</a></li>
@@ -13,8 +12,12 @@
   <nav class="horizontal-menu">
     <ul class="nav-list">
       <li class="menu-icon-container">
-        <a href="#sidebar-menu">
+        <a href="#sidebar-menu" class="sidebar-menu-closed">
           <span class="sr-only">open menu</span>
+          {{> icon-hamburger }}
+        </a>
+        <a href="#" class="sidebar-menu-open">
+          <span class="sr-only">close menu</span>
           {{> icon-hamburger }}
         </a>
       </li>

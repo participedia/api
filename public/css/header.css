@@ -103,7 +103,7 @@ header a {
   position: fixed;
   width: 100%;
   height: 100%;
-  top: 0;
+  top: 60px;
   left: -99999px;
   background-color: rgba(0, 0, 0, 0.54);
 }
@@ -112,9 +112,10 @@ header a {
   width: 300px;
   background-color: #fff;
   position: fixed;
-  top: 0;
+  top: 61px;
   left: -300px;
   height: 100%;
+  margin-bottom: 272px;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.23);
   transition: all .3s ease;
 }
@@ -143,13 +144,23 @@ header a {
 }
 
 .sidebar-menu .nav-list li:first-child {
-  padding-bottom: 60px;
-  text-align: right;
+  padding-top: 60px;
 }
 
-.sidebar-menu .nav-list li:first-child a:hover {
-  background-color: #fff;
-  text-decoration: underline;
+/* hamburger menu when sidebar menu is closed */
+#sidebar-menu + .horizontal-menu .sidebar-menu-open {
+  display: none;
+}
+#sidebar-menu + .horizontal-menu .sidebar-menu-closed {
+  display: flex;
+}
+
+/* hamburger menu when sidebar menu is open */
+#sidebar-menu:target + .horizontal-menu .sidebar-menu-open {
+  display: flex;
+}
+#sidebar-menu:target + .horizontal-menu .sidebar-menu-closed {
+  display: none;
 }
 
 .map-container {
