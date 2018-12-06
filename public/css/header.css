@@ -71,7 +71,7 @@ header a {
 }
 
 /* when search input is focused, change icon color to #222 */
-.header-search-container input:focus + .icon-container svg g g {
+.header-search-container input:focus + .icon-container .icon-search {
   fill: #222;
 }
 
@@ -87,6 +87,16 @@ header a {
 
 .icon-container i {
   height: 18px;
+}
+
+.sidebar-menu-open .icon-hamburger,
+.sidebar-menu-closed:hover .icon-hamburger {
+  fill: #808080;
+}
+
+.sidebar-menu-open:hover .icon-hamburger,
+.sidebar-menu-closed .icon-hamburger {
+  fill: #ffffff;
 }
 
 .quick-submit-container {
