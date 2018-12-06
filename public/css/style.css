@@ -129,21 +129,37 @@ article {
   min-width: 60px;
   align-items: center;
   justify-content: center;
-  height: 39px;
-  padding: 0 15px;
-  display: flex;
+  padding: 8px 15px;
+  display: flex-inline;
 }
 
 .button svg {
   padding-right: .5em;
 }
 
-.white-button {
+.button-white {
   background-color: #fff;
   color: #222;
 }
 
-.dark-grey-button {
+.button-white .icon-fill {
+  fill: #222;
+}
+
+.button-dark-grey {
   background-color: #4D4D4D;
   color: #fff;
+}
+
+.button-dark-grey .icon-fill {
+  fill: #fff;
+}
+
+.button-red {
+  background-color: #EC2024;
+  color: #fff;
+}
+
+.button-red .icon-fill {
+  fill: #fff;
 }

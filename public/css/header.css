@@ -71,7 +71,7 @@ header a {
 }
 
 /* when search input is focused, change icon color to #222 */
-.header-search-container input:focus + .icon-container .icon-search {
+.header-search-container input:focus + .icon-container .icon-fill {
   fill: #222;
 }
 
@@ -89,13 +89,13 @@ header a {
   height: 18px;
 }
 
-.sidebar-menu-open .icon-hamburger,
-.sidebar-menu-closed:hover .icon-hamburger {
+.sidebar-menu-open .icon-fill,
+.sidebar-menu-closed:hover .icon-fill {
   fill: #808080;
 }
 
-.sidebar-menu-open:hover .icon-hamburger,
-.sidebar-menu-closed .icon-hamburger {
+.sidebar-menu-open:hover .icon-fill,
+.sidebar-menu-closed .icon-fill {
   fill: #ffffff;
 }
 
@@ -122,7 +122,7 @@ header a {
   background-color: rgba(0, 0, 0, 0.54);
 }
 
-.sidebar-menu .nav-list {
+.sidebar-menu-inner-container {
   width: 300px;
   background-color: #fff;
   position: fixed;
@@ -138,7 +138,7 @@ header a {
   left: 0;
 }
 
-#sidebar-menu:target .nav-list {
+#sidebar-menu:target .sidebar-menu-inner-container {
   left: 0;
   transition: all .4s ease;
 }
@@ -147,7 +147,7 @@ header a {
   align-self: flex-start;
 }
 
-.sidebar-menu a {
+.sidebar-menu li a {
   color: #000;
   padding: 13px 30px;
   display: block;
@@ -175,6 +175,10 @@ header a {
 }
 #sidebar-menu:target + .horizontal-menu .sidebar-menu-closed {
   display: none;
+}
+
+.sidebar-menu-more-buttons {
+  margin: 60px 0px 0px 30px;
 }
 
 .map-container {

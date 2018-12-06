@@ -1,13 +1,21 @@
 <header>
   <nav class="sidebar-menu js-sidebar-menu" id="sidebar-menu">
-    <ul class="nav-list">
-      <li><a href="/">Home</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/teaching">Teaching</a></li>
-      <li><a href="/research">Research</a></li>
-      <li><a href="/help">Help & Contact</a></li>
-      <li><a href="/legal">Terms of Use</a></li>
-    </ul>
+    <div class="sidebar-menu-inner-container">
+      <ul class="nav-list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/teaching">Teaching</a></li>
+        <li><a href="/research">Research</a></li>
+        <li><a href="/help">Help & Contact</a></li>
+        <li><a href="/legal">Terms of Use</a></li>
+      </ul>
+
+      <div class="sidebar-menu-more-buttons">
+        <a href="/new" class="button button-red">
+          {{> icon-add }} Quick Submit
+        </a>
+      </div>
+    </div>
   </nav>
   <nav class="horizontal-menu">
     <ul class="nav-list">
@@ -31,14 +39,14 @@
         </form>
       </li>
       <li class="quick-submit-container">
-        <a href="/new" class="button white-button">
+        <a href="/new" class="button button-white">
           {{> icon-add }} Quick Submit
         </a>
       </li>
       <li>
         <a
           href="https://participedia.auth0.com/login"
-          class="button dark-grey-button"
+          class="button button-dark-grey"
         >
           Login
         </a>
