@@ -143,21 +143,21 @@ header a {
   transition: all .4s ease;
 }
 
-.sidebar-menu .nav-list li {
+.sidebar-menu-main-menu li {
   align-self: flex-start;
 }
 
-.sidebar-menu li a {
+.sidebar-menu-main-menu li a {
   color: #000;
   padding: 13px 30px;
   display: block;
 }
 
-.sidebar-menu .nav-list a:hover {
+.sidebar-menu-main-menu a:hover {
   background-color: #E6E6E6;
 }
 
-.sidebar-menu .nav-list li:first-child {
+.sidebar-menu-main-menu li:first-child {
   padding-top: 60px;
 }
 
@@ -177,8 +177,13 @@ header a {
   display: none;
 }
 
-.sidebar-menu-more-buttons {
-  margin: 60px 0px 0px 30px;
+.nav-list.sidebar-menu-additional-nav {
+  margin: 30px 0px 0px 30px;
+}
+
+.nav-list.sidebar-menu-additional-nav li {
+  margin-bottom: 30px;
+  display: flex;
 }
 
 .map-container {

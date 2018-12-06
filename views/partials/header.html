@@ -1,7 +1,7 @@
 <header>
   <nav class="sidebar-menu js-sidebar-menu" id="sidebar-menu">
     <div class="sidebar-menu-inner-container">
-      <ul class="nav-list">
+      <ul class="nav-list sidebar-menu-main-menu">
         <li><a href="/">Home</a></li>
         <li><a href="/about">About</a></li>
         <li><a href="/teaching">Teaching</a></li>
@@ -10,11 +10,21 @@
         <li><a href="/legal">Terms of Use</a></li>
       </ul>
 
-      <div class="sidebar-menu-more-buttons">
-        <a href="/new" class="button button-red">
-          {{> icon-add }} Quick Submit
-        </a>
-      </div>
+      <ul class="nav-list sidebar-menu-additional-nav">
+        <li>
+          <a href="/new" class="button button-red">
+            {{> icon-add }} Quick Submit
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://participedia.auth0.com/login"
+            class="button button-dark-grey"
+          >
+            Login
+          </a>
+        </li>
+      </ul>
     </div>
   </nav>
   <nav class="horizontal-menu">

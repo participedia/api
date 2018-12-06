@@ -20,13 +20,6 @@ footer section {
   flex-wrap: wrap;
 }
 
-.nav-list {
-  padding-left: 0px;
-  list-style-type: none;
-  margin-block-start: 0;
-  margin-block-end: 0;
-}
-
 .footer-main-nav {
   display: flex;
   flex-grow: 2;

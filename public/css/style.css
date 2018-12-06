@@ -120,6 +120,13 @@ article {
   top: -10px;
 }
 
+.nav-list {
+  padding-left: 0px;
+  list-style-type: none;
+  margin: 0px;
+}
+
+
 /* Buttons */
 .button {
   background-color: #fff;
@@ -130,7 +137,7 @@ article {
   align-items: center;
   justify-content: center;
   padding: 8px 15px;
-  display: flex-inline;
+  display: inline-flex;
 }
 
 .button svg {
