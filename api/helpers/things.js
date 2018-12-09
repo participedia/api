@@ -40,8 +40,6 @@ const getThingByType_id_lang_userId_view = async function(
   switch (type) {
     case "case":
       if (view == "edit") {
-        console.log("getCaseEditById(%s, %s, %s)", thingid, lang, userid);
-        console.log("Query: %s", CASE_EDIT_BY_ID);
         articleRow = await db.one(CASE_EDIT_BY_ID, { thingid, lang, userid });
       } else {
         articleRow = await db.one(CASE_VIEW_BY_ID, { thingid, lang, userid });
@@ -101,86 +99,57 @@ const fixUpURLs = function(article) {
   }
 };
 
-const getThingByRequest = async function(type, req) {
-  const thingid = as.number(req.params.thingid);
-  const lang = as.value(req.params.language || "en");
-  const userId = req.user ? req.user.user_id : null;
-  const view = req.params.view || "view";
-  return await getThingByType_id_lang_userId_view(
+const returnByType = (res, params, article, static) => {
+  const { returns, type, view } = params;
+  switch (returns) {
+    case "htmlfrag":
+      return res
+        .status(200)
+        .render(type + "-" + view, { article, static, layout: false });
+    case "json":
+      return res.status(200).json({ OK: true, article, static });
+    case "csv":
+      // TODO: implement CSV
+      return res.status(500, "CSV not implemented yet").render();
+    case "xml":
+      // TODO: implement XML
+      return res.status(500, "XML not implemented yet").render();
+    case "html": // fall through
+    default:
+      return res.status(200).render(type + "-" + view, { article, static });
+  }
+};
+
+const parseGetParams = function(req, type) {
+  return {
+    type,
+    view: as.value(req.params.view || "view"),
+    articleid: as.number(req.params.thingid || req.params.articleid),
+    lang: as.value(req.query.language || "en"),
+    userid: req.user
+      ? as.number(req.user.user_id || req.user.userid || req.query.userid)
+      : null,
+    returns: as.value(req.query.returns)
+  };
+};
+
+/* This is the entry point for getting an article */
+const returnThingByRequest = async function(type, req, res) {
+  const { articleid, lang, userid, view } = (params = parseGetParams(
+    req,
+    type
+  ));
+  const article = await getThingByType_id_lang_userId_view(
     type,
     thingid,
     lang,
-    userId,
+    userid,
     view
   );
-};
-
-const returnByType = req => {
-  // handle json requests from old client or tests
-  let view = req.params.view || "view";
-  // ONly allow supported views
-  if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
-    return res => res.status(404, "View type not found").render();
-  }
-  let returnType = req.query.returns;
-  if (req.accepts("json", "html") === "json") {
-    returnType = "json";
-  }
-  switch (returnType) {
-    case "htmlfrag":
-      return (res, type, thing, staticText) =>
-        res.status(200).render(type + "-" + view, {
-          article: thing,
-          static: staticText,
-          layout: false
-        });
-    case "json":
-      return (res, type, thing, staticText) =>
-        res.status(200).json({ OK: true, article: thing, static: staticText });
-    case "csv":
-      // TODO: implement CSV
-      return (res, type, thing) =>
-        res.status(500, "CSV not implemented yet").render();
-    case "xml":
-      // TODO: implement XML
-      return (res, type, thing) =>
-        res.status(500, "XML not implemented yet").render();
-    case "html": // fall through
-    default:
-      return (res, type, thing, staticText) =>
-        res
-          .status(200)
-          .render(type + "-" + view, { article: thing, static: staticText });
-  }
-};
-
-const returnThingByRequest = async function(type, req, res) {
-  try {
-    const lang = as.value(req.params.language || "en");
-    const thing = await getThingByRequest(type, req);
-    let view = req.params.view || "view";
-    // ONly allow supported views
-    if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
-      return res => res.status(404, "View type not found").render();
-    }
-    const staticText = await db.one(
-      `select * from ${type}_${view}_localized where language = '${lang}';`
-    );
-    Object.keys(thing).forEach(key => {
-      // DOES THIS EVER GET CALLED?
-      if (thing[key] === "{}") {
-        console.warn("This should not happen: thing[%s]=%s", key, thing[key]);
-        thing[key] = [];
-      }
-    });
-    returnByType(req)(res, type, thing, staticText);
-  } catch (error) {
-    log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
-    res.status(500).json({
-      OK: false,
-      error: error
-    });
-  }
+  const static = await db.one(
+    `select * from ${type}_${view}_localized where language = '${lang}';`
+  );
+  returnByType(req)(res, params, thing, static);
 };
 
 /* I can't believe basic set operations are not part of ES5 Sets */
@@ -546,7 +515,6 @@ const uniq = list => {
 };
 
 module.exports = {
-  getThingByRequest,
   returnThingByRequest,
   getEditXById,
   supportedTypes,
@@ -554,5 +522,7 @@ module.exports = {
   shortKeys,
   mediumKeys,
   uniq,
-  fixUpURLs
+  fixUpURLs,
+  parseGetParams,
+  returnByType
 };

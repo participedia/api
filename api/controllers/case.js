@@ -4,12 +4,21 @@ const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 
-const { db, as, CASES_BY_COUNTRY, CREATE_CASE } = require("../helpers/db");
+const {
+  db,
+  as,
+  CASES_BY_COUNTRY,
+  CREATE_CASE,
+  CASE_EDIT_BY_ID,
+  CASE_VIEW_BY_ID
+} = require("../helpers/db");
 
 const {
   getEditXById,
   addRelatedList,
-  returnThingByRequest
+  parseGetParams,
+  returnByType,
+  fixUpURLs
 } = require("../helpers/things");
 
 /**
@@ -172,11 +181,30 @@ router.put("/:thingid", getEditXById("case"));
  *
  */
 
-// We want to extract the user ID from the auth token if it's there,
-// but not fail if not.
-router.get("/:thingid/:view?", (req, res) =>
-  returnThingByRequest("case", req, res)
-);
+router.get("/:thingid/", async (req, res) => {
+  /* This is the entry point for getting an article */
+  const params = parseGetParams(req, "case");
+  const articleRow = await db.one(CASE_VIEW_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  const staticText = await db.one(
+    "select * from case_view_localized where language = ${lang};",
+    params
+  );
+  returnByType(res, params, article, staticText);
+});
+
+router.get("/:thingid/edit", async (req, res) => {
+  const params = parseGetParams(req, "case");
+  const articleRow = await db.one(CASE_EDIT_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  const staticText = await db.one(
+    "select * from case_edit_localized where language = ${lang};",
+    params
+  );
+  returnByType(res, params, article, staticText);
+});
 
 /**
  * @api {delete} /case/:caseId Delete a case
