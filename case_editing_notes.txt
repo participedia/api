@@ -52,7 +52,7 @@
   facilitator_training, // normalize to key
   facetoface_online_or_both, // normalize to key
   participants_interactions, // normalize to array of keys
-  glearning_resources, // normalize to array of keys
+  learning_resources, // normalize to array of keys
   decision_methods, // normalize to array of keys
   if_voting, // normalize to array of keys
   insights_outcomes, // normalize to array of keys

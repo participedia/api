@@ -4,17 +4,13 @@ const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 
-const { db, sql, as } = require("../helpers/db");
+const { db, as, CASES_BY_COUNTRY, CREATE_CASE } = require("../helpers/db");
 
 const {
   getEditXById,
   addRelatedList,
-  returnThingByRequest,
-  getThingByType_id_lang_userId
+  returnThingByRequest
 } = require("../helpers/things");
-
-const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
-const CREATE_CASE = sql("../sql/create_case.sql");
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country

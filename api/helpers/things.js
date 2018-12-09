@@ -4,12 +4,20 @@ const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
 
-const { as, db, sql } = require("./db");
-
-const THING_BY_ID = sql(`../sql/thing_by_id.sql`);
-const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
-const UPDATE_NOUN = sql("../sql/update_noun.sql");
-const INSERT_AUTHOR = sql("../sql/insert_author.sql");
+const {
+  as,
+  db,
+  THING_BY_ID,
+  INSERT_LOCALIZED_TEXT,
+  UPDATE_NOUN,
+  INSERT_AUTHOR,
+  CASE_EDIT_BY_ID,
+  CASE_VIEW_BY_ID,
+  METHOD_EDIT_BY_ID,
+  METHOD_VIEW_BY_ID,
+  ORGANIZATION_EDIT_BY_ID,
+  ORGANIZATION_VIEW_BY_ID
+} = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
 const titleKeys = ["id", "title"];
@@ -21,64 +29,96 @@ const shortKeys = titleKeys.concat([
 ]);
 const mediumKeys = shortKeys.concat(["body", "bookmarked", "location"]);
 
-const getThingByType_id_lang_userId = async function(
+const getThingByType_id_lang_userId_view = async function(
   type,
   thingid,
   lang,
-  userId
+  userid,
+  view
 ) {
-  let table = type + "s";
-  let thingRow;
-  if (type === "case") {
-    thingRow = await db.one(
-      "select row_to_json(get_case_by_id(${thingid}, ${lang}, ${userId})) as results;",
-      { thingid, lang, userId }
-    );
-  } else {
-    thingRow = await db.one(THING_BY_ID, {
-      table,
-      type,
-      thingid,
-      lang,
-      userId
-    });
+  let articleRow;
+  switch (type) {
+    case "case":
+      if (view == "edit") {
+        console.log("getCaseEditById(%s, %s, %s)", thingid, lang, userid);
+        console.log("Query: %s", CASE_EDIT_BY_ID);
+        articleRow = await db.one(CASE_EDIT_BY_ID, { thingid, lang, userid });
+      } else {
+        articleRow = await db.one(CASE_VIEW_BY_ID, { thingid, lang, userid });
+      }
+      break;
+    case "method":
+      if (view == "edit") {
+        articleRow = await db.one(METHOD_EDIT_BY_ID, { thingid, lang, userid });
+      } else {
+        articleRow = await db.one(METHOD_VIEW_BY_ID, { thingid, lang, userid });
+      }
+      break;
+    case "organization":
+      if (view == "edit") {
+        articleRow = await db.one(ORGANIZATION_EDIT_BY_ID, {
+          thingid,
+          lang,
+          userid
+        });
+      } else {
+        articleRow = await db.one(ORGANIZATION_VIEW_BY_ID, {
+          thingid,
+          lang,
+          userid
+        });
+      }
+      break;
+    default:
+      throw new Exception("Not a recognized article type");
+      break;
   }
-  const thing = thingRow.results;
+
+  const article = articleRow.results;
   // massage results for display
-  if (thing.photos && thing.photos.length) {
-    thing.photos.forEach(
+  fixUpURLs(article);
+  return article;
+};
+
+const fixUpURLs = function(article) {
+  if (article.photos && article.photos.length) {
+    article.photos.forEach(
       img =>
         (img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url))
     );
   }
-  if (thing.files && thing.files.length) {
-    thing.files.forEach(
+  if (article.files && article.files.length) {
+    article.files.forEach(
       file =>
         (file.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(file.url))
     );
   }
-  if (thing.longitude.startsWith("0° 0' 0\"")) {
-    thing.longitude = "";
+  if (article.longitude.startsWith("0° 0' 0\"")) {
+    article.longitude = "";
   }
-  if (thing.latitude.startsWith("0° 0' 0\"")) {
-    thing.latitude = "";
+  if (article.latitude.startsWith("0° 0' 0\"")) {
+    article.latitude = "";
   }
-
-  return thing;
 };
 
 const getThingByRequest = async function(type, req) {
   const thingid = as.number(req.params.thingid);
   const lang = as.value(req.params.language || "en");
   const userId = req.user ? req.user.user_id : null;
-  return await getThingByType_id_lang_userId(type, thingid, lang, userId);
+  const view = req.params.view || "view";
+  return await getThingByType_id_lang_userId_view(
+    type,
+    thingid,
+    lang,
+    userId,
+    view
+  );
 };
 
 const returnByType = req => {
   // handle json requests from old client or tests
   let view = req.params.view || "view";
   // ONly allow supported views
-  console.log("View: %s", view);
   if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
     return res => res.status(404, "View type not found").render();
   }
@@ -127,7 +167,9 @@ const returnThingByRequest = async function(type, req, res) {
       `select * from ${type}_${view}_localized where language = '${lang}';`
     );
     Object.keys(thing).forEach(key => {
+      // DOES THIS EVER GET CALLED?
       if (thing[key] === "{}") {
+        console.warn("This should not happen: thing[%s]=%s", key, thing[key]);
         thing[key] = [];
       }
     });
@@ -239,6 +281,7 @@ function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
     const thingid = req.thingid || as.number(req.params.thingid);
+    const view = req.params.view || "view";
     let lang,
       user,
       userId,
@@ -254,11 +297,12 @@ function getEditXById(type) {
       lang = as.value(req.params.language || "en");
       user = req.user;
       userId = user.user_id;
-      oldThing = await getThingByType_id_lang_userId(
+      oldThing = await getThingByType_id_lang_userId_view(
         type,
         thingid,
         lang,
-        userId
+        userId,
+        view
       );
       newThing = req.body;
       // console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
@@ -449,11 +493,12 @@ function getEditXById(type) {
           id: thingid
         });
         // update materialized view for search
-        retThing = await getThingByType_id_lang_userId(
+        retThing = await getThingByType_id_lang_userId_view(
           type,
           as.number(thingid),
           lang,
-          userId
+          userId,
+          view
         );
         if (req.thingid) {
           res.status(201).json({
@@ -501,7 +546,6 @@ const uniq = list => {
 };
 
 module.exports = {
-  getThingByType_id_lang_userId,
   getThingByRequest,
   returnThingByRequest,
   getEditXById,
@@ -509,5 +553,6 @@ module.exports = {
   titleKeys,
   shortKeys,
   mediumKeys,
-  uniq
+  uniq,
+  fixUpURLs
 };

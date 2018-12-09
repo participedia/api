@@ -5,7 +5,8 @@ let options = {
   promiseLib: promise, // use bluebird as promise library
   capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
 };
-if (process.env.LOG_QUERY === "true") {
+//if (process.env.LOG_QUERY === "true") {
+if (true) {
   options.query = evt => console.info("Executing query %s", evt.query);
 }
 let pgp = require("pg-promise")(options);
@@ -158,10 +159,62 @@ const as = Object.assign({}, pgp.as, {
 
 const helpers = pgp.helpers;
 
+const CASE_EDIT_BY_ID = sql(`../sql/case_edit_by_id.sql`);
+const CASE_VIEW_BY_ID = sql(`../sql/case_view_by_id.sql`);
+const METHOD_EDIT_BY_ID = sql(`../sql/method_edit_by_id.sql`);
+const METHOD_VIEW_BY_ID = sql(`../sql/method_view_by_id.sql`);
+const ORGANIZATION_EDIT_BY_ID = sql(`../sql/organization_edit_by_id.sql`);
+const ORGANIZATION_VIEW_BY_ID = sql(`../sql/organization_view_by_id.sql`);
+const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
+const UPDATE_NOUN = sql("../sql/update_noun.sql");
+const INSERT_AUTHOR = sql("../sql/insert_author.sql");
+const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
+const USER_BY_ID = sql("../sql/user_by_id.sql");
+const CREATE_USER_ID = sql("../sql/create_user_id.sql");
+const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
+const CREATE_CASE = sql("../sql/create_case.sql");
+const CREATE_METHOD = sql("../sql/create_method.sql");
+const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
+const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
+const SEARCH = sql("../sql/search.sql");
+const FEATURED_MAP = sql("../sql/featuredmap.sql");
+const FEATURED = sql("../sql/featured.sql");
+const SEARCH_MAP = sql("../sql/searchmap.sql");
+const LIST_MAP_CASES = sql("../sql/list_map_cases.sql");
+const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
+const LIST_TITLES = sql("../sql/list_titles.sql");
+const LIST_SHORT = sql("../sql/list_short.sql");
+const UPDATE_USER = sql("../sql/update_user.sql");
+
 module.exports = {
   db,
-  sql,
   as,
   helpers,
-  pgp
+  pgp,
+  INSERT_LOCALIZED_TEXT,
+  UPDATE_NOUN,
+  INSERT_AUTHOR,
+  USER_BY_EMAIL,
+  USER_BY_ID,
+  CREATE_USER_ID,
+  CASES_BY_COUNTRY,
+  CREATE_CASE,
+  CREATE_METHOD,
+  CREATE_ORGANIZATION,
+  TITLES_FOR_THINGS,
+  SEARCH,
+  FEATURED_MAP,
+  FEATURED,
+  SEARCH_MAP,
+  LIST_MAP_CASES,
+  LIST_MAP_ORGANIZATIONS,
+  LIST_TITLES,
+  LIST_SHORT,
+  UPDATE_USER,
+  CASE_EDIT_BY_ID,
+  CASE_VIEW_BY_ID,
+  METHOD_EDIT_BY_ID,
+  METHOD_VIEW_BY_ID,
+  ORGANIZATION_EDIT_BY_ID,
+  ORGANIZATION_VIEW_BY_ID
 };

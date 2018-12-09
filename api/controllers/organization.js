@@ -5,15 +5,12 @@ const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 
-const { db, sql, as } = require("../helpers/db");
-
-const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
+const { db, as, CREATE_ORGANIZATION } = require("../helpers/db");
 
 const {
   getEditXById,
   addRelatedList,
-  returnThingByRequest,
-  getThingByType_id_lang_userId
+  returnThingByRequest
 } = require("../helpers/things");
 
 /**

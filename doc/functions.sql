@@ -351,24 +351,6 @@ $_$;
 
 
 --
--- Name: get_methods(cases, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION get_methods(thing cases, language text) RETURNS object_title[]
-    LANGUAGE sql STABLE
-    AS $_$
-    with mids as (select unnest($1.process_methods) as id)
-    SELECT
-      COALESCE(array_agg((mids.id, title)::object_title), '{}'::object_title[])
-    FROM
-      localized_texts, mids
-    WHERE
-      localized_texts.thingid = mids.id and
-      localized_texts.language = $2;
-$_$;
-
-
---
 -- Name: get_object_short(integer, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -413,24 +395,6 @@ CREATE FUNCTION get_object_title_list(ids integer[], language text) RETURNS full
 SELECT array_agg(get_object_title(id, language))
 FROM unnest(ids) as id;
 $$;
-
-
---
--- Name: get_organizations(cases, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION get_organizations(thing cases, language text) RETURNS object_title[]
-    LANGUAGE sql STABLE
-    AS $_$
-    with mids as (select unnest($1.primary_organizers) as id)
-    SELECT
-      COALESCE(array_agg((mids.id, title)::object_title), '{}'::object_title[])
-    FROM
-      localized_texts, mids
-    WHERE
-      localized_texts.thingid = mids.id and
-      localized_texts.language = $2;
-$_$;
 
 
 --
