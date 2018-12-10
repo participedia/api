@@ -11,12 +11,14 @@
 
 <body style="">
   {{> header }}
-  {{> map }}
+  <div class="map-container">
+    {{> map }}
+  </div>
   <main>
     {{{ body }}}
   </main>
   {{> footer }}
-  <script src="/js/app.js"></script>
+  <script type="module" src="/js/app.js"></script>
 </body>
 
 </html>

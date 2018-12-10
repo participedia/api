@@ -1,17 +1,66 @@
-<div class="nav-bar-component">
-  <div class="nav-bar-wrapper">
-    <div class="logo-area"><a class="menu-icon"><svg viewBox="0 0 24 24" style="display: inline-block; color: rgba(0, 0, 0, 0.87); fill: white; height: 32px; width: 32px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path></svg></a>
-      <a
-        class="logo" href="/">Participedia</a>
+<header>
+  <nav class="sidebar-menu js-sidebar-menu" id="sidebar-menu">
+    <div class="sidebar-menu-inner-container">
+      <ul class="nav-list sidebar-menu-main-menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/teaching">Teaching</a></li>
+        <li><a href="/research">Research</a></li>
+        <li><a href="/help">Help & Contact</a></li>
+        <li><a href="/legal">Terms of Use</a></li>
+      </ul>
+
+      <ul class="nav-list sidebar-menu-additional-nav">
+        <li>
+          <a href="/new" class="button button-red">
+            {{> icon-add }} Quick Submit
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://participedia.auth0.com/login"
+            class="button button-dark-grey"
+          >
+            Login
+          </a>
+        </li>
+      </ul>
     </div>
-    <div class="search-box-area"><input type="text" class="search-bar" placeholder="Search" value=""></div>
-    <a class="d-none d-none d-md-block d-lg-block d-xl-block" href="/new">
-      <div class="qs-button-case">
-        <div class="qs-button customButton" style="color: rgba(0, 0, 0, 0.87); background-color: rgb(255, 255, 255); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; box-sizing: border-box; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px; border-radius: 2px; display: inline-block; min-width: 88px;"><button tabindex="0" type="button" style="border: 10px; box-sizing: border-box; display: inline-block; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); cursor: pointer; text-decoration: none; margin: 0px; padding: 0px; outline: none; font-size: inherit; font-weight: inherit; position: relative; z-index: 1; height: 36px; line-height: 36px; width: 100%; border-radius: 2px; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; background-color: rgb(255, 255, 255); text-align: center;"><div><div style="height: 36px; border-radius: 2px; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; top: 0px;"><svg viewBox="0 0 24 24" style="display: inline-block; color: rgba(0, 0, 0, 0.87); fill: rgba(0, 0, 0, 0.87); height: 24px; width: 24px; user-select: none; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; vertical-align: middle; margin-left: 12px; margin-right: 0px;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg><span style="position: relative; opacity: 1; font-size: 14px; letter-spacing: 0px; text-transform: uppercase; font-weight: 500; margin: 0px; user-select: none; padding-left: 8px; padding-right: 16px; color: rgba(0, 0, 0, 0.87);">Quick Submit</span></div></div></button></div>
-      </div>
-    </a>
-    <div class="loginButton">
-      <div class="customButton" style="color: rgba(0, 0, 0, 0.87); background-color: rgb(255, 255, 255); transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; box-sizing: border-box; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px; border-radius: 2px; display: inline-block; min-width: 88px;"><button tabindex="0" type="button" style="border: 10px; box-sizing: border-box; display: inline-block; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); cursor: pointer; text-decoration: none; margin: 0px; padding: 0px; outline: none; font-size: inherit; font-weight: inherit; position: relative; z-index: 1; height: 36px; line-height: 36px; width: 100%; border-radius: 2px; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; background-color: rgb(68, 68, 68); text-align: center;"><div><div style="height: 36px; border-radius: 2px; transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms; top: 0px;"><span style="position: relative; opacity: 1; font-size: 14px; letter-spacing: 0px; text-transform: uppercase; font-weight: 500; margin: 0px; user-select: none; padding-left: 16px; padding-right: 16px; color: white;">Login</span></div></div></button></div>
-    </div>
-  </div>
-</div>
+  </nav>
+  <nav class="horizontal-menu">
+    <ul class="nav-list">
+      <li class="menu-icon-container">
+        <a href="#sidebar-menu" class="sidebar-menu-closed">
+          <span class="sr-only">open menu</span>
+          {{> icon-hamburger }}
+        </a>
+        <a href="#" class="sidebar-menu-open">
+          <span class="sr-only">close menu</span>
+          {{> icon-hamburger }}
+        </a>
+      </li>
+      <li class="header-logo-container"><a href="/">Participedia</a></li>
+      <li class="header-search-container">
+        <form action="/">
+          <input name="query" type="text" placeholder="Search" />
+          <div class="icon-container">
+            {{> icon-search }}
+          </div>
+        </form>
+      </li>
+      <li class="quick-submit-container">
+        <a href="/new" class="button button-white">
+          {{> icon-add }} Quick Submit
+        </a>
+      </li>
+      <li>
+        <a
+          href="https://participedia.auth0.com/login"
+          class="button button-dark-grey"
+        >
+          Login
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>

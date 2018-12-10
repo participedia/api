@@ -2,6 +2,8 @@
 
 @import url("/css/vendor/normalize.css");
 
+@import url("/css/header.css");
+
 @import url("/css/footer.css");
 
 @font-face {
@@ -37,7 +39,7 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Participedia Typography */
+/* Typography */
 body {
   font-size: 1rem; /* 16px */
   font-weight: 300;
@@ -84,10 +86,7 @@ strong {
   font-weight: 600;
 }
 
-/* Participedia Layout */
-
-/* Below are all subject to review and modification, they are just there as reasonable defaults */
-
+/* Layout */
 main section {
   display: flex;
   justify-content: center;
@@ -113,14 +112,61 @@ article {
   order: 2;
 }
 
-body > header {
-  margin-bottom: 3.5em;
+.sr-only {
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  top: -10px;
 }
 
-body > header h1 {
-  margin: 0;
+.nav-list {
+  padding-left: 0px;
+  list-style-type: none;
+  margin: 0px;
 }
 
-body > header p {
-  margin: 0;
+
+/* Buttons */
+.button {
+  background-color: #fff;
+  color: #222;
+  border-radius: 2px;
+  text-decoration: none;
+  min-width: 60px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  display: inline-flex;
+}
+
+.button svg {
+  padding-right: .5em;
+}
+
+.button-white {
+  background-color: #fff;
+  color: #222;
+}
+
+.button-white .icon-fill {
+  fill: #222;
+}
+
+.button-dark-grey {
+  background-color: #4D4D4D;
+  color: #fff;
+}
+
+.button-dark-grey .icon-fill {
+  fill: #fff;
+}
+
+.button-red {
+  background-color: #EC2024;
+  color: #fff;
+}
+
+.button-red .icon-fill {
+  fill: #fff;
 }
