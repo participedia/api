@@ -10,7 +10,9 @@ const {
   CASES_BY_COUNTRY,
   CREATE_CASE,
   CASE_EDIT_BY_ID,
-  CASE_VIEW_BY_ID
+  CASE_EDIT_STATIC,
+  CASE_VIEW_BY_ID,
+  CASE_VIEW_STATIC
 } = require("../helpers/db");
 
 const {
@@ -187,10 +189,7 @@ router.get("/:thingid/", async (req, res) => {
   const articleRow = await db.one(CASE_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(
-    "select * from case_view_localized where language = ${lang};",
-    params
-  );
+  const staticText = await db.one(CASE_VIEW_STATIC, params);
   returnByType(res, params, article, staticText);
 });
 
@@ -199,10 +198,13 @@ router.get("/:thingid/edit", async (req, res) => {
   const articleRow = await db.one(CASE_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(
-    "select * from case_edit_localized where language = ${lang};",
-    params
+  const staticText = await db.one(CASE_EDIT_STATIC, params);
+  staticText.authors = await db.one(
+    "SELECT array_agg((users.id, users.name)) AS authors FROM users;"
   );
+  //  get_object_title_list(array_agg(cases.id), ${lang}) as cases,
+  //  get_object_title_list(array_agg(methods.id), ${lang}) as methods,
+
   returnByType(res, params, article, staticText);
 });
 

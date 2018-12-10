@@ -7,7 +7,6 @@ const moment = require("moment");
 const {
   as,
   db,
-  THING_BY_ID,
   INSERT_LOCALIZED_TEXT,
   UPDATE_NOUN,
   INSERT_AUTHOR,
@@ -28,55 +27,6 @@ const shortKeys = titleKeys.concat([
   "updated_date"
 ]);
 const mediumKeys = shortKeys.concat(["body", "bookmarked", "location"]);
-
-const getThingByType_id_lang_userId_view = async function(
-  type,
-  thingid,
-  lang,
-  userid,
-  view
-) {
-  let articleRow;
-  switch (type) {
-    case "case":
-      if (view == "edit") {
-        articleRow = await db.one(CASE_EDIT_BY_ID, { thingid, lang, userid });
-      } else {
-        articleRow = await db.one(CASE_VIEW_BY_ID, { thingid, lang, userid });
-      }
-      break;
-    case "method":
-      if (view == "edit") {
-        articleRow = await db.one(METHOD_EDIT_BY_ID, { thingid, lang, userid });
-      } else {
-        articleRow = await db.one(METHOD_VIEW_BY_ID, { thingid, lang, userid });
-      }
-      break;
-    case "organization":
-      if (view == "edit") {
-        articleRow = await db.one(ORGANIZATION_EDIT_BY_ID, {
-          thingid,
-          lang,
-          userid
-        });
-      } else {
-        articleRow = await db.one(ORGANIZATION_VIEW_BY_ID, {
-          thingid,
-          lang,
-          userid
-        });
-      }
-      break;
-    default:
-      throw new Exception("Not a recognized article type");
-      break;
-  }
-
-  const article = articleRow.results;
-  // massage results for display
-  fixUpURLs(article);
-  return article;
-};
 
 const fixUpURLs = function(article) {
   if (article.photos && article.photos.length) {

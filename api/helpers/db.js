@@ -159,12 +159,18 @@ const as = Object.assign({}, pgp.as, {
 
 const helpers = pgp.helpers;
 
-const CASE_EDIT_BY_ID = sql(`../sql/case_edit_by_id.sql`);
-const CASE_VIEW_BY_ID = sql(`../sql/case_view_by_id.sql`);
-const METHOD_EDIT_BY_ID = sql(`../sql/method_edit_by_id.sql`);
-const METHOD_VIEW_BY_ID = sql(`../sql/method_view_by_id.sql`);
-const ORGANIZATION_EDIT_BY_ID = sql(`../sql/organization_edit_by_id.sql`);
-const ORGANIZATION_VIEW_BY_ID = sql(`../sql/organization_view_by_id.sql`);
+const CASE_EDIT_BY_ID = sql("../sql/case_edit_by_id.sql");
+const CASE_EDIT_STATIC = sql("../sql/case_edit_static.sql");
+const CASE_VIEW_BY_ID = sql("../sql/case_view_by_id.sql");
+const CASE_VIEW_STATIC = sql("../sql/case_view_static.sql");
+const METHOD_EDIT_BY_ID = sql("../sql/method_edit_by_id.sql");
+const METHOD_EDIT_STATIC = sql("../sql/method_edit_static.sql");
+const METHOD_VIEW_BY_ID = sql("../sql/method_view_by_id.sql");
+const METHOD_VIEW_STATIC = sql("../sql/method_view_static.sql");
+const ORGANIZATION_EDIT_BY_ID = sql("../sql/organization_edit_by_id.sql");
+const ORGANIZATION_EDIT_STATIC = sql("../sql/organization_edit_static.sql");
+const ORGANIZATION_VIEW_BY_ID = sql("../sql/organization_view_by_id.sql");
+const ORGANIZATION_VIEW_STATIC = sql("../sql/organization_view_static.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
@@ -212,9 +218,15 @@ module.exports = {
   LIST_SHORT,
   UPDATE_USER,
   CASE_EDIT_BY_ID,
+  CASE_EDIT_STATIC,
   CASE_VIEW_BY_ID,
+  CASE_VIEW_STATIC,
   METHOD_EDIT_BY_ID,
+  METHOD_EDIT_STATIC,
   METHOD_VIEW_BY_ID,
+  METHOD_VIEW_STATIC,
   ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_VIEW_BY_ID
+  ORGANIZATION_EDIT_STATIC,
+  ORGANIZATION_VIEW_BY_ID,
+  ORGANIZATION_VIEW_STATIC
 };
