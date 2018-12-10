@@ -2,8 +2,6 @@
 DROP FUNCTION IF EXISTS get_methods(thing cases, language text);
 DROP FUNCTION IF EXISTS get_organizations(thing cases, language text);
 
--- fix minor issues in get_case_by_id
-
 --
 -- Name: get_case_by_id(integer, text, integer); Type: FUNCTION; Schema: public; Owner: -
 --
@@ -112,38 +110,3 @@ CREATE OR REPLACE FUNCTION get_case_edit_by_id(id integer, language text, userid
   SELECT thecase.*
   FROM localized, get_case_by_id(id, language, userid, localized.lookup) as thecase;
 $_$;
-
-
--- add get_raw_case_by_id
-
--- add get_case_by_id_with_lists
-
-CREATE OR REPLACE FUNCTION get_case_view_localized_values(field text, language text) RETURNS localized_value[]
-  LANGUAGE sql STABLE
-  AS $_$
-SELECT array_agg((replace(lookup_key, field || '_value_', ''), lookup_key, value)::localized_value) as values
-  FROM (
-      SELECT key as lookup_key, value from rotate_case_view_localized(language) where key like field || '_value_%' order by key
-  ) AS keyvalues
-$_$;
-
-CREATE OR REPLACE FUNCTION get_case_edit_localized_values(field text, language text) RETURNS localized_value[]
-  LANGUAGE sql STABLE
-  AS $_$
-SELECT array_agg((replace(lookup_key, field || '_value_', ''), lookup_key, value)::localized_value) as values
-  FROM (
-      SELECT key as lookup_key, value from rotate_case_edit_localized(language) where key like field || '_value_%' order by key
-  ) AS keyvalues
-$_$;
-
--- add get_raw_case_by_id_with_lists
-
--- update keys to match view data
-
--- functions to return all cases, all methods, all organizations
-
--- add file label to static table
-
--- Remove duplicates from case values
-
--- Organize static value tags

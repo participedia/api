@@ -198,13 +198,22 @@ router.get("/:thingid/edit", async (req, res) => {
   const articleRow = await db.one(CASE_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(CASE_EDIT_STATIC, params);
-  staticText.authors = await db.one(
-    "SELECT array_agg((users.id, users.name)) AS authors FROM users;"
+  const staticResults = await db.one(CASE_EDIT_STATIC, params);
+  const staticText = staticResults.static;
+  const authorsResult = await db.one(
+    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   );
-  //  get_object_title_list(array_agg(cases.id), ${lang}) as cases,
-  //  get_object_title_list(array_agg(methods.id), ${lang}) as methods,
-
+  staticText.authors = authorsResult.authors;
+  const casesResult = await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
+    params
+  );
+  staticText.cases = casesResult.cases;
+  const methodsResult = await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
+    params
+  );
+  staticText.methods = methodsResult.methods;
   returnByType(res, params, article, staticText);
 });
 
