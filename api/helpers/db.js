@@ -5,8 +5,7 @@ let options = {
   promiseLib: promise, // use bluebird as promise library
   capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
 };
-//if (process.env.LOG_QUERY === "true") {
-if (true) {
+if (process.env.LOG_QUERY === "true") {
   options.query = evt => console.info("Executing query %s", evt.query);
 }
 let pgp = require("pg-promise")(options);
