@@ -110,3 +110,16 @@ CREATE OR REPLACE FUNCTION get_case_edit_by_id(id integer, language text, userid
   SELECT thecase.*
   FROM localized, get_case_by_id(id, language, userid, localized.lookup) as thecase;
 $_$;
+
+CREATE OR REPLACE FUNCTION get_case_edit_localized_values(field text, language text) RETURNS localized_value[]
+  LANGUAGE sql STABLE
+  AS $_$
+SELECT array_agg((replace(key, field || '_value_', ''), key, value)::localized_value)
+FROM (
+  SELECT key, value
+  FROM rotate_case_view_localized(language)
+  WHERE key LIKE field || '_value_%'
+  ORDER BY key
+) as values
+;
+$_$
