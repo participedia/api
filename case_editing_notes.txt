@@ -1,0 +1,80 @@
+// Saving a Case
+
+// 1. Are there any changes?
+// 2. Some values we throw away, unless the user is admin
+// 3. title, description, body -> localized_texts
+// 4. user -> authors
+// 5. Several inputs need to be normalized from lists of objects to lists of key or ids
+// 6. Bookmarked gets set on user
+// 7. Has components makes this case the is_component_of for other cases
+
+  id, // never change, won't be present for new articles
+  type, // never change
+  title, // -> localized_texts, sql sanitize, max word count
+  general_issues, // normalize to array of keys, max 3
+  specific_topics, // normalize to array of keys, max 3
+  description, // -> localized_texts, sql sanitize, max word count
+  body, // -> localized_texts, sql sanitize, html sanitize, sanity check word count
+  tags, // normalize to a list of keys (keys are from a different table)
+  location_name, // sql sanitize, max length
+  address1, // sql sanitize, max length
+  address2, // sql sanitize, max length
+  city, // sql sanitize, max length
+  province, // sql sanitize, max length
+  postal_code, // sql sanitize, max length
+  country, // sql sanitize, max length
+  latitude, // match to regex
+  longitude, // match to regex
+  scope_of_influence, // normalize to key
+  has_components, // normalize to list of case ids, diffs applied to those cases
+  is_component_of, // normalize to case id
+  files, // save as full_files, sql sanitize all fields, convert to sql arrays of objects
+  links, // save as full_links, sql sanitize all fields, convert to sql arrays of objects
+  photos, // sql sanitize all fields, convert to sql arrays of objects
+  videos, // save as full_videos, sql sanitize all fields, convert to sql arrays of objects
+  audio, // sql sanitize all fields, convert to sql arrays of objects
+  start_date, // convert to Date
+  end_date, // convert to Date
+  ongoing, // must be boolean
+  time_limited, // normalize to key
+  purposes, // normalize to array of keys
+  approaches, // normalize to array of keys
+  public_spectrum, // normalize to key
+  number_of_participants, // must be integer
+  open_limited, // normalize to key
+  recruitement_method, // normalize to key
+  targeted_participants, // normalize to array of keys
+  method_types, // normalize to array of keys
+  tools_techniques_types, // normalize to array of keys
+  specific_methods_tools_techniques, // normalize to array of ids for methods or tools
+  legality, // normalize to key
+  facilitators, // normalize to key
+  facilitator_training, // normalize to key
+  facetoface_online_or_both, // normalize to key
+  participants_interactions, // normalize to array of keys
+  learning_resources, // normalize to array of keys
+  decision_methods, // normalize to array of keys
+  if_voting, // normalize to array of keys
+  insights_outcomes, // normalize to array of keys
+  primary_organizer, // normalize to user id ???
+  organizer_types, // normalize to array of keys
+  funder, // sql sanitize, html nuke, max length
+  funder_types, // normalize to list of keys
+  staff, // boolean only
+  volunteers, // boolean only
+  impact_evidence, // boolean only
+  change_types, // normalize to array of keys
+  implementers_of_change, // normalize to array of keys
+  formal_evaluation, // boolean only
+  evaluation_reports, // array of urls
+  evaluation_links, // array of urls
+  bookmarked, // -> user
+  creator, // -> authors and/or localized_texts, can only be modified by admin
+  last_updated_by, // authors and/or localized_texts, can only be modified by admin
+
+  original_language, // sql sanitize, max length
+  post_date, // can only be modified by admin
+  published, // can only be modified by admin, for now
+  updated_date, // -> localized_texts?, can only be modified by admin
+  featured, // can only be modified by admin
+  hidden // can only be modified by admin

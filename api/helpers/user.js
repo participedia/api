@@ -1,10 +1,12 @@
-let { db, sql, as } = require("../helpers/db");
+let {
+  db,
+  as,
+  USER_BY_EMAIL,
+  USER_BY_ID,
+  CREATE_USER_ID
+} = require("../helpers/db");
 let log = require("winston");
 let unless = require("express-unless");
-
-const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
-const USER_BY_ID = sql("../sql/user_by_id.sql");
-const CREATE_USER_ID = sql("../sql/create_user_id.sql");
 
 async function preferUser(req, res, next) {
   commonUserHandler(false, req, res, next);
@@ -61,7 +63,6 @@ async function commonUserHandler(required, req, res, next) {
       });
     }
     if (userObj) {
-      // console.warn("the bloody userObj is %s", JSON.stringify(userObj));
       userObj = userObj.user;
       if (!req.user) {
         req.user = {};

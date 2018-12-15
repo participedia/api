@@ -3,10 +3,7 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
-let { db, sql, as } = require("../helpers/db");
-
-const USER_BY_ID = sql("../sql/user_by_id.sql");
-const UPDATE_USER = sql("../sql/update_user.sql");
+let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
 
 async function getUserById(userId, req, res) {
   try {

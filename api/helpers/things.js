@@ -4,12 +4,19 @@ const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
 
-const { as, db, sql } = require("./db");
-
-const THING_BY_ID = sql(`../sql/thing_by_id.sql`);
-const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
-const UPDATE_NOUN = sql("../sql/update_noun.sql");
-const INSERT_AUTHOR = sql("../sql/insert_author.sql");
+const {
+  as,
+  db,
+  INSERT_LOCALIZED_TEXT,
+  UPDATE_NOUN,
+  INSERT_AUTHOR,
+  CASE_EDIT_BY_ID,
+  CASE_VIEW_BY_ID,
+  METHOD_EDIT_BY_ID,
+  METHOD_VIEW_BY_ID,
+  ORGANIZATION_EDIT_BY_ID,
+  ORGANIZATION_VIEW_BY_ID
+} = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
 const titleKeys = ["id", "title"];
@@ -21,124 +28,78 @@ const shortKeys = titleKeys.concat([
 ]);
 const mediumKeys = shortKeys.concat(["body", "bookmarked", "location"]);
 
-const getThingByType_id_lang_userId = async function(
-  type,
-  thingid,
-  lang,
-  userId
-) {
-  let table = type + "s";
-  let thingRow;
-  if (type === "case") {
-    thingRow = await db.one(
-      "select row_to_json(get_case_by_id(${thingid}, ${lang}, ${userId})) as results;",
-      { thingid, lang, userId }
-    );
-  } else {
-    thingRow = await db.one(THING_BY_ID, {
-      table,
-      type,
-      thingid,
-      lang,
-      userId
-    });
-  }
-  const thing = thingRow.results;
-  // massage results for display
-  if (thing.photos && thing.photos.length) {
-    thing.photos.forEach(
+const fixUpURLs = function(article) {
+  if (article.photos && article.photos.length) {
+    article.photos.forEach(
       img =>
         (img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url))
     );
   }
-  if (thing.files && thing.files.length) {
-    thing.files.forEach(
+  if (article.files && article.files.length) {
+    article.files.forEach(
       file =>
         (file.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(file.url))
     );
   }
-  if (thing.longitude.startsWith("0° 0' 0\"")) {
-    thing.longitude = "";
+  if (article.longitude.startsWith("0° 0' 0\"")) {
+    article.longitude = "";
   }
-  if (thing.latitude.startsWith("0° 0' 0\"")) {
-    thing.latitude = "";
+  if (article.latitude.startsWith("0° 0' 0\"")) {
+    article.latitude = "";
   }
-
-  return thing;
 };
 
-const getThingByRequest = async function(type, req) {
-  const thingid = as.number(req.params.thingid);
-  const lang = as.value(req.params.language || "en");
-  const userId = req.user ? req.user.user_id : null;
-  return await getThingByType_id_lang_userId(type, thingid, lang, userId);
-};
-
-const returnByType = req => {
-  // handle json requests from old client or tests
-  let view = req.params.view || "view";
-  // ONly allow supported views
-  console.log("View: %s", view);
-  if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
-    return res => res.status(404, "View type not found").render();
-  }
-  let returnType = req.query.returns;
-  if (req.accepts("json", "html") === "json") {
-    returnType = "json";
-  }
-  switch (returnType) {
+const returnByType = (res, params, article, static) => {
+  const { returns, type, view } = params;
+  switch (returns) {
     case "htmlfrag":
-      return (res, type, thing, staticText) =>
-        res.status(200).render(type + "-" + view, {
-          article: thing,
-          static: staticText,
-          layout: false
-        });
+      return res
+        .status(200)
+        .render(type + "-" + view, { article, static, layout: false });
     case "json":
-      return (res, type, thing, staticText) =>
-        res.status(200).json({ OK: true, article: thing, static: staticText });
+      return res.status(200).json({ OK: true, article, static });
     case "csv":
       // TODO: implement CSV
-      return (res, type, thing) =>
-        res.status(500, "CSV not implemented yet").render();
+      return res.status(500, "CSV not implemented yet").render();
     case "xml":
       // TODO: implement XML
-      return (res, type, thing) =>
-        res.status(500, "XML not implemented yet").render();
+      return res.status(500, "XML not implemented yet").render();
     case "html": // fall through
     default:
-      return (res, type, thing, staticText) =>
-        res
-          .status(200)
-          .render(type + "-" + view, { article: thing, static: staticText });
+      return res.status(200).render(type + "-" + view, { article, static });
   }
 };
 
+const parseGetParams = function(req, type) {
+  return {
+    type,
+    view: as.value(req.params.view || "view"),
+    articleid: as.number(req.params.thingid || req.params.articleid),
+    lang: as.value(req.query.language || "en"),
+    userid: req.user
+      ? as.number(req.user.user_id || req.user.userid || req.query.userid)
+      : null,
+    returns: as.value(req.query.returns)
+  };
+};
+
+/* This is the entry point for getting an article */
 const returnThingByRequest = async function(type, req, res) {
-  try {
-    const lang = as.value(req.params.language || "en");
-    const thing = await getThingByRequest(type, req);
-    let view = req.params.view || "view";
-    // ONly allow supported views
-    if (!["view", "edit", "edit_localize", "view_localize"].includes(view)) {
-      return res => res.status(404, "View type not found").render();
-    }
-    const staticText = await db.one(
-      `select * from ${type}_${view}_localized where language = '${lang}';`
-    );
-    Object.keys(thing).forEach(key => {
-      if (thing[key] === "{}") {
-        thing[key] = [];
-      }
-    });
-    returnByType(req)(res, type, thing, staticText);
-  } catch (error) {
-    log.error("Exception in GET /%s/%s => %s", type, req.params.thingid, error);
-    res.status(500).json({
-      OK: false,
-      error: error
-    });
-  }
+  const { articleid, lang, userid, view } = (params = parseGetParams(
+    req,
+    type
+  ));
+  const article = await getThingByType_id_lang_userId_view(
+    type,
+    thingid,
+    lang,
+    userid,
+    view
+  );
+  const static = await db.one(
+    `select * from ${type}_${view}_localized where language = '${lang}';`
+  );
+  returnByType(req)(res, params, thing, static);
 };
 
 /* I can't believe basic set operations are not part of ES5 Sets */
@@ -239,21 +200,33 @@ function getEditXById(type) {
   return async function editById(req, res) {
     cache.clear();
     const thingid = req.thingid || as.number(req.params.thingid);
+    const view = req.params.view || "view";
+    let lang,
+      user,
+      userId,
+      oldThing,
+      newThing,
+      updatedText,
+      updatedThingFields = [],
+      isTextUpdated = false,
+      anyChanges = false,
+      retThing = null;
     try {
       // FIXME: Figure out how to get all of this done as one transaction
-      const lang = as.value(req.params.language || "en");
-      const user = req.user;
-      const userId = user.user_id;
-      const oldThing = await getThingByType_id_lang_userId(
+      lang = as.value(req.params.language || "en");
+      user = req.user;
+      userId = user.user_id;
+      oldThing = await getThingByType_id_lang_userId_view(
         type,
         thingid,
         lang,
-        userId
+        userId,
+        view
       );
-      const newThing = req.body;
+      newThing = req.body;
       // console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
       // console.log("User: %s", JSON.stringify(user));
-      let updatedText = {
+      updatedText = {
         body: oldThing.body,
         title: oldThing.title,
         description: oldThing.description,
@@ -261,10 +234,6 @@ function getEditXById(type) {
         type: type,
         id: thingid
       };
-      let updatedThingFields = [];
-      let isTextUpdated = false;
-      let anyChanges = false;
-      let retThing = null;
 
       /* DO ALL THE DIFFS */
       // FIXME: Does this need to be async?
@@ -443,20 +412,21 @@ function getEditXById(type) {
           id: thingid
         });
         // update materialized view for search
-        retThing = await getThingByType_id_lang_userId(
+        retThing = await getThingByType_id_lang_userId_view(
           type,
           as.number(thingid),
           lang,
-          userId
+          userId,
+          view
         );
         if (req.thingid) {
           res.status(201).json({
             OK: true,
-            data: { thingid: retThing.id },
-            object: retThing
+            object: retThing,
+            data: { thingid: retThing.id }
           });
         } else {
-          res.status(200).json({ OK: true, data: retThing });
+          res.status(200).json({ OK: true, object: retThing });
         }
       }
     } catch (error) {
@@ -474,7 +444,7 @@ function getEditXById(type) {
     } // end catch
     // update search index
     try {
-      db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
+      db.none("REFRESH MATERIALIZED VIEW search_index_en;");
     } catch (error) {
       console.error("Problem refreshing materialized view: %s", error);
     }
@@ -483,13 +453,26 @@ function getEditXById(type) {
 
 const supportedTypes = ["case", "method", "organization"];
 
+/** uniq ::: return a list with no repeated items. Items will be in the order they first appear in the list. **/
+const uniq = list => {
+  let newList = [];
+  list.forEach(item => {
+    if (!newList.includes(item)) {
+      newList.push(item);
+    }
+  });
+  return newList;
+};
+
 module.exports = {
-  getThingByType_id_lang_userId,
-  getThingByRequest,
   returnThingByRequest,
   getEditXById,
   supportedTypes,
   titleKeys,
   shortKeys,
-  mediumKeys
+  mediumKeys,
+  uniq,
+  fixUpURLs,
+  parseGetParams,
+  returnByType
 };

@@ -5,15 +5,22 @@ const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 
-const { db, sql, as } = require("../helpers/db");
-
-const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
+const {
+  db,
+  as,
+  CREATE_ORGANIZATION,
+  ORGANIZATION_EDIT_BY_ID,
+  ORGANIZATION_EDIT_STATIC,
+  ORGANIZATION_VIEW_BY_ID,
+  ORGANIZATION_VIEW_STATIC
+} = require("../helpers/db");
 
 const {
   getEditXById,
   addRelatedList,
-  returnThingByRequest,
-  getThingByType_id_lang_userId
+  parseGetParams,
+  returnByType,
+  fixUpURLs
 } = require("../helpers/things");
 
 /**
@@ -110,56 +117,24 @@ router.post("/new", async function(req, res) {
 
 router.put("/:thingid", getEditXById("organization"));
 
-/**
- * @api {get} /organization/:id Get the last version of an organization
- * @apiGroup Organizations
- * @apiVersion 0.1.0
- * @apiName getOrgById
- * @apiParam {Number} id Organization ID
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} Organization data
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *         "ID": 3,
- *         "Description": 'foo'
- *        }
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
+router.get("/:thingid/", async (req, res) => {
+  /* This is the entry point for getting an article */
+  const params = parseGetParams(req, "organization");
+  const articleRow = await db.one(ORGANIZATION_VIEW_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  const staticText = await db.one(ORGANIZATION_VIEW_STATIC, params);
+  returnByType(res, params, article, staticText);
+});
 
-router.get("/:thingid", (req, res) =>
-  returnThingByRequest("organization", req, res)
-);
-
-/**
- * @api {delete} /organization/:id Delete an organization
- * @apiGroup Organizations
- * @apiVersion 0.1.0
- * @apiName deleteOrganization
- * @apiParam {Number} Organization ID
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *        OK: true
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
+router.get("/:thingid/edit", async (req, res) => {
+  const params = parseGetParams(req, "organization");
+  const articleRow = await db.one(ORGANIZATION_EDIT_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  const staticText = await db.one(ORGANIZATION_EDIT_STATIC, params);
+  returnByType(res, params, article, staticText);
+});
 
 router.delete("/:id", function deleteOrganization(req, res) {
   // let orgId = req.swagger.params.id.value;

@@ -4,17 +4,24 @@ const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 
-const { db, sql, as } = require("../helpers/db");
+const {
+  db,
+  as,
+  CASES_BY_COUNTRY,
+  CREATE_CASE,
+  CASE_EDIT_BY_ID,
+  CASE_EDIT_STATIC,
+  CASE_VIEW_BY_ID,
+  CASE_VIEW_STATIC
+} = require("../helpers/db");
 
 const {
   getEditXById,
   addRelatedList,
-  returnThingByRequest,
-  getThingByType_id_lang_userId
+  parseGetParams,
+  returnByType,
+  fixUpURLs
 } = require("../helpers/things");
-
-const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
-const CREATE_CASE = sql("../sql/create_case.sql");
 
 /**
  * @api {get} /case/countsByCountry Get case counts for each country
@@ -114,6 +121,7 @@ router.post("/new", async function postNewCase(req, res) {
     return res.status(500).json({ OK: false, error: error });
   }
   // Refresh search index
+  // FIXME: This will never get called as we have already returned ff
   try {
     db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
   } catch (error) {
@@ -175,11 +183,39 @@ router.put("/:thingid", getEditXById("case"));
  *
  */
 
-// We want to extract the user ID from the auth token if it's there,
-// but not fail if not.
-router.get("/:thingid/:view?", (req, res) =>
-  returnThingByRequest("case", req, res)
-);
+router.get("/:thingid/", async (req, res) => {
+  /* This is the entry point for getting an article */
+  const params = parseGetParams(req, "case");
+  const articleRow = await db.one(CASE_VIEW_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  const staticText = await db.one(CASE_VIEW_STATIC, params);
+  returnByType(res, params, article, staticText);
+});
+
+router.get("/:thingid/edit", async (req, res) => {
+  const params = parseGetParams(req, "case");
+  const articleRow = await db.one(CASE_EDIT_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  const staticResults = await db.one(CASE_EDIT_STATIC, params);
+  const staticText = staticResults.static;
+  const authorsResult = await db.one(
+    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
+  );
+  staticText.authors = authorsResult.authors;
+  const casesResult = await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
+    params
+  );
+  staticText.cases = casesResult.cases;
+  const methodsResult = await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
+    params
+  );
+  staticText.methods = methodsResult.methods;
+  returnByType(res, params, article, staticText);
+});
 
 /**
  * @api {delete} /case/:caseId Delete a case
