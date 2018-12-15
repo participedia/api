@@ -1,18 +1,20 @@
 "use strict";
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
-let { db, sql, as } = require("../helpers/db");
+let {
+  db,
+  as,
+  TITLES_FOR_THINGS,
+  SEARCH,
+  FEATURED_MAP,
+  FEATURED,
+  SEARCH_MAP,
+  LIST_MAP_CASES,
+  LIST_MAP_ORGANIZATIONS
+} = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
 let log = require("winston");
 const { supportedTypes } = require("../helpers/things");
-
-const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
-const SEARCH = sql("../sql/search.sql");
-const FEATURED_MAP = sql("../sql/featuredmap.sql");
-const FEATURED = sql("../sql/featured.sql");
-const SEARCH_MAP = sql("../sql/searchmap.sql");
-const LIST_MAP_CASES = sql("../sql/list_map_cases.sql");
-const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
 
 const RESPONSE_LIMIT = 20;
 

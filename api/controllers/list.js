@@ -3,12 +3,8 @@ const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
 const log = require("winston");
 
-const { db, sql, as } = require("../helpers/db");
+const { db, as, LIST_TITLES, LIST_SHORT } = require("../helpers/db");
 const { supportedTypes } = require("../helpers/things");
-
-const LIST_TITLES = sql("../sql/list_titles.sql");
-const LIST_SHORT = sql("../sql/list_short.sql");
-//const LIST_REFERENCES = sql("../sql/list_references.sql");
 
 /**
  * @api {get} /list/titles Get title and id for all "things"

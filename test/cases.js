@@ -1,3 +1,4 @@
+let fs = require("fs");
 let tokens = require("./setupenv");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
@@ -18,22 +19,13 @@ let location = {
   longitude: -81.69436050000002
 };
 
+let example_case = JSON.parse(fs.readFileSync("test/case.json"));
+
 async function addBasicCase() {
   return chai
     .postJSON("/case/new?returns=json")
     .set("Authorization", "Bearer " + tokens.user_token)
-    .send({
-      // mandatory
-      title: "First Title",
-      body: "First Body",
-      // optional
-      photos: ["CitizensAssembly_2.jpg"], // key into S3 bucket
-      videos: [
-        "https://www.youtube.com/watch?v=QF7g3rCnD-w",
-        "https://www.youtube.com/watch?v=w44lApffH30"
-      ],
-      location: location
-    });
+    .send(example_case);
 }
 
 describe("Cases", () => {

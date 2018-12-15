@@ -4,15 +4,22 @@ const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 
-const { db, sql, as } = require("../helpers/db");
-
-const CREATE_METHOD = sql("../sql/create_method.sql");
+const {
+  db,
+  as,
+  CREATE_METHOD,
+  METHOD_EDIT_BY_ID,
+  METHOD_EDIT_STATIC,
+  METHOD_VIEW_BY_ID,
+  METHOD_VIEW_STATIC
+} = require("../helpers/db");
 
 const {
   getEditXById,
   addRelatedList,
-  returnThingByRequest,
-  getThingByType_id_lang_userId
+  parseGetParams,
+  returnByType,
+  fixUpURLs
 } = require("../helpers/things");
 
 /**
@@ -109,52 +116,24 @@ router.post("/new", async function(req, res) {
 
 router.put("/:thingid", getEditXById("method"));
 
-/**
- * @api {get} /method/:id Get the last version of a method
- * @apiGroup Methods
- * @apiVersion 0.1.0
- * @apiName getMethodById
- * @apiParam {Number} id Method ID
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} method data
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *         "ID": 3,
- *         "Description": 'foo'
- *        }
- *     }
- *
- *
- */
+router.get("/:thingid/", async (req, res) => {
+  /* This is the entry point for getting an article */
+  const params = parseGetParams(req, "method");
+  const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  const staticText = await db.one(METHOD_VIEW_STATIC, params);
+  returnByType(res, params, article, staticText);
+});
 
-router.get("/:thingid", (req, res) => returnThingByRequest("method", req, res));
-
-/**
- * @api {delete} /method/:id Delete a method
- * @apiGroup Methods
- * @apiVersion 0.1.0
- * @apiName deleteMethod
- * @apiParam {Number} id Method ID
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *        OK: true
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
+router.get("/:thingid/edit", async (req, res) => {
+  const params = parseGetParams(req, "method");
+  const articleRow = await db.one(METHOD_EDIT_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  const staticText = await db.one(METHOD_EDIT_STATIC, params);
+  returnByType(res, params, article, staticText);
+});
 
 router.delete("/:id", function deleteMethod(req, res) {
   // let id = req.swagger.params.id.value;
