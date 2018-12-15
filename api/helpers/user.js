@@ -20,6 +20,14 @@ async function commonUserHandler(required, req, res, next) {
     let email = req.header("X-Auth0-Name");
     let auth0UserId = req.header("X-Auth0-UserId");
     const language = as.value(req.params.language || "en");
+    // Temporary fake user
+    if (!user && req.query.user) {
+      req.user = await db.oneOrNone(USER_BY_ID, {
+        userId: req.query.user,
+        language
+      });
+      return next();
+    }
     if (!user) {
       if (required) {
         return res.status(401).json({
@@ -53,7 +61,7 @@ async function commonUserHandler(required, req, res, next) {
       });
     }
     if (userObj) {
-      console.warn("the bloody userObj is %s", JSON.stringify(userObj));
+      // console.warn("the bloody userObj is %s", JSON.stringify(userObj));
       userObj = userObj.user;
       if (!req.user) {
         req.user = {};
