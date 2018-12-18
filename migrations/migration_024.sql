@@ -117,7 +117,7 @@ CREATE OR REPLACE FUNCTION get_case_edit_localized_values(field text, language t
 SELECT array_agg((replace(key, field || '_value_', ''), key, value)::localized_value)
 FROM (
   SELECT key, value
-  FROM rotate_case_view_localized(language)
+  FROM rotate_case_edit_localized(language)
   WHERE key LIKE field || '_value_%'
   ORDER BY key
 ) as values
