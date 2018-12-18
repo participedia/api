@@ -81,7 +81,7 @@ const parseGetParams = function(req, type) {
     userid: req.user
       ? as.number(req.user.user_id || req.user.userid || req.query.userid)
       : null,
-    returns: as.value(req.query.returns)
+    returns: as.value(req.query.returns || "html")
   };
 };
 

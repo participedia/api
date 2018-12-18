@@ -26,12 +26,11 @@ WITH staticrow as (
   get_case_edit_localized_values('funder_types', ${lang}) as funder_types,
   get_case_edit_localized_values('change_types', ${lang}) as change_types,
   get_case_edit_localized_values('implementers_of_change', ${lang}) as implementers_of_change,
-  labels.*
-
+  array_agg((labelvalues.key, '', labelvalues.value)::localized_value) as labels
   FROM rotate_tags_localized(${lang}) as tagvalues,
-       rotate_case_edit_localized(${lang}) as labels
-  WHERE tagvalues.key <> 'language' AND
-       labels.key NOT LIKE '%_value%'
+       rotate_case_edit_localized(${lang}) as labelvalues
+  WHERE tagvalues.key <> 'language'
+       AND labelvalues.key NOT LIKE '%_value_%'
 )
 SELECT to_json(staticrow.*) static FROM staticrow
 ;
