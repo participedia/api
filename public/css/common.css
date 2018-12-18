@@ -1,0 +1,204 @@
+@font-face {
+  font-family: "Fakt";
+  src: url("/fonts/FaktPro-Medium.ttf");
+  font-weight: 800;
+  font-style: bold;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fakt";
+  src: url("/fonts/FaktPro-Normal.ttf");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fakt";
+  src: url("/fonts/FaktPro-Blond.ttf");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  font-family: "Fakt", serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background: #fff;
+  color: #000;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Typography */
+body {
+  font-size: 1rem; /* 16px */
+  font-weight: 300;
+  line-height: 1.5; /* 24px */
+}
+h1, h2, h3, h4, h5, h6 {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+h1 {
+  font-size: 2.5rem; /* 40px */
+  line-height: 1.1; /* 44px */
+  font-weight: 600;
+}
+h2 {
+  font-size: 1.75rem; /* 28px */
+  line-height: 1.875rem; /* 30px */
+  font-weight: 600;
+}
+h3 {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.4; /* 28px */
+  font-weight: 600;
+}
+h4 {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5; /* 24px */
+  font-weight: 600;
+}
+h5 {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  font-weight: 600;
+}
+.large {
+  font-size: 12rem; /* 19.2px */
+  line-height: 1.875rem; /* 30px */
+  font-weight: 300;
+}
+small,
+.small {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+  font-weight: 300;
+}
+b,
+strong {
+  font-weight: 600;
+}
+
+a {
+  color: #000;
+}
+
+/* Layout */
+main section {
+  display: flex;
+  justify-content: center;
+}
+
+aside {
+  flex: 0 0 25%;
+  max-width: 25%;
+  background-color: cornsilk;
+  order: 1;
+}
+
+.case-nav {
+  flex: 0 0 25%;
+  max-width: 25%;
+  background-color: palegreen;
+  order: 3;
+}
+
+article {
+  background-color: lightcyan;
+  flex: 0 0 50%;
+  order: 2;
+}
+
+.sr-only {
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  overflow: hidden;
+  top: -10px;
+}
+
+/*
+  replace nav-list class with unstyled-list in header and footer,
+  since lists can be used for things that are not nav
+*/
+.nav-list,
+.unstyled-list {
+  padding-left: 0px;
+  list-style-type: none;
+  margin: 0px;
+}
+
+
+/* Buttons */
+.button {
+  background-color: #fff;
+  color: #222;
+  border-radius: 2px;
+  text-decoration: none;
+  min-width: 60px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  display: inline-flex;
+  border-width: 0;
+  line-height: 1.5rem;
+  cursor: pointer;
+}
+
+.button svg {
+  padding-right: .5em;
+}
+
+.button-white {
+  background-color: #fff;
+  color: #222;
+}
+
+.button-white .icon-fill {
+  fill: #222;
+}
+
+.button-dark-grey {
+  background-color: #4D4D4D;
+  color: #fff;
+}
+
+.button-dark-grey .icon-fill {
+  fill: #fff;
+}
+
+.button-red {
+  background-color: #EC2024;
+  color: #fff;
+}
+
+.button-red .icon-fill {
+  fill: #fff;
+}
+
+.button-light-grey {
+  background-color: #b3b3b3;
+  color: #fff;
+}
+
+.button-light-grey .icon-fill {
+  fill: #fff;
+}
+
+button.icon-only {
+  border: 0px;
+  padding: 8px;
+  display: flex;
+}
+
+.striped-bg {
+  background-image: url('data:image/svg+xml;utf8,<svg width="31" height="33" xmlns="http://www.w3.org/2000/svg"><g fill="#E6E6E6" fill-rule="evenodd"><path d="M0 1.6597h30.667v-1.66H0zM0 10.5547h30.667v-1.661H0zM0 6.1077h30.667v-1.661H0zM0 15.0017h30.667v-1.66H0zM0 19.4477h30.667v-1.66H0zM0 23.8957h30.667v-1.661H0zM0 28.3427h30.667v-1.66H0zM0 32.7897h30.667v-1.661H0z" /></g></svg>');
+  background-repeat: no-repeat;
+}
+
+pre {
+  white-space: pre-wrap;
+}
