@@ -53,11 +53,15 @@ const returnByType = (res, params, article, static, user) => {
   const { returns, type, view } = params;
   switch (returns) {
     case "htmlfrag":
-      return res
-        .status(200)
-        .render(type + "-" + view, { article, static, user, layout: false });
+      return res.status(200).render(type + "-" + view, {
+        article,
+        static,
+        user,
+        params,
+        layout: false
+      });
     case "json":
-      return res.status(200).json({ OK: true, article, static, user });
+      return res.status(200).json({ OK: true, article, static, user, params });
     case "csv":
       // TODO: implement CSV
       return res.status(500, "CSV not implemented yet").render();
@@ -68,12 +72,12 @@ const returnByType = (res, params, article, static, user) => {
     default:
       return res
         .status(200)
-        .render(type + "-" + view, { article, static, user });
+        .render(type + "-" + view, { article, static, user, params });
   }
 };
 
 const parseGetParams = function(req, type) {
-  return {
+  return Object.assign({}, req.query, {
     type,
     view: as.value(req.params.view || "view"),
     articleid: as.number(req.params.thingid || req.params.articleid),
@@ -82,7 +86,7 @@ const parseGetParams = function(req, type) {
       ? as.number(req.user.user_id || req.user.userid || req.query.userid)
       : null,
     returns: as.value(req.query.returns || "html")
-  };
+  });
 };
 
 /* This is the entry point for getting an article */
