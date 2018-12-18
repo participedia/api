@@ -190,7 +190,7 @@ router.get("/:thingid/", async (req, res) => {
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = await db.one(CASE_VIEW_STATIC, params);
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 });
 
 router.get("/:thingid/edit", async (req, res) => {
@@ -214,7 +214,7 @@ router.get("/:thingid/edit", async (req, res) => {
     params
   );
   staticText.methods = methodsResult.methods;
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 });
 
 /**

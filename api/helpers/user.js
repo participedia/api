@@ -17,75 +17,85 @@ async function ensureUser(req, res, next) {
 }
 
 async function commonUserHandler(required, req, res, next) {
-  try {
-    let user = req.user;
-    let email = req.header("X-Auth0-Name");
-    let auth0UserId = req.header("X-Auth0-UserId");
-    const language = as.value(req.params.language || "en");
-    if (!user) {
-      if (required) {
-        return res.status(401).json({
-          message: "User must be logged in to perform this function"
-        });
-      } else if (!email) {
-        // nothing more we can do here without a user
-        return next();
-      }
-    }
-    if (required && !okToEdit(user)) {
-      res.status(401).json({
-        message: "User is not authorized to add or edit content."
-      });
-    }
-    // if (user.user_id) {
-    //   // all is well, carry on, but make sure user_id is a number
-    //   user.user_id = Number(user.user_id);
-    //   return next();
-    // }
-    // get user id from email
-    let userIdObj = await db.oneOrNone(USER_BY_EMAIL, {
-      userEmail: user && user.email ? user.email : email
+  //  try {
+  let user = req.user;
+  let email = req.header("X-Auth0-Name");
+  let auth0UserId = req.header("X-Auth0-UserId");
+  const language = as.value(req.params.language || "en");
+  // Temporary fake user
+  if (!user && req.query.user) {
+    let theUser = await db.oneOrNone(USER_BY_ID, {
+      userId: as.number(req.query.user),
+      language
     });
-    // get full user object
-    let userObj = null;
-    if (userIdObj) {
-      userObj = await db.oneOrNone(USER_BY_ID, {
-        userId: userIdObj.id,
-        language
+    req.user = theUser.user;
+    req.user.user_id = req.user.id;
+    return next();
+  }
+  if (!user) {
+    if (required) {
+      return res.status(401).json({
+        message: "User must be logged in to perform this function"
       });
+    } else if (!email) {
+      // nothing more we can do here without a user
+      return next();
     }
-    if (userObj) {
-      userObj = userObj.user;
-      if (!req.user) {
-        req.user = {};
-      }
-      req.user.isadmin = userObj.isadmin;
-      req.user.user_id = userObj.id;
-    } else {
-      console.warn("no userObj found for %s", JSON.stringify(req.user));
-      let newUser;
-      let pictureUrl = user.picture;
-      if (user.user_metadata && user.user_metadata.customPic) {
-        pictureUrl = user.user_metadata.customPic;
-      }
-      newUser = await db.one(CREATE_USER_ID, {
-        userEmail: user.email,
-        userName: user.name || user.email,
-        joinDate: user.created_at,
-        auth0UserId: auth0UserId,
-        pictureUrl: pictureUrl,
-        bio: ""
-      });
-      req.user.user_id = newUser.user_id;
-    }
-    next();
-  } catch (error) {
-    console.trace("Problem creating user", JSON.stringify(error));
-    return res.status(500).json({
-      OK: false,
-      error: error
+  }
+  if (required && !okToEdit(user)) {
+    res.status(401).json({
+      message: "User is not authorized to add or edit content."
     });
   }
+  // if (user.user_id) {
+  //   // all is well, carry on, but make sure user_id is a number
+  //   user.user_id = Number(user.user_id);
+  //   return next();
+  // }
+  // get user id from email
+  let userIdObj = await db.oneOrNone(USER_BY_EMAIL, {
+    userEmail: user && user.email ? user.email : email
+  });
+  // get full user object
+  let userObj = null;
+  if (userIdObj) {
+    userObj = await db.oneOrNone(USER_BY_ID, {
+      userId: userIdObj.id,
+      language
+    });
+  }
+  if (userObj) {
+    userObj = userObj.user;
+    if (!req.user) {
+      req.user = {};
+    }
+    req.user.isadmin = userObj.isadmin;
+    req.user.user_id = userObj.id;
+  } else {
+    console.warn("no userObj found for %s", JSON.stringify(req.user));
+    let newUser;
+    let pictureUrl = user.picture;
+    if (user.user_metadata && user.user_metadata.customPic) {
+      pictureUrl = user.user_metadata.customPic;
+    }
+    newUser = await db.one(CREATE_USER_ID, {
+      userEmail: user.email,
+      userName: user.name || user.email,
+      joinDate: user.created_at,
+      auth0UserId: auth0UserId,
+      pictureUrl: pictureUrl,
+      bio: ""
+    });
+    req.user.user_id = newUser.user_id;
+  }
+  next();
+  //  } catch (error) {
+  //    console.trace("Problem creating user", JSON.stringify(error));
+  //    return res.status(500).json({
+  //      OK: false,
+  //      error: error
+  //    });
+  //  }
 }
 
 function okToEdit(user) {
