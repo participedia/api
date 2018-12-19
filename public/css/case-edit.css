@@ -77,8 +77,8 @@ article.case-edit fieldset h2 {
   border-radius: 2em;
   padding: 1em;
   position: fixed;
-  bottom: 300px;
-  right: 15%;
+  bottom: 3rem;
+  right: 3rem;
 }
 
 .case-edit-buttons .floating-publish-button svg {
