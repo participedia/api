@@ -45,6 +45,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "browserify": "^16.2.3",
     "chai": "^4.0.2",
     "chai-http": "^3.0.0",
     "csv": "^3.1.0",
@@ -52,12 +53,15 @@
     "eslint-config-google": "^0.9.1",
     "eslint-config-prettier": "^2.2.0",
     "eslint-plugin-prettier": "^2.0.1",
+    "esmify": "^2.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
-    "prettier": "^1.7.0"
+    "prettier": "^1.7.0",
+    "watchify": "^3.11.0"
   },
   "scripts": {
     "start": "nodemon server.js",
+    "watch": "watchify public/js/app.js -p esmify -o public/build/js/app.bundle.js -v",
     "lint": "eslint \"**.js\"",
     "deployprod": "git push participedia-api",
     "deploystage": "git push participedia-stage",
