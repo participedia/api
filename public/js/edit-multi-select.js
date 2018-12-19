@@ -29,15 +29,32 @@ const editMultiSelect = {
 
       el.addEventListener("drop", (e) => {
         e.preventDefault();
+        const parentList = e.target.closest("ol");
+        const allLiEls = parentList.querySelectorAll("li");
+        const name = parentList.getAttribute("data-name");
         const droppedLi = e.target.closest("li");
         const newSourceLi = `<li draggable="true">${sourceLi.innerHTML}</li>`;
+
+        const getIndexOfLi = (node) => {
+          for (var i = 0; i < allLiEls.length; i++) {
+            if (node === allLiEls[i]) break;
+          }
+          return i;
+        };
+
         if (droppedLi) {
-          droppedLi.insertAdjacentHTML('beforebegin', newSourceLi);
+          const droppedLiIndex = getIndexOfLi(droppedLi);
+          const sourceLiIndex = getIndexOfLi(sourceLi);
+
+          if (droppedLiIndex < sourceLiIndex) {
+            droppedLi.insertAdjacentHTML("beforebegin", newSourceLi);
+          } else {
+            droppedLi.insertAdjacentHTML("afterend", newSourceLi);
+          }
+
           sourceLi.remove();
 
           // update the input field names to reflect new order
-          const parentList = e.target.closest("ol");
-          const name = parentList.getAttribute('data-name');
           parentList.querySelectorAll("input").forEach((el, i) => {
             el.name =`${name}[${i}]`;
           });
