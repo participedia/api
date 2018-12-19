@@ -137,8 +137,8 @@ article.case-edit fieldset h2 {
   display: flex;
   align-items: center;
   flex-basis: 100%;
-  padding-left: 8px;
-
+  padding: 8px;
+  line-height: 1.2em;
 }
 
 .edit-multi-select-list li .icon-fill {
