@@ -1,6 +1,8 @@
 import { StepMap } from "prosemirror-transform";
 import { keymap } from "prosemirror-keymap";
 import { undo, redo } from "prosemirror-history";
+import { EditorView } from "prosemirror-view";
+import { EditorState } from "prosemirror-state";
 
 export default class EditRichTextFootnoteView {
   constructor(node, view, getPos) {
