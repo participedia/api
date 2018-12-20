@@ -1,3 +1,7 @@
 {{#> case-edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
-  <pre>edit richtext for {{name}}</pre>
+  <div id="case-edit-rich-text-editor" class="editor"></div>
+
+  <div id="case-edit-rich-text-content" style="display: none">
+    {{{getvalue article name}}}
+  </div>
 {{/ case-edit-form-group}}
