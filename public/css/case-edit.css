@@ -125,6 +125,7 @@ article.case-edit fieldset h2 {
 
 .edit-multi-select-list li {
   border: 1px solid #e6e6e6;
+  border-radius: 2px;
   margin-bottom: 15px;
   display: flex;
 }

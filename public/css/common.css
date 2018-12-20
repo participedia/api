@@ -199,6 +199,10 @@ button.icon-only {
   background-color: #fff;
 }
 
+button.icon-only svg {
+  pointer-events: none;
+}
+
 .striped-bg {
   background-image: url('data:image/svg+xml;utf8,<svg width="31" height="4" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path fill="#E6E6E6" d="M0 2h31V0H0z"/></g></svg>');
   background-repeat: repeat-y;

@@ -11,6 +11,15 @@
   background-color: rgba(0, 0, 0, .75);
 }
 
+.c-dialog p {
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.c-dialog button.icon-only {
+  padding: 0px 0px 8px 8px;
+}
+
 .c-dialog__box {
   max-width: 48rem;
   margin: auto;
@@ -23,7 +32,8 @@
   display: none;
 }
 
-.c-dialog__footer {
+.c-dialog__footer,
+.c-dialog__header {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
