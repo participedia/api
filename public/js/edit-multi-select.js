@@ -1,3 +1,4 @@
+// todo: use npm module once browserify bundles have been implemented
 import Modal from './vendor/a11y-dialog-component.esm.js';
 
 const editMultiSelect = {
@@ -115,9 +116,9 @@ const editMultiSelect = {
     ) {
       currentList.append(newItemHTML);
     } else if (!hasNotReachedMax()) {
-      // open warning modal
-      const errorText = `You can not add more than ${maxItems} items to this field.`;
-      document.querySelector(`${this.modalId} p`).innerText = errorText;
+      // insert error text & open modal
+      const errorText = `<p>You can not add more than ${maxItems} items to this field.</p>`;
+      document.querySelector(`${this.modalId} .c-dialog__content`).innerHTML = errorText;
       this.modal.open();
     }
 
