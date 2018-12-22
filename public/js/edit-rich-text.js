@@ -1,28 +1,25 @@
-import { EditorState } from "prosemirror-state";
-import { DOMParser } from "prosemirror-model";
-import { EditorView } from "prosemirror-view";
-import { exampleSetup } from "prosemirror-example-setup";
-
-import footnoteSchema from "./edit-rich-text-footnote-schema.js";
-import FootnoteView from "./edit-rich-text-footnote-view.js";
-import menu from "./edit-rich-text-menu.js";
+import Quill from 'quill';
 
 const editRichText = {
   init() {
-    const editorEl = document.querySelector("#case-edit-rich-text-editor");
-    const contentEl = document.querySelector("#case-edit-rich-text-content");
-    window.view = new EditorView(editorEl, {
-      state: EditorState.create({
-        doc: DOMParser.fromSchema(footnoteSchema).parse(contentEl),
-        plugins: exampleSetup({
-          schema: footnoteSchema,
-          menuContent: menu.fullMenu
-        })
-      }),
-      nodeViews: {
-        footnote(node, view, getPos) { return new FootnoteView(node, view, getPos) }
-      }
-    })
+    const editorEl = document.querySelector('.js-rich-text-editor-container');
+    const quill = new Quill(editorEl, {
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+          ['link', 'image'],
+          ['clean'],
+        ]
+      },
+      placeholder: 'Body text here',
+      theme: 'snow',
+    });
+    // editor el is set to display: none in the html.
+    // setting to block after it's initialized so we don't
+    // get a flash of unstyled content (FOUC)
+    editorEl.style.display = 'block';
   }
 };
 
