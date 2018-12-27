@@ -25,6 +25,7 @@ function staticMediaText(staticText, name, attr, type) {
 }
 
 function mapIdTitleToKeyValue(options) {
+  if (!options) return null;
   return options.map(item => {
     return {
       key: item.id,
