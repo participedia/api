@@ -86,6 +86,10 @@ article.case-edit fieldset h2 {
   transform: scale(2);
 }
 
+.edit-link-list {
+  margin-bottom: 15px;
+}
+
 .edit-link-list li {
   margin-bottom: 15px;
 }
