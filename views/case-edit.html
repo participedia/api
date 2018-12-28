@@ -27,11 +27,11 @@
       <h2 class="quickonly">{{ static.quick_submit_sectionlabel }}</h2>
 
       {{> edit-text name="title" is_required=true quick-submit=true}}
-      {{> edit-list-ranked name="general_issues" quick-submit=true max=3 }}
-      {{> edit-list-ranked name="specific_topics" max=3 }}
+      {{> edit-multi-select ranked=true name="general_issues" quick-submit=true max=3 }}
+      {{> edit-multi-select ranked=true name="specific_topics" max=3 }}
       {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
       {{> edit-richtext name="body" }}
-      {{> edit-list name="tags" }}
+      {{> edit-multi-select name="tags" }}
     </fieldset>
     <fieldset class="location">
       <h2>{{ static.location_sectionlabel }}</h2>
@@ -40,8 +40,8 @@
     </fieldset>
     <fieldset class="components fullonly">
       <h2>{{ static.components_sectionlabel }}</h2>
-      {{> edit-reference-list name="has_components" type="cases" }}
-      {{> edit-reference-list name="is_component_of" type="cases" }}
+      {{> edit-multi-select name="has_components" }}
+      {{> edit-multi-select name="is_component_of" }}
     </fieldset>
     <fieldset class="media">
       <h2>{{ static.media_sectionlabel }}</h2>
@@ -60,8 +60,8 @@
     </fieldset>
     <fieldset class="purpose_and_approach fullonly">
       <h2>{{ static.purpose_sectionlabel }}</h2>
-      {{> edit-list-ranked name="purpose" max=3 }}
-      {{> edit-list-ranked name="approach" max=3 }}
+      {{> edit-multi-select ranked=true name="purposes" max=3 }}
+      {{> edit-multi-select ranked=true name="approaches" max=3 }}
       {{> edit-select name="public_spectrum" }}
     </fieldset>
     <fieldset class="participants fullonly">
@@ -69,40 +69,40 @@
       {{> edit-number name="number_of_participants" }}
       {{> edit-select name="open_or_limited" }}
       {{> edit-select name="recruitment_method" }}
-      {{> edit-list name="targeted_participants" max=3 }}
+      {{> edit-multi-select name="targeted_participants" max=3 }}
     </fieldset>
     <fieldset class="process fullonly">
       <h2>{{ static.process_sectionlabel }}</h2>
-      {{> edit-list-ranked name="method_types" max=3 }}
-      {{> edit-list-ranked name="tools_techniques_types" max=3 }}
-      {{> edit-list name="specific_methods_tools_techniques" }}
+      {{> edit-multi-select ranked=true name="method_types" max=3 }}
+      {{> edit-multi-select ranked=true name="tools_techniques_types" max=3 }}
+      {{> edit-multi-select name="specific_methods_tools_techniques" }}
       {{> edit-select name="legality" }}
       {{> edit-select name="facilitators" }}
       {{> edit-select name="facilitator_training" }}
       {{> edit-select name="facetoface_online_or_both" }}
-      {{> edit-list-ranked name="participants_interaction" max=3 }}
-      {{> edit-list name="learning_resources" }}
-      {{> edit-list name="decision_methods" }}
-      {{> edit-list name="if_voting" }}
-      {{> edit-list name="insights_outcomes" max=3 }}
+      {{> edit-multi-select ranked=true name="participants_interactions" max=3 }}
+      {{> edit-multi-select name="learning_resources" }}
+      {{> edit-multi-select name="decision_methods" }}
+      {{> edit-multi-select name="if_voting" }}
+      {{> edit-multi-select name="insights_outcomes" max=3 }}
     </fieldset>
     <fieldset class="organizations_and_supporters fullonly">
       <h2>{{ static.organizers_sectionlabel }}</h2>
-      {{> edit-list name="primary_organizer" max=1 }}
-      {{> edit-list name="organizer_types" max=3 }}
+      {{> edit-select name="primary_organizer" }} <!-- missing organizations in static json -->
+      {{> edit-multi-select name="organizer_types" max=3 }}
     </fieldset>
     <fieldset class="resources fullonly">
       <h2>{{ static.resources_sectionlabel }}</h2>
       {{> edit-text name="funder" }}
-      {{> edit-list name="funder_types" max=3 }}
+      {{> edit-multi-select name="funder_types" max=3 }}
       {{> edit-select name="staff" }}
       {{> edit-select name="volunteers" }}
     </fieldset>
     <fieldset class="evidence_of_impact fullonly">
       <h2>{{ static.evidence_sectionlabel }}</h2>
       {{> edit-select name="impact_evidence" }}
-      {{> edit-list-ranked name="change_types" max=5 }}
-      {{> edit-list-ranked name="implementers_of_change" max=3 }}
+      {{> edit-multi-select ranked=true name="change_types" max=5 }}
+      {{> edit-multi-select ranked=true name="implementers_of_change" max=3 }}
       {{> edit-select name="formal_evaluation" }}
       {{> edit-media name="evaluation_reports" }}
       {{> edit-link-list name="evaluation_links" }}
@@ -118,5 +118,6 @@
 
       <a href="?full=1" class="button button-dark-grey quickonly">Do Full Version</a>
     </div>
+
   </form>
 </article>

@@ -77,8 +77,8 @@ article.case-edit fieldset h2 {
   border-radius: 2em;
   padding: 1em;
   position: fixed;
-  bottom: 300px;
-  right: 15%;
+  bottom: 3rem;
+  right: 3rem;
 }
 
 .case-edit-buttons .floating-publish-button svg {
@@ -119,36 +119,52 @@ article.case-edit fieldset h2 {
   margin-top: 15px;
 }
 
-.edit-list-ranked {
+.edit-multi-select-list {
   margin-top: 15px;
 }
 
-.edit-list-ranked li {
+.edit-multi-select-list li {
   border: 1px solid #e6e6e6;
-  margin-left: 15px;
+  border-radius: 2px;
   margin-bottom: 15px;
   display: flex;
-  height: 33px;
 }
 
-.edit-list-ranked li:last-child {
+.edit-multi-select-list li:last-child {
   margin-bottom: 0;
 }
 
-.edit-list-ranked .reorder-handle {
+.edit-multi-select-list li span {
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+  padding: 8px;
+  line-height: 1.2em;
+}
+
+.edit-multi-select-list .reorder-handle {
   width: 31px;
   align-items: center;
   justify-content: center;
   display: flex;
-  margin-right: 15px;
 }
 
-.edit-list-ranked li span {
-  display: flex;
-  align-items: center;
-  flex-basis: 100%;
+.edit-multi-select-list li:not([draggable]) .reorder-handle {
+  display: none;
 }
 
-.edit-list-ranked li .icon-fill {
-  fill: #808080;
+.edit-multi-select {
+  color: #757575;
+}
+
+@media (max-width: 1000px) {
+  article.case-edit {
+    width: 65%;
+  }
+}
+
+@media (max-width: 700px) {
+  article.case-edit {
+    width: calc(100% - 4rem);
+  }
 }
