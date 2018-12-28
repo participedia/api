@@ -2,7 +2,11 @@
   class="case-edit"
   data-submit-type="{{getCaseEditSubmitType req}}"
 >
-  <form action="/case/{{article.id}}" method="post">
+  <form
+    action="/case/{{article.id}}"
+    method="post"
+    enctype="multipart/form-data"
+  >
     <div class="case-edit-author-info">
       <h4>
         <strong>First Submitted By</strong>
@@ -47,7 +51,7 @@
       <h2>{{ static.media_sectionlabel }}</h2>
       {{> edit-media-link name="links" quick-submit=true}}
       {{> edit-media name="files" quick-submit=true}}
-      {{> edit-media name="photos" quick-submit=true}}
+      {{> edit-media name="photos" type="image" quick-submit=true}}
       {{> edit-media-link name="videos" quick-submit=true}}
       {{> edit-media-link name="audio" quick-submit=true}}
     </fieldset>
