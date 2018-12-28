@@ -26,5 +26,14 @@
       }}
     {{/each}}
   {{/if}}
-  <a href="#">+ Add another {{name}} link</a>
+  <a href="#" class="js-add-media-link-set" data-for="{{name}}">+ Add another {{name}} link</a>
+
+  <script type="text/template" class="js-edit-media-link-inputs-template-{{name}}">
+    {{> edit-media-link-inputs
+      name=name
+      article=article
+      static=static
+      index=0
+    }}
+  </script>
 </div>

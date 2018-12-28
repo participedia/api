@@ -3,6 +3,7 @@ import elementClosestPolyfill from './polyfills/element.closest.polyfill.js';
 import editMultiSelect from './edit-multi-select.js';
 import editRichText from './edit-rich-text.js';
 import editLocation from './edit-location.js';
+import editMediaLink from './edit-media-link.js';
 
 // polyfills
 elementClosestPolyfill();
@@ -17,4 +18,5 @@ if (window.location.pathname.indexOf('edit') > 0) {
   editMultiSelect.init();
   editRichText.init();
   editLocation.init();
+  editMediaLink.init();
 }
