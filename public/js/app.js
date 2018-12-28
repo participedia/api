@@ -2,6 +2,7 @@ import header from './header.js';
 import elementClosestPolyfill from './polyfills/element.closest.polyfill.js';
 import editMultiSelect from './edit-multi-select.js';
 import editRichText from './edit-rich-text.js';
+import editLocation from './edit-location.js';
 
 // polyfills
 elementClosestPolyfill();
@@ -15,4 +16,5 @@ header.init();
 if (window.location.pathname.indexOf('edit') > 0) {
   editMultiSelect.init();
   editRichText.init();
+  editLocation.init();
 }
