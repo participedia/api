@@ -213,7 +213,7 @@ article.case-edit fieldset h2 {
   -moz-tab-size: 4;
   text-align: left;
   white-space: pre-wrap;
-  word-wrap: break-word;
+  word-break: break-word;
 }
 .ql-editor > * {
   cursor: text;
