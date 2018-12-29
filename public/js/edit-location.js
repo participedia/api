@@ -1,26 +1,42 @@
 // there is no official google maps api npm module so
 // global google var is loaded via script tag in main.html
 
+const LOCATION_KEYS = [
+  "address1",
+  "address2",
+  "city",
+  "province",
+  "postal_code",
+  "country",
+  "latitude",
+  "longitude"
+];
+
 const editLocation = {
   init() {
     this.inputEl = document.querySelector("[name=location_name]");
     this.autocomplete = new google.maps.places.Autocomplete(this.inputEl);
     this.autocomplete.setFields(["address_components", "geometry", "formatted_address"]);
     this.autocomplete.addListener("place_changed", () => this.handlePlaceChange());
+    this.inputEl.addEventListener("change", (ev) => this.handleInputElChange(ev))
+  },
+
+  handleInputElChange(ev) {
+    if (ev.target.value === "") {
+      // set hidden fields values to "" when main field value is cleared
+      const inputs = ev.target.closest('fieldset').querySelectorAll("input[type='hidden']");
+      inputs.forEach(el => el.value = "");
+    }
   },
 
   handlePlaceChange() {
     const place = this.autocomplete.getPlace();
     const addressComponents = this.parseAddressComponents(place);
 
-    // insert hidden fields for the addressComponents keys
-    const keys = Object.keys(addressComponents);
-    keys.forEach(key => {
-      const hiddenInputEl = document.createElement("input");
-      hiddenInputEl.setAttribute("type", "hidden");
-      hiddenInputEl.setAttribute("name", key);
-      hiddenInputEl.setAttribute("value", addressComponents[key]);
-      this.inputEl.insertAdjacentElement("afterend", hiddenInputEl);
+    // set hidden fields for the addressComponents key
+    LOCATION_KEYS.forEach(key => {
+      const hiddenInputEl = document.querySelector(`input[name=${key}]`);
+      hiddenInputEl.value = addressComponents[key] ? addressComponents[key] : "";
     });
   },
 
