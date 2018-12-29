@@ -25,6 +25,7 @@ function staticMediaText(staticText, name, attr, type) {
 }
 
 function mapIdTitleToKeyValue(options) {
+  if (!options) return null;
   return options.map(item => {
     return {
       key: item.id,
@@ -53,6 +54,20 @@ module.exports = {
       // otherwise just return the item
       return item;
     }
+  },
+  hasValue: (article, name) => {
+    const item = article[name];
+
+    // potential falsey values
+    // null
+    // ""
+    // []
+    // { "value": "" }
+
+    return item !== null &&
+           item !== "" &&
+           !(item.hasOwnProperty("length") && item.length === 0) &&
+           !(item.hasOwnProperty("value") && item.value === "");
   },
   getKey: (article, name) => {
     if (article[name]) {
