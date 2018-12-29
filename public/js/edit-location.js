@@ -11,16 +11,9 @@ const editLocation = {
 
   handlePlaceChange() {
     const place = this.autocomplete.getPlace();
+    const addressComponents = this.parseAddressComponents(place);
 
-    const addressComponents = {
-      city: place.address_components[0].long_name,
-      province: place.address_components[2].short_name,
-      country: place.address_components[3].long_name,
-      latitude: place.geometry.location.lat(),
-      longitude: place.geometry.location.lng(),
-    };
-
-    // insert hidden fields for the addressComponents values
+    // insert hidden fields for the addressComponents keys
     const keys = Object.keys(addressComponents);
     keys.forEach(key => {
       const hiddenInputEl = document.createElement("input");
@@ -29,6 +22,42 @@ const editLocation = {
       hiddenInputEl.setAttribute("value", addressComponents[key]);
       this.inputEl.insertAdjacentElement("afterend", hiddenInputEl);
     });
+  },
+
+  parseAddressComponents(place) {
+    const addressComponents = {};
+    place.address_components.forEach(component => {
+      if (component.types.includes("street_number")) {
+       addressComponents.address1 = component.long_name;
+      }
+
+      if (component.types.includes("route")) {
+        if (addressComponents.address1) {
+          addressComponents.address1 = `${addressComponents.address1} ${component.long_name}`;
+        } else {
+          addressComponents.address1 = component.long_name;
+        }
+      }
+
+      if (component.types.includes("locality")) {
+        addressComponents.city = component.long_name;
+      }
+
+      if (component.types.includes("administrative_area_level_1")) {
+        addressComponents.province = component.long_name;
+      }
+
+      if (component.types.includes("country")) {
+        addressComponents.country = component.long_name;
+      }
+
+      if (component.types.includes("postal_code")) {
+        addressComponents.postal_code = component.long_name;
+      }
+    });
+    addressComponents.latitude = place.geometry.location.lat();
+    addressComponents.longitude = place.geometry.location.lng();
+    return addressComponents;
   }
 };
 
