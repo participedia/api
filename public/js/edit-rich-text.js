@@ -13,7 +13,6 @@ const editRichText = {
           ['clean'],
         ]
       },
-      placeholder: 'Body text here',
       theme: 'snow',
     });
     // editor el is set to display: none in the html.

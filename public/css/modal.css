@@ -11,20 +11,62 @@
   background-color: rgba(0, 0, 0, .75);
 }
 
+.c-dialog p {
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
 .c-dialog__box {
-  max-width: 48rem;
   margin: auto;
   background-color: #fff;
-  width: 50vw;
-  padding: 1rem;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 45%;
 }
 
 .c-dialog[aria-hidden="true"] {
   display: none;
 }
 
-.c-dialog__footer {
+.c-dialog__footer,
+.c-dialog__header {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 }
+
+.c-dialog__content-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.c-dialog__content {
+  flex-basis: 100%;
+  padding-right: 1rem;
+}
+
+/* makes the first text element align with top up of close icon */
+.c-dialog__content p:first-child,
+.c-dialog__content h3:first-child {
+  margin-top: -5px;
+}
+
+.c-dialog__close-icon button.icon-only {
+  padding: 0px;
+}
+
+@media (max-width: 1000px) {
+  .c-dialog__box {
+    width: 65%;
+  }
+}
+
+@media (max-width: 700px) {
+  .c-dialog__box {
+    width: calc(100% - 4rem);
+  }
+}
+
+
+

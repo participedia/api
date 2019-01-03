@@ -56,6 +56,20 @@ module.exports = {
       return item;
     }
   },
+  hasValue: (article, name) => {
+    const item = article[name];
+
+    // potential falsey values
+    // null
+    // ""
+    // []
+    // { "value": "" }
+
+    return item !== null &&
+           item !== "" &&
+           !(item.hasOwnProperty("length") && item.length === 0) &&
+           !(item.hasOwnProperty("value") && item.value === "");
+  },
   getKey: (article, name) => {
     if (article[name]) {
       return  article[name].key;

@@ -49,15 +49,15 @@ const fixUpURLs = function(article) {
   }
 };
 
-const returnByType = (res, params, article, static) => {
+const returnByType = (res, params, article, static, user) => {
   const { returns, type, view } = params;
   switch (returns) {
     case "htmlfrag":
       return res
         .status(200)
-        .render(type + "-" + view, { article, static, layout: false });
+        .render(type + "-" + view, { article, static, user, layout: false });
     case "json":
-      return res.status(200).json({ OK: true, article, static });
+      return res.status(200).json({ OK: true, article, static, user });
     case "csv":
       // TODO: implement CSV
       return res.status(500, "CSV not implemented yet").render();
@@ -66,7 +66,9 @@ const returnByType = (res, params, article, static) => {
       return res.status(500, "XML not implemented yet").render();
     case "html": // fall through
     default:
-      return res.status(200).render(type + "-" + view, { article, static });
+      return res
+        .status(200)
+        .render(type + "-" + view, { article, static, user });
   }
 };
 

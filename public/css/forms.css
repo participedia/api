@@ -7,8 +7,7 @@ fieldset {
 
 input, select, textarea {
   width: 100%;
-  padding: 5px;
-  font-size: .875rem;
+  padding: 8px;
   border: 1px solid #000;
   border-radius: 2px;
   box-sizing : border-box;
@@ -23,36 +22,10 @@ select:not([multiple]) {
   -moz-appearance: none;
   text-indent: 0.01px;
   text-overflow: '';
-
   -webkit-appearance: unset;
   background-color: #ffffff;
-  background: url('data:image/svg+xml;utf8,<svg width="13" height="8" xmlns="http://www.w3.org/2000/svg"><path fill="%23000" class="icon-fill" fill-rule="nonzero" d="M10.7359.2929L12.15 1.707 6.221 7.6363.293 1.707 1.7071.293 6.221 4.8077z"/></svg>') no-repeat #fff;
-  background-position: right 10px center;
-}
-
-/* always show the number up/down arrows in chrome, not just on hover of the input */
-input[type=number]::-webkit-inner-spin-button {
-  opacity: 1;
-}
-
-.form-group {
-  margin-bottom: 30px;
-}
-
-textarea {
-  height: 5rem;
-}
-
-select:not([multiple]) {
-  /* hides select arrow in FF */
-  -moz-appearance: none;
-  text-indent: 0.01px;
-  text-overflow: '';
-
-  -webkit-appearance: unset;
-  background-color: #ffffff;
-  background: url('data:image/svg+xml;utf8,<svg width="13" height="8" xmlns="http://www.w3.org/2000/svg"><path fill="%23000" class="icon-fill" fill-rule="nonzero" d="M10.7359.2929L12.15 1.707 6.221 7.6363.293 1.707 1.7071.293 6.221 4.8077z"/></svg>') no-repeat #fff;
-  background-position: right 10px center;
+  background: url('data:image/svg+xml;utf8,<svg width="13" height="8" xmlns="http://www.w3.org/2000/svg"><path fill="#808080" class="icon-fill" fill-rule="nonzero" d="M10.7359.2929L12.15 1.707 6.221 7.6363.293 1.707 1.7071.293 6.221 4.8077z"/></svg>') no-repeat #fff;
+  background-position: right 8px center;
 }
 
 /* always show the number up/down arrows in chrome, not just on hover of the input */
