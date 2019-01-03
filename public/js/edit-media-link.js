@@ -1,9 +1,20 @@
 const editMediaLink = {
   init() {
     const addAnotherLinkSetEl = document.querySelectorAll(".js-add-media-link-set");
-    addAnotherLinkSetEl.forEach(el => {
-      el.addEventListener("click", this.addMediaLinkSet);
-    });
+    addAnotherLinkSetEl.forEach(el => el.addEventListener("click", this.addMediaLinkSet));
+
+    // delete button event delegation
+    const linkFormGroupEls = document.querySelectorAll(".js-edit-media-link-form-group");
+    linkFormGroupEls.forEach(el => el.addEventListener("click", this.deleteMediaLinkSet));
+  },
+
+  deleteMediaLinkSet(e) {
+    const buttonEl = e.target.closest("button");
+    if (buttonEl) {
+      e.preventDefault();
+      const containerEl = buttonEl.closest(".js-edit-media-link-set-container");
+      containerEl.parentNode.removeChild(containerEl);
+    }
   },
 
   addMediaLinkSet(e) {
@@ -27,7 +38,8 @@ const editMediaLink = {
     });
 
     // insert new set into dom
-    e.target.insertAdjacentElement("beforebegin", newMediaLinkSetEl.querySelector("ul"))
+    const containerEl = newMediaLinkSetEl.querySelector(".js-edit-media-link-set-container");
+    e.target.insertAdjacentElement("beforebegin", containerEl);
   }
 };
 
