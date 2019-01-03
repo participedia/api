@@ -11,9 +11,10 @@ const mapArticleKeyToStaticKey = {
   files: "file",
   photos: "photo",
   audio: "audio",
+  evaluation_links: "evaluation_links",
 };
 
-function staticMediaText(staticText, name, attr, type) {
+function staticLinkSetText(staticText, name, attr, type) {
   const mappedName = mapArticleKeyToStaticKey[name];
   let key;
   if (name === "links" && attr === "link") {
@@ -88,22 +89,22 @@ module.exports = {
   getOptions: (article, name) => {
     return article[name];
   },
-  getMediaLinkValue(article, name, index, attr) {
+  getLinkSetValue(article, name, index, attr) {
     if (!article[name]) return;
     if (!article[name][index]) return;
     return article[name][index][attr];
   },
-  mediaLinkFieldName(name, index, attr) {
+  linkSetFieldName(name, index, attr) {
     return `${name}[${index}][${attr}]`;
   },
-  mediaLinkPlaceholder(staticText, name, attr) {
-    return staticMediaText(staticText, name, attr, "placeholder");
+  linkSetPlaceholder(staticText, name, attr) {
+    return staticLinkSetText(staticText, name, attr, "placeholder");
   },
-  mediaLinkLabel(staticText, name, attr) {
-    return staticMediaText(staticText, name, attr, "label");
+  linkSetLabel(staticText, name, attr) {
+    return staticLinkSetText(staticText, name, attr, "label");
   },
-  mediaLinkInstructional(staticText, name, attr) {
-    return staticMediaText(staticText, name, attr, "instructional");
+  linkSetInstructional(staticText, name, attr) {
+    return staticLinkSetText(staticText, name, attr, "instructional");
   },
   formatDate(article, name, format) {
     return moment(article[name]).format(format);

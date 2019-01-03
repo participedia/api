@@ -94,44 +94,44 @@ article.case-edit fieldset h2 {
   margin-bottom: 15px;
 }
 
-.edit-media-link-set-container {
+.edit-link-set-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
   margin-right: -30px;
 }
 
-.edit-media-link-set-container:first-of-type {
+.edit-link-set-container:first-of-type {
   margin-right: 0px;
 }
 
-.edit-media-link-set-container:first-of-type button {
+.edit-link-set-container:first-of-type button {
   display: none;
 }
 
-.edit-media-link-set {
+.edit-link-set {
   border: 1px solid #E0E0E0;
   padding: 15px;
   margin-bottom: 15px;
   flex-basis: 100%;
 }
 
-.edit-media-link-set label {
+.edit-link-set label {
   font-size: 1rem;
   font-weight: 300;
   line-height: 1.5;
 }
 
-.edit-media-link-set li {
+.edit-link-set li {
   margin-bottom: 15px;
 }
 
-.edit-media-link-set li:last-child,
+.edit-link-set li:last-child,
 .edit-link-list li:last-child  {
   margin-bottom: 0;
 }
 
-.edit-media-link-set + a,
+.edit-link-set + a,
 .edit-link-list + a {
   color: #000;
   font-weight: 600;

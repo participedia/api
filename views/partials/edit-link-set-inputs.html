@@ -1,0 +1,31 @@
+<div class="edit-link-set-container js-edit-link-set-container">
+  <ul class="unstyled-list edit-link-set">
+    <li>
+      <input
+        type="text"
+        placeholder="{{linkSetPlaceholder static name 'link'}}"
+        name="{{linkSetFieldName name index 'link'}}"
+        value="{{getLinkSetValue article name index 'link'}}"
+      />
+    </li>
+    <li>
+      <p>{{linkSetInstructional static name 'attribution'}}</p>
+      <input
+        type="text"
+        placeholder="{{linkSetPlaceholder static name 'attribution'}}"
+        name="{{linkSetFieldName name index 'attribution'}}"
+        value="{{getLinkSetValue article name @index 'attribution'}}"
+      />
+    </li>
+    <li>
+      <p>{{linkSetInstructional static name 'title'}}</p>
+      <input
+        type="text"
+        placeholder="{{linkSetPlaceholder static name 'title'}}"
+        name="{{linkSetFieldName name index 'title'}}"
+        value="{{getLinkSetValue article name index 'title'}}"
+      />
+    </li>
+  </ul>
+  <button class="icon-only">{{> icon-trash}}</button>
+</div>
