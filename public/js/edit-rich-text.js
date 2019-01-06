@@ -3,6 +3,9 @@ import Quill from 'quill';
 const editRichText = {
   init() {
     const editorEl = document.querySelector('.js-rich-text-editor-container');
+
+    if (!editorEl) return; // don't init the quill editor if no editor el exists
+
     const quill = new Quill(editorEl, {
       modules: {
         toolbar: [
