@@ -37,7 +37,7 @@ describe("Cases", () => {
     });
   });
   describe("Adding", () => {
-    it("fails without authentication", async () => {
+    it.only("fails without authentication", async () => {
       try {
         const res = await chai.postJSON("/case/new?returns=json").send({});
         // fail if error not thrown

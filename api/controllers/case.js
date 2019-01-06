@@ -195,6 +195,7 @@ router.get("/:thingid/", async (req, res) => {
 
 router.get("/:thingid/edit", async (req, res) => {
   const params = parseGetParams(req, "case");
+  params.view = "edit";
   const articleRow = await db.one(CASE_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
