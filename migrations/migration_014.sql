@@ -103,7 +103,7 @@ INSERT INTO tags_localized VALUES(
 update things set tags = array_remove(tags, '1st amendment');
 update things set tags = array_remove(tags, 'airesis');
 update things set tags = array_remove(tags, 'alpine environment');
-update things set tags = array_remove(tags, '$_$'Americans Elect' 'Colton Schweitzer' 'Tony Elia'$_$');
+update things set tags = array_remove(tags,  $_$'Americans Elect' 'Colton Schweitzer' 'Tony Elia'$_$);
 update things set tags = array_remove(tags, 'applied innovation');
 update things set tags = array_remove(tags, 'art');
 update things set tags = array_remove(tags, 'assembly');
