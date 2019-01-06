@@ -15,6 +15,7 @@ const LOCATION_KEYS = [
 const editLocation = {
   init() {
     this.inputEl = document.querySelector("[name=location_name]");
+    if (!this.inputEl) return;
     this.autocomplete = new google.maps.places.Autocomplete(this.inputEl);
     this.autocomplete.setFields(["address_components", "geometry", "formatted_address"]);
     this.autocomplete.addListener("place_changed", () => this.handlePlaceChange());
