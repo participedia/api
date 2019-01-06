@@ -284,6 +284,14 @@
   }
 }
 
+@media (max-width: 375px) {
+  .form-group p,
+  .form-group label,
+  .edit-form fieldset h2 {
+    word-break: break-word;
+  }
+}
+
 /* Rich Text Editor */
 /*!
  * Quill Editor v1.3.6
