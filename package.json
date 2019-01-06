@@ -48,7 +48,7 @@
   "devDependencies": {
     "browserify": "^16.2.3",
     "chai": "^4.0.2",
-    "chai-http": "^3.0.0",
+    "chai-http": "^4.2.1",
     "csv": "^5.1.0",
     "eslint": "^4.1.1",
     "eslint-config-google": "^0.9.1",
