@@ -3,11 +3,14 @@
   data-submit-type="{{getCaseEditSubmitType req}}"
 >
   <form
-    action="/case/{{article.id}}"
+    action="/case/{{article.id}}/edit"
     method="post"
     enctype="multipart/form-data"
     class="js-edit-form"
   >
+
+    <input type="hidden" name="userId" value="14" />
+
     <div class="edit-form-author-info">
       <h4>
         <strong>First Submitted By</strong>
