@@ -8,6 +8,20 @@ CREATE TABLE legal_case_field_keys(
   ordering INTEGER NOT NULL
 );
 
+DROP TABLE IF EXISTS localized_short_values;
+CREATE TABLE localized_short_values(
+  language TEXT NOT NULL,
+  key TEXT NOT NULL,
+  value TEXT NOT NULL
+);
+INSERT INTO localized_short_values VALUES
+  ('en', 'yes', 'Yes'),
+  ('en', 'no', 'No'),
+  ('en', 'true', 'True'),
+  ('en', 'false', 'False'),
+  ('en', 'dk', 'Don''t Know'),
+  ('en', 'na', 'Not Applicable');
+
 CREATE SEQUENCE value_order;
 CREATE FUNCTION insert_fields(field text) RETURNS VOID
   LANGUAGE sql VOLATILE
@@ -83,6 +97,19 @@ CREATE FUNCTION insert_localized_values(field text) RETURNS VOID
     ;
 $_$;
 
+select * from insert_localized_values('general_issues');
+INSERT INTO localized_case_field_values VALUES
+  ('en', 'general_issues_human', 'Human Rights & Civil Rights', 'Human Rights & Civil Rights');
+INSERT INTO localized_case_field_values
+  SELECT
+    'en' AS language,
+    split_part(view.key, '_value_', 1) || split_part(view.key, '_value', 2) as key,
+    view.value as view,
+    view.value as edit
+  FROM
+    rotate_case_view_localized as view
+  WHERE
+    view.key LIKE 'tool_types_value_%';
 select * from insert_localized_values('scope');
 select * from insert_localized_values('time_limited');
 select * from insert_localized_values('purposes');
@@ -106,6 +133,8 @@ select * from insert_localized_values('organizer_types');
 select * from insert_localized_values('funder_types');
 select * from insert_localized_values('change_types');
 select * from insert_localized_values('implementors_of_change');
+
+
 
 DROP SEQUENCE value_order;
 DROP FUNCTION insert_fields(TEXT);
