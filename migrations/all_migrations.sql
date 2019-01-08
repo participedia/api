@@ -23,3 +23,4 @@
 \include 'migrations/migration_024.sql'
 \include 'migrations/migration_025.sql'
 \include 'migrations/migration_026.sql'
+\include 'migrations/migration_027.sql'
