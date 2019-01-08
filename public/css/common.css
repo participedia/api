@@ -99,12 +99,6 @@ aside {
   order: 3;
 }
 
-article {
-  background-color: lightcyan;
-  flex: 0 0 50%;
-  order: 2;
-}
-
 .sr-only {
   height: 1px;
   width: 1px;

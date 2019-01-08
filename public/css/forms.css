@@ -19,6 +19,7 @@ input[disabled] {
 
 textarea {
   height: 5rem;
+  resize: none;
 }
 
 select:not([multiple]) {

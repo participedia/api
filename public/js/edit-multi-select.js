@@ -5,6 +5,8 @@ const editMultiSelect = {
   init() {
     this.selectLists = document.querySelectorAll(".js-edit-multi-select-list");
 
+    if (this.selectLists.length < 1) return;
+
     this.bindRemoveItemClicks();
     this.bindOnSelectChange();
     this.bindDragHandlers();

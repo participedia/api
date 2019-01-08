@@ -1,10 +1,10 @@
-article.case-edit {
+.edit-form {
   width: 45%;
   margin: 0 auto 120px auto;
   background-color: #fff;
 }
 
-article.case-edit .fieldset-header {
+.edit-form .fieldset-header {
   margin-bottom: 30px;
 }
 
@@ -47,32 +47,32 @@ article.case-edit .fieldset-header {
   display: block;
 }
 
-.case-edit-author-info {
+.edit-form-author-info {
   margin-bottom: 30px;
 }
 
-.case-edit-author-info h4 {
+.edit-form-author-info h4 {
   font-weight: 300;
 }
 
-.case-edit-author-info h4:first-child {
+.edit-form-author-info h4:first-child {
   margin-bottom: 15px;
 }
 
-.case-edit-author-info time {
+.edit-form-author-info time {
   display: block;
 }
 
-.case-edit-buttons {
+.edit-buttons {
   display: flex;
   justify-content: flex-start;
 }
 
-.case-edit-buttons button {
+.edit-buttons button {
   margin-right: 30px;
 }
 
-.case-edit-buttons .floating-publish-button {
+.floating-action-button {
   margin: 0;
   border-radius: 2em;
   padding: 1em;
@@ -81,7 +81,7 @@ article.case-edit .fieldset-header {
   right: 3rem;
 }
 
-.case-edit-buttons .floating-publish-button svg {
+.floating-action-button svg {
   padding: .5em;
   transform: scale(2);
 }
@@ -273,14 +273,22 @@ article.case-edit .fieldset-header {
 }
 
 @media (max-width: 1000px) {
-  article.case-edit {
+  .edit-form {
     width: 65%;
   }
 }
 
 @media (max-width: 700px) {
-  article.case-edit {
+  .edit-form {
     width: calc(100% - 4rem);
+  }
+}
+
+@media (max-width: 375px) {
+  .form-group p,
+  .form-group label,
+  .edit-form fieldset h2 {
+    word-break: break-word;
   }
 }
 

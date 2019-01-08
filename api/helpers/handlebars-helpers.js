@@ -40,6 +40,7 @@ module.exports = {
   info: (staticText, name) => staticText[name + "_info"] || name + "_info",
   instructional: (staticText, name) => staticText[name + "_instructional"] || name + "_instructional",
   placeholder: (staticText, name) => staticText[name + "_placeholder"] || name + "_placeholder",
+  staticText: (staticText, name) => staticText[name] || name,
   isEmptyArray: (article, name) => {
     const value = article[name];
     if (value && value.constructor === Array) {
