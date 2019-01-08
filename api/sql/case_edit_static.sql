@@ -3,16 +3,16 @@ WITH staticrow as (
   array_agg(tagvalues.*) as tags,
   get_case_edit_localized_values('general_issues', ${lang}) as general_issues,
   get_case_edit_localized_values('specific_topics', ${lang}) as specific_topics,
-  get_case_edit_localized_values('scope_of_influence', ${lang}) as scope_of_influence,
+  get_case_edit_localized_values('scope', ${lang}) as scope_of_influence,
   get_case_edit_localized_values('time_limited', ${lang}) as time_limited,
   get_case_edit_localized_values('purposes', ${lang}) as purposes,
   get_case_edit_localized_values('approaches', ${lang}) as approaches,
   get_case_edit_localized_values('public_spectrum', ${lang}) as public_spectrum,
   get_case_edit_localized_values('open_limited', ${lang}) as open_limited,
-  get_case_edit_localized_values('recruitement_method', ${lang}) as recruitment_method,
+  get_case_edit_localized_values('recruitment_method', ${lang}) as recruitment_method,
   get_case_edit_localized_values('targeted_participants', ${lang}) as targeted_participants,
   get_case_edit_localized_values('method_types', ${lang}) as method_types,
-  get_case_edit_localized_values('tools_techniques_types', ${lang}) as tools_techniques_types,
+  get_case_edit_localized_values('tool_types', ${lang}) as tools_techniques_types,
   get_case_edit_localized_values('legality', ${lang}) as legality,
   get_case_edit_localized_values('facilitators', ${lang}) as facilitators,
   get_case_edit_localized_values('facilitator_training', ${lang}) as facilitator_training,
@@ -25,9 +25,13 @@ WITH staticrow as (
   get_case_edit_localized_values('organizer_types', ${lang}) as organizer_types,
   get_case_edit_localized_values('funder_types', ${lang}) as funder_types,
   get_case_edit_localized_values('change_types', ${lang}) as change_types,
-  get_case_edit_localized_values('implementers_of_change', ${lang}) as implementers_of_change
-  FROM rotate_tags_localized('en') as tagvalues
-  WHERE tagvalues.key <> 'language'
+  get_case_edit_localized_values('implementers_of_change', ${lang}) as implementers_of_change,
+  labels.*
+
+  FROM rotate_tags_localized(${lang}) as tagvalues,
+       rotate_case_edit_localized(${lang}) as labels
+  WHERE tagvalues.key <> 'language' AND
+       labels.key NOT LIKE '%_value%'
 )
 SELECT to_json(staticrow.*) static FROM staticrow
 ;

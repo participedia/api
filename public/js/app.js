@@ -3,9 +3,9 @@ import elementClosestPolyfill from './polyfills/element.closest.polyfill.js';
 import editMultiSelect from './edit-multi-select.js';
 import editRichText from './edit-rich-text.js';
 import editLocation from './edit-location.js';
-import editMediaLink from './edit-media-link.js';
-import editLinkList from './edit-link-list.js';
 import editMedia from './edit-media.js';
+import editLinkSet from './edit-link-set.js';
+import editLinkList from './edit-link-list.js';
 
 // polyfills
 elementClosestPolyfill();
@@ -20,7 +20,7 @@ if (window.location.pathname.indexOf('edit') > 0) {
   editMultiSelect.init();
   editRichText.init();
   editLocation.init();
-  editMediaLink.init();
+  editLinkSet.init();
   editLinkList.init();
   editMedia.init();
 }

@@ -4,7 +4,7 @@ article.case-edit {
   background-color: #fff;
 }
 
-article.case-edit fieldset h2 {
+article.case-edit .fieldset-header {
   margin-bottom: 30px;
 }
 
@@ -24,11 +24,11 @@ article.case-edit fieldset h2 {
   display: inline-flex;
 }
 
-[data-submit-type=quick] fieldset h2 {
+[data-submit-type=quick] .fieldset-header {
   display: none;
 }
 
-[data-submit-type=quick] fieldset h2.quickonly {
+[data-submit-type=quick] .fieldset-header.quickonly {
   display: block;
 }
 
@@ -94,28 +94,48 @@ article.case-edit fieldset h2 {
   margin-bottom: 15px;
 }
 
-.edit-media-link-set {
+.edit-link-set-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-right: -30px;
+}
+
+.edit-link-set-container .icon-fill {
+  fill: #808080;
+}
+
+.edit-link-set-container:first-of-type {
+  margin-right: 0px;
+}
+
+.edit-link-set-container:first-of-type button {
+  display: none;
+}
+
+.edit-link-set {
   border: 1px solid #E0E0E0;
   padding: 15px;
   margin-bottom: 15px;
+  flex-basis: 100%;
 }
 
-.edit-media-link-set label {
+.edit-link-set label {
   font-size: 1rem;
   font-weight: 300;
   line-height: 1.5;
 }
 
-.edit-media-link-set li {
+.edit-link-set li {
   margin-bottom: 15px;
 }
 
-.edit-media-link-set li:last-child,
+.edit-link-set li:last-child,
 .edit-link-list li:last-child  {
   margin-bottom: 0;
 }
 
-.edit-media-link-set + a,
+.edit-link-set + a,
 .edit-link-list + a {
   color: #000;
   font-weight: 600;
@@ -161,6 +181,7 @@ article.case-edit fieldset h2 {
 .edit-multi-select-list > li,
 .edit-media-file-list > li {
   border: 1px solid #e6e6e6;
+  border-radius: 2px;
   margin-bottom: 15px;
   display: flex;
 }
@@ -295,7 +316,6 @@ article.case-edit fieldset h2 {
 }
 .ql-editor {
   box-sizing: border-box;
-  line-height: 1.42;
   height: 100%;
   outline: none;
   overflow-y: auto;
@@ -304,7 +324,7 @@ article.case-edit fieldset h2 {
   -moz-tab-size: 4;
   text-align: left;
   white-space: pre-wrap;
-  word-wrap: break-word;
+  word-break: break-word;
 }
 .ql-editor > * {
   cursor: text;
@@ -853,24 +873,6 @@ article.case-edit fieldset h2 {
 .ql-snow .ql-direction.ql-active svg:first-child {
   display: none;
 }
-.ql-snow .ql-editor h1 {
-  font-size: 2em;
-}
-.ql-snow .ql-editor h2 {
-  font-size: 1.5em;
-}
-.ql-snow .ql-editor h3 {
-  font-size: 1.17em;
-}
-.ql-snow .ql-editor h4 {
-  font-size: 1em;
-}
-.ql-snow .ql-editor h5 {
-  font-size: 0.83em;
-}
-.ql-snow .ql-editor h6 {
-  font-size: 0.67em;
-}
 .ql-snow .ql-editor a {
   text-decoration: underline;
 }
@@ -1033,45 +1035,6 @@ article.case-edit fieldset h2 {
 .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="6"]::before,
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
   content: 'Heading 6';
-}
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
-  font-size: 2em;
-}
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
-  font-size: 1.5em;
-}
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
-  font-size: 1.17em;
-}
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
-  font-size: 1em;
-}
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="5"]::before {
-  font-size: 0.83em;
-}
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
-  font-size: 0.67em;
-}
-.ql-snow .ql-picker.ql-font {
-  width: 108px;
-}
-.ql-snow .ql-picker.ql-font .ql-picker-label::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item::before {
-  content: 'Sans Serif';
-}
-.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=serif]::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=serif]::before {
-  content: 'Serif';
-}
-.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=monospace]::before,
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=monospace]::before {
-  content: 'Monospace';
-}
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=serif]::before {
-  font-family: Georgia, Times New Roman, serif;
-}
-.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=monospace]::before {
-  font-family: Monaco, Courier New, monospace;
 }
 .ql-snow .ql-picker.ql-size {
   width: 98px;

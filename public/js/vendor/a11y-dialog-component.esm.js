@@ -215,7 +215,8 @@ class Dialog {
   }
 
   [addEventListeners]() {
-    document.addEventListener('click', this[onClick], { capture: true });
+    document.querySelector("[role=dialog] [data-dismiss]")
+      .addEventListener('click', this[onClick], { capture: true });
     this.dialog.addEventListener('keydown', this[onKeydown]);
     this.closingTriggers.forEach(closingTrigger => closingTrigger.addEventListener('click', this.close));
   }
