@@ -1,4 +1,3 @@
--- FIXME: Once this is working, duplicate for case_view_by_id.sql
 SELECT row_to_json(results.*) as results from (
 SELECT
   id,
