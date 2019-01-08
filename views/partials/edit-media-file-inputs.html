@@ -2,13 +2,13 @@
   <section>
     <ul class="unstyled-list edit-media-file-attribution-inputs">
       <li>
-        <img src="{{getMediaLinkValue article name index 'url'}}" height="100px" />
+        <img src="{{getLinkSetValue article name index 'url'}}" height="100px" />
         <input
           data-attr="url"
           type="text"
           placeholder="url"
           name="{{name}}[{{index}}]url"
-          value="{{getMediaLinkValue article name index 'url'}}"
+          value="{{getLinkSetValue article name index 'url'}}"
           disabled
         />
         <input
@@ -25,7 +25,7 @@
           type="text"
           placeholder="source_url"
           name="{{name}}[{{index}}]source_url"
-          value="{{getMediaLinkValue article name index 'source_url'}}"
+          value="{{getLinkSetValue article name index 'source_url'}}"
         />
       </li>
       <li>
@@ -35,7 +35,7 @@
           type="text"
           placeholder="attribution"
           name="{{name}}[{{index}}]attribution"
-          value="{{getMediaLinkValue article name index 'attribution'}}"
+          value="{{getLinkSetValue article name index 'attribution'}}"
         />
       </li>
       <li>
@@ -45,7 +45,7 @@
           type="text"
           placeholder="title"
           name="{{name}}[{{index}}]title"
-          value="{{getMediaLinkValue article name index 'title'}}"
+          value="{{getLinkSetValue article name index 'title'}}"
         />
       </li>
     </ul>
