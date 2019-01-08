@@ -5,7 +5,6 @@ import editRichText from './edit-rich-text.js';
 import editLocation from './edit-location.js';
 import editMedia from './edit-media.js';
 import editLinkSet from './edit-link-set.js';
-import editLinkList from './edit-link-list.js';
 import editWarning from './edit-warning.js';
 
 // polyfills
@@ -22,7 +21,6 @@ if (window.location.pathname.indexOf('edit') > 0) {
   editRichText.init();
   editLocation.init();
   editLinkSet.init();
-  editLinkList.init();
   editMedia.init();
   editWarning.init();
 }
