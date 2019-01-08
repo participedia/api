@@ -32,23 +32,24 @@ CREATE OR REPLACE FUNCTION localized_short_value(lang text, key text) RETURNS lo
   ;
 $_$;
 
-CREATE OR REPLACE FUNCTION only_localized_case_edit_value(lang text, field text, key text) RETURNS localized_value
+CREATE OR REPLACE FUNCTION only_localized_case_edit_value(lang text, field text, name text) RETURNS localized_value
   LANGUAGE sql STABLE
   AS $_$
-  SELECT (key, field || '_' || key, vals.edit)::localized_value
+  SELECT (name, field || '_' || name, vals.edit)::localized_value
   FROM localized_case_field_values as vals
   WHERE lang = vals.language AND
-        field || '_' || key = vals.key
+        field || '_' || name = vals.key
   ;
 $_$;
 
-CREATE OR REPLACE FUNCTION only_localized_case_view_value(lang text, field text, key text) RETURNS localized_value
+DROP FUNCTION IF EXISTS only_localized_case_view_value(text, text, text);
+CREATE OR REPLACE FUNCTION only_localized_case_view_value(lang text, field text, name text) RETURNS localized_value
   LANGUAGE sql STABLE
   AS $_$
-  SELECT (key, field || '_' || key, vals.view)::localized_value
+  SELECT (name, field || '_' || name, vals.view)::localized_value
   FROM localized_case_field_values as vals
   WHERE lang = vals.language AND
-        field || '_' || key = vals.key
+        field || '_' || name = vals.key
   ;
 $_$;
 
@@ -77,7 +78,7 @@ CREATE OR REPLACE FUNCTION get_case_edit_localized_value(language text, field te
       WHEN ARRAY[key] <@ ARRAY['yes', 'no', 'true', 'false', 'dk', 'na'] THEN
         localized_short_value(language, key)
       WHEN key = '' THEN
-        ('', '', '')::localized_value
+        NULL
       ELSE
         only_localized_case_edit_value(language, field, key)
     END
@@ -85,14 +86,43 @@ CREATE OR REPLACE FUNCTION get_case_edit_localized_value(language text, field te
   ;
 $_$;
 
-CREATE OR REPLACE FUNCTION get_case_edit_localized_values(field text, language text) RETURNS localized_value[]
+DROP FUNCTION IF EXISTS get_case_edit_localized_values(text, text);
+CREATE OR REPLACE FUNCTION get_case_edit_localized_values(fieldname text, language text) RETURNS localized_value[]
   LANGUAGE sql STABLE
   AS $_$
   SELECT
-    array_agg(get_case_view_localized_value(language, field, replace(legal.key, field || '_', '')))::localized_value[]
+    array_agg(get_case_edit_localized_value(language, fieldname, replace(legal.key, fieldname || '_', '')))::localized_value[]
   FROM
     legal_case_field_keys AS legal
   WHERE
-    legal.field = field
+    legal.field = fieldname
   ;
 $_$;
+
+CREATE OR REPLACE FUNCTION get_case_view_localized_values(fieldname text, language text) RETURNS localized_value[]
+  LANGUAGE sql STABLE
+  AS $_$
+  SELECT
+    array_agg(get_case_view_localized_value(language, fieldname, replace(legal.key, fieldname || '_', '')))::localized_value[]
+  FROM
+    legal_case_field_keys AS legal
+  WHERE
+    legal.field = fieldname
+  ;
+$_$;
+
+CREATE OR REPLACE FUNCTION get_case_edit_localized_list(language text, field text, keys text[]) RETURNS localized_value[]
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT array_agg(get_case_edit_localized_value(language, field, key)) as values from (
+    SELECT field, unnest(keys) as key
+  ) as a group by field
+$$;
+
+CREATE OR REPLACE FUNCTION get_case_view_localized_list(language text, field text, keys text[]) RETURNS localized_value[]
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT array_agg(get_case_view_localized_value(language, field, key)) as values from (
+    SELECT field, unnest(keys) as key
+  ) as a group by field
+$$;
