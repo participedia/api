@@ -36,11 +36,22 @@ function mapIdTitleToKeyValue(options) {
   });
 }
 
+function getStaticTextValue(staticText, name, type) {
+  const labelKey = `${name}_${type}`;
+  const labelObj = staticText.labels.find(item => item.key === labelKey);
+
+  if (labelObj && labelObj.value) {
+    return labelObj.value;
+  } else {
+    return labelKey;
+  }
+}
+
 module.exports = {
-  label: (staticText, name) => staticText[name + "_label"] || name + "_label",
-  info: (staticText, name) => staticText[name + "_info"] || name + "_info",
-  instructional: (staticText, name) => staticText[name + "_instructional"] || name + "_instructional",
-  placeholder: (staticText, name) => staticText[name + "_placeholder"] || name + "_placeholder",
+  label: (staticText, name) => getStaticTextValue(staticText, name, "label"),
+  info: (staticText, name) => getStaticTextValue(staticText, name, "info"),
+  instructional: (staticText, name) => getStaticTextValue(staticText, name, "instructional"),
+  placeholder: (staticText, name) => getStaticTextValue(staticText, name, "placeholder"),
   staticText: (staticText, name) => staticText[name] || name,
   isEmptyArray: (article, name) => {
     const value = article[name];
