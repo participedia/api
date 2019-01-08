@@ -2,7 +2,12 @@
   class="case-edit"
   data-submit-type="{{getCaseEditSubmitType req}}"
 >
-  <form action="/case/{{article.id}}" method="post">
+  <form
+    action="/case/{{article.id}}"
+    method="post"
+    enctype="multipart/form-data"
+    id="js-case-edit-form"
+  >
     <div class="case-edit-author-info">
       <h4>
         <strong>First Submitted By</strong>
@@ -45,11 +50,11 @@
     </fieldset>
     <fieldset class="media">
       <h2 class="fieldset-header">{{ static.media_sectionlabel }}</h2>
-      {{> edit-media-link name="links" quick-submit=true}}
+      {{> edit-link-set name="links" quick-submit=true}}
       {{> edit-media name="files" quick-submit=true}}
-      {{> edit-media name="photos" quick-submit=true}}
-      {{> edit-media-link name="videos" quick-submit=true}}
-      {{> edit-media-link name="audio" quick-submit=true}}
+      {{> edit-media name="photos" type="image" quick-submit=true}}
+      {{> edit-link-set name="videos" quick-submit=true}}
+      {{> edit-link-set name="audio" quick-submit=true}}
     </fieldset>
     <fieldset class="date_and_duration">
       <h2 class="fieldset-header">{{ static.date_sectionlabel }}</h2>
@@ -105,7 +110,7 @@
       {{> edit-multi-select ranked=true name="implementers_of_change" max=3 }}
       {{> edit-select name="formal_evaluation" }}
       {{> edit-media name="evaluation_reports" }}
-      {{> edit-link-list name="evaluation_links" }}
+      {{> edit-link-set name="evaluation_links" }}
     </fieldset>
     <div class="case-edit-buttons">
       <button type="submit" class="button button-light-grey">

@@ -1,0 +1,56 @@
+<li class="js-edit-media-file-list-item">
+  <section>
+    <ul class="unstyled-list edit-media-file-attribution-inputs">
+      <li>
+        <img src="{{getMediaLinkValue article name index 'url'}}" height="100px" />
+        <input
+          data-attr="url"
+          type="text"
+          placeholder="url"
+          name="{{name}}[{{index}}]url"
+          value="{{getMediaLinkValue article name index 'url'}}"
+          disabled
+        />
+        <input
+          data-attr="file"
+          type="hidden"
+          name="{{name}}[{{index}}]file"
+          value="file data"
+        />
+      </li>
+      <li>
+        <label>If applicable, provide a link to where the original file was sourced.</label>
+        <input
+          data-attr="source_url"
+          type="text"
+          placeholder="source_url"
+          name="{{name}}[{{index}}]source_url"
+          value="{{getMediaLinkValue article name index 'source_url'}}"
+        />
+      </li>
+      <li>
+        <label>Who is the original owner or creator of this file?</label>
+        <input
+          data-attr="attribution"
+          type="text"
+          placeholder="attribution"
+          name="{{name}}[{{index}}]attribution"
+          value="{{getMediaLinkValue article name index 'attribution'}}"
+        />
+      </li>
+      <li>
+        <label>Provide the original title or description of this file in ten words or less.</label>
+        <input
+          data-attr="title"
+          type="text"
+          placeholder="title"
+          name="{{name}}[{{index}}]title"
+          value="{{getMediaLinkValue article name index 'title'}}"
+        />
+      </li>
+    </ul>
+  </section>
+  <section>
+    <button class="icon-only js-edit-media-file-list-remove-item">{{> icon-close }}</button>
+  </section>
+</li>

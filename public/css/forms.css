@@ -13,6 +13,10 @@ input, select, textarea {
   box-sizing : border-box;
 }
 
+input[disabled] {
+  border: 1px solid #808080;
+}
+
 textarea {
   height: 5rem;
 }

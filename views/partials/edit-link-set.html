@@ -1,0 +1,39 @@
+<div
+  class="form-group js-edit-link-set-form-group"
+  {{#if quick-submit}}data-quick-submit="{{quick-submit}}"{{/if}}
+>
+  <label for="{{name}}" {{#if is_required}}data-required={{is_required}}{{/if}}>
+    {{linkSetLabel static name 'link'}}
+  </label>
+  {{#if (linkSetInstructional static name 'link')}}
+    <p>{{linkSetInstructional static name 'link'}}</p>
+  {{/if}}
+
+  {{#if (isEmptyArray article name)}}
+    {{> edit-link-set-inputs
+      name=name
+      article=article
+      static=static
+      index=0
+    }}
+  {{else}}
+    {{#each (getvalue article name)}}
+      {{> edit-link-set-inputs
+        name=../name
+        article=../article
+        static=../static
+        index=@index
+      }}
+    {{/each}}
+  {{/if}}
+  <a href="#" class="js-add-link-set" data-for="{{name}}">+ Add another {{name}} link</a>
+
+  <script type="text/template" class="js-edit-link-set-inputs-template-{{name}}">
+    {{> edit-link-set-inputs
+      name=name
+      article=article
+      static=static
+      index=0
+    }}
+  </script>
+</div>
