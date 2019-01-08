@@ -1,6 +1,6 @@
 WITH staticrow as (
   SELECT
-  array_agg(tagvalues.*) as tags,
+  get_all_tags(${lang}) as tags,
   get_case_edit_localized_values('general_issues', ${lang}) as general_issues,
   get_case_edit_localized_values('specific_topics', ${lang}) as specific_topics,
   get_case_edit_localized_values('scope', ${lang}) as scope_of_influence,
@@ -26,11 +26,7 @@ WITH staticrow as (
   get_case_edit_localized_values('funder_types', ${lang}) as funder_types,
   get_case_edit_localized_values('change_types', ${lang}) as change_types,
   get_case_edit_localized_values('implementers_of_change', ${lang}) as implementers_of_change,
-  array_agg((labelvalues.key, '', labelvalues.value)::localized_value) as labels
-  FROM rotate_tags_localized(${lang}) as tagvalues,
-       rotate_case_edit_localized(${lang}) as labelvalues
-  WHERE tagvalues.key <> 'language'
-       AND labelvalues.key NOT LIKE '%_value_%'
+  get_edit_labels(${lang}) as labels
 )
 SELECT to_json(staticrow.*) static FROM staticrow
 ;
