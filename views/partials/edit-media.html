@@ -1,4 +1,31 @@
 {{#> case-edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
-  <!-- upload form for files and photos -->
-  <pre>edit-media for {{name}}</pre>
+  <ol
+    class="unstyled-list edit-media-file-list js-edit-media-file-list"
+    data-name="{{name}}"
+    data-type="{{type}}"
+  >
+    {{#unless (isEmptyArray article name)}}
+      {{#each (getvalue article name)}}
+        {{> edit-media-file-inputs
+          index=@index
+          name=../name
+          article=../article
+          static=../static
+        }}
+      {{/each}}
+    {{/unless}}
+  </ol>
+
+  <div class="edit-media-drag-drop-area js-edit-media-drag-drop-area">
+    {{> icon-add}}
+    <div>
+      <input type="file" id="input-{{name}}" name="temporary-{{name}}" multiple />
+      <label for="input-{{name}}">Click to select</label>
+      or drag and drop files here
+    </div>
+  </div>
+
+  <script type="text/template" class="js-edit-media-file-inputs-template">
+    {{> edit-media-file-inputs }}
+  </script>
 {{/ case-edit-form-group}}
