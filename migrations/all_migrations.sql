@@ -20,3 +20,7 @@
 \include 'migrations/migration_021.sql'
 \include 'migrations/migration_022.sql'
 \include 'migrations/migration_023.sql'
+\include 'migrations/migration_024.sql'
+\include 'migrations/migration_025.sql'
+\include 'migrations/migration_026.sql'
+\include 'migrations/migration_027.sql'
