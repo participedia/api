@@ -1,31 +1,6 @@
 const moment = require("moment");
 const faqContent = require("./faq-content.js");
 
-// links, videos, files and photos have different keys
-// on the article and the static text object,
-// so mapping the different keys here
-// we could change the keys on the static text obj to
-// match those on the article to remove the need for this.
-const mapArticleKeyToStaticKey = {
-  links: "link",
-  videos: "video",
-  files: "file",
-  photos: "photo",
-  audio: "audio",
-  evaluation_links: "evaluation_links",
-};
-
-function staticLinkSetText(staticText, name, attr, type) {
-  const mappedName = mapArticleKeyToStaticKey[name];
-  let key;
-  if (name === "links" && attr === "link") {
-    key = `${mappedName}_${type}`;
-  } else {
-    key = `${mappedName}_${attr}_${type}`;
-  }
-  return staticText[key] || key;
-}
-
 function mapIdTitleToKeyValue(options) {
   if (!options) return null;
   return options.map(item => {
@@ -36,23 +11,28 @@ function mapIdTitleToKeyValue(options) {
   });
 }
 
-function getStaticTextValue(staticText, name, type) {
-  const labelKey = `${name}_${type}`;
-  const labelObj = staticText.labels.find(item => item.key === labelKey);
+function staticTextValue(staticText, name, type = null) {
+  let key;
+  if (type) {
+    key = `${name}_${type}`;
+  } else {
+    key = name;
+  }
+  const labelObj = staticText.labels.find(item => item.key === key);
 
   if (labelObj && labelObj.value) {
     return labelObj.value;
   } else {
-    return labelKey;
+    return key;
   }
 }
 
 module.exports = {
-  label: (staticText, name) => getStaticTextValue(staticText, name, "label"),
-  info: (staticText, name) => getStaticTextValue(staticText, name, "info"),
-  instructional: (staticText, name) => getStaticTextValue(staticText, name, "instructional"),
-  placeholder: (staticText, name) => getStaticTextValue(staticText, name, "placeholder"),
-  staticText: (staticText, name) => staticText[name] || name,
+  label: (staticText, name) => staticTextValue(staticText, name, "label"),
+  info: (staticText, name) => staticTextValue(staticText, name, "info"),
+  instructional: (staticText, name) => staticTextValue(staticText, name, "instructional"),
+  placeholder: (staticText, name) => staticTextValue(staticText, name, "placeholder"),
+  staticText: (staticText, name) => staticTextValue(staticText, name),
   isEmptyArray: (article, name) => {
     const value = article[name];
     if (value && value.constructor === Array) {
@@ -125,13 +105,13 @@ module.exports = {
     return `${name}[${index}][${attr}]`;
   },
   linkSetPlaceholder(staticText, name, attr) {
-    return staticLinkSetText(staticText, name, attr, "placeholder");
+    return staticTextValue(staticText, `${name}_${attr}`, "placeholder");
   },
   linkSetLabel(staticText, name, attr) {
-    return staticLinkSetText(staticText, name, attr, "label");
+    return staticTextValue(staticText, `${name}_${attr}`, "label");
   },
   linkSetInstructional(staticText, name, attr) {
-    return staticLinkSetText(staticText, name, attr, "instructional");
+    return staticTextValue(staticText, `${name}_${attr}`, "instructional");
   },
   formatDate(article, name, format) {
     return moment(article[name]).format(format);
