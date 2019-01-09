@@ -18,6 +18,9 @@ function staticTextValue(staticText, name, type = null) {
   } else {
     key = name;
   }
+
+  if (!staticText.labels) return;
+
   const labelObj = staticText.labels.find(item => item.key === key);
 
   if (labelObj && labelObj.value) {
