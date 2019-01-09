@@ -4,11 +4,11 @@
       <li>
         <img src="{{getLinkSetValue article name index 'url'}}" height="100px" />
         <input
-          data-attr="url"
+          data-attr="upload"
           type="text"
-          placeholder="url"
-          name="{{name}}[{{index}}]url"
-          value="{{getLinkSetValue article name index 'url'}}"
+          placeholder="{{linkSetPlaceholder static name 'upload'}}"
+          name="{{linkSetFieldName name index 'upload'}}"
+          value="{{getLinkSetValue article name index 'upload'}}"
           disabled
         />
         <input
@@ -19,32 +19,32 @@
         />
       </li>
       <li>
-        <label>If applicable, provide a link to where the original file was sourced.</label>
+        <p>{{linkSetInstructional static name 'link'}}</p>
         <input
-          data-attr="source_url"
+          data-attr="link"
           type="text"
-          placeholder="source_url"
-          name="{{name}}[{{index}}]source_url"
-          value="{{getLinkSetValue article name index 'source_url'}}"
+          placeholder="{{linkSetPlaceholder static name 'link'}}"
+          name="{{linkSetFieldName name index 'link'}}"
+          value="{{getLinkSetValue article name index 'link'}}"
         />
       </li>
       <li>
-        <label>Who is the original owner or creator of this file?</label>
+        <p>{{linkSetInstructional static name 'attribution'}}</p>
         <input
           data-attr="attribution"
           type="text"
-          placeholder="attribution"
-          name="{{name}}[{{index}}]attribution"
+          placeholder="{{linkSetPlaceholder static name 'attribution'}}"
+          name="{{linkSetFieldName name index 'attribution'}}"
           value="{{getLinkSetValue article name index 'attribution'}}"
         />
       </li>
       <li>
-        <label>Provide the original title or description of this file in ten words or less.</label>
+        <p>{{linkSetInstructional static name 'title'}}</p>
         <input
           data-attr="title"
           type="text"
-          placeholder="title"
-          name="{{name}}[{{index}}]title"
+          placeholder="{{linkSetPlaceholder static name 'title'}}"
+          name="{{linkSetFieldName name index 'title'}}"
           value="{{getLinkSetValue article name index 'title'}}"
         />
       </li>
