@@ -88,7 +88,7 @@
 .contact-help-faq-container[data-view=list] .back-btn {
   display: none;
 }
-.contact-help-faq-container[data-state=answer] .back-btn {
+.contact-help-faq-container[data-view=answer] .back-btn {
   display: block;
 }
 
