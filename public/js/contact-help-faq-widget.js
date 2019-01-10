@@ -1,21 +1,21 @@
 const contactHelpFaqWidget = {
   init() {
     const helpLinkEl = document.querySelector("a[href='/help']");
-    const contactHelpFaqWidgetEl = document.querySelector(".js-contact-help-faq-container");
-    const faqListEl = contactHelpFaqWidgetEl.querySelector(".js-faq-list");
+    this.contactHelpFaqWidgetEl = document.querySelector(".js-contact-help-faq-container");
+    const faqListEl = this.contactHelpFaqWidgetEl.querySelector(".js-faq-list");
     const faqLinks = faqListEl.querySelectorAll("a");
 
-    this.contentAreaEl = contactHelpFaqWidgetEl.querySelector(".js-content-area");
+    this.contentAreaEl = this.contactHelpFaqWidgetEl.querySelector(".js-content-area");
 
     this.initialContent = this.contentAreaEl.innerHTML;
 
     // delegate event listeners
-    contactHelpFaqWidgetEl.addEventListener("click", (e) => {
+    this.contactHelpFaqWidgetEl.addEventListener("click", (e) => {
       // close widget
       if (e.target.closest(".js-close")) {
         e.preventDefault();
         this.backToList();
-        contactHelpFaqWidgetEl.style = "display: none;";
+        this.contactHelpFaqWidgetEl.style = "display: none;";
       }
 
       // return to list of questions
@@ -34,12 +34,13 @@ const contactHelpFaqWidget = {
     // event listener to open widget
     helpLinkEl.addEventListener("click", (e) => {
       e.preventDefault();
-      contactHelpFaqWidgetEl.style = "display: block;";
+      this.contactHelpFaqWidgetEl.style = "display: block;";
     });
   },
 
   backToList() {
     // insert initial content back into content areas
+    this.contactHelpFaqWidgetEl.setAttribute("data-view", "list");
     this.contentAreaEl.innerHTML = this.initialContent;
     this.contentAreaEl.scrollTop = 0;
   },
@@ -53,6 +54,7 @@ const contactHelpFaqWidget = {
         ${answer}
       </div>
     `;
+    this.contactHelpFaqWidgetEl.setAttribute("data-view", "answer");
     this.contentAreaEl.innerHTML = content;
     this.contentAreaEl.scrollTop = 0;
   }

@@ -13,12 +13,14 @@
 }
 
 .contact-help-faq-container .header {
-  padding: 15px;
+  padding: 15px 20px;
   background-color: #323232;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  height: 70px;
+  box-sizing: border-box;
 }
 
 .contact-help-faq-container .header .icon-only {
@@ -46,7 +48,7 @@
 
 .contact-help-faq-container .content-area {
   overflow: auto;
-  height: calc(100% - 68px); /* 68px is the height of the header */
+  height: calc(100% - 70px); /* 70px is the height of the header */
 }
 
 .contact-help-faq-container .faq-list h3 {
@@ -81,4 +83,11 @@
 
 .contact-help-faq-container .faq-answer-content {
   padding: 20px;
+}
+
+.contact-help-faq-container[data-view=list] .back-btn {
+  display: none;
+}
+.contact-help-faq-container[data-state=answer] .back-btn {
+  display: block;
 }
