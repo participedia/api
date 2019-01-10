@@ -133,6 +133,7 @@ module.exports = {
     }
   },
   getFaqContent() {
+    // todo: get this as translated text from the server
     return faqContent;
   },
 };

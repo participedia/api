@@ -91,3 +91,11 @@
 .contact-help-faq-container[data-state=answer] .back-btn {
   display: block;
 }
+
+@media (max-width: 600px) {
+  .contact-help-faq-container {
+    width: 90%;
+    left: 5%;
+    right: 5%;
+  }
+}
