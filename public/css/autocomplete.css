@@ -1,0 +1,25 @@
+.autocomplete {
+  background: white;
+  z-index: 1000;
+  overflow: auto;
+  box-sizing: border-box;
+  border: 1px solid #000;
+}
+
+.autocomplete * {
+  font: inherit;
+}
+
+.autocomplete > div {
+  padding: 8px;
+}
+
+.autocomplete .group {
+  background: #eee;
+}
+
+.autocomplete > div:hover:not(.group),
+.autocomplete > div.selected {
+  background: #fff;
+  cursor: pointer;
+}
