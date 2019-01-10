@@ -6,12 +6,14 @@ import editLocation from './edit-location.js';
 import editMedia from './edit-media.js';
 import editLinkSet from './edit-link-set.js';
 import editWarning from './edit-warning.js';
+import contactHelpFaqWidget from "./contact-help-faq-widget.js";
 
 // polyfills
 elementClosestPolyfill();
 
 // common
 header.init();
+contactHelpFaqWidget.init();
 
 // case edit form
 // only init edit form fields if on edit page
