@@ -9,23 +9,33 @@
   background-color: #fff;
   display: flex;
   flex-flow: column;
-  box-shadow: 0px 0px 20px 1px rgba(168,168,168,1);
+  box-shadow: 0px 0px 20px 1px #A8A8A8;
 }
 
 .contact-help-faq-container .header {
-  padding: 20px;
+  padding: 15px;
   background-color: #323232;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 }
 
 .contact-help-faq-container .header .icon-only {
   background-color: transparent;
 }
 
-.contact-help-faq-container .header .icon-only .icon-fill {
+.contact-help-faq-container .header .icon-fill {
   fill: #fff;
+}
+
+.contact-help-faq-container .close-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.contact-help-faq-container .back-btn {
+  margin-right: 15px;
 }
 
 .contact-help-faq-container .header h3 {
