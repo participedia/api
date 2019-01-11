@@ -56,6 +56,7 @@
     "chai-http": "^4.2.1",
     "csv": "^5.1.0",
     "eslint": "^5.12.1",
+    "cypress": "^2.0.3",
     "eslint-config-google": "^0.9.1",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-prettier": "^2.0.1",
@@ -66,6 +67,7 @@
     "watchify": "^3.11.0"
   },
   "scripts": {
+    "cypress:open": "cypress open",
     "start": "nodemon server.js",
     "watch": "watchify public/js/app.js -p esmify -o public/build/js/app.bundle.js -v",
     "lint": "eslint \"**.js\"",
