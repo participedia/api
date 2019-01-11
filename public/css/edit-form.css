@@ -280,6 +280,10 @@
   text-align: right;
 }
 
+.textarea-counter-over-limit {
+  color: #EC2024;
+}
+
 @media (max-width: 1000px) {
   .edit-form {
     width: 65%;

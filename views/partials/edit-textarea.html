@@ -1,3 +1,3 @@
 {{#> case-edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
-  <textarea name="{{name}}" {{#if charLimit}}maxlength="{{charLimit}}"{{/if}}>{{getvalue article name}}</textarea>
+  <textarea name="{{name}}" {{#if charLimit}}data-max-length="{{charLimit}}"{{/if}}>{{getvalue article name}}</textarea>
 {{/ case-edit-form-group}}

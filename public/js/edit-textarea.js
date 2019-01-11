@@ -1,12 +1,12 @@
 const editTextarea = {
   init() {
     // get all textarea elements with a maxlength attr
-    const textAreaEls = document.querySelectorAll("textarea[maxlength]");
+    const textAreaEls = document.querySelectorAll("textarea[data-max-length]");
 
     if (textAreaEls.length < 1) return;
 
     textAreaEls.forEach(el => {
-      const limit = el.getAttribute("maxlength");
+      const limit = el.getAttribute("data-max-length");
 
       // create and insert counter element
       const counterEl = document.createElement("div");
@@ -16,7 +16,13 @@ const editTextarea = {
 
       // update count on every character change
       el.addEventListener("keyup", e => {
-        counterEl.innerText = `${e.target.value.length}/${limit}`;
+        const count = e.target.value.length;
+        counterEl.innerText = `${count}/${limit}`;
+        if (count > limit) {
+          counterEl.classList.add("textarea-counter-over-limit");
+        } else {
+          counterEl.classList.remove("textarea-counter-over-limit");
+        }
       });
     });
   }
