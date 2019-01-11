@@ -284,6 +284,11 @@
   color: #EC2024;
 }
 
+.something-missing-prompt {
+  margin-top: 60px;
+  margin-bottom: 120px;
+}
+
 @media (max-width: 1000px) {
   .edit-form {
     width: 65%;
