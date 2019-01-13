@@ -69,6 +69,7 @@ SELECT
   published,
   updated_date,
   featured,
+   get_user_names(${userid})  as authors,
   hidden
 FROM
   cases,
