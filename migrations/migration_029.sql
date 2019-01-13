@@ -90,10 +90,6 @@ INSERT INTO localized_labels VALUES
   UPDATE localized_labels SET key = 'organizer_types_instructional' where key = 'organizer_type_instructional';
   UPDATE localized_labels SET key = 'organizer_types_info' where key = 'organizer_type_info';
   UPDATE localized_labels SET key = 'organizer_types_placeholder' where key = 'organizer_type_placeholder';
-  UPDATE localized_labels SET key = 'funder_types_label' where key = 'funder_type_label';
-  UPDATE localized_labels SET key = 'funder_types_instructional' where key = 'funder_type_instructional';
-  UPDATE localized_labels SET key = 'funder_types_info' where key = 'funder_type_info';
-  UPDATE localized_labels SET key = 'funder_types_placeholder' where key = 'funder_type_placeholder';
 
 DROP FUNCTION IF EXISTS get_edit_labels(text);
 CREATE OR REPLACE FUNCTION get_edit_labels(lang text) RETURNS JSON
