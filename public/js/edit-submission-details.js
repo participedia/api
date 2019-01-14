@@ -4,6 +4,9 @@ const editSubmissionDetails = {
   init() {
     const firstSubmittedAutoCompleteEl =
       document.querySelector("input[name=first_submitted_by_autocomplete]");
+
+    if (!firstSubmittedAutoCompleteEl) return; // if submission field not present, don't continue
+
     const firstSubmittedHiddenEl =
       document.querySelector("input[name=first_submitted_by]");
 
