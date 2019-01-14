@@ -71,10 +71,8 @@
   </p>
 </div>
 
-<!-- used in js to get author data -->
-<!-- todo: get real author data from json blob -->
 <ul class="js-author-list" style="display: none;">
-{{#each params.authors}}
-  <li data-user-id="{{user_id}}">{{name}}</li>
+{{#each static.authors}}
+  <li data-user-id="{{id}}">{{title}}</li>
 {{/each}}
 </ul>
