@@ -1,4 +1,5 @@
 const moment = require("moment");
+const faqContent = require("./faq-content.js");
 
 // links, videos, files and photos have different keys
 // on the article and the static text object,
@@ -130,5 +131,9 @@ module.exports = {
     } else {
       return "quick";
     }
+  },
+  getFaqContent() {
+    // todo: get this as translated text from the server
+    return faqContent;
   },
 };

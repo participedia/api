@@ -1,0 +1,24 @@
+<div class="contact-help-faq-container js-contact-help-faq-container" data-view="list" style="display: none;">
+  <div class="header">
+    <button class="icon-only back-btn js-back">{{> icon-back-arrow}}</button>
+    <h3>Participedia Help</h3>
+    <button class="icon-only close-btn js-close">{{> icon-close}}</button>
+  </div>
+  <div class="content-area js-content-area">
+    <div class="contact">
+      <h3>Contact Us</h3>
+      <a href="mailto: info@participedia.net" class="js-mail-link">Email Support Team</a>
+    </div>
+    <div class="faq-list js-faq-list">
+      <h3>FAQ</h3>
+      <ul class="unstyled-list">
+        {{#each (getFaqContent)}}
+          <li>
+            <a href="#">{{q}}</a>
+            <div class="faq-answer js-faq-answer">{{{a}}}</div>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>

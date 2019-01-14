@@ -1,0 +1,101 @@
+.contact-help-faq-container {
+  width: 480px;
+  height: 400px;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  right: 30px;
+  z-index: 1000;
+  background-color: #fff;
+  display: flex;
+  flex-flow: column;
+  box-shadow: 0px 0px 20px 1px #A8A8A8;
+}
+
+.contact-help-faq-container .header {
+  padding: 15px 20px;
+  background-color: #323232;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  box-sizing: border-box;
+}
+
+.contact-help-faq-container .header .icon-only {
+  background-color: transparent;
+}
+
+.contact-help-faq-container .header .icon-fill {
+  fill: #fff;
+}
+
+.contact-help-faq-container .close-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.contact-help-faq-container .back-btn {
+  margin-right: 15px;
+}
+
+.contact-help-faq-container .header h3 {
+  color: #fff;
+  margin: 0;
+  flex: 1;
+}
+
+.contact-help-faq-container .content-area {
+  overflow: auto;
+  height: calc(100% - 70px); /* 70px is the height of the header */
+}
+
+.contact-help-faq-container .faq-list h3 {
+  padding: 20px 0 0 20px;
+}
+
+.contact-help-faq-container .contact {
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.25);
+}
+
+.contact-help-faq-container .contact h3 {
+  padding: 20px 0 0 20px;
+}
+.contact-help-faq-container .contact a {
+  display: block;
+  padding: 0 0 20px 20px;
+}
+
+.contact-help-faq-container .faq-answer {
+  display: none;
+}
+
+.contact-help-faq-container li a {
+  font-size: 1.1rem;
+  padding: 20px;
+  display: block;
+  text-decoration: none;
+}
+.contact-help-faq-container li a:hover {
+  background-color: #e6e6e6;
+}
+
+.contact-help-faq-container .faq-answer-content {
+  padding: 20px;
+}
+
+.contact-help-faq-container[data-view=list] .back-btn {
+  display: none;
+}
+.contact-help-faq-container[data-view=answer] .back-btn {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .contact-help-faq-container {
+    width: 90%;
+    left: 5%;
+    right: 5%;
+  }
+}
