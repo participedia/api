@@ -5,56 +5,56 @@
     <!-- TODO: Identify all the section headers for view vs. edit, replace the section comments below with section headers -->
 
     <!-- Overview -->
-    <dl>
+    <section>
       {{> view-list name="general_issues" }}
       {{> view-list name="specific_topics" }}
       {{> view-list name="tags" }}
-    </dl>
+    </section>
 
     <!-- Location -->
-    <dl>
+    <section>
       {{> view-location }}
       {{> view-text name="scope" }}
-    </dl>
+    </section>
 
     <!-- Components -->
-    <dl>
+    <section>
       {{> view-reference-list name="has_components" }}
       {{> view-reference name="is_component_of" }}
-    </dl>
+    </section>
 
     <!-- Media -->
-    <dl>
+    <section>
       {{> view-media-list name="links" }}
       {{> view-media-list name="files" }}
       {{> view-media-list name="audio" }}
-    </dl>
+    </section>
 
     <!-- Date & Duration -->
-    <dl>
+    <section>
       {{> view-date name="start_date" }}
       {{> view-date name="end_date" }}
       {{> view-boolean name="ongoing" }}
       {{> view-boolean name="time_limited" }}
-    </dl>
+    </section>
 
     <!-- Purpose & Approach -->
-    <dl>
+    <section>
       {{> view-list name="purpose" }}
       {{> view-list name="approach" }}
       {{> view-text name="public_spectrum" }}
-    </dl>
+    </section>
 
     <!-- Participants -->
-    <dl>
+    <section>
       {{> view-number name="number_participants" }}
       {{> view-text name="open_limited" }}
       {{> view-text name="recruitment_method" }}
       {{> view-text name="targeted_participants" }}
-    </dl>
+    </section>
 
     <!-- Process -->
-    <dl>
+    <section>
       {{> view-list name="types_of_methods" }}
       {{> view-list name="types_of_tools_techniques" }}
       {{> view-text name="specific_tools" }}
@@ -67,31 +67,31 @@
       {{> view-list name="decision_methods" }}
       {{> view-list name="if_voting" }}
       {{> view-list name="insights_outcomes" }}
-    </dl>
+    </section>
 
     <!-- Organizations and Supporters -->
-    <dl>
+    <section>
       {{> view-text name="primary_organizer" }}
       {{> view-list name="organizer_types" }}
-    </dl>
+    </section>
 
     <!-- Resources -->
-    <dl>
+    <section>
       {{> view-text name="funder" }}
       {{> view-text name="type_of_funder" }}
       {{> view-boolean name="staff" }}
       {{> view-boolean name="volunteers" }}
-    </dl>
+    </section>
 
     <!-- Evidence of Impact -->
-    <dl>
+    <section>
       {{> view-list name="impact_evidence" }}
       {{> view-list name="change_types" }}
       {{> view-list name="implementers_of_change" }}
       {{> view-list name="formal_evaluation" }}
       {{> view-link-list name="evaluation_report_documents" }}
       {{> view-link-list name="evaluation_report_links" }}
-    </dl>
+    </section>
 
   </aside>
   <article>

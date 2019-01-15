@@ -17,3 +17,13 @@
 .reader-view nav {
   width: 27%;
 }
+
+.reader-view dt {
+  font-weight: 600;
+}
+
+.reader-view dd {
+  margin-left: 0;
+  padding-left: 1em;
+  text-indent: -1em;
+}
