@@ -14,6 +14,7 @@
   "dependencies": {
     "apicache": "^1.1.1",
     "async": "^2.3.0",
+    "autocompleter": "^4.0.2",
     "aws-sdk": "^2.70.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",

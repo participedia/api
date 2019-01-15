@@ -187,8 +187,8 @@ header a {
   display: flex;
 }
 
-.map-container {
-  margin-top: 61px;
+.main-content {
+  margin-top: 90px;
 }
 
 @media (max-width: 1150px) {
@@ -230,7 +230,7 @@ header a {
     z-index: -1;
   }
 
-  .map-container {
-    margin-top: 128px;
+  .main-content {
+    margin-top: 160px;
   }
 }

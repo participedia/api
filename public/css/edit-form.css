@@ -272,9 +272,20 @@
   outline: 1px dotted #000;
 }
 
+.edit-submission-details-btn {
+  float: right;
+}
+
 @media (max-width: 1000px) {
   .edit-form {
     width: 65%;
+  }
+}
+
+@media (max-width: 800px) {
+  .edit-submission-details-btn {
+    float: none;
+    margin-bottom: 15px;
   }
 }
 
