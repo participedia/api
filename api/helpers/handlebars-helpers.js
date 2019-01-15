@@ -19,7 +19,12 @@ function staticTextValue(staticText, name, type = null) {
     key = name;
   }
 
-  return staticText.labels[key];
+  if (staticText.labels) {
+    return staticText.labels[key];
+  } else {
+    // this makes the static keys work on the reader view for now since the format is different from the edit view
+    return staticText[key];
+  }
 }
 
 module.exports = {
@@ -121,5 +126,8 @@ module.exports = {
   getFaqContent() {
     // todo: get this as translated text from the server
     return faqContent;
+  },
+  toUpperCase(text) {
+    return text.toUpperCase();
   },
 };

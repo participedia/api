@@ -1,0 +1,19 @@
+.reader-view {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 120px;
+}
+
+.reader-view aside {
+  width: 27%;
+  margin: 0 90px 0 30px;
+}
+
+.reader-view article {
+  width: 46%;
+  margin-right: 30px;
+}
+
+.reader-view nav {
+  width: 27%;
+}
