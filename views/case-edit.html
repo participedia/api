@@ -54,8 +54,8 @@
     <fieldset class="media">
       <h2 class="fieldset-header">{{staticText static "media_sectionlabel"}}</h2>
       {{> edit-link-set name="links" quick-submit=true}}
-      {{> edit-media name="files" quick-submit=true}}
-      {{> edit-media name="photos" type="image" quick-submit=true}}
+      {{> edit-media name="files_upload" quick-submit=true}}
+      {{> edit-media name="photos_upload" type="image" quick-submit=true}}
       {{> edit-link-set name="videos" quick-submit=true}}
       {{> edit-link-set name="audio" quick-submit=true}}
     </fieldset>
@@ -75,7 +75,7 @@
     <fieldset class="participants fullonly">
       <h2 class="fieldset-header">{{staticText static "participants_sectionlabel"}}</h2>
       {{> edit-number name="number_of_participants" }}
-      {{> edit-select name="open_or_limited" }}
+      {{> edit-select name="open_limited" }}
       {{> edit-select name="recruitment_method" }}
       {{> edit-multi-select name="targeted_participants" max=3 }}
     </fieldset>
@@ -112,8 +112,8 @@
       {{> edit-multi-select ranked=true name="change_types" max=5 }}
       {{> edit-multi-select ranked=true name="implementers_of_change" max=3 }}
       {{> edit-select name="formal_evaluation" }}
-      {{> edit-media name="evaluation_reports" }}
-      {{> edit-link-set name="evaluation_links" }}
+      {{> edit-media name="evaluation_file" }}
+      {{> edit-link-set name="evaluation_link" }}
     </fieldset>
     <div class="edit-buttons">
       <button type="submit" class="button button-light-grey">

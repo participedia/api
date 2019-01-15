@@ -51,10 +51,10 @@ const editMedia = {
   },
 
   renderUploadedFiles(ev) {
-    const template = document.querySelector(".js-edit-media-file-inputs-template");
     const listEl = ev.target.closest(".form-group").querySelector(".js-edit-media-file-list");
     const type = listEl.closest("ol").getAttribute("data-type");
     const name = listEl.getAttribute("data-name");
+    const template = document.querySelector(`.js-edit-media-file-inputs-template-${name}`);
     const files = ev.target.files;
 
     // for each uploaded file, show the set of inputs as defined in the script/template element
