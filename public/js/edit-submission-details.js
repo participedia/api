@@ -3,17 +3,17 @@ import autocomplete from "autocompleter";
 const editSubmissionDetails = {
   init() {
     const firstSubmittedAutoCompleteEl =
-      document.querySelector("input[name=first_submitted_by_autocomplete]");
+      document.querySelector("input[name=creator_name]");
 
     if (!firstSubmittedAutoCompleteEl) return; // if submission field not present, don't continue
 
     const firstSubmittedHiddenEl =
-      document.querySelector("input[name=first_submitted_by]");
+      document.querySelector("input[name=creator_user_id]");
 
     const mostRecentChangeAutoCompleteEl =
-      document.querySelector("input[name=most_recent_change_autocomplete]");
+      document.querySelector("input[name=last_updated_by_name]");
     const mostRecentChangeHiddenEl =
-      document.querySelector("input[name=most_recent_change]");
+      document.querySelector("input[name=last_updated_by_user_id]");
 
     // get author data from ui
     const authors = this.getAuthorData();
