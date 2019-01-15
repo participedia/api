@@ -130,4 +130,32 @@ module.exports = {
   toUpperCase(text) {
     return text.toUpperCase();
   },
+  shareLink(type, req) {
+    const path = req.originalUrl;
+    const host = req.headers.host;
+    const url = `https://${host}${path}`;
+
+    const shareUrls = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      twitter: `https://twitter.com/home?status=${url}`,
+      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
+    }
+    return shareUrls[type];
+  },
+  hasPhoto(article) {
+    if (article.photos < 1) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+  getFirstPhotoUrl(article) {
+    if (article.photos < 1) return;
+    return article.photos[0].url;
+  },
+  currentUrl(req) {
+    const path = req.originalUrl;
+    const host = req.headers.host;
+    return `https://${host}${path}`;
+  },
 };
