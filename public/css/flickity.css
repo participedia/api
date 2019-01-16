@@ -137,13 +137,17 @@ https://flickity.metafizzy.co
   opacity: 1;
 }
 
+.carousel-main {
+  margin-top: 45px;
+}
+
 .carousel-nav {
   margin-bottom: 45px;
 }
 
 .carousel-cell {
   width: 100%;
-  height: 200px;
+  height: 250px;
   background: #222;
   display: flex;
   align-items: center;
@@ -167,7 +171,7 @@ https://flickity.metafizzy.co
 
 .carousel-image {
   display: block;
-  height: 200px;
+  height: 100%;
   min-width: 150px;
   max-width: 100%;
 }
