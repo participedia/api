@@ -27,3 +27,21 @@
   padding-left: 1em;
   text-indent: -1em;
 }
+
+
+/* bookmark link */
+.reader-view .bookmark-link {
+  display: none;
+}
+
+.reader-view .bookmark-link[data-user-id] {
+  display: inline-block;
+}
+
+.reader-view .bookmark-link[data-bookmarked='false'] .icon-fill:first-of-type {
+  fill: #ffffff;
+}
+
+.reader-view .bookmark-link[data-bookmarked='true'] .icon-fill:first-of-type {
+  fill: #808080;
+}

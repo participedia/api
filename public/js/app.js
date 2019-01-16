@@ -10,6 +10,7 @@ import contactHelpFaqWidget from "./contact-help-faq-widget.js";
 import editSubmissionDetails from "./edit-submission-details.js";
 import editTextarea from './edit-textarea.js';
 import imageCarousel from "./image-carousel.js";
+import viewSocialMedia from "./view-socialmedia.js";
 
 // polyfills
 elementClosestPolyfill();
@@ -33,4 +34,5 @@ if (viewType === "edit") {
 
 if (viewType === "view") {
   imageCarousel.init();
+  viewSocialMedia.init();
 }

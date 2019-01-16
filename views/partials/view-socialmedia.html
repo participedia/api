@@ -1,6 +1,13 @@
 <ul class="unstyled-list">
   <li>
-    <a href="#">
+    <a
+      href="#"
+      class="bookmark-link js-bookmark-link"
+      data-bookmarked="{{article.bookmarked}}"
+      data-type="{{article.type}}"
+      data-thing-id="{{article.id}}"
+      {{#if user}}data-user-id="{{user.id}}"{{/if}}
+    >
       {{> icon-bookmark-fill}}
     </a>
   </li>
