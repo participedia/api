@@ -157,9 +157,8 @@ https://flickity.metafizzy.co
 .carousel-cell p {
   position: absolute;
   bottom: -16px;
-  background-color: rgba(0,0,0,.8);
+  background-color: rgba(21,21,21,.6);
   width: 100%;
-  text-align: center;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
