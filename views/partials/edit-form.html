@@ -1,0 +1,37 @@
+<article
+  class="edit-form"
+  data-submit-type="{{getCaseEditSubmitType req}}"
+>
+  <form
+    action="/{{formType}}/{{article.id}}/edit"
+    method="post"
+    enctype="multipart/form-data"
+    class="js-edit-form"
+  >
+    <!-- todo: pass in user id from server once it's added to the json -->
+    <input type="hidden" name="user" value="14" />
+
+    <div class="edit-form-author-info">
+      {{> edit-submission-details }}
+    </div>
+
+    {{> @partial-block }}
+
+    <div class="edit-buttons">
+      <button type="submit" class="button button-light-grey">
+        {{> icon-submit }} Publish
+      </button>
+
+      <button type="submit" class="button button-red floating-action-button" title="Publish">
+        {{> icon-submit }}
+      </button>
+
+      <a href="?full=1" class="button button-dark-grey quickonly">Do Full Version</a>
+    </div>
+
+    <div class="something-missing-prompt">
+      <h3>Something Missing?</h3>
+      <p>Suggest edits to this form by email to <a target="_blank" href="mailto:info@participedia.net?subject=Suggested form edits - {{formType}}">info@participedia.net</a></p>
+    </div>
+  </form>
+</article>
