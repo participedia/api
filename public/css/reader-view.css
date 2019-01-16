@@ -14,6 +14,10 @@
   margin-right: 30px;
 }
 
+.reader-view article a {
+  overflow-wrap: break-word;
+}
+
 .reader-view nav {
   width: 27%;
 }
@@ -27,7 +31,6 @@
   padding-left: 1em;
   text-indent: -1em;
 }
-
 
 /* bookmark link */
 .reader-view .bookmark-link {
