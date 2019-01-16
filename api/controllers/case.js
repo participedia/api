@@ -24,51 +24,6 @@ const {
 } = require("../helpers/things");
 
 /**
- * @api {get} /case/countsByCountry Get case counts for each country
- * @apiGroup Cases
- * @apiVersion 0.1.0
- * @apiName countsByCountry
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data Mapping of country names to counts (when `OK` is true)
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *          countryCounts: {
- *            "United States": 122,
- *            "United Kingdom": 57,
- *            "Italy": 51,
- *            ...
- *        }
- *     }
- * })
- */
-
-// TODO: figure out if the choropleth should show cases or all things
-
-router.get("/countsByCountry", async function getCountsByCountry(req, res) {
-  try {
-    const countries = await db.any(CASES_BY_COUNTRY);
-    // convert array to object
-    let countryCounts = {};
-    countries.forEach(function(row) {
-      countryCounts[row.country.toLowerCase()] = row.count;
-    });
-    res.status(200).json({
-      OK: true,
-      data: { countryCounts: countryCounts }
-    });
-  } catch (error) {
-    log.error("Exception in /case/countsByCountry => %s", error);
-    res.status(500).json({ OK: false, error: error });
-  }
-});
-
-/**
  * @api {post} /case/new Create new case
  * @apiGroup Cases
  * @apiVersion 0.1.0
