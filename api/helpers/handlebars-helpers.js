@@ -20,10 +20,10 @@ function staticTextValue(staticText, name, type = null) {
   }
 
   if (staticText.labels) {
-    return staticText.labels[key];
+    return staticText.labels[key] || key;
   } else {
     // this makes the static keys work on the reader view for now since the format is different from the edit view
-    return staticText[key];
+    return staticText[key] || key;
   }
 }
 
