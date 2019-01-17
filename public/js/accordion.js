@@ -7,9 +7,9 @@ const accordion = {
         const accordionEl = e.target.closest("[data-accordion]");
         const state = accordionEl.getAttribute("data-accordion");
         if (state === "open") {
-          accordionEl.setAttribute("data-accordion", "closed")
+          accordionEl.setAttribute("data-accordion", "closed");
         } else {
-          accordionEl.setAttribute("data-accordion", "open")
+          accordionEl.setAttribute("data-accordion", "open");
         }
       });
     });

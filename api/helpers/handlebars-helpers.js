@@ -22,7 +22,8 @@ function staticTextValue(staticText, name, type = null) {
   if (staticText.labels) {
     return staticText.labels[key] || key;
   } else {
-    // this makes the static keys work on the reader view for now since the format is different from the edit view
+    // this makes the static keys work on the reader view for now
+    // since the format is different from the edit view
     return staticText[key] || key;
   }
 }
@@ -146,15 +147,11 @@ module.exports = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       twitter: `https://twitter.com/home?status=${url}`,
       linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
-    }
+    };
     return shareUrls[type];
   },
   hasPhoto(article) {
-    if (article.photos < 1) {
-      return false;
-    } else {
-      return true;
-    }
+    return article.photos && article.photos.length > 0;
   },
   getFirstPhotoUrl(article) {
     if (article.photos < 1) return;
