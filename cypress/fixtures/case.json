@@ -45,21 +45,33 @@
       "lookup_key": "scope_regional",
       "value": "Regional"
     },
-    "has_components": [],
-    "is_component_of": null,
+    "has_components": [
+      {
+        "id": 5190,
+        "title": "Kenya Youth Manifesto",
+        "type": "case",
+      }
+    ],
+    "is_component_of": [
+      {
+        "id": 5191,
+        "title": "The Youth Cafe",
+        "type": "organization",
+      }
+    ],
     "files": [
        {
         "url": "https://s3.amazonaws.com/uploads.participedia.xyz/NRP-MinniapolisNeighborhoods1.jpg",
-        "source_url": "",
-        "attribution": "",
-        "title": ""
+        "source_url": "sourceurl.com",
+        "attribution": "this is the attribution text",
+        "title": "this is a title"
       }
     ],
     "links": [
       {
-        "url": "https://google.com",
-        "attribution": "some attr string",
-        "title": "some title"
+        "url": "sourceurl.com",
+        "attribution": "this is the attribution text",
+        "title": "this is a title"
       }
     ],
     "photos": [
@@ -67,8 +79,32 @@
         "url": "https://s3.amazonaws.com/uploads.participedia.xyz/NRP-MinniapolisNeighborhoods1.jpg",
         "source_url": "",
         "attribution": "",
-        "title": ""
-      }
+        "title": "really really long title, that will take up too much space. Probably. maybe. we'll see."
+      },
+      {
+        "url": "https://picsum.photos/720/540/?image=1069",
+        "source_url": "",
+        "attribution": "",
+        "title": "title two"
+      },
+      {
+        "url": "https://picsum.photos/540/720/?image=696",
+        "source_url": "",
+        "attribution": "",
+        "title": "title three"
+      },
+      {
+        "url": "https://picsum.photos/720/540/?image=517",
+        "source_url": "",
+        "attribution": "",
+        "title": "title four"
+      },
+      {
+        "url": "https://picsum.photos/720/540/?image=56",
+        "source_url": "",
+        "attribution": "",
+        "title": "title five"
+      },
     ],
     "videos": [
       {
@@ -77,32 +113,60 @@
         "title": ""
       }
     ],
-    "audio": [],
+    "audio": [
+      {
+        "url": "sourceurl.com",
+        "attribution": "this is the attribution text",
+        "title": "this is a title"
+      }
+    ],
     "start_date": "1998-05-01T00:00:00",
     "end_date": "1998-06-01T00:00:00",
     "ongoing": true,
     "time_limited": {
-      "key": "",
-      "lookup_key": "",
-      "value": ""
+      "key": "a",
+      "lookup_key": "time_limited_a",
+      "value": "A single, defined period of time"
     },
-    "purposes": null,
-    "approaches": null,
+    "purposes": [
+      {
+        "key": "make",
+        "lookup_key": "purposes_make",
+        "value": "Make, influence, or challenge decisions of government and public bodies"
+      },
+      {
+        "key": "make_influence",
+        "lookup_key": "purposes_make_influence",
+        "value": "Make, influence, or challenge decisions of private organizations"
+      },
+    ],
+    "approaches": [
+      {
+        "key": "advocacy",
+        "lookup_key": "approaches_advocacy",
+        "value": "Advocacy"
+      },
+      {
+        "key": "citizenship",
+        "lookup_key": "approaches_citizenship",
+        "value": "Citizenship building"
+      },
+    ],
     "public_spectrum": {
-      "key": "",
-      "lookup_key": "",
-      "value": ""
+      "key": "inform",
+      "lookup_key": "public_spectrum_inform",
+      "value": "Inform"
     },
-    "number_of_participants": null,
+    "number_of_participants": 200,
     "open_limited": {
-      "key": "",
-      "lookup_key": "",
-      "value": ""
+      "key": "open",
+      "lookup_key": "open_limited_open",
+      "value": "Open to All"
     },
     "recruitement_method": {
-      "key": "",
-      "lookup_key": "",
-      "value": ""
+      "key": "captive",
+      "lookup_key": "recruitment_method_captive",
+      "value": "Captive Sample"
     },
     "targeted_participants": [
       {
@@ -121,13 +185,34 @@
         "value": "Racial/Ethnic Groups"
       }
     ],
-    "method_types": null,
-    "tools_techniques_types": null,
-    "get_object_title_list": null,
+    "method_types": [
+      {
+        "key": "collaborative",
+        "lookup_key": "method_types_collaborative",
+        "value": "Collaborative approaches"
+      },
+      {
+        "key": "community",
+        "lookup_key": "method_types_community",
+        "value": "Community development, organizing, and mobilization"
+      },
+    ],
+    "tools_techniques_types": [
+      {
+        "key": "manage",
+        "lookup_key": "tool_types_manage",
+        "value": "Manage and/or allocate money or resources"
+      },
+      {
+        "key": "collect",
+        "lookup_key": "tool_types_collect",
+        "value": "Collect, analyse and/or solicit feedback"
+      },
+    ],
     "legality": {
-      "key": "",
-      "lookup_key": "",
-      "value": ""
+      "key": "yes",
+      "lookup_key": "yes",
+      "value": "Yes"
     },
     "facilitators": {
       "key": "yes",
@@ -135,17 +220,39 @@
       "value": "Yes"
     },
     "facilitator_training": {
-      "key": "",
-      "lookup_key": "",
-      "value": ""
+      "key": "professional",
+      "lookup_key": "facilitator_training_professional",
+      "value": "Professional Facilitators"
     },
     "facetoface_online_or_both": {
       "key": "facetoface",
       "lookup_key": "facetoface_online_or_both_facetoface",
       "value": "Face-to-Face"
     },
-    "participants_interactions": null,
-    "learning_resources": null,
+    "participants_interactions": [
+    {
+      "key": "acting",
+      "lookup_key": "participants_interactions_acting",
+      "value": "Acting, Drama, or Roleplay"
+    },
+    {
+      "key": "ask",
+      "lookup_key": "participants_interactions_ask",
+      "value": "Ask & Answer Questions"
+      },
+    ],
+    "learning_resources": [
+      {
+        "key": "expert",
+        "lookup_key": "learning_resources_expert",
+        "value": "Expert Presentations"
+      },
+      {
+        "key": "participant",
+        "lookup_key": "learning_resources_participant",
+        "value": "Participant Presentations"
+      },
+    ],
     "decision_methods": [
       {
         "key": "opinion",
@@ -153,7 +260,18 @@
         "value": "Opinion Survey"
       }
     ],
-    "if_voting": null,
+    "if_voting": [
+      {
+        "key": "preferential",
+        "lookup_key": "if_voting_preferential",
+        "value": "Preferential Voting"
+      },
+      {
+        "key": "plurality",
+        "lookup_key": "if_voting_plurality",
+        "value": "Plurality"
+      },
+    ],
     "insights_outcomes": [
       {
         "key": "public_hearingsmeetings",
@@ -161,18 +279,90 @@
         "value": "Public Hearings/Meetings"
       }
     ],
-    "primary_organizer": null,
-    "organizer_types": null,
-    "funder": "",
-    "funder_types": null,
-    "staff": null,
-    "volunteers": null,
-    "impact_evidence": "",
-    "change_types": null,
-    "implementers_of_change": null,
-    "formal_evaluation": null,
-    "evaluation_reports": [],
-    "evaluation_links": [],
+    "primary_organizer": {
+      "id": 5191,
+      "title": "The Youth Cafe",
+      "type": "organization",
+    },
+    "organizer_types": [
+      {
+        "key": "academic",
+        "lookup_key": "organizer_types_academic",
+        "value": "Academic Institution"
+      },
+      {
+        "key": "activist",
+        "lookup_key": "organizer_types_activist",
+        "value": "Activist Network"
+      },
+    ],
+    "funder": "Funder Name Here",
+    "funder_types": [
+      {
+        "key": "academic",
+        "lookup_key": "funder_types_academic",
+        "value": "Academic Institution"
+      },
+    ],
+    "staff": {
+      "key": "yes",
+      "lookup_key": "yes",
+      "value": "Yes"
+    },
+    "volunteers": {
+      "key": "yes",
+      "lookup_key": "yes",
+      "value": "Yes"
+    },
+    "impact_evidence": {
+      "key": "yes",
+      "lookup_key": "yes",
+      "value": "Yes"
+    },
+    "change_types": [
+      {
+        "key": "changes",
+        "lookup_key": "change_types_changes",
+        "value": "Changes in people’s knowledge, attitudes, and behavior"
+      },
+      {
+        "key": "changes_civic",
+        "lookup_key": "change_types_changes_civic",
+        "value": "Changes in civic capacities"
+      },
+    ],
+    "implementers_of_change": [
+      {
+        "key": "lay",
+        "lookup_key": "implementers_of_change_lay",
+        "value": "Lay Public"
+      },
+      {
+        "key": "stakeholder",
+        "lookup_key": "implementers_of_change_stakeholder",
+        "value": "Stakeholder Organizations"
+      },
+    ],
+    "formal_evaluation": {
+      "key": "yes",
+      "lookup_key": "yes",
+      "value": "Yes"
+    },
+    "evaluation_files": [
+      {
+        "url": "https://s3.amazonaws.com/uploads.participedia.xyz/NRP-MinniapolisNeighborhoods1.jpg",
+        "source_url": "sourceurl.com",
+        "attribution": "this is the attribution text",
+        "title": "this is a title"
+      }
+    ],
+    "evaluation_links": [
+      {
+        "source_url": "sourceurl.com",
+        "attribution": "this is the attribution text",
+        "title": "this is a title"
+      }
+    ],
     "bookmarked": false,
     "creator": {
       "user_id": 14,
