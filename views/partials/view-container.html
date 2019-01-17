@@ -1,0 +1,23 @@
+<div class="reader-view">
+  <aside>
+    <!-- Data and Metadata -->
+    <h2>{{static.data_sectionlabel}}</h2>
+
+    {{> @partial-block }}
+  </aside>
+
+  <article>
+    <hgroup>
+      <h2>{{toUpperCase article.type}}</h2>
+      <h1>{{article.title}}</h1>
+    </hgroup>
+    {{> view-slideshow }}
+    {{> view-authors }}
+    {{{ article.body }}}
+  </article>
+
+  <nav class="reader-view-side-nav">
+    {{> view-socialmedia }}
+    {{> view-editbutton }}
+  </nav>
+</div>

@@ -1,111 +1,91 @@
-<div class="reader-view">
-  <aside>
-    <!-- Data and Metadata -->
-    <h2>{{static.data_sectionlabel}}</h2>
+{{#> view-container }}
+  <!-- Overview -->
+  <section>
+    {{> view-list name="general_issues" }}
+    {{> view-list name="specific_topics" }}
+    {{> view-list name="tags" }}
+  </section>
 
-    <!-- Overview -->
-    <section>
-      {{> view-list name="general_issues" }}
-      {{> view-list name="specific_topics" }}
-      {{> view-list name="tags" }}
-    </section>
+  <!-- Location -->
+  <section>
+    {{> view-location }}
+    {{> view-list name="scope" }}
+  </section>
 
-    <!-- Location -->
-    <section>
-      {{> view-location }}
-      {{> view-list name="scope" }}
-    </section>
+  <!-- Components -->
+  <section>
+    {{> view-article-list name="has_components" }}
+    {{> view-article-list name="is_component_of" }}
+  </section>
 
-    <!-- Components -->
-    <section>
-      {{> view-article-list name="has_components" }}
-      {{> view-article-list name="is_component_of" }}
-    </section>
+  <!-- Media -->
+  <section>
+    {{> view-media-list name="files" }}
+    {{> view-media-list name="links" }}
+    {{> view-media-list name="videos" }}
+    {{> view-media-list name="audio" }}
+  </section>
 
-    <!-- Media -->
-    <section>
-      {{> view-media-list name="files" }}
-      {{> view-media-list name="links" }}
-      {{> view-media-list name="videos" }}
-      {{> view-media-list name="audio" }}
-    </section>
+  <!-- Date & Duration -->
+  <section>
+    {{> view-date name="start_date" }}
+    {{> view-date name="end_date" }}
+    {{> view-boolean name="ongoing" }}
+    {{> view-list name="time_limited" }}
+  </section>
 
-    <!-- Date & Duration -->
-    <section>
-      {{> view-date name="start_date" }}
-      {{> view-date name="end_date" }}
-      {{> view-boolean name="ongoing" }}
-      {{> view-list name="time_limited" }}
-    </section>
+  <!-- Purpose & Approach -->
+  <section>
+    {{> view-list name="purposes" }}
+    {{> view-list name="approaches" }}
+    {{> view-list name="public_spectrum" }}
+  </section>
 
-    <!-- Purpose & Approach -->
-    <section>
-      {{> view-list name="purposes" }}
-      {{> view-list name="approaches" }}
-      {{> view-list name="public_spectrum" }}
-    </section>
+  <!-- Participants -->
+  <section>
+    {{> view-text name="number_participants" }}
+    {{> view-text name="open_limited" }}
+    {{> view-text name="recruitment_method" }}
+    {{> view-list name="targeted_participants" }}
+  </section>
 
-    <!-- Participants -->
-    <section>
-      {{> view-text name="number_participants" }}
-      {{> view-text name="open_limited" }}
-      {{> view-text name="recruitment_method" }}
-      {{> view-list name="targeted_participants" }}
-    </section>
+  <!-- Process -->
+  <section>
+    {{> view-list name="types_of_methods" }}
+    {{> view-list name="types_of_tools_techniques" }}
+    {{> view-text name="specific_tools" }}
+    {{> view-text name="legality" }}
+    {{> view-text name="facilitators" }}
+    {{> view-text name="facilitator_training" }}
+    {{> view-text name="facetoface_online_or_both" }}
+    {{> view-list name="participants_interactions" }}
+    {{> view-list name="learning_resources" }}
+    {{> view-list name="decision_methods" }}
+    {{> view-list name="if_voting" }}
+    {{> view-list name="insights_outcomes" }}
+  </section>
 
-    <!-- Process -->
-    <section>
-      {{> view-list name="types_of_methods" }}
-      {{> view-list name="types_of_tools_techniques" }}
-      {{> view-text name="specific_tools" }}
-      {{> view-text name="legality" }}
-      {{> view-text name="facilitators" }}
-      {{> view-text name="facilitator_training" }}
-      {{> view-text name="facetoface_online_or_both" }}
-      {{> view-list name="participants_interactions" }}
-      {{> view-list name="learning_resources" }}
-      {{> view-list name="decision_methods" }}
-      {{> view-list name="if_voting" }}
-      {{> view-list name="insights_outcomes" }}
-    </section>
+  <!-- Organizations and Supporters -->
+  <section>
+    {{> view-article-list name="primary_organizer" }}
+    {{> view-list name="organizer_types" }}
+  </section>
 
-    <!-- Organizations and Supporters -->
-    <section>
-      {{> view-article-list name="primary_organizer" }}
-      {{> view-list name="organizer_types" }}
-    </section>
+  <!-- Resources -->
+  <section>
+    {{> view-text name="funder" }}
+    {{> view-list name="funder_type" }}
+    {{> view-boolean name="staff" }}
+    {{> view-boolean name="volunteers" }}
+  </section>
 
-    <!-- Resources -->
-    <section>
-      {{> view-text name="funder" }}
-      {{> view-list name="funder_type" }}
-      {{> view-boolean name="staff" }}
-      {{> view-boolean name="volunteers" }}
-    </section>
-
-    <!-- Evidence of Impact -->
-    <section>
-      {{> view-list name="impact_evidence" }}
-      {{> view-list name="change_types" }}
-      {{> view-list name="implementers_of_change" }}
-      {{> view-list name="formal_evaluation" }}
-      {{> view-media-list name="evaluation_files" }}
-      {{> view-media-list name="evaluation_links" }}
-    </section>
-  </aside>
-
-  <article>
-    <hgroup>
-      <h2>{{toUpperCase article.type}}</h2>
-      <h1>{{article.title}}</h1>
-    </hgroup>
-    {{> view-slideshow }}
-    {{> view-authors }}
-    {{{ article.body }}}
-  </article>
-
-  <nav class="reader-view-side-nav">
-    {{> view-socialmedia }}
-    {{> view-editbutton }}
-  </nav>
-</div>
+  <!-- Evidence of Impact -->
+  <section>
+    {{> view-list name="impact_evidence" }}
+    {{> view-list name="change_types" }}
+    {{> view-list name="implementers_of_change" }}
+    {{> view-list name="formal_evaluation" }}
+    {{> view-media-list name="evaluation_files" }}
+    {{> view-media-list name="evaluation_links" }}
+  </section>
+{{/view-container}}
