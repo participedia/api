@@ -9,6 +9,7 @@ import editWarning from './edit-warning.js';
 import contactHelpFaqWidget from "./contact-help-faq-widget.js";
 import editSubmissionDetails from "./edit-submission-details.js";
 import editTextarea from './edit-textarea.js';
+import editForm from "./edit-form.js"
 import imageCarousel from "./image-carousel.js";
 import viewSocialMedia from "./view-socialmedia.js";
 
@@ -30,6 +31,7 @@ if (viewType === "edit") {
   editWarning.init();
   editSubmissionDetails.init();
   editTextarea.init();
+  editForm.init();
 }
 
 if (viewType === "view") {
