@@ -11,15 +11,17 @@
 
 .reader-view article {
   width: 46%;
-  margin-right: 30px;
+  margin-right: 27%;
+  display: flex;
+  flex-direction: column;
+}
+
+.reader-view article .case-data-accordion {
+  display: none;
 }
 
 .reader-view article a {
   overflow-wrap: break-word;
-}
-
-.reader-view nav {
-  width: 27%;
 }
 
 .reader-view dt {
@@ -30,6 +32,18 @@
   margin-left: 0;
   padding-left: 1em;
   text-indent: -1em;
+}
+
+.reader-view .social-links {
+  order: -1;
+  width: 30px;
+  position: absolute;
+  margin-left: 46%;
+  text-align: center;
+}
+
+.reader-view .body-content {
+  word-break: break-word;
 }
 
 /* bookmark link */
@@ -47,4 +61,55 @@
 
 .reader-view .bookmark-link[data-bookmarked='true'] .icon-fill:first-of-type {
   fill: #808080;
+}
+
+/* accordion */
+.accordion-header {
+  border-top: 1px solid #e6e6e6;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.accordion[data-accordion=closed] .accordion-body {
+  display: none;
+}
+
+.accordion[data-accordion=open] .accordion-body {
+  display: block;
+}
+
+.accordion[data-accordion=closed] button {
+  transform: rotate(0);
+}
+
+.accordion[data-accordion=open] button {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 850px) {
+  .reader-view .social-links {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    position: relative;
+    margin-left: 0;
+    order: 0;
+  }
+  .reader-view .social-links li {
+    margin-right: 8px;
+  }
+
+  .reader-view article {
+    width: 100%;
+    margin: 0 30px;
+  }
+
+  .reader-view article .case-data-accordion {
+    display: block;
+  }
+
+  .reader-view aside {
+    display: none;
+  }
 }

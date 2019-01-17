@@ -12,6 +12,7 @@ import editTextarea from './edit-textarea.js';
 import editForm from "./edit-form.js"
 import imageCarousel from "./image-carousel.js";
 import viewSocialMedia from "./view-socialmedia.js";
+import accordion from "./accordion.js";
 
 // polyfills
 elementClosestPolyfill();
@@ -37,4 +38,5 @@ if (viewType === "edit") {
 if (viewType === "view") {
   imageCarousel.init();
   viewSocialMedia.init();
+  accordion.init();
 }
