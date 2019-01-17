@@ -1,6 +1,6 @@
 import Flickity from "flickity-as-nav-for";
 
-const imageCarousel = {
+const viewSlideshow = {
   init() {
     const commonOptions = {
       imagesLoaded: true,
@@ -18,4 +18,4 @@ const imageCarousel = {
   },
 }
 
-export default imageCarousel;
+export default viewSlideshow;

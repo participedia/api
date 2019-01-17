@@ -154,7 +154,8 @@ module.exports = {
     return article.photos && article.photos.length > 0;
   },
   getFirstPhotoUrl(article) {
-    if (article.photos < 1) return;
+    if (!article.photos) return;
+    if (article.photos.length === 0) return;
     return article.photos[0].url;
   },
   currentUrl(req) {

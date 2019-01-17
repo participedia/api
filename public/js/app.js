@@ -9,7 +9,7 @@ import editWarning from './edit-warning.js';
 import contactHelpFaqWidget from "./contact-help-faq-widget.js";
 import editSubmissionDetails from "./edit-submission-details.js";
 import editTextarea from './edit-textarea.js';
-import imageCarousel from "./image-carousel.js";
+import viewSlideshow from "./view-slideshow.js";
 import viewSocialMedia from "./view-socialmedia.js";
 import accordion from "./accordion.js";
 
@@ -34,7 +34,7 @@ if (viewType === "edit") {
 }
 
 if (viewType === "view") {
-  imageCarousel.init();
+  viewSlideshow.init();
   viewSocialMedia.init();
   accordion.init();
 }
