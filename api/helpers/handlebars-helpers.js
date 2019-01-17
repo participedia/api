@@ -1,5 +1,6 @@
 const moment = require("moment");
 const faqContent = require("./faq-content.js");
+const socialTagsTemplate = require("./social-tags-template.js");
 
 function mapIdTitleToKeyValue(options) {
   if (!options) return null;
@@ -26,6 +27,18 @@ function staticTextValue(staticText, name, type = null) {
     // since the format is different from the edit view
     return staticText[key] || key;
   }
+}
+
+function currentUrl(req) {
+  const path = req.originalUrl;
+  const host = req.headers.host;
+  return `https://${host}${path}`;
+}
+
+function getFirstPhotoUrl(article) {
+  if (!article.photos) return;
+  if (article.photos.length === 0) return;
+  return article.photos[0].url;
 }
 
 module.exports = {
@@ -139,9 +152,7 @@ module.exports = {
     return text.toUpperCase();
   },
   shareLink(type, req) {
-    const path = req.originalUrl;
-    const host = req.headers.host;
-    const url = `https://${host}${path}`;
+    const url = currentUrl(req);
 
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
@@ -154,16 +165,22 @@ module.exports = {
     return article.photos && article.photos.length > 0;
   },
   getFirstPhotoUrl(article) {
-    if (!article.photos) return;
-    if (article.photos.length === 0) return;
-    return article.photos[0].url;
+    return getFirstPhotoUrl(article);
   },
   currentUrl(req) {
-    const path = req.originalUrl;
-    const host = req.headers.host;
-    return `https://${host}${path}`;
+    return currentUrl(req);
   },
   isReaderPage(params) {
     return params.view === "view";
   },
+  socialTagsTemplate(article, req) {
+    if (!article) return;
+
+    const url = currentUrl(req);
+    const title = article.title;
+    const description = article.description;
+    const imageUrl = getFirstPhotoUrl(article);
+
+    return socialTagsTemplate(title, description, url, imageUrl);
+  }
 };

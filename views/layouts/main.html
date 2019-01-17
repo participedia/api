@@ -8,12 +8,7 @@
   <link rel="stylesheet" href="/css/style.css">
 
   {{#if (isReaderPage params)}}
-    <meta property="og:title" content="Particpedia: {{article.title}}" />
-    <meta property="og:description" content="{{article.description}}" />
-    <meta property="og:url" content="{{currentUrl req}}" />
-    {{#if (hasPhoto article)}}
-      <meta property="og:image" content="{{getFirstPhotoUrl article}}" />
-    {{/if}}
+    {{{socialTagsTemplate article req}}}
   {{/if}}
 
   <title>Participedia</title>
