@@ -163,4 +163,7 @@ module.exports = {
     const host = req.headers.host;
     return `https://${host}${path}`;
   },
+  isReaderPage(params) {
+    return params.view === "view";
+  },
 };

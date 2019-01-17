@@ -7,7 +7,7 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/style.css">
 
-  {{#if article.title}}
+  {{#if (isReaderPage params)}}
     <meta property="og:title" content="Particpedia: {{article.title}}" />
     <meta property="og:description" content="{{article.description}}" />
     <meta property="og:url" content="{{currentUrl req}}" />
