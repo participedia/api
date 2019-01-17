@@ -13,19 +13,20 @@
     <!-- Location -->
     <section>
       {{> view-location }}
-      {{> view-text name="scope" }}
+      {{> view-list name="scope" }}
     </section>
 
     <!-- Components -->
     <section>
-      {{> view-reference-list name="has_components" }}
-      {{> view-reference name="is_component_of" }}
+      {{> view-article-list name="has_components" }}
+      {{> view-article-list name="is_component_of" }}
     </section>
 
     <!-- Media -->
     <section>
-      {{> view-media-list name="links" }}
       {{> view-media-list name="files" }}
+      {{> view-media-list name="links" }}
+      {{> view-media-list name="videos" }}
       {{> view-media-list name="audio" }}
     </section>
 
@@ -34,22 +35,22 @@
       {{> view-date name="start_date" }}
       {{> view-date name="end_date" }}
       {{> view-boolean name="ongoing" }}
-      {{> view-boolean name="time_limited" }}
+      {{> view-list name="time_limited" }}
     </section>
 
     <!-- Purpose & Approach -->
     <section>
-      {{> view-list name="purpose" }}
-      {{> view-list name="approach" }}
-      {{> view-text name="public_spectrum" }}
+      {{> view-list name="purposes" }}
+      {{> view-list name="approaches" }}
+      {{> view-list name="public_spectrum" }}
     </section>
 
     <!-- Participants -->
     <section>
-      {{> view-number name="number_participants" }}
+      {{> view-text name="number_participants" }}
       {{> view-text name="open_limited" }}
       {{> view-text name="recruitment_method" }}
-      {{> view-text name="targeted_participants" }}
+      {{> view-list name="targeted_participants" }}
     </section>
 
     <!-- Process -->
@@ -70,14 +71,14 @@
 
     <!-- Organizations and Supporters -->
     <section>
-      {{> view-text name="primary_organizer" }}
+      {{> view-article-list name="primary_organizer" }}
       {{> view-list name="organizer_types" }}
     </section>
 
     <!-- Resources -->
     <section>
       {{> view-text name="funder" }}
-      {{> view-text name="type_of_funder" }}
+      {{> view-list name="funder_type" }}
       {{> view-boolean name="staff" }}
       {{> view-boolean name="volunteers" }}
     </section>
@@ -88,22 +89,21 @@
       {{> view-list name="change_types" }}
       {{> view-list name="implementers_of_change" }}
       {{> view-list name="formal_evaluation" }}
-      {{> view-link-list name="evaluation_report_documents" }}
-      {{> view-link-list name="evaluation_report_links" }}
+      {{> view-media-list name="evaluation_files" }}
+      {{> view-media-list name="evaluation_links" }}
     </section>
-
   </aside>
+
   <article>
-    <!-- Body of the article, description, body, images, etc. -->
     <hgroup>
       <h2>{{toUpperCase article.type}}</h2>
       <h1>{{article.title}}</h1>
     </hgroup>
     {{> view-slideshow }}
     {{> view-authors }}
-    {{ article.description }}
     {{{ article.body }}}
   </article>
+
   <nav class="reader-view-side-nav">
     {{> view-socialmedia }}
     {{> view-editbutton }}

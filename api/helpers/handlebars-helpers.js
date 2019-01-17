@@ -39,6 +39,10 @@ module.exports = {
       return value.length === 0;
     }
   },
+  isArray: (article, name) => {
+    const value = article[name];
+    return value && value.constructor === Array;
+  },
   getvalue: (article, name) => {
     const item = article[name];
     if (item && item.hasOwnProperty("value")) {
@@ -67,6 +71,9 @@ module.exports = {
     if (article[name]) {
       return  article[name].key;
     }
+  },
+  getArticleKey: (article, name, key) => {
+    return article[name] && article[name][key];
   },
   isSelectedInArray: (article, name, optionKey) => {
     const options = article[name];
