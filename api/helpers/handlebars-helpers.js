@@ -171,7 +171,7 @@ module.exports = {
     return currentUrl(req);
   },
   isReaderPage(params) {
-    return params.view === "view";
+    return params && params.view === "view";
   },
   socialTagsTemplate(article, req) {
     if (!article) return;
@@ -182,5 +182,13 @@ module.exports = {
     const imageUrl = getFirstPhotoUrl(article);
 
     return socialTagsTemplate(title, description, url, imageUrl);
-  }
+  },
+  getCasesFromResults(results) {
+    console.log(results);
+    return results.filter(r => r.type === "case");
+  },
+  truncateText(text) {
+    // 71 chars
+    return text;
+  },
 };

@@ -1,10 +1,18 @@
 <div>
-{{> tabnav }}
-{{> pagecount }}
-<section>
-  {{#each results }}
-    {{> search-grid-card }}
-  {{/each}}
-</section>
-{{> pagecount }}
+  {{> map }}
+  <!-- {{> tabnav }} -->
+  {{> pagecount }}
+  <section>
+    <!--
+      {{#each (getCasesFromResults results)}}
+        <p>{{type}}</p>
+      {{/each}}
+    -->
+    <ul class="unstyled-list cards-container">
+      {{#each results }}
+        {{> search-grid-card }}
+      {{/each}}
+    </ul>
+  </section>
+  {{> pagecount }}
 </div>

@@ -1,0 +1,81 @@
+.cards-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.article-card {
+  width: 280px;
+  height: 400px;
+  margin-right: 30px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.article-card img {
+  border: 1px solid #e6e6e6;
+}
+
+.article-card a {
+  text-decoration: none;
+}
+
+.article-card-meta {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.article-card-meta h5 {
+  margin: 0;
+}
+
+.article-card-meta button {
+  padding: 0;
+}
+
+/* styles for '...' */
+.article-card-title {
+  /* hide text if it more than N lines  */
+  overflow: hidden;
+  /* for set '...' in absolute position */
+  position: relative;
+  /* use this value to count block height */
+  line-height: 1.2em;
+  /* max-height = line-height (1.2) * lines max number (3) */
+  max-height: 3.6em;
+  /* fix problem when last visible word doesn't adjoin right side  */
+  text-align: justify;
+  /* place for '...' */
+  margin-right: -1em;
+  padding-right: 1em;
+}
+/* create the ... */
+.article-card-title:before {
+  /* points in the end */
+  content: '...';
+  /* absolute position */
+  position: absolute;
+  /* set position to right bottom corner of block */
+  right: 0;
+  bottom: 0;
+}
+/* hide ... if we have text, which is less than or equal to max lines */
+.article-card-title:after {
+  /* points in the end */
+  content: '';
+  /* absolute position */
+  position: absolute;
+  /* set position to right bottom corner of text */
+  right: 0;
+  /* set width and height */
+  width: 1em;
+  height: 1em;
+  margin-top: 0.2em;
+  /* bg color = bg color under block */
+  background: white;
+}
+
+

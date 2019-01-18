@@ -1,15 +1,18 @@
-<a href="/{{type}}/{{id}}">
-  <article class="card">
-    <img src="{{lookup images 0}}" alt="article main image" />
-    <button type="button" class="bookmark">
-      {{#if bookmarked }}
-        <img width="32px" src="/images/bookmark-ribbon.png" alt="bookmarked" />
-      {{else}}
-        <img width="32px" src="/images/bookmark-outline.png" alt="not bookmarked" />
-     {{/if}}
-    </button>
-    <h2>{{type}}</h2>
-    <h1>{{this.title}}</h1>
-    {{> view-date }}
-  </article>
-</a>
+<li class="article-card">
+  <a href="/{{type}}/{{id}}">
+    <img src="{{lookup images 0}}" alt="article main image" width="280" height="200" />
+    <div class="article-card-meta">
+      <h5>{{toUpperCase type}}</h5>
+      <button type="button" class="icon-only">
+        {{#if bookmarked }}
+          {{> icon-bookmark-filled}}
+        {{else}}
+          {{> icon-bookmark}}
+        {{/if}}
+      </button>
+    </div>
+
+    <h3 class="article-card-title">{{title}}</h3>
+    <p>Submitted {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
+  </a>
+</li>
