@@ -183,10 +183,6 @@ module.exports = {
 
     return socialTagsTemplate(title, description, url, imageUrl);
   },
-  getCasesFromResults(results) {
-    console.log(results);
-    return results.filter(r => r.type === "case");
-  },
   truncateText(text) {
     if (text.length > 70) {
       return text.split('').splice(0, 71).join("") + "...";

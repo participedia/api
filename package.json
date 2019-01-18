@@ -12,6 +12,7 @@
     "node": "11.2.0"
   },
   "dependencies": {
+    "@github/tab-container-element": "0.0.2",
     "apicache": "^1.1.1",
     "async": "^2.3.0",
     "autocompleter": "^4.0.2",

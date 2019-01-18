@@ -12,6 +12,7 @@ import editTextarea from './edit-textarea.js';
 import viewSlideshow from "./view-slideshow.js";
 import viewSocialMedia from "./view-socialmedia.js";
 import accordion from "./accordion.js";
+import homeSearch from "./home-search.js";
 
 // polyfills
 elementClosestPolyfill();

@@ -1,3 +1,17 @@
+.home-search .content {
+  margin: 30px;
+}
+
+.home-search .tagline {
+  width: 75%;
+}
+
+.map-container {
+  margin-top: -30px;
+  height: 300px;
+  background-color: #e6e6e6;
+}
+
 .cards-container {
   display: flex;
   flex-direction: row;
@@ -13,7 +27,7 @@
 }
 
 .article-card img {
-  border: 1px solid #e6e6e6;
+  display: block;
 }
 
 .article-card a {
@@ -39,3 +53,23 @@
 .article-card-title {
   height: 5.1rem;
 }
+
+tab-container {
+  display: block;
+}
+
+tab-container .tab-button-list {
+  border-bottom: 1px solid #ccc;
+}
+
+tab-container .tab-button-list  button {
+  padding: .5rem;
+  border: 0;
+  background-color: transparent;
+}
+
+tab-container .tab-button-list  button:hover,
+tab-container .tab-button-list  button[aria-selected="true"] {
+  border-bottom: 2px solid #ec2024;
+}
+
