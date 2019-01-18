@@ -188,7 +188,11 @@ module.exports = {
     return results.filter(r => r.type === "case");
   },
   truncateText(text) {
-    // 71 chars
-    return text;
+    if (text.length > 70) {
+      return text.split('').splice(0, 71).join("") + "...";
+    } else {
+      return text;
+    }
+
   },
 };
