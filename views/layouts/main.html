@@ -6,11 +6,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/style.css">
+
+  {{#if (isReaderPage params)}}
+    {{{socialTagsTemplate article req}}}
+  {{/if}}
+
   <title>Participedia</title>
 </head>
 {{> modal }}
 
-<body>
+<body data-view="{{params.view}}">
   {{> header }}
   <main class="main-content">
     {{{ body }}}

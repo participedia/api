@@ -47,22 +47,6 @@
   display: block;
 }
 
-.edit-form-author-info {
-  margin-bottom: 30px;
-}
-
-.edit-form-author-info h4 {
-  font-weight: 300;
-}
-
-.edit-form-author-info h4:first-child {
-  margin-bottom: 15px;
-}
-
-.edit-form-author-info time {
-  display: block;
-}
-
 .edit-buttons {
   display: flex;
   justify-content: flex-start;

@@ -1,5 +1,6 @@
 const moment = require("moment");
 const faqContent = require("./faq-content.js");
+const socialTagsTemplate = require("./social-tags-template.js");
 
 function mapIdTitleToKeyValue(options) {
   if (!options) return null;
@@ -19,7 +20,25 @@ function staticTextValue(staticText, name, type = null) {
     key = name;
   }
 
-  return staticText.labels[key];
+  if (staticText.labels) {
+    return staticText.labels[key] || key;
+  } else {
+    // this makes the static keys work on the reader view for now
+    // since the format is different from the edit view
+    return staticText[key] || key;
+  }
+}
+
+function currentUrl(req) {
+  const path = req.originalUrl;
+  const host = req.headers.host;
+  return `https://${host}${path}`;
+}
+
+function getFirstPhotoUrl(article) {
+  if (!article.photos) return;
+  if (article.photos.length === 0) return;
+  return article.photos[0].url;
 }
 
 module.exports = {
@@ -33,6 +52,10 @@ module.exports = {
     if (value && value.constructor === Array) {
       return value.length === 0;
     }
+  },
+  isArray: (article, name) => {
+    const value = article[name];
+    return value && value.constructor === Array;
   },
   getvalue: (article, name) => {
     const item = article[name];
@@ -62,6 +85,9 @@ module.exports = {
     if (article[name]) {
       return  article[name].key;
     }
+  },
+  getArticleKey: (article, name, key) => {
+    return article[name] && article[name][key];
   },
   isSelectedInArray: (article, name, optionKey) => {
     const options = article[name];
@@ -122,4 +148,39 @@ module.exports = {
     // todo: get this as translated text from the server
     return faqContent;
   },
+  toUpperCase(text) {
+    return text.toUpperCase();
+  },
+  shareLink(type, req) {
+    const url = currentUrl(req);
+
+    const shareUrls = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      twitter: `https://twitter.com/home?status=${url}`,
+      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
+    };
+    return shareUrls[type];
+  },
+  hasPhoto(article) {
+    return article.photos && article.photos.length > 0;
+  },
+  getFirstPhotoUrl(article) {
+    return getFirstPhotoUrl(article);
+  },
+  currentUrl(req) {
+    return currentUrl(req);
+  },
+  isReaderPage(params) {
+    return params.view === "view";
+  },
+  socialTagsTemplate(article, req) {
+    if (!article) return;
+
+    const url = currentUrl(req);
+    const title = article.title;
+    const description = article.description;
+    const imageUrl = getFirstPhotoUrl(article);
+
+    return socialTagsTemplate(title, description, url, imageUrl);
+  }
 };

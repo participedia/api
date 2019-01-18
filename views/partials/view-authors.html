@@ -1,16 +1,18 @@
-<div class="authors">
-  {{#with article.creator }}
-  <p>
-    <strong>{{../static.first_submitted_label}}</strong>
-    <a href="/users/{{id}}">{{name}}</a><br />
-    <time datetime="{{timestamp}}">{{timestamp}}</time>
-  </p>
-  {{/with}}
-  {{#with article.last_updated_by}}
-  <p>
-    <strong>{{../static.most_recent_label}}</strong>
-    <a href="/users/{{id}}">{{name}}</a><br />
-    <time datetime="{{timestamp}}">{{timestamp}}</time>
-  </p>
-  {{/with}}
+<div class="author-info">
+  <h4>
+    <strong>First Submitted By</strong>
+    <a href="/users/{{article.creator.user_id}}">{{article.creator.name}}</a>
+    <time datetime="{{article.post_date}}">
+      {{formatDate article post_date 'LL'}}
+    </time>
+  </h4>
+  <h4>
+    <strong>Most Recent Changes By</strong>
+    <a href="/users/{{article.last_updated_by.user_id}}">
+      {{article.last_updated_by.name}}
+    </a>
+    <time datetime="{{article.updated_date}}">
+      {{formatDate article updated_date 'LL'}}
+    </time>
+  </h4>
 </div>
