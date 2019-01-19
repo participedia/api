@@ -1,8 +1,8 @@
-{{#> case-edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
+{{#> edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
   <input
     type="checkbox"
     name="{{name}}"
     value="{{getvalue article name}}"
     {{#if (getvalue article name)}}checked{{/if}}
   />
-{{/ case-edit-form-group}}
+{{/ edit-form-group}}

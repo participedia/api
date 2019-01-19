@@ -1,116 +1,86 @@
-<article
-  class="edit-form"
-  data-submit-type="{{getCaseEditSubmitType req}}"
->
-  <form
-    action="/case/{{article.id}}/edit"
-    method="post"
-    enctype="multipart/form-data"
-    class="js-edit-form"
-  >
-    <!-- todo: pass in user id from server once it's added to the json -->
-    <input type="hidden" name="user" value="14" />
-
-    <div class="edit-form-author-info">
-      {{> edit-submission-details }}
-    </div>
-    <fieldset class="overview">
-      <h2 class="fieldset-header">{{staticText static "overview_sectionlabel"}}</h2>
-
-      <h2 class="fieldset-header quickonly">{{staticText static "quick_submit_sectionlabel"}}</h2>
-
-      {{> edit-text name="title" is_required=true quick-submit=true}}
-      {{> edit-multi-select ranked=true name="general_issues" quick-submit=true max=3 }}
-      {{> edit-multi-select ranked=true name="specific_topics" max=3 }}
-      {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
-      {{> edit-richtext name="body" }}
-      {{> edit-multi-select name="tags" }}
-    </fieldset>
-    <fieldset class="location">
-      <h2 class="fieldset-header">{{staticText static "location_sectionlabel"}}</h2>
-      {{> edit-location quick-submit=true}}
-      {{> edit-select name="scope" }}
-    </fieldset>
-    <fieldset class="components fullonly">
-      <h2 class="fieldset-header">{{staticText static "components_sectionlabel"}}</h2>
-      {{> edit-multi-select name="has_components" }}
-      {{> edit-multi-select name="is_component_of" }}
-    </fieldset>
-    <fieldset class="media">
-      <h2 class="fieldset-header">{{staticText static "media_sectionlabel"}}</h2>
-      {{> edit-link-set name="links" quick-submit=true}}
-      {{> edit-media name="files_upload" quick-submit=true}}
-      {{> edit-media name="photos_upload" type="image" quick-submit=true}}
-      {{> edit-link-set name="videos" quick-submit=true}}
-      {{> edit-link-set name="audio" quick-submit=true}}
-    </fieldset>
-    <fieldset class="date_and_duration">
-      <h2 class="fieldset-header">{{staticText static "date_sectionlabel"}}</h2>
-      {{> edit-date name="start_date" quick-submit=true}}
-      {{> edit-date name="end_date" quick-submit=true}}
-      {{> edit-boolean name="ongoing" quick-submit=true}}
-      {{> edit-select name="time_limited" }}
-    </fieldset>
-    <fieldset class="purpose_and_approach fullonly">
-      <h2 class="fieldset-header">{{staticText static "purpose_sectionlabel"}}</h2>
-      {{> edit-multi-select ranked=true name="purposes" max=3 }}
-      {{> edit-multi-select ranked=true name="approaches" max=3 }}
-      {{> edit-select name="public_spectrum" }}
-    </fieldset>
-    <fieldset class="participants fullonly">
-      <h2 class="fieldset-header">{{staticText static "participants_sectionlabel"}}</h2>
-      {{> edit-number name="number_of_participants" }}
-      {{> edit-select name="open_limited" }}
-      {{> edit-select name="recruitment_method" }}
-      {{> edit-multi-select name="targeted_participants" max=3 }}
-    </fieldset>
-    <fieldset class="process fullonly">
-      <h2 class="fieldset-header">{{staticText static "process_sectionlabel"}}</h2>
-      {{> edit-multi-select ranked=true name="method_types" max=3 }}
-      {{> edit-multi-select ranked=true name="tools_techniques_types" max=3 }}
-      {{> edit-multi-select name="specific_methods_tools_techniques" }}
-      {{> edit-select name="legality" }}
-      {{> edit-select name="facilitators" }}
-      {{> edit-select name="facilitator_training" }}
-      {{> edit-select name="facetoface_online_or_both" }}
-      {{> edit-multi-select ranked=true name="participants_interactions" max=3 }}
-      {{> edit-multi-select name="learning_resources" }}
-      {{> edit-multi-select name="decision_methods" }}
-      {{> edit-multi-select name="if_voting" }}
-      {{> edit-multi-select name="insights_outcomes" max=3 }}
-    </fieldset>
-    <fieldset class="organizations_and_supporters fullonly">
-      <h2 class="fieldset-header">{{staticText static "organizers_sectionlabel"}}</h2>
-      {{> edit-select name="primary_organizer" }} <!-- missing organizations in static json -->
-      {{> edit-multi-select name="organizer_types" max=3 }}
-    </fieldset>
-    <fieldset class="resources fullonly">
-      <h2 class="fieldset-header">{{staticText static "resources_sectionlabel"}}</h2>
-      {{> edit-text name="funder" }}
-      {{> edit-multi-select name="funder_types" max=3 }}
-      {{> edit-select name="staff" }}
-      {{> edit-select name="volunteers" }}
-    </fieldset>
-    <fieldset class="evidence_of_impact fullonly">
-      <h2 class="fieldset-header">{{staticText static "evidence_sectionlabel"}}</h2>
-      {{> edit-select name="impact_evidence" }}
-      {{> edit-multi-select ranked=true name="change_types" max=5 }}
-      {{> edit-multi-select ranked=true name="implementers_of_change" max=3 }}
-      {{> edit-select name="formal_evaluation" }}
-      {{> edit-media name="evaluation_file" }}
-      {{> edit-link-set name="evaluation_link" }}
-    </fieldset>
-    <div class="edit-buttons">
-      <button type="submit" class="button button-light-grey">
-        {{> icon-submit }} Publish
-      </button>
-
-      <button type="submit" class="button button-red floating-action-button" title="Publish">
-        {{> icon-submit }}
-      </button>
-
-      <a href="?full=1" class="button button-dark-grey quickonly">Do Full Version</a>
-    </div>
-
-  </form>
-</article>
+{{#> edit-form formType="case"}}
+  <fieldset class="overview">
+    <h2 class="fieldset-header">{{staticText static "overview_sectionlabel"}}</h2>
+    <h2 class="fieldset-header quickonly">{{staticText static "quick_submit_sectionlabel"}}</h2>
+    {{> edit-text name="title" is_required=true quick-submit=true}}
+    {{> edit-multi-select ranked=true name="general_issues" quick-submit=true max=3 }}
+    {{> edit-multi-select ranked=true name="specific_topics" max=3 }}
+    {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
+    {{> edit-richtext name="body" }}
+    {{> edit-multi-select name="tags" }}
+  </fieldset>
+  <fieldset class="location">
+    <h2 class="fieldset-header">{{staticText static "location_sectionlabel"}}</h2>
+    {{> edit-location quick-submit=true}}
+    {{> edit-select name="scope" }}
+  </fieldset>
+  <fieldset class="components fullonly">
+    <h2 class="fieldset-header">{{staticText static "components_sectionlabel"}}</h2>
+    {{> edit-multi-select name="has_components" }}
+    {{> edit-multi-select name="is_component_of" }}
+  </fieldset>
+  <fieldset class="media">
+    <h2 class="fieldset-header">{{staticText static "media_sectionlabel"}}</h2>
+    {{> edit-link-set name="links" quick-submit=true}}
+    {{> edit-media name="files" quick-submit=true}}
+    {{> edit-media name="photos" type="image" quick-submit=true}}
+    {{> edit-link-set name="videos" quick-submit=true}}
+    {{> edit-link-set name="audio" quick-submit=true}}
+  </fieldset>
+  <fieldset class="date_and_duration">
+    <h2 class="fieldset-header">{{staticText static "date_sectionlabel"}}</h2>
+    {{> edit-date name="start_date" quick-submit=true}}
+    {{> edit-date name="end_date" quick-submit=true}}
+    {{> edit-boolean name="ongoing" quick-submit=true}}
+    {{> edit-select name="time_limited" }}
+  </fieldset>
+  <fieldset class="purpose_and_approach fullonly">
+    <h2 class="fieldset-header">{{staticText static "purpose_sectionlabel"}}</h2>
+    {{> edit-multi-select ranked=true name="purposes" max=3 }}
+    {{> edit-multi-select ranked=true name="approaches" max=3 }}
+    {{> edit-select name="public_spectrum" }}
+  </fieldset>
+  <fieldset class="participants fullonly">
+    <h2 class="fieldset-header">{{staticText static "participants_sectionlabel"}}</h2>
+    {{> edit-number name="number_of_participants" }}
+    {{> edit-select name="open_or_limited" }}
+    {{> edit-select name="recruitment_method" }}
+    {{> edit-multi-select name="targeted_participants" max=3 }}
+  </fieldset>
+  <fieldset class="process fullonly">
+    <h2 class="fieldset-header">{{staticText static "process_sectionlabel"}}</h2>
+    {{> edit-multi-select ranked=true name="method_types" max=3 }}
+    {{> edit-multi-select ranked=true name="tools_techniques_types" max=3 }}
+    {{> edit-multi-select name="specific_methods_tools_techniques" }}
+    {{> edit-select name="legality" }}
+    {{> edit-select name="facilitators" }}
+    {{> edit-select name="facilitator_training" }}
+    {{> edit-select name="facetoface_online_or_both" }}
+    {{> edit-multi-select ranked=true name="participants_interactions" max=3 }}
+    {{> edit-multi-select name="learning_resources" }}
+    {{> edit-multi-select name="decision_methods" }}
+    {{> edit-multi-select name="if_voting" }}
+    {{> edit-multi-select name="insights_outcomes" max=3 }}
+  </fieldset>
+  <fieldset class="organizations_and_supporters fullonly">
+    <h2 class="fieldset-header">{{staticText static "organizers_sectionlabel"}}</h2>
+    {{> edit-select name="primary_organizer" }} <!-- missing organizations in static json -->
+    {{> edit-multi-select name="organizer_types" max=3 }}
+  </fieldset>
+  <fieldset class="resources fullonly">
+    <h2 class="fieldset-header">{{staticText static "resources_sectionlabel"}}</h2>
+    {{> edit-text name="funder" }}
+    {{> edit-multi-select name="funder_types" max=3 }}
+    {{> edit-select name="staff" }}
+    {{> edit-select name="volunteers" }}
+  </fieldset>
+  <fieldset class="evidence_of_impact fullonly">
+    <h2 class="fieldset-header">{{staticText static "evidence_sectionlabel"}}</h2>
+    {{> edit-select name="impact_evidence" }}
+    {{> edit-multi-select ranked=true name="change_types" max=5 }}
+    {{> edit-multi-select ranked=true name="implementers_of_change" max=3 }}
+    {{> edit-select name="formal_evaluation" }}
+    {{> edit-media name="evaluation_reports" }}
+    {{> edit-link-set name="evaluation_links" }}
+  </fieldset>
+{{/ edit-form}}

@@ -8,6 +8,7 @@ import editLinkSet from './edit-link-set.js';
 import editWarning from './edit-warning.js';
 import contactHelpFaqWidget from "./contact-help-faq-widget.js";
 import editSubmissionDetails from "./edit-submission-details.js";
+import editTextarea from './edit-textarea.js';
 
 // polyfills
 elementClosestPolyfill();
@@ -27,4 +28,5 @@ if (window.location.pathname.indexOf('edit') > 0) {
   editMedia.init();
   editWarning.init();
   editSubmissionDetails.init();
+  editTextarea.init();
 }
