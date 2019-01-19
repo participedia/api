@@ -173,32 +173,5 @@ router.get("/:thingid/edit", async (req, res) => {
   returnByType(res, params, article, staticText, req.user);
 });
 
-/**
- * @api {delete} /case/:caseId Delete a case
- * @apiGroup Cases
- * @apiVersion 0.1.0
- * @apiName deleteCase
- * @apiParam {Number} caseId Case ID
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *        OK: true
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
-
-router.delete("/:thingid", function editCaseById(req, res) {
-  cache.clear();
-  // let caseId = req.swagger.params.caseId.value;
-  // let caseBody = req.body;
-  res.status(200).json(req.body);
-});
 
 module.exports = router;
