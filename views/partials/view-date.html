@@ -1,1 +1,10 @@
-    <p>{{static.updated_date_label}} <time datetime="{{updated_date}}">{{updated_date}}</time></p>
+{{#if (getvalue article name)}}
+<dl>
+  <dt>{{label static name}}</dt>
+  <dd>
+    <time datetime="{{formatDate article name "MMMM M, YYYY"}}">
+      {{formatDate article name "MMMM M, YYYY"}}
+    </time>
+  </dd>
+</dl>
+{{/if}}
