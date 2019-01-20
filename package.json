@@ -77,7 +77,7 @@
     "restorelocal":
       "dropdb \"participedia\"; createdb -E UTF8 \"participedia\"; psql \"participedia\" < ppedia_local.sql",
     "restorestage": "psql -d \"${DATABASE_STAGE_URL}\" -f ppedia_stage.sql",
-    "resetstagedb": "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql",
+    "resetstagedb": "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql; DATABASE_URL=$DATABASE_STAGE_URL node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
     "resettestdb":
       "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js; psql -d \"participedia-test\" -f migrations/all_migrations.sql",
     "resetlocaldb":
