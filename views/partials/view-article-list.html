@@ -1,0 +1,16 @@
+{{#if (getvalue article name) }}
+<dl>
+  <dt>{{label static name}}</dt>
+  {{#if (isArray article name)}}
+    {{#each (getvalue article name) }}
+      <dd><a href="/{{type}}/{{id}}">{{title}}</a></dd>
+    {{/each}}
+  {{else}}
+    <dd>
+      <a href="/{{getArticleKey article name 'type'}}/{{getArticleKey article name 'id'}}">
+        {{getArticleKey article name "title"}}
+      </a>
+    </dd>
+  {{/if}}
+</dl>
+{{/if}}

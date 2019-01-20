@@ -1,0 +1,33 @@
+<div class="reader-view">
+  <aside>
+    <!-- Data and Metadata -->
+    <h2>{{static.data_sectionlabel}}</h2>
+
+    {{> @partial-block }}
+  </aside>
+
+  <article>
+    <hgroup>
+      <h2>{{toUpperCase article.type}}</h2>
+      <h1>{{article.title}}</h1>
+    </hgroup>
+    {{> view-socialmedia }}
+    {{> view-slideshow }}
+    {{> view-authors }}
+
+    <div class="accordion case-data-accordion" data-accordion="closed">
+      <h3 class="accordion-header">
+        Case Data
+        <button class="icon-only">
+          {{> icon-chevron}}
+        </button>
+      </h3>
+      <div class="accordion-body">
+        {{> @partial-block }}
+      </div>
+    </div>
+    <div class="body-content">{{{ article.body }}}</div>
+  </article>
+</div>
+
+{{> view-editbutton }}

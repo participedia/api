@@ -26,6 +26,7 @@
     "express-jwt": "^5.1.0",
     "express-unless": "^0.3.0",
     "faucet": "^0.0.1",
+    "flickity-as-nav-for": "^2.0.1",
     "json-pretty": "^0.0.1",
     "jsonwebtoken": "^7.3.0",
     "jwks-rsa": "^1.1.1",
@@ -73,10 +74,13 @@
     "backupstage": "pg_dump -d \"${DATABASE_STAGE_URL}\" > ppedia_stage.sql",
     "restorelocal": "dropdb \"participedia\"; createdb -E UTF8 \"participedia\"; psql \"participedia\" < ppedia_local.sql",
     "restorestage": "psql -d \"${DATABASE_STAGE_URL}\" -f ppedia_stage.sql",
-    "resetstagedb": "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql",
-    "resettestdb": "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js; psql -d \"participedia-test\" -f migrations/all_migrations.sql",
-    "resetlocaldb": "dropdb \"participedia\"; createdb \"participedia\"; psql -d \"participedia\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
-    "resettestfunctions": "psql -d participedia-test -f migrations/functions.sql",
+    "resetstagedb": "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql; DATABASE_URL=$DATABASE_STAGE_URL node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
+    "resettestdb":
+      "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js; psql -d \"participedia-test\" -f migrations/all_migrations.sql",
+    "resetlocaldb":
+      "dropdb \"participedia\"; createdb \"participedia\"; psql -d \"participedia\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
+    "resettestfunctions":
+      "psql -d participedia-test -f migrations/functions.sql",
     "resetlocalfunctions": "psql -d participedia -f migrations/functions.sql",
     "resetstagefunctions": "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/functions.sql",
     "resetprodfunctions": "psql -d \"${DATABASE_PROD_URL}\" -f migrations/functions.sql",

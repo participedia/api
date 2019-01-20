@@ -9,6 +9,9 @@ import editWarning from './edit-warning.js';
 import contactHelpFaqWidget from "./contact-help-faq-widget.js";
 import editSubmissionDetails from "./edit-submission-details.js";
 import editTextarea from './edit-textarea.js';
+import viewSlideshow from "./view-slideshow.js";
+import viewSocialMedia from "./view-socialmedia.js";
+import accordion from "./accordion.js";
 
 // polyfills
 elementClosestPolyfill();
@@ -17,10 +20,9 @@ elementClosestPolyfill();
 header.init();
 contactHelpFaqWidget.init();
 
-// case edit form
-// only init edit form fields if on edit page
-// todo: handle dynamic imports of edit field js so we don't import if not needed
-if (window.location.pathname.indexOf('edit') > 0) {
+const viewType = document.querySelector("[data-view]").getAttribute("data-view");
+
+if (viewType === "edit") {
   editMultiSelect.init();
   editRichText.init();
   editLocation.init();
@@ -29,4 +31,10 @@ if (window.location.pathname.indexOf('edit') > 0) {
   editWarning.init();
   editSubmissionDetails.init();
   editTextarea.init();
+}
+
+if (viewType === "view") {
+  viewSlideshow.init();
+  viewSocialMedia.init();
+  accordion.init();
 }

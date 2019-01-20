@@ -1,60 +1,56 @@
-<section>
-<aside>
-  <!-- Data and Metadata -->
-  <h2>{{static.data_sectionlabel}}</h2>
-  <!-- TODO: Identify all the section headers for view vs. edit, replace the section comments below with section headers -->
-
+{{#> view-container }}
   <!-- Overview -->
-  <dl>
+  <section>
     {{> view-list name="general_issues" }}
     {{> view-list name="specific_topics" }}
     {{> view-list name="tags" }}
-  </dl>
+  </section>
 
   <!-- Location -->
-  <dl>
+  <section>
     {{> view-location }}
-    {{> view-text name="scope" }}
-  </dl>
+    {{> view-list name="scope" }}
+  </section>
 
   <!-- Components -->
-  <dl>
-    {{> view-reference-list name="has_components" }}
-    {{> view-reference name="is_component_of" }}
-  </dl>
+  <section>
+    {{> view-article-list name="has_components" }}
+    {{> view-article-list name="is_component_of" }}
+  </section>
 
   <!-- Media -->
-  <dl>
-    {{> view-media-list name="links" }}
+  <section>
     {{> view-media-list name="files" }}
+    {{> view-media-list name="links" }}
+    {{> view-media-list name="videos" }}
     {{> view-media-list name="audio" }}
-  </dl>
+  </section>
 
   <!-- Date & Duration -->
-  <dl>
+  <section>
     {{> view-date name="start_date" }}
     {{> view-date name="end_date" }}
     {{> view-boolean name="ongoing" }}
-    {{> view-boolean name="time_limited" }}
-  </dl>
+    {{> view-list name="time_limited" }}
+  </section>
 
   <!-- Purpose & Approach -->
-  <dl>
-    {{> view-list name="purpose" }}
-    {{> view-list name="approach" }}
-    {{> view-text name="public_spectrum" }}
-  </dl>
+  <section>
+    {{> view-list name="purposes" }}
+    {{> view-list name="approaches" }}
+    {{> view-list name="public_spectrum" }}
+  </section>
 
   <!-- Participants -->
-  <dl>
-    {{> view-number name="number_participants" }}
+  <section>
+    {{> view-text name="number_participants" }}
     {{> view-text name="open_limited" }}
     {{> view-text name="recruitment_method" }}
-    {{> view-text name="targeted_participants" }}
-  </dl>
+    {{> view-list name="targeted_participants" }}
+  </section>
 
   <!-- Process -->
-  <dl>
+  <section>
     {{> view-list name="types_of_methods" }}
     {{> view-list name="types_of_tools_techniques" }}
     {{> view-text name="specific_tools" }}
@@ -67,46 +63,29 @@
     {{> view-list name="decision_methods" }}
     {{> view-list name="if_voting" }}
     {{> view-list name="insights_outcomes" }}
-  </dl>
+  </section>
 
   <!-- Organizations and Supporters -->
-  <dl>
-    {{> view-text name="primary_organizer" }}
+  <section>
+    {{> view-article-list name="primary_organizer" }}
     {{> view-list name="organizer_types" }}
-  </dl>
+  </section>
 
   <!-- Resources -->
-  <dl>
+  <section>
     {{> view-text name="funder" }}
-    {{> view-text name="type_of_funder" }}
+    {{> view-list name="funder_type" }}
     {{> view-boolean name="staff" }}
     {{> view-boolean name="volunteers" }}
-  </dl>
+  </section>
 
   <!-- Evidence of Impact -->
-  <dl>
+  <section>
     {{> view-list name="impact_evidence" }}
     {{> view-list name="change_types" }}
     {{> view-list name="implementers_of_change" }}
     {{> view-list name="formal_evaluation" }}
-    {{> view-link-list name="evaluation_report_documents" }}
-    {{> view-link-list name="evaluation_report_links" }}
-  </dl>
-
-</aside>
-<article>
-  <!-- Body of the article, description, body, images, etc. -->
-  <hgroup>
-    <h2>{{article.type}}</h2>
-    <h1>{{article.title}}</h1>
-  </hgroup>
-  {{> view-slideshow }}
-  {{> view-authors }}
-  {{ article.description }}
-  {{{ article.body }}}
-</article>
-<nav class="case-nav">
-  {{> view-socialmedia }}
-  {{> view-editbutton }}
-</nav>
-</section>
+    {{> view-media-list name="evaluation_files" }}
+    {{> view-media-list name="evaluation_links" }}
+  </section>
+{{/view-container}}

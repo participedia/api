@@ -85,13 +85,6 @@ a {
   color: #000;
 }
 
-aside {
-  flex: 0 0 25%;
-  max-width: 25%;
-  background-color: cornsilk;
-  order: 1;
-}
-
 .case-nav {
   flex: 0 0 25%;
   max-width: 25%;
@@ -202,4 +195,20 @@ button.icon-only .icon-fill {
 
 pre {
   white-space: pre-wrap;
+}
+
+.author-info {
+  margin-bottom: 30px;
+}
+
+.author-info h4 {
+  font-weight: 300;
+}
+
+.author-info h4:first-child {
+  margin-bottom: 15px;
+}
+
+.author-info time {
+  display: block;
 }

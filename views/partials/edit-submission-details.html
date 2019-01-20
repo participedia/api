@@ -1,3 +1,4 @@
+<div class="edit-form-author-info">
 {{#if user.isadmin}}
   <button class="button button-red edit-submission-details-btn js-edit-submission-details-btn">
     Edit Submission Details
@@ -5,22 +6,7 @@
 {{/if}}
 
 <div class="js-view-submission-details">
-  <h4>
-    <strong>First Submitted By</strong>
-    <a href="/users/{{article.creator.user_id}}">{{article.creator.name}}</a>
-    <time datetime="{{article.post_date}}">
-      {{formatDate article post_date 'LL'}}
-    </time>
-  </h4>
-  <h4>
-    <strong>Most Recent Changes By</strong>
-    <a href="/users/{{article.last_updated_by.user_id}}">
-      {{article.last_updated_by.name}}
-    </a>
-    <time datetime="{{article.updated_date}}">
-      {{formatDate article updated_date 'LL'}}
-    </time>
-  </h4>
+  {{> view-authors }}
 </div>
 
 {{#if user.isadmin}}
