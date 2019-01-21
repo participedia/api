@@ -189,6 +189,17 @@ module.exports = {
     } else {
       return text;
     }
-
   },
+  paginationNumResults(cards, req) {
+    const pageNum = req.query && req.query.page;
+    if (pageNum > 1) {
+      return `${cards.length * (pageNum - 1)} - ${cards.length * pageNum}`;
+    } else {
+      return cards.length;
+    }
+  },
+  getCurrentPage(req) {
+    return req.query && req.query.page;
+  },
+
 };

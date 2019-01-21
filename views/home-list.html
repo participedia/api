@@ -11,40 +11,30 @@
       </div>
       <div role="tabpanel">
         <p>all</p>
-        {{> pagecount }}
-
-        <ul class="unstyled-list cards-container">
-          {{#each results }}
-            {{> search-grid-card }}
-          {{/each}}
-        </ul>
+        {{> cards-container
+          cards=results
+        }}
       </div>
       <div role="tabpanel" hidden>
         <p>cases</p>
-        {{> pagecount }}
-        <ul class="unstyled-list cards-container">
-          {{#each results }}
-            {{> search-grid-card }}
-          {{/each}}
-        </ul>
+        <!-- todo pass in cases array -->
+        {{> cards-container
+          cards=results
+        }}
       </div>
       <div role="tabpanel" hidden>
         <p>methods</p>
-        {{> pagecount }}
-        <ul class="unstyled-list cards-container">
-          {{#each results }}
-            {{> search-grid-card }}
-          {{/each}}
-        </ul>
+        <!-- todo pass in methods array -->
+        {{> cards-container
+          cards=results
+        }}
       </div>
       <div role="tabpanel" hidden>
         <p>organizations</p>
-        {{> pagecount }}
-        <ul class="unstyled-list cards-container">
-          {{#each results }}
-            {{> search-grid-card }}
-          {{/each}}
-        </ul>
+        <!-- todo pass in orgs array -->
+        {{> cards-container
+          cards=results
+        }}
       </div>
     </tab-container>
   </div>

@@ -1,0 +1,33 @@
+<style type="text/css">
+  .pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 0 30px 0;
+  }
+  .pagination-nav {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .pagination-nav li {
+    margin-right: 5px;
+  }
+  .pagination-nav li:last-child {
+    margin-right: 0;
+  }
+</style>
+
+<div class="pagination">
+  <div class="pagination-string">
+    {{paginationNumResults cards req}} results of {{total}}
+    {{#if searchTerm}} for ${searchTerm} {{/if}}
+    (page {{getCurrentPage req}} of {{pages}})
+  </div>
+  <ul class="unstyled-list pagination-nav">
+    <li><<</li>
+    <li><</li>
+    <li>></li>
+    <li>>></li>
+  </ul>
+</div>

@@ -1,0 +1,8 @@
+{{> pagination
+  cards=cards
+}}
+<ul class="unstyled-list cards-container js-cards-container">
+  {{#each cards }}
+    {{> search-grid-card }}
+  {{/each}}
+</ul>
