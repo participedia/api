@@ -8,8 +8,8 @@
 
 .map-container {
   margin-top: -30px;
-  height: 300px;
-  background-color: #e6e6e6;
+  height: 350px;
+  background-color: #C2CACC;
 }
 
 .cards-container {
@@ -59,7 +59,7 @@ tab-container {
 }
 
 tab-container .tab-button-list {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #E6E6E6;
 }
 
 tab-container .tab-button-list  button {
