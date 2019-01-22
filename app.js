@@ -7,6 +7,7 @@ let app = require("express")();
 var exphbs = require("express-handlebars");
 const fs = require("fs");
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
+const cookieParser = require('cookie-parser');
 
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
@@ -79,6 +80,7 @@ app.use(morgan("dev")); // request logging
 app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
+app.use(cookieParser());
 app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
 app.use(
