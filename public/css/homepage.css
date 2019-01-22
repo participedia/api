@@ -54,22 +54,23 @@
   height: 5.1rem;
 }
 
-tab-container {
+
+/* tabs */
+.tab-container {
   display: block;
 }
 
-tab-container .tab-button-list {
+.tab-container .tab-button-list {
   border-bottom: 1px solid #E6E6E6;
 }
 
-tab-container .tab-button-list  button {
+.tab-container .tab-button-list  button {
   padding: .5rem;
   border: 0;
   background-color: transparent;
 }
 
-tab-container .tab-button-list  button:hover,
-tab-container .tab-button-list  button[aria-selected="true"] {
+.tab-container .tab-button-list  button:hover,
+.tab-container .tab-button-list  button[aria-selected="true"] {
   border-bottom: 2px solid #ec2024;
 }
-
