@@ -56,12 +56,50 @@
 }
 
 .article-card-title {
-  height: 5.1rem;
   margin: 0;
 }
 
 .article-card .close-card-btn {
   display: none;
+}
+
+.article-card-description {
+  display: none;
+}
+
+.cards-container[data-layout="list"] .article-card {
+  width: 100%;
+  height: unset;
+  border-bottom: 1px solid #e6e6e6;
+  margin-right: 0;
+  padding-bottom: 30px;
+}
+
+.cards-container[data-layout="list"] .article-card a {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.cards-container[data-layout="list"] .article-card-content {
+  flex: 1;
+}
+
+.cards-container[data-layout="list"] .article-card-img {
+  margin-right: 30px;
+}
+
+.cards-container[data-layout="list"] .article-card-description {
+  display: block;
+}
+
+.cards-container[data-layout="list"] .article-card-meta {
+  margin-top: 0;
+}
+
+.cards-container[data-layout="list"] .article-card-title,
+.cards-container[data-layout="list"] .article-card-description {
+  margin-right: 30px;
 }
 
 /* PopOver on map */
@@ -110,4 +148,12 @@
 .tab-container [role="tablist"]  button:hover,
 .tab-container [role="tablist"]  button[aria-selected="true"] {
   border-bottom: 2px solid #ec2024;
+}
+
+.card-view-nav {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  float: right;
+  flex-flow: row-reverse;
 }
