@@ -26,7 +26,12 @@
         {{> @partial-block }}
       </div>
     </div>
-    <div class="body-content">{{{ article.body }}}</div>
+    <div class="body-content">
+      {{# if article.description}}
+        <p>{{ article.description }}</p>
+      {{/if}}
+      {{{ article.body }}}
+    </div>
   </article>
 </div>
 
