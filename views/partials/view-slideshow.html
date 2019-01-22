@@ -1,15 +1,17 @@
 {{#if (hasPhoto article)}}
-  <div class="carousel carousel-main js-carousel-main">
-    {{#each article.photos}}
-      <div class="carousel-cell">
-        <img class="carousel-image" data-flickity-lazyload="{{url}}" alt="{{title}}" />
-        {{#if title}}<p>{{title}}</p>{{/if}}
-      </div>
-    {{/each}}
-  </div>
-  <div class="carousel carousel-nav js-carousel-nav">
-    {{#each article.photos}}
-      <img class="carousel-image" data-flickity-lazyload="{{url}}" alt="thumbnail" />
-    {{/each}}
+  <div class="js-carousel-container" style="visibility: hidden">
+    <div class="carousel carousel-main js-carousel-main">
+      {{#each article.photos}}
+        <div class="carousel-cell">
+          <img class="carousel-image" data-flickity-lazyload="{{url}}" alt="{{title}}" />
+          {{#if title}}<p>{{title}}</p>{{/if}}
+        </div>
+      {{/each}}
+    </div>
+    <div class="carousel carousel-nav js-carousel-nav">
+      {{#each article.photos}}
+        <img class="carousel-image" data-flickity-lazyload="{{url}}" alt="thumbnail" />
+      {{/each}}
+    </div>
   </div>
 {{/if}}

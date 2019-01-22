@@ -2,6 +2,10 @@ import Flickity from "flickity-as-nav-for";
 
 const viewSlideshow = {
   init() {
+    const carouselContainerEl = document.querySelector(".js-carousel-container");
+
+    if (!carouselContainerEl) return;
+
     const commonOptions = {
       imagesLoaded: true,
       pageDots: false,
@@ -15,6 +19,9 @@ const viewSlideshow = {
     const navCarousel = new Flickity(".js-carousel-nav", Object.assign(commonOptions, {
       asNavFor: '.js-carousel-main',
     }));
+
+    // only show carousel container once it's been initialized
+    carouselContainerEl.style.visibility = "visible";
   },
 }
 
