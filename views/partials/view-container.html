@@ -30,4 +30,11 @@
   </article>
 </div>
 
-{{> view-editbutton }}
+<a
+  href="/{{article.type}}/{{article.id}}/edit"
+  class="button button-red floating-action-button"
+  title="Edit Article"
+>
+  <span class="sr-only">Edit Article</span>
+  {{> icon-edit }}
+</a>
