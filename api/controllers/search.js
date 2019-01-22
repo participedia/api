@@ -189,7 +189,7 @@ router.get("/", async function(req, res) {
           static: staticText
         });
       case "htmlfrag":
-        return res.status(200).render("home-list", {
+        return res.status(200).render("home", {
           total,
           pages,
           searchhits,
@@ -202,7 +202,7 @@ router.get("/", async function(req, res) {
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through
       default:
-        return res.status(200).render("home-list", {
+        return res.status(200).render("home", {
           OK,
           total,
           pages,
