@@ -15,24 +15,6 @@ const featuredMarkerIcon = Object.assign({}, markerIcon, {
   strokeColor: "#ec2024",
 });
 
-function parseDMS(input) {
-  const parts = input.split(/[^\d\w\.]+/);
-
-  return {
-    latitude: convertDMSToDD(parts[0], parts[1], parts[2], parts[3]),
-    longitude: convertDMSToDD(parts[4], parts[5], parts[6], parts[7]),
-  };
-}
-
-function convertDMSToDD(degrees, minutes, seconds, direction) {
-  let dd = Number(degrees) + Number(minutes) / 60 + Number(seconds) / (60 * 60);
-
-  if (direction === "S" || direction === "W") {
-    dd = dd * -1;
-  } // Don't do anything for N or E
-  return dd;
-}
-
 const map = {
   init() {
     const mapEl = document.querySelector(".js-map-container");
@@ -62,21 +44,19 @@ const map = {
     );
 
     const markers = Array.prototype.slice.call(currentCardEls).map(el => {
-      const latitude = el.getAttribute("data-latitude");
-      const longitude = el.getAttribute("data-longitude");
-      const featured = el.getAttribute("data-featured");
-      if (latitude && longitude) {
-        // convert lat/lng from degrees to decimal
-        const decimalLatLng = parseDMS(`${latitude},${longitude}`);
-        return {
-          featured: featured,
-          position: new google.maps.LatLng(
-            decimalLatLng.latitude,
-            decimalLatLng.longitude
-          ),
-          content: el,
-        };
-      }
+      const latLng = el.getAttribute("data-lat-lng");
+
+      // if cards don't have valid lat,lng coords, don't render markers
+      if (!latLng || latLng === "NaN,NaN" || latLng === "0,0") return;
+
+      const latitude = latLng.split(",")[0];
+      const longitude = latLng.split(",")[1];
+
+      return {
+        featured: el.getAttribute("data-featured"),
+        position: new google.maps.LatLng(latitude, longitude),
+        content: el,
+      };
     });
 
     // render markers
