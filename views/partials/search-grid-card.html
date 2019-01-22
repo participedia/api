@@ -1,12 +1,17 @@
 <li class="article-card" data-featured="{{featured}}" data-latitude="{{latitude}}" data-longitude="{{longitude}}">
   <a href="/{{type}}/{{id}}">
-    <img src="{{lookup images 0}}" alt="article main image" width="280" height="200" />
+    <div
+      class="article-card-img"
+      style="background-image: url('{{lookup images 0}}')"
+    ></div>
     <div class="article-card-meta">
       <h5>{{toUpperCase type}}</h5>
-      <button type="button" class="icon-only">
+      <button type="button" class="icon-only bookmark-btn">
         {{#if bookmarked }}
+          <span class="sr-only">Remove Bookmark</span>
           {{> icon-bookmark-filled}}
         {{else}}
+          <span class="sr-only">Add Bookmark</span>
           {{> icon-bookmark}}
         {{/if}}
       </button>
@@ -14,5 +19,10 @@
 
     <h3 class="article-card-title">{{truncateText title}}</h3>
     <p>Submitted {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
+
+    <button type="button" class="icon-only close-card-btn js-close-card-btn">
+      <span class="sr-only">Close Card</span>
+      {{> icon-close}}
+    </button>
   </a>
 </li>
