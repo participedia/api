@@ -1,4 +1,23 @@
 // forked from https://github.com/github/tab-container-element/blob/master/index.js
+// altered to not use a custom element for wider browser support without needing a polyfill
+
+// expects the following markup:
+// <div class="tab-container js-tab-container">
+//   <div role="tablist">
+//     <button type="button" role="tab" aria-selected="true">Tab 1</button>
+//     <button type="button" role="tab">Tab 2</button>
+//     <button type="button" role="tab">Tab 3</button>
+//   </div>
+//   <div role="tabpanel">
+//     content here
+//   </div>
+//   <div role="tabpanel" hidden>
+//     content here
+//   </div>
+//   <div role="tabpanel" hidden>
+//     content here
+//   </div>
+// </div>
 
 function nodeListToArray(arr) {
   return Array.prototype.slice.call(arr);
