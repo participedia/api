@@ -8,8 +8,18 @@ const homeSearch = {
 
     this.initPagination();
 
+    this.initMobileTabNav();
+
     // todo add event listeners sort by functionality
 
+  },
+
+  initMobileTabNav() {
+    const selectEl = this.homeSearchEl.querySelector(".js-article-select-container select");
+    selectEl.addEventListener("change", event => {
+      // change tab to selected type
+      // console.log('event.target.value', event.target.value)
+    });
   },
 
   updateUrlParams(type) {

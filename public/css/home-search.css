@@ -189,3 +189,39 @@
 .pagination-nav li:last-child {
   margin-right: 0;
 }
+
+@media (max-width: 1000px) {
+  .cards-container .article-card {
+    width: calc(33% - 15px);
+  }
+}
+
+@media (max-width: 850px) {
+  .cards-container .article-card {
+    width: calc(50% - 10px);
+  }
+}
+
+@media (max-width: 650px) {
+  .cards-container .article-card {
+    width: 100%;
+  }
+  /* hide toggle layout button */
+  .card-layout-btns {
+    display: none;
+  }
+  /* change tabs to select dropdown */
+  .article-select-container {
+    display: block;
+  }
+
+  .tab-container [role="tablist"] {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .pagination {
+    flex-direction: column;
+  }
+}
