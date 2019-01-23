@@ -29,38 +29,46 @@
     </div>
 
     <div class="tab-container js-tab-container">
-      <div role="tablist">
-        <a href="#tab-all" role="tab">All</a>
-        <a href="#tab-cases" role="tab">Cases</a>
-        <a href="#tab-methods" role="tab">Methods</a>
-        <a href="#tab-organizations" role="tab">Organizations</a>
-      </div>
-      <div role="tabpanel" id="tab-all" class="active">
-        <p>all</p>
-        {{> cards-container
-          cards=results
-        }}
-      </div>
-      <div role="tabpanel" id="tab-cases">
-        <p>cases</p>
-        <!-- todo pass in cases array -->
-        {{> cards-container
-          cards=results
-        }}
-      </div>
-      <div role="tabpanel" id="tab-methods">
-        <p>methods</p>
-        <!-- todo pass in methods array -->
-        {{> cards-container
-          cards=results
-        }}
-      </div>
-      <div role="tabpanel" id="tab-organizations">
-        <p>organizations</p>
-        <!-- todo pass in orgs array -->
-        {{> cards-container
-          cards=results
-        }}
+      <input id="tab-all" type="radio" name="tabs" checked>
+      <label for="tab-all">All</label>
+
+      <input id="tab-cases" type="radio" name="tabs">
+      <label for="tab-cases">Cases</label>
+
+      <input id="tab-methods" type="radio" name="tabs">
+      <label for="tab-methods">Methods</label>
+
+      <input id="tab-organizations" type="radio" name="tabs">
+      <label for="tab-organizations">Organizations</label>
+
+      <div class="tab-panels">
+        <div role="tabpanel" id="tab-all">
+          <p>all</p>
+          {{> cards-container
+            cards=results
+          }}
+        </div>
+        <div role="tabpanel" id="tab-cases">
+          <p>cases</p>
+          <!-- todo pass in cases array -->
+          {{> cards-container
+            cards=results
+          }}
+        </div>
+        <div role="tabpanel" id="tab-methods">
+          <p>methods</p>
+          <!-- todo pass in methods array -->
+          {{> cards-container
+            cards=results
+          }}
+        </div>
+        <div role="tabpanel" id="tab-organizations">
+          <p>organizations</p>
+          <!-- todo pass in orgs array -->
+          {{> cards-container
+            cards=results
+          }}
+        </div>
       </div>
     </div>
   </div>
