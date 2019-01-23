@@ -273,8 +273,6 @@ module.exports = {
     // if there is no param, make tab-all active
     if ((!tabParam && tabName === "tab-all") || tabParam === tabName) {
       return "checked";
-    } else {
-      return;
     }
   },
 
