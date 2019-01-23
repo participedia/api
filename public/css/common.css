@@ -172,7 +172,7 @@ button {
   fill: #fff;
 }
 
-button.icon-only {
+.icon-only {
   border: 0px;
   padding: 8px;
   display: flex;
@@ -180,11 +180,11 @@ button.icon-only {
   color: #808080;
 }
 
-button.icon-only svg {
+.icon-only svg {
   pointer-events: none;
 }
 
-button.icon-only .icon-fill {
+.icon-only .icon-fill {
   fill: #808080;
 }
 

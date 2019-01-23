@@ -1,8 +1,7 @@
-{{> pagination
-  cards=cards
-}}
+{{> pagination }}
 <ul class="unstyled-list cards-container js-cards-container" data-layout="grid">
   {{#each cards }}
     {{> article-card }}
   {{/each}}
 </ul>
+{{> pagination }}

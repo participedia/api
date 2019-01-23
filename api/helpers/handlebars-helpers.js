@@ -202,15 +202,35 @@ module.exports = {
     return socialTagsTemplate(title, description, url, imageUrl);
   },
   paginationNumResults(cards, req) {
-    const pageNum = req.query && req.query.page;
+    const pageNum = parseInt(req.query.page);
     if (pageNum > 1) {
-      return `${cards.length * (pageNum - 1)} - ${cards.length * pageNum}`;
+      return `${cards.length * (pageNum - 1) + 1} - ${cards.length * pageNum}`;
     } else {
-      return cards.length;
+      return "1 - " + cards.length;
     }
   },
   getCurrentPage(req) {
-    return req.query && req.query.page;
+    if (req.query && req.query.page) {
+      return req.query.page
+    } else {
+      return 1;
+    }
+  },
+  getPrevPageNum(req) {
+    const currentPageNum = req.query && req.query.page;
+    if (currentPageNum) {
+      return parseInt(currentPageNum) - 1;
+    } else {
+      return 1;
+    }
+  },
+  getNextPageNum(req, totalPages) {
+    const currentPageNum = req.query && req.query.page;
+    if (currentPageNum && (parseInt(currentPageNum) !== parseInt(totalPages))) {
+      return parseInt(currentPageNum) + 1;
+    } else {
+      return totalPages;
+    }
   },
   parseLatLng(latitude, longitude) {
     const coords = parseDMS(`${latitude},${longitude}`);
