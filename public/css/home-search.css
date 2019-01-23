@@ -234,8 +234,12 @@
     display: block;
   }
 
-  .tab-container [role="tablist"] {
+  .tab-container label {
     display: none;
+  }
+
+  .tab-panels {
+    margin-top: 30px;
   }
 }
 

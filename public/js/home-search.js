@@ -33,10 +33,24 @@ const homeSearch = {
   },
 
   initMobileTabNav() {
+    const tabInputEls = Array.prototype.slice.call(
+      this.homeSearchEl.querySelectorAll(".js-tab-container input[name='tabs']")
+    );
     const selectEl = this.homeSearchEl.querySelector(".js-article-select-container select");
+
+    // select current tab
+    const optionEls = Array.prototype.slice.call(selectEl.querySelectorAll("option"));
+    const currentTab = tabInputEls.find(el => el.checked);
+    optionEls.forEach(el => el.selected = el.value === currentTab.id);
+
+    // event listener for select change
     selectEl.addEventListener("change", event => {
       // change tab to selected type
-      // console.log('event.target.value', event.target.value)
+      const newTabId = event.target.value;
+      // toggle checked attr on inputs
+      tabInputEls.forEach(el => el.checked = el.id === newTabId);
+      // update url
+      this.updateUrlParams("tab", newTabId);
     });
   },
 
