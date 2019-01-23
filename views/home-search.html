@@ -1,17 +1,17 @@
-<div class="home-search js-home-search">
+<div class="home-search js-home-search" data-layout="{{cardLayoutType req}}">
   {{> map }}
   <div class="content">
     <h2 class="tagline">Participedia is a global commmunity sharing knowledge and stories about public particpation.</h2>
 
     <ul class="unstyled-list card-layout-btns js-card-layout-btns">
       <li>
-        <button class="icon-only toggle-layout-btn" data-type="list">
+        <button class="icon-only toggle-list-layout-btn" data-type="list">
           <span class="sr-only">list view</span>
           {{> icon-list}}
         </button>
       </li>
       <li>
-        <button class="icon-only toggle-layout-btn active" data-type="grid">
+        <button class="icon-only toggle-grid-layout-btn" data-type="grid">
           <span class="sr-only">grid view</span>
           {{> icon-grid}}
         </button>

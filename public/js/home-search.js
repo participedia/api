@@ -4,15 +4,30 @@ const homeSearch = {
 
     if (!this.homeSearchEl) return;
 
-    this.toggleLayoutBtnsEl = this.homeSearchEl.querySelector(".js-card-layout-btns");
-
     this.initCardLayout();
+
+    this.initPagination();
 
     // todo add event listeners sort by functionality
 
   },
 
+  initPagination() {
+    const paginationNavEl = this.homeSearchEl.querySelector(".js-pagination-nav");
+    paginationNavEl.addEventListener("click", event => {
+      event.preventDefault();
+      const link = event.target.closest("a");
+      if (link) {
+        const pageNum = link.getAttribute("data-page-num");
+        const layoutType = window.localStorage.getItem("participedia:cardLayout");
+        window.location = `/?page=${pageNum}&layout=${layoutType}`;
+      }
+    });
+  },
+
   initCardLayout() {
+    const toggleLayoutBtnsEl = this.homeSearchEl.querySelector(".js-card-layout-btns");
+
     // set layout view from local storage var
     const savedType = window.localStorage.getItem("participedia:cardLayout");
     if (savedType) {
@@ -20,7 +35,7 @@ const homeSearch = {
     }
 
     // event listeners for grid/list toggle buttons
-    this.toggleLayoutBtnsEl.addEventListener("click", event => {
+    toggleLayoutBtnsEl.addEventListener("click", event => {
       const btnEl = event.target.closest("button");
 
       if (btnEl) {
@@ -35,24 +50,7 @@ const homeSearch = {
   },
 
   toggleLayout(type) {
-    const cardContainerEls = Array.prototype.slice.call(
-      this.homeSearchEl.querySelectorAll(".js-cards-container")
-    );
-    const buttonEls = Array.prototype.slice.call(
-      this.toggleLayoutBtnsEl.querySelectorAll("button")
-    );
-
-    //toggle data-layout attribute on all card containers/tabs
-    cardContainerEls.forEach(el => el.setAttribute("data-layout", type));
-
-    // toggle button active class
-    buttonEls.forEach(el => {
-      if (el.getAttribute("data-type") === type) {
-        el.classList.add("active");
-      } else {
-        el.classList.remove("active");
-      }
-    });
+    this.homeSearchEl.setAttribute("data-layout", type);
   }
 }
 

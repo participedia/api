@@ -224,6 +224,13 @@ module.exports = {
     return socialTagsTemplate(title, description, url, imageUrl);
   },
 
+  // search layout helpers
+  cardLayoutType(req) {
+    const defaultLayoutType = "grid";
+    const type = req.query && req.query.layout;
+    return type ? type : defaultLayoutType;
+  },
+
   // pagination helpers
   paginationNumResults(cards, req) {
     const pageNum = parseInt(req.query.page);
