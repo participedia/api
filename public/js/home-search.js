@@ -12,6 +12,21 @@ const homeSearch = {
 
   },
 
+  updateUrlParams(type) {
+    const params = window.location.search;
+
+    if (!params) return;
+
+    const paramsArr = params.split("?")[1].split("&").map(p => p.split("="));
+    const paramsObj = {};
+    paramsArr.forEach(param => paramsObj[param[0]] = param[1]);
+
+    if (paramsObj.page) {
+      // update url without reloading page
+      history.pushState({}, "", `/?page=${paramsObj.page}&layout=${type}`);
+    }
+  },
+
   initPagination() {
     const paginationNavEl = this.homeSearchEl.querySelector(".js-pagination-nav");
     paginationNavEl.addEventListener("click", event => {
@@ -19,7 +34,7 @@ const homeSearch = {
       const link = event.target.closest("a");
       if (link) {
         const pageNum = link.getAttribute("data-page-num");
-        const layoutType = window.localStorage.getItem("participedia:cardLayout");
+        const layoutType = this.homeSearchEl.getAttribute("data-layout");
         window.location = `/?page=${pageNum}&layout=${layoutType}`;
       }
     });
@@ -28,12 +43,6 @@ const homeSearch = {
   initCardLayout() {
     const toggleLayoutBtnsEl = this.homeSearchEl.querySelector(".js-card-layout-btns");
 
-    // set layout view from local storage var
-    const savedType = window.localStorage.getItem("participedia:cardLayout");
-    if (savedType) {
-      this.toggleLayout(savedType);
-    }
-
     // event listeners for grid/list toggle buttons
     toggleLayoutBtnsEl.addEventListener("click", event => {
       const btnEl = event.target.closest("button");
@@ -41,17 +50,11 @@ const homeSearch = {
       if (btnEl) {
         const type = btnEl.getAttribute("data-type");
 
-        // save type to local storage so we can present as default view
-        window.localStorage.setItem("participedia:cardLayout", type)
-
-        this.toggleLayout(type);
+        this.updateUrlParams(type);
+        this.homeSearchEl.setAttribute("data-layout", type);
       }
     });
   },
-
-  toggleLayout(type) {
-    this.homeSearchEl.setAttribute("data-layout", type);
-  }
 }
 
 export default homeSearch;
