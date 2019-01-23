@@ -73,8 +73,12 @@ const tabs = {
     if (!(event.target instanceof Element)) return;
 
     const tabButton = target.closest('[role="tab"]');
+
+    if (!tabButton) return;
+
     const tabPanel = tabButton.closest('[role="tablist"]');
-    if (!tabButton || !tabPanel) return;
+
+    if (!tabPanel) return;
 
     const tabsNodeList = tabPanel.querySelectorAll('[role="tab"]');
     const tabs = nodeListToArray(tabsNodeList);
