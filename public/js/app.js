@@ -14,6 +14,7 @@ import viewSocialMedia from "./view-socialmedia.js";
 import accordion from "./accordion.js";
 import map from "./map.js";
 import tabs from "./tabs.js";
+import homeSearch from "./home-search.js";
 
 // polyfills
 elementClosestPolyfill();
@@ -23,6 +24,7 @@ header.init();
 contactHelpFaqWidget.init();
 map.init();
 tabs.init();
+homeSearch.init();
 
 const viewType = document.querySelector("[data-view]").getAttribute("data-view");
 

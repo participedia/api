@@ -150,10 +150,18 @@
   border-bottom: 2px solid #ec2024;
 }
 
-.card-view-nav {
+.card-layout-btns {
   display: flex;
   flex-direction: row;
   width: 50%;
   float: right;
   flex-flow: row-reverse;
+  margin-top: -4px;
+}
+
+.card-layout-btns .toggle-layout-btn .icon-fill {
+  fill: #B3B3B3;
+}
+.card-layout-btns .toggle-layout-btn.active .icon-fill {
+  fill: #EC2024;
 }

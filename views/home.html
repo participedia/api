@@ -1,8 +1,22 @@
-<div class="home-search">
+<div class="home-search js-home-search">
   {{> map }}
   <div class="content">
     <h2 class="tagline">Participedia is a global commmunity sharing knowledge and stories about public particpation.</h2>
 
+    <ul class="unstyled-list card-layout-btns js-card-layout-btns">
+      <li>
+        <button class="icon-only toggle-layout-btn" data-type="list">
+          <span class="sr-only">list view</span>
+          {{> icon-list}}
+        </button>
+      </li>
+      <li>
+        <button class="icon-only toggle-layout-btn active" data-type="grid">
+          <span class="sr-only">grid view</span>
+          {{> icon-grid}}
+        </button>
+      </li>
+    </ul>
     <div class="tab-container js-tab-container">
       <div role="tablist">
         <button type="button" role="tab" aria-selected="true">All</button>
