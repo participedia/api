@@ -27,7 +27,7 @@ const homeSearch = {
     );
     tabInputEls.forEach(el => {
       el.addEventListener("click", event => {
-        this.updateUrlParams("tab", event.target.id)
+        this.updateUrlParams("tab", event.target.id);
       });
     });
   },
@@ -42,12 +42,12 @@ const homeSearch = {
 
   updateUrlParams(key, value) {
     const params = window.location.search;
-
-    if (!params) return;
-
-    const paramsArr = params.split("?")[1].split("&").map(p => p.split("="));
     const paramsObj = {};
-    paramsArr.forEach(param => paramsObj[param[0]] = param[1]);
+
+    if (params) {
+      const paramsArr = params.split("?")[1].split("&").map(p => p.split("="));
+      paramsArr.forEach(param => paramsObj[param[0]] = param[1]);
+    }
 
     // add/update param
     paramsObj[key] = value;
