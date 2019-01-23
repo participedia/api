@@ -270,7 +270,8 @@ module.exports = {
   // tab helpers
   isTabActive(req, tabName) {
     const tabParam = req.query && req.query.tab;
-    if (tabParam === tabName) {
+    // if there is no param, make tab-all active
+    if ((!tabParam && tabName === "tab-all") || tabParam === tabName) {
       return "checked";
     } else {
       return;
