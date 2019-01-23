@@ -1,8 +1,13 @@
+import map from "./map.js";
+
 const homeSearch = {
   init() {
     this.homeSearchEl = document.querySelector(".js-home-search");
 
     if (!this.homeSearchEl) return;
+
+    // init map
+    map.init();
 
     this.initCardLayout();
 
@@ -10,8 +15,21 @@ const homeSearch = {
 
     this.initMobileTabNav();
 
+    this.initTabs();
+
     // todo add event listeners sort by functionality
 
+  },
+
+  initTabs() {
+    const tabInputEls = Array.prototype.slice.call(
+      this.homeSearchEl.querySelectorAll(".js-tab-container input[name='tabs']")
+    );
+    tabInputEls.forEach(el => {
+      el.addEventListener("click", event => {
+        this.updateUrlParams("tab", event.target.id)
+      });
+    });
   },
 
   initMobileTabNav() {
@@ -22,7 +40,7 @@ const homeSearch = {
     });
   },
 
-  updateUrlParams(type) {
+  updateUrlParams(key, value) {
     const params = window.location.search;
 
     if (!params) return;
@@ -31,22 +49,31 @@ const homeSearch = {
     const paramsObj = {};
     paramsArr.forEach(param => paramsObj[param[0]] = param[1]);
 
-    if (paramsObj.page) {
-      // update url without reloading page
-      history.pushState({}, "", `/?page=${paramsObj.page}&layout=${type}`);
-    }
+    // add/update param
+    paramsObj[key] = value;
+
+    let newParamsString = "";
+    Object.keys(paramsObj).forEach(key => {
+      newParamsString += `${key}=${paramsObj[key]}&`;
+    });
+    // update url without reloading page
+    history.pushState({}, "", `/?${newParamsString.slice(0, -1)}`);
   },
 
   initPagination() {
-    const paginationNavEl = this.homeSearchEl.querySelector(".js-pagination-nav");
-    paginationNavEl.addEventListener("click", event => {
-      event.preventDefault();
-      const link = event.target.closest("a");
-      if (link) {
-        const pageNum = link.getAttribute("data-page-num");
-        const layoutType = this.homeSearchEl.getAttribute("data-layout");
-        window.location = `/?page=${pageNum}&layout=${layoutType}`;
-      }
+    const paginationNavEls = Array.prototype.slice.call(
+      this.homeSearchEl.querySelectorAll(".js-pagination-nav")
+    );
+
+    paginationNavEls.forEach(el => {
+      el.addEventListener("click", event => {
+        event.preventDefault();
+        const link = event.target.closest("a");
+        if (link) {
+          this.updateUrlParams("page", link.getAttribute("data-page-num"));
+          window.location.href = window.location.href;
+        }
+      });
     });
   },
 
@@ -60,7 +87,7 @@ const homeSearch = {
       if (btnEl) {
         const type = btnEl.getAttribute("data-type");
 
-        this.updateUrlParams(type);
+        this.updateUrlParams("layout", type);
         this.homeSearchEl.setAttribute("data-layout", type);
       }
     });

@@ -267,6 +267,16 @@ module.exports = {
     }
   },
 
+  // tab helpers
+  isTabActive(req, tabName) {
+    const tabParam = req.query && req.query.tab;
+    if (tabParam === tabName) {
+      return "checked";
+    } else {
+      return;
+    }
+  },
+
   // location helpers
   parseLatLng(latitude, longitude) {
     const coords = parseDMS(`${latitude},${longitude}`);

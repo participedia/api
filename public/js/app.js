@@ -12,8 +12,6 @@ import editTextarea from './edit-textarea.js';
 import viewSlideshow from "./view-slideshow.js";
 import viewSocialMedia from "./view-socialmedia.js";
 import accordion from "./accordion.js";
-import map from "./map.js";
-import tabs from "./tabs.js";
 import homeSearch from "./home-search.js";
 
 // polyfills
@@ -22,8 +20,8 @@ elementClosestPolyfill();
 // common
 header.init();
 contactHelpFaqWidget.init();
-map.init();
-// tabs.init();
+
+// home/search page
 homeSearch.init();
 
 const viewType = document.querySelector("[data-view]").getAttribute("data-view");

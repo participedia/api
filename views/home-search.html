@@ -29,16 +29,16 @@
     </div>
 
     <div class="tab-container js-tab-container">
-      <input id="tab-all" type="radio" name="tabs" checked>
+      <input id="tab-all" type="radio" name="tabs" {{isTabActive req "tab-all"}}>
       <label for="tab-all">All</label>
 
-      <input id="tab-cases" type="radio" name="tabs">
+      <input id="tab-cases" type="radio" name="tabs" {{isTabActive req "tab-cases"}}>
       <label for="tab-cases">Cases</label>
 
-      <input id="tab-methods" type="radio" name="tabs">
+      <input id="tab-methods" type="radio" name="tabs" {{isTabActive req "tab-methods"}}>
       <label for="tab-methods">Methods</label>
 
-      <input id="tab-organizations" type="radio" name="tabs">
+      <input id="tab-organizations" type="radio" name="tabs" {{isTabActive req "tab-organizations"}}>
       <label for="tab-organizations">Organizations</label>
 
       <div class="tab-panels">
