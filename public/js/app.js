@@ -23,7 +23,7 @@ elementClosestPolyfill();
 header.init();
 contactHelpFaqWidget.init();
 map.init();
-tabs.init();
+// tabs.init();
 homeSearch.init();
 
 const viewType = document.querySelector("[data-view]").getAttribute("data-view");

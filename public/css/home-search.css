@@ -137,15 +137,24 @@
   border-bottom: 1px solid #E6E6E6;
 }
 
-.tab-container [role="tablist"]  button {
+.tab-container [role="tablist"] a {
   padding: .5rem;
-  border: 0;
-  background-color: transparent;
+  display: inline-block;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
 }
 
-.tab-container [role="tablist"]  button:hover,
-.tab-container [role="tablist"]  button[aria-selected="true"] {
+.tab-container [role="tablist"] a:hover,
+.tab-container [role="tablist"] a:target {
   border-bottom: 2px solid #ec2024;
+}
+
+[role="tabpanel"]:not(:target) {
+  display: none;
+}
+
+[role="tabpanel"]:target {
+  display: block;
 }
 
 .card-layout-btns {
@@ -188,6 +197,10 @@
 
 .pagination-nav li:last-child {
   margin-right: 0;
+}
+
+.article-select-container {
+  display: none;
 }
 
 @media (max-width: 1000px) {
