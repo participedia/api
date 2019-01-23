@@ -62,8 +62,10 @@ function convertDMSToDD(degrees, minutes, seconds, direction) {
 module.exports = {
   label: (staticText, name) => staticTextValue(staticText, name, "label"),
   info: (staticText, name) => staticTextValue(staticText, name, "info"),
-  instructional: (staticText, name) => staticTextValue(staticText, name, "instructional"),
-  placeholder: (staticText, name) => staticTextValue(staticText, name, "placeholder"),
+  instructional: (staticText, name) =>
+    staticTextValue(staticText, name, "instructional"),
+  placeholder: (staticText, name) =>
+    staticTextValue(staticText, name, "placeholder"),
   staticText: (staticText, name) => staticTextValue(staticText, name),
   isEmptyArray: (article, name) => {
     const value = article[name];
@@ -94,14 +96,16 @@ module.exports = {
     // []
     // { "value": "" }
 
-    return item !== null &&
-           item !== "" &&
-           !(item.hasOwnProperty("length") && item.length === 0) &&
-           !(item.hasOwnProperty("value") && item.value === "");
+    return (
+      item !== null &&
+      item !== "" &&
+      !(item.hasOwnProperty("length") && item.length === 0) &&
+      !(item.hasOwnProperty("value") && item.value === "")
+    );
   },
   getKey: (article, name) => {
     if (article[name]) {
-      return  article[name].key;
+      return article[name].key;
     }
   },
   getArticleKey: (article, name, key) => {
@@ -110,7 +114,7 @@ module.exports = {
   isSelectedInArray: (article, name, optionKey) => {
     const options = article[name];
     if (options && options.length > 0) {
-      return options.find((item) => {
+      return options.find(item => {
         return item.key === optionKey;
       });
     }
@@ -211,7 +215,7 @@ module.exports = {
   },
   getCurrentPage(req) {
     if (req.query && req.query.page) {
-      return req.query.page
+      return req.query.page;
     } else {
       return 1;
     }
@@ -226,7 +230,7 @@ module.exports = {
   },
   getNextPageNum(req, totalPages) {
     const currentPageNum = req.query && req.query.page;
-    if (currentPageNum && (parseInt(currentPageNum) !== parseInt(totalPages))) {
+    if (currentPageNum && parseInt(currentPageNum) !== parseInt(totalPages)) {
       return parseInt(currentPageNum) + 1;
     } else {
       return totalPages;
