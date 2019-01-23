@@ -109,6 +109,9 @@
   height: 290px;
   width: 290px;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .pop-over .bookmark-btn {
@@ -118,11 +121,6 @@
 .pop-over .article-card-img {
   width: 100%;
   height: 155px;
-}
-
-.pop-over .article-card-title {
-  height: 3.4rem;
-  overflow: hidden;
 }
 
 .pop-over .close-card-btn {
