@@ -60,23 +60,56 @@ function convertDMSToDD(degrees, minutes, seconds, direction) {
 }
 
 module.exports = {
+  // transalation helpers
   label: (staticText, name) => staticTextValue(staticText, name, "label"),
+
   info: (staticText, name) => staticTextValue(staticText, name, "info"),
+
   instructional: (staticText, name) =>
     staticTextValue(staticText, name, "instructional"),
+
   placeholder: (staticText, name) =>
     staticTextValue(staticText, name, "placeholder"),
+
   staticText: (staticText, name) => staticTextValue(staticText, name),
+
+  getStaticOptions: (staticText, name) => {
+    // has_components and is_component_of fields use the cases options
+    // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
+    if (name === "has_components" || name === "is_component_of") {
+      return mapIdTitleToKeyValue(staticText["cases"]);
+    } else if (name === "specific_methods_tools_techniques") {
+      return mapIdTitleToKeyValue(staticText["methods"]);
+    } else {
+      return staticText[name];
+    }
+  },
+
+  linkSetPlaceholder(staticText, name, attr) {
+    return staticTextValue(staticText, `${name}_${attr}`, "placeholder");
+  },
+
+  linkSetLabel(staticText, name, attr) {
+    return staticTextValue(staticText, `${name}_${attr}`, "label");
+  },
+
+  linkSetInstructional(staticText, name, attr) {
+    return staticTextValue(staticText, `${name}_${attr}`, "instructional");
+  },
+
+  // article helpers
   isEmptyArray: (article, name) => {
     const value = article[name];
     if (value && value.constructor === Array) {
       return value.length === 0;
     }
   },
+
   isArray: (article, name) => {
     const value = article[name];
     return value && value.constructor === Array;
   },
+
   getvalue: (article, name) => {
     const item = article[name];
     if (item && item.hasOwnProperty("value")) {
@@ -87,6 +120,7 @@ module.exports = {
       return item;
     }
   },
+
   hasValue: (article, name) => {
     const item = article[name];
 
@@ -103,14 +137,17 @@ module.exports = {
       !(item.hasOwnProperty("value") && item.value === "")
     );
   },
+
   getKey: (article, name) => {
     if (article[name]) {
       return article[name].key;
     }
   },
+
   getArticleKey: (article, name, key) => {
     return article[name] && article[name][key];
   },
+
   isSelectedInArray: (article, name, optionKey) => {
     const options = article[name];
     if (options && options.length > 0) {
@@ -119,46 +156,32 @@ module.exports = {
       });
     }
   },
+
   isSelected: (article, name, optionKey) => {
     const options = article[name];
     if (options) {
       return options.key === optionKey;
     }
   },
-  getStaticOptions: (staticText, name) => {
-    // has_components and is_component_of fields use the cases options
-    // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
-    if (name === "has_components" || name === "is_component_of") {
-      return mapIdTitleToKeyValue(staticText["cases"]);
-    } else if (name === "specific_methods_tools_techniques") {
-      return mapIdTitleToKeyValue(staticText["methods"]);
-    } else {
-      return staticText[name];
-    }
-  },
+
   getOptions: (article, name) => {
     return article[name];
   },
+
   getLinkSetValue(article, name, index, attr) {
     if (!article[name]) return;
     if (!article[name][index]) return;
     return article[name][index][attr];
   },
+
   linkSetFieldName(name, index, attr) {
     return `${name}[${index}][${attr}]`;
   },
-  linkSetPlaceholder(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "placeholder");
-  },
-  linkSetLabel(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "label");
-  },
-  linkSetInstructional(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "instructional");
-  },
+
   formatDate(article, name, format) {
     return moment(article[name]).format(format);
   },
+
   getCaseEditSubmitType(req) {
     if (req.query.full === "1") {
       return "full";
@@ -166,13 +189,7 @@ module.exports = {
       return "quick";
     }
   },
-  getFaqContent() {
-    // todo: get this as translated text from the server
-    return faqContent;
-  },
-  toUpperCase(text) {
-    return text.toUpperCase();
-  },
+
   shareLink(type, req) {
     const url = currentUrl(req);
 
@@ -183,18 +200,19 @@ module.exports = {
     };
     return shareUrls[type];
   },
+
   hasPhoto(article) {
     return article.photos && article.photos.length > 0;
   },
+
   getFirstPhotoUrl(article) {
     return getFirstPhotoUrl(article);
   },
-  currentUrl(req) {
-    return currentUrl(req);
-  },
+
   isReaderPage(params) {
     return params && params.view === "view";
   },
+
   socialTagsTemplate(article, req) {
     if (!article) return;
 
@@ -205,6 +223,8 @@ module.exports = {
 
     return socialTagsTemplate(title, description, url, imageUrl);
   },
+
+  // pagination helpers
   paginationNumResults(cards, req) {
     const pageNum = parseInt(req.query.page);
     if (pageNum > 1) {
@@ -213,6 +233,7 @@ module.exports = {
       return "1 - " + cards.length;
     }
   },
+
   getCurrentPage(req) {
     if (req.query && req.query.page) {
       return req.query.page;
@@ -220,6 +241,7 @@ module.exports = {
       return 1;
     }
   },
+
   getPrevPageNum(req) {
     const currentPageNum = req.query && req.query.page;
     if (currentPageNum) {
@@ -228,6 +250,7 @@ module.exports = {
       return 1;
     }
   },
+
   getNextPageNum(req, totalPages) {
     const currentPageNum = req.query && req.query.page;
     if (currentPageNum && parseInt(currentPageNum) !== parseInt(totalPages)) {
@@ -236,8 +259,24 @@ module.exports = {
       return totalPages;
     }
   },
+
+  // location helpers
   parseLatLng(latitude, longitude) {
     const coords = parseDMS(`${latitude},${longitude}`);
     return `${coords.latitude},${coords.longitude}`;
+  },
+
+  // utilities
+  currentUrl(req) {
+    return currentUrl(req);
+  },
+
+  getFaqContent() {
+    // todo: get this as translated text from the server
+    return faqContent;
+  },
+
+  toUpperCase(text) {
+    return text.toUpperCase();
   },
 };
