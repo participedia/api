@@ -154,10 +154,10 @@
   border-bottom: 2px solid #ec2024;
 }
 
-#tab-all:checked ~ .tab-panels #tab-all,
-#tab-cases:checked ~ .tab-panels #tab-cases,
-#tab-methods:checked ~ .tab-panels #tab-methods,
-#tab-organizations:checked ~ .tab-panels #tab-organizations {
+#tab-all:checked ~ .tab-panels .tab-all,
+#tab-cases:checked ~ .tab-panels .tab-cases,
+#tab-methods:checked ~ .tab-panels .tab-methods,
+#tab-organizations:checked ~ .tab-panels .tab-organizations {
   display: block;
 }
 
