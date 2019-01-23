@@ -201,13 +201,6 @@ module.exports = {
 
     return socialTagsTemplate(title, description, url, imageUrl);
   },
-  truncateText(text) {
-    if (text.length > 70) {
-      return text.split('').splice(0, 71).join("") + "...";
-    } else {
-      return text;
-    }
-  },
   paginationNumResults(cards, req) {
     const pageNum = req.query && req.query.page;
     if (pageNum > 1) {
