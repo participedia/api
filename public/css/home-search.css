@@ -233,11 +233,22 @@
   visibility: visible;
 }
 
-.menu-button-container .menu-button-menu button {
-  justify-content: flex-start;
+.menu-button-container:hover svg {
+  transform: rotate(180deg);
 }
 
-.menu-button-container .menu-button-menu button:hover {
+.menu-button-container .menu-button-menu a {
+  justify-content: flex-start;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.menu-button-container .menu-button-menu a:last-of-type {
+  margin-bottom: 0;
+}
+
+.menu-button-container .menu-button-menu a:hover {
   color: #808080;
 }
 

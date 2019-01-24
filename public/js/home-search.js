@@ -18,7 +18,20 @@ const homeSearch = {
     this.initTabs();
 
     // todo add event listeners sort by functionality
+    this.initSortBy();
+  },
 
+  initSortBy() {
+    const sortByMenuEl = this.homeSearchEl.querySelector(".js-sort-by-menu");
+    sortByMenuEl.addEventListener("click", event => {
+      const link = event.target.closest("a");
+      if (link) {
+        event.preventDefault();
+        const sortBy = link.getAttribute("data-sortby");
+        this.updateUrlParams("sortby", sortBy);
+        window.location.href = window.location.href;
+      }
+    });
   },
 
   initTabs() {
@@ -100,7 +113,7 @@ const homeSearch = {
 
       if (btnEl) {
         const type = btnEl.getAttribute("data-type");
-
+        if (!type) return;
         this.updateUrlParams("layout", type);
         this.homeSearchEl.setAttribute("data-layout", type);
       }
