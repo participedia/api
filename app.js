@@ -109,6 +109,13 @@ app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
 
+app.get('/about', function (req, res) {
+  res.status(200).render("about-view");
+});
+app.get('/legal', function (req, res) {
+  res.status(200).render("legal-view");
+});
+
 app.use("/s3/:path", checkJwtRequired);
 app.use(
   "/s3",
