@@ -6,7 +6,6 @@ const homeSearch = {
 
     if (!this.homeSearchEl) return;
 
-    // init map
     map.init();
 
     this.initCardLayout();
@@ -17,7 +16,6 @@ const homeSearch = {
 
     this.initTabs();
 
-    // todo add event listeners sort by functionality
     this.initSortBy();
   },
 
