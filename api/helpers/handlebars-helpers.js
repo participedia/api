@@ -224,6 +224,10 @@ module.exports = {
     return socialTagsTemplate(title, description, url, imageUrl);
   },
 
+  articleDataTitle(article) {
+    return article.type + " Data";
+  },
+
   // search layout helpers
   cardLayoutType(req) {
     const defaultLayoutType = "grid";

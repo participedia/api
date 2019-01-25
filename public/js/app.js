@@ -20,6 +20,7 @@ elementClosestPolyfill();
 // common
 header.init();
 contactHelpFaqWidget.init();
+accordion.init();
 
 // home/search page
 homeSearch.init();
@@ -40,5 +41,4 @@ if (viewType === "edit") {
 if (viewType === "view") {
   viewSlideshow.init();
   viewSocialMedia.init();
-  accordion.init();
 }

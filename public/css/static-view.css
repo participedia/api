@@ -7,18 +7,6 @@
   margin-bottom: 30px;
 }
 
-.static-view-container h2 + p,
-.static-view-container h3 + p,
-.static-view-container h4 + p {
-  margin-top: 0;
-}
-
-.static-view-container h2,
-.static-view-container h3,
-.static-view-container h4  {
-  margin-bottom: .5rem;
-}
-
 .video-embed-container {
   position: relative;
   padding-bottom: 56.25%;
