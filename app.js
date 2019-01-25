@@ -118,6 +118,9 @@ app.get('/legal', function (req, res) {
 app.get('/research', function (req, res) {
   res.status(200).render("research-view");
 });
+app.get('/teaching', function (req, res) {
+  res.status(200).render("teaching-view");
+});
 
 app.use("/s3/:path", checkJwtRequired);
 app.use(
