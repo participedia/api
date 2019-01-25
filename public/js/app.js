@@ -11,7 +11,6 @@ import editSubmissionDetails from "./edit-submission-details.js";
 import editTextarea from './edit-textarea.js';
 import viewSlideshow from "./view-slideshow.js";
 import viewSocialMedia from "./view-socialmedia.js";
-import accordion from "./accordion.js";
 import homeSearch from "./home-search.js";
 
 // polyfills
@@ -20,7 +19,6 @@ elementClosestPolyfill();
 // common
 header.init();
 contactHelpFaqWidget.init();
-accordion.init();
 
 // home/search page
 homeSearch.init();

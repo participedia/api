@@ -63,30 +63,6 @@
   fill: #808080;
 }
 
-/* accordion */
-.accordion-header {
-  border-top: 1px solid #e6e6e6;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.accordion[data-accordion=closed] .accordion-body {
-  display: none;
-}
-
-.accordion[data-accordion=open] .accordion-body {
-  display: block;
-}
-
-.accordion[data-accordion=closed] button {
-  transform: rotate(0);
-}
-
-.accordion[data-accordion=open] button {
-  transform: rotate(180deg);
-}
-
 @media (max-width: 850px) {
   .reader-view .social-links {
     display: flex;

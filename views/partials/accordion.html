@@ -1,11 +1,9 @@
-<div class="accordion case-data-accordion" data-accordion="closed">
-  <h3 class="accordion-header">
+<div class="accordion">
+  <input type="checkbox" name="accordion" id="{{toKebabCase title}}-accordion">
+  <label for="{{toKebabCase title}}-accordion">
     {{title}}
-    <button class="icon-only">
-      {{> icon-chevron}}
-    </button>
-  </h3>
-  <div class="accordion-body">
+  </label>
+  <div class="accordion-content">
     {{> @partial-block }}
   </div>
 </div>

@@ -1,6 +1,7 @@
 const moment = require("moment");
 const faqContent = require("./faq-content.js");
 const socialTagsTemplate = require("./social-tags-template.js");
+const kebabCase = require("just-kebab-case");
 
 function mapIdTitleToKeyValue(options) {
   if (!options) return null;
@@ -298,5 +299,9 @@ module.exports = {
 
   toUpperCase(text) {
     return text.toUpperCase();
+  },
+
+  toKebabCase(text) {
+    return kebabCase(text);
   },
 };
