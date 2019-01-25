@@ -121,6 +121,9 @@ app.get('/research', function (req, res) {
 app.get('/teaching', function (req, res) {
   res.status(200).render("teaching-view");
 });
+app.get('/content-chooser', function (req, res) {
+  res.status(200).render("content-chooser");
+});
 
 app.use("/s3/:path", checkJwtRequired);
 app.use(
