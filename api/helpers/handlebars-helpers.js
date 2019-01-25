@@ -1,7 +1,7 @@
 const moment = require("moment");
 const faqContent = require("./faq-content.js");
+const aboutData = require("./data/about-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
-const kebabCase = require("just-kebab-case");
 
 function mapIdTitleToKeyValue(options) {
   if (!options) return null;
@@ -301,7 +301,16 @@ module.exports = {
     return text.toUpperCase();
   },
 
-  toKebabCase(text) {
-    return kebabCase(text);
+  getRandomKey() {
+    return parseInt(Math.random() * Math.random() * 1000000, 10);
+  },
+
+  // data
+  getPartnersData() {
+    return aboutData.partners;
+  },
+
+  getCommitteesData() {
+    return aboutData.committees;
   },
 };

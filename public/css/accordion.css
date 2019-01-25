@@ -3,6 +3,10 @@
   border-bottom: 1px solid #e6e6e6;
 }
 
+.accordion + .accordion {
+  border-top: 0;
+}
+
 .accordion input[name='accordion'] {
   display: none;
 }
@@ -36,5 +40,33 @@
 }
 
 .accordion input[name='accordion']:checked ~ .accordion-content {
-  max-height: 50em;
+  max-height: 100%;
+}
+
+.accordion-small {
+  border: 0;
+}
+
+.accordion-small label {
+  font-size: 1rem;
+  padding-left: 2rem;
+}
+
+.accordion-small input:checked + label:after {
+  content: "";
+}
+
+.accordion-small label:after {
+  content: "";
+}
+
+.accordion-small input:checked + label:before {
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26.7 13.7'%3e%3cpolygon fill='grey' points='13.3%2c0 26.7%2c12.2 25.3%2c13.7 13.3%2c2.7 1.3%2c13.7 0%2c12.2'/%3e%3c/svg%3e");
+}
+.accordion-small label:before {
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26.7 13.7'%3e%3cpolygon fill='grey' points='13.3%2c13.7 0%2c1.5 1.3%2c0 13.3%2c11 25.3%2c0 26.7%2c1.5' /%3e%3c/svg%3e");
+  position: absolute;
+  left: 0;
+  width: 1em;
+  height: 1em;
 }

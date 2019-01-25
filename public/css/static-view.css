@@ -26,6 +26,14 @@
   height: 100%;
 }
 
+.people dt {
+  font-weight: 600;
+}
+
+.people dd {
+  margin-left: 0;
+}
+
 @media (max-width: 1000px) {
   .static-view-container {
     width: 60%;

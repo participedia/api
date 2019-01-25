@@ -28,10 +28,79 @@
     <p>The initial vision for Participedia was developed by Archon Fung (Kennedy School of Government, Harvard University) and Mark E. Warren (Department of Political Science, University of British Columbia), and is guided by a set of standing committees.</p>
   </section>
 
-  {{#> accordion title="Members"}}
-    <p>Community members include policy analysts, democratic theorists, scholars, teachers, practitioners, activists, government officials, journalists and more. Anyone can join and help to build this growing resource by editing existing content or publishing new examples of public participation.</p>
+  <section>
+    {{#> accordion title="Members"}}
+      <p>Community members include policy analysts, democratic theorists, scholars, teachers, practitioners, activists, government officials, journalists and more. Anyone can join and help to build this growing resource by editing existing content or publishing new examples of public participation.</p>
 
-    <p><a href="/login">Join now</a></p>
-  {{/ accordion}}
+      <p><a href="/login">Join now</a></p>
+    {{/accordion}}
 
+    {{#> accordion title="Partners"}}
+      <p>Participedia reflects partnerships with organizations, institutions and individuals across the globe who share an interest in participatory politics and governance. Participedia’s partners are co-signers to the current SSHRC Partnership Grant. Please contact us if you would like to discuss developing a partnership to support Participedia’s global mission.</p>
+
+      {{#each (getPartnersData)}}
+        {{> about-section}}
+      {{/each}}
+    {{/accordion}}
+
+    {{#> accordion title="Committees"}}
+      <p>Committees are comprised of project co-investigators and collaborators, each with one nominated chairperson who sits on the executive committee.</p>
+
+      {{#each (getCommitteesData)}}
+        {{> about-section}}
+      {{/each}}
+    {{/accordion}}
+
+    {{#> accordion title="Funders"}}
+      <p>Participedia is currently supported by the Social Sciences and Humanities Research Council of Canada (SSHRC) in the form of a five-year Partnership Grant beginning in April 2015. A two-year SSHRC Partnership Grant was originally provided in April 2011. In 2012, The Bertelsmann Foundation provided generous support for development of multi-language functionality.</p>
+    {{/accordion}}
+
+    {{#> accordion title="Staff"}}
+      <p>Participedia employs a core staff to maintain day to day operations, support the community and ensure project goals are being met.</p>
+
+      <dl class="people">
+        <dt>David Ascher, Technical Lead, Design & Technology Committee</dt>
+        {{# each descriptors}}
+          <dd>{{this}}</dd>
+        {{/each}}
+      </dl>
+
+      <dl class="people">
+        <dt>Jesi Carson, Design & Communities Coordinator</dt>
+        <dd>Emily Carr University of Art + Design</dd>
+      </dl>
+
+      <dl class="people">
+        <dt>Rebecca Monnerat, Project Manager</dt>
+        <dd>University of British Columbia</dd>
+      </dl>
+
+      <dl class="people">
+        <dt>Patrick L. Scully, (member ex officio), Managing Director</dt>
+      </dl>
+
+      <dl class="people">
+        <dt>Mark E. Warren, Project Director and Co-Founder</dt>
+        <dd>Department of Political Science / Centre for the Study of Democratic Institutions</dd>
+        <dd>University of British Columbia</dd>
+      </dl>
+    {{/accordion}}
+  </section>
+
+  <section>
+    <h2>Content</h2>
+    <p>Participedia offers a searchable database of content related to worldwide public participation.</p>
+
+    {{#> accordion title="Cases"}}
+      <p>Cases are events and instances of participatory politics and governance of all shapes and sizes.</p>
+    {{/accordion}}
+
+    {{#> accordion title="Methods"}}
+      <p>Methods are the processes and procedures used to guide participatory politics and governance.</p>
+    {{/accordion}}
+
+    {{#> accordion title="Organizations"}}
+      <p>Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance.</p>
+    {{/accordion}}
+  </section>
 </div>

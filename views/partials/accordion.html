@@ -1,8 +1,5 @@
-<div class="accordion">
-  <input type="checkbox" name="accordion" id="{{toKebabCase title}}-accordion">
-  <label for="{{toKebabCase title}}-accordion">
-    {{title}}
-  </label>
+<div class="accordion {{#if small}}accordion-small{{/if}}">
+  {{> accordion-label key=(getRandomKey) title=title}}
   <div class="accordion-content">
     {{> @partial-block }}
   </div>
