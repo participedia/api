@@ -331,6 +331,11 @@ module.exports = {
         title: "Organization",
         description: "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance."
       },
+      {
+        slug: "tools-techniques",
+        title: "Tools & Techniques",
+        description: "Description TBD"
+      },
     ];
   }
 };
