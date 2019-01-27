@@ -54,7 +54,7 @@
     "csv": "^5.1.0",
     "eslint": "^5.12.1",
     "eslint-config-google": "^0.9.1",
-    "eslint-config-prettier": "^3.4.0",
+    "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-prettier": "^2.0.1",
     "esmify": "^2.0.0",
     "istanbul": "^0.4.5",
