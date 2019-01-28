@@ -1,0 +1,9 @@
+{{> article-edit-text name="location"}}
+
+{{#each (locationFieldNames)}}
+  <input
+    type="hidden"
+    name="{{this}}"
+    value="{{getvalue ../article this}}"
+  />
+{{/each}}

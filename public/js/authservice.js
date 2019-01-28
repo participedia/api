@@ -15,7 +15,7 @@ window.addEventListener('load', function() {
     redirectUri: location.origin + "/redirect"
   });
 
-  var loginBtns = document.querySelectorAll('.loginButton');
+  var loginBtns = document.querySelectorAll('.js-login-button');
 
   for (let i = 0; i < loginBtns.length; i++){
     loginBtns[i].addEventListener('click', function(e) {

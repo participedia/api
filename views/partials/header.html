@@ -17,12 +17,18 @@
           </a>
         </li>
         <li>
-          <button
-            type="button"
-            class="button button-dark-grey loginButton"
-          >
-            Login
-          </button>
+          {{#if user}}
+            <a href="/user/{{user.id}}" class="button button-dark-grey">
+              Profile
+            </a>
+          {{else}}
+            <button
+              type="button"
+              class="button button-dark-grey js-login-button"
+            >
+              Login
+            </button>
+          {{/if}}
         </li>
       </ul>
     </div>
@@ -55,20 +61,21 @@
       </li>
       <li>
         {{#if user}}
-        <span>{{user.name}}</span>
-        <button
-          type="button"
-          class="button button-dark-grey loginButton"
-        >
-          Log out
-        </button>
+          <a href="/user/{{user.id}}" class="header-profile-link">
+            <span class="sr-only">goto profile</span>
+            {{#if user.picture_url}}
+              <img src="{{user.picture_url}}" alt="profile_picture" width="40" height="40" />
+            {{else}}
+              <div class="user-profile-image-initial">{{getInitials user.name}}</div>
+            {{/if}}
+          </a>
         {{else}}
-        <button
-          type="button"
-          class="button button-dark-grey loginButton"
-        >
-          Login
-        </button>
+          <button
+            type="button"
+            class="button button-dark-grey js-login-button"
+          >
+            Login
+          </button>
         {{/if}}
       </li>
     </ul>

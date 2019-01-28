@@ -1,13 +1,13 @@
 {{#> edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
-  <select name="{{name}}">
-    <option value="">{{placeholder static name}}</option>
-    {{#each (getStaticOptions static name)}}
+  <select name={{name}}>
+    <option value="">{{placeholder_txt}}</option>
+    {{#each options}}
       <option
         value="{{this.key}}"
-        {{#if (isSelected ../article ../name this.key)}}selected{{/if}}
+        {{#if (isEqual ../selectedValue this.key)}}selected{{/if}}
       >
         {{this.value}}
       </option>
     {{/each}}
   </select>
-{{/ edit-form-group}}
+{{/edit-form-group}}

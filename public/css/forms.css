@@ -6,6 +6,10 @@ fieldset {
   margin-bottom: 60px;
 }
 
+fieldset + fieldset {
+  border: 0;
+}
+
 input, select, textarea {
   width: 100%;
   padding: 8px;
@@ -53,6 +57,10 @@ input[type=number]::-webkit-inner-spin-button {
 .form-group p {
   margin-top: 8px;
   margin-bottom: 10px;
+}
+
+.form-group-password input {
+  margin-bottom: 15px;
 }
 
 [data-required="true"]:before {

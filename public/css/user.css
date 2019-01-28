@@ -1,0 +1,99 @@
+.user-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 60px;
+}
+
+.user-profile-image {
+  width: 340px;
+  margin-bottom: 30px;
+}
+
+.user-main-content {
+  width: 45%;
+}
+
+.user-profile-image img,
+.user-profile-image-initial {
+  display: block;
+  border-radius: 100px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.user-profile-image-initial {
+  background-color: #E0E0E0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  width: 160px;
+  height: 160px;
+  font-size: 5rem;
+  font-weight: 800;
+}
+
+/* user-edit */
+.user-edit-container {
+  margin-bottom: 0;
+}
+
+.user-profile-image-edit-mask {
+  border-radius: 100px;
+  overflow: hidden;
+  display: block;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
+  text-decoration: none;
+}
+
+.user-profile-image-edit-mask:hover {
+  opacity: .75;
+}
+
+.user-profile-image-edit-overlay {
+  background-color: rgba(0,0,0,.75);
+  position: relative;
+  top: -40px;
+  text-align: center;
+  color: #fff;
+  height: 60px;
+  padding-top: 8px;
+  font-size: 0.875rem;
+}
+
+/* user-view */
+.user-view-body {
+  margin: 0 30px 120px 30px;
+}
+
+.user-view-name {
+  margin: 0;
+}
+
+.user-view-edit-profile-button {
+  float: right;
+}
+
+@media (max-width: 850px) {
+  .user-container {
+    flex-direction: column;
+  }
+
+  .user-main-content,
+  .user-profile-image {
+    width: calc(100% - 60px);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .user-view .user-main-content {
+    text-align: center;
+  }
+
+  .user-view-edit-profile-button {
+    float: none;
+    margin-bottom: 30px;
+  }
+}

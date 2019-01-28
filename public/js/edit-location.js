@@ -39,6 +39,7 @@ const editLocation = {
     // set hidden fields for the addressComponents key
     LOCATION_KEYS.forEach(key => {
       const hiddenInputEl = document.querySelector(`input[name=${key}]`);
+      if (!hiddenInputEl) return;
       hiddenInputEl.value = addressComponents[key] ? addressComponents[key] : "";
     });
   },
