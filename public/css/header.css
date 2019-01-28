@@ -76,6 +76,14 @@ header a {
   fill: #222;
 }
 
+.header-profile-link {
+  display: flex;
+}
+
+.header-profile-link img {
+  border-radius: 24px;
+}
+
 .icon-container {
   background-color: #4D4D4D;
   order: -1;
