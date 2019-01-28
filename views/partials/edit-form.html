@@ -22,10 +22,6 @@
         {{> icon-submit }} Publish
       </button>
 
-      <button type="submit" class="button button-red floating-action-button" title="Publish">
-        {{> icon-submit }}
-      </button>
-
       <a href="?full=1" class="button button-dark-grey quickonly">Do Full Version</a>
     </div>
 
@@ -33,5 +29,10 @@
       <h3>Something Missing?</h3>
       <p>Suggest edits to this form by email to <a target="_blank" href="mailto:info@participedia.net?subject=Suggested form edits - {{article.type}}">info@participedia.net</a></p>
     </div>
+
+    <button type="submit" class="button button-red floating-action-button" title="Publish">
+      <span class="sr-only">Publish Article</span>
+      {{> icon-submit }}
+    </button>
   </form>
 </article>
