@@ -17,12 +17,12 @@
           </a>
         </li>
         <li>
-          <a
-            href="https://participedia.auth0.com/login"
-            class="button button-dark-grey"
+          <button
+            type="button"
+            class="button button-dark-grey loginButton"
           >
             Login
-          </a>
+          </button>
         </li>
       </ul>
     </div>
@@ -54,12 +54,22 @@
         </a>
       </li>
       <li>
-        <a
-          href="https://participedia.auth0.com/login"
-          class="button button-dark-grey"
+        {{#if user}}
+        <span>{{user.name}}</span>
+        <button
+          type="button"
+          class="button button-dark-grey loginButton"
+        >
+          Log out
+        </button>
+        {{else}}
+        <button
+          type="button"
+          class="button button-dark-grey loginButton"
         >
           Login
-        </a>
+        </button>
+        {{/if}}
       </li>
     </ul>
   </nav>

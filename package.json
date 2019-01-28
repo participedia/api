@@ -4,8 +4,7 @@
   "private": true,
   "description": "API for Participedia v4",
   "keywords": [],
-  "author":
-    "David Ascher <david.ascher@gmail.com>, Dethe Elza <dethe@livingcode.org",
+  "author": "David Ascher <david.ascher@gmail.com>, Dethe Elza <dethe@livingcode.org",
   "license": "MIT",
   "main": "app.js",
   "engines": {
@@ -19,6 +18,7 @@
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
     "compression": "^1.6.2",
+    "cookie-parser": "^1.4.3",
     "cors": "^2.8.1",
     "dotenv": "^4.0.0",
     "errorhandler": "^1.5.0",
@@ -48,11 +48,14 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "auth0": "^2.14.0",
+    "auth0-js": "^9.9.0",
+    "auth0-lock": "^11.13.0",
     "browserify": "^16.2.3",
     "chai": "^4.0.2",
     "chai-http": "^4.2.1",
     "csv": "^5.1.0",
-    "eslint": "^5.12.1",
+    "eslint": "^3.14.1",
     "eslint-config-google": "^0.9.1",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-prettier": "^2.0.1",
@@ -68,36 +71,24 @@
     "lint": "eslint \"**.js\"",
     "deployprod": "git push participedia-api",
     "deploystage": "git push participedia-stage",
-    "coverage":
-      "NODE_ENV=test istanbul cover _mocha -- -R spec && open coverage/lcov-report/index.html",
+    "coverage": "NODE_ENV=test istanbul cover _mocha -- -R spec && open coverage/lcov-report/index.html",
     "test": "NODE_ENV=test mocha",
     "backuplocal": "pg_dump participedia > ppedia_local.sql",
     "backupprod": "pg_dump -d \"${DATABASE_PROD_URL}\" > ppedia_prod.sql",
     "backupstage": "pg_dump -d \"${DATABASE_STAGE_URL}\" > ppedia_stage.sql",
-    "restorelocal":
-      "dropdb \"participedia\"; createdb -E UTF8 \"participedia\"; psql \"participedia\" < ppedia_local.sql",
+    "restorelocal": "dropdb \"participedia\"; createdb -E UTF8 \"participedia\"; psql \"participedia\" < ppedia_local.sql",
     "restorestage": "psql -d \"${DATABASE_STAGE_URL}\" -f ppedia_stage.sql",
-    "resetstagedb": "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql",
-    "resettestdb":
-      "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js; psql -d \"participedia-test\" -f migrations/all_migrations.sql",
-    "resetlocaldb":
-      "dropdb \"participedia\"; createdb \"participedia\"; psql -d \"participedia\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
-    "resettestfunctions":
-      "psql -d participedia-test -f migrations/functions.sql",
+    "resetstagedb": "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql; DATABASE_URL=$DATABASE_STAGE_URL node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
+    "resettestdb": "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js; psql -d \"participedia-test\" -f migrations/all_migrations.sql",
+    "resetlocaldb": "dropdb \"participedia\"; createdb \"participedia\"; psql -d \"participedia\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
+    "resettestfunctions": "psql -d participedia-test -f migrations/functions.sql",
     "resetlocalfunctions": "psql -d participedia -f migrations/functions.sql",
-    "resetstagefunctions":
-      "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/functions.sql",
-    "resetprodfunctions":
-      "psql -d \"${DATABASE_PROD_URL}\" -f migrations/functions.sql",
-    "textdump":
-      "pg_dump --format=p --file=one_schema.sql --clean --create --no-owner --if-exists --dbname=participedia",
-    "migrateprod":
-      "f(){ printf -v item \"%03d\" $1; psql -d \"${DATABASE_PROD_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
-    "migratestage":
-      "f(){ printf -v item \"%03d\" $1; psql -d \"${DATABASE_STAGE_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
-    "migratelocal":
-      "f(){ printf -v item \"%03d\" $1 && echo ${item} && psql -d \"${DATABASE_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
-    "migratetest":
-      "f(){ printf -v item \"%03d\" $1; psql -d \"${DATABASE_TEST_URL}\" -f \"migrations/migration_${item}.sql\"; };f"
+    "resetstagefunctions": "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/functions.sql",
+    "resetprodfunctions": "psql -d \"${DATABASE_PROD_URL}\" -f migrations/functions.sql",
+    "textdump": "pg_dump --format=p --file=one_schema.sql --clean --create --no-owner --if-exists --dbname=participedia",
+    "migrateprod": "f(){ printf -v item \"%03d\" $1; psql -d \"${DATABASE_PROD_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
+    "migratestage": "f(){ printf -v item \"%03d\" $1; psql -d \"${DATABASE_STAGE_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
+    "migratelocal": "f(){ printf -v item \"%03d\" $1 && echo ${item} && psql -d \"${DATABASE_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
+    "migratetest": "f(){ printf -v item \"%03d\" $1; psql -d \"${DATABASE_TEST_URL}\" -f \"migrations/migration_${item}.sql\"; };f"
   }
 }
