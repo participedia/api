@@ -4,13 +4,15 @@ window.addEventListener('load', function() {
   let idToken;
   let accessToken;
   let expiresAt;
-
+  if (!location.href.split('#')[0].endsWith('/redirect')){
+    localStorage.destURL = location.href;
+  }
   var webAuth = new auth0.WebAuth({
     domain: 'participedia.auth0.com',
     clientID: 'lORPmEONgX2K71SX7fk35X5PNZOCaSfU',
     responseType: 'token id_token',
     scope: 'openid profile email picture user_metadata',
-    redirectUri: window.location.href
+    redirectUri: location.origin + "/redirect"
   });
 
   var loginBtns = document.querySelectorAll('.loginButton');
@@ -29,13 +31,15 @@ window.addEventListener('load', function() {
   function handleAuthentication() {
     webAuth.parseHash(function(err, authResult) {
       if (authResult && authResult.accessToken && authResult.idToken) {
+        logObject(authResult);
         document.cookie = 'token=' + authResult.idToken;
         window.location.hash = '';
         localLogin(authResult);
-        location.reload(true);
+        location.replace(localStorage.destURL);
       } else if (err) {
         window.location.hash = '';
         console.log(err);
+        logout();
         alert(
           'Error: ' + err.error + '. Check the console for further details.'
         );
@@ -75,8 +79,12 @@ window.addEventListener('load', function() {
     accessToken = '';
     idToken = '';
     expiresAt = 0;
-    location.reload(true);
+    document.cookie = 'token=';
+    localStorage.destURL = '';
+    location.replace('/');
   }
+
+  window.logout = logout;
 
   function isAuthenticated() {
     // Check whether the current time is past the
@@ -84,6 +92,7 @@ window.addEventListener('load', function() {
     var expiration = parseInt(expiresAt) || 0;
     return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration
   }
+  window.isAuthenticated = isAuthenticated;
 
   if (localStorage.getItem('isLoggedIn') === 'true') {
     renewTokens();

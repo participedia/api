@@ -68,6 +68,9 @@ module.exports = {
     }
   },
   hasValue: (article, name) => {
+    if (!article){
+      return 'undefined ' + name;
+    }
     const item = article[name];
 
     // potential falsey values
@@ -171,7 +174,7 @@ module.exports = {
     return currentUrl(req);
   },
   isReaderPage(params) {
-    return params.view === "view";
+    return params && params.view && params.view === "view";
   },
   socialTagsTemplate(article, req) {
     if (!article) return;

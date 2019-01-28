@@ -122,4 +122,11 @@ app.use(
   })
 );
 
+app.get('/redirect', function(req, res){
+  console.log('request URL: %s', req.originalUrl);
+  return res
+    .status(200)
+    .render('experiments-edit');
+});
+
 module.exports = app;

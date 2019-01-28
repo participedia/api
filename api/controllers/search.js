@@ -189,7 +189,7 @@ router.get("/", async function(req, res) {
           parsed_query,
           static: staticText,
           params,
-          user: req.user
+          user: req.user || null
         });
       case "htmlfrag":
         return res.status(200).render("home-list", {
@@ -199,7 +199,7 @@ router.get("/", async function(req, res) {
           results,
           static: staticText,
           params,
-          user: req.user
+          user: req.user || null
         });
       case "csv":
         return res.status(500, "CSV not implemented yet").render();
@@ -215,7 +215,7 @@ router.get("/", async function(req, res) {
           results,
           static: staticText,
           params,
-          user: req.user
+          user: req.user || null
         });
     }
   } catch (error) {

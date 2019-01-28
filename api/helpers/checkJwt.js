@@ -22,7 +22,7 @@ let requiredOptions = {
   credentialsRequired: true,
   getToken: req => {
     console.log('Cookie token: %s', req.cookies.token);
-    req.cookies.token || null
+    return req.cookies.token || null
   }
 };
 const checkJwtRequired = jwt(requiredOptions);
