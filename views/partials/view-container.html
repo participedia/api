@@ -17,7 +17,7 @@
 
     <div class="accordion case-data-accordion" data-accordion="closed">
       <h3 class="accordion-header">
-        Case Data
+        {{article.type}} Data
         <button class="icon-only">
           {{> icon-chevron}}
         </button>
@@ -26,8 +26,20 @@
         {{> @partial-block }}
       </div>
     </div>
-    <div class="body-content">{{{ article.body }}}</div>
+    <div class="body-content">
+      {{# if article.description}}
+        <p>{{ article.description }}</p>
+      {{/if}}
+      {{{ article.body }}}
+    </div>
   </article>
 </div>
 
-{{> view-editbutton }}
+<a
+  href="/{{article.type}}/{{article.id}}/edit"
+  class="button button-red floating-action-button"
+  title="Edit Article"
+>
+  <span class="sr-only">Edit Article</span>
+  {{> icon-edit }}
+</a>

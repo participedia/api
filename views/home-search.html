@@ -1,0 +1,87 @@
+<div class="home-search js-home-search" data-layout="{{cardLayoutType req}}">
+  {{> map }}
+  <div class="content">
+    <h2 class="tagline">Participedia is a global commmunity sharing knowledge and stories about public particpation.</h2>
+
+    <ul class="unstyled-list card-layout-btns js-card-layout-btns">
+      <li>
+        <button class="icon-only toggle-list-layout-btn" data-type="list">
+          <span class="sr-only">list view</span>
+          {{> icon-list}}
+        </button>
+      </li>
+      <li>
+        <button class="icon-only toggle-grid-layout-btn" data-type="grid">
+          <span class="sr-only">grid view</span>
+          {{> icon-grid}}
+        </button>
+      </li>
+      <li>
+        <div class="menu-button-container">
+          <button class="button button-with-icon menu-button-trigger">
+            Sort By
+            {{> icon-dropdown-arrow}}
+          </button>
+          <div class="menu-button-menu js-sort-by-menu">
+            <a href="/?sortby=created_at" data-sortby="created_at">Date Submitted</a>
+            <a href="/?sortby=updated_at" data-sortby="updated_at">Last Edited</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <!-- select for navigating to different tabs in mobile view -->
+    <div class="article-select-container js-article-select-container">
+      <select>
+        <option value="tab-all">All</option>
+        <option value="tab-cases">Cases</option>
+        <option value="tab-methods">Methods</option>
+        <option value="tab-organizations">Organizations</option>
+      </select>
+    </div>
+
+    <div class="tab-container js-tab-container">
+      <input id="tab-all" type="radio" name="tabs" {{isTabActive req "tab-all"}}>
+      <label for="tab-all">All</label>
+
+      <input id="tab-cases" type="radio" name="tabs" {{isTabActive req "tab-cases"}}>
+      <label for="tab-cases">Cases</label>
+
+      <input id="tab-methods" type="radio" name="tabs" {{isTabActive req "tab-methods"}}>
+      <label for="tab-methods">Methods</label>
+
+      <input id="tab-organizations" type="radio" name="tabs" {{isTabActive req "tab-organizations"}}>
+      <label for="tab-organizations">Organizations</label>
+
+      <div class="tab-panels">
+        <div role="tabpanel" class="tab-all">
+          <p>all</p>
+          {{> cards-container
+            cards=results
+          }}
+        </div>
+        <div role="tabpanel" class="tab-cases">
+          <p>cases</p>
+          <!-- todo pass in cases array -->
+          {{> cards-container
+            cards=results
+          }}
+        </div>
+        <div role="tabpanel" class="tab-methods">
+          <p>methods</p>
+          <!-- todo pass in methods array -->
+          {{> cards-container
+            cards=results
+          }}
+        </div>
+        <div role="tabpanel" class="tab-organizations">
+          <p>organizations</p>
+          <!-- todo pass in orgs array -->
+          {{> cards-container
+            cards=results
+          }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

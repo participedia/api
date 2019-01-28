@@ -192,7 +192,7 @@ router.get("/", async function(req, res) {
           user: req.user || null
         });
       case "htmlfrag":
-        return res.status(200).render("home-list", {
+        return res.status(200).render("home-search", {
           total,
           pages,
           searchhits,
@@ -207,7 +207,7 @@ router.get("/", async function(req, res) {
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through
       default:
-        return res.status(200).render("home-list", {
+        return res.status(200).render("home-search", {
           OK,
           total,
           pages,
