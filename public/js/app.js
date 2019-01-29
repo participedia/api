@@ -12,6 +12,7 @@ import editTextarea from './edit-textarea.js';
 import viewSlideshow from "./view-slideshow.js";
 import viewSocialMedia from "./view-socialmedia.js";
 import homeSearch from "./home-search.js";
+import userView from "./user-view.js";
 
 // polyfills
 elementClosestPolyfill();
@@ -20,8 +21,15 @@ elementClosestPolyfill();
 header.init();
 contactHelpFaqWidget.init();
 
-// home/search page
-homeSearch.init();
+if (window.location.pathname === "/") {
+  // home/search page
+  homeSearch.init();
+}
+
+if (window.location.pathname.lastIndexOf('user') === 1) {
+  // user view page
+  userView.init();
+}
 
 const viewType = document.querySelector("[data-view]").getAttribute("data-view");
 
