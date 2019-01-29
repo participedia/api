@@ -289,6 +289,22 @@ module.exports = {
     }
   },
 
+  getHomeTabs() {
+    return [
+      { title: "All", key: "tab-all" },
+      { title: "Cases", key: "tab-cases" },
+      { title: "Methods", key: "tab-methods" },
+      { title: "Organizations", key: "tab-organizations" },
+    ];
+  },
+
+  getUserTabs() {
+    return [
+      { title: "Contributions", key: "tab-contributions" },
+      { title: "Bookmarks", key: "tab-bookmarks" },
+    ];
+  },
+
   // location helpers
   parseLatLng(latitude, longitude) {
     const coords = parseDMS(`${latitude},${longitude}`);
