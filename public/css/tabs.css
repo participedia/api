@@ -33,3 +33,22 @@
 #tab-bookmarks:checked ~ .tab-panels .tab-bookmarks {
   display: block;
 }
+
+.tab-select-container {
+  display: none;
+}
+
+@media (max-width: 650px) {
+  /* change tabs to select dropdown */
+  .tab-select-container {
+    display: block;
+  }
+
+  .tab-container label {
+    display: none;
+  }
+
+  .tab-panels {
+    margin-top: 30px;
+  }
+}

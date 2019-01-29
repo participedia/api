@@ -172,10 +172,6 @@
   margin-right: 0;
 }
 
-.article-select-container {
-  display: none;
-}
-
 /* button with dropdown menu */
 .menu-button-container {
   position: relative;
@@ -238,18 +234,6 @@
   /* hide toggle layout button */
   .card-layout-btns {
     display: none;
-  }
-  /* change tabs to select dropdown */
-  .article-select-container {
-    display: block;
-  }
-
-  .tab-container label {
-    display: none;
-  }
-
-  .tab-panels {
-    margin-top: 30px;
   }
 }
 

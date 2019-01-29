@@ -11,6 +11,13 @@
   </div>
 
   <div class="user-view-body">
+    <!-- select for navigating to different tabs in mobile view -->
+    <div class="tab-select-container js-tab-select-container">
+      <select>
+        <option value="tab-contributions">Contributions</option>
+        <option value="tab-bookmarks">Bookmarks</option>
+      </select>
+    </div>
     <div class="tab-container js-tab-container">
       <input id="tab-contributions" type="radio" name="tabs" {{isTabActive req "tab-contributions"}}>
       <label for="tab-contributions">Contributions</label>
