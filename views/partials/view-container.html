@@ -15,17 +15,10 @@
     {{> view-slideshow }}
     {{> view-authors }}
 
-    <div class="accordion case-data-accordion" data-accordion="closed">
-      <h3 class="accordion-header">
-        {{article.type}} Data
-        <button class="icon-only">
-          {{> icon-chevron}}
-        </button>
-      </h3>
-      <div class="accordion-body">
-        {{> @partial-block }}
-      </div>
-    </div>
+    {{#> accordion title=(articleDataTitle article)}}
+      {{> @partial-block }}
+    {{/accordion}}
+
     <div class="body-content">
       {{# if article.description}}
         <p>{{ article.description }}</p>

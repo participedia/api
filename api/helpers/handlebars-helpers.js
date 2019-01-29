@@ -1,5 +1,6 @@
 const moment = require("moment");
 const faqContent = require("./faq-content.js");
+const aboutData = require("./data/about-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
 
 function mapIdTitleToKeyValue(options) {
@@ -227,6 +228,10 @@ module.exports = {
     return socialTagsTemplate(title, description, url, imageUrl);
   },
 
+  articleDataTitle(article) {
+    return article.type + " Data";
+  },
+
   // search layout helpers
   cardLayoutType(req) {
     const defaultLayoutType = "grid";
@@ -298,4 +303,42 @@ module.exports = {
   toUpperCase(text) {
     return text.toUpperCase();
   },
+
+  getRandomKey() {
+    return parseInt(Math.random() * Math.random() * 1000000, 10);
+  },
+
+  // data
+  getPartnersData() {
+    return aboutData.partners;
+  },
+
+  getCommitteesData() {
+    return aboutData.committees;
+  },
+
+  getContentTypeData() {
+    return [
+      {
+        slug: "cases",
+        title: "Case",
+        description: "Cases are specific events and instances of participatory politics and governance of all shapes and sizes. Cases can be contemporary or historical, completed, or ongoing."
+      },
+      {
+        slug: "methods",
+        title: "Method",
+        description: "Methods are the processes and procedures used to guide participatory politics and governance."
+      },
+      {
+        slug: "organizations",
+        title: "Organization",
+        description: "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance."
+      },
+      {
+        slug: "tools-techniques",
+        title: "Tools & Techniques",
+        description: "Description TBD"
+      },
+    ];
+  }
 };

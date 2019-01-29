@@ -1,0 +1,13 @@
+{{#> accordion title=title small=true}}
+  {{#if description}}
+    <p>{{description}}</p>
+  {{/if}}
+  {{#each members}}
+    <dl class="people">
+      <dt>{{name}}</dt>
+      {{# each descriptors}}
+        <dd>{{this}}</dd>
+      {{/each}}
+    </dl>
+  {{/each}}
+{{/accordion}}
