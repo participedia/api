@@ -11,7 +11,6 @@ import editSubmissionDetails from "./edit-submission-details.js";
 import editTextarea from './edit-textarea.js';
 import viewSlideshow from "./view-slideshow.js";
 import viewSocialMedia from "./view-socialmedia.js";
-import accordion from "./accordion.js";
 import homeSearch from "./home-search.js";
 
 // polyfills
@@ -40,5 +39,4 @@ if (viewType === "edit") {
 if (viewType === "view") {
   viewSlideshow.init();
   viewSocialMedia.init();
-  accordion.init();
 }

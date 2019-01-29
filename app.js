@@ -109,6 +109,22 @@ app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
 
+app.get('/about', function (req, res) {
+  res.status(200).render("about-view");
+});
+app.get('/legal', function (req, res) {
+  res.status(200).render("legal-view");
+});
+app.get('/research', function (req, res) {
+  res.status(200).render("research-view");
+});
+app.get('/teaching', function (req, res) {
+  res.status(200).render("teaching-view");
+});
+app.get('/content-chooser', function (req, res) {
+  res.status(200).render("content-chooser");
+});
+
 app.use("/s3/:path", checkJwtRequired);
 app.use(
   "/s3",

@@ -1,0 +1,105 @@
+<div class="static-view-container">
+  <h1>Welcome to Participedia</h1>
+  <h2>A global community sharing knowledge and stories about public participation</h2>
+
+  <div class="video-embed-container">
+    <iframe src='https://player.vimeo.com/video/219546454' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+  </div>
+
+  <section>
+    <h2>Get Involved</h2>
+    <p>Anyone can <a href="/login">join the Participedia community</a> and help crowdsource, catalogue and compare participatory political processes around the world. All content on Participedia is collaboratively produced and open-source under a <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons License</a>.</p>
+
+    <h3>Explore</h3>
+    <p>Search, read, download and gain insight from our database of <a href="/cases">Cases</a>, <a href="/methods">Methods</a>, <a href="/organizations">Organizations</a>, surveys, teaching resources and external data sets.</p>
+
+    <h3>Contribute</h3>
+    <p>Help improve the quality of this knowledge resource by editing existing content or publishing your own.</p>
+
+    <h3>Teach</h3>
+    <p>Use Participedia in the classroom as a tool to engage students and showcase their research.</p>
+  </section>
+
+  <section>
+    <h2>Community</h2>
+    <p>Participedia’s searchable database of democratic innovations is made up of three distinct content types including Cases, Methods and Organizations. Bolstering this knowledge base are added resources, including surveys, teaching tools and external data sets.</p>
+
+    <p>The initial vision for Participedia was developed by Archon Fung (Kennedy School of Government, Harvard University) and Mark E. Warren (Department of Political Science, University of British Columbia), and is guided by a set of standing committees.</p>
+  </section>
+
+  <section>
+    {{#> accordion title="Members"}}
+      <p>Community members include policy analysts, democratic theorists, scholars, teachers, practitioners, activists, government officials, journalists and more. Anyone can join and help to build this growing resource by editing existing content or publishing new examples of public participation.</p>
+
+      <p><a href="/login">Join now</a></p>
+    {{/accordion}}
+
+    {{#> accordion title="Partners"}}
+      <p>Participedia reflects partnerships with organizations, institutions and individuals across the globe who share an interest in participatory politics and governance. Participedia’s partners are co-signers to the current SSHRC Partnership Grant. Please contact us if you would like to discuss developing a partnership to support Participedia’s global mission.</p>
+
+      {{#each (getPartnersData)}}
+        {{> about-section}}
+      {{/each}}
+    {{/accordion}}
+
+    {{#> accordion title="Committees"}}
+      <p>Committees are comprised of project co-investigators and collaborators, each with one nominated chairperson who sits on the executive committee.</p>
+
+      {{#each (getCommitteesData)}}
+        {{> about-section}}
+      {{/each}}
+    {{/accordion}}
+
+    {{#> accordion title="Funders"}}
+      <p>Participedia is currently supported by the Social Sciences and Humanities Research Council of Canada (SSHRC) in the form of a five-year Partnership Grant beginning in April 2015. A two-year SSHRC Partnership Grant was originally provided in April 2011. In 2012, The Bertelsmann Foundation provided generous support for development of multi-language functionality.</p>
+    {{/accordion}}
+
+    {{#> accordion title="Staff"}}
+      <p>Participedia employs a core staff to maintain day to day operations, support the community and ensure project goals are being met.</p>
+
+      <dl class="people">
+        <dt>David Ascher, Technical Lead, Design & Technology Committee</dt>
+        {{# each descriptors}}
+          <dd>{{this}}</dd>
+        {{/each}}
+      </dl>
+
+      <dl class="people">
+        <dt>Jesi Carson, Design & Communities Coordinator</dt>
+        <dd>Emily Carr University of Art + Design</dd>
+      </dl>
+
+      <dl class="people">
+        <dt>Rebecca Monnerat, Project Manager</dt>
+        <dd>University of British Columbia</dd>
+      </dl>
+
+      <dl class="people">
+        <dt>Patrick L. Scully, (member ex officio), Managing Director</dt>
+      </dl>
+
+      <dl class="people">
+        <dt>Mark E. Warren, Project Director and Co-Founder</dt>
+        <dd>Department of Political Science / Centre for the Study of Democratic Institutions</dd>
+        <dd>University of British Columbia</dd>
+      </dl>
+    {{/accordion}}
+  </section>
+
+  <section>
+    <h2>Content</h2>
+    <p>Participedia offers a searchable database of content related to worldwide public participation.</p>
+
+    {{#> accordion title="Cases"}}
+      <p>Cases are events and instances of participatory politics and governance of all shapes and sizes.</p>
+    {{/accordion}}
+
+    {{#> accordion title="Methods"}}
+      <p>Methods are the processes and procedures used to guide participatory politics and governance.</p>
+    {{/accordion}}
+
+    {{#> accordion title="Organizations"}}
+      <p>Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance.</p>
+    {{/accordion}}
+  </section>
+</div>
