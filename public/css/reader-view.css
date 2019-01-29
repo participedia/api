@@ -46,6 +46,15 @@
   word-break: break-word;
 }
 
+.reader-view .body-content h3 {
+  /* style h3 tags as h2 tags within body content only */
+  font-size: 1.75rem;
+  line-height: 1.875rem;
+  font-weight: 600;
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
 /* bookmark link */
 .reader-view .bookmark-link {
   display: none;

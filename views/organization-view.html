@@ -1,1 +1,25 @@
-<article>organization-view</article>
+{{#> view-container}}
+  <section>
+    {{> view-location }}
+    {{> view-list name="scope_operations"}}
+  </section>
+
+  <section>
+    {{> view-list name="sector"}}
+    {{> view-list name="general_issues"}}
+    {{> view-list name="specific_topics"}}
+  </section>
+
+  <section>
+    {{> view-media-list name="files"}}
+    {{> view-media-list name="links"}}
+    {{> view-media-list name="videos"}}
+    {{> view-media-list name="audio"}}
+  </section>
+
+  <section>
+    {{> view-list name="type_method"}}
+    {{> view-list name="type_tool"}}
+    {{> view-list name="methods_tools_techniques"}}
+  </section>
+{{/view-container}}

@@ -59,10 +59,11 @@
 .floating-action-button {
   margin: 0;
   border-radius: 2em;
-  padding: 1em;
+  padding: 1em 0;
   position: fixed;
   bottom: 3rem;
   right: 3rem;
+  box-shadow: 0px 0px 20px 1px #B3B3B3;
 }
 
 .floating-action-button svg {

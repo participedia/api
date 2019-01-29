@@ -1,1 +1,43 @@
-<article>organization-edit</article>
+{{#> edit-form}}
+  <fieldset>
+    <h2 class="fieldset-header">{{staticText static "overview_sectionlabel"}}</h2>
+    <h2 class="fieldset-header quickonly">{{staticText static "quick_submit_sectionlabel"}}</h2>
+
+    {{> edit-text name="name" is_required=true quick-submit=true}}
+    {{> edit-location}}
+    {{> edit-multi-select name="scope_operations"}}
+  </fieldset>
+
+  <fieldset>
+    <h2 class="fieldset-header">{{staticText static "description_narrative_sectionlabel"}}</h2>
+
+    {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
+    {{> edit-richtext name="body"}}
+  </fieldset>
+
+  <fieldset class="fullonly">
+    <h2 class="fieldset-header">{{staticText static "focus_areas_sectionlabel"}}</h2>
+
+    {{> edit-select name="sector"}}
+    {{> edit-multi-select name="general_issues" max=3}}
+    {{> edit-multi-select name="specific_topics" max=3}}
+  </fieldset>
+
+  <fieldset>
+    <h2 class="fieldset-header">{{staticText static "media_sectionlabel"}}</h2>
+
+    {{> edit-media name="files" quick-submit=true}}
+    {{> edit-link-set name="links" quick-submit=true}}
+    {{> edit-media name="photos" quick-submit=true}}
+    {{> edit-link-set name="videos" quick-submit=true}}
+    {{> edit-link-set name="audio" quick-submit=true}}
+  </fieldset>
+
+  <fieldset class="fullonly">
+    <h2 class="fieldset-header">{{staticText static "tools_techniques_sectionlabel"}}</h2>
+
+    {{> edit-multi-select name="type_method" max=3}}
+    {{> edit-multi-select name="type_tool" max=3}}
+    {{> edit-multi-select name="methods_tools_techniques" max=3}}
+  </fieldset>
+{{/ edit-form}}
