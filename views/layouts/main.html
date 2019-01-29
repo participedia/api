@@ -24,9 +24,12 @@
 
   {{> contact-help-faq }}
 
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYi8w5HOVTr3HyioFkAKUK_PofGow_7uA&libraries=places"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYi8w5HOVTr3HyioFkAKUK_PofGow_7uA&libraries=places&language={{static.language}}"></script>
   <script type="text/javascript" src="/js/polyfills/DragDropTouch.js"></script>
   <script type="text/javascript" src="/build/js/app.bundle.js"></script>
+  <script src="https://cdn.auth0.com/js/auth0/9.5.1/auth0.min.js"></script>
+  <script src="/js/authservice.js"></script>
+
 </body>
 
 </html>

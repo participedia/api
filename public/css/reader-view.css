@@ -46,6 +46,15 @@
   word-break: break-word;
 }
 
+.reader-view .body-content h3 {
+  /* style h3 tags as h2 tags within body content only */
+  font-size: 1.75rem;
+  line-height: 1.875rem;
+  font-weight: 600;
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
 /* bookmark link */
 .reader-view .bookmark-link {
   display: none;
@@ -61,30 +70,6 @@
 
 .reader-view .bookmark-link[data-bookmarked='true'] .icon-fill:first-of-type {
   fill: #808080;
-}
-
-/* accordion */
-.accordion-header {
-  border-top: 1px solid #e6e6e6;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.accordion[data-accordion=closed] .accordion-body {
-  display: none;
-}
-
-.accordion[data-accordion=open] .accordion-body {
-  display: block;
-}
-
-.accordion[data-accordion=closed] button {
-  transform: rotate(0);
-}
-
-.accordion[data-accordion=open] button {
-  transform: rotate(180deg);
 }
 
 @media (max-width: 850px) {

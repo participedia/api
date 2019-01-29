@@ -14,7 +14,7 @@ let {
 } = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
 let log = require("winston");
-const { supportedTypes } = require("../helpers/things");
+const { supportedTypes, parseGetParams  } = require("../helpers/things");
 
 const RESPONSE_LIMIT = 20;
 
@@ -147,6 +147,7 @@ router.get("/", async function(req, res) {
   const staticText = await db.one(
     `select * from layout_localized where language = '${lang}';`
   );
+  const params = parseGetParams(req, filterFromReq(req));
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
@@ -186,15 +187,19 @@ router.get("/", async function(req, res) {
           results,
           user_query,
           parsed_query,
-          static: staticText
+          static: staticText,
+          params,
+          user: req.user || null
         });
       case "htmlfrag":
-        return res.status(200).render("home-list", {
+        return res.status(200).render("home-search", {
           total,
           pages,
           searchhits,
           results,
-          static: staticText
+          static: staticText,
+          params,
+          user: req.user || null
         });
       case "csv":
         return res.status(500, "CSV not implemented yet").render();
@@ -202,13 +207,15 @@ router.get("/", async function(req, res) {
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through
       default:
-        return res.status(200).render("home-list", {
+        return res.status(200).render("home-search", {
           OK,
           total,
           pages,
           searchhits,
           results,
-          static: staticText
+          static: staticText,
+          params,
+          user: req.user || null
         });
     }
   } catch (error) {

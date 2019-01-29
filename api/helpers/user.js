@@ -22,16 +22,6 @@ async function commonUserHandler(required, req, res, next) {
   let email = req.header("X-Auth0-Name");
   let auth0UserId = req.header("X-Auth0-UserId");
   const language = as.value(req.params.language || "en");
-  // Temporary fake user
-  if (!user && req.query.user) {
-    let theUser = await db.oneOrNone(USER_BY_ID, {
-      userId: as.number(req.query.user),
-      language
-    });
-    req.user = theUser.user;
-    req.user.user_id = req.user.id;
-    return next();
-  }
   if (!user) {
     if (required) {
       return res.status(401).json({

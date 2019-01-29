@@ -18,6 +18,7 @@
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
     "compression": "^1.6.2",
+    "cookie-parser": "^1.4.3",
     "cors": "^2.8.1",
     "dotenv": "^4.0.0",
     "errorhandler": "^1.5.0",
@@ -47,13 +48,16 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "auth0": "^2.14.0",
+    "auth0-js": "^9.9.0",
+    "auth0-lock": "^11.13.0",
     "browserify": "^16.2.3",
     "chai": "^4.0.2",
     "chai-http": "^4.2.1",
     "csv": "^5.1.0",
     "eslint": "^5.12.1",
     "eslint-config-google": "^0.9.1",
-    "eslint-config-prettier": "^3.4.0",
+    "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-prettier": "^2.0.1",
     "esmify": "^2.0.0",
     "istanbul": "^0.4.5",
@@ -75,12 +79,9 @@
     "restorelocal": "dropdb \"participedia\"; createdb -E UTF8 \"participedia\"; psql \"participedia\" < ppedia_local.sql",
     "restorestage": "psql -d \"${DATABASE_STAGE_URL}\" -f ppedia_stage.sql",
     "resetstagedb": "psql -d \"${DATABASE_STAGE_URL}\" -f setup.sql; DATABASE_URL=$DATABASE_STAGE_URL node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
-    "resettestdb":
-      "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js; psql -d \"participedia-test\" -f migrations/all_migrations.sql",
-    "resetlocaldb":
-      "dropdb \"participedia\"; createdb \"participedia\"; psql -d \"participedia\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
-    "resettestfunctions":
-      "psql -d participedia-test -f migrations/functions.sql",
+    "resettestdb": "dropdb \"participedia-test\"; createdb \"participedia-test\"; psql -d \"participedia-test\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia-test node migrations/import_json.js; psql -d \"participedia-test\" -f migrations/all_migrations.sql",
+    "resetlocaldb": "dropdb \"participedia\"; createdb \"participedia\"; psql -d \"participedia\" -f setup.sql; DATABASE_URL=postgres://${USER}@localhost:5432/participedia node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
+    "resettestfunctions": "psql -d participedia-test -f migrations/functions.sql",
     "resetlocalfunctions": "psql -d participedia -f migrations/functions.sql",
     "resetstagefunctions": "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/functions.sql",
     "resetprodfunctions": "psql -d \"${DATABASE_PROD_URL}\" -f migrations/functions.sql",

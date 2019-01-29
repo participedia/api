@@ -7,6 +7,7 @@ let app = require("express")();
 var exphbs = require("express-handlebars");
 const fs = require("fs");
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
+const cookieParser = require('cookie-parser');
 
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
@@ -79,6 +80,7 @@ app.use(morgan("dev")); // request logging
 app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
+app.use(cookieParser());
 app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
 app.use(
@@ -109,6 +111,22 @@ app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
 
+app.get('/about', function (req, res) {
+  res.status(200).render("about-view");
+});
+app.get('/legal', function (req, res) {
+  res.status(200).render("legal-view");
+});
+app.get('/research', function (req, res) {
+  res.status(200).render("research-view");
+});
+app.get('/teaching', function (req, res) {
+  res.status(200).render("teaching-view");
+});
+app.get('/content-chooser', function (req, res) {
+  res.status(200).render("content-chooser");
+});
+
 app.use("/s3/:path", checkJwtRequired);
 app.use(
   "/s3",
@@ -119,5 +137,12 @@ app.use(
     ACL: "private" // this is default
   })
 );
+
+app.get('/redirect', function(req, res){
+  console.log('request URL: %s', req.originalUrl);
+  return res
+    .status(200)
+    .render('experiments-edit');
+});
 
 module.exports = app;
