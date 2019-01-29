@@ -340,5 +340,13 @@ module.exports = {
         description: "Description TBD"
       },
     ];
+  },
+
+  getYearFromDate(date, format) {
+    return moment(date).year();
+  },
+
+  parseUser(user) {
+    console.log(user)
   }
 };

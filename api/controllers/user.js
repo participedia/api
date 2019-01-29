@@ -16,7 +16,8 @@ async function getUserById(userId, req, res) {
         .status(404)
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
-    res.status(200).json({ OK: true, data: result.user });
+
+    return res.status(200).render("user-view", { data: result.user });
   } catch (error) {
     log.error("Exception in GET /user/%s => %s", userId, error);
     console.trace(error);
