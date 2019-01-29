@@ -1,7 +1,11 @@
-{{> pagination }}
-<ul class="unstyled-list cards-container js-cards-container">
-  {{#each cards }}
-    {{> article-card }}
-  {{/each}}
-</ul>
-{{> pagination }}
+{{#if cards}}
+  {{> pagination }}
+  <ul class="unstyled-list cards-container js-cards-container">
+    {{#each cards }}
+      {{> article-card }}
+    {{/each}}
+  </ul>
+  {{> pagination }}
+{{else}}
+  <p>There are no items to display.</p>
+{{/if}}
