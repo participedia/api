@@ -1,0 +1,23 @@
+.user-view-header {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 60px;
+}
+
+.user-image-container {
+  width: 340px;
+}
+
+.user-image-container img {
+  border-radius: 100px;
+  display: block;
+  margin: 0 auto;
+}
+
+.user-meta-container {
+  width: 50%;
+}
+
+.user-view-body {
+  margin: 0 30px 120px 30px;
+}

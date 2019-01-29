@@ -278,8 +278,13 @@ module.exports = {
   // tab helpers
   isTabActive(req, tabName) {
     const tabParam = req.query && req.query.tab;
-    // if there is no param, make tab-all active
-    if ((!tabParam && tabName === "tab-all") || tabParam === tabName) {
+    // this is kind of hacky -- this will break in the case that when
+    // have a default tab with the same name as a non-default tab on another page.
+    // tab-contributions is default tab on /user/{id} (user-view)
+    // tab-all is default tab on / (home-search)
+    const defaultTabs = ['tab-contributions', 'tab-all'];
+    // if there is no param, make default tab active
+    if ((!tabParam && defaultTabs.indexOf(tabName) > -1) || tabParam === tabName) {
       return "checked";
     }
   },

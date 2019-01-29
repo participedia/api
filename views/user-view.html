@@ -1,60 +1,36 @@
-<style type="text/css">
-  .user-view-container {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 60px;
-  }
-
-  .user-image-container {
-    width: 340px;
-  }
-
-  .user-image-container img {
-    border-radius: 100px;
-    display: block;
-    margin: 0 auto;
-  }
-
-  .user-meta-container {
-    width: 50%;
-  }
-</style>
-
 <div class="user-view-container">
-  <div class="user-image-container">
-    <img src="{{data.picture_url}}" alt="profile picture" width="160" height="160" />
+  <div class="user-view-header">
+    <div class="user-image-container">
+      <img src="{{data.picture_url}}" alt="profile picture" width="160" height="160" />
+    </div>
+    <div class="user-meta-container">
+      <h2>{{data.name}}</h2>
+      <p><strong>Member Since</strong> {{getYearFromDate data.join_date}}</p>
+      {{#if data.bio}}<p>{{data.bio}}</p>{{/if}}
+    </div>
   </div>
-  <div class="user-meta-container">
-    <h2>{{data.name}}</h2>
-    <p><strong>Member Since</strong> {{getYearFromDate data.join_date}}</p>
-    {{#if data.bio}}<p>{{data.bio}}</p>{{/if}}
+
+  <div class="user-view-body">
+    <div class="tab-container js-tab-container">
+      <input id="tab-contributions" type="radio" name="tabs" {{isTabActive req "tab-contributions"}}>
+      <label for="tab-contributions">Contributions</label>
+
+      <input id="tab-bookmarks" type="radio" name="tabs" {{isTabActive req "tab-bookmarks"}}>
+      <label for="tab-bookmarks">Bookmarks</label>
+
+      <div class="tab-panels">
+        <div role="tabpanel" class="tab-contributions">
+          {{> cards-container
+            cards=data.cases
+          }}
+        </div>
+
+        <div role="tabpanel" class="tab-bookmarks">
+          {{> cards-container
+            cards=data.bookmarks
+          }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-<!--
-{
-  "OK": true,
-  "data": {
-    "id": 417689,
-    "hidden": null,
-    "name": "alanna.scott@gmail.com",
-    "email": "alanna.scott@gmail.com",
-    "language": "en",
-    "language_1": "en",
-    "accepted_date": null,
-    "last_access_date": null,
-    "login": null,
-    "auth0_user_id": null,
-    "join_date": "2018-11-20T21:51:09.734",
-    "picture_url": "https://s.gravatar.com/avatar/d87986e91d456dfd25bdd9545d7cb51f?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fal.png",
-    "bio": "",
-    "isadmin": false,
-    "groups": [],
-    "type": "user",
-    "cases": [],
-    "methods": [],
-    "organizations": [],
-    "bookmarks": []
-  }
-}
- -->

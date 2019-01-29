@@ -128,39 +128,6 @@
   float: right;
 }
 
-/* tabs */
-.tab-panels {
-  border-top: 1px solid #E6E6E6;
-}
-
-.tab-panels > [role="tabpanel"] {
-  display: none;
-}
-
-.tab-container input {
-  display: none;
-}
-
-.tab-container label {
-  padding: .5rem;
-  display: inline-block;
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  cursor: pointer;
-}
-
-.tab-container label:hover,
-.tab-container input:checked + label {
-  border-bottom: 2px solid #ec2024;
-}
-
-#tab-all:checked ~ .tab-panels .tab-all,
-#tab-cases:checked ~ .tab-panels .tab-cases,
-#tab-methods:checked ~ .tab-panels .tab-methods,
-#tab-organizations:checked ~ .tab-panels .tab-organizations {
-  display: block;
-}
-
 /* toggle layout buttons */
 .card-layout-btns {
   display: flex;
