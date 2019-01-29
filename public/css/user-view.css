@@ -4,17 +4,17 @@
   margin-bottom: 60px;
 }
 
-.user-image-container {
+.user-view-header-image {
   width: 340px;
 }
 
-.user-image-container img {
+.user-view-header-image img {
   border-radius: 100px;
   display: block;
   margin: 0 auto;
 }
 
-.user-meta-container {
+.user-view-header-meta {
   width: 50%;
 }
 
