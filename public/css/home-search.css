@@ -66,7 +66,7 @@
   display: none;
 }
 
-.home-search[data-layout="list"] .cards-container .article-card {
+[data-card-layout="list"] .cards-container .article-card {
   width: 100%;
   height: unset;
   border-bottom: 1px solid #e6e6e6;
@@ -74,31 +74,31 @@
   padding-bottom: 30px;
 }
 
-.home-search[data-layout="list"] .cards-container .article-card a {
+[data-card-layout="list"] .cards-container .article-card a {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.home-search[data-layout="list"] .cards-container .article-card-content {
+[data-card-layout="list"] .cards-container .article-card-content {
   flex: 1;
 }
 
-.home-search[data-layout="list"] .cards-container .article-card-img {
+[data-card-layout="list"] .cards-container .article-card-img {
   width: 280px;
   margin-right: 30px;
 }
 
-.home-search[data-layout="list"] .cards-container .article-card-description {
+[data-card-layout="list"] .cards-container .article-card-description {
   display: block;
 }
 
-.home-search[data-layout="list"] .cards-container .article-card-meta {
+[data-card-layout="list"] .cards-container .article-card-meta {
   margin-top: 0;
 }
 
-.home-search[data-layout="list"] .cards-container .article-card-title,
-.home-search[data-layout="list"] .cards-container .article-card-description {
+[data-card-layout="list"] .cards-container .article-card-title,
+[data-card-layout="list"] .cards-container .article-card-description {
   margin-right: 30px;
 }
 
@@ -138,16 +138,16 @@
   margin-top: -4px;
 }
 
-[data-layout="grid"] .toggle-grid-layout-btn .icon-fill {
+[data-card-layout="grid"] .toggle-grid-layout-btn .icon-fill {
   fill: #EC2024;
 }
-[data-layout="grid"] .toggle-list-layout-btn .icon-fill {
+[data-card-layout="grid"] .toggle-list-layout-btn .icon-fill {
   fill: #B3B3B3;
 }
-[data-layout="list"] .toggle-grid-layout-btn .icon-fill {
+[data-card-layout="list"] .toggle-grid-layout-btn .icon-fill {
   fill: #B3B3B3;
 }
-[data-layout="list"] .toggle-list-layout-btn .icon-fill {
+[data-card-layout="list"] .toggle-list-layout-btn .icon-fill {
   fill: #EC2024;
 }
 

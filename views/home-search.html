@@ -1,34 +1,7 @@
-<div class="home-search js-home-search" data-layout="{{cardLayoutType req}}">
+<div class="home-search" data-card-layout="{{cardLayoutType req}}">
   {{> map }}
   <div class="content">
     <h2 class="tagline">Participedia is a global commmunity sharing knowledge and stories about public particpation.</h2>
-
-    <ul class="unstyled-list card-layout-btns js-card-layout-btns">
-      <li>
-        <button class="icon-only toggle-list-layout-btn" data-type="list">
-          <span class="sr-only">list view</span>
-          {{> icon-list}}
-        </button>
-      </li>
-      <li>
-        <button class="icon-only toggle-grid-layout-btn" data-type="grid">
-          <span class="sr-only">grid view</span>
-          {{> icon-grid}}
-        </button>
-      </li>
-      <li>
-        <div class="menu-button-container">
-          <button class="button button-with-icon menu-button-trigger">
-            Sort By
-            {{> icon-dropdown-arrow}}
-          </button>
-          <div class="menu-button-menu js-sort-by-menu">
-            <a href="/?sortby=created_at" data-sortby="created_at">Date Submitted</a>
-            <a href="/?sortby=updated_at" data-sortby="updated_at">Last Edited</a>
-          </div>
-        </div>
-      </li>
-    </ul>
 
     {{#> tabs req=req getTabs=(getHomeTabs)}}
       <div role="tabpanel" class="tab-all">
