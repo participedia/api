@@ -1,10 +1,10 @@
 import map from "./map.js";
-import tabs from "./tabs.js";
+import tabsWithCards from "./tabs-with-cards.js";
 
 const homeSearch = {
   init() {
     map.init();
-    tabs.init();
+    tabsWithCards.init();
   },
 }
 

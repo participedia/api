@@ -1,8 +1,8 @@
-import tabs from "./tabs.js";
+import tabsWithCards from "./tabs-with-cards.js";
 
 const userView = {
   init() {
-    tabs.init();
+    tabsWithCards.init();
   },
 }
 
