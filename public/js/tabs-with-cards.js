@@ -1,6 +1,6 @@
 import { updateUrlParams } from "./utils/utils.js";
 
-const tabs = {
+const tabsWithCards = {
   init() {
     this.tabInputEls = Array.prototype.slice.call(
       document.querySelectorAll(".js-tab-container input[name='tabs']")
@@ -97,4 +97,4 @@ const tabs = {
   },
 };
 
-export default tabs;
+export default tabsWithCards;

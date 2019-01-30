@@ -1,9 +1,9 @@
-<div class="home-search" data-card-layout="{{cardLayoutType req}}">
+<div class="home-search">
   {{> map }}
   <div class="content">
     <h2 class="tagline">Participedia is a global commmunity sharing knowledge and stories about public particpation.</h2>
 
-    {{#> tabs req=req getTabs=(getHomeTabs)}}
+    {{#> tabs-with-cards req=req getTabs=(getHomeTabs)}}
       <div role="tabpanel" class="tab-all">
         <p>all</p>
         {{> cards-container
@@ -31,6 +31,6 @@
           cards=results
         }}
       </div>
-    {{/tabs}}
+    {{/tabs-with-cards}}
   </div>
 </div>
