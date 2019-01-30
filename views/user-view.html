@@ -4,6 +4,7 @@
   </div>
   <div class="user-view-header-meta">
     <h2>{{data.name}}</h2>
+    {{#if data.location}}<p><strong>Location</strong> {{data.location}}</p>{{/if}}
     <p><strong>Member Since</strong> {{getYearFromDate data.join_date}}</p>
     {{#if data.bio}}<p>{{data.bio}}</p>{{/if}}
   </div>
