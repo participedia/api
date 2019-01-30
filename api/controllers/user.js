@@ -17,22 +17,23 @@ async function getUserById(userId, req, res, view="view") {
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
 
-      if (view === "edit") {
-        return res.status(200).render("user-edit", { data: user, static: {} });
-      } else {
-        return res.status(200).render("user-view", { data: user, static: {} });
-      }
+    // depending on view, return correct template
+    if (view === "edit") {
+      return res.status(200).render("user-edit", { data: result.user, static: {} });
+    } else {
+      return res.status(200).render("user-view", { data: result.user, static: {} });
+    }
 
-    } catch (error) {
-      log.error("Exception in GET /user/%s => %s", userId, error);
-      console.trace(error);
-      if (error.message && error.message == "No data returned from the query.") {
-        res.status(404).json({ OK: false });
-      } else {
-        res.status(500).json({ OK: false, error: error });
-      }
+  } catch (error) {
+    log.error("Exception in GET /user/%s => %s", userId, error);
+    console.trace(error);
+    if (error.message && error.message == "No data returned from the query.") {
+      res.status(404).json({ OK: false });
+    } else {
+      res.status(500).json({ OK: false, error: error });
     }
   }
+}
 
 /**
  * @api {get} /user/:userId Retrieve a user
