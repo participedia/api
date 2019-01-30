@@ -1,8 +1,9 @@
-.home-search .content {
-  margin: 30px;
+.home-search-body {
+  margin: 0 30px 120px 30px;
 }
 
-.home-search .tagline {
+.home-search-tagline {
+  margin-top: 30px;
   width: 75%;
 }
 
