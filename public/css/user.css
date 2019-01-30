@@ -27,3 +27,7 @@
 .user-view-body {
   margin: 0 30px 120px 30px;
 }
+
+.user-view-name {
+  margin: 0;
+}

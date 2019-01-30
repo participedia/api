@@ -3,9 +3,9 @@
     <img src="{{data.picture_url}}" alt="profile picture" width="160" height="160" />
   </div>
   <div class="user-main-content">
-    <h2>{{data.name}}</h2>
-    {{#if data.location}}<p><strong>Location</strong> {{data.location}}</p>{{/if}}
-    <p><strong>Member Since</strong> {{getYearFromDate data.join_date}}</p>
+    <h2 class="user-view-name">{{data.name}}</h2>
+    {{#if data.location}}<span class="small"><strong>Location</strong> {{data.location}}</span></br>{{/if}}
+    <span class="small"><strong>Member Since</strong> {{getYearFromDate data.join_date}}</span></br>
     {{#if data.bio}}<p>{{data.bio}}</p>{{/if}}
   </div>
 </div>
@@ -13,7 +13,7 @@
   {{#> tabs-with-cards req=req getTabs=(getUserTabs)}}
     <div role="tabpanel" class="tab-contributions">
       {{> cards-container
-        cards=data.cases
+        cards=data.articles
       }}
     </div>
 
