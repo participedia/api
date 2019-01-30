@@ -1,8 +1,8 @@
-<div class="user-view-header">
-  <div class="user-view-header-image">
+<div class="user-container">
+  <div class="user-profile-image">
     <img src="{{data.picture_url}}" alt="profile picture" width="160" height="160" />
   </div>
-  <div class="user-view-header-meta">
+  <div class="user-main-content">
     <h2>{{data.name}}</h2>
     {{#if data.location}}<p><strong>Location</strong> {{data.location}}</p>{{/if}}
     <p><strong>Member Since</strong> {{getYearFromDate data.join_date}}</p>

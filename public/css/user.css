@@ -1,23 +1,29 @@
-.user-view-header {
+.user-container {
   display: flex;
   flex-direction: row;
   margin-bottom: 60px;
 }
 
-.user-view-header-image {
+.user-profile-image {
   width: 340px;
 }
 
-.user-view-header-image img {
+.user-main-content {
+  width: 45%;
+}
+
+.user-profile-image img {
   border-radius: 100px;
   display: block;
   margin: 0 auto;
 }
 
-.user-view-header-meta {
-  width: 50%;
+/* user-edit */
+.user-edit-container {
+  margin-bottom: 0;
 }
 
+/* user-view */
 .user-view-body {
   margin: 0 30px 120px 30px;
 }

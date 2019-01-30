@@ -1,1 +1,37 @@
-<article>user-edit</article>
+<div class="user-container">
+  <div class="user-profile-image">
+    <img src="{{user.picture_url}}" alt="profile picture" width="160" height="160" />
+  </div>
+  <div class="user-main-content">
+    <form
+      action="/user"
+      method="post"
+      enctype="multipart/form-data"
+      data-submit-type="full"
+    >
+      <fieldset>
+        <h2>Public Profile</h2>
+        {{> edit-text name="name" value="value"}}
+        <!-- edit-location name="location"
+        edit-richtext name="bio" -->
+      </fieldset>
+
+      <fieldset>
+        <h2>Private Settings</h2>
+    <!--
+        edit-link-set name="emails"
+
+        edit-select name="primary_email"
+
+         todo: make password partial with 2 text fields current_pw, new_pw, confirm_pw
+        edit-text name="password"
+
+        edit-select name="language" -->
+      </fieldset>
+
+      <button type="submit" class="button button-light-grey">
+        {{> icon-submit }} Publish
+      </button>
+    </form>
+  </div>
+</div>
