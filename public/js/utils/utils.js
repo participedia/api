@@ -1,18 +1,18 @@
 function updateUrlParams(key, value) {
   const params = window.location.search;
-  const paramsObj = {};
+  const newParams = {};
 
   if (params) {
     const paramsArr = params.split("?")[1].split("&").map(p => p.split("="));
-    paramsArr.forEach(param => paramsObj[param[0]] = param[1]);
+    paramsArr.forEach(param => newParams[param[0]] = param[1]);
   }
 
   // add/update param
-  paramsObj[key] = value;
+  newParams[key] = value;
 
   let newParamsString = "";
-  Object.keys(paramsObj).forEach(key => {
-    newParamsString += `${key}=${paramsObj[key]}&`;
+  Object.keys(newParams).forEach(key => {
+    newParamsString += `${key}=${newParams[key]}&`;
   });
 
   // update url without reloading page
