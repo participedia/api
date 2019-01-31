@@ -8,12 +8,13 @@
       method="post"
       enctype="multipart/form-data"
       data-submit-type="full"
+      class="js-edit-form"
     >
       <fieldset>
         <h2>Public Profile</h2>
-        {{> edit-text name="name" value="value"}}
-        <!-- edit-location name="location"
-        edit-richtext name="bio" -->
+        {{> edit-text name="name" value=data.name}}
+        <!-- edit-location name="location" -->
+        {{> edit-richtext name="bio" value="data.bio"}}
       </fieldset>
 
       <fieldset>

@@ -1,6 +1,8 @@
 {{#> edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
   <div class="rich-text-editor-container js-rich-text-editor-container" style="display: none;">
-    {{#if (hasValue article name)}}
+    {{#if value}}
+      {{{value}}}
+    {{else if (hasValue article name)}}
       {{{getvalue article name}}}
     {{else}}
       {{{placeholder static name}}}
