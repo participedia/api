@@ -13,13 +13,17 @@
   {{#> tabs-with-cards req=req getTabs=(getUserTabs)}}
     <div role="tabpanel" class="tab-contributions">
       {{> cards-container
-        cards=data.articles
+        totalResults=data.articles.totalResults
+        totalPages=data.articles.totalPages
+        cards=data.articles.results
       }}
     </div>
 
     <div role="tabpanel" class="tab-bookmarks">
       {{> cards-container
-        cards=data.bookmarks
+        totalResults=data.bookmarks.totalResults
+        totalPages=data.bookmarks.totalPages
+        cards=data.bookmarks.results
       }}
     </div>
   {{/tabs-with-cards}}

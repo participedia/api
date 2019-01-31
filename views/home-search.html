@@ -7,6 +7,8 @@
     <div role="tabpanel" class="tab-all">
       <p>all</p>
       {{> cards-container
+        totalResults=total
+        totalPages=pages
         cards=results
       }}
     </div>
@@ -14,6 +16,8 @@
       <p>cases</p>
       <!-- todo pass in cases array -->
       {{> cards-container
+        totalResults=total
+        totalPages=pages
         cards=results
       }}
     </div>
@@ -21,6 +25,8 @@
       <p>methods</p>
       <!-- todo pass in methods array -->
       {{> cards-container
+        totalResults=total
+        totalPages=pages
         cards=results
       }}
     </div>
@@ -28,6 +34,8 @@
       <p>organizations</p>
       <!-- todo pass in orgs array -->
       {{> cards-container
+        totalResults=total
+        totalPages=pages
         cards=results
       }}
     </div>
