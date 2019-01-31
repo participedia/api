@@ -6,6 +6,7 @@
 
 .user-profile-image {
   width: 340px;
+  margin-bottom: 30px;
 }
 
 .user-main-content {
@@ -30,4 +31,21 @@
 
 .user-view-name {
   margin: 0;
+}
+
+@media (max-width: 750px) {
+  .user-container {
+    flex-direction: column;
+  }
+
+  .user-main-content,
+  .user-profile-image {
+    width: calc(100% - 60px);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .user-view .user-main-content {
+    text-align: center;
+  }
 }
