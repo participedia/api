@@ -4,8 +4,6 @@
     placeholder="{{placeholder static name}}"
     name="{{name}}"
     {{#if value}}
-      {{!-- if a value is passed into the partial, use that --}}
-      {{!-- value="{{getValue model key}}" , but then would have to pass in model to every component --}}
       value="{{value}}"
     {{else}}
       {{!-- if no value is passed in, assume this is for use with articles --}}

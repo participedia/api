@@ -311,6 +311,19 @@ module.exports = {
     return `${coords.latitude},${coords.longitude}`;
   },
 
+  locationFieldNames() {
+    return [
+      "address1",
+      "address2",
+      "city",
+      "province",
+      "postal_code",
+      "country",
+      "latitude",
+      "longitude"
+    ];
+  },
+
   // utilities
   currentUrl(req) {
     return currentUrl(req);
@@ -367,7 +380,7 @@ module.exports = {
     return moment(date).year();
   },
 
-  parseUser(user) {
-    console.log(user)
+  log(data) {
+    console.log(data)
   }
 };

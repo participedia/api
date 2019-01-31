@@ -1,10 +1,17 @@
-{{> edit-text name="location" }}
+{{#if value}}
+  {{> edit-text name="location" value=value}}
+{{else}}
+  {{> edit-text name="location"}}
+{{/if}}
 
-<input type="hidden" name="address1" value="{{getvalue article 'address1'}}" />
-<input type="hidden" name="address2" value="{{getvalue article 'address2'}}" />
-<input type="hidden" name="city" value="{{getvalue article 'city'}}" />
-<input type="hidden" name="province" value="{{getvalue article 'province'}}" />
-<input type="hidden" name="postal_code" value="{{getvalue article 'postal_code'}}" />
-<input type="hidden" name="country" value="{{getvalue article 'country'}}" />
-<input type="hidden" name="latitude" value="{{getvalue article 'latitude'}}" />
-<input type="hidden" name="longitude" value="{{getvalue article 'longitude'}}" />
+{{#each (locationFieldNames)}}
+  <input
+    type="hidden"
+    name="{{this}}"
+    {{#if article}}
+      value="{{getvalue ../article this}}"
+    {{else}}
+      value=""
+    {{/if}}
+  />
+{{/each}}
