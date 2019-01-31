@@ -131,7 +131,7 @@ button {
 }
 
 .button-with-icon svg {
-  margin-left: 1rem;
+  margin-left: 5px;
   padding-right: 0;
   width: 20px;
 }
