@@ -1,29 +1,29 @@
 <div class="user-container user-view">
   <div class="user-profile-image">
-    <img src="{{data.picture_url}}" alt="profile picture" width="160" height="160" />
+    <img src="{{user.picture_url}}" alt="profile picture" width="160" height="160" />
   </div>
   <div class="user-main-content">
-    <h2 class="user-view-name">{{data.name}}</h2>
-    {{#if data.location}}<span class="small"><strong>Location</strong> {{data.location}}</span></br>{{/if}}
-    <span class="small"><strong>Member Since</strong> {{getYearFromDate data.join_date}}</span></br>
-    {{#if data.bio}}<p>{{data.bio}}</p>{{/if}}
+    <h2 class="user-view-name">{{user.name}}</h2>
+    {{#if user.location}}<span class="small"><strong>Location</strong> {{user.location}}</span></br>{{/if}}
+    <span class="small"><strong>Member Since</strong> {{getYearFromDate user.join_date}}</span></br>
+    {{#if user.bio}}<p>{{user.bio}}</p>{{/if}}
   </div>
 </div>
 <div class="user-view-body">
   {{#> tabs-with-cards req=req getTabs=(getUserTabs)}}
     <div role="tabpanel" class="tab-contributions">
       {{> cards-container
-        totalResults=data.articles.totalResults
-        totalPages=data.articles.totalPages
-        cards=data.articles.results
+        totalResults=user.articles.totalResults
+        totalPages=user.articles.totalPages
+        cards=user.articles.results
       }}
     </div>
 
     <div role="tabpanel" class="tab-bookmarks">
       {{> cards-container
-        totalResults=data.bookmarks.totalResults
-        totalPages=data.bookmarks.totalPages
-        cards=data.bookmarks.results
+        totalResults=user.bookmarks.totalResults
+        totalPages=user.bookmarks.totalPages
+        cards=user.bookmarks.results
       }}
     </div>
   {{/tabs-with-cards}}

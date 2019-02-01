@@ -18,7 +18,7 @@
         </li>
         <li>
           {{#if user}}
-            <a href="/user/{{user.user_id}}" class="button button-dark-grey">
+            <a href="/user/{{user.id}}" class="button button-dark-grey">
               Profile
             </a>
           {{else}}
@@ -61,9 +61,9 @@
       </li>
       <li>
         {{#if user}}
-          <a href="/user/{{user.user_id}}" class="header-profile-link">
+          <a href="/user/{{user.id}}" class="header-profile-link">
             <span class="sr-only">goto profile</span>
-            <img src="{{user.picture}}" width="40" height="40" alt="profile picture" />
+            <img src="{{user.picture_url}}" width="40" height="40" alt="profile picture" />
           </a>
         {{else}}
           <button

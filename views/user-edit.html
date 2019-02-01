@@ -1,6 +1,6 @@
 <div class="user-container">
   <div class="user-profile-image">
-    <img src="{{data.picture_url}}" alt="profile picture" width="160" height="160" />
+    <img src="{{user.picture_url}}" alt="profile picture" width="160" height="160" />
   </div>
   <div class="user-main-content">
     <form
@@ -12,15 +12,15 @@
     >
       <fieldset>
         <h2>Public Profile</h2>
-        {{> edit-text name="name" value=data.name}}
-        {{> edit-text name="location" value=data.location}}
-        {{> edit-richtext name="bio" value=data.bio}}
+        {{> edit-text name="name" value=user.name}}
+        {{> edit-text name="location" value=user.location}}
+        {{> edit-richtext name="bio" value=user.bio}}
       </fieldset>
 
       <fieldset>
         <h2>Private Settings</h2>
 
-        {{> edit-text name="email" value=data.email}}
+        {{> edit-text name="email" value=user.email}}
 
         {{#> edit-form-group name="password"}}
           <input
@@ -43,7 +43,7 @@
         {{> edit-select
           name="language"
           options=static.languageOptions
-          selectedValue=data.language
+          selectedValue=user.language
           placeholder_txt=static.language_placeholder
         }}
       </fieldset>
