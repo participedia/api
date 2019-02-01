@@ -1,6 +1,9 @@
 <div class="user-container">
-  <div class="user-profile-image">
-    <img src="{{user.picture_url}}" alt="profile picture" width="160" height="160" />
+  <div class="user-profile-image user-profile-image-edit">
+    <a href="https://en.gravatar.com/" target="_blank" class="user-profile-image-edit-mask">
+      <img src="{{user.picture_url}}" alt="profile picture" width="160" height="160" />
+      <div class="user-profile-image-edit-overlay">Change</div>
+    </a>
   </div>
   <div class="user-main-content">
     <form

@@ -14,14 +14,39 @@
 }
 
 .user-profile-image img {
-  border-radius: 100px;
   display: block;
+  border-radius: 100px;
+  overflow: hidden;
   margin: 0 auto;
 }
 
 /* user-edit */
 .user-edit-container {
   margin-bottom: 0;
+}
+
+.user-profile-image-edit-mask {
+  border-radius: 100px;
+  overflow: hidden;
+  display: block;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
+}
+
+.user-profile-image-edit-mask:hover {
+  opacity: .75;
+}
+
+.user-profile-image-edit-overlay {
+  background-color: rgba(0,0,0,.75);
+  position: relative;
+  top: -40px;
+  text-align: center;
+  color: #fff;
+  height: 60px;
+  padding-top: 8px;
+  font-size: 0.875rem;
 }
 
 /* user-view */
