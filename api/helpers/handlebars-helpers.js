@@ -13,20 +13,20 @@ function mapIdTitleToKeyValue(options) {
   });
 }
 
-function staticTextValue(staticText, name, type = null) {
-  let key;
+function staticTextValue(staticText, key, type = null) {
+  let newKey;
   if (type) {
-    key = `${name}_${type}`;
+    newKey = `${key}_${type}`;
   } else {
-    key = name;
+    newKey = key;
   }
 
   if (staticText.labels) {
-    return staticText.labels[key] || key;
+    return staticText.labels[newKey] || newKey;
   } else {
     // this makes the static keys work on the reader view for now
     // since the format is different from the edit view
-    return staticText[key] || key;
+    return staticText[newKey] || newKey;
   }
 }
 
@@ -72,7 +72,7 @@ module.exports = {
   placeholder: (staticText, name) =>
     staticTextValue(staticText, name, "placeholder"),
 
-  staticText: (staticText, name) => staticTextValue(staticText, name),
+  staticText: (staticText, key) => staticTextValue(staticText, key),
 
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
