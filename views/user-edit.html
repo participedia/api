@@ -1,6 +1,6 @@
 <div class="user-container">
   <div class="user-profile-image">
-    <img src="{{user.picture_url}}" alt="profile picture" width="160" height="160" />
+    <img src="{{data.picture_url}}" alt="profile picture" width="160" height="160" />
   </div>
   <div class="user-main-content">
     <form
@@ -40,13 +40,12 @@
           />
         {{/edit-form-group}}
 
-    <!--
-         todo: make password partial with 2 text fields current_pw, new_pw, confirm_pw
-        edit-text name="password"
--->
-
-
-        <!-- edit-select name="language" -->
+        {{> edit-select
+          name="language"
+          options=static.languageOptions
+          selectedValue=data.language
+          placeholder_txt=static.language_placeholder
+        }}
       </fieldset>
 
       <button type="submit" class="button button-light-grey">

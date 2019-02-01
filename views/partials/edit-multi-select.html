@@ -5,7 +5,7 @@
     {{#if ranked}}data-ranked="true"{{/if}}
   >
     <option value="">{{placeholder static name}}</option>
-    {{#each (getStaticOptions static name)}}
+    {{#each (getArticleOptions static name)}}
       <option
         value="{{this.key}}"
       >

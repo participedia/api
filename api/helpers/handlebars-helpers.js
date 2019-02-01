@@ -74,7 +74,7 @@ module.exports = {
 
   staticText: (staticText, name) => staticTextValue(staticText, name),
 
-  getStaticOptions: (staticText, name) => {
+  getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
     // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
     if (name === "has_components" || name === "is_component_of") {
@@ -340,6 +340,10 @@ module.exports = {
 
   getRandomKey() {
     return parseInt(Math.random() * Math.random() * 1000000, 10);
+  },
+
+  isEqual(arg1, arg2) {
+    return arg1 === arg2;
   },
 
   // data

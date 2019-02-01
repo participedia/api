@@ -4,7 +4,7 @@
     <h2 class="fieldset-header quickonly">{{staticText static "quick_submit_sectionlabel"}}</h2>
 
     {{> edit-text name="title" is_required=true quick-submit=true}}
-    {{> edit-select name="facetoface_online_or_both" quick-submit=true}}
+    {{> article-edit-select name="facetoface_online_or_both" quick-submit=true}}
   </fieldset>
 
   <fieldset>
@@ -40,6 +40,6 @@
     <h2 class="fieldset-header">{{staticText static "process_sectionlabel"}}</h2>
 
     {{> edit-multi-select name="types_interaction" }}
-    {{> edit-select name="facilitation" }}
+    {{> article-edit-select name="facilitation" }}
   </fieldset>
 {{/edit-form}}
