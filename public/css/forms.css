@@ -55,6 +55,10 @@ input[type=number]::-webkit-inner-spin-button {
   margin-bottom: 10px;
 }
 
+.form-group-password input {
+  margin-bottom: 15px;
+}
+
 [data-required="true"]:before {
   content: '*';
   color: #EC2024;

@@ -1,8 +1,4 @@
-{{#if value}}
-  {{> edit-text name="location" value=value}}
-{{else}}
-  {{> edit-text name="location"}}
-{{/if}}
+{{> edit-text name="location"}}
 
 {{#each (locationFieldNames)}}
   <input
