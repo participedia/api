@@ -19,7 +19,7 @@ function isEditPage() {
 }
 
 function isUserPage() {
-  return window.location.pathname.lastIndexOf('/user') > 0;
+  return window.location.pathname.lastIndexOf('/user') >= 0;
 }
 
 // polyfills
