@@ -182,6 +182,10 @@ module.exports = {
     return `${name}[${index}][${attr}]`;
   },
 
+  moment(date, format) {
+    return moment(date).format(format);
+  },
+
   formatDate(article, name, format) {
     return moment(article[name]).format(format);
   },

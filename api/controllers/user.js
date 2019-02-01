@@ -145,11 +145,9 @@ async function getUserById(userId, req, res, view="view") {
     };
 
     // only pass down the neccessary keys for the edit view
-    const userEditKeys = ["id", "hidden", "name", "email", "location", "language", "login", "picture_url", "bio", "isadmin"]
+    const userEditKeys = ["id", "hidden", "name", "email", "location", "language", "login", "picture_url", "bio", "isadmin", "join_date"]
     const userEditJSON = {};
-    userEditKeys.forEach(key => {
-      userEditJSON[key] = userJSON[key];
-    });
+    userEditKeys.forEach(key => userEditJSON[key] = userJSON[key]);
 
     // depending on view, return correct template
     if (view === "edit") {

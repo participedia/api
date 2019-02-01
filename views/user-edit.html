@@ -10,6 +10,8 @@
       data-submit-type="full"
       class="js-edit-form"
     >
+      <p><strong>Member Since</strong> {{moment user.join_date "ll"}}</p>
+
       <fieldset>
         <h2>Public Profile</h2>
         {{> edit-text name="name" value=user.name}}
