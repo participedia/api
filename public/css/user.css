@@ -58,7 +58,11 @@
   margin: 0;
 }
 
-@media (max-width: 750px) {
+.user-view-edit-profile-button {
+  float: right;
+}
+
+@media (max-width: 850px) {
   .user-container {
     flex-direction: column;
   }
@@ -72,5 +76,10 @@
 
   .user-view .user-main-content {
     text-align: center;
+  }
+
+  .user-view-edit-profile-button {
+    float: none;
+    margin-bottom: 30px;
   }
 }
