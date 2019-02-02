@@ -63,7 +63,11 @@
         {{#if user}}
           <a href="/user/{{user.id}}" class="header-profile-link">
             <span class="sr-only">goto profile</span>
-            <img src="{{user.picture_url}}" width="40" height="40" alt="profile picture" />
+            {{#if user.picture_url}}
+              <img src="{{user.picture_url}}" alt="profile_picture" width="40" height="40" />
+            {{else}}
+              <div class="user-profile-image-initial">{{getFirstCharacter user.name}}</div>
+            {{/if}}
           </a>
         {{else}}
           <button

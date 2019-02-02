@@ -13,11 +13,24 @@
   width: 45%;
 }
 
-.user-profile-image img {
+.user-profile-image img,
+.user-profile-image-initial {
   display: block;
   border-radius: 100px;
   overflow: hidden;
   margin: 0 auto;
+}
+
+.user-profile-image-initial {
+  background-color: #E0E0E0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  width: 160px;
+  height: 160px;
+  font-size: 6rem;
+  font-weight: 800;
 }
 
 /* user-edit */
@@ -32,6 +45,7 @@
   width: 160px;
   height: 160px;
   margin: 0 auto;
+  text-decoration: none;
 }
 
 .user-profile-image-edit-mask:hover {

@@ -1,6 +1,10 @@
 <div class="user-container user-view">
   <div class="user-profile-image">
-    <img src="{{user.picture_url}}" alt="{{staticText static "profile_picture"}}" width="160" height="160" />
+    {{#if user.picture_url}}
+      <img src="{{user.picture_url}}" alt="{{staticText static "profile_picture"}}" width="160" height="160" />
+    {{else}}
+      <div class="user-profile-image-initial">{{getFirstCharacter user.name}}</div>
+    {{/if}}
   </div>
   <div class="user-main-content">
     {{!-- if user is logged in, show edit profile button --}}
@@ -11,8 +15,15 @@
     {{/if}}
 
     <h2 class="user-view-name">{{user.name}}</h2>
-    {{#if user.location}}<span class="small"><strong>{{staticText static "location"}}</strong> {{user.location}}</span></br>{{/if}}
-    <span class="small"><strong>{{staticText static "member_since"}}</strong> {{getYearFromDate user.join_date}}</span></br>
+    {{#if user.location}}
+      <span class="small"><strong>{{staticText static "location"}}</strong> {{user.location}}</span></br>
+    {{/if}}
+    {{#if user.join_date}}
+      <span class="small">
+        <strong>{{staticText static "member_since"}}</strong> {{getYearFromDate user.join_date}}
+      </span>
+      </br>
+    {{/if}}
     {{#if user.bio}}<p>{{user.bio}}</p>{{/if}}
   </div>
 </div>

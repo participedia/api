@@ -350,6 +350,10 @@ module.exports = {
     return arg1 === arg2;
   },
 
+  getFirstCharacter(text) {
+    return text.charAt(0);
+  },
+
   // data
   getPartnersData() {
     return aboutData.partners;

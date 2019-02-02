@@ -84,6 +84,18 @@ header a {
   border-radius: 24px;
 }
 
+.header-profile-link .user-profile-image-initial {
+  background-color: #E0E0E0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
 .icon-container {
   background-color: #4D4D4D;
   order: -1;

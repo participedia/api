@@ -1,7 +1,11 @@
 <div class="user-container">
   <div class="user-profile-image user-profile-image-edit">
     <a href="https://gravatar.com/" target="_blank" class="user-profile-image-edit-mask">
-      <img src="{{user.picture_url}}" alt="profile picture" width="160" height="160" />
+      {{#if user.picture_url}}
+        <img src="{{user.picture_url}}" alt="profile_picture" width="160" height="160" />
+      {{else}}
+        <div class="user-profile-image-initial">{{getFirstCharacter user.name}}</div>
+      {{/if}}
       <div class="user-profile-image-edit-overlay">{{staticText static "change"}}</div>
     </a>
   </div>
@@ -17,15 +21,15 @@
 
       <fieldset>
         <h2>{{staticText static "public_profile"}}</h2>
-        {{> edit-text name="name" value=user.name}}
-        {{> edit-text name="location" value=user.location}}
-        {{> edit-richtext name="bio" value=user.bio}}
+        {{> edit-text name="name" value=user.name placeholderText=static.name_placeholder}}
+        {{> edit-text name="location" value=user.location placeholderText=static.location_placeholder}}
+        {{> edit-richtext name="bio" value=user.bio placeholderText=static.bio_placeholder}}
       </fieldset>
 
       <fieldset>
         <h2>{{staticText static "private_settings"}}</h2>
 
-        {{> edit-text name="email" value=user.email}}
+        {{> edit-text name="email" value=user.email placeholderText=static.email_placeholder}}
 
         {{#> edit-form-group name="password"}}
           <input
