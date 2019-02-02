@@ -328,6 +328,22 @@ module.exports = {
     ];
   },
 
+  // user profile
+  getInitials(username) {
+    let initials = "";
+    const splitUsername = username.split(" ");
+
+    if (splitUsername.length > 1) {
+      // if there are 2 names in the string, extract each first letter
+      initials = splitUsername[0].charAt(0) + splitUsername[1].charAt(0);
+    } else {
+      // otherwise just use the first letter of the string
+      initials = username.charAt(0);
+    }
+
+    return initials.toUpperCase();
+  },
+
   // utilities
   currentUrl(req) {
     return currentUrl(req);
@@ -348,10 +364,6 @@ module.exports = {
 
   isEqual(arg1, arg2) {
     return arg1 === arg2;
-  },
-
-  getFirstCharacter(text) {
-    return text.charAt(0);
   },
 
   // data

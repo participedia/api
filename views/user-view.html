@@ -3,7 +3,7 @@
     {{#if user.picture_url}}
       <img src="{{user.picture_url}}" alt="{{staticText static "profile_picture"}}" width="160" height="160" />
     {{else}}
-      <div class="user-profile-image-initial">{{getFirstCharacter user.name}}</div>
+      <div class="user-profile-image-initial">{{getInitials user.name}}</div>
     {{/if}}
   </div>
   <div class="user-main-content">
