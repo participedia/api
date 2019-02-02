@@ -403,8 +403,4 @@ module.exports = {
   getYearFromDate(date, format) {
     return moment(date).year();
   },
-
-  log(data) {
-    console.log(data)
-  }
 };
