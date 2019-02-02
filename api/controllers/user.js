@@ -172,8 +172,14 @@ async function getUserById(userId, req, res, view="view") {
       language_instructional: "language_instructional",
       language_placeholder: "language_placeholder",
       publish: "Publish",
-    }
+    };
 
+    const userViewStaticText = {
+      profile_picture: "profile picture",
+      edit_profile: "Edit Profile",
+      member_since: "Member Since",
+      location: "Location",
+    };
 
     // depending on view, return correct template
     if (view === "edit") {
@@ -182,7 +188,7 @@ async function getUserById(userId, req, res, view="view") {
         static: userEditstaticTxt,
       });
     } else {
-      return res.status(200).render("user-view", { user: userJSON, static: {} });
+      return res.status(200).render("user-view", { user: userJSON, static: userViewStaticText });
     }
 
   } catch (error) {
