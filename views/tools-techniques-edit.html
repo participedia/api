@@ -3,7 +3,7 @@
     <h2 class="fieldset-header">{{staticText static "overview_sectionlabel"}}</h2>
     <h2 class="fieldset-header quickonly">{{staticText static "quick_submit_sectionlabel"}}</h2>
 
-    {{> edit-text name="title" is_required=true quick-submit=true}}
+    {{> article-edit-text name="title" is_required=true quick-submit=true}}
     {{> article-edit-select name="facetoface_online_or_both" quick-submit=true}}
   </fieldset>
 
@@ -17,7 +17,11 @@
     <h2 class="fieldset-header">{{staticText static "description_narrative_sectionlabel"}}</h2>
 
     {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
-    {{> edit-richtext name="body_method"}}
+    {{> edit-richtext
+      name="body_method"
+      value=(getvalue article "body_method")
+      placeholderText=(placeholder static "body_method")
+    }}
   </fieldset>
 
   <fieldset>

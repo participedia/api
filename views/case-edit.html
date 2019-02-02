@@ -2,16 +2,20 @@
   <fieldset class="overview">
     <h2 class="fieldset-header">{{staticText static "overview_sectionlabel"}}</h2>
     <h2 class="fieldset-header quickonly">{{staticText static "quick_submit_sectionlabel"}}</h2>
-    {{> edit-text name="title" is_required=true quick-submit=true}}
+    {{> article-edit-text name="title" is_required=true quick-submit=true}}
     {{> edit-multi-select ranked=true name="general_issues" quick-submit=true max=3 }}
     {{> edit-multi-select ranked=true name="specific_topics" max=3 }}
     {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
-    {{> edit-richtext name="body" }}
+    {{> edit-richtext
+      name="body"
+      value=(getvalue article "body")
+      placeholderText=(placeholder static "body")
+    }}
     {{> edit-multi-select name="tags" }}
   </fieldset>
   <fieldset class="location">
     <h2 class="fieldset-header">{{staticText static "location_sectionlabel"}}</h2>
-    {{> edit-location quick-submit=true}}
+    {{> article-edit-location quick-submit=true}}
     {{> article-edit-select name="scope" }}
   </fieldset>
   <fieldset class="components fullonly">
@@ -69,7 +73,7 @@
   </fieldset>
   <fieldset class="resources fullonly">
     <h2 class="fieldset-header">{{staticText static "resources_sectionlabel"}}</h2>
-    {{> edit-text name="funder" }}
+    {{> article-edit-text name="funder" }}
     {{> edit-multi-select name="funder_types" max=3 }}
     {{> article-edit-select name="staff" }}
     {{> article-edit-select name="volunteers" }}
