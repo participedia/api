@@ -18,7 +18,7 @@ services:
 install:
   - npm ci
 script:
-  - npm start &
+  - npm start & wait-on http://localhost:3001
   - $(npm bin)/cypress run --record
 before_script:
   - psql -a -U postgres -c 'create database participedia;'
