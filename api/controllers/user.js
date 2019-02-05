@@ -8,8 +8,6 @@ const staticTextToBeAdded = require("../locales/en.js");
 
 async function getStaticText(language) {
   // merge localized text from the db with the keys that need to be added.
-  // todo: might be better to just add the keys to the db....
-  // would need to write a migration to add keys to the db
   const staticTextFromDB = await db.one(
     `select * from layout_localized where language = '${language}';`
   );
