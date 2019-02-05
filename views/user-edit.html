@@ -23,7 +23,7 @@
         <h2>{{staticText static "public_profile"}}</h2>
         {{> edit-text name="name" value=user.name placeholderText=static.name_placeholder}}
         {{> edit-text name="location" value=user.location placeholderText=static.location_placeholder}}
-        {{> edit-richtext name="bio" value=user.bio placeholderText=static.bio_placeholder}}
+        {{> edit-richtext name="bio" value=user.bio}}
       </fieldset>
 
       <fieldset>
@@ -34,17 +34,17 @@
         {{#> edit-form-group name="password"}}
           <input
             type="password"
-            placeholder={{staticText static "current_password_placeholder"}}
+            placeholder="{{staticText static "current_password_placeholder"}}"
             name="current_password"
           />
           <input
             type="password"
-            placeholder={{staticText static "new_password_placeholder"}}
+            placeholder="{{staticText static "new_password_placeholder"}}"
             name="new_password"
           />
           <input
             type="password"
-            placeholder={{staticText static "confirm_new_password_placeholder"}}
+            placeholder="{{staticText static "confirm_new_password_placeholder"}}"
             name="confirm_new_password"
           />
         {{/edit-form-group}}
