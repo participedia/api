@@ -18,11 +18,11 @@
     {{> @partial-block }}
 
     <div class="edit-buttons">
-      <button type="submit" class="button button-light-grey">
+      <button type="submit" class="button button-light-grey" data-cy="submit">
         {{> icon-submit }} Publish
       </button>
 
-      <a href="?full=1" class="button button-dark-grey quickonly">Do Full Version</a>
+      <a href="?full=1" class="button button-dark-grey quickonly" data-cy="full-version-link">Do Full Version</a>
     </div>
 
     <div class="something-missing-prompt">
@@ -30,7 +30,7 @@
       <p>Suggest edits to this form by email to <a target="_blank" href="mailto:info@participedia.net?subject=Suggested form edits - {{article.type}}">info@participedia.net</a></p>
     </div>
 
-    <button type="submit" class="button button-red floating-action-button" title="Publish">
+    <button type="submit" class="button button-red floating-action-button" title="Publish" data-cy="floating-action-button">
       <span class="sr-only">Publish Article</span>
       {{> icon-submit }}
     </button>
