@@ -67,8 +67,9 @@
     "watchify": "^3.11.0"
   },
   "scripts": {
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:verify": "cypress verify",
     "start": "nodemon server.js",
     "watch": "watchify public/js/app.js -p esmify -o public/build/js/app.bundle.js -v",
     "lint": "eslint \"**.js\"",
