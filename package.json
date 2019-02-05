@@ -64,9 +64,11 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "prettier": "^1.7.0",
+    "wait-on": "^3.2.0",
     "watchify": "^3.11.0"
   },
   "scripts": {
+    "start-and-test-cypress": "npm start & wait-on http://localhost:3001 & npm run cy:run",
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:verify": "cypress verify",
