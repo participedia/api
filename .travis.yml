@@ -18,6 +18,7 @@ services:
 install:
   - npm ci
 script:
+  - npm start &
   - $(npm bin)/cypress run --record
 before_script:
   - psql -a -U postgres -c 'create database participedia;'
