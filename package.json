@@ -68,6 +68,7 @@
   },
   "scripts": {
     "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "start": "nodemon server.js",
     "watch": "watchify public/js/app.js -p esmify -o public/build/js/app.bundle.js -v",
     "lint": "eslint \"**.js\"",
