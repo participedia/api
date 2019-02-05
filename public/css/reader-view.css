@@ -42,6 +42,10 @@
   text-align: center;
 }
 
+.reader-view .social-links li {
+  align-self: center;
+}
+
 .reader-view .body-content {
   word-break: break-word;
 }
@@ -80,9 +84,14 @@
     position: relative;
     margin-left: 0;
     order: 0;
+    margin-bottom: 30px;
   }
   .reader-view .social-links li {
     margin-right: 8px;
+  }
+
+  .reader-view .social-links svg {
+    display: flex;
   }
 
   .reader-view article {

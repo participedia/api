@@ -4,19 +4,60 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
+const staticTextToBeAdded = require("../locales/en.js");
 
-async function getUserById(userId, req, res) {
+async function getStaticText(language) {
+  // merge localized text from the db with the keys that need to be added.
+  const staticTextFromDB = await db.one(
+    `select * from layout_localized where language = '${language}';`
+  );
+  return Object.assign({}, staticTextToBeAdded, staticTextFromDB);
+}
+
+async function getUserById(userId, req, res, view="view") {
   try {
+    const language = req.params.language || "en";
+
     const result = await db.oneOrNone(USER_BY_ID, {
       userId: userId,
-      language: req.params.language || "en"
+      language: language,
     });
     if (!result) {
       return res
         .status(404)
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
-    res.status(200).json({ OK: true, data: result.user });
+
+    const staticText = await getStaticText(language);
+
+    if (view === "edit") {
+      // only return some keys on the user object for the edit view
+      const userEditKeys = [
+        "id",
+        "hidden",
+        "name",
+        "email",
+        "location",
+        "language",
+        "login",
+        "picture_url",
+        "bio",
+        "isadmin",
+        "join_date"
+      ];
+      const userEditJSON = {};
+      userEditKeys.forEach(key => userEditJSON[key] = result.user[key]);
+
+      return {
+        static: staticText,
+        user: userEditJSON,
+      };
+    } else {
+      return {
+        static: staticText,
+        user: result.user,
+      };
+    }
   } catch (error) {
     log.error("Exception in GET /user/%s => %s", userId, error);
     console.trace(error);
@@ -49,11 +90,26 @@ async function getUserById(userId, req, res) {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.get("/:userId", function(req, res) {
+router.get("/:userId", async function(req, res) {
   try {
-    return getUserById(req.params.userId || req.user.user_id, req, res);
+    const data = await getUserById(req.params.userId || req.user.user_id, req, res, "view");
+
+    // return html template
+    res.status(200).render(`user-view`, data);
   } catch (error) {
     console.error("Problem in /user/:userId");
+    console.trace(error);
+  }
+});
+
+router.get("/:userId/edit", async function(req, res) {
+  try {
+    const data = await getUserById(req.params.userId || req.user.user_id, req, res, "edit");
+
+    // return html template
+    res.status(200).render(`user-edit`, data);
+  } catch (error) {
+    console.error("Problem in /user/:userId/edit");
     console.trace(error);
   }
 });

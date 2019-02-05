@@ -2,6 +2,8 @@ const viewSocialMedia = {
   init() {
     const bookmarkLinkEl = document.querySelector(".js-bookmark-link");
 
+    if (!bookmarkLinkEl) return;
+
     this.data = {
       type: bookmarkLinkEl.getAttribute("data-type"),
       thingId: bookmarkLinkEl.getAttribute("data-thing-id"),

@@ -13,20 +13,20 @@ function mapIdTitleToKeyValue(options) {
   });
 }
 
-function staticTextValue(staticText, name, type = null) {
-  let key;
+function staticTextValue(staticText, key, type = null) {
+  let newKey;
   if (type) {
-    key = `${name}_${type}`;
+    newKey = `${key}_${type}`;
   } else {
-    key = name;
+    newKey = key;
   }
 
   if (staticText.labels) {
-    return staticText.labels[key] || key;
+    return staticText.labels[newKey] || newKey;
   } else {
     // this makes the static keys work on the reader view for now
     // since the format is different from the edit view
-    return staticText[key] || key;
+    return staticText[newKey] || newKey;
   }
 }
 
@@ -72,9 +72,9 @@ module.exports = {
   placeholder: (staticText, name) =>
     staticTextValue(staticText, name, "placeholder"),
 
-  staticText: (staticText, name) => staticTextValue(staticText, name),
+  staticText: (staticText, key) => staticTextValue(staticText, key),
 
-  getStaticOptions: (staticText, name) => {
+  getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
     // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
     if (name === "has_components" || name === "is_component_of") {
@@ -182,6 +182,10 @@ module.exports = {
     return `${name}[${index}][${attr}]`;
   },
 
+  moment(date, format) {
+    return moment(date).format(format);
+  },
+
   formatDate(article, name, format) {
     return moment(article[name]).format(format);
   },
@@ -278,16 +282,66 @@ module.exports = {
   // tab helpers
   isTabActive(req, tabName) {
     const tabParam = req.query && req.query.tab;
-    // if there is no param, make tab-all active
-    if ((!tabParam && tabName === "tab-all") || tabParam === tabName) {
+    // this is kind of hacky -- this will break in the case that when
+    // have a default tab with the same name as a non-default tab on another page.
+    // tab-contributions is default tab on /user/{id} (user-view)
+    // tab-all is default tab on / (home-search)
+    const defaultTabs = ['tab-contributions', 'tab-all'];
+    // if there is no param, make default tab active
+    if ((!tabParam && defaultTabs.indexOf(tabName) > -1) || tabParam === tabName) {
       return "checked";
     }
+  },
+
+  getHomeTabs() {
+    return [
+      { title: "All", key: "tab-all" },
+      { title: "Cases", key: "tab-cases" },
+      { title: "Methods", key: "tab-methods" },
+      { title: "Organizations", key: "tab-organizations" },
+    ];
+  },
+
+  getUserTabs() {
+    return [
+      { title: "Contributions", key: "tab-contributions" },
+      { title: "Bookmarks", key: "tab-bookmarks" },
+    ];
   },
 
   // location helpers
   parseLatLng(latitude, longitude) {
     const coords = parseDMS(`${latitude},${longitude}`);
     return `${coords.latitude},${coords.longitude}`;
+  },
+
+  locationFieldNames() {
+    return [
+      "address1",
+      "address2",
+      "city",
+      "province",
+      "postal_code",
+      "country",
+      "latitude",
+      "longitude"
+    ];
+  },
+
+  // user profile
+  getInitials(username) {
+    let initials = "";
+    const splitUsername = username.split(" ");
+
+    if (splitUsername.length > 1) {
+      // if there are 2 names in the string, extract each first letter
+      initials = splitUsername[0].charAt(0) + splitUsername[1].charAt(0);
+    } else {
+      // otherwise just use the first letter of the string
+      initials = username.charAt(0);
+    }
+
+    return initials.toUpperCase();
   },
 
   // utilities
@@ -306,6 +360,10 @@ module.exports = {
 
   getRandomKey() {
     return parseInt(Math.random() * Math.random() * 1000000, 10);
+  },
+
+  isEqual(arg1, arg2) {
+    return arg1 === arg2;
   },
 
   // data
@@ -340,5 +398,9 @@ module.exports = {
         description: "Description TBD"
       },
     ];
-  }
+  },
+
+  getYearFromDate(date, format) {
+    return moment(date).year();
+  },
 };

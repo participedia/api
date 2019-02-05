@@ -1,0 +1,47 @@
+<div data-card-layout="{{cardLayoutType req}}">
+  <ul class="unstyled-list card-layout-btns js-card-layout-btns">
+    <li>
+      <button class="icon-only toggle-list-layout-btn" data-type="list">
+        <span class="sr-only">list view</span>
+        {{> icon-list}}
+      </button>
+    </li>
+    <li>
+      <button class="icon-only toggle-grid-layout-btn" data-type="grid">
+        <span class="sr-only">grid view</span>
+        {{> icon-grid}}
+      </button>
+    </li>
+    <li>
+      <div class="menu-button-container ">
+        <button class="button button-with-icon menu-button-trigger">
+          Sort By
+          {{> icon-dropdown-arrow}}
+        </button>
+        <div class="menu-button-menu js-sort-by-menu">
+          <a href="/{{req.pathname}}/?sortby=created_at" data-sortby="created_at">Date Submitted</a>
+          <a href="/{{req.pathname}}/?sortby=updated_at" data-sortby="updated_at">Last Edited</a>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <!-- select for navigating to different tabs in mobile view -->
+  <div class="tab-select-container js-tab-select-container">
+    <select>
+      {{#each getTabs}}
+        <option value="{{key}}">{{title}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="tab-container js-tab-container">
+    {{#each getTabs}}
+      <input id="{{key}}" type="radio" name="tabs" {{isTabActive ../req key}}>
+      <label for="{{key}}">{{title}}</label>
+    {{/each}}
+
+    <div class="tab-panels">
+      {{> @partial-block }}
+    </div>
+  </div>
+</div>
