@@ -4,13 +4,25 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
-const userPresenter = require("../presenters/user.js");
+const staticTextToBeAdded = require("../locales/en.js");
+
+async function getStaticText(language) {
+  // merge localized text from the db with the keys that need to be added.
+  // todo: might be better to just add the keys to the db....
+  // would need to write a migration to add keys to the db
+  const staticTextFromDB = await db.one(
+    `select * from layout_localized where language = '${language}';`
+  );
+  return Object.assign({}, staticTextToBeAdded, staticTextFromDB);
+}
 
 async function getUserById(userId, req, res, view="view") {
   try {
+    const language = req.params.language || "en";
+
     const result = await db.oneOrNone(USER_BY_ID, {
       userId: userId,
-      language: req.params.language || "en"
+      language: language,
     });
     if (!result) {
       return res
@@ -18,9 +30,36 @@ async function getUserById(userId, req, res, view="view") {
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
 
-    // return html template
-    res.status(200).render(`user-${view}`, userPresenter(result.user, view));
+    const staticText = await getStaticText(language);
 
+    if (view === "edit") {
+      // only return some keys on the user object for the edit view
+      const userEditKeys = [
+        "id",
+        "hidden",
+        "name",
+        "email",
+        "location",
+        "language",
+        "login",
+        "picture_url",
+        "bio",
+        "isadmin",
+        "join_date"
+      ];
+      const userEditJSON = {};
+      userEditKeys.forEach(key => userEditJSON[key] = result.user[key]);
+
+      return {
+        static: staticText,
+        user: userEditJSON,
+      };
+    } else {
+      return {
+        static: staticText,
+        user: result.user,
+      };
+    }
   } catch (error) {
     log.error("Exception in GET /user/%s => %s", userId, error);
     console.trace(error);
@@ -53,20 +92,26 @@ async function getUserById(userId, req, res, view="view") {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.get("/:userId", function(req, res) {
+router.get("/:userId", async function(req, res) {
   try {
-    return getUserById(req.params.userId || req.user.user_id, req, res, "view");
+    const data = await getUserById(req.params.userId || req.user.user_id, req, res, "view");
+
+    // return html template
+    res.status(200).render(`user-view`, data);
   } catch (error) {
     console.error("Problem in /user/:userId");
     console.trace(error);
   }
 });
 
-router.get("/:userId/edit", function(req, res) {
+router.get("/:userId/edit", async function(req, res) {
   try {
-    return getUserById(req.params.userId || req.user.user_id, req, res, "edit");
+    const data = await getUserById(req.params.userId || req.user.user_id, req, res, "edit");
+
+    // return html template
+    res.status(200).render(`user-edit`, data);
   } catch (error) {
-    console.error("Problem in /user/:userId");
+    console.error("Problem in /user/:userId/edit");
     console.trace(error);
   }
 });
