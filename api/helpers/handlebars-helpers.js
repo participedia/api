@@ -21,7 +21,9 @@ function staticTextValue(staticText, key, type = null) {
     newKey = key;
   }
 
-  if (staticText.labels) {
+  if (!staticText) {
+    return newKey;
+  } else if (staticText.labels) {
     return staticText.labels[newKey] || newKey;
   } else {
     // this makes the static keys work on the reader view for now
@@ -73,6 +75,7 @@ module.exports = {
     staticTextValue(staticText, name, "placeholder"),
 
   staticText: (staticText, key) => staticTextValue(staticText, key),
+  t: (staticText, key) => staticTextValue(staticText, key), // duplicate short function name
 
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
@@ -373,6 +376,10 @@ module.exports = {
 
   getCommitteesData() {
     return aboutData.committees;
+  },
+
+  getStaffData() {
+    return aboutData.members;
   },
 
   getContentTypeData() {

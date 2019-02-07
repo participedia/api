@@ -9,6 +9,9 @@ const fs = require("fs");
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const cookieParser = require('cookie-parser');
 
+// static text js objects
+const aboutStaticText = require("./static-text/about-static-text.js");
+
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: "main",
@@ -112,7 +115,7 @@ app.use("/user", user);
 app.use("/bookmark", bookmark);
 
 app.get('/about', function (req, res) {
-  res.status(200).render("about-view");
+  res.status(200).render("about-view", { static: aboutStaticText });
 });
 app.get('/legal', function (req, res) {
   res.status(200).render("legal-view");
