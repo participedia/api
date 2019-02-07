@@ -9,25 +9,26 @@ let log = require("winston");
 let unless = require("express-unless");
 
 async function preferUser(req, res, next) {
+  console.log('preferUser()');
   commonUserHandler(false, req, res, next);
 }
 
 async function ensureUser(req, res, next) {
+  console.log('ensureUser()');
   commonUserHandler(true, req, res, next);
 }
 
 async function commonUserHandler(required, req, res, next) {
   //  try {
   let user = req.user;
-  let email = req.header("X-Auth0-Name");
-  let auth0UserId = req.header("X-Auth0-UserId");
+  console.log('commonUserHandler req.user: %s', JSON.stringify(user));
   const language = as.value(req.params.language || "en");
   if (!user) {
     if (required) {
       return res.status(401).json({
         message: "User must be logged in to perform this function"
       });
-    } else if (!email) {
+    } else{
       // nothing more we can do here without a user
       return next();
     }
@@ -37,14 +38,8 @@ async function commonUserHandler(required, req, res, next) {
       message: "User is not authorized to add or edit content."
     });
   }
-  // if (user.user_id) {
-  //   // all is well, carry on, but make sure user_id is a number
-  //   user.user_id = Number(user.user_id);
-  //   return next();
-  // }
-  // get user id from email
   let userIdObj = await db.oneOrNone(USER_BY_EMAIL, {
-    userEmail: user && user.email ? user.email : email
+    userEmail: user.email
   });
   // get full user object
   let userObj = null;
@@ -55,12 +50,7 @@ async function commonUserHandler(required, req, res, next) {
     });
   }
   if (userObj) {
-    userObj = userObj.user;
-    if (!req.user) {
-      req.user = {};
-    }
-    req.user.isadmin = userObj.isadmin;
-    req.user.user_id = userObj.id;
+    req.user = userObj.user;
   } else {
     console.warn("no userObj found for %s", JSON.stringify(req.user));
     let newUser;

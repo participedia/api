@@ -62,7 +62,7 @@ router.post("/new", async function postNewCase(req, res) {
         message: "Cannot create Case without at least a title"
       });
     }
-    const user_id = req.user.user_id;
+    const user_id = req.user.id;
     const thing = await db.one(CREATE_CASE, {
       title,
       body,
@@ -110,7 +110,7 @@ router.post("/new", async function postNewCase(req, res) {
  *
  */
 
-router.put("/:thingid", async (req, res) => {
+router.post("/:thingid/edit", async (req, res) => {
   // Only changs to title, description, and/or body trigger a new author and version
 
   // id, integer, immutable
@@ -184,7 +184,7 @@ router.put("/:thingid", async (req, res) => {
   // hidden, immutable unless changed by admin
     cache.clear();
     const params = parseGetParams(req, "case");
-    const {articleid, type, view, userid, land, returns} = params;
+    const {articleid, type, view, userid, lang, returns} = params;
     let user,
       oldThing,
       newThing,
@@ -210,7 +210,7 @@ router.put("/:thingid", async (req, res) => {
         description: oldThing.description,
         language: lang,
         type: type,
-        id: thingid
+        id: articleid
       };
 
       /* DO ALL THE DIFFS */
@@ -400,18 +400,17 @@ router.put("/:thingid", async (req, res) => {
         if (req.thingid) {
           res.status(201).json({
             OK: true,
-            object: retThing,
-            data: { thingid: retThing.id }
+            article: retThing
           });
         } else {
-          res.status(200).json({ OK: true, object: retThing });
+          res.status(200).json({ OK: true, article: retThing });
         }
       }
     } catch (error) {
       log.error(
         "Exception in PUT /%s/%s => %s",
         type,
-        req.thingid || thingid,
+        req.thingid || articleid,
         error
       );
       console.trace(error);
