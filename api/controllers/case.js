@@ -12,7 +12,8 @@ const {
   CASE_EDIT_BY_ID,
   CASE_EDIT_STATIC,
   CASE_VIEW_BY_ID,
-  CASE_VIEW_STATIC
+  CASE_VIEW_STATIC,
+  UPDATE_NOUN
 } = require("../helpers/db");
 
 const {
@@ -70,10 +71,10 @@ router.post("/new", async function postNewCase(req, res) {
       language
     });
     req.thingid = thing.thingid;
-    return getEditXById("case")(req, res);
+    getEditXById("case")(req, res);
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
-    return res.status(500).json({ OK: false, error: error });
+    res.status(500).json({ OK: false, error: error });
   }
   // Refresh search index
   // FIXME: This will never get called as we have already returned ff
@@ -195,11 +196,8 @@ router.post("/:thingid/edit", async (req, res) => {
       retThing = null;
     try {
       // FIXME: Figure out how to get all of this done as one transaction
-      lang = as.value(req.params.language || "en");
       user = req.user;
-      userId = user.user_id;
-      const articleRow = await db.one(CASE_VIEW_BY_ID, params);
-      const oldThing = articleRow.results;
+      const oldThing = (await db.one(CASE_VIEW_BY_ID, params)).results;
 
       newThing = req.body;
       console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
@@ -316,7 +314,7 @@ router.post("/:thingid/edit", async (req, res) => {
             } else if (typeof value !== "number") {
               component_id = value.value;
             }
-            if (component_id !== thingid) {
+            if (component_id !== articleid) {
               if (oldThing.is_component_of !== component_id) {
                 updatedThingFields.push({
                   key: as.name(key),
@@ -381,20 +379,20 @@ router.post("/:thingid/edit", async (req, res) => {
             .map(field => field.key + " = " + field.value)
             .join(", "),
           type: type,
-          id: thingid
+          id: articleid
         });
         // INSERT row for X__authors
         await db.none(INSERT_AUTHOR, {
-          user_id: userId,
+          user_id: userid,
           type: type,
-          id: thingid
+          id: articleid
         });
         // update materialized view for search
         retThing = await getThingByType_id_lang_userId_view(
           type,
-          as.number(thingid),
+          as.number(articleid),
           lang,
-          userId,
+          userid,
           view
         );
         if (req.thingid) {

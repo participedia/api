@@ -81,13 +81,8 @@ app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(cookieParser());
-app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
+// handle expired login tokens more gracefully
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
-app.use(
-  checkJwtOptional.unless({
-    method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"]
-  })
-);
 app.use(
   preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
 );
