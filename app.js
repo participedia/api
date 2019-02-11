@@ -14,6 +14,7 @@ const sharedStaticText = require("./static-text/shared-static-text.js");
 const aboutStaticText = require("./static-text/about-static-text.js");
 const researchStaticText = require("./static-text/research-static-text.js");
 const teachingStaticText = require("./static-text/teaching-static-text.js");
+const contentTypesText = require("./static-text/content-types-static-text.js");
 
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
@@ -135,7 +136,10 @@ app.get('/teaching', function (req, res) {
   });
 });
 app.get('/content-chooser', function (req, res) {
-  res.status(200).render("content-chooser");
+  const staticText = Object.assign({}, sharedStaticText, contentTypesText);
+  res.status(200).render("content-chooser", {
+    static: staticText,
+  });
 });
 
 app.use("/s3/:path", checkJwtRequired);

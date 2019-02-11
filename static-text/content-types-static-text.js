@@ -1,4 +1,6 @@
 module.exports = {
+  "content_types.header": "Select the type of content you would like to publish.",
+
   "content_types.case": "Case",
 
   "content_types.case.description": "Cases are specific events and instances of participatory politics and governance of all shapes and sizes. Cases can be contemporary or historical, completed, or ongoing.",

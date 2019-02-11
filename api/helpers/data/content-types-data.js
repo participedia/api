@@ -12,11 +12,11 @@ module.exports = [
   {
     slug: "organizations",
     titleKey: "content_types.organization",
-    description: "content_types.organization.description"
+    descriptionKey: "content_types.organization.description"
   },
   {
     slug: "tools-techniques",
-    title: "content_types.tools-techniques",
-    description: "content_types.tools-techniques.description"
+    titleKey: "content_types.tools-techniques",
+    descriptionKey: "content_types.tools-techniques.description"
   },
 ];
