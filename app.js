@@ -13,6 +13,7 @@ const cookieParser = require('cookie-parser');
 const sharedStaticText = require("./static-text/shared-static-text.js");
 const aboutStaticText = require("./static-text/about-static-text.js");
 const researchStaticText = require("./static-text/research-static-text.js");
+const teachingStaticText = require("./static-text/teaching-static-text.js");
 
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
@@ -128,7 +129,10 @@ app.get('/research', function (req, res) {
   res.status(200).render("research-view", { static: staticText });
 });
 app.get('/teaching', function (req, res) {
-  res.status(200).render("teaching-view");
+  const staticText = Object.assign({}, sharedStaticText, teachingStaticText);
+  res.status(200).render("teaching-view", {
+    static: staticText,
+  });
 });
 app.get('/content-chooser', function (req, res) {
   res.status(200).render("content-chooser");
