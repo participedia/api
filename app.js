@@ -10,7 +10,9 @@ const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const cookieParser = require('cookie-parser');
 
 // static text js objects
+const sharedStaticText = require("./static-text/shared-static-text.js");
 const aboutStaticText = require("./static-text/about-static-text.js");
+const researchStaticText = require("./static-text/research-static-text.js");
 
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
@@ -115,13 +117,15 @@ app.use("/user", user);
 app.use("/bookmark", bookmark);
 
 app.get('/about', function (req, res) {
-  res.status(200).render("about-view", { static: aboutStaticText });
+  const staticText = Object.assign({}, sharedStaticText, aboutStaticText);
+  res.status(200).render("about-view", { static: staticText });
 });
 app.get('/legal', function (req, res) {
   res.status(200).render("legal-view");
 });
 app.get('/research', function (req, res) {
-  res.status(200).render("research-view");
+  const staticText = Object.assign({}, sharedStaticText, researchStaticText);
+  res.status(200).render("research-view", { static: staticText });
 });
 app.get('/teaching', function (req, res) {
   res.status(200).render("teaching-view");

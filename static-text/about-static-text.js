@@ -1,6 +1,4 @@
-const sharedStaticText = require("./shared-static-text.js");
-
-module.exports = Object.assign({}, sharedStaticText, {
+module.exports = {
   "about.cases.p1": "Cases are events and instances of participatory politics and governance of all shapes and sizes.",
 
   "about.ckmc.description": "The Communication and Knowledge Mobilization Committee is responsible for advising the Executive Committee on how communication with research partners can be planned, carried out, and refined. The CKM committee also advises on optimal communication with the Participedia user community, including supporting the development of content for the website, newsletter, and social media channels.",
@@ -46,4 +44,4 @@ module.exports = Object.assign({}, sharedStaticText, {
   "about.ttmc.decription": "The Teaching Training and Mentoring Committee is responsible for developing outputs and implement actions for the integration of Participedia materials into pedagogy, teaching, student involvement and the training of practitioners and public officials.",
 
   "about.ttmc.title": "Teaching Training & Mentoring Committee",
-});
+};
