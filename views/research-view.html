@@ -5,17 +5,28 @@
   {{#> accordion title=(t static "Methodology")}}
     <p>{{t static "research.methodology.p1"}}</p>
 
-    <p>{{t static "research.methodology.p2"}}</p>
+    <p>{{{t static "research.methodology.p2"}}}</p>
   {{/accordion}}
 
   {{#> accordion title=(t static "Data Repository")}}
-    <p>{{t static "research.data_repository.p1"}}</p>
+    <p><strong>{{t static "research.data_repository.dataverse"}}</strong></p>
 
-    <p>
-      <a href="http://participedia.net/en/content/brazilian-participatory-budgeting-census">
-        {{t static "research.brazilian_data_set_link"}}
-      </a>
-    </p>
+    <p>{{{t static "research.data_repository.p1"}}}</p>
+
+    <p>{{t static "research.data_repository.p2"}}</p>
+
+    <ul>
+      <li>{{t static "research.data_repository.feature.1"}}</li>
+      <li>{{t static "research.data_repository.feature.2"}}</li>
+      <li>{{t static "research.data_repository.feature.3"}}</li>
+      <li>{{t static "research.data_repository.feature.4"}}</li>
+      <li>{{t static "research.data_repository.feature.5"}}</li>
+      <li>{{t static "research.data_repository.feature.6"}}</li>
+      <li>{{t static "research.data_repository.feature.7"}}</li>
+      <li>{{t static "research.data_repository.feature.8"}}</li>
+    </ul>
+
+    <p>{{{t static "research.data_repository.questions"}}}</p>
   {{/accordion}}
 
   {{#> accordion title=(t static "Surveys")}}
