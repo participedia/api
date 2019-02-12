@@ -1,14 +1,19 @@
 # Localization
 
-### Templates expect each route that returns html to return a static key on the json response object that contains key/value pairs of the string key and the localized value.
+### What templates expect
+Each route that returns html should return a `static` key on the data object that contains key/value pairs of the string key and the localized value.
 
 ```
+// example response
+res.status(200).render("about-view", { static: {
+  "stringKey": "my string value",
+});
+
+// payload
 {
   "static": {
-    "stringKey": "stringValue",
-    ...
+    "stringKey": "my string value",
   },
-  ...
 }
 ```
 
