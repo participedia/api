@@ -1,15 +1,6 @@
 # Localization
 
-## Backend
-
-### How to add new keys to the db
-
-
-----------
-
-## Front-End
-
-### Templates expect each route that returns html to return a static key on the json response object.
+### Templates expect each route that returns html to return a static key on the json response object that contains key/value pairs of the string key and the localized value.
 
 ```
 {
@@ -21,11 +12,14 @@
 }
 ```
 
-### Handlebars Helper
-{{t static key}}
+### Rendering localized text in HBS templates
+Use the `t` helper function and pass the static object with the key of the string you wish to render.
+```
+<p>{{t static "research.surveys.p1"}}</p>
+```
 
 ### Key Best Practices
-- for single words and short titles or phrases, use the actual text as the key
+- for single words and short titles or phrases, use the actual text as the key.
 ```
 "static": {
   "Cases": "Cases",
@@ -38,9 +32,12 @@
 ```
 "static": {
   "about.cases.p1": "Cases are events and instances of participatory politics and governance of all shapes and sizes.",
-  "about.cases.p2": "",
-  "about.tagline": "A global community sharing knowledge and stories about public participation",
-  "research.tagline": "Some other tag line",
+
+  "about.ckmc.title": "Communications & Knowledge Mobilization Committee",
+
+  "research.tagline": "Participedia is guided by the research question: What kinds of participatory processes work best, for what purposes, and under what conditions?",
 }
 ```
 
+### Adding new strings to the DB
+TBD

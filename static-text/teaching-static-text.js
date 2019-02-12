@@ -1,6 +1,4 @@
 module.exports = {
-  "teaching.header": "Teaching",
-
   "teaching.in_the_classroom": "Participedia in the Classroom",
 
   "teaching.in_the_classroom.p1": "Writing or editing articles for Participedia can be a great assignment for courses that deal with political participation, democratic innovation, or deliberation.",
