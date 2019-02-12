@@ -75,8 +75,7 @@ module.exports = {
   placeholder: (staticText, name) =>
     staticTextValue(staticText, name, "placeholder"),
 
-  staticText: (staticText, key) => staticTextValue(staticText, key),
-  t: (staticText, key) => staticTextValue(staticText, key), // duplicate short function name
+  t: (staticText, key) => staticTextValue(staticText, key),
 
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
