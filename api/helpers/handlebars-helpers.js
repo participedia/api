@@ -198,13 +198,13 @@ module.exports = {
     }
   },
 
-  shareLink(type, req) {
+  shareLink(type, article, req) {
     const url = currentUrl(req);
-
+    const title = article.title;
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      twitter: `https://twitter.com/home?status=${url}`,
-      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}`,
+      twitter: `https://twitter.com/home?status=${title} - ${url}`,
+      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
     };
     return shareUrls[type];
   },
