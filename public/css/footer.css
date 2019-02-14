@@ -52,6 +52,10 @@ footer section {
   padding-right: 0px;
 }
 
+.footer-social-nav .icon-fill {
+  fill: #fff;
+}
+
 .footer-copyright-area {
   justify-content: flex-end;
   align-items: center;
