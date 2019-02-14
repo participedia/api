@@ -44,7 +44,7 @@ const editMedia = {
       if (type === 'image') {
         fileItemEl.querySelector("img").src = reader.result;
       }
-      fileItemEl.querySelector("input[data-attr='file']").value = reader.result;
+      fileItemEl.querySelector("input[data-attr='url']").value = reader.result;
     }, false);
 
     reader.readAsDataURL(file);
@@ -71,7 +71,7 @@ const editMedia = {
       // on all inputs set name to reflect index of item
       fileItemEl.querySelectorAll("input").forEach(el => {
         // ie: files[0]url
-        el.name = `${name}[${itemIndex}]${el.getAttribute('data-attr')}`;
+        el.name = `${name}[${itemIndex}][${el.getAttribute('data-attr')}]`;
       });
 
       fileItemEl.querySelector("li").setAttribute("data-index", itemIndex);
@@ -108,8 +108,8 @@ const editMedia = {
       const inputEls = el.querySelectorAll("input");
       // on all inputs set name to reflect index of item
       inputEls.forEach(el => {
-        // ie: files[0]url
-        el.name = `${name}[${index}]${el.getAttribute('data-attr')}`;
+        // ie: files[0][url]
+        el.name = `${name}[${index}][${el.getAttribute('data-attr')}]`;
       });
     });
   },
