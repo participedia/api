@@ -155,7 +155,10 @@ router.post("/new", async function postNewCase(req, res) {
  *
  */
 
-router.put("/:thingid", getEditXById("case"));
+router.post("/:thingid", (req, res) => {
+  console.log('req.body', req.body);
+  // getEditXById("case");
+});
 
 /**
  * @api {get} /case/:thingid Get the last version of a case
