@@ -54,6 +54,7 @@ footer section {
 
 .footer-copyright-area {
   justify-content: flex-end;
+  align-items: center;
   margin-top: 90px;
 }
 
@@ -61,9 +62,8 @@ footer section {
   font-size: .875rem;
 }
 
-.footer-copyright-area img {
+.footer-copyright-area svg {
   padding-right: 10px;
-  padding-top: 3px;
 }
 
 .footer-description {
