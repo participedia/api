@@ -1,6 +1,6 @@
 const contactHelpFaqWidget = {
   init() {
-    const helpLinkEl = document.querySelector("a[href='/help']");
+    const helpLinkEls = document.querySelectorAll("a[href='/help']");
     this.contactHelpFaqWidgetEl = document.querySelector(".js-contact-help-faq-container");
     const faqListEl = this.contactHelpFaqWidgetEl.querySelector(".js-faq-list");
     const faqLinks = faqListEl.querySelectorAll("a");
@@ -31,11 +31,13 @@ const contactHelpFaqWidget = {
       }
     });
 
-    // event listener to open widget
-    helpLinkEl.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.contactHelpFaqWidgetEl.style = "display: block;";
-    });
+    // event listener to open widget, attach to all help links
+    for (let i = 0; i < helpLinkEls.length; i++) {
+      helpLinkEls[i].addEventListener("click", (e) => {
+        e.preventDefault();
+        this.contactHelpFaqWidgetEl.style = "display: block;";
+      });
+    }
   },
 
   backToList() {
