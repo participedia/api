@@ -1,1 +1,65 @@
-<article>user-edit</article>
+<div class="user-container">
+  <div class="user-profile-image user-profile-image-edit">
+    <a href="https://gravatar.com/" target="_blank" class="user-profile-image-edit-mask">
+      {{#if user.picture_url}}
+        <img src="{{user.picture_url}}" alt="profile_picture" width="160" height="160" />
+      {{else}}
+        <div class="user-profile-image-initial">{{getInitials user.name}}</div>
+      {{/if}}
+      <div class="user-profile-image-edit-overlay">{{staticText static "change"}}</div>
+    </a>
+  </div>
+  <div class="user-main-content">
+    <form
+      action="/user"
+      method="post"
+      enctype="multipart/form-data"
+      data-submit-type="full"
+      class="js-edit-form"
+    >
+      <p><strong>{{staticText static "member_since"}}</strong> {{moment user.join_date "ll"}}</p>
+
+      <fieldset>
+        <h2>{{staticText static "public_profile"}}</h2>
+        {{> edit-text name="name" value=user.name placeholderText=static.name_placeholder}}
+        {{> edit-text name="location" value=user.location placeholderText=static.location_placeholder}}
+        {{> edit-richtext name="bio" value=user.bio}}
+      </fieldset>
+
+      <fieldset>
+        <h2>{{staticText static "private_settings"}}</h2>
+
+        {{> edit-text name="email" value=user.email placeholderText=static.email_placeholder}}
+
+        {{#> edit-form-group name="password"}}
+          <input
+            type="password"
+            placeholder="{{staticText static "current_password_placeholder"}}"
+            name="current_password"
+          />
+          <input
+            type="password"
+            placeholder="{{staticText static "new_password_placeholder"}}"
+            name="new_password"
+          />
+          <input
+            type="password"
+            placeholder="{{staticText static "confirm_new_password_placeholder"}}"
+            name="confirm_new_password"
+          />
+        {{/edit-form-group}}
+
+        {{> edit-select
+          name="language"
+          options=static.language_options
+          selectedValue=user.language
+          placeholder_txt=static.language_placeholder
+        }}
+      </fieldset>
+
+      <button type="submit" class="button button-light-grey">
+        {{> icon-submit }} {{staticText static "publish"}}
+      </button>
+    </form>
+  </div>
+</div>

@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
+const equals = require("deep-equal");
 
 const {
   db,
