@@ -15,9 +15,6 @@
     {{/if}}
 
     <h2 class="user-view-name">{{user.name}}</h2>
-    {{#if user.location}}
-      <span class="small"><strong>{{t static "location"}}</strong> {{user.location}}</span></br>
-    {{/if}}
     {{#if user.join_date}}
       <span class="small">
         <strong>{{t static "member_since"}}</strong> {{getYearFromDate user.join_date}}
