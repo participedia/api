@@ -1,6 +1,7 @@
 const moment = require("moment");
 const faqContent = require("./faq-content.js");
 const aboutData = require("./data/about-data.js");
+const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
 
 function mapIdTitleToKeyValue(options) {
@@ -21,7 +22,9 @@ function staticTextValue(staticText, key, type = null) {
     newKey = key;
   }
 
-  if (staticText.labels) {
+  if (!staticText) {
+    return newKey;
+  } else if (staticText.labels) {
     return staticText.labels[newKey] || newKey;
   } else {
     // this makes the static keys work on the reader view for now
@@ -72,7 +75,7 @@ module.exports = {
   placeholder: (staticText, name) =>
     staticTextValue(staticText, name, "placeholder"),
 
-  staticText: (staticText, key) => staticTextValue(staticText, key),
+  t: (staticText, key) => staticTextValue(staticText, key),
 
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
@@ -375,29 +378,12 @@ module.exports = {
     return aboutData.committees;
   },
 
+  getStaffData() {
+    return aboutData.members;
+  },
+
   getContentTypeData() {
-    return [
-      {
-        slug: "cases",
-        title: "Case",
-        description: "Cases are specific events and instances of participatory politics and governance of all shapes and sizes. Cases can be contemporary or historical, completed, or ongoing."
-      },
-      {
-        slug: "methods",
-        title: "Method",
-        description: "Methods are the processes and procedures used to guide participatory politics and governance."
-      },
-      {
-        slug: "organizations",
-        title: "Organization",
-        description: "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance."
-      },
-      {
-        slug: "tools-techniques",
-        title: "Tools & Techniques",
-        description: "Description TBD"
-      },
-    ];
+    return contentTypesData;
   },
 
   getYearFromDate(date, format) {
