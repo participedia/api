@@ -25,6 +25,12 @@ var serialize = function (form) {
       }
     }
 
+    // convert rich text fields
+    if (field.getAttribute("data-field-type") === "richtext") {
+      const richtextValue = form.querySelector(`[data-name=richtext-${field.name}] [contenteditable="true"]`).innerHTML;
+      serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(richtextValue));
+    }
+
     // Convert field data to a query string
     else if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
       serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value));
