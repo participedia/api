@@ -1,7 +1,7 @@
 <div class="pagination">
   <div class="pagination-string">
     {{paginationNumResults cards req}} results of {{totalResults}}
-    {{#if searchTerm}} for ${searchTerm} {{/if}}
+    {{#if req.query.query}} for "{{req.query.query}}" {{/if}}
     (page {{getCurrentPage req}} of {{totalPages}})
   </div>
   <ul class="unstyled-list pagination-nav js-pagination-nav">

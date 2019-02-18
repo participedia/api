@@ -5,15 +5,13 @@
         <li><a href="/about">About</a></li>
         <li><a href="/research">Research</a></li>
         <li><a href="/teaching">Teaching</a></li>
-        <li><a href="/experiments">Experiments</a></li>
       </ul>
       <ul class="nav-list">
-        <li><a href="/cases">Cases</a></li>
-        <li><a href="/methods">Methods</a></li>
-        <li><a href="/organizations">Organizations</a></li>
+        <li><a href="/?tab=tab-cases">Cases</a></li>
+        <li><a href="/?tab=tab-methods">Methods</a></li>
+        <li><a href="/?tab=tab-organizations">Organizations</a></li>
       </ul>
       <ul class="nav-list">
-        <li><a href="/news">News</a></li>
         <li><a href="/help">Help & Contact</a></li>
         <li><a href="/legal">Terms of Use</a></li>
       </ul>
@@ -31,12 +29,8 @@
             target="_blank"
             href="https://www.facebook.com/Participedia/"
           >
-            <img
-              src="/images/facebook.png"
-              alt="Particpedia on Facebook"
-              width="28"
-              height="28"
-            >
+            {{> icon-facebook }}
+            <span class="sr-only">Particpedia on Facebook</span>
           </a>
         </li>
         <li>
@@ -44,12 +38,8 @@
             target="_blank"
             href="https://twitter.com/participedia"
           >
-            <img
-              src="/images/twitter.png"
-              alt="Participedia on Twitter"
-              width="28"
-              height="28"
-            >
+            {{> icon-twitter }}
+            <span class="sr-only">Participedia on Twitter</span>
           </a>
         </li>
         <li>
@@ -57,19 +47,14 @@
             target="_blank"
             href="https://www.linkedin.com/company/participedia"
           >
-            <img
-              src="/images/linkedin.png"
-              alt="Participedia on LinkedIn"
-              width="28"
-              height="28"
-            >
+            {{> icon-linkedIn }}
+            <span class="sr-only">Participedia on LinkedIn</span>
           </a>
         </li>
       </ul>
     </nav>
   </section>
   <section class="footer-copyright-area">
-    <img src="/images/creativecommons.png" alt="" width="14" height="14">
-    <span>Participedia 2019</span>
+    <span>&#169; Participedia 2019</span>
   </section>
 </footer>
