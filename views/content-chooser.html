@@ -1,15 +1,15 @@
 <div class="static-view-container">
-  <h2>Select the type of content you would like to publish.</h2>
+  <h2>{{t static "content_types.header"}}</h2>
 
   <ul class="unstyled-list">
     {{#each (getContentTypeData)}}
       <li>
         <a href="/{{slug}}/new" class="button button-red button-block">
           {{> icon-add}}
-          {{title}}
+          {{t ../static titleKey}}
 
         </a>
-        <p>{{description}}</p>
+        <p>{{t ../static descriptionKey}}</p>
       </li>
     {{/each}}
   </ul>

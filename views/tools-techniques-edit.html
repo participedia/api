@@ -1,20 +1,20 @@
 {{#> edit-form}}
   <fieldset>
-    <h2 class="fieldset-header">{{staticText static "overview_sectionlabel"}}</h2>
-    <h2 class="fieldset-header quickonly">{{staticText static "quick_submit_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t static "overview_sectionlabel"}}</h2>
+    <h2 class="fieldset-header quickonly">{{t static "quick_submit_sectionlabel"}}</h2>
 
     {{> article-edit-text name="title" is_required=true quick-submit=true}}
     {{> article-edit-select name="facetoface_online_or_both" quick-submit=true}}
   </fieldset>
 
   <fieldset>
-    <h2 class="fieldset-header">{{staticText static "type_purpose_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t static "type_purpose_sectionlabel"}}</h2>
 
     {{> edit-multi-select name="type_tool" quick-submit=true max=3}}
   </fieldset>
 
   <fieldset>
-    <h2 class="fieldset-header">{{staticText static "description_narrative_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t static "description_narrative_sectionlabel"}}</h2>
 
     {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
     {{> edit-richtext
@@ -25,7 +25,7 @@
   </fieldset>
 
   <fieldset>
-    <h2 class="fieldset-header">{{staticText static "media_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t static "media_sectionlabel"}}</h2>
 
     {{> edit-media name="files" quick-submit=true}}
     {{> edit-link-set name="links" quick-submit=true}}
@@ -35,13 +35,13 @@
   </fieldset>
 
   <fieldset class="fullonly">
-    <h2 class="fieldset-header">{{staticText static "participants_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t static "participants_sectionlabel"}}</h2>
 
     {{> edit-number name="number_of_participants" }}
   </fieldset>
 
    <fieldset class="fullonly">
-    <h2 class="fieldset-header">{{staticText static "process_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t static "process_sectionlabel"}}</h2>
 
     {{> edit-multi-select name="types_interaction" }}
     {{> article-edit-select name="facilitation" }}
