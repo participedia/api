@@ -15,6 +15,7 @@ const {
   CASE_VIEW_BY_ID,
   CASE_VIEW_STATIC,
   INSERT_AUTHOR,
+  INSERT_LOCALIZED_TEXT,
   UPDATE_NOUN
 } = require("../helpers/db");
 
@@ -231,7 +232,6 @@ router.post("/:thingid/edit", async (req, res) => {
     maybeUpdateUserText(req, res);
     const updatedThing = {};
     // admin-only
-    updatedThing, (isadmin = user.isadmin);
     if (user.isadmin) {
       updatedThing.featured = as.boolean(newThing.featured);
       updatedThing.hidden = as.boolean(newThing.hidden);
@@ -268,7 +268,7 @@ router.post("/:thingid/edit", async (req, res) => {
       "latitude",
       "longitude",
       "funder"
-    ].map(key => (updateThing[key] = as.text(newThing[key])));
+    ].map(key => (updatedThing[key] = as.text(newThing[key])));
     // URLS, strip off prefix
     ["evaluation_reports", "evaluation_links"].map(
       key => (updatedThing[key] = as.url(newThing[key]))

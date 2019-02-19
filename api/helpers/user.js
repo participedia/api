@@ -6,50 +6,53 @@ const {
   CREATE_USER_ID
 } = require("../helpers/db");
 const log = require("winston");
-const {
-  checkJwtRequired,
-  checkJwtOptional
-} = require("./checkJwt");
+const { checkJwtRequired, checkJwtOptional } = require("./checkJwt");
 const unless = require("express-unless");
 
 async function preferUser(req, res, next) {
-  console.log('preferUser()');
-  try{
-    checkJwtOptional(req, res, (err, req_, res_, next_) => commonUserHandler(false, err, req, res, next));
-  }catch(err){
-    console.error('Error in preferUser: %s', JSON.stringify(err));
+  console.log("preferUser()");
+  try {
+    checkJwtOptional(req, res, (err, req_, res_, next_) =>
+      commonUserHandler(false, err, req, res, next)
+    );
+  } catch (err) {
+    console.error("Error in preferUser: %s", JSON.stringify(err));
   }
 }
 
 async function ensureUser(req, res, next) {
-  console.log('ensureUser()');
-  try{
-    checkJwtRequired(req, res, (err, req_, res_, next_) => commonUserHandler(true, err, req, res, next));
-  }catch(err){
-    console.error('Error in ensureUser: %s', JSON.stringify(err));
+  console.log("ensureUser()");
+  try {
+    checkJwtRequired(req, res, (err, req_, res_, next_) =>
+      commonUserHandler(true, err, req, res, next)
+    );
+  } catch (err) {
+    console.error("Error in ensureUser: %s", JSON.stringify(err));
   }
 }
 
 async function commonUserHandler(required, err, req, res, next) {
   //  try {
-  console.log('required: %s', typeof(required));
-  if (required){
-    console.log('is required actually an error? %s', JSON.stringify(required));
+  if (required !== true && require !== false) {
+    console.log("is required actually an error? %s", JSON.stringify(required));
   }
-  if (err){
-    console.error('%s %s (%s) in commonUserHandler: %s', err.status, err.name, err.code, err.message);
+  if (err) {
+    console.error(
+      "%s %s (%s) in commonUserHandler: %s",
+      err.status,
+      err.name,
+      err.code,
+      err.message
+    );
   }
-  console.log('commonUserHandler req: %s', Object.keys(req).join(', '));
-  console.log('commonUserHandler res: %s', Object.keys(res).join(', '));
   let user = req.user;
-  console.log('commonUserHandler req.user: %s', JSON.stringify(user));
   const language = as.value(req.params.language || "en");
   if (!user) {
     if (required) {
       return res.status(401).json({
         message: "User must be logged in to perform this function"
       });
-    } else{
+    } else {
       // nothing more we can do without a user
       return next();
     }
