@@ -218,7 +218,7 @@ async function maybeUpdateUserText(req, res) {
 // featured, immutable unless changed by admin
 // hidden, immutable unless changed by admin
 
-router.post("/:thingid/edit", async (req, res) => {
+router.post("/:thingid", async (req, res) => {
   cache.clear();
   const params = parseGetParams(req, "case");
   const { articleid, type, view, userid, lang, returns } = params;
