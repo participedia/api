@@ -3,6 +3,9 @@ import serialize from "./utils/serialize.js";
 const editWarning = {
   init() {
     const formEl = document.querySelector(".js-edit-form");
+
+    if (!formEl) return;
+
     const initialFormData = serialize(formEl);
 
     window.addEventListener("beforeunload", (e) => {

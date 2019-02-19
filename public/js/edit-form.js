@@ -5,6 +5,9 @@ const editForm = {
   init() {
     // bind event listener for publish buttons clicks
     const submitButtonEls = document.querySelectorAll("[type=submit]");
+
+    if (!submitButtonEls) return;
+
     for (let i = 0; i < submitButtonEls.length; i++) {
       submitButtonEls[i].addEventListener("click", event => {
         this.sendFormData(event);
@@ -15,6 +18,9 @@ const editForm = {
   sendFormData(event) {
     event.preventDefault();
     const formEl = event.target.closest("form");
+
+    if (!formEl) return;
+
     const formData = serialize(formEl);
 
     // TODO: before we make the request, make sure required fields are not empty
