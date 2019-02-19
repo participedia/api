@@ -9,6 +9,13 @@ const fs = require("fs");
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const cookieParser = require("cookie-parser");
 
+// static text js objects
+const sharedStaticText = require("./static-text/shared-static-text.js");
+const aboutStaticText = require("./static-text/about-static-text.js");
+const researchStaticText = require("./static-text/research-static-text.js");
+const teachingStaticText = require("./static-text/teaching-static-text.js");
+const contentTypesText = require("./static-text/content-types-static-text.js");
+
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: "main",
@@ -80,7 +87,7 @@ app.use(morgan("dev")); // request logging
 app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
-app.use(bodyParser.urlencoded({ limit: "5mb" }));
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cookieParser());
 // handle expired login tokens more gracefully
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
@@ -108,19 +115,27 @@ app.use("/user", user);
 app.use("/bookmark", bookmark);
 
 app.get("/about", function(req, res) {
-  res.status(200).render("about-view");
+  const staticText = Object.assign({}, sharedStaticText, aboutStaticText);
+  res.status(200).render("about-view", { static: staticText });
 });
 app.get("/legal", function(req, res) {
   res.status(200).render("legal-view");
 });
 app.get("/research", function(req, res) {
-  res.status(200).render("research-view");
+  const staticText = Object.assign({}, sharedStaticText, researchStaticText);
+  res.status(200).render("research-view", { static: staticText });
 });
 app.get("/teaching", function(req, res) {
-  res.status(200).render("teaching-view");
+  const staticText = Object.assign({}, sharedStaticText, teachingStaticText);
+  res.status(200).render("teaching-view", {
+    static: staticText
+  });
 });
 app.get("/content-chooser", function(req, res) {
-  res.status(200).render("content-chooser");
+  const staticText = Object.assign({}, sharedStaticText, contentTypesText);
+  res.status(200).render("content-chooser", {
+    static: staticText
+  });
 });
 
 app.use("/s3/:path", checkJwtRequired);

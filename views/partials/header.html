@@ -12,7 +12,7 @@
 
       <ul class="nav-list sidebar-menu-additional-nav">
         <li>
-          <a href="/new" class="button button-red">
+          <a href="/content-chooser" class="button button-red">
             {{> icon-add }} Quick Submit
           </a>
         </li>
@@ -45,14 +45,14 @@
       <li class="header-logo-container"><a href="/">Participedia</a></li>
       <li class="header-search-container">
         <form action="/">
-          <input name="query" type="text" placeholder="Search" />
+          <input name="query" type="text" placeholder="Search" value="{{req.query.query}}" />
           <div class="icon-container">
             {{> icon-search }}
           </div>
         </form>
       </li>
       <li class="quick-submit-container">
-        <a href="/new" class="button button-white">
+        <a href="/content-chooser" class="button button-white">
           {{> icon-add }} Quick Submit
         </a>
       </li>

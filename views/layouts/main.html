@@ -2,6 +2,16 @@
 <html lang="en" class="js-document">
 
 <head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-132033152-1');
+  </script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="shortcut icon" href="/favicon.ico">
@@ -30,6 +40,11 @@
   <script src="https://cdn.auth0.com/js/auth0/9.5.1/auth0.min.js"></script>
   <script src="/js/authservice.js"></script>
 
+  {{!-- initialize usersnap   --}}
+  <script type="text/javascript">
+  (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/80049ef3-8aba-45c2-9a72-88b56bb1b342.js';
+  var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
+  </script>
 </body>
 
 </html>

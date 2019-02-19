@@ -1,9 +1,10 @@
 {{#> edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
-  <div class="rich-text-editor-container js-rich-text-editor-container" style="display: none;">
+  <div class="rich-text-editor-container js-rich-text-editor-container" style="display: none;" data-name="richtext-{{name}}">
     {{#if value}}
       {{{value}}}
     {{else}}
       {{{placeholderText}}}
     {{/if}}
   </div>
+  <input type="hidden" name="{{name}}" data-field-type="richtext" />
 {{/ edit-form-group}}
