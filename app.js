@@ -7,7 +7,7 @@ let app = require("express")();
 var exphbs = require("express-handlebars");
 const fs = require("fs");
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 
 // static text js objects
 const sharedStaticText = require("./static-text/shared-static-text.js");
@@ -20,7 +20,7 @@ var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: "main",
   extname: ".html",
-  helpers: handlebarsHelpers,
+  helpers: handlebarsHelpers
 });
 
 // make the req var available as local var in templates
@@ -89,13 +89,8 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cookieParser());
-app.use(checkJwtRequired.unless({ method: ["OPTIONS", "GET"] }));
+// handle expired login tokens more gracefully
 app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
-app.use(
-  checkJwtOptional.unless({
-    method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"]
-  })
-);
 app.use(
   preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
 );
@@ -119,27 +114,27 @@ app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
 
-app.get('/about', function (req, res) {
+app.get("/about", function(req, res) {
   const staticText = Object.assign({}, sharedStaticText, aboutStaticText);
   res.status(200).render("about-view", { static: staticText });
 });
-app.get('/legal', function (req, res) {
+app.get("/legal", function(req, res) {
   res.status(200).render("legal-view");
 });
-app.get('/research', function (req, res) {
+app.get("/research", function(req, res) {
   const staticText = Object.assign({}, sharedStaticText, researchStaticText);
   res.status(200).render("research-view", { static: staticText });
 });
-app.get('/teaching', function (req, res) {
+app.get("/teaching", function(req, res) {
   const staticText = Object.assign({}, sharedStaticText, teachingStaticText);
   res.status(200).render("teaching-view", {
-    static: staticText,
+    static: staticText
   });
 });
-app.get('/content-chooser', function (req, res) {
+app.get("/content-chooser", function(req, res) {
   const staticText = Object.assign({}, sharedStaticText, contentTypesText);
   res.status(200).render("content-chooser", {
-    static: staticText,
+    static: staticText
   });
 });
 
@@ -154,11 +149,9 @@ app.use(
   })
 );
 
-app.get('/redirect', function(req, res){
-  console.log('request URL: %s', req.originalUrl);
-  return res
-    .status(200)
-    .render('experiments-edit');
+app.get("/redirect", function(req, res) {
+  console.log("request URL: %s", req.originalUrl);
+  return res.status(200).render("experiments-edit");
 });
 
 module.exports = app;

@@ -1,6 +1,7 @@
-let promise = require("bluebird");
-let { isArray, isObject } = require("lodash");
-let options = {
+const promise = require("bluebird");
+const url = require("url");
+const { isArray, isObject, isDate, uniq } = require("lodash");
+const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
   capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
@@ -8,11 +9,11 @@ let options = {
 if (process.env.LOG_QUERY === "true") {
   options.query = evt => console.info("Executing query %s", evt.query);
 }
-let pgp = require("pg-promise")(options);
+const pgp = require("pg-promise")(options);
 const path = require("path");
-let log = require("winston");
-let connectionString = process.env.DATABASE_URL;
-let parse = require("pg-connection-string").parse;
+const log = require("winston");
+const connectionString = process.env.DATABASE_URL;
+const parse = require("pg-connection-string").parse;
 let config;
 
 try {
@@ -28,19 +29,31 @@ try {
 let db = pgp(config);
 
 function sql(filename) {
-  return new pgp.QueryFile(path.join(__dirname, filename), { minify: true });
+  return new pgp.QueryFile(path.join(__dirname, filename), {
+    minify: true
+  });
 }
 
 // as.number, enhances existing as.number to cope with numbers as strings
 function number(value) {
+  if (value === "") {
+    return null;
+  }
   return pgp.as.number(Number(value));
+}
+
+function integer(value) {
+  if (value === "") {
+    return null;
+  }
+  return pgp.as.number(parseInt(value));
 }
 
 // as.author
 function author(user_id, name) {
   // TODO: escape user_id and name to avoid injection attacks
   if (!(user_id && name)) {
-    throw new Exception("Must have both user_id and name for an author");
+    throw new Error("Must have both user_id and name for an author");
   }
   user_id = as.number(user_id);
   name = as.text(name);
@@ -50,78 +63,63 @@ function author(user_id, name) {
 // as.attachment
 function attachment(att) {
   if (!att) {
-    return "null";
+    return null;
   }
   if (isObject(att)) {
-    const url = as.text(att.url);
+    const url = asUrl(att.url);
     const title = as.text(att.title);
-    const size = att.size === undefined ? "null" : as.number(size);
+    const size = att.size === undefined ? null : as.number(size);
     return `(${url}, ${title}, ${size})::attachment`;
   } else {
-    const urlOnly = as.text(att);
-    return `(${urlOnly}, '', null)::attachment`;
+    throw new Error("attachment is wrong shape");
   }
 }
 
-// as.attachments
-function old_attachments(url, title, size) {
-  if (isArray(url)) {
-    let atts = url;
-    return (
-      "ARRAY[" +
-      atts
-        .map(vid => {
-          let url, title, size;
-          if (isObject(vid)) {
-            url = as.text(vid.url);
-            title = as.text(vid.title ? vid.title : "");
-            size = vid.size === undefined ? null : as.number(vid.size);
-            return `(${url}, ${title}, ${size})`;
-          } else {
-            return `('${vid}', '', null)`;
-          }
-        })
-        .join(", ") +
-      "]::attachment[]"
-    );
+function asUrl(value) {
+  if (!value) {
+    return null;
   }
-  url = as.text(url ? url : "{}");
-  title = as.text(title ? title : "");
-  size = size === undefined ? "null" : as.number(size);
-  if (size === undefined) {
-    size = "null";
+  if (isObject(value)) {
+    console.error("Expecting URL, received: %s", JSON.stringify(value));
   }
-  return `ARRAY[(${url}, ${title}, ${size})]::attachment[]`;
+  return as.text(new URL(value).href);
 }
+
+function urls(urlList) {
+  if (urlList === null) {
+    return urlList;
+  }
+  if (!urlList) {
+    return [];
+  }
+  return uniq(urlList.map(asUrl).filter(x => x && x.length));
+}
+
+const id = integer;
 
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
   if (!idList) {
-    return "'{}'";
+    return [];
   }
-  return (
-    "ARRAY[" + idList.map(s => as.number(s.value)).join(", ") + "]::integer[]"
-  );
+  return uniq(idList.map(integer));
+  // return (
+  //   "ARRAY[" + idList.map(s => as.number(s.value)).join(", ") + "]::integer[]"
+  // );
 }
 
 // as.strings
 function strings(strList) {
   if (!strList) {
-    return "'{}'";
+    return [];
   }
-  if (!strList.map) {
-    console.error(
-      "What kind of array does not have a map()? This kind: %o",
-      strList
-    );
-    return "'{}'";
-  }
-  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
+  return uniq(strList.map(as.text).filter(x => x && x.length));
+  //  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
 }
 
 function localed(strList) {
   // localed strings come in as as list of objects with {text, value}, we want value (the localization key)
-  if (strList.length && typeof strList[0] === "object") {
+  if (strList && strList.length && typeof strList[0] === "object") {
     return strings(strList.map(s => s.value));
   } else {
     // someone passes us a list of strings, yay!
@@ -137,23 +135,80 @@ function attachments(attList) {
   }
 }
 
+function audio(audioList) {}
+
+function videos(videoList) {}
+
+function files(fileList) {}
+
+function photos(photoList) {}
+
+function links(linksList) {}
+
+function boolean(value) {
+  if (value === "true") {
+    return true;
+  }
+  if (value === "false") {
+    return false;
+  }
+  if (value === true || value === false) {
+    return value;
+  }
+  return null;
+}
+
+// Yes, these should be converted to booleans
+function yesno(value) {
+  if (!value) {
+    return null;
+  }
+  if (value === "yes" || value === "no") {
+    return value;
+  }
+  throw new Error("Only yes or no are allowed here");
+}
+
+function date(value) {
+  if (isDate(value)) {
+    return value;
+  } else {
+    if (!value) {
+      return null;
+    }
+    return new Date(value);
+  }
+}
+
 // replace as.text, don't convert null to "null" because that's dumb
 function text(value) {
-  if (value === null) {
-    return value;
+  if (!value) {
+    return null;
   }
   return pgp.as.text(value);
 }
 
 const as = Object.assign({}, pgp.as, {
+  audio,
+  boolean,
   author,
   attachment,
   attachments,
+  date,
+  files,
+  id,
   ids,
+  integer,
+  links,
   localed,
   number,
+  photos,
   strings,
-  text
+  text,
+  url: asUrl,
+  urls,
+  videos,
+  yesno
 });
 
 const helpers = pgp.helpers;

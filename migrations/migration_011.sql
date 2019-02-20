@@ -118,6 +118,22 @@ UPDATE cases SET scope_of_influence = ltrim(rtrim(scope_of_influence, '}'), '{')
 ALTER TABLE case_view_localized RENAME COLUMN scope_value_citytown TO "scope_value_city/town";
 
 --
+-- Name: get_title(integer, text); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION get_title(thingid integer, language text) RETURNS text
+    LANGUAGE sql STABLE
+    AS $_$
+SELECT title
+FROM localized_texts
+WHERE thingid = $1 AND language = $2
+ORDER BY timestamp DESC
+LIMIT 1;
+$_$;
+
+
+
+--
 -- Name: get_object_title(integer, text); Type: FUNCTION; Schema: public; Owner: -
 --
 DROP FUNCTION get_object_title(integer, text);

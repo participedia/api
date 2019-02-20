@@ -120,7 +120,8 @@ ALTER TABLE case_edit_localized RENAME COLUMN open_limited_value_special TO open
 -- recruitment method
 
 ALTER TABLE case_edit_localized RENAME COLUMN recruitment_method_value_na TO recruitment_method_value_not;
-ALTER TABLE case_edit_localized RENAME COLUMN recruitment_method_value_longterm TO recruitment_method_value_civic
+--ALTER TABLE case_edit_localized RENAME COLUMN recruitment_method_value_longterm TO recruitment_method_value_civic;
+-- No such column as either of these
 
 -- Targeted participants
 

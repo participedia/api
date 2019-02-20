@@ -107,7 +107,7 @@ INSERT INTO localized_case_field_values
     view.value as view,
     view.value as edit
   FROM
-    rotate_case_view_localized as view
+    rotate_case_view_localized('en') as view
   WHERE
     view.key LIKE 'tool_types_value_%';
 select insert_localized_values('scope');

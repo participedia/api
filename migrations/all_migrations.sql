@@ -2,7 +2,7 @@
 \include 'migrations/migration_003.sql'
 \include 'migrations/migration_004.sql'
 \include 'migrations/migration_005.sql'
-\include 'migrations/migration_006.sql'
+-- \include 'migrations/migration_006.sql' -- redundant, skip
 \include 'migrations/migration_007.sql'
 \include 'migrations/migration_008.sql'
 \include 'migrations/migration_009.sql'
@@ -26,3 +26,4 @@
 \include 'migrations/migration_027.sql'
 \include 'migrations/migration_028.sql'
 \include 'migrations/migration_029.sql'
+\include 'migrations/migration_030.sql'
