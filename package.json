@@ -66,7 +66,8 @@
     "watchify": "^3.11.0"
   },
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "npm run build && nodemon server.js",
+    "build": "browserify public/js/app.js -p esmify -o public/build/js/app.bundle.js -v",
     "watch": "watchify public/js/app.js -p esmify -o public/build/js/app.bundle.js -v",
     "lint": "eslint \"**.js\"",
     "deployprod": "git push participedia-api",
