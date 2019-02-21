@@ -51,7 +51,7 @@ const tabsWithCards = {
   },
 
   initSortBy() {
-    const sortByMenuEl = this.viewEl.querySelector(".js-sort-by-menu");
+    const sortByMenuEl = this.viewEl.querySelector(".js-sort-by-items");
     sortByMenuEl.addEventListener("click", event => {
       const link = event.target.closest("a");
       if (link) {
