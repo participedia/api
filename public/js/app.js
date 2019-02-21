@@ -14,6 +14,7 @@ import viewSlideshow from "./view-slideshow.js";
 import viewSocialMedia from "./view-socialmedia.js";
 import homeSearch from "./home-search.js";
 import userView from "./user-view.js";
+import dropdownButton from "./dropdown-button.js";
 
 function isEditPage() {
   return window.location.pathname.lastIndexOf('/edit') > 0;
@@ -29,6 +30,7 @@ elementClosestPolyfill();
 // common
 header.init();
 contactHelpFaqWidget.init();
+dropdownButton.init();
 
 if (window.location.pathname === "/") {
   // home/search page

@@ -205,7 +205,7 @@
 
 .dropdown-button-container .dropdown-button-items {
   opacity: 0;
-  visibility: hidden;
+  z-index: 10;
   position: absolute;
   left: -120px;
   background-color: #fff;
@@ -214,16 +214,6 @@
   display: flex;
   flex-direction: column;
   padding: 15px;
-}
-
-.dropdown-button-container:hover .dropdown-button-items {
-  z-index: 10;
-  opacity: 1;
-  visibility: visible;
-}
-
-.dropdown-button-container:hover svg {
-  transform: rotate(180deg);
 }
 
 .dropdown-button-container .dropdown-button-items a {
