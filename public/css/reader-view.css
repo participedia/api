@@ -101,6 +101,7 @@
 
   .reader-view article .article-data-accordion {
     display: block;
+    margin-bottom: 30px;
   }
 
   .reader-view aside {
