@@ -16,7 +16,7 @@
   flex-direction: column;
 }
 
-.reader-view article .case-data-accordion {
+.reader-view article .article-data-accordion {
   display: none;
 }
 
@@ -99,7 +99,7 @@
     margin: 0 30px;
   }
 
-  .reader-view article .case-data-accordion {
+  .reader-view article .article-data-accordion {
     display: block;
   }
 
