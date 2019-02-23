@@ -269,9 +269,9 @@ router.post("/:thingid", async (req, res) => {
       "longitude",
       "funder"
     ].map(key => (updatedThing[key] = as.text(newThing[key])));
-    // URLS, strip off prefix
+    // these are now shaped like full_links
     ["evaluation_reports", "evaluation_links"].map(
-      key => (updatedThing[key] = as.url(newThing[key]))
+      key => (updatedThing[key] = as.links(newThing[key]))
     );
     // date
     ["start_date", "end_date"].map(
