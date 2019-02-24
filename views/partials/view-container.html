@@ -15,9 +15,11 @@
     {{> view-slideshow }}
     {{> view-authors }}
 
-    {{#> accordion title=(articleDataTitle article)}}
-      {{> @partial-block }}
-    {{/accordion}}
+    <div class="article-data-accordion">
+      {{#> accordion title=(articleDataTitle article)}}
+        {{> @partial-block }}
+      {{/accordion}}
+    </div>
 
     <div class="body-content">
       {{# if article.description}}

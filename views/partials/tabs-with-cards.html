@@ -13,16 +13,7 @@
       </button>
     </li>
     <li>
-      <div class="menu-button-container ">
-        <button class="button button-with-icon menu-button-trigger">
-          Sort By
-          {{> icon-dropdown-arrow}}
-        </button>
-        <div class="menu-button-menu js-sort-by-menu">
-          <a href="/{{req.pathname}}/?sortby=created_at" data-sortby="created_at">Date Submitted</a>
-          <a href="/{{req.pathname}}/?sortby=updated_at" data-sortby="updated_at">Last Edited</a>
-        </div>
-      </div>
+      {{> sort-by-dropdown-button }}
     </li>
   </ul>
 

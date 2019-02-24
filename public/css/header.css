@@ -164,6 +164,10 @@ header a {
   transition: all .4s ease;
 }
 
+.sidebar-menu-main-menu {
+  margin-top: 30px;
+}
+
 .sidebar-menu-main-menu li {
   align-self: flex-start;
 }
@@ -176,10 +180,6 @@ header a {
 
 .sidebar-menu-main-menu a:hover {
   background-color: #E6E6E6;
-}
-
-.sidebar-menu-main-menu li:first-child {
-  padding-top: 60px;
 }
 
 /* hamburger menu when sidebar menu is closed */

@@ -12,3 +12,44 @@
   height: 350px;
   background-color: #C2CACC;
 }
+
+.map-controls {
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px;
+  /* unfortunately we need to use !important here because google maps is applying styling that i need to overwrite */
+  right: 15px!important;
+  top: 15px!important;
+}
+
+.map-controls button {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  min-width: unset;
+}
+
+.map-zoom-control-in {
+  border-bottom: 1px solid #E1E1E1;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.map-zoom-control-out {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.map-controls svg {
+  width: 8px;
+  padding-right: 0;
+}
+
+.map-controls .icon-fill {
+  fill: #000;
+}
+
+.map-controls button:hover .icon-fill {
+  fill: #333;
+}

@@ -16,13 +16,13 @@
   padding: .5rem;
   display: inline-block;
   text-decoration: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: 4px solid transparent;
   cursor: pointer;
 }
 
 .tab-container label:hover,
 .tab-container input:checked + label {
-  border-bottom: 2px solid #ec2024;
+  border-bottom: 4px solid #ec2024;
 }
 
 #tab-all:checked ~ .tab-panels .tab-all,
@@ -199,13 +199,13 @@
 }
 
 /* button with dropdown menu */
-.menu-button-container {
+.dropdown-button-container {
   position: relative;
 }
 
-.menu-button-container .menu-button-menu {
+.dropdown-button-container .dropdown-button-items {
   opacity: 0;
-  visibility: hidden;
+  z-index: 10;
   position: absolute;
   left: -120px;
   background-color: #fff;
@@ -216,28 +216,18 @@
   padding: 15px;
 }
 
-.menu-button-container:hover .menu-button-menu {
-  z-index: 10;
-  opacity: 1;
-  visibility: visible;
-}
-
-.menu-button-container:hover svg {
-  transform: rotate(180deg);
-}
-
-.menu-button-container .menu-button-menu a {
+.dropdown-button-container .dropdown-button-items a {
   justify-content: flex-start;
   text-decoration: none;
   display: block;
   margin-bottom: 15px;
 }
 
-.menu-button-container .menu-button-menu a:last-of-type {
+.dropdown-button-container .dropdown-button-items a:last-of-type {
   margin-bottom: 0;
 }
 
-.menu-button-container .menu-button-menu a:hover {
+.dropdown-button-container .dropdown-button-items a:hover {
   color: #808080;
 }
 
