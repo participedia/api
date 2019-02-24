@@ -1185,9 +1185,13 @@
   border: 1px solid #000;
 }
 .rich-text-editor-container {
-  height: 200px;
+  height: 400px;
   border: 1px solid #000;
   border-top: 0;
+}
+
+.user-main-content .rich-text-editor-container {
+  height: 200px;
 }
 
 .ql-toolbar.ql-snow {
