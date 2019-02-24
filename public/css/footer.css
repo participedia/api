@@ -57,9 +57,7 @@ footer section {
 }
 
 .footer-copyright-area {
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 90px;
+  margin-top: 45px;
 }
 
 .footer-copyright-area span {
@@ -100,10 +98,6 @@ footer section {
   .footer-social-nav {
     margin-top: -105px;
     margin-bottom: 80px;
-  }
-
-  .footer-copyright-area {
-    margin-top: -20px;
   }
 }
 
