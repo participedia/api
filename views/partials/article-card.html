@@ -8,27 +8,28 @@
     <div class="article-card-content">
       <div class="article-card-meta">
         <h5>{{toUpperCase type}}</h5>
-        <button type="button" class="icon-only bookmark-btn">
-          {{#if bookmarked }}
-            <span class="sr-only">Remove Bookmark</span>
-            {{> icon-bookmark-fill}}
-          {{else}}
-            <span class="sr-only">Add Bookmark</span>
-            {{> icon-bookmark}}
-          {{/if}}
-        </button>
+        <h3 class="article-card-title">{{title}}</h3>
+        <p class="article-card-description">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat mas.</p>
+
+        {{#if description}}
+          <p class="article-card-description">{{description}}</p>
+        {{/if}}
+        <p class="small">Submitted {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
       </div>
-
-      <h3 class="article-card-title">{{title}}</h3>
-      {{#if description}}
-        <p class="article-card-description">{{description}}</p>
-      {{/if}}
-      <p class="small">Submitted {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
-
-      <button type="button" class="icon-only close-card-btn js-close-card-btn">
-        <span class="sr-only">Close Card</span>
-        {{> icon-close}}
+      <button type="button" class="icon-only bookmark-btn">
+        {{#if bookmarked }}
+          <span class="sr-only">Remove Bookmark</span>
+          {{> icon-bookmark-fill}}
+        {{else}}
+          <span class="sr-only">Add Bookmark</span>
+          {{> icon-bookmark}}
+        {{/if}}
       </button>
     </div>
+
+    <button type="button" class="icon-only close-card-btn js-close-card-btn">
+      <span class="sr-only">Close Card</span>
+      {{> icon-close}}
+    </button>
   </a>
 </li>
