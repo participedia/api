@@ -281,9 +281,9 @@ module.exports = {
   },
 
   getNextPageNum(req, totalPages) {
-    const currentPageNum = req.query && req.query.page;
-    if (currentPageNum && parseInt(currentPageNum) !== parseInt(totalPages)) {
-      return parseInt(currentPageNum) + 1;
+    const currentPageNum = req.query && parseInt(req.query.page) || 1;
+    if (currentPageNum !== parseInt(totalPages)) {
+      return currentPageNum + 1;
     } else {
       return totalPages;
     }

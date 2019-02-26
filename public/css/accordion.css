@@ -7,6 +7,10 @@
   border-top: 0;
 }
 
+.accordion-small:last-of-type {
+  margin-bottom: 15px;
+}
+
 .accordion input[name='accordion'] {
   display: none;
 }

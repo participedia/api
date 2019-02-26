@@ -3,7 +3,7 @@
     <strong>First Submitted By</strong>
     <a href="/user/{{article.creator.user_id}}">{{article.creator.name}}</a>
     <time datetime="{{article.post_date}}">
-      {{formatDate article post_date 'LL'}}
+      {{formatDate article "post_date" "LL"}}
     </time>
   </h4>
   <h4>
@@ -12,7 +12,7 @@
       {{article.last_updated_by.name}}
     </a>
     <time datetime="{{article.updated_date}}">
-      {{formatDate article updated_date 'LL'}}
+      {{formatDate article "updated_date" "LL"}}
     </time>
   </h4>
 </div>
