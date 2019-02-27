@@ -8,4 +8,12 @@ module.exports = {
   "content_types.organization.description": "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance.",
 
   "content_types.tools-techniques.description": "Description TBD",
+
+  "case": "Case",
+
+  "method": "Method",
+
+  "organization": "Organization",
+
+  "tools-techniques": "Tools & Techniques",
 };
