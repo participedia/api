@@ -66,6 +66,7 @@
     "watchify": "^3.11.0"
   },
   "scripts": {
+    "heroku-postbuild": "npm run build",
     "start": "nodemon server.js",
     "build": "browserify public/js/app.js -p esmify -o public/build/js/app.bundle.js -v",
     "watch": "watchify public/js/app.js -p esmify -o public/build/js/app.bundle.js -v",
