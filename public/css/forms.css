@@ -27,10 +27,10 @@ select:not([multiple]) {
   /* hides select arrow in FF */
   -moz-appearance: none;
   text-indent: 0.01px;
-  text-overflow: '';
   -webkit-appearance: unset;
   background-color: #ffffff;
-  background: url('data:image/svg+xml;utf8,<svg width="13" height="8" xmlns="http://www.w3.org/2000/svg"><path fill="#808080" class="icon-fill" fill-rule="nonzero" d="M10.7359.2929L12.15 1.707 6.221 7.6363.293 1.707 1.7071.293 6.221 4.8077z"/></svg>') no-repeat #fff;
+
+  background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTMiIGhlaWdodD0iOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjODA4MDgwIiBjbGFzcz0iaWNvbi1maWxsIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGQ9Ik0xMC43MzU5LjI5MjlMMTIuMTUgMS43MDcgNi4yMjEgNy42MzYzLjI5MyAxLjcwNyAxLjcwNzEuMjkzIDYuMjIxIDQuODA3N3oiLz48L3N2Zz4=') no-repeat;
   background-position: right 8px center;
 }
 
