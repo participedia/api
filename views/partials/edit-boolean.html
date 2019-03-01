@@ -1,8 +1,11 @@
 {{#> edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
-  <input
-    type="checkbox"
-    name="{{name}}"
-    value="{{getvalue article name}}"
-    {{#if (getvalue article name)}}checked{{/if}}
-  />
+  <label class="control-checkbox">
+    <input
+      type="checkbox"
+      name="{{name}}"
+      value="{{getvalue article name}}"
+      {{#if (getvalue article name)}}checked{{/if}}
+    />
+    <div class="control-checkbox-indicator"></div>
+  </label>
 {{/ edit-form-group}}
