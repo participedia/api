@@ -29,6 +29,7 @@ html {
   background: #fff;
   color: #000;
   -webkit-overflow-scrolling: touch;
+  visibility: hidden;
 }
 
 /* Typography */

@@ -1,3 +1,5 @@
+import FontFaceObserver from "fontfaceobserver";
+
 import header from './header.js';
 import elementClosestPolyfill from './polyfills/element.closest.polyfill.js';
 import editMultiSelect from './edit-multi-select.js';
@@ -16,6 +18,19 @@ import homeSearch from "./home-search.js";
 import userView from "./user-view.js";
 import dropdownButton from "./dropdown-button.js";
 
+function loadFonts() {
+  if (sessionStorage.participedia_faktFontLoaded) {
+    // fonts loaded
+    document.documentElement.style.visibility = "visible";
+  } else {
+    const faktFont = new FontFaceObserver('Fakt');
+    faktFont.load().then(() => {
+      document.documentElement.style.visibility = "visible";
+      sessionStorage.participedia_faktFontLoaded = true;
+    });
+  }
+}
+
 function isEditPage() {
   return window.location.pathname.lastIndexOf('/edit') > 0;
 }
@@ -28,6 +43,7 @@ function isUserPage() {
 elementClosestPolyfill();
 
 // common
+loadFonts();
 header.init();
 contactHelpFaqWidget.init();
 dropdownButton.init();
