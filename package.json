@@ -28,6 +28,7 @@
     "express-unless": "^0.3.0",
     "faucet": "^0.0.1",
     "flickity-as-nav-for": "^2.0.1",
+    "fontfaceobserver": "^2.1.0",
     "json-pretty": "^0.0.1",
     "jsonwebtoken": "^7.3.0",
     "jwks-rsa": "^1.1.1",

@@ -23,6 +23,13 @@
 
   <title>Participedia</title>
 </head>
+
+{{!--
+  We are using JS to make the html element visible when the fonts are loaded.
+  In the case that the browser does not use JS, then just show the html element now.
+--}}
+<noscript><style>html { visibility: visible; }</style></noscript>
+
 {{> modal }}
 
 <body data-view="{{params.view}}">
