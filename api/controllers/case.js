@@ -16,7 +16,7 @@ const {
   CASE_VIEW_STATIC,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
-  UPDATE_NOUN
+  UPDATE_CASE
 } = require("../helpers/db");
 
 const {
@@ -238,12 +238,17 @@ router.post("/:thingid", async (req, res) => {
       updatedThing.original_language = as.text(newThing.original_langauge);
       updatedThing.post_date = as.date(newThing.post_date);
     }
-    // media
-    updatedThing.full_files = as.files(newThing);
-    updatedThing.full_links = as.links(newThing);
-    updatedThing.photos = as.photos(newThing);
-    updatedThing.full_videos = as.videos(newThing);
-    updatedThing.audio = as.audio(newThing);
+    // media lists
+    [
+      "files",
+      "links",
+      "videos",
+      "audio",
+      "evaluation_reports",
+      "evaluation_links"
+    ].map(key => (updatedThing[key] = as.media(newThing[key])));
+    // photos are slightly different from other media as they have a source url too
+    updatedThing.photos = as.photos(newThing.photos);
     // boolean
     ["ongoing", "staff", "volunteers", "published"].map(
       key => (updatedThing[key] = as.boolean(newThing[key]))
@@ -269,10 +274,6 @@ router.post("/:thingid", async (req, res) => {
       "longitude",
       "funder"
     ].map(key => (updatedThing[key] = as.text(newThing[key])));
-    // these are now shaped like full_links
-    ["evaluation_reports", "evaluation_links"].map(
-      key => (updatedThing[key] = as.links(newThing[key]))
-    );
     // date
     ["start_date", "end_date"].map(
       key => (updatedThing[key] = as.date(newThing[key]))
@@ -293,7 +294,7 @@ router.post("/:thingid", async (req, res) => {
       "facilitators",
       "facilitator_training",
       "facetoface_online_or_both"
-    ].map(key => (updatedThing[key] = as.key(newThing[key])));
+    ].map(key => (updatedThing[key] = as.casekey(newThing[key])));
     // list of keys
     [
       "general_issues",
@@ -314,16 +315,21 @@ router.post("/:thingid", async (req, res) => {
       "funder_types",
       "change_types",
       "implementers_of_change"
-    ].map(key => (updatedThing[key] = as.keys(newThing[key])));
+    ].map(key => (updatedThing[key] = as.casekeys(newThing[key])));
     // special list of keys
-    updatedThing.tags = as.tagKeys(newThing.tags);
+    updatedThing.tags = as.tagkeys(newThing.tags);
     updatedThing.updated_date = as.date("now");
     updatedThing.type = "case";
     updatedThing.id = params.articleid;
     // list of ids on user objecte
     // TODO save bookmarked on user
     // UPDATE the thing row
-    await db.none(UPDATE_CASE, updatedThing);
+    try {
+      console.log("Update case query file: %s", UPDATE_CASE);
+      await db.none(UPDATE_CASE, updatedThing);
+    } catch (e) {
+      console.trace(e);
+    }
     // update materialized view for search
     try {
       db.none("REFRESH MATERIALIZED VIEW search_index_en;");

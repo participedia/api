@@ -48,7 +48,7 @@ SELECT
   COALESCE(get_case_edit_localized_list(${lang},'decision_methods', decision_methods), '{}') as decision_methods,
   COALESCE(get_case_edit_localized_list(${lang},'if_voting', if_voting), '{}') as if_voting,
   COALESCE(get_case_edit_localized_list(${lang},'insights_outcomes', insights_outcomes), '{}') as insights_outcomes,
-  COALESCE(get_object_title(primary_organizer, ${lang}), '{}') as primary_organizer,
+  get_object_title(primary_organizer, ${lang}) as primary_organizer,
   COALESCE(get_case_edit_localized_list(${lang},'organizer_types', organizer_types), '{}') as organizer_types,
   funder,
   COALESCE(get_case_edit_localized_list(${lang},'funder_types', funder_types), '{}') as funder_types,
