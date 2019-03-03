@@ -4,6 +4,13 @@ const aboutData = require("./data/about-data.js");
 const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
 
+function toTitleCase(str) {
+  return str.replace(
+    /\w\S*/g,
+    txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
+}
+
 function mapIdTitleToKeyValue(options) {
   if (!options) return null;
   return options.map(item => {
@@ -236,7 +243,7 @@ module.exports = {
   },
 
   articleDataTitle(article) {
-    return article.type + " Data";
+    return toTitleCase(article.type + " Data");
   },
 
   // search layout helpers
@@ -274,9 +281,9 @@ module.exports = {
   },
 
   getNextPageNum(req, totalPages) {
-    const currentPageNum = req.query && req.query.page;
-    if (currentPageNum && parseInt(currentPageNum) !== parseInt(totalPages)) {
-      return parseInt(currentPageNum) + 1;
+    const currentPageNum = req.query && parseInt(req.query.page) || 1;
+    if (currentPageNum !== parseInt(totalPages)) {
+      return currentPageNum + 1;
     } else {
       return totalPages;
     }

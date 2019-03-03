@@ -25,14 +25,25 @@ const map = {
       center: { lat: 24.6207595, lng: -40.2706411 },
       zoom: 1.75,
       disableDefaultUI: true,
-      zoomControl: true,
-      zoomControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_TOP,
-      },
+      zoomControl: false,
       styles: mapStyle,
     });
 
+    this.initZoomControls(this.map);
+
     this.renderMarkers();
+  },
+
+  initZoomControls(map) {
+    document.querySelector('.js-map-zoom-control-in').addEventListener("click", () => {
+      map.setZoom(map.getZoom() + 1);
+    });
+    document.querySelector('.js-map-zoom-control-out').addEventListener("click", () => {
+      map.setZoom(map.getZoom() - 1);
+    });
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+      document.querySelector('.js-map-controls')
+    );
   },
 
   renderMarkers() {

@@ -164,6 +164,10 @@ header a {
   transition: all .4s ease;
 }
 
+.sidebar-menu-main-menu {
+  margin-top: 30px;
+}
+
 .sidebar-menu-main-menu li {
   align-self: flex-start;
 }
@@ -178,8 +182,19 @@ header a {
   background-color: #E6E6E6;
 }
 
-.sidebar-menu-main-menu li:first-child {
-  padding-top: 60px;
+.sidebar-menu-newsletter-container-mobile {
+  display: none;
+}
+
+.sidebar-menu-newsletter-container-desktop {
+  border: 1px solid #e6e6e6;
+  padding: 15px;
+  color: #000;
+  margin: 30px;
+}
+
+.sidebar-menu-newsletter-container-desktop h4 {
+  margin-bottom: 0;
 }
 
 /* hamburger menu when sidebar menu is closed */
@@ -253,5 +268,14 @@ header a {
 
   .main-content {
     margin-top: 128px;
+  }
+}
+
+@media (max-height: 698px) {
+  .sidebar-menu-newsletter-container-desktop {
+    display: none;
+  }
+  .sidebar-menu-newsletter-container-mobile {
+    display: block;
   }
 }

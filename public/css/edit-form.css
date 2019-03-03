@@ -1,3 +1,143 @@
+fieldset {
+  background-color: #fff;
+  border: 0;
+  padding: 0;
+  border-bottom: 1px solid #D2D2D2;
+  margin-bottom: 60px;
+}
+
+/* remove horizontal line and extra space between sections on quick submit only */
+[data-submit-type=quick] fieldset {
+  border: 0;
+  margin-bottom: 0px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #000;
+  border-radius: 2px;
+  box-sizing : border-box;
+}
+
+input[disabled] {
+  border: 1px solid #808080;
+}
+
+textarea {
+  height: 5rem;
+  resize: none;
+}
+
+select:not([multiple]) {
+  /* hides select arrow in FF */
+  -moz-appearance: none;
+  text-indent: 0.01px;
+  -webkit-appearance: unset;
+  background-color: #ffffff;
+
+  background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTMiIGhlaWdodD0iOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjODA4MDgwIiBjbGFzcz0iaWNvbi1maWxsIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGQ9Ik0xMC43MzU5LjI5MjlMMTIuMTUgMS43MDcgNi4yMjEgNy42MzYzLjI5MyAxLjcwNyAxLjcwNzEuMjkzIDYuMjIxIDQuODA3N3oiLz48L3N2Zz4=') no-repeat;
+  background-position: right 8px center;
+}
+
+/* always show the number up/down arrows in chrome, not just on hover of the input */
+input[type=number]::-webkit-inner-spin-button {
+  opacity: 1;
+}
+
+/* checkbox styling */
+.control-checkbox {
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 15px;
+}
+
+.control-checkbox input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.control-checkbox-indicator {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background: #fff;
+  border: 1px solid #000;
+}
+
+.control-checkbox:hover input ~ .control-checkbox-indicator,
+.control-checkbox input:focus ~ .control-checkbox-indicator {
+  background: #fff;
+}
+
+.control-checkbox input:checked ~ .control-checkbox-indicator {
+  background: #242424;
+}
+
+.control-checkbox input:disabled ~ .control-checkbox-indicator {
+  background: #e6e6e6;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.control-checkbox-indicator:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.control-checkbox input:checked ~ .control-checkbox-indicator:after {
+  display: block;
+}
+
+.control-checkbox .control-checkbox-indicator:after {
+  left: 8px;
+  top: 4px;
+  width: 3px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.control-checkbox input:disabled ~ .control-checkbox-indicator:after {
+  border-color: #7b7b7b;
+}
+
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.form-group label {
+  font-size: 1.25rem;
+  line-height: 1rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.form-group p {
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.form-group-password input {
+  margin-bottom: 15px;
+}
+
+[data-required="true"]:before {
+  content: '*';
+  color: #EC2024;
+  position: absolute;
+  margin: 5px 0 0 -20px;
+  font-weight: 600;
+  font-size: 1.75rem;
+}
+
 .edit-form {
   width: 45%;
   margin: 0 auto 120px auto;
@@ -1185,9 +1325,13 @@
   border: 1px solid #000;
 }
 .rich-text-editor-container {
-  height: 200px;
+  height: 400px;
   border: 1px solid #000;
   border-top: 0;
+}
+
+.user-main-content .rich-text-editor-container {
+  height: 200px;
 }
 
 .ql-toolbar.ql-snow {
