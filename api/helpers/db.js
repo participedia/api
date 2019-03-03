@@ -75,7 +75,7 @@ function author(user_id, name) {
     throw new Error("Must have both user_id and name for an author");
   }
   user_id = as.number(user_id);
-  name = as.text(name);
+  name = text(name);
   return `(${user_id}, 'now', ${name})::author`;
 }
 
@@ -124,15 +124,17 @@ function strings(strList) {
   //  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
 }
 
-function casekey(str) {
-  if (str && dbcasekeys.includes(str)) {
-    return text(str);
+function casekey(group, str) {
+  if (str && dbcasekeys.includes(`${group}_${str}`)) {
+    return str;
   }
-  return null;
+  return "";
 }
 
-function casekeys(strList) {
-  return as.array(uniq((strList || []).map(casekey).filter(x => !!x)));
+function casekeys(group, strList) {
+  return as.array(
+    uniq((strList || []).map(k => casekey(group, k)).filter(x => !!x))
+  );
 }
 
 function tagkey(str) {
@@ -201,7 +203,7 @@ function boolean(value) {
   if (value === true || value === false) {
     return value;
   }
-  return null;
+  return false;
 }
 
 // Yes, these should be converted to booleans
@@ -217,7 +219,7 @@ function yesno(value) {
 
 function date(value) {
   if (isDate(value)) {
-    return value;
+    return text(value);
   } else {
     if (!value) {
       return null;
@@ -228,10 +230,7 @@ function date(value) {
 
 // replace as.text, don't convert null to "null" because that's dumb
 function text(value) {
-  if (!value) {
-    return null;
-  }
-  return pgp.as.text(value);
+  return pgp.as.text(value || "");
 }
 
 const as = Object.assign({}, pgp.as, {

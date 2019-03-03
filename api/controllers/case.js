@@ -117,33 +117,134 @@ router.post("/new", async function postNewCase(req, res) {
 async function maybeUpdateUserText(req, res) {
   // if none of the user-submitted text fields have changed, don't add a record
   // to localized_text or
-  const newThing = req.body;
+  const newCase = req.body;
   const params = parseGetParams(req, "case");
-  const oldThing = (await db.one(CASE_VIEW_BY_ID, params)).results;
+  const oldCase = (await db.one(CASE_VIEW_BY_ID, params)).results;
   let textModified = false;
   const updatedText = {
-    body: oldThing.body,
-    title: oldThing.title,
-    description: oldThing.description,
+    body: oldCase.body,
+    title: oldCase.title,
+    description: oldCase.description,
     language: params.lang,
     type: "case",
     id: params.articleid
   };
   ["body", "title", "description"].forEach(key => {
-    if (newThing[key] !== oldThing[key]) {
+    if (newCase[key] !== oldCase[key]) {
       textModified = true;
-      updatedText[key] = newThing[key];
+      updatedText[key] = oldCase[key];
     }
   });
   if (textModified) {
-    await db.none(INSERT_LOCALIZED_TEXT, updatedText);
-    // INSERT row for X__authors
-    await db.none(INSERT_AUTHOR, {
+    const author = {
       user_id: params.userid,
       type: "case",
       id: params.articleid
-    });
+    };
+    return { updatedText, author, oldCase };
+  } else {
+    return { updateText: null, author: null, oldCase };
   }
+}
+
+function getUpdatedCase(user, params, newCase, oldCase) {
+  const updatedCase = {};
+  // admin-only
+  if (user.isadmin) {
+    updatedCase.featured = as.boolean(newCase.featured);
+    updatedCase.hidden = as.boolean(newCase.hidden);
+    updatedCase.original_language = as.text(newCase.original_langauge);
+    updatedCase.post_date = as.date(newCase.post_date);
+  } else {
+    updatedCase.featured = as.boolean(oldCase.featured);
+    updatedCase.hidden = as.boolean(oldCase.hidden);
+    updatedCase.original_language = as.text(oldCase.original_language);
+    updatedCase.post_date = as.date(oldCase.post_date);
+  }
+  // media lists
+  [
+    "files",
+    "links",
+    "videos",
+    "audio",
+    "evaluation_reports",
+    "evaluation_links"
+  ].map(key => (updatedCase[key] = as.media(newCase[key])));
+  // photos are slightly different from other media as they have a source url too
+  updatedCase.photos = as.photos(newCase.photos);
+  // boolean (would include "published" but we don't really support it)
+  ["ongoing", "staff", "volunteers"].map(
+    key => (updatedCase[key] = as.boolean(newCase[key]))
+  );
+  // yes/no (convert to boolean)
+  ["impact_evidence", "formal_evaluation"].map(
+    key => (updatedCase[key] = as.yesno(newCase[key]))
+  );
+  // number
+  ["number_of_participants"].map(
+    key => (updatedCase[key] = as.integer(newCase[key]))
+  );
+  // plain text
+  [
+    "location_name",
+    "address1",
+    "address2",
+    "city",
+    "province",
+    "postal_code",
+    "country",
+    "latitude",
+    "longitude",
+    "funder"
+  ].map(key => (updatedCase[key] = as.text(newCase[key])));
+  // date
+  ["start_date", "end_date"].map(
+    key => (updatedCase[key] = as.date(newCase[key]))
+  );
+  // id
+  ["is_component_of", "primary_organizer"].map(
+    key => (updatedCase[key] = as.id(newCase[key]))
+  );
+  // list of ids
+  updatedCase.specific_methods_tools_techniques = as.ids(
+    newCase.specific_methods_tools_techniques
+  );
+  // key
+  [
+    "scope",
+    "public_spectrum",
+    "legality",
+    "facilitators",
+    "facilitator_training",
+    "facetoface_online_or_both"
+  ].map(key => (updatedCase[key] = as.casekey(newCase[key])));
+  // list of keys
+  [
+    "general_issues",
+    "specific_topics",
+    "time_limited",
+    "purposes",
+    "approaches",
+    "open_limited",
+    "recruitment_method",
+    "targeted_participants",
+    "method_types",
+    "participants_interactions",
+    "learning_resources",
+    "decision_methods",
+    "if_voting",
+    "insights_outcomes",
+    "organizer_types",
+    "funder_types",
+    "change_types",
+    "implementers_of_change",
+    "tools_techniques_types"
+  ].map(key => (updatedCase[key] = as.casekeys(key, newCase[key])));
+  // special list of keys
+  updatedCase.tags = as.tagkeys(newCase.tags);
+  updatedCase.id = params.articleid;
+  // TODO save bookmarked on user
+  return updatedCase;
 }
 
 // Only changs to title, description, and/or body trigger a new author and version
@@ -221,120 +322,31 @@ async function maybeUpdateUserText(req, res) {
 router.post("/:thingid", async (req, res) => {
   cache.clear();
   const params = parseGetParams(req, "case");
-  const { articleid, type, view, userid, lang, returns } = params;
   const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
   try {
-    // FIXME: Figure out how to get all of this done as one transaction
-    const newThing = req.body;
-    console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
-    // FIXME, do validation step before any updates
+    const newCase = req.body;
+    console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
     // save any changes to the user-submitted text
-    maybeUpdateUserText(req, res);
-    const updatedThing = {};
-    // admin-only
-    if (user.isadmin) {
-      updatedThing.featured = as.boolean(newThing.featured);
-      updatedThing.hidden = as.boolean(newThing.hidden);
-      updatedThing.original_language = as.text(newThing.original_langauge);
-      updatedThing.post_date = as.date(newThing.post_date);
-    }
-    // media lists
-    [
-      "files",
-      "links",
-      "videos",
-      "audio",
-      "evaluation_reports",
-      "evaluation_links"
-    ].map(key => (updatedThing[key] = as.media(newThing[key])));
-    // photos are slightly different from other media as they have a source url too
-    updatedThing.photos = as.photos(newThing.photos);
-    // boolean
-    ["ongoing", "staff", "volunteers", "published"].map(
-      key => (updatedThing[key] = as.boolean(newThing[key]))
-    );
-    // yes/no (convert to boolean)
-    ["impact_evidence", "formal_evaluation"].map(
-      key => (updatedThing[key] = as.yesno(newThing[key]))
-    );
-    // number
-    ["number_of_participants"].map(
-      key => (updatedThing[key] = as.integer(newThing[key]))
-    );
-    // plain text
-    [
-      "location_name",
-      "address1",
-      "address2",
-      "city",
-      "province",
-      "postal_code",
-      "country",
-      "latitude",
-      "longitude",
-      "funder"
-    ].map(key => (updatedThing[key] = as.text(newThing[key])));
-    // date
-    ["start_date", "end_date"].map(
-      key => (updatedThing[key] = as.date(newThing[key]))
-    );
-    // id
-    ["is_component_of", "primary_organizer"].map(
-      key => (updatedThing[key] = as.id(newThing[key]))
-    );
-    // list of ids
-    updatedThing.tools_techniques_types = as.ids(
-      newThing.tools_techniques_types
-    );
-    // key
-    [
-      "scope",
-      "public_spectrum",
-      "legality",
-      "facilitators",
-      "facilitator_training",
-      "facetoface_online_or_both"
-    ].map(key => (updatedThing[key] = as.casekey(newThing[key])));
-    // list of keys
-    [
-      "general_issues",
-      "specific_topics",
-      "time_limited",
-      "purposes",
-      "approaches",
-      "open_limited",
-      "recruitment_method",
-      "targeted_participants",
-      "method_types",
-      "participants_interactions",
-      "learning_resources",
-      "decision_methods",
-      "if_voting",
-      "insights_outcomes",
-      "organizer_types",
-      "funder_types",
-      "change_types",
-      "implementers_of_change"
-    ].map(key => (updatedThing[key] = as.casekeys(newThing[key])));
-    // special list of keys
-    updatedThing.tags = as.tagkeys(newThing.tags);
-    updatedThing.updated_date = as.date("now");
-    updatedThing.type = "case";
-    updatedThing.id = params.articleid;
-    // list of ids on user objecte
-    // TODO save bookmarked on user
-    // UPDATE the thing row
-    try {
-      console.log("Update case query file: %s", UPDATE_CASE);
-      await db.none(UPDATE_CASE, updatedThing);
-    } catch (e) {
-      console.trace(e);
-    }
-    // update materialized view for search
-    try {
-      db.none("REFRESH MATERIALIZED VIEW search_index_en;");
-    } catch (error) {
-      console.error("Problem refreshing materialized view: %s", error);
+    const { updatedText, author, oldCase } = maybeUpdateUserText(req, res);
+    const updatedCase = getUpdatedCase(user, params, newCase, oldCase);
+    console.warn("updatedCase: %s", JSON.stringify(updatedCase));
+    if (updatedText) {
+      await db.tx("update-case", t => {
+        return t.batch([
+          t.none(INSERT_AUTHOR, author),
+          t.none(INSERT_LOCALIZED_TEXT, updatedText),
+          t.none(UPDATE_CASE, updatedCase),
+          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+        ]);
+      });
+    } else {
+      await db.tx("update-case", t => {
+        return t.batch([
+          t.none(UPDATE_CASE, updatedCase),
+          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+        ]);
+      });
     }
     res.redirect(req.originalUrl.replace("/edit", ""));
   } catch (error) {
