@@ -19,16 +19,13 @@ import userView from "./user-view.js";
 import dropdownButton from "./dropdown-button.js";
 
 function loadFonts() {
-  if (sessionStorage.participedia_faktFontLoaded) {
-    // fonts loaded
+  const faktFont = new FontFaceObserver('Fakt');
+  faktFont.load().then(() => {
     document.documentElement.style.visibility = "visible";
-  } else {
-    const faktFont = new FontFaceObserver('Fakt');
-    faktFont.load().then(() => {
-      document.documentElement.style.visibility = "visible";
-      sessionStorage.participedia_faktFontLoaded = true;
-    });
-  }
+  }, () => {
+    // even if loading fails, show html and it will use the fallback font
+    document.documentElement.style.visibility = "visible";
+  });
 }
 
 function isEditPage() {
