@@ -11,6 +11,15 @@
     <!-- todo: pass in user id from server once it's added to the json -->
     <input type="hidden" name="user" value="14" />
 
+    {{!--
+      harcode values for fields that are required by the backend,
+      for features that have not yet been implemented on the frontend.
+    --}}
+    <input type="hidden" name="original_language" value="en" />
+    <input type="hidden" name="featured" value="false" />
+    <input type="hidden" name="hidden" value="false" />
+    {{!----}}
+
     <div class="edit-form-author-info">
       {{> edit-submission-details }}
     </div>

@@ -28,6 +28,25 @@ try {
 }
 let db = pgp(config);
 
+let dbtagkeys;
+let dbcasekeys;
+
+async function initKeys() {
+  // we're just getting the keys for validation, which are the same for
+  // every language, so hard-coding 'en' here is OK.
+  dbcasekeys = (await db.one(`
+    SELECT to_json(array_agg(key)) AS keys
+    FROM localized_case_field_values
+    WHERE language = 'en';
+  `)).keys;
+  dbtagkeys = (await db.one(`
+    SELECT to_json(array_agg(key)) as keys
+    FROM rotate_tags_localized('en') AS tagvalues
+    WHERE tagvalues.key <> 'language';
+  `)).keys;
+}
+initKeys().then(() => console.log("keys initialized")); // we'll need these when users submit data
+
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {
     minify: true
@@ -56,7 +75,7 @@ function author(user_id, name) {
     throw new Error("Must have both user_id and name for an author");
   }
   user_id = as.number(user_id);
-  name = as.text(name);
+  name = text(name);
   return `(${user_id}, 'now', ${name})::author`;
 }
 
@@ -86,23 +105,14 @@ function asUrl(value) {
 }
 
 function urls(urlList) {
-  if (urlList === null) {
-    return urlList;
-  }
-  if (!urlList) {
-    return [];
-  }
-  return uniq(urlList.map(asUrl).filter(x => x && x.length));
+  return as.array(uniq((urlList || []).map(asUrl).filter(x => !!x)));
 }
 
 const id = integer;
 
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
-  if (!idList) {
-    return [];
-  }
-  return uniq(idList.map(integer));
+  return as.array(uniq((idList || []).map(integer)));
   // return (
   //   "ARRAY[" + idList.map(s => as.number(s.value)).join(", ") + "]::integer[]"
   // );
@@ -110,16 +120,37 @@ function ids(idList) {
 
 // as.strings
 function strings(strList) {
-  if (!strList) {
-    return [];
-  }
-  return uniq(strList.map(as.text).filter(x => x && x.length));
+  return as.array(uniq((strList || []).map(text).filter(x => !!x)));
   //  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
+}
+
+function casekey(group, str) {
+  if (str && dbcasekeys.includes(`${group}_${str}`)) {
+    return str;
+  }
+  return "";
+}
+
+function casekeys(group, strList) {
+  return as.array(
+    uniq((strList || []).map(k => casekey(group, k)).filter(x => !!x))
+  );
+}
+
+function tagkey(str) {
+  if (str && dbtagkeys.includes(str)) {
+    return text(str);
+  }
+  return null;
+}
+
+function tagkeys(strList) {
+  return as.array(uniq((strList || []).map(tagkey).filter(x => !!x)));
 }
 
 function localed(strList) {
   // localed strings come in as as list of objects with {text, value}, we want value (the localization key)
-  if (strList && strList.length && typeof strList[0] === "object") {
+  if (strList && strList.length && isObject(strList[0])) {
     return strings(strList.map(s => s.value));
   } else {
     // someone passes us a list of strings, yay!
@@ -135,15 +166,32 @@ function attachments(attList) {
   }
 }
 
-function audio(audioList) {}
+function aMedium(obj) {
+  if (!obj.link) return null;
+  return {
+    link: asUrl(obj.link),
+    attribution: as.text(obj.attribution),
+    title: as.text(obj.title)
+  };
+}
 
-function videos(videoList) {}
+function aPhoto(obj) {
+  if (!obj.url) return null;
+  return {
+    url: asUrl(obj.url),
+    source_url: asUrl(obj.link),
+    attribution: as.text(obj.attribution),
+    title: as.text(obj.title)
+  };
+}
 
-function files(fileList) {}
+function media(mediaList) {
+  return as.array((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
+}
 
-function photos(photoList) {}
-
-function links(linksList) {}
+function photos(photoList) {
+  return as.array((photoList || []).map(aPhoto).filter(x => !!x)); // remove nulls
+}
 
 function boolean(value) {
   if (value === "true") {
@@ -155,7 +203,7 @@ function boolean(value) {
   if (value === true || value === false) {
     return value;
   }
-  return null;
+  return false;
 }
 
 // Yes, these should be converted to booleans
@@ -171,7 +219,7 @@ function yesno(value) {
 
 function date(value) {
   if (isDate(value)) {
-    return value;
+    return text(value);
   } else {
     if (!value) {
       return null;
@@ -182,32 +230,29 @@ function date(value) {
 
 // replace as.text, don't convert null to "null" because that's dumb
 function text(value) {
-  if (!value) {
-    return null;
-  }
-  return pgp.as.text(value);
+  return pgp.as.text(value || "");
 }
 
 const as = Object.assign({}, pgp.as, {
-  audio,
   boolean,
   author,
   attachment,
   attachments,
   date,
-  files,
   id,
   ids,
   integer,
-  links,
   localed,
+  media,
   number,
   photos,
   strings,
+  casekey,
+  casekeys,
+  tagkeys,
   text,
   url: asUrl,
   urls,
-  videos,
   yesno
 });
 
@@ -245,6 +290,7 @@ const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
 const LIST_TITLES = sql("../sql/list_titles.sql");
 const LIST_SHORT = sql("../sql/list_short.sql");
 const UPDATE_USER = sql("../sql/update_user.sql");
+const UPDATE_CASE = sql("../sql/update_case.sql");
 
 module.exports = {
   db,
@@ -271,6 +317,7 @@ module.exports = {
   LIST_TITLES,
   LIST_SHORT,
   UPDATE_USER,
+  UPDATE_CASE,
   CASE_EDIT_BY_ID,
   CASE_EDIT_STATIC,
   CASE_VIEW_BY_ID,
