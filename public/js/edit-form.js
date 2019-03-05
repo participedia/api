@@ -1,4 +1,5 @@
 import serialize from "./utils/serialize.js";
+import Modal from "a11y-dialog-component";
 
 const editForm = {
   init() {
@@ -27,26 +28,45 @@ const editForm = {
       if (xhr.readyState !== xhr.DONE) return;
 
       const response = JSON.parse(xhr.response);
-      console.log(response)
 
       if (response.OK) {
-        // show success ui
-        this.renderSuccess();
+        this.handleSuccess();
       } else {
-        // show error ui
-        this.renderErrors(response.errors);
+        this.handleErrors(response.errors);
       }
     }
 
     xhr.send(formData);
   },
 
-  renderSuccess() {
-    alert("success");
+  handleSuccess() {
+    // remove `/edit` from current url & redirect to reader view
+    // eg: /case/1234/edit => /case/1234
+    location.href = location.pathname.slice(0, location.pathname.length - 5);;
   },
 
-  renderErrors() {
-    alert("error");
+  errorModalHtml(errors) {
+    const errorsHtml = errors.map(error => `<li>${error}</li>`).join("");
+    return `
+      <h3>Please fix the following issues</h3>
+      <ul>
+        ${errorsHtml}
+      </ul>
+      <button class="button button-red js-modal-close">OK</button>
+    `;
+  },
+
+  handleErrors(errors) {
+    const modalId = "#modal-container";
+    const modal = new Modal(modalId, {
+      closingSelector: ".js-modal-close",
+    });
+    const modalContentEl = document.querySelector(`${modalId} .c-dialog__content`);
+    modalContentEl.innerHTML = this.errorModalHtml(errors);
+    modal.open();
+
+    // attach event listener for new close button inserted in modal
+    modalContentEl.querySelector(".js-modal-close").addEventListener("click", modal.close);
   },
 }
 
