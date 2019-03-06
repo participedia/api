@@ -380,14 +380,12 @@ router.post("/:thingid", async (req, res) => {
     );
     console.trace(error);
     // validation error response
-    // errors should be passed back to client as array of objects for each field
+    // errors should be passed back to client as array of error messages
     res.status(200).json({
       OK: false,
       errors: [
-        {
-          key: "title",
-          userMessage: "Title can not be empty.",
-        }
+        "Title can not be empty.",
+        "Some other validation issue",
       ],
     });
   } // end catch
