@@ -359,6 +359,24 @@ module.exports = {
     return currentUrl(req);
   },
 
+  isEditView(req) {
+    const baseUrls = ["/case", "/method", "/organization", "/user"];
+    return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
+  },
+
+  isReaderView(req) {
+    const baseUrls = ["/case", "/method", "/organization"];
+    return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") === -1;
+  },
+
+  isHomeSearchView(req) {
+    return req.path === "/";
+  },
+
+  isUserView(req) {
+    return req.baseUrl === "/user" && req.path.indexOf("edit") === -1;
+  },
+
   getFaqContent() {
     // todo: get this as translated text from the server
     return faqContent;
