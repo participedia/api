@@ -1,31 +1,21 @@
 @font-face {
-  font-family: "Fakt";
-  src: url("/fonts/FaktPro-Medium.ttf");
-  font-weight: 800;
-  font-style: bold;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Fakt";
-  src: url("/fonts/FaktPro-Normal.ttf");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Fakt";
-  src: url("/fonts/FaktPro-Blond.ttf");
+  font-family: "Inter";
   font-weight: 300;
-  font-style: normal;
-  font-display: swap;
+  src: url("../fonts/Inter-Light-BETA.woff2?v=3.3") format("woff2"),
+       url("../fonts/Inter-Light-BETA.woff?v=3.3") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 500;
+  src: url("../fonts/Inter-Medium.woff2?v=3.3") format("woff2"),
+       url("../fonts/Inter-Medium.woff?v=3.3") format("woff");
 }
 
 html {
-  font-family: "Fakt", "Avenir", sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
+  font-family: "Inter", "Avenir", sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
   background: #fff;
   color: #000;
   -webkit-overflow-scrolling: touch;
@@ -34,37 +24,37 @@ html {
 
 /* Typography */
 body {
-  font-size: 1rem; /* 16px */
+  font-size: 1rem;
   font-weight: 300;
-  line-height: 1.5; /* 24px */
+  line-height: 1.7;
 }
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
 }
 h1 {
-  font-size: 2.5rem; /* 40px */
-  line-height: 1.1; /* 44px */
-  font-weight: 600;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  font-weight: 500;
 }
 h2 {
   font-size: 1.75rem; /* 28px */
   line-height: 2.3rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 h3 {
   font-size: 1.25rem; /* 20px */
   line-height: 1.4; /* 28px */
-  font-weight: 600;
+  font-weight: 500;
 }
 h4 {
   font-size: 1rem; /* 16px */
   line-height: 1.5; /* 24px */
-  font-weight: 600;
+  font-weight: 500;
 }
 h5 {
   font-size: 0.875rem; /* 14px */
   line-height: 1.25rem; /* 20px */
-  font-weight: 600;
+  font-weight: 500;
 }
 .large {
   font-size: 1.2rem; /* 19.2px */
@@ -79,7 +69,7 @@ small,
 }
 b,
 strong {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 a {

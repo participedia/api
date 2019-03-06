@@ -18,7 +18,7 @@ header a {
 
 .header-logo-container a {
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: 500;
   color: #fff;
   text-decoration: none;
   display: inline-block;
@@ -93,7 +93,7 @@ header a {
   width: 40px;
   height: 40px;
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .icon-container {

@@ -116,7 +116,7 @@ input[type=number]::-webkit-inner-spin-button {
 .form-group label {
   font-size: 1.25rem;
   line-height: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   display: inline-block;
 }
 
@@ -134,7 +134,7 @@ input[type=number]::-webkit-inner-spin-button {
   color: #EC2024;
   position: absolute;
   margin: 5px 0 0 -20px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1.75rem;
 }
 
@@ -263,7 +263,7 @@ input[type=number]::-webkit-inner-spin-button {
 .edit-link-set + a,
 .edit-link-list + a {
   color: #000;
-  font-weight: 600;
+  font-weight: 500;
   display: inline-block;
 }
 

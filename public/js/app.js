@@ -4,8 +4,8 @@ import elementClosestPolyfill from "./polyfills/element.closest.polyfill.js";
 import contactHelpFaqWidget from "./contact-help-faq-widget.js";
 
 function loadFonts() {
-  const faktFont = new FontFaceObserver("Fakt");
-  faktFont.load().then(() => {
+  const font = new FontFaceObserver("Inter");
+  font.load().then(() => {
     document.documentElement.style.visibility = "visible";
   }, () => {
     // even if loading fails, show html and it will use the fallback font
