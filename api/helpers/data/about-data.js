@@ -693,6 +693,7 @@ const partners = [
 const committees = [
   {
     "titleKey": "Executive Committee",
+    "descriptionKey": "about.committees.executive_committee.p1",
     "members": [
       {
         "name": "Marco Adria",
@@ -721,10 +722,9 @@ const committees = [
       {
         "name": "Patrick L. Scully",
         "titleKey": "(member ex officio), Managing Director",
-
       },
       {
-        "name": "Graham Smith",
+        "name": "Matt Ryan",
         "titleKey": "Chair, Research Design Committee",
         "descriptors": [
           "Centre for the Study of Democracy",
@@ -732,16 +732,18 @@ const committees = [
         ]
       },
       {
-        "name": "Bettina Von Lieres",
-        "titleKey": "Chair, Teaching, Training and Mentoring Committee",
+        "name": "Joanna Ashworth and Bettina Von Lieres",
+        "titleKey": "Co-Chairs, Teaching, Training and Mentoring Committee",
         "descriptors": [
+          "Centre for Sustainable Development",
+          "Simon Fraser University",
           "Centre for Critical Development Studies",
           "University of Toronto-Scarborough"
         ]
       },
       {
         "name": "Mark E. Warren",
-        "titleKey": "Project Director and Co-Founder",
+        "titleKey": "Participedia Project Director and Co-Founder",
         "descriptors": [
           "Department of Political Science / Centre for the Study of Democratic Institutions",
           "University of British Columbia"
@@ -751,53 +753,69 @@ const committees = [
   },
   {
     "titleKey": "Design & Technology Committee",
-    "descriptionKey": "The Design & Technology Committee is responsible for the design and maintenance of the Participedia website.",
+    "descriptionKey": "about.committees.design_tech.p1",
     "members": [
       {
-        "name": "David Ascher",
-        "titleKey": "Technical Lead",
+        "name": "Amber Frid-Jimenez",
+        "titleKey": "Design & Technology Team Lead & Art Director",
       },
       {
         "name": "Jesi Carson",
-        "titleKey": "Design & Communities Coordinator",
-        "descriptors": [
-          "Studio for Extensive Aesthetics",
-          "Emily Carr University of Art + Design"
-        ]
+        "titleKey": "Lead Designer & Communities Coordinator",
       },
       {
-        "name": "Andrea Del Rio",
-        "titleKey": "Developer",
-        "descriptors": [
-          "Centre for Digital Media"
-        ]
+        "name": "Katherine Gillieson",
+        "titleKey": "Lead Graphic Designer",
+      },
+      {
+        "name": "Stephan Garneau",
+        "titleKey": "Designer",
       },
       {
         "name": "Dethe Elza",
+        "titleKey": "Lead Developer",
+      },
+      {
+        "name": "Andrea Del Rio",
+        "titleKey": "Designer & Developer",
+      },
+      {
+        "name": "Alanna Scott",
         "titleKey": "Developer",
       },
       {
-        "name": "Amber Frid-Jimenez",
-        "titleKey": "Committee Chair, Design Lead",
-        "descriptors": [
-          "Faculty of Design + Dynamic Media and Director, Studio for Extensive Aesthetics",
-          "Emily Carr University of Art + Design"
-        ]
+        "name": "Sam Jiang",
+        "titleKey": "Designer & Developer",
       },
       {
-        "name": "Sam Jiang",
-        "titleKey": "Graphic Designer & Developer",
-
-      }
+        "name": "Kushal Goenka",
+        "titleKey": "Developer",
+      },
+      {
+        "name": "Lydia Prince",
+        "titleKey": "Developer",
+      },
+      {
+        "name": "David Ascher",
+        "titleKey": "Tech Lead",
+      },
+      {
+        "name": "Patrick Scully",
+        "titleKey": "Managing Director",
+      },
+      {
+        "name": "Scott Fletcher",
+        "titleKey": "Managing Editor",
+      },
     ]
   },
   {
     "titleKey": "Communications & Knowledge Mobilization Committee",
-    "descriptionKey": "The Communication and Knowledge Mobilization Committee is responsible for advising the Executive Committee on how communication with research partners can be planned, carried out, and refined. The CKM committee also advises on optimal communication with the Participedia user community, including supporting the development of content for the website, newsletter, and social media channels.",
+    "descriptionKey": "about.committees.communications_knowledge_mobilization.p1",
     "members": [
       {
         "name": "Marco Adria",
-        "titleKey": "Chair, Communication & Knowledge Mobilization Committee",
+        "titleKey": "Co-investigator & Committee Chair",
         "descriptors": [
           "Centre for Public Involvement",
           "University of Alberta"
@@ -805,7 +823,7 @@ const committees = [
       },
       {
         "name": "Jesi Carson",
-        "titleKey": "Design & Communities Coordinator",
+        "titleKey": "Lead Designer & Communities Coordinator",
         "descriptors": [
           "Studio for Extensive Aesthetics",
           "Emily Carr University of Art + Design"
@@ -828,22 +846,23 @@ const committees = [
       },
       {
         "name": "Paolo Spada",
-        "titleKey": "Collaborator",
+        "titleKey": "Co-investigator",
         "descriptors": [
-          "University of Southampton"
+          "Centro de Estudo Sociais",
+          "Universidade de Coimbra",
         ]
       },
       {
         "name": "Secchi Michelangelo",
         "titleKey": "Research Assistant",
         "descriptors": [
-          "Center for Social Studies",
+          "Centro de Estudo Sociais",
           "University of Coimbra"
         ]
       },
       {
         "name": "Scott Fletcher",
-        "titleKey": "Research Assistant",
+        "titleKey": "Managing Editor",
         "descriptors": [
           "Department of Political Science / Centre for the Study of Democratic Institutions",
           "University of British Columbia"
@@ -853,7 +872,7 @@ const committees = [
   },
   {
     "titleKey": "Teaching Training & Mentoring Committee",
-    "descriptionKey": "The Teaching Training and Mentoring Committee is responsible for developing outputs and implement actions for the integration of Participedia materials into pedagogy, teaching, student involvement and the training of practitioners and public officials.",
+    "descriptionKey": "about.committees.teaching_training_mentoring.p1",
     "members": [
       {
         "name": "Joanna Ashworth",
@@ -864,7 +883,7 @@ const committees = [
         ]
       },
       {
-        "name": "Bonny Ibhawoh",
+        "name": "Ibhawoh Bonny",
         "titleKey": "Co-investigator",
         "descriptors": [
           "Department of History",
@@ -875,7 +894,7 @@ const committees = [
         "name": "Katie Knobloch",
         "titleKey": "Collaborator",
         "descriptors": [
-          "Communication Studies",
+          "Department of Communication",
           "Colorado State University"
         ]
       },
@@ -899,9 +918,8 @@ const committees = [
         "name": "Françoise Montambeaul",
         "titleKey": "Co-investigator",
         "descriptors": [
-          "Centre d'études et de recherches internationals (CÉRIUM)",
-          "Centre for International Studies",
-          "Universite de Montreal"
+          "Département de science politique",
+          "Université de Montréal"
         ]
       },
       {
@@ -909,7 +927,7 @@ const committees = [
         "titleKey": "Co-investigator",
         "descriptors": [
           "Program for the Advancement of Research on Conflict and Collaboration (PARCC)",
-          "Maxwell School, Syracuse University"
+          "Syracuse University/Maxwell School"
         ]
       },
       {
@@ -922,6 +940,7 @@ const committees = [
       },
       {
         "name": "Matthew Ryan",
+        "titleKey": "Co-investigator",
         "descriptors": [
           "Centre for Citizenship, Governance and Globalization",
           "University of Southampton"
@@ -960,13 +979,13 @@ const committees = [
   },
   {
     "titleKey": "Research Design Committee",
-    "descriptionKey": "The Research Design Committee is responsible for setting the strategic direction of PPedia’s research agenda.",
+    "descriptionKey": "about.committees.reasearch_design.p1",
     "members": [
       {
         "name": "Leonardo Avritzer",
         "titleKey": "Co-investigator",
         "descriptors": [
-          "Federal University of Minas Gerais"
+          "Universidade Federal de Minas Gerais"
         ]
       },
       {
@@ -991,26 +1010,28 @@ const committees = [
       },
       {
         "name": "Michael MacKenzie",
+        "titleKey": "Collaborator",
         "descriptors": [
           "University of Pittsburgh"
         ]
       },
       {
         "name": "Patrizia Nanz",
+        "titleKey": "Co-investigator",
         "descriptors": [
           "Research College / University of Duisburg-Essen"
         ]
       },
       {
         "name": "Lucy Parry",
-        "titleKey": "Research Assistant",
+        "titleKey": "Research Associate",
         "descriptors": [
           "University of Canberra"
         ]
       },
       {
         "name": "Matthew Ryan",
-        "titleKey": "Collaborator",
+        "titleKey": "Co-investigator",
         "descriptors": [
           "University of Southampton"
         ]
@@ -1024,13 +1045,14 @@ const committees = [
       },
       {
         "name": "Dietlind Stolle",
+        "titleKey": "Co-investigator",
         "descriptors": [
           "McGill University"
         ]
       },
       {
         "name": "Mark E. Warren",
-        titleKey: "Project Director and Co-Founder",
+        titleKey: "Project Director, Co-Founder and Principal Investigator",
         "descriptors": [
           "Department of Political Science / Centre for the Study of Democratic Institutions",
           "University of British Columbia"

@@ -40,7 +40,8 @@
     {{/accordion}}
 
     {{#> accordion title=(t static "Committees")}}
-      <p>{{about.committees.p1}}</p>
+      <p>{{t static "about.committees.p1"}}</p>
+
       {{#each (getCommitteesData)}}
         {{> about-section static=../static}}
       {{/each}}

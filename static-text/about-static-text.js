@@ -5,7 +5,9 @@ module.exports = {
 
   "about.ckmc.title": "Communications & Knowledge Mobilization Committee",
 
-  "about.committees.p1": "Committees are comprised of project co-investigators and collaborators, each with one nominated chairperson who sits on the executive committee.",
+  "about.committees.p1": "Participedia’s committees are comprised of project co-investigators and collaborators, and are headed by a nominated chairperson who sits on the executive committee.",
+
+  "about.committees.executive_committee.p1": "Participedia's executive committee comprises the chairs of each standing committee, and it's meetings are open to any member of our extended team or co-signatories to the project's SSHRC Partnership Grant (co-investigators, collaborators, and administrative representative of partner institutions).",
 
   "about.community.p1": "Participedia’s searchable database of participatory democracy is for anyone - from the armchair researcher to the social scientist. The platform was collaboratively designed by an international research partnership to connect and bolster their work on participatory democracy with publicly crowdsourced knowledge.",
 
@@ -44,4 +46,48 @@ module.exports = {
   "about.ttmc.decription": "The Teaching Training and Mentoring Committee is responsible for developing outputs and implement actions for the integration of Participedia materials into pedagogy, teaching, student involvement and the training of practitioners and public officials.",
 
   "about.ttmc.title": "Teaching Training & Mentoring Committee",
+
+  "about.committees.design_tech.p1": "The design and technology team researches and responds to the needs and goals of the Participedia's project and its community by testing and developing the open-source Participedia platform. The design and technology team is primarily composed of undergraduate and graduate students from the Studio for Extensive Aesthetics at Emily Carr University of Art + Design. Its members contribute to the design and development of the Participedia Project under the leadership of Emily Carr faculty member, Amber Frid-Jimenez, Canada Research Chair in Art and Design Technology and Director of the Studio for Extensive Aesthetics.",
+
+  "about.committees.communications_knowledge_mobilization.p1": "The communication and knowledge mobilization committee advises the executive committee on the planning, implementing, and refining of communications between research partners. The committee also advises on the optimization of external communications with and among  the Participedia community by supporting the development of content for the website, newsletter, and social media channels.",
+
+  "about.committees.teaching_training_mentoring.p1": "The teaching training and mentoring committee is responsible for the integration of Participedia materials into pedagogy, teaching, student involvement, and the training of practitioners and public officials.",
+
+  "about.committees.reasearch_design.p1": "The research design committee sets the strategic direction of Participedia’s research agenda.",
+
+  "Project Director, Co-Founder and Principal Investigator": "Project Director, Co-Founder and Principal Investigator",
+
+  "Co-investigator": "Co-investigator",
+
+  "Research Associate": "Research Associate",
+
+  "Collaborator": "Collaborator",
+
+  "Co-Chairs, Teaching, Training and Mentoring Committee": "Co-Chairs, Teaching, Training and Mentoring Committee",
+
+  "Participedia Project Director and Co-Founder": "Participedia Project Director and Co-Founder",
+
+  "Design & Technology Team Lead & Art Director": "Design & Technology Team Lead & Art Director",
+
+  "Lead Designer & Communities Coordinator": "Lead Designer & Communities Coordinator",
+
+  "Lead Graphic Designer": "Lead Graphic Designer",
+
+  "Designer": "Designer",
+
+  "Lead Developer": "Lead Developer",
+
+  "Designer & Developer": "Designer & Developer",
+
+  "Developer": "Developer",
+
+  "Tech Lead": "Tech Lead",
+
+  "Managing Director": "Managing Director",
+
+  "Managing Editor": "Managing Editor",
+
+  "Co-investigator & Committee Chair": "Co-investigator & Committee Chair",
+
+  "Lead Designer & Communities Coordinator": "Lead Designer & Communities Coordinator",
 };
