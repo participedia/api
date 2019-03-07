@@ -1,5 +1,7 @@
 module.exports = {
-  "about.cases.p1": "Cases are events and instances of participatory politics and governance of all shapes and sizes.",
+  "about.cases.p1": "Entries about cases document specific examples of how various methods of participatory politics and governance are implemented. Cases can be contemporary or historical, completed, or ongoing.",
+
+  "about.cases.example": "For example, this case on <a href='/case/5008'>Paris’s 2017 Participatory Budget</a> is one of over 160 case entries documenting the use of participatory methods to give citizens stronger influence over the distribution of public resources.",
 
   "about.ckmc.description": "The Communication and Knowledge Mobilization Committee is responsible for advising the Executive Committee on how communication with research partners can be planned, carried out, and refined. The CKM committee also advises on optimal communication with the Participedia user community, including supporting the development of content for the website, newsletter, and social media channels.",
 
@@ -27,9 +29,21 @@ module.exports = {
 
   "about.members.p1": "Participedia is open to anyone. Our members include people of all backgrounds, nationalities, and professions. From policy analysts to professors, activists to teachers, Participedia is a place for anyone interested in democratic participation. Our community is at the heart of our endeavour: by joining up, you too can help build this growing resource by editing existing content or publishing new examples of public participation.",
 
-  "about.methods.p1": "Methods are the processes and procedures used to guide participatory politics and governance.",
+  "about.methods.p1": "Entries about methods provide information on the overarching processes used to guide public participation, such as citizens’ juries, deliberative polling, and participatory budgeting.",
+
+  "about.methods.example": "For example, the <a href='/method/145'>21st Century Town Meeting</a> method allows a large number of people to deliberate simultaneously in small-groups using audience response technology.",
+
+  "about.tools_techniques.p1": "Entries about tools and techniques provide information on the techniques, mechanisms, and devices used to implement, guide, or improve participatory methods.",
+
+  "about.tools_techniques.example": "For example, <a href='/method/147'>Deliberative Polling®</a> is a method that uses tools and techniques such as <a href='/method/5507'>random selection</a>, <a href='/method/565'>surveys</a>, and <a href='/method/5309'>facilitated small-group discussions</a>.",
 
   "about.organizations.p1": "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance.",
+
+  "about.organizations.example": "For example, <a href='/organization/4997'>Apathy is Boring</a> is a Canadian NGO that uses methods of participatory arts and democratic education to engage youth in politics.",
+
+  "about.teaching_resources.p1": "Entries in the Teaching & Learning Resource Center provide resources for undergraduate and graduate classroom settings, as well as professional development resources for practitioners, civil society organizations, and NGOs. Resources range from course syllabi and class assignments, to handbooks, simulations, and multi-media training material.",
+
+  "about.teaching_resources.example": "This section is under construction and will be available soon.",
 
   "about.partners.p1": "Participedia is built on a global partnership between organizations, institutions, and individuals who share an interest in participatory politics and governance. Our partners include co-applicants and collaborators under the SSHRC Partnership Grant. Please contact us if you would like to support the Participedia Project's global mission to expand the use and knowledge of democratic innovation by becoming a partner.",
 

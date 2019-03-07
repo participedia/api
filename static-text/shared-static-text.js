@@ -19,7 +19,7 @@ module.exports = {
 
   "Case": "Case",
 
-  "Tools & Techniques": "Tools & Techniques",
+  "Tools/Techniques": "Tools/Techniques",
 
   "Co-investigators": "Co-investigators",
 
@@ -56,4 +56,6 @@ module.exports = {
   "Staff": "Staff",
 
   "Welcome to Participedia": "Welcome to Participedia",
+
+  "Teaching Resources": "Teaching Resources",
 }
