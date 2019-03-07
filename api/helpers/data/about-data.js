@@ -1066,14 +1066,21 @@ const staff = {
   "titleKey": "Staff",
   "members": [
     {
-      "name": "David Ascher",
-      "titleKey": "Technical Lead, Design & Technology Committee",
-    },
-    {
       "name": "Jesi Carson",
-      "titleKey": "Design & Communities Coordinator",
+      "titleKey": "Lead Designer & Communities Coordinator",
       "descriptors": [
         "Emily Carr University of Art + Design",
+      ]
+    },
+    {
+      "name": "Dethe Elza",
+      "titleKey": "Lead Developer",
+    },
+    {
+      "name": "Scott Fletcher",
+      "titleKey": "Managing Editor",
+      "descriptors": [
+        "University of British Columbia",
       ]
     },
     {
@@ -1084,15 +1091,16 @@ const staff = {
       ]
     },
     {
+      "name": "Alanna Scott",
+      "titleKey": "Developer",
+    },
+    {
       "name": "Patrick L. Scully",
-      "titleKey": "(member ex officio), Managing Director",
-      "descriptors": [
-        "University of British Columbia",
-      ]
+      "titleKey": "Managing Director",
     },
     {
       "name": "Mark E. Warren",
-      "titleKey": "Project Director and Co-Founder",
+      "titleKey": "Project Director, Co-Founder and Principal Investigator",
       "descriptors": [
         "Department of Political Science / Centre for the Study of Democratic Institutions",
         "University of British Columbia",

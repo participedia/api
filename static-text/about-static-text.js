@@ -21,7 +21,7 @@ module.exports = {
 
   "about.explore.p1": "Search, read, download, and learn from our database of cases, methods, organizations, surveys, teaching resources and external data sets.",
 
-  "about.funders.p1": "Participedia is currently supported by the Social Sciences and Humanities Research Council of Canada (SSHRC) in the form of a five-year Partnership Grant beginning in April 2015. A two-year SSHRC Partnership Grant was originally provided in April 2011. In 2012, The Bertelsmann Foundation provided generous support for development of multi-language functionality.",
+  "about.funders.p1": "Participedia is currently supported by the <a href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx'>Social Sciences and Humanities Research Council of Canada</a> (SSHRC) through a five-year Partnership Grant beginning in April 2015. The design and technology team receives additional support from  is additionally supported by the <a href='http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx'>Canada Research Chairs Program</a> and the <a href='https://www.innovation.ca/'>Canada Foundation for Innovation</a>. Initial funding for the project was covered by a two-year SSHRC Partnership Grant from April 2011-2013. The platform's multi-language functionality was developed under the generous support of the <a href='http://www.bfna.org/'>Bertelsmann Foundation</a> in 2012.",
 
   "about.get_involved.p1": `Anyone can <a href="/login">join the Participedia community</a> and help crowdsource, catalogue and compare participatory political processes around the world. All content on Participedia is collaboratively produced and open-source under a <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons License</a>.`,
 
@@ -37,7 +37,7 @@ module.exports = {
 
   "about.rdc.title": "Research Design Committee",
 
-  "about.staff.p1": "Participedia employs a core staff to maintain day to day operations, support the community and ensure project goals are being met.",
+  "about.staff.p1": "Participedia's core team of staff members maintain day-to-day operations, support the community, and ensure project goals are continuously attained and refined.",
 
   "about.tagline": "A global community sharing knowledge and stories about public participation",
 

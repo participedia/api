@@ -48,13 +48,13 @@
     {{/accordion}}
 
     {{#> accordion title=(t static "Funders")}}
-      <p>{{t static "about.funders.p1"}}</p>
+      <p>{{{t static "about.funders.p1"}}}</p>
     {{/accordion}}
 
     {{#> accordion title=(t static "Staff")}}
       <p>{{t static "about.staff.p1"}}</p>
 
-      {{#each (getStaffData)}}
+      {{#each (getStaffMembers)}}
         <dl class="people">
           <dt>{{name}}{{#if titleKey}}, {{t static titleKey}}{{/if}}</dt>
           {{# each descriptors}}
