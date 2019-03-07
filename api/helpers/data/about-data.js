@@ -4,7 +4,7 @@ const partners = [
     "members": [
       {
         "name": "Mark E. Warren",
-        "titleKey": "Project Director and Co-Founder",
+        "titleKey": "Participedia Project Director and Co-founder",
         "descriptors": [
           "Department of Political Science / Centre for the Study of Democratic Institutions",
           "University of British Columbia"
@@ -15,6 +15,14 @@ const partners = [
   {
     "titleKey": "Co-investigators",
     "members": [
+      {
+        "name": "Archon Fung",
+        "titleKey": "Participedia Co-founder",
+        "descriptors": [
+          "Ash Center for Democratic Governance and Innovation",
+          "Harvard University"
+        ]
+      },
       {
         "name": "Julia Abelson",
         "descriptors": [
@@ -89,15 +97,8 @@ const partners = [
       {
         "name": "Amber Frid-Jimenez",
         "descriptors": [
-          "Faculty of Design + Dynamic Media",
+          "Studio for Extensive Aesthetics / Design + Dynamic Media",
           "Emily Carr University of Art + Design"
-        ]
-      },
-      {
-        "name": "Archon Fung",
-        "descriptors": [
-          "Ash Center for Democratic Governance and Innovation",
-          "Harvard University"
         ]
       },
       {
@@ -186,10 +187,37 @@ const partners = [
         ]
       },
       {
+        "name": "Thamy Pogrebinschi",
+        "descriptors": [
+          "Research Unit Democracy and Democratization",
+          "WZB Berlin Social Science Center"
+        ]
+      },
+      {
+        "name": "Robert C. Richards, Jr.",
+        "descriptors": [
+          "University of Arkansas Clinton School of Public Service",
+        ]
+      },
+      {
+        "name": "Matthew Ryan",
+        "descriptors": [
+          "Centre for Citizenship, Governance and Globalization",
+          "University of Southampton",
+        ]
+      },
+      {
         "name": "Graham Smith",
         "descriptors": [
           "Centre for the Study of Democracy",
           "University of Westminster"
+        ]
+      },
+      {
+        "name": "Paolo Spada",
+        "descriptors": [
+          "Centro de Estudo Sociais",
+          "Universidade de Coimbra"
         ]
       },
       {
@@ -261,6 +289,14 @@ const partners = [
         ]
       },
       {
+        "name": "Edana Beauvais",
+        "descriptors": [
+          "Centre for the Study of Democratic Citizenship",
+          "Department of Political Science",
+          "McGill University",
+        ]
+      },
+      {
         "name": "Claudia Feres Faria",
         "descriptors": [
           "Department of Political Science",
@@ -285,14 +321,12 @@ const partners = [
         "name": "Jez Hall",
         "descriptors": [
           "PB Partners",
-          "Emily Carr University of Art + Design"
         ]
       },
       {
         "name": "Sandy Heierbacher",
         "descriptors": [
           "National Coalition for Dialogue and Deliberation",
-          "Emily Carr University of Art + Design"
         ]
       },
       {
@@ -366,13 +400,6 @@ const partners = [
         ]
       },
       {
-        "name": "Matthew Ryan",
-        "descriptors": [
-          "Centre for Citizenship, Governance and Globalization",
-          "University of Southampton"
-        ]
-      },
-      {
         "name": "Hollie Russon-Gilman",
         "descriptors": [
           "Open Technology Institute",
@@ -404,17 +431,17 @@ const partners = [
         ]
       },
       {
-        "name": "Paolo Spada",
-        "descriptors": [
-          "Centre for the Study of Democratic Institutions",
-          "University of British Columbia"
-        ]
-      },
-      {
         "name": "Joanna Wilson",
         "descriptors": [
           "Department of Biology",
           "McMaster University"
+        ]
+      },
+       {
+        "name": "Sule Yaylaci",
+        "descriptors": [
+          "Department of Sociology",
+          "University of British Columbia"
         ]
       },
       {
@@ -432,29 +459,40 @@ const partners = [
       {
         "name": "University of British Columbia",
         "descriptors": [
-          "Centre for the Study of Democratic Institutions"
-        ]
-      },
-      {
-        "name": "Coady International Institute",
-
-      },
-      {
-        "name": "Deliberative Democracy Consortium",
-
-      },
-      {
-        "name": "Emily Carr University of Art + Design",
-        "descriptors": [
-          "Studio for Extensive Aesthetics"
+          "Centre for the Study of Democratic Institutions",
+          "Vancouver, Canada"
         ]
       },
       {
         "name": "Harvard University",
         "descriptors": [
-          "Ash Center for Democratic Governance and Innovation"
+          "Ash Center for Democratic Governance and Innovation",
+          "Cambridge, United States"
         ]
       },
+      {
+        "name": "Coady International Institute",
+        "descriptors": [
+          "St. Francis Xavier University",
+          "Antigonish, Canada"
+        ]
+      },
+      {
+        "name": "Deliberative Democracy Consortium",
+        "descriptors": [
+          "Washington, United States"
+        ]
+
+      },
+      {
+        "name": "Emily Carr University of Art + Design",
+        "descriptors": [
+          "Studio for Extensive Aesthetics / Design + Dynamic Media",
+          "Vancouver, Canada",
+
+        ]
+      },
+
       {
         "name": "International Observatory on Participatory Democracy",
         "descriptors": [
@@ -492,21 +530,21 @@ const partners = [
         "name": "National Coalition for Dialogue and Deliberation",
         "descriptors": [
           "Boston, Massachusetts",
-          "Singapore"
         ]
       },
       {
         "name": "Peking University",
         "descriptors": [
           "Co-Innovation Center for State Governance",
-          "Institute of Political Development and Governance"
+          "Institute of Political Development and Governance",
+          "Beijing, China",
         ]
       },
       {
         "name": "Pennsylvania State University",
         "descriptors": [
           "The McCourtney Institute for Democracy",
-          "State College, Pennsylvania"
+          "Pennsylvania, United States"
         ]
       },
       {
@@ -521,6 +559,13 @@ const partners = [
         "descriptors": [
           "Program for the Advancement of Research on Conflict and Collaboration (PARCC)",
           "Syracuse, New York"
+        ]
+      },
+      {
+        "name": "Simon Fraser University",
+        "descriptors": [
+          "Centre for Sustainable Development",
+          "Burnaby, Canada"
         ]
       },
       {
@@ -552,6 +597,12 @@ const partners = [
         ]
       },
       {
+        "name": "University of Arkansas Clinton School of Public Service",
+        "descriptors": [
+          "Little Rock, United States",
+        ]
+      },
+      {
         "name": "Università di Bologna",
         "descriptors": [
           "Dipartimento di Scienze Politiche e Sociali",
@@ -561,13 +612,15 @@ const partners = [
       {
         "name": "University of British Columbia",
         "descriptors": [
-          "InterPARES Trust"
+          "InterPARES Trust",
+          "Vancouver, Canada"
         ]
       },
       {
         "name": "University of British Columbia",
         "descriptors": [
-          "W. Maurice Young Centre for Applied Ethics"
+          "W. Maurice Young Centre for Applied Ethics",
+          "Vancouver, Canada",
         ]
       },
       {
@@ -587,7 +640,8 @@ const partners = [
       {
         "name": "University of Southampton",
         "descriptors": [
-          "Centre for Citizenship, Globalisation and Governance (C2G2)"
+          "Centre for Citizenship, Globalisation and Governance (C2G2)",
+          "Southampton, United Kingdom",
         ]
       },
       {
@@ -608,7 +662,7 @@ const partners = [
         "name": "University of the Western Cape",
         "descriptors": [
           "Department of Political Studies",
-          "Bellville, Cape Town, South Africa"
+          "Bellville, South Africa"
         ]
       },
       {
@@ -622,7 +676,14 @@ const partners = [
         "name": "World Bank Institute",
         "descriptors": [
           "ICT4Gov Program",
-          "Washington, DC"
+          "Washington, United States"
+        ]
+      },
+      {
+        "name": "WZB Berlin Social Science Center",
+        "descriptors": [
+          "Research Unit Democracy and Democratization",
+          "Berlin, Germany"
         ]
       }
     ]
