@@ -1,22 +1,22 @@
 module.exports = [
   {
-    slug: "cases",
-    titleKey: "content_types.case",
+    slug: "case",
+    titleKey: "Case",
     descriptionKey: "content_types.case.description",
   },
   {
-    slug: "methods",
-    titleKey: "content_types.method",
+    slug: "method",
+    titleKey: "Method",
     descriptionKey: "content_types.method.description",
   },
   {
-    slug: "organizations",
-    titleKey: "content_types.organization",
+    slug: "organization",
+    titleKey: "Organization",
     descriptionKey: "content_types.organization.description"
   },
-  {
-    slug: "tools-techniques",
-    titleKey: "content_types.tools-techniques",
-    descriptionKey: "content_types.tools-techniques.description"
-  },
+  // {
+  //   slug: "tools-techniques",
+  //   titleKey: "Tools & Techniques",
+  //   descriptionKey: "content_types.tools-techniques.description"
+  // },
 ];
