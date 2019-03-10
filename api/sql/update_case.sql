@@ -1,7 +1,7 @@
 UPDATE cases
 SET
 -- admin-only
-  original_language = ${original_language},
+  original_language = ${original_language:raw},
   post_date = ${post_date},
   featured = ${featured},
   hidden = ${hidden},
