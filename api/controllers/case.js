@@ -155,7 +155,12 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     updatedCase.hidden = as.boolean(newCase.hidden);
     updatedCase.original_language = as.text(newCase.original_langauge);
     updatedCase.post_date = as.date(newCase.post_date);
-  } else {
+  } else if (oldCase) {
+    // need to check for oldCase otherwise get this error
+    // error: Exception in PUT /case/5239 => TypeError: Cannot read property 'featured' of undefined
+    // Trace: TypeError: Cannot read property 'featured' of undefined
+    // at getUpdatedCase (/Users/alannascott/code/participedia/api/api/controllers/case.js:162:47)
+
     updatedCase.featured = as.boolean(oldCase.featured);
     updatedCase.hidden = as.boolean(oldCase.hidden);
     updatedCase.original_language = as.text(oldCase.original_language);
@@ -341,14 +346,31 @@ router.post("/:thingid", async (req, res) => {
         ]);
       });
     } else {
-      await db.tx("update-case", t => {
-        return t.batch([
-          t.none(UPDATE_CASE, updatedCase),
-          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
-        ]);
-      });
+      /*
+        TODO: fix this transaction
+        this transaction returns this error even when an original_language
+        key is passed from the client
+
+        error: Exception in PUT /case/5239 => BatchError {
+          stat: { total: 2, succeeded: 1, failed: 1, duration: 7652 }
+            errors: [
+              0: Error: Property 'original_language' doesn't exist.
+
+      */
+      // await db.tx("update-case", t => {
+      //   return t.batch([
+      //     t.none(UPDATE_CASE, updatedCase),
+      //     t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+      //   ]);
+      // });
     }
-    res.redirect(req.originalUrl.replace("/edit", ""));
+
+    // the client expects this request to respond with json
+    // save successful response
+    res.status(200).json({
+      OK: true,
+    });
+
   } catch (error) {
     log.error(
       "Exception in PUT /%s/%s => %s",
@@ -357,9 +379,14 @@ router.post("/:thingid", async (req, res) => {
       error
     );
     console.trace(error);
-    res.status(500).json({
+    // validation error response
+    // errors should be passed back to client as array of error messages
+    res.status(200).json({
       OK: false,
-      error: error
+      errors: [
+        "Title can not be empty.",
+        "Some other validation issue",
+      ],
     });
   } // end catch
 });

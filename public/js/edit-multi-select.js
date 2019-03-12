@@ -1,5 +1,4 @@
-// todo: use npm module once browserify bundles have been implemented
-import Modal from './vendor/a11y-dialog-component.esm.js';
+import Modal from "a11y-dialog-component";
 
 const editMultiSelect = {
   init() {
@@ -12,7 +11,9 @@ const editMultiSelect = {
     this.bindDragHandlers();
 
     this.modalId = "#modal-container";
-    this.modal = new Modal(this.modalId);
+    this.modal = new Modal(this.modalId, {
+      closingSelector: ".js-modal-close",
+    });
   },
 
   bindDragHandlers() {

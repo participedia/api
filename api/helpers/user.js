@@ -86,7 +86,11 @@ async function commonUserHandler(required, err, req, res, next) {
       userEmail: user.email,
       userName: user.name || user.email,
       joinDate: user.created_at,
-      auth0UserId: auth0UserId,
+      // TODO: fix auth0UserId error
+      // this line was throwing an error for auth0UserId being undefined,
+      // so changed it to null for now
+      // auth0UserId: auth0UserId,
+      auth0UserId: null,
       pictureUrl: pictureUrl,
       bio: ""
     });
