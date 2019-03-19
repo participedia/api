@@ -1,44 +1,44 @@
 <div class="user-container user-view">
   <div class="user-profile-image">
-    {{#if user.picture_url}}
-      <img src="{{user.picture_url}}" alt="{{t static "profile_picture"}}" width="160" height="160" />
+    {{#if profile.picture_url}}
+      <img src="{{profile.picture_url}}" alt="{{t static "profile_picture"}}" width="160" height="160" />
     {{else}}
-      <div class="user-profile-image-initial">{{getInitials user.name}}</div>
+      <div class="user-profile-image-initial">{{getInitials profile.name}}</div>
     {{/if}}
   </div>
   <div class="user-main-content">
     {{!-- if user is logged in, show edit profile button --}}
-    {{#if user.login}}
+    {{#if (isProfileOwner user profile)}}
       <div class="user-view-edit-profile-button">
-        <a href="/user/{{user.id}}/edit" class="button button-red">{{t static "edit_profile"}}</a>
+        <a href="/user/{{profile.id}}/edit" class="button button-red">{{t static "edit_profile"}}</a>
       </div>
     {{/if}}
 
-    <h2 class="user-view-name">{{user.name}}</h2>
-    {{#if user.join_date}}
+    <h2 class="user-view-name">{{profile.name}}</h2>
+    {{#if profile.join_date}}
       <span class="small">
-        <strong>{{t static "member_since"}}</strong> {{getYearFromDate user.join_date}}
+        <strong>{{t static "member_since"}}</strong> {{getYearFromDate profile.join_date}}
       </span>
       </br>
     {{/if}}
-    {{#if user.bio}}<p>{{user.bio}}</p>{{/if}}
+    {{#if profile.bio}}<p>{{profile.bio}}</p>{{/if}}
   </div>
 </div>
 <div class="user-view-body">
   {{#> tabs-with-cards req=req getTabs=(getUserTabs)}}
     <div role="tabpanel" class="tab-contributions">
       {{> cards-container
-        totalResults=user.articles.totalResults
-        totalPages=user.articles.totalPages
-        cards=user.articles.results
+        totalResults=profile.articles.totalResults
+        totalPages=profile.articles.totalPages
+        cards=profile.articles.results
       }}
     </div>
 
     <div role="tabpanel" class="tab-bookmarks">
       {{> cards-container
-        totalResults=user.bookmarks.totalResults
-        totalPages=user.bookmarks.totalPages
-        cards=user.bookmarks.results
+        totalResults=profile.bookmarks.totalResults
+        totalPages=profile.bookmarks.totalPages
+        cards=profile.bookmarks.results
       }}
     </div>
   {{/tabs-with-cards}}

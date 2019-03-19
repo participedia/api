@@ -354,6 +354,12 @@ module.exports = {
     return initials.toUpperCase();
   },
 
+  isProfileOwner(user, profile) {
+    if (!user && !profile) return false;
+
+    return user.id === profile.id;
+  },
+
   // utilities
   currentUrl(req) {
     return currentUrl(req);

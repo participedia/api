@@ -95,7 +95,7 @@ router.get("/:userId", async function(req, res) {
     const data = await getUserById(req.params.userId || req.user.user_id, req, res, "view");
 
     // return html template
-    res.status(200).render(`user-view`, data);
+    res.status(200).render(`user-view`, { profile: data.user });
   } catch (error) {
     console.error("Problem in /user/:userId");
     console.trace(error);
