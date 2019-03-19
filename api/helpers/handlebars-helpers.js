@@ -355,9 +355,19 @@ module.exports = {
   },
 
   isProfileOwner(user, profile) {
-    if (!user && !profile) return false;
+    if (!user || !profile) return false;
 
     return user.id === profile.id;
+  },
+
+  getContributionsForProfile(profile) {
+    const contributionTypes = ["cases", "methods", "organizations"];
+    // merge all article types into 1 array
+    let allContributions = [];
+    contributionTypes.forEach(type => {
+      allContributions = allContributions.concat(profile[type]);
+    });
+    return allContributions;
   },
 
   // utilities

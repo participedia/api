@@ -28,17 +28,13 @@
   {{#> tabs-with-cards req=req getTabs=(getUserTabs)}}
     <div role="tabpanel" class="tab-contributions">
       {{> cards-container
-        totalResults=profile.articles.totalResults
-        totalPages=profile.articles.totalPages
-        cards=profile.articles.results
+        cards=(getContributionsForProfile profile)
       }}
     </div>
 
     <div role="tabpanel" class="tab-bookmarks">
       {{> cards-container
-        totalResults=profile.bookmarks.totalResults
-        totalPages=profile.bookmarks.totalPages
-        cards=profile.bookmarks.results
+        cards=profile.bookmarks
       }}
     </div>
   {{/tabs-with-cards}}
