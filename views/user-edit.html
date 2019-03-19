@@ -25,30 +25,6 @@
         {{> edit-richtext name="bio" value=profile.bio}}
       </fieldset>
 
-      <fieldset>
-        <h2>{{t static "private_settings"}}</h2>
-
-        {{> edit-text name="email" value=profile.email placeholderText=static.email_placeholder}}
-
-        {{#> edit-form-group name="password"}}
-          <input
-            type="password"
-            placeholder="{{t static "current_password_placeholder"}}"
-            name="current_password"
-          />
-          <input
-            type="password"
-            placeholder="{{t static "new_password_placeholder"}}"
-            name="new_password"
-          />
-          <input
-            type="password"
-            placeholder="{{t static "confirm_new_password_placeholder"}}"
-            name="confirm_new_password"
-          />
-        {{/edit-form-group}}
-      </fieldset>
-
       <button type="submit" class="button button-light-grey">
         {{> icon-submit }} {{t static "publish"}}
       </button>
