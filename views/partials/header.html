@@ -17,8 +17,8 @@
           </a>
         </li>
         <li>
-          {{#if user}}
-          <a href="/user/{{user.id}}" class="button button-dark-grey">
+          {{#if req.user}}
+          <a href="/user/{{req.user.id}}" class="button button-dark-grey">
             Profile
           </a>
           {{else}}
@@ -71,19 +71,19 @@
         </a>
       </li>
       <li>
-        {{#if user}}
-        <a href="/user/{{user.id}}" class="header-profile-link">
+        {{#if req.user}}
+        <a href="/user/{{req.user.id}}" class="header-profile-link">
           <span class="sr-only">goto profile</span>
-          {{#if user.picture_url}}
+          {{#if req.user.picture_url}}
           <img
-            src="{{user.picture_url}}"
+            src="{{req.user.picture_url}}"
             alt="profile_picture"
             width="40"
             height="40"
           />
           {{else}}
           <div class="user-profile-image-initial">
-            {{getInitials user.name}}
+            {{getInitials req.user.name}}
           </div>
           {{/if}}
         </a>
