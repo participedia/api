@@ -8,7 +8,7 @@
   </div>
   <div class="user-main-content">
     {{!-- if user is logged in, show edit profile button --}}
-    {{#if (isProfileOwner user profile)}}
+    {{#if (isProfileOwner req.user profile)}}
       <div class="user-view-edit-profile-button">
         <a href="/user/{{profile.id}}/edit" class="button button-red">{{t static "edit_profile"}}</a>
       </div>

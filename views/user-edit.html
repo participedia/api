@@ -1,10 +1,10 @@
 <div class="user-container">
   <div class="user-profile-image user-profile-image-edit">
     <a href="https://gravatar.com/" target="_blank" class="user-profile-image-edit-mask">
-      {{#if user.picture_url}}
-        <img src="{{user.picture_url}}" alt="profile_picture" width="160" height="160" />
+      {{#if profile.picture_url}}
+        <img src="{{profile.picture_url}}" alt="profile_picture" width="160" height="160" />
       {{else}}
-        <div class="user-profile-image-initial">{{getInitials user.name}}</div>
+        <div class="user-profile-image-initial">{{getInitials profile.name}}</div>
       {{/if}}
       <div class="user-profile-image-edit-overlay">{{t static "change"}}</div>
     </a>
@@ -17,18 +17,18 @@
       data-submit-type="full"
       class="js-edit-form"
     >
-      <p><strong>{{t static "member_since"}}</strong> {{moment user.join_date "ll"}}</p>
+      <p><strong>{{t static "member_since"}}</strong> {{getYearFromDate profile.join_date}}</p>
 
       <fieldset>
         <h2>{{t static "public_profile"}}</h2>
-        {{> edit-text name="name" value=user.name placeholderText=static.name_placeholder}}
-        {{> edit-richtext name="bio" value=user.bio}}
+        {{> edit-text name="name" value=profile.name placeholderText=static.name_placeholder}}
+        {{> edit-richtext name="bio" value=profile.bio}}
       </fieldset>
 
       <fieldset>
         <h2>{{t static "private_settings"}}</h2>
 
-        {{> edit-text name="email" value=user.email placeholderText=static.email_placeholder}}
+        {{> edit-text name="email" value=profile.email placeholderText=static.email_placeholder}}
 
         {{#> edit-form-group name="password"}}
           <input

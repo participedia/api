@@ -50,12 +50,12 @@ async function getUserById(userId, req, res, view="view") {
 
       return {
         static: staticText,
-        user: userEditJSON,
+        profile: userEditJSON,
       };
     } else {
       return {
         static: staticText,
-        user: result.user,
+        profile: result.user,
       };
     }
   } catch (error) {
@@ -95,7 +95,7 @@ router.get("/:userId", async function(req, res) {
     const data = await getUserById(req.params.userId || req.user.user_id, req, res, "view");
 
     // return html template
-    res.status(200).render(`user-view`, { profile: data.user });
+    res.status(200).render(`user-view`, data);
   } catch (error) {
     console.error("Problem in /user/:userId");
     console.trace(error);
@@ -104,6 +104,7 @@ router.get("/:userId", async function(req, res) {
 
 router.get("/:userId/edit", async function(req, res) {
   try {
+    // todo: only allow editing if user is owner of this account
     const data = await getUserById(req.params.userId || req.user.user_id, req, res, "edit");
 
     // return html template
