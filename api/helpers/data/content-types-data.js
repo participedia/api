@@ -14,9 +14,4 @@ module.exports = [
     titleKey: "Organization",
     descriptionKey: "content_types.organization.description"
   },
-  // {
-  //   slug: "tools-techniques",
-  //   titleKey: "Tools & Techniques",
-  //   descriptionKey: "content_types.tools-techniques.description"
-  // },
 ];
