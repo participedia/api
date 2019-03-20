@@ -33,6 +33,11 @@
   font-weight: 800;
 }
 
+.user-profile-image img {
+  position: relative;
+  margin-top: -160px;
+}
+
 /* user-edit */
 .user-edit-container {
   margin-bottom: 0;

@@ -1,4 +1,5 @@
 const moment = require("moment");
+const md5 = require("js-md5");
 const faqContent = require("./faq-content.js");
 const aboutData = require("./data/about-data.js");
 const contentTypesData = require("./data/content-types-data.js");
@@ -358,6 +359,13 @@ module.exports = {
     if (!user || !profile) return false;
 
     return user.id === profile.id;
+  },
+
+  getGravatarUrl(email) {
+    if (!email) return;
+
+    const emailHash = md5(email);
+    return `https://www.gravatar.com/avatar/${emailHash}`;
   },
 
   getContributionsForProfile(profile) {
