@@ -50,12 +50,12 @@ async function getUserById(userId, req, res, view="view") {
 
       return {
         static: staticText,
-        user: userEditJSON,
+        profile: userEditJSON,
       };
     } else {
       return {
         static: staticText,
-        user: result.user,
+        profile: result.user,
       };
     }
   } catch (error) {
@@ -92,7 +92,7 @@ async function getUserById(userId, req, res, view="view") {
  */
 router.get("/:userId", async function(req, res) {
   try {
-    const data = await getUserById(req.params.userId || req.user.user_id, req, res, "view");
+    const data = await getUserById(req.params.userId, req, res, "view");
 
     // return html template
     res.status(200).render(`user-view`, data);
@@ -104,10 +104,15 @@ router.get("/:userId", async function(req, res) {
 
 router.get("/:userId/edit", async function(req, res) {
   try {
-    const data = await getUserById(req.params.userId || req.user.user_id, req, res, "edit");
-
-    // return html template
-    res.status(200).render(`user-edit`, data);
+    // check if logged in user id is the same as this profile id
+    if (parseInt(req.user.id) === parseInt(req.params.userId)) {
+      const data = await getUserById(req.params.userId, req, res, "edit");
+      // return html template
+      res.status(200).render(`user-edit`, data);
+    } else {
+      // if it's not the logged in user's profile, then redirect to homepage
+      res.redirect("/");
+    }
   } catch (error) {
     console.error("Problem in /user/:userId/edit");
     console.trace(error);

@@ -1,4 +1,5 @@
 const moment = require("moment");
+const md5 = require("js-md5");
 const faqContent = require("./faq-content.js");
 const aboutData = require("./data/about-data.js");
 const contentTypesData = require("./data/content-types-data.js");
@@ -352,6 +353,29 @@ module.exports = {
     }
 
     return initials.toUpperCase();
+  },
+
+  isProfileOwner(user, profile) {
+    if (!user || !profile) return false;
+
+    return user.id === profile.id;
+  },
+
+  getGravatarUrl(email) {
+    if (!email) return;
+
+    const emailHash = md5(email);
+    return `https://www.gravatar.com/avatar/${emailHash}`;
+  },
+
+  getContributionsForProfile(profile) {
+    const contributionTypes = ["cases", "methods", "organizations"];
+    // merge all article types into 1 array
+    let allContributions = [];
+    contributionTypes.forEach(type => {
+      allContributions = allContributions.concat(profile[type]);
+    });
+    return allContributions;
   },
 
   // utilities

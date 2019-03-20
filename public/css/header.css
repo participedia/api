@@ -82,6 +82,8 @@ header a {
 
 .header-profile-link img {
   border-radius: 24px;
+  position: relative;
+  margin-left: -40px;
 }
 
 .header-profile-link .user-profile-image-initial {

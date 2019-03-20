@@ -1,11 +1,15 @@
 {{#if cards}}
-  {{> pagination }}
+  {{#if totalResults}}
+    {{> pagination }}
+  {{/if}}
   <ul class="unstyled-list cards-container js-cards-container">
     {{#each cards }}
       {{> article-card }}
     {{/each}}
   </ul>
-  {{> pagination }}
+  {{#if totalResults}}
+    {{> pagination }}
+  {{/if}}
 {{else}}
   <p>There are no items to display.</p>
 {{/if}}
