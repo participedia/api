@@ -403,8 +403,8 @@ module.exports = {
     return aboutData.committees;
   },
 
-  getStaffData() {
-    return aboutData.members;
+  getStaffMembers() {
+    return aboutData.staff.members;
   },
 
   getContentTypeData() {

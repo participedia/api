@@ -21,9 +21,9 @@ module.exports = {
 
   "research.data_repository.feature.8": "an open API that allows data and metadata to be used by other web services.",
 
-  "research.data_repository.questions": "Please direct any questions you may have about how to contribute to Participedia Dataverse to <a href=\"mailto:data@participedia.net\">data@participedia.net</a>",
+  "research.data_repository.questions": "Please direct any questions about contributing to Participedia Dataverse to <a href=\"mailto:data@participedia.net\">data@participedia.net</a>",
 
-  "research.methodology.p1": "The strategy is simple: crowdsource information on democratic innovations from around the world and then aggregate this into a public database that continually updates with new contributions. All of Participedia’s content and data is open source.",
+  "research.methodology.p1": "The strategy is simple: crowdsource information on democratic innovations from around the world and aggregate it into a public database that continually updates with new contributions. All of Participedia’s content and data is open source.",
 
   "research.methodology.p2": "For an in-depth explanation of the history, aspirations, theory, and analytical approach of Participedia, see '<a href=\"http://archonfung.net/docs/articles/2011/FungParticipedia201112.pdf\">The Participedia Project: An Introduction</a>', by the two founders of Participedia, Archon Fung and Mark E. Warren.",
 

@@ -3,7 +3,7 @@
   <h2>{{t static "about.tagline"}}</h2>
 
   <div class="video-embed-container">
-    <iframe src='https://player.vimeo.com/video/219546454' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+    <iframe src="https://player.vimeo.com/video/219546454" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
   </div>
 
   <section>
@@ -29,8 +29,6 @@
   <section>
     {{#> accordion title=(t static "Members")}}
       <p>{{t static "about.members.p1"}}</p>
-
-      <p><a href="/login">{{t static "Join now"}}</a></p>
     {{/accordion}}
 
     {{#> accordion title=(t static "Partners")}}
@@ -42,20 +40,21 @@
     {{/accordion}}
 
     {{#> accordion title=(t static "Committees")}}
-      <p>{{about.committees.p1}}</p>
+      <p>{{t static "about.committees.p1"}}</p>
+
       {{#each (getCommitteesData)}}
         {{> about-section static=../static}}
       {{/each}}
     {{/accordion}}
 
     {{#> accordion title=(t static "Funders")}}
-      <p>{{t static "about.funders.p1"}}</p>
+      <p>{{{t static "about.funders.p1"}}}</p>
     {{/accordion}}
 
     {{#> accordion title=(t static "Staff")}}
       <p>{{t static "about.staff.p1"}}</p>
 
-      {{#each (getStaffData)}}
+      {{#each (getStaffMembers)}}
         <dl class="people">
           <dt>{{name}}{{#if titleKey}}, {{t static titleKey}}{{/if}}</dt>
           {{# each descriptors}}
@@ -73,14 +72,37 @@
 
     {{#> accordion title=(t static "Cases")}}
       <p>{{t static "about.cases.p1"}}</p>
+      <ul>
+        <li>{{{t static "about.cases.example"}}}</li>
+      </ul>
     {{/accordion}}
 
     {{#> accordion title=(t static "Methods")}}
       <p>{{t static "about.methods.p1"}}</p>
+      <ul>
+        <li>{{{t static "about.methods.example"}}}</li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t static "Tools/Techniques")}}
+      <p>{{t static "about.tools_techniques.p1"}}</p>
+      <ul>
+        <li>{{{t static "about.tools_techniques.example"}}}</li>
+      </ul>
     {{/accordion}}
 
     {{#> accordion title=(t static "Organizations")}}
       <p>{{t static "about.organizations.p1"}}</p>
+      <ul>
+        <li>{{{t static "about.organizations.example"}}}</li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t static "Teaching Resources")}}
+      <p>{{t static "about.teaching_resources.p1"}}</p>
+      <ul>
+        <li>{{{t static "about.teaching_resources.example"}}}</li>
+      </ul>
     {{/accordion}}
   </section>
 </div>
