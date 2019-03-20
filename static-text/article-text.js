@@ -31,4 +31,10 @@ module.exports = {
   evaluation_links_title_instructional: "Provide a title or description of this linked content in 10 words or less.",
   evaluation_links_title_placeholder: "Title or description",
   add_another_link: "Add Another Link",
+  audio_link_instructional: "Add links to audio, such as podcasts.",
+  audio_link_placeholder: "Add link to audio",
+  audio_attribution_instructional: "Who is the original owner or creator of this audio?",
+  audio_attribution_placeholder: "Owner or creator",
+  audio_title_instructional: "Provide a title or description of this audio in 10 words or less.",
+  audio_title_placeholder: "Title or description",
 };
