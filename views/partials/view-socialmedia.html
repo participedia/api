@@ -3,13 +3,13 @@
     <li>
       <a
         href="#"
-        class="social-links-bookmark-link js-bookmark-link"
+        class="js-bookmark-link"
         data-bookmarked="{{article.bookmarked}}"
         data-type="{{article.type}}"
         data-thing-id="{{article.id}}"
-        data-user-id="{{user.user_id}}"
       >
-        {{> icon-bookmark-fill}}
+        <span class="is-bookmarked">{{> icon-bookmark-fill}}</span>
+        <span class="is-not-bookmarked">{{> icon-bookmark}}</span>
       </a>
     </li>
   {{/if}}

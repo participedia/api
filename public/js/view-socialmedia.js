@@ -5,26 +5,32 @@ const viewSocialMedia = {
     if (!bookmarkLinkEl) return;
 
     this.data = {
-      type: bookmarkLinkEl.getAttribute("data-type"),
-      thingId: bookmarkLinkEl.getAttribute("data-thing-id"),
-      userId: bookmarkLinkEl.getAttribute("data-user-id"),
+      bookmarkType: bookmarkLinkEl.getAttribute("data-type"),
+      thingid: bookmarkLinkEl.getAttribute("data-thing-id"),
     };
 
     // add link event listener
     bookmarkLinkEl.addEventListener("click", e => this.handleLinkClick(e));
   },
 
-  toggleBookmark(action) {
+  toggleBookmark(addOrDelete, linkEl, isBookmarked) {
+    const errorCodes = [500, 400, 401];
     const request = new XMLHttpRequest();
-    request.open("POST", `/bookmark/${action}`, true);
+    let action = "POST";
+    if (addOrDelete === "delete") {
+      action = "DELETE";
+    }
+    request.open(action, `/bookmark/${addOrDelete}`, true);
     request.onreadystatechange = () => {
-      if (request.readyState != 4 || request.status != 200) {
-        console.log("error: " + request.responseText);
-      } else {
-        console.log("success: " + request.responseText);
+      if (request.readyState === 4 && errorCodes.includes(request.status)) {
+        console.error("error: " + request.responseText)
+      } else if (request.readyState === 4) {
+        // success, toggle data attribute to update icon style
+        linkEl.setAttribute("data-bookmarked", !isBookmarked);
       }
     };
-    request.send({ body: this.data });
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.send(JSON.stringify(this.data));
   },
 
   handleLinkClick(e) {
@@ -34,13 +40,10 @@ const viewSocialMedia = {
     const isBookmarked = linkEl.getAttribute("data-bookmarked") === "true";
 
     if (isBookmarked) {
-      this.toggleBookmark("delete");
+      this.toggleBookmark("delete", linkEl, isBookmarked);
     } else {
-      this.toggleBookmark("add");
+      this.toggleBookmark("add", linkEl, isBookmarked);
     }
-
-    // toggle state in data-attr
-    linkEl.setAttribute("data-bookmarked", !isBookmarked);
   },
 }
 
