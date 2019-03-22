@@ -1,7 +1,7 @@
 import viewSlideshow from "./view-slideshow.js";
-import viewSocialMedia from "./view-socialmedia.js";
+import bookmarkButtons from "./bookmark-buttons.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   viewSlideshow.init();
-  viewSocialMedia.init();
+  bookmarkButtons.init();
 });

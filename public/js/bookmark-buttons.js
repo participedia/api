@@ -1,19 +1,20 @@
-const viewSocialMedia = {
+const bookmarkButtons = {
   init() {
-    const bookmarkLinkEl = document.querySelector(".js-bookmark-link");
+    const bookmarkButtons = Array.prototype.slice.call(
+      document.querySelectorAll(".js-bookmark-button")
+    );
 
-    if (!bookmarkLinkEl) return;
+    if (bookmarkButtons.length < 1) return;
 
-    this.data = {
-      bookmarkType: bookmarkLinkEl.getAttribute("data-type"),
-      thingid: bookmarkLinkEl.getAttribute("data-thing-id"),
-    };
-
-    // add link event listener
-    bookmarkLinkEl.addEventListener("click", e => this.handleLinkClick(e));
+    bookmarkButtons.forEach(bookmarkButtonEl => {
+      bookmarkButtonEl.addEventListener("click", e => {
+        e.preventDefault();
+        this.handleLinkClick(e);
+      });
+    });
   },
 
-  toggleBookmark(addOrDelete, linkEl, isBookmarked) {
+  toggleBookmark(addOrDelete, linkEl, isBookmarked, thingid, bookmarkType) {
     const errorCodes = [500, 400, 401];
     const request = new XMLHttpRequest();
     let action = "POST";
@@ -30,7 +31,7 @@ const viewSocialMedia = {
       }
     };
     request.setRequestHeader('Content-Type', 'application/json')
-    request.send(JSON.stringify(this.data));
+    request.send(JSON.stringify({ thingid, bookmarkType }));
   },
 
   handleLinkClick(e) {
@@ -38,13 +39,15 @@ const viewSocialMedia = {
 
     const linkEl = e.target.closest("a");
     const isBookmarked = linkEl.getAttribute("data-bookmarked") === "true";
+    const bookmarkType = linkEl.getAttribute("data-type");
+    const thingid = linkEl.getAttribute("data-thing-id");
 
     if (isBookmarked) {
-      this.toggleBookmark("delete", linkEl, isBookmarked);
+      this.toggleBookmark("delete", linkEl, isBookmarked, thingid, bookmarkType);
     } else {
-      this.toggleBookmark("add", linkEl, isBookmarked);
+      this.toggleBookmark("add", linkEl, isBookmarked, thingid, bookmarkType);
     }
   },
-}
+};
 
-export default viewSocialMedia;
+export default bookmarkButtons;
