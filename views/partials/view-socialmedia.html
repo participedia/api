@@ -1,5 +1,5 @@
 <ul class="unstyled-list social-links">
-  {{#if user}}
+  {{#if req.user}}
     <li>
       <a
         href="#"
@@ -8,8 +8,14 @@
         data-type="{{article.type}}"
         data-thing-id="{{article.id}}"
       >
-        <span class="is-bookmarked">{{> icon-bookmark-fill}}</span>
-        <span class="is-not-bookmarked">{{> icon-bookmark}}</span>
+        <span class="is-bookmarked">
+          <span class="sr-only">Remove Bookmark</span>
+          {{> icon-bookmark-fill}}
+        </span>
+        <span class="is-not-bookmarked">
+          <span class="sr-only">Add Bookmark</span>
+          {{> icon-bookmark}}
+        </span>
       </a>
     </li>
   {{/if}}
