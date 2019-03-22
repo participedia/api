@@ -28,8 +28,8 @@ async function getUserById(userId, req, res, view="view") {
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
 
-    // if name contains @ symbol (therefore is an email),
-    // truncate at @ symbol so we are not displaying a user's email address
+    // if name contains @, assume it's an email address, and strip the domain
+    // so we are not sharing email address' publicly
     const atSymbolIndex = result.user.name.indexOf("@");
     if (atSymbolIndex > 0) {
       result.user.name = result.user.name.substr(0, atSymbolIndex);
