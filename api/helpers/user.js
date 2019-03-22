@@ -84,7 +84,8 @@ async function commonUserHandler(required, err, req, res, next) {
     }
     newUser = await db.one(CREATE_USER_ID, {
       userEmail: user.email,
-      userName: user.name || user.email,
+      // if user.name is null, use first part of email address for username
+      userName: user.name || user.email.substr(0, user.email.indexOf("@")),
       joinDate: user.created_at,
       // TODO: fix auth0UserId error
       // this line was throwing an error for auth0UserId being undefined,
