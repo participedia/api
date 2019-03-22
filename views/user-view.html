@@ -26,15 +26,19 @@
 <div class="user-view-body">
   {{#> tabs-with-cards req=req getTabs=(getUserTabs)}}
     <div role="tabpanel" class="tab-contributions">
-      {{> cards-container
-        cards=(getContributionsForProfile profile)
-      }}
+      {{#if (isSelectedUserTab req "contributions")}}
+        {{> cards-container
+          cards=(getContributionsForProfile profile)
+        }}
+      {{/if}}
     </div>
 
     <div role="tabpanel" class="tab-bookmarks">
-      {{> cards-container
-        cards=profile.bookmarks
-      }}
+      {{#if (isSelectedUserTab req "bookmarks")}}
+        {{> cards-container
+          cards=profile.bookmarks
+        }}
+      {{/if}}
     </div>
   {{/tabs-with-cards}}
 </div>
