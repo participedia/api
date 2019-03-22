@@ -96,6 +96,7 @@
   margin-top: 15px;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 }
 
 [data-card-layout="list"] .cards-container {
@@ -156,6 +157,14 @@
 .pop-over .close-card-btn {
   display: block;
   align-self: flex-end;
+}
+
+.pop-over .bookmark-btn {
+  display: none;
+}
+
+.pop-over .article-card-meta .small {
+  margin-bottom: 0;
 }
 
 /* toggle layout buttons */
