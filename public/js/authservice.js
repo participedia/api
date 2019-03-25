@@ -19,6 +19,8 @@ window.addEventListener('load', function() {
     redirectUri: location.origin + "/redirect"
   });
 
+  window.webAuth = webAuth;
+
   var loginBtns = document.querySelectorAll('.js-login-button');
 
   for (let i = 0; i < loginBtns.length; i++) {

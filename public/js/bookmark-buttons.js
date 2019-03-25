@@ -42,10 +42,14 @@ const bookmarkButtons = {
     const bookmarkType = linkEl.getAttribute("data-type");
     const thingid = linkEl.getAttribute("data-thing-id");
 
-    if (isBookmarked) {
-      this.toggleBookmark("delete", linkEl, isBookmarked, thingid, bookmarkType);
+    if (window.isAuthenticated()) {
+      if (isBookmarked) {
+        this.toggleBookmark("delete", linkEl, isBookmarked, thingid, bookmarkType);
+      } else {
+        this.toggleBookmark("add", linkEl, isBookmarked, thingid, bookmarkType);
+      }
     } else {
-      this.toggleBookmark("add", linkEl, isBookmarked, thingid, bookmarkType);
+      window.webAuth.authorize();
     }
   },
 };
