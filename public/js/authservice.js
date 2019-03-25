@@ -1,4 +1,18 @@
-// app.js
+function xhrReq(action, url, data = {}, successCB = null, errorCB = null) {
+  const errorCodes = [500, 400, 401];
+  const request = new XMLHttpRequest();
+  request.withCredentials = true;
+  request.open(action, url, true);
+  request.onreadystatechange = () => {
+    if (request.readyState === 4 && errorCodes.includes(request.status)) {
+      if (errorCB) errorCB();
+    } else if (request.readyState === 4) {
+      if (successCB) successCB();
+    }
+  };
+  request.setRequestHeader('Content-Type', 'application/json')
+  request.send(data);
+}
 
 window.addEventListener('load', function() {
   let idToken = localStorage['auth0-idToken'];
@@ -27,6 +41,15 @@ window.addEventListener('load', function() {
     loginBtns[i].addEventListener('click', function(e) {
       e.preventDefault();
       webAuth.authorize();
+    });
+  }
+
+  var logoutBtns = document.querySelectorAll('.js-logout-button');
+
+  for (let i = 0; i < logoutBtns.length; i++) {
+    logoutBtns[i].addEventListener('click', function(e) {
+      e.preventDefault();
+      logout();
     });
   }
 
@@ -107,10 +130,10 @@ window.addEventListener('load', function() {
     localStorage.removeItem('auth0-accessToken');
     localStorage.removeItem('auth0-idToken');
     localStorage.removeItem('auth0-expiresAt');
-    location.replace('/');
+    const logoutUrl = 'https://participedia.auth0.com/v2/logout';
+    const logoutSuccessCB = () => location.href = location.origin;
+    xhrReq("GET", logoutUrl, {}, logoutSuccessCB);
   }
-
-  window.logout = logout;
 
   function isAuthenticated() {
     console.log('isAuthenticated()');
