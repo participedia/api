@@ -22,10 +22,13 @@ let location = {
 let example_case = JSON.parse(fs.readFileSync("test/case.json"));
 
 async function addBasicCase() {
-  return chai
-    .postJSON("/case/new?returns=json")
-    .set("Authorization", "Bearer " + tokens.user_token)
-    .send(example_case);
+  return (
+    chai
+      .postJSON("/case/new?returns=json")
+      .set("Cookie", "token=" + tokens.user_token)
+      // .set("Authorization", "Bearer " + tokens.user_token)
+      .send(example_case)
+  );
 }
 
 describe("Cases", () => {
@@ -37,7 +40,7 @@ describe("Cases", () => {
     });
   });
   describe("Adding", () => {
-    it.only("fails without authentication", async () => {
+    it("fails without authentication", async () => {
       try {
         const res = await chai.postJSON("/case/new?returns=json").send({});
         // fail if error not thrown
@@ -57,9 +60,9 @@ describe("Cases", () => {
         err.should.have.status(400);
       }
     });
-    it("works with authentication", async () => {
+    it.only("works with authentication", async () => {
       const res = await addBasicCase();
-      res.should.have.status(201);
+      res.should.have.status(200);
       res.body.OK.should.be.true;
       res.body.data.thingid.should.be.a("number");
       let returnedCase = res.body.object;

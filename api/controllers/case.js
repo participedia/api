@@ -75,19 +75,20 @@ router.post("/new", async function postNewCase(req, res) {
       description,
       language
     });
-    req.thingid = thing.thingid;
-    getEditXById("case")(req, res);
+    //    req.thingid = thing.thingid;
+    req.params.thingid = thing.thingid;
+    updateCase(req, res);
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
     res.status(500).json({ OK: false, error: error });
   }
   // Refresh search index
   // FIXME: This will never get called as we have already returned ff
-  try {
-    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
-  } catch (error) {
-    log.error("Exception in POST /case/new => %s", error);
-  }
+  // try {
+  //   db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
+  // } catch (error) {
+  //   log.error("Exception in POST /case/new => %s", error);
+  // }
 });
 
 /**
@@ -326,7 +327,9 @@ function getUpdatedCase(user, params, newCase, oldCase) {
 // featured, immutable unless changed by admin
 // hidden, immutable unless changed by admin
 
-router.post("/:thingid", async (req, res) => {
+router.post("/:thingid", updateCase);
+
+async function updateCase(req, res) {
   cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
@@ -370,9 +373,8 @@ router.post("/:thingid", async (req, res) => {
     // the client expects this request to respond with json
     // save successful response
     res.status(200).json({
-      OK: true,
+      OK: true
     });
-
   } catch (error) {
     log.error(
       "Exception in PUT /%s/%s => %s",
@@ -385,13 +387,10 @@ router.post("/:thingid", async (req, res) => {
     // errors should be passed back to client as array of error messages
     res.status(200).json({
       OK: false,
-      errors: [
-        "Title can not be empty.",
-        "Some other validation issue",
-      ],
+      errors: ["Title can not be empty.", "Some other validation issue"]
     });
   } // end catch
-});
+}
 
 /**
  * @api {get} /case/:thingid Get the last version of a case
