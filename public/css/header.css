@@ -8,7 +8,6 @@ header {
 }
 
 header a {
-  color: #fff;
   text-decoration: none;
 }
 
@@ -212,6 +211,59 @@ header a {
 .main-content {
   padding-top: 30px;
   margin-top: 60px;
+}
+
+/* profile img/button with dropdown menu */
+.profile-dropdown-button-container {
+  position: relative;
+}
+
+.profile-dropdown-button-container .profile-dropdown-button-items {
+  opacity: 0;
+  z-index: 10;
+  position: absolute;
+  top: 50px;
+  left: -188px;
+  background-color: #fff;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+}
+
+.profile-dropdown-button-container .profile-dropdown-button-items a {
+  justify-content: flex-start;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.profile-dropdown-button-container .profile-dropdown-button-items a:last-of-type {
+  margin-bottom: 0;
+}
+
+.profile-dropdown-button-container .profile-dropdown-button-items a:hover {
+  color: #808080;
+}
+
+.header-user-profile-image-initial {
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+}
+.profile-dropdown-button-trigger {
+  padding: 0px;
+  min-width: unset;
+  width: 40px;
+  height: 40px;
+  display: block;
+  background-color: transparent;
+}
+.profile-dropdown-button-trigger img {
+  top: -40px;
+  position: relative;
+  border-radius: 40px;
 }
 
 @media (max-width: 1150px) {

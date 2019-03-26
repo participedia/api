@@ -6,8 +6,6 @@
 
 @import url("/css/common.css");
 
-@import url("/css/header.css");
-
 @import url("/css/footer.css");
 
 @import url("/css/edit-form.css");
@@ -29,3 +27,5 @@
 @import url("/css/tabs-with-cards.css");
 
 @import url("/css/user.css");
+
+@import url("/css/header.css");

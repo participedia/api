@@ -5,7 +5,7 @@ const headerProfileDropdownMenu = {
     if (!containerEl) return;
 
     containerEl.addEventListener("click", e => {
-      const button = e.target.closest(".js-dropdown-button-trigger");
+      const button = e.target.closest(".js-profile-dropdown-button-trigger");
       if (button) {
         const isOpen = containerEl.getAttribute("state") === "open";
         const itemsContainerEl = containerEl.querySelector(".js-profile-dropdown-button-items");
