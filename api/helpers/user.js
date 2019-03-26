@@ -45,7 +45,8 @@ async function commonUserHandler(required, err, req, res, next) {
       err.message
     );
   }
-  let user = req.user;
+  let user = req.user && req.user._json;
+
   const language = as.value(req.params.language || "en");
   if (!user) {
     if (required) {
