@@ -436,6 +436,17 @@ module.exports = {
     return arg1 === arg2;
   },
 
+  sanitizeName(name) {
+    // if name contains @, assume it's an email address, and strip the domain
+    // so we are not sharing email address' publicly
+    const atSymbolIndex = name.indexOf("@");
+    if (atSymbolIndex > 0) {
+      return name.substr(0, atSymbolIndex);
+    } else {
+      return name;
+    }
+  },
+
   // data
   getPartnersData() {
     return aboutData.partners;

@@ -3,9 +3,9 @@ module.exports = {
 
   "teaching.in_the_classroom.p1": "Writing or editing articles for Participedia can be a great assignment for courses that deal with political participation, democratic innovation, or deliberation.",
 
-  "teaching.in_the_classroom.p2": "Writing or editing articles for Participedia can be a great assignment for courses that deal with political participation, democratic innovation, or deliberation.",
+  "teaching.in_the_classroom.p2": "In the course of selecting, researching, and writing up a case, method, or organization, students will learn about the substance of participation in varied contexts. Students may also find it rewarding to have their work showcased on Participedia.",
 
-  "teaching.in_the_classroom.p3": "Writing or editing articles for Participedia can be a great assignment for courses that deal with political participation, democratic innovation, or deliberation.",
+  "teaching.in_the_classroom.p3": "In addition to searching Participedia’s Teaching & Learning Resource Center (coming soon - see below) for ideas on how to enhance course offerings about public participation, here are links to a few brief blog posts describing experiences with Participedia in the classroom from the perspective of teachers and students.",
 
   "teaching.in_course": "Participedia In Course Assignments",
 
