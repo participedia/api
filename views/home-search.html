@@ -5,39 +5,40 @@
 
   {{#> tabs-with-cards req=req getTabs=(getHomeTabs)}}
     <div role="tabpanel" class="tab-all">
-      <p>all</p>
-      {{> cards-container
-        totalResults=total
-        totalPages=pages
-        cards=results
-      }}
+      {{#if (isSelectedHomeTab req "all")}}
+        {{> cards-container
+          totalResults=total
+          totalPages=pages
+          cards=results
+        }}
+      {{/if}}
     </div>
     <div role="tabpanel" class="tab-cases">
-      <p>cases</p>
-      <!-- todo pass in cases array -->
-      {{> cards-container
-        totalResults=total
-        totalPages=pages
-        cards=results
-      }}
+      {{#if (isSelectedHomeTab req "case")}}
+        {{> cards-container
+          totalResults=total
+          totalPages=pages
+          cards=results
+        }}
+      {{/if}}
     </div>
     <div role="tabpanel" class="tab-methods">
-      <p>methods</p>
-      <!-- todo pass in methods array -->
-      {{> cards-container
-        totalResults=total
-        totalPages=pages
-        cards=results
-      }}
+      {{#if (isSelectedHomeTab req "method")}}
+        {{> cards-container
+          totalResults=total
+          totalPages=pages
+          cards=results
+        }}
+      {{/if}}
     </div>
     <div role="tabpanel" class="tab-organizations">
-      <p>organizations</p>
-      <!-- todo pass in orgs array -->
-      {{> cards-container
-        totalResults=total
-        totalPages=pages
-        cards=results
-      }}
+      {{#if (isSelectedHomeTab req "organizations")}}
+        {{> cards-container
+          totalResults=total
+          totalPages=pages
+          cards=results
+        }}
+      {{/if}}
     </div>
   {{/tabs-with-cards}}
 </div>
