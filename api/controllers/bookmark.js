@@ -107,12 +107,12 @@ router.post("/add", async function addBookmark(req, res) {
         .json({ error: "Required parameter (thingid) wasn't specified" });
       return;
     }
-    if (!req.user.user_id) {
+    if (!req.user.id) {
       log.error("No user");
-      res.status(400).json({ error: "User (userId) wasn't specified" });
+      res.status(401).json({ error: "You must be logged in to perform this action." });
       return;
     }
-    let userId = as.number(req.user.user_id);
+    let userId = as.number(req.user.id);
     let thingid = as.number(req.body.thingid);
     let bookmarkType = req.body.bookmarkType;
     const data1 = await db.oneOrNone(
@@ -173,7 +173,7 @@ router.post("/add", async function addBookmark(req, res) {
 
 router.delete("/delete", async function updateUser(req, res) {
   try {
-    const userId = as.number(req.user.user_id);
+    const userId = as.number(req.user.id);
     const bookmarkType = req.body.bookmarkType;
     const thingid = as.number(req.body.thingid);
     const data1 = await db.one(

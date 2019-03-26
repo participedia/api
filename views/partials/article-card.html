@@ -15,15 +15,22 @@
         {{/if}}
         <p class="small">Submitted {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
       </div>
-      <button type="button" class="icon-only bookmark-btn">
-        {{#if bookmarked }}
+      <a
+        href="#"
+        class="bookmark-btn js-bookmark-button"
+        data-bookmarked="{{bookmarked}}"
+        data-type="{{type}}"
+        data-thing-id="{{id}}"
+      >
+        <span class="is-bookmarked">
           <span class="sr-only">Remove Bookmark</span>
           {{> icon-bookmark-fill}}
-        {{else}}
+        </span>
+        <span class="is-not-bookmarked">
           <span class="sr-only">Add Bookmark</span>
           {{> icon-bookmark}}
-        {{/if}}
-      </button>
+        </span>
+      </a>
     </div>
 
     <button type="button" class="icon-only close-card-btn js-close-card-btn">
