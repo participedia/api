@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 
 // Perform the login, after login Auth0 will redirect to callback
 app.get("/login", passport.authenticate("auth0", {
-  scope: "openid email profile"
+  scope: "offline_access openid email profile"
 }), function (req, res) {
   res.redirect("/");
 });
