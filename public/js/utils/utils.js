@@ -26,9 +26,9 @@ function xhrReq(action, url, data = {}, successCB = null, errorCB = null) {
   request.open(action, url, true);
   request.onreadystatechange = () => {
     if (request.readyState === 4 && errorCodes.includes(request.status)) {
-      if (errorCB) errorCB();
+      if (errorCB) errorCB(request);
     } else if (request.readyState === 4) {
-      if (successCB) successCB();
+      if (successCB) successCB(request);
     }
   };
   request.setRequestHeader('Content-Type', 'application/json')

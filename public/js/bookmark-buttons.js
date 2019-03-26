@@ -21,12 +21,20 @@ const bookmarkButtons = {
     if (addOrDelete === "delete") {
       action = "DELETE";
     }
-    const successCB = () => {
+    const successCB = (request) => {
       linkEl.setAttribute("data-bookmarked", !isBookmarked);
+    }
+    const errorCB = (request) => {
+      if (request.status === 401) {
+        // if unauthorized error, redirect to login
+        location.href = `${location.origin}/login`;
+      } else {
+        alert("Sorry, something went wrong.");
+      }
     }
     const data = JSON.stringify({ thingid, bookmarkType });
     const url = `/bookmark/${addOrDelete}`;
-    xhrReq(action, url, data, successCB);
+    xhrReq(action, url, data, successCB, errorCB);
   },
 
   handleLinkClick(e) {
@@ -37,14 +45,10 @@ const bookmarkButtons = {
     const bookmarkType = linkEl.getAttribute("data-type");
     const thingid = linkEl.getAttribute("data-thing-id");
 
-    if (window.isAuthenticated()) {
-      if (isBookmarked) {
-        this.toggleBookmark("delete", linkEl, isBookmarked, thingid, bookmarkType);
-      } else {
-        this.toggleBookmark("add", linkEl, isBookmarked, thingid, bookmarkType);
-      }
+    if (isBookmarked) {
+      this.toggleBookmark("delete", linkEl, isBookmarked, thingid, bookmarkType);
     } else {
-      window.webAuth.authorize();
+      this.toggleBookmark("add", linkEl, isBookmarked, thingid, bookmarkType);
     }
   },
 };
