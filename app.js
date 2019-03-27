@@ -38,7 +38,7 @@ const strategy = new Auth0Strategy({
   domain: process.env.AUTH0_DOMAIN,
   clientID: process.env.AUTH0_CLIENT_ID,
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
-  callbackURL: process.env.AUTH0_CALLBACK_URL || "/redirect"
+  callbackURL: "/redirect"
   },
   function (accessToken, refreshToken, extraParams, profile, done) {
     // accessToken is the token to call Auth0 API (not needed in the most cases)
@@ -64,7 +64,7 @@ passport.deserializeUser(function (user, done) {
 
 // Perform the login, after login Auth0 will redirect to callback
 app.get("/login", passport.authenticate("auth0", {
-  scope: "offline_access openid email profile"
+  scope: "openid email profile"
 }), function (req, res) {
   res.redirect("/");
 });
