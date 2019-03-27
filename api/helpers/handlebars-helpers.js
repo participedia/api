@@ -83,7 +83,9 @@ module.exports = {
   placeholder: (staticText, name) =>
     staticTextValue(staticText, name, "placeholder"),
 
-  t: (staticText, key) => staticTextValue(staticText, key),
+  t: (key, context) => {
+    return context && context.data && context.data.root && context.data.root.__(key);
+  },
 
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options

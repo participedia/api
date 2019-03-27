@@ -5,7 +5,7 @@
       {{#if (getGravatarUrl profile.email)}}
         <img src="{{getGravatarUrl profile.email}}?s=160&d=blank" alt="profile_picture" width="160" height="160" />
       {{/if}}
-      <div class="user-profile-image-edit-overlay">{{t static "change"}}</div>
+      <div class="user-profile-image-edit-overlay">{{t "change"}}</div>
     </a>
   </div>
   <div class="user-main-content">
@@ -16,16 +16,16 @@
       data-submit-type="full"
       class="js-edit-form"
     >
-      <p><strong>{{t static "member_since"}}</strong> {{getYearFromDate profile.join_date}}</p>
+      <p><strong>{{t "member_since"}}</strong> {{getYearFromDate profile.join_date}}</p>
 
       <fieldset>
-        <h2>{{t static "public_profile"}}</h2>
+        <h2>{{t "public_profile"}}</h2>
         {{> edit-text name="name" value=profile.name placeholderText=static.name_placeholder}}
         {{> edit-richtext name="bio" value=profile.bio}}
       </fieldset>
 
       <button type="submit" class="button button-light-grey">
-        {{> icon-submit }} {{t static "publish"}}
+        {{> icon-submit }} {{t "publish"}}
       </button>
     </form>
   </div>
