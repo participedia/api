@@ -29,8 +29,6 @@ const {
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
-const articleText = require("../../static-text/article-text.js");
-
 /**
  * @api {post} /case/new Create new case
  * @apiGroup Cases
@@ -427,8 +425,7 @@ router.get("/:thingid/", async (req, res) => {
   const articleRow = await db.one(CASE_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticTextFromDB = await db.one(CASE_VIEW_STATIC, params);
-  const staticText = Object.assign({}, staticTextFromDB, articleText);
+  const staticText = await db.one(CASE_VIEW_STATIC, params);
   returnByType(res, params, article, staticText, req.user);
 });
 
@@ -455,7 +452,6 @@ router.get("/:thingid/edit", requireAuthenticatedUser(), async (req, res) => {
   );
   staticText.methods = methodsResult.methods;
 
-  staticText.labels = Object.assign({}, staticText.labels, articleText);
   returnByType(res, params, article, staticText, req.user);
 });
 

@@ -1,26 +1,9 @@
 # Localization
 
-### What templates expect
-Each route that returns html should return a `static` key on the data object that contains key/value pairs of the string key and the localized value.
-
-```
-// example response
-res.status(200).render("about-view", { static: {
-  "stringKey": "my string value",
-});
-
-// payload
-{
-  "static": {
-    "stringKey": "my string value",
-  },
-}
-```
-
 ### Rendering localized text in HBS templates
-Use the `t` helper function and pass the static object with the key of the string you wish to render.
+Use the `t` helper function and pass the key of the string you wish to render.
 ```
-<p>{{t static "research.surveys.p1"}}</p>
+<p>{{t "research.surveys.p1"}}</p>
 ```
 
 ### Key Best Practices
@@ -44,5 +27,3 @@ Use the `t` helper function and pass the static object with the key of the strin
 }
 ```
 
-### Adding new strings to the DB
-TBD
