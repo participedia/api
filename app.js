@@ -86,8 +86,9 @@ app.get("/redirect", function (req, res, next) {
 
 // Perform session logout and redirect to homepage
 app.get("/logout", (req, res) => {
+  const currentUrl = `${req.protocol}://${req.headers.host}`;
   req.logout();
-  res.redirect("/");
+  res.redirect(`https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`);
 });
 
 var hbs = exphbs.create({
