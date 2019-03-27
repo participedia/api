@@ -19,13 +19,11 @@
         </li>
         <li>
           {{#if req.user}}
-          <a href="/user/{{req.user.id}}" class="button button-dark-grey">
-            Profile
-          </a>
+            <a href="/user/{{req.user.id}}" class="button button-dark-grey">
+              Profile
+            </a>
           {{else}}
-          <button type="button" class="button button-dark-grey js-login-button">
-            Login
-          </button>
+            <a href="/login" class="button button-dark-grey">Login</a>
           {{/if}}
         </li>
         <li>
@@ -84,9 +82,7 @@
             </div>
           </div>
         {{else}}
-          <a href="/login" class="button button-dark-grey">
-            Login
-          </a>
+          <a href="/login" class="button button-dark-grey">Login</a>
         {{/if}}
       </li>
     </ul>
