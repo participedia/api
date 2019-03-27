@@ -15,7 +15,8 @@ const i18n = require('i18n-2');
 
 i18n.expressBind(app, {
   locales: ["en"],
-  defaultLocale: "en"
+  defaultLocale: "en",
+  extension: ".json",
 });
 
 app.use(function(req, res, next) {
