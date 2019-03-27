@@ -62,11 +62,6 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
-app.use((req, res, next) => {
-  res.locals.user = req.user;
-  next();
-});
-
 // Perform the login, after login Auth0 will redirect to callback
 app.get("/login", passport.authenticate("auth0", {
   scope: "offline_access openid email profile"
