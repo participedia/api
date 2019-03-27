@@ -4,14 +4,12 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
-const staticTextToBeAdded = require("../locales/en.js");
 
 async function getStaticText(language) {
-  // merge localized text from the db with the keys that need to be added.
   const staticTextFromDB = await db.one(
     `select * from layout_localized where language = '${language}';`
   );
-  return Object.assign({}, staticTextToBeAdded, staticTextFromDB);
+  return staticTextFromDB;
 }
 
 async function getUserById(userId, req, res, view="view") {

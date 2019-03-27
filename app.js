@@ -8,13 +8,17 @@ var exphbs = require("express-handlebars");
 const fs = require("fs");
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const cookieParser = require("cookie-parser");
+const i18n = require('i18n-2');
 
-// static text js objects
-const sharedStaticText = require("./static-text/shared-static-text.js");
-const aboutStaticText = require("./static-text/about-static-text.js");
-const researchStaticText = require("./static-text/research-static-text.js");
-const teachingStaticText = require("./static-text/teaching-static-text.js");
-const contentTypesText = require("./static-text/content-types-static-text.js");
+i18n.expressBind(app, {
+  locales: ["en"],
+  defaultLocale: "en"
+});
+
+app.use(function(req, res, next) {
+  req.i18n.setLocaleFromQuery(req);
+  next();
+});
 
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
@@ -125,27 +129,19 @@ app.use("/user", user);
 app.use("/bookmark", bookmark);
 
 app.get("/about", function(req, res) {
-  const staticText = Object.assign({}, sharedStaticText, aboutStaticText);
-  res.status(200).render("about-view", { static: staticText });
+  res.status(200).render("about-view");
 });
 app.get("/legal", function(req, res) {
   res.status(200).render("legal-view");
 });
 app.get("/research", function(req, res) {
-  const staticText = Object.assign({}, sharedStaticText, researchStaticText);
-  res.status(200).render("research-view", { static: staticText });
+  res.status(200).render("research-view");
 });
 app.get("/teaching", function(req, res) {
-  const staticText = Object.assign({}, sharedStaticText, teachingStaticText);
-  res.status(200).render("teaching-view", {
-    static: staticText
-  });
+  res.status(200).render("teaching-view");
 });
 app.get("/content-chooser", function(req, res) {
-  const staticText = Object.assign({}, sharedStaticText, contentTypesText);
-  res.status(200).render("content-chooser", {
-    static: staticText
-  });
+  res.status(200).render("content-chooser");
 });
 
 app.use("/s3/:path", checkJwtRequired);
