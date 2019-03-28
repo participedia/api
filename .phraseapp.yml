@@ -6,8 +6,10 @@ phraseapp:
     - file: ./locales/<locale_name>.js
       params:
         file_format: node_json
+        update_translations: true
   pull:
     targets:
     - file: ./locales/<locale_name>.js
       params:
         file_format: node_json
+        update_translations: true
