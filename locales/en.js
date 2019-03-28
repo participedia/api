@@ -1,6 +1,6 @@
 {
 	"about.cases.p1": "Entries about cases document specific examples of how various methods of participatory politics and governance are implemented. Cases can be contemporary or historical, completed, or ongoing.",
-	"about.cases.example": "For example, this case on <a href='/case/5008'>Paris’s 2017 Participatory Budget</a> is one of over 160 case entries documenting the use of participatory methods to give citizens stronger influence over the distribution of public resources.",
+	"about.cases.example": "For example, this case on %sParis’s 2017 Participatory Budget%s is one of over 160 case entries documenting the use of participatory methods to give citizens stronger influence over the distribution of public resources.",
 	"about.ckmc.description": "The Communication and Knowledge Mobilization Committee is responsible for advising the Executive Committee on how communication with research partners can be planned, carried out, and refined. The CKM committee also advises on optimal communication with the Participedia user community, including supporting the development of content for the website, newsletter, and social media channels.",
 	"about.ckmc.title": "Communications & Knowledge Mobilization Committee",
 	"about.committees.p1": "Participedia’s committees are comprised of project co-investigators and collaborators, and are headed by a nominated chairperson who sits on the executive committee.",
