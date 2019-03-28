@@ -6,7 +6,6 @@ require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
 const app = require("express")();
 const exphbs = require("express-handlebars");
 const fs = require("fs");
-const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
@@ -22,8 +21,8 @@ const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const cors = require("cors");
 
-
 // Actual Participedia APIS vs. Nodejs gunk
+const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const case_ = require("./api/controllers/case");
 const method = require("./api/controllers/method");
 const organization = require("./api/controllers/organization");
@@ -44,8 +43,6 @@ const { ensureUser, preferUser } = require("./api/helpers/user");
 // CONFIGS
 AWS.config.update({ region: "us-east-1" });
 app.use(compression());
-
-
 app.set("port", port);
 app.use(express.static("public", { index: false }));
 app.use(morgan("dev")); // request logging
@@ -65,9 +62,10 @@ i18n.expressBind(app, {
   locales: ["en", "fr"],
   defaultLocale: "en",
   extension: ".json",
+  cookieName: "locale",
 });
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   req.i18n.setLocaleFromCookie();
   next();
 });
@@ -163,6 +161,9 @@ const hbs = exphbs.create({
   helpers: handlebarsHelpers
 });
 
+app.engine(".html", hbs.engine);
+app.set("view engine", ".html");
+
 // make data available as local vars in templates
 app.use((req, res, next) => {
   const getGATrackingId = () => {
@@ -178,9 +179,6 @@ app.use((req, res, next) => {
   res.locals.GA_TRACKING_ID = getGATrackingId();
   next();
 });
-
-app.engine(".html", hbs.engine);
-app.set("view engine", ".html");
 
 if (
   process.env.NODE_ENV === "test" &&
