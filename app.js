@@ -1,14 +1,62 @@
 "use strict";
 
-let path = require("path");
-let process = require("process");
+const path = require("path");
+const process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
-let app = require("express")();
-var exphbs = require("express-handlebars");
+const app = require("express")();
+const exphbs = require("express-handlebars");
 const fs = require("fs");
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const cookieParser = require("cookie-parser");
 const i18n = require('i18n-2');
+const apicache = require("apicache");
+const express = require("express");
+const compression = require("compression");
+const AWS = require("aws-sdk");
+const errorhandler = require("errorhandler");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
+const cors = require("cors");
+
+
+// Actual Participedia APIS vs. Nodejs gunk
+const case_ = require("./api/controllers/case");
+const method = require("./api/controllers/method");
+const organization = require("./api/controllers/organization");
+const bookmark = require("./api/controllers/bookmark");
+const search = require("./api/controllers/search");
+const list = require("./api/controllers/list");
+const user = require("./api/controllers/user");
+const isUser = require("./api/middleware/isUser");
+
+const port = process.env.PORT || 3001;
+
+const {
+  checkJwtRequired,
+  checkJwtOptional
+} = require("./api/helpers/checkJwt");
+const { ensureUser, preferUser } = require("./api/helpers/user");
+
+// CONFIGS
+AWS.config.update({ region: "us-east-1" });
+app.use(compression());
+
+
+app.set("port", port);
+app.use(express.static("public", { index: false }));
+app.use(morgan("dev")); // request logging
+app.use(methodOverride()); // Do we actually use/need this?
+app.use(cors());
+app.use(bodyParser.json({ limit: "5mb" }));
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
+app.use(cookieParser());
+// handle expired login tokens more gracefully
+app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
+app.use(
+  preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
+);
+app.use(errorhandler());
 
 i18n.expressBind(app, {
   locales: ["en", "fr"],
@@ -17,11 +65,20 @@ i18n.expressBind(app, {
 });
 
 app.use(function(req, res, next) {
-  req.i18n.setLocaleFromQuery(req);
+  req.i18n.setLocaleFromCookie();
   next();
 });
 
-var hbs = exphbs.create({
+
+const cache = apicache.middleware;
+apicache.options({
+  debug: true,
+  enabled: false,
+  successCodes: [200, 201]
+});
+// TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
+
+const hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: "main",
   extname: ".html",
@@ -68,58 +125,7 @@ process.on("unhandledRejection", function(reason, p) {
   // application specific logging here
 });
 
-let express = require("express");
-let compression = require("compression");
-let AWS = require("aws-sdk");
-AWS.config.update({ region: "us-east-1" });
-app.use(compression());
-let port = process.env.PORT || 3001;
-
-// Actual Participedia APIS vs. Nodejs gunk
-let case_ = require("./api/controllers/case");
-let method = require("./api/controllers/method");
-let organization = require("./api/controllers/organization");
-let bookmark = require("./api/controllers/bookmark");
-let search = require("./api/controllers/search");
-let list = require("./api/controllers/list");
-let user = require("./api/controllers/user");
-
-let errorhandler = require("errorhandler");
-let morgan = require("morgan");
-let bodyParser = require("body-parser");
-let methodOverride = require("method-override");
-let cors = require("cors");
-let isUser = require("./api/middleware/isUser");
-const {
-  checkJwtRequired,
-  checkJwtOptional
-} = require("./api/helpers/checkJwt");
-let { ensureUser, preferUser } = require("./api/helpers/user");
-
-app.set("port", port);
-app.use(express.static("public", { index: false }));
-app.use(morgan("dev")); // request logging
-app.use(methodOverride()); // Do we actually use/need this?
-app.use(cors());
-app.use(bodyParser.json({ limit: "5mb" }));
-app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
-app.use(cookieParser());
-// handle expired login tokens more gracefully
-app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
-app.use(
-  preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
-);
-app.use(errorhandler());
-
-const apicache = require("apicache");
-const cache = apicache.middleware;
-apicache.options({
-  debug: true,
-  enabled: false,
-  successCodes: [200, 201]
-});
-// TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
-
+// ROUTES
 app.use("/", cache("5 minutes"), search);
 
 app.use("/case", case_);
