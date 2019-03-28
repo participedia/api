@@ -87,6 +87,20 @@ module.exports = {
     return context && context.data && context.data.root && context.data.root.__(key);
   },
 
+  getLanguageOptions: () => {
+    return [
+      { key: "en", value: "English" },
+      { key: "fr", value: "French" },
+      { key: "de", value: "German" },
+    ];
+  },
+
+  isSelectedLanguage: (lang, context) => {
+    if (context && context.data && context.data.root) {
+      return lang === context.data.root.req.cookies.locale;
+    }
+  },
+
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
     // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
