@@ -86,21 +86,39 @@
     {{#> accordion title=(t "Methods")}}
       <p>{{t "about.methods.p1"}}</p>
       <ul>
-        <li>{{{t "about.methods.example"}}}</li>
+        <li>{{{__ "about.methods.example" "<a href='/method/145'>" "</a>"}}}</li>
       </ul>
     {{/accordion}}
 
     {{#> accordion title=(t "Tools/Techniques")}}
       <p>{{t "about.tools_techniques.p1"}}</p>
       <ul>
-        <li>{{{t "about.tools_techniques.example"}}}</li>
+        <li>
+          {{{__
+            "about.tools_techniques.example"
+            "<a href='/method/147'>"
+            "</a>"
+            "<a href='/method/5507'>"
+            "</a>"
+            "<a href='/method/565'>"
+            "</a>"
+            "<a href='/method/5309'>"
+            "</a>"
+          }}}
+        </li>
       </ul>
     {{/accordion}}
 
     {{#> accordion title=(t "Organizations")}}
       <p>{{t "about.organizations.p1"}}</p>
       <ul>
-        <li>{{{t "about.organizations.example"}}}</li>
+        <li>
+          {{{__
+            "about.organizations.example"
+            "<a href='/organization/4997'>"
+            "</a>"
+          }}}
+        </li>
       </ul>
     {{/accordion}}
 

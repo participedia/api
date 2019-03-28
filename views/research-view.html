@@ -11,7 +11,13 @@
   {{#> accordion title=(t "Data Repository")}}
     <p><strong>{{t "research.data_repository.dataverse"}}</strong></p>
 
-    <p>{{{t "research.data_repository.p1"}}}</p>
+    <p>
+      {{{__
+        "research.data_repository.p1"
+        "<a href='https://dataverse.harvard.edu/dataverse/Participedia' target='_blank'>"
+        "</a>"
+      }}}
+    </p>
 
     <p>{{t "research.data_repository.p2"}}</p>
 
@@ -26,7 +32,12 @@
       <li>{{t "research.data_repository.feature.8"}}</li>
     </ul>
 
-    <p>{{{t "research.data_repository.questions"}}}</p>
+    <p>
+      {{{__
+        "research.data_repository.questions"
+        "<a href='mailto:data@participedia.net'>data@participedia.net</a>"
+      }}}
+    </p>
   {{/accordion}}
 
   {{#> accordion title=(t "Surveys")}}
