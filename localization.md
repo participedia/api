@@ -10,7 +10,9 @@ For strings that require interpolation of variables, use the `__` function in th
 
 string definition in en.js:
 ```
-"about.cases.example": "For example, this case on %sParis’s 2017 Participatory Budget%s is one of over 160 case entries documenting the use of participatory methods to give citizens stronger influence over the distribution of public resources.",
+"about.cases.example": "For example, this case on %sParis’s 2017 Participatory Budget%s
+is one of over 160 case entries documenting the use of participatory methods to give
+citizens stronger influence over the distribution of public resources.",
 ```
 
 in HBS template:
@@ -22,7 +24,7 @@ in HBS template:
 ### Key Best Practices
 - for single words and short titles or phrases, use the actual text as the key.
 ```
-"static": {
+{
   "Cases": "Cases",
   "Publish": "Publish",
   "Project Director and Co-Founder": "Project Director and Co-Founder",
@@ -31,12 +33,15 @@ in HBS template:
 
 - for page/section specific text use dot-notation to name space pages/sections
 ```
-"static": {
-  "about.cases.p1": "Cases are events and instances of participatory politics and governance of all shapes and sizes.",
+{
+  "about.cases.p1": "Cases are events and instances of participatory politics
+   and governance of all shapes and sizes.",
 
   "about.ckmc.title": "Communications & Knowledge Mobilization Committee",
 
-  "research.tagline": "Participedia is guided by the research question: What kinds of participatory processes work best, for what purposes, and under what conditions?",
+  "research.tagline": "Participedia is guided by the research question:
+   What kinds of participatory processes work best, for what purposes,
+   and under what conditions?",
 }
 ```
 
