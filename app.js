@@ -59,7 +59,7 @@ app.use(
 app.use(errorhandler());
 
 i18n.expressBind(app, {
-  locales: ["en", "fr"],
+  locales: ["en", "fr", "de"],
   defaultLocale: "en",
   extension: ".json",
   cookieName: "locale",
