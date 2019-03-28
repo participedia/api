@@ -11,7 +11,7 @@ const cookieParser = require("cookie-parser");
 const i18n = require('i18n-2');
 
 i18n.expressBind(app, {
-  locales: ["en"],
+  locales: ["en", "fr"],
   defaultLocale: "en",
   extension: ".json",
 });
