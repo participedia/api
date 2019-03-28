@@ -45,9 +45,9 @@ in HBS template:
 }
 ```
 
-###Working with PhraseApp
+### Working with PhraseApp
 
-####When keys and translations are changed via code
+#### When keys and translations are changed via code
 When changes are made to the `locales/*.js` files, they will need to be synced/updated with PhraseApp. The best way to do this is to use the PhraseApp CLI to push the changes to a new branch on PhraseApp. First, make sure you have the phraseapp cli installed:
 
 ```
@@ -57,9 +57,11 @@ $ brew install phraseapp
 More info on cli installation can be found here: https://help.phraseapp.com/phraseapp-for-developers/phraseapp-client/installation
 
 Then use the cli to push a new branch with your changes.
-`phraseapp push --branch <branchname>`
+```
+phraseapp push --branch <branchname>
+```
 
 Once this is done goto phraseapp.com and select the Participedia project, then go to the branches tab. From there you can choose to `Compare & Merge` the branch. Using this branching flow will prevent us from overwriting any updates or translations that have been completed via the PhraseApp editor.
 
-####When keys and translations are changed via the PhraseApp.com editor
+#### When keys and translations are changed via the PhraseApp.com editor
 When changes have been made via the PhraseApp editor we will need to sync them to our github repo and master branch. To do this go to phraseapp.com and select the Participedia project, then go to the Locales tab. From here we can choose the `Export to GitHub as pull request` option from the `GitHub Sync` select menu. Once a PR is created we can review and merge to master to see the updated translations.
