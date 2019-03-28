@@ -48,7 +48,19 @@
     {{/accordion}}
 
     {{#> accordion title=(t "Funders")}}
-      <p>{{{t "about.funders.p1"}}}</p>
+      <p>
+        {{{__
+          "about.funders.p1"
+          "<a href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx'>"
+          "</a>"
+          "<a href='http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx'>"
+          "</a>"
+          "<a href='https://www.innovation.ca/'>"
+          "</a>"
+          "<a href='http://www.bfna.org/'>"
+          "</a>"
+        }}}
+      </p>
     {{/accordion}}
 
     {{#> accordion title=(t "Staff")}}
