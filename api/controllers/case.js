@@ -365,10 +365,10 @@ async function updateCase(req, res) {
     if (updatedText) {
       await db.tx("update-case", t => {
         return t.batch([
-          t.none(INSERT_AUTHOR, author),
-          t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_CASE, updatedCase),
-          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+          // t.none(INSERT_AUTHOR, author),
+          // t.none(INSERT_LOCALIZED_TEXT, updatedText),
+          t.none(UPDATE_CASE, updatedCase)
+          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     } else {
