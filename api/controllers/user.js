@@ -116,6 +116,11 @@ router.get("/:userId/edit", async function(req, res) {
     return res.redirect("/login");
   }
 
+  // if user is not owner of this profile, redirect to profile view
+  if (req.user.id !== parseInt(req.params.userId)) {
+    return res.redirect(`/user/${req.params.userId}`);
+  }
+
   try {
     const data = await getUserById(req.params.userId, req, res, "edit");
     // return html template
