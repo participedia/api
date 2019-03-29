@@ -21,8 +21,8 @@ let requiredOptions = {
   algorithms: ["RS256"],
   credentialsRequired: true,
   getToken: req => {
-    console.log('Cookie token: %s', req.cookies.token);
-    return req.cookies.token || null
+    // console.log('Cookie token: %s', req.cookies.token);
+    return req.cookies.token || null;
   }
 };
 const checkJwtRequired = jwt(requiredOptions);

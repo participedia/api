@@ -64,8 +64,9 @@ describe("Cases", () => {
       const res = await addBasicCase();
       res.should.have.status(200);
       res.body.OK.should.be.true;
-      res.body.data.thingid.should.be.a("number");
       let returnedCase = res.body.object;
+      returnedCase.id.should.be.a("number");
+      console.log("returned case:\n%s", JSON.stringify(returnedCase, null, 4));
       returnedCase.videos.length.should.equal(2);
     });
   });

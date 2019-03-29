@@ -123,6 +123,9 @@ async function maybeUpdateUserText(req, res) {
   const newCase = req.body;
   const params = parseGetParams(req, "case");
   const oldCase = (await db.one(CASE_VIEW_BY_ID, params)).results;
+  if (!oldCase) {
+    throw new Error("No case found for id %s", params.articleid);
+  }
   let textModified = false;
   const updatedText = {
     body: oldCase.body,
@@ -133,20 +136,25 @@ async function maybeUpdateUserText(req, res) {
     id: params.articleid
   };
   ["body", "title", "description"].forEach(key => {
-    if (newCase[key] !== oldCase[key]) {
+    let value;
+    if (key === "body") {
+      value = as.richtext(newCase[key]);
+    } else {
+      value = as.text(newCase[key]);
+    }
+    if (oldCase[key] !== value) {
       textModified = true;
-      updatedText[key] = oldCase[key];
+      updatedText[key] = value;
     }
   });
   if (textModified) {
     const author = {
       user_id: params.userid,
-      type: "case",
-      id: params.articleid
+      thingid: params.articleid
     };
     return { updatedText, author, oldCase };
   } else {
-    return { updateText: null, author: null, oldCase };
+    return { updatedText: null, author: null, oldCase };
   }
 }
 
@@ -154,20 +162,20 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   const updatedCase = {};
   // admin-only
   if (user.isadmin) {
-    updatedCase.featured = as.boolean(newCase.featured);
-    updatedCase.hidden = as.boolean(newCase.hidden);
-    updatedCase.original_language = as.text(newCase.original_langauge);
-    updatedCase.post_date = as.date(newCase.post_date);
-  } else if (oldCase) {
+    updatedCase.featured = as.boolean(newCase.featured || false);
+    updatedCase.hidden = as.boolean(newCase.hidden || false);
+    updatedCase.original_language = as.text(newCase.original_language || "en");
+    updatedCase.post_date = as.date(newCase.post_date || "now");
+  } else {
     // need to check for oldCase otherwise get this error
     // error: Exception in PUT /case/5239 => TypeError: Cannot read property 'featured' of undefined
     // Trace: TypeError: Cannot read property 'featured' of undefined
     // at getUpdatedCase (/Users/alannascott/code/participedia/api/api/controllers/case.js:162:47)
 
-    updatedCase.featured = as.boolean(oldCase.featured);
-    updatedCase.hidden = as.boolean(oldCase.hidden);
-    updatedCase.original_language = as.text(oldCase.original_language);
-    updatedCase.post_date = as.date(oldCase.post_date);
+    updatedCase.featured = as.boolean(oldCase.featured || false);
+    updatedCase.hidden = as.boolean(oldCase.hidden || false);
+    updatedCase.original_language = as.text(oldCase.original_language || "en");
+    updatedCase.post_date = as.date(oldCase.post_date || "now");
   }
   // media lists
   [
@@ -177,7 +185,9 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "audio",
     "evaluation_reports",
     "evaluation_links"
-  ].map(key => (updatedCase[key] = as.media(newCase[key])));
+  ].map(key => {
+    return (updatedCase[key] = as.media(newCase[key]));
+  });
   // photos are slightly different from other media as they have a source url too
   updatedCase.photos = as.photos(newCase.photos);
   // boolean (would include "published" but we don't really support it)
@@ -194,6 +204,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   );
   // plain text
   [
+    "original_language",
     "location_name",
     "address1",
     "address2",
@@ -206,7 +217,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "funder"
   ].map(key => (updatedCase[key] = as.text(newCase[key])));
   // date
-  ["start_date", "end_date"].map(
+  ["start_date", "end_date", "post_date"].map(
     key => (updatedCase[key] = as.date(newCase[key]))
   );
   // id
@@ -224,17 +235,17 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "legality",
     "facilitators",
     "facilitator_training",
-    "facetoface_online_or_both"
+    "facetoface_online_or_both",
+    "open_limited",
+    "recruitment_method",
+    "time_limited"
   ].map(key => (updatedCase[key] = as.casekey(newCase[key])));
   // list of keys
   [
     "general_issues",
     "specific_topics",
-    "time_limited",
     "purposes",
     "approaches",
-    "open_limited",
-    "recruitment_method",
     "targeted_participants",
     "method_types",
     "participants_interactions",
@@ -336,11 +347,19 @@ async function updateCase(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   try {
     const newCase = req.body;
-    console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
+    // console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
     // save any changes to the user-submitted text
-    const { updatedText, author, oldCase } = maybeUpdateUserText(req, res);
+    const { updatedText, author, oldCase } = await maybeUpdateUserText(
+      req,
+      res
+    );
+    console.log("updatedText: %s", JSON.stringify(Object.keys(updatedText)));
+    console.log("author: %s", JSON.stringify(author));
     const updatedCase = getUpdatedCase(user, params, newCase, oldCase);
-    console.warn("updatedCase: %s", JSON.stringify(updatedCase));
+    // console.warn(
+    //   "updatedCase before updating db: %s",
+    //   JSON.stringify(updatedCase)
+    // );
     if (updatedText) {
       await db.tx("update-case", t => {
         return t.batch([
@@ -351,29 +370,20 @@ async function updateCase(req, res) {
         ]);
       });
     } else {
-      /*
-        TODO: fix this transaction
-        this transaction returns this error even when an original_language
-        key is passed from the client
-
-        error: Exception in PUT /case/5239 => BatchError {
-          stat: { total: 2, succeeded: 1, failed: 1, duration: 7652 }
-            errors: [
-              0: Error: Property 'original_language' doesn't exist.
-
-      */
-      // await db.tx("update-case", t => {
-      //   return t.batch([
-      //     t.none(UPDATE_CASE, updatedCase),
-      //     t.none("REFRESH MATERIALIZED VIEW search_index_en;")
-      //   ]);
-      // });
+      await db.tx("update-case", t => {
+        return t.batch([
+          t.none(UPDATE_CASE, updatedCase),
+          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+        ]);
+      });
     }
 
     // the client expects this request to respond with json
     // save successful response
+    console.log("Params for returning case: %s", JSON.stringify(params));
     res.status(200).json({
-      OK: true
+      OK: true,
+      object: await getCase(params)
     });
   } catch (error) {
     log.error(
@@ -418,12 +428,17 @@ async function updateCase(req, res) {
  *
  */
 
-router.get("/:thingid/", async (req, res) => {
-  /* This is the entry point for getting an article */
-  const params = parseGetParams(req, "case");
+async function getCase(params) {
   const articleRow = await db.one(CASE_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
+  return article;
+}
+
+router.get("/:thingid/", async (req, res) => {
+  /* This is the entry point for getting an article */
+  const params = parseGetParams(req, "case");
+  const article = await getCase(params);
   const staticTextFromDB = await db.one(CASE_VIEW_STATIC, params);
   const staticText = Object.assign({}, staticTextFromDB, articleText);
   returnByType(res, params, article, staticText, req.user);
@@ -432,9 +447,7 @@ router.get("/:thingid/", async (req, res) => {
 router.get("/:thingid/edit", async (req, res) => {
   const params = parseGetParams(req, "case");
   params.view = "edit";
-  const articleRow = await db.one(CASE_EDIT_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+  const article = await getCase(params);
   const staticResults = await db.one(CASE_EDIT_STATIC, params);
   let staticText = staticResults.static;
   const authorsResult = await db.one(

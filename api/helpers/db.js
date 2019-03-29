@@ -96,12 +96,22 @@ function attachment(att) {
 
 function asUrl(value) {
   if (!value) {
-    return null;
+    return "";
   }
   if (isObject(value)) {
-    console.error("Expecting URL, received: %s", JSON.stringify(value));
+    console.error("Expecting URL, received: %s", value);
+    throw new Error("Not a URL: " + value);
+    return "";
   }
-  return as.text(new URL(value).href);
+  try {
+    if (!value.startsWith("http")) {
+      value = process.env.ASSETS_URL + value;
+    }
+    return as.text(new URL(value).href);
+  } catch (e) {
+    console.error("Expected URL, received: %s", JSON.stringify(value));
+    throw e;
+  }
 }
 
 function urls(urlList) {
@@ -132,9 +142,18 @@ function casekey(group, str) {
 }
 
 function casekeys(group, strList) {
-  return as.array(
-    uniq((strList || []).map(k => casekey(group, k)).filter(x => !!x))
-  );
+  try {
+    return as.array(
+      uniq((strList || []).map(k => casekey(group, k)).filter(x => !!x))
+    );
+  } catch (e) {
+    console.error(
+      "Attempting to convert and filter a list of keys for %s, but got %s for the list",
+      group,
+      JSON.stringify(strList)
+    );
+    throw e;
+  }
 }
 
 function tagkey(str) {
@@ -233,6 +252,11 @@ function text(value) {
   return pgp.as.text(value || "");
 }
 
+function richtext(value) {
+  // FIXME: only allow white-listed HTML
+  return text(value);
+}
+
 const as = Object.assign({}, pgp.as, {
   boolean,
   author,
@@ -249,6 +273,7 @@ const as = Object.assign({}, pgp.as, {
   strings,
   casekey,
   casekeys,
+  richtext,
   tagkeys,
   text,
   url: asUrl,
