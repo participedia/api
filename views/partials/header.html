@@ -19,13 +19,11 @@
         </li>
         <li>
           {{#if req.user}}
-          <a href="/user/{{req.user.id}}" class="button button-dark-grey">
-            Profile
-          </a>
+            <a href="/user/{{req.user.id}}" class="button button-dark-grey">
+              Profile
+            </a>
           {{else}}
-          <button type="button" class="button button-dark-grey js-login-button">
-            Login
-          </button>
+            <a href="/login" class="button button-dark-grey">Login</a>
           {{/if}}
         </li>
         <li>
@@ -64,24 +62,27 @@
       </li>
       <li>
         {{#if req.user}}
-        <a href="/user/{{req.user.id}}" class="header-profile-link">
-          <span class="sr-only">goto profile</span>
-          <div class="user-profile-image-initial">
-            {{getInitials req.user.name}}
+          <div class="profile-dropdown-button-container js-profile-dropdown-button-container">
+            <button class="button button-with-icon profile-dropdown-button-trigger js-profile-dropdown-button-trigger">
+              <div class="header-user-profile-image-initial user-profile-image-initial">
+                {{getInitials req.user.name}}
+              </div>
+              {{#if (getGravatarUrl req.user.email)}}
+                <img
+                  src="{{getGravatarUrl req.user.email}}?s=40&d=blank"
+                  alt="profile_picture"
+                  width="40"
+                  height="40"
+                />
+              {{/if}}
+            </button>
+            <div class="profile-dropdown-button-items js-profile-dropdown-button-items">
+              <a href="/user/{{req.user.id}}">Profile</a>
+              <a href="/logout">Sign out</a>
+            </div>
           </div>
-          {{#if (getGravatarUrl req.user.email)}}
-            <img
-              src="{{getGravatarUrl req.user.email}}?s=40&d=blank"
-              alt="profile_picture"
-              width="40"
-              height="40"
-            />
-          {{/if}}
-        </a>
         {{else}}
-        <button type="button" class="button button-dark-grey js-login-button">
-          Login
-        </button>
+          <a href="/login" class="button button-dark-grey">Login</a>
         {{/if}}
       </li>
     </ul>

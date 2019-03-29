@@ -1,3 +1,5 @@
+import { xhrReq } from "./utils/utils.js";
+
 const bookmarkButtons = {
   init() {
     const bookmarkButtons = Array.prototype.slice.call(
@@ -15,23 +17,24 @@ const bookmarkButtons = {
   },
 
   toggleBookmark(addOrDelete, linkEl, isBookmarked, thingid, bookmarkType) {
-    const errorCodes = [500, 400, 401];
-    const request = new XMLHttpRequest();
     let action = "POST";
     if (addOrDelete === "delete") {
       action = "DELETE";
     }
-    request.open(action, `/bookmark/${addOrDelete}`, true);
-    request.onreadystatechange = () => {
-      if (request.readyState === 4 && errorCodes.includes(request.status)) {
-        console.error("error: " + request.responseText)
-      } else if (request.readyState === 4) {
-        // success, toggle data attribute to update icon style
-        linkEl.setAttribute("data-bookmarked", !isBookmarked);
+    const successCB = (request) => {
+      linkEl.setAttribute("data-bookmarked", !isBookmarked);
+    }
+    const errorCB = (request) => {
+      if (request.status === 401) {
+        // if unauthorized error, redirect to login
+        location.href = `${location.origin}/login`;
+      } else {
+        alert("Sorry, something went wrong.");
       }
-    };
-    request.setRequestHeader('Content-Type', 'application/json')
-    request.send(JSON.stringify({ thingid, bookmarkType }));
+    }
+    const data = JSON.stringify({ thingid, bookmarkType });
+    const url = `/bookmark/${addOrDelete}`;
+    xhrReq(action, url, data, successCB, errorCB);
   },
 
   handleLinkClick(e) {
@@ -42,14 +45,10 @@ const bookmarkButtons = {
     const bookmarkType = linkEl.getAttribute("data-type");
     const thingid = linkEl.getAttribute("data-thing-id");
 
-    if (window.isAuthenticated()) {
-      if (isBookmarked) {
-        this.toggleBookmark("delete", linkEl, isBookmarked, thingid, bookmarkType);
-      } else {
-        this.toggleBookmark("add", linkEl, isBookmarked, thingid, bookmarkType);
-      }
+    if (isBookmarked) {
+      this.toggleBookmark("delete", linkEl, isBookmarked, thingid, bookmarkType);
     } else {
-      window.webAuth.authorize();
+      this.toggleBookmark("add", linkEl, isBookmarked, thingid, bookmarkType);
     }
   },
 };

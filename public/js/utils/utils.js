@@ -20,6 +20,22 @@ function updateUrlParams(key, value) {
   history.pushState({}, "", `${basePath}?${newParamsString.slice(0, -1)}`);
 }
 
+function xhrReq(action, url, data = {}, successCB = null, errorCB = null) {
+  const errorCodes = [500, 400, 401];
+  const request = new XMLHttpRequest();
+  request.open(action, url, true);
+  request.onreadystatechange = () => {
+    if (request.readyState === 4 && errorCodes.includes(request.status)) {
+      if (errorCB) errorCB(request);
+    } else if (request.readyState === 4) {
+      if (successCB) successCB(request);
+    }
+  };
+  request.setRequestHeader('Content-Type', 'application/json')
+  request.send(data);
+}
+
 export {
   updateUrlParams,
+  xhrReq,
 }
