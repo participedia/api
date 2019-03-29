@@ -8,9 +8,17 @@ const languageSelect = {
   },
 
   handleSelectChange(e) {
-    // set locale cookie and reload page
+    // set locale cookie
     document.cookie = `locale=${e.target.value}`;
-    location.href = location.href;
+
+    // if location.href has a `#` at the end, remove it, b/c otherwise the page won't be reloaded
+    let url = location.href;
+    if (url.indexOf("#") === url.length - 1) {
+      url = url.substring(0, url.length - 1);
+    }
+
+    // reload page
+    location.href = url;
   }
 }
 
