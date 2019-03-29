@@ -186,6 +186,8 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "evaluation_reports",
     "evaluation_links"
   ].map(key => {
+    console.log("media list: %s", key);
+    console.log(newCase[key]);
     return (updatedCase[key] = as.media(newCase[key]));
   });
   // photos are slightly different from other media as they have a source url too
