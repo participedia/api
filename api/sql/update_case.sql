@@ -8,13 +8,13 @@ SET
 -- automatic
   updated_date = 'now',
 -- media lists
-  full_files = ${files:raw},
-  full_links = ${links:raw},
-  full_videos = ${videos:raw},
-  audio = ${audio:raw},
-  photos = ${photos:raw},
-  evaluation_reports = ${evaluation_reports:raw},
-  evaluation_links = ${evaluation_links:raw},
+  full_files = ${files},
+  full_links = ${links},
+  full_videos = ${videos},
+  audio = ${audio},
+  photos = ${photos},
+  evaluation_reports = ${evaluation_reports},
+  evaluation_links = ${evaluation_links},
 -- boolean
   ongoing = ${ongoing},
   staff = ${staff},
@@ -25,16 +25,16 @@ SET
 -- number
   number_of_participants = ${number_of_participants},
 -- plain text
-  location_name = ${location_name:raw},
-  address1 = ${address1:raw},
-  address2 = ${address2:raw},
-  city = ${city:raw},
-  province = ${province:raw},
-  postal_code = ${postal_code:raw},
-  country = ${country:raw},
-  latitude = ${latitude:raw},
-  longitude = ${longitude:raw},
-  funder = ${funder:raw},
+  location_name = ${location_name},
+  address1 = ${address1},
+  address2 = ${address2},
+  city = ${city},
+  province = ${province},
+  postal_code = ${postal_code},
+  country = ${country},
+  latitude = ${latitude},
+  longitude = ${longitude},
+  funder = ${funder},
 -- dates
   start_date = ${start_date},
   end_date = ${end_date},
@@ -44,7 +44,7 @@ SET
 -- list of ids
   specific_methods_tools_techniques = ${specific_methods_tools_techniques:raw},
 -- key
-  scope_of_influence = ${scope},
+  scope_of_influence = ${scope_of_influence},
   public_spectrum = ${public_spectrum},
   legality = ${legality},
   facilitator_training = ${facilitator_training},

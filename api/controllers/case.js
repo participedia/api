@@ -186,12 +186,12 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "evaluation_reports",
     "evaluation_links"
   ].map(key => {
-    console.log("media list: %s", key);
-    console.log(newCase[key]);
-    return (updatedCase[key] = as.media(newCase[key]));
+    updatedCase[key] = as.media(newCase[key]);
   });
-  // photos are slightly different from other media as they have a source url too
-  updatedCase.photos = as.photos(newCase.photos);
+  // photos and files are slightly different from other media as they have a source url too
+  ["photos", "files"].map(
+    key => (updatedCase[key] = as.sourcedMedia(newCase[key]))
+  );
   // boolean (would include "published" but we don't really support it)
   ["ongoing", "staff", "volunteers"].map(
     key => (updatedCase[key] = as.boolean(newCase[key]))
@@ -217,7 +217,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "latitude",
     "longitude",
     "funder"
-  ].map(key => (updatedCase[key] = as.text(newCase[key])));
+  ].map(key => (updatedCase[key] = newCase[key]));
   // date
   ["start_date", "end_date", "post_date"].map(
     key => (updatedCase[key] = as.date(newCase[key]))
@@ -232,7 +232,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   );
   // key
   [
-    "scope",
+    "scope_of_influence",
     "public_spectrum",
     "legality",
     "facilitators",
@@ -241,7 +241,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "open_limited",
     "recruitment_method",
     "time_limited"
-  ].map(key => (updatedCase[key] = as.casekey(newCase[key])));
+  ].map(key => (updatedCase[key] = as.casekey(key, newCase[key])));
   // list of keys
   [
     "general_issues",
@@ -355,13 +355,18 @@ async function updateCase(req, res) {
       req,
       res
     );
-    console.log("updatedText: %s", JSON.stringify(Object.keys(updatedText)));
-    console.log("author: %s", JSON.stringify(author));
+    // console.log("updatedText: %s", JSON.stringify(Object.keys(updatedText)));
+    // console.log("author: %s", JSON.stringify(author));
     const updatedCase = getUpdatedCase(user, params, newCase, oldCase);
     // console.warn(
     //   "updatedCase before updating db: %s",
     //   JSON.stringify(updatedCase)
     // );
+    Object.keys(updatedCase)
+      .sort()
+      .forEach(key =>
+        console.log("updated %s => <| %s |>", key, updatedCase[key])
+      );
     if (updatedText) {
       await db.tx("update-case", t => {
         return t.batch([

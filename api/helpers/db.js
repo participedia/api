@@ -107,6 +107,7 @@ function asUrl(value) {
     if (!value.startsWith("http")) {
       value = process.env.ASSETS_URL + value;
     }
+    // return new URL(value).href;
     return as.text(new URL(value).href);
   } catch (e) {
     console.error("Expected URL, received: %s", JSON.stringify(value));
@@ -118,7 +119,12 @@ function urls(urlList) {
   return as.array(uniq((urlList || []).map(asUrl).filter(x => !!x)));
 }
 
-const id = integer;
+function id(obj) {
+  if (!obj) {
+    return null;
+  }
+  return as.integer(obj.id);
+}
 
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
@@ -134,37 +140,62 @@ function strings(strList) {
   //  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
 }
 
-function casekey(group, str) {
-  if (str && dbcasekeys.includes(`${group}_${str}`)) {
-    return str;
+function casekey(group, obj) {
+  if (group === undefined) {
+    throw new Error("Group cannot be undefined");
+  }
+  if (obj === undefined) {
+    throw new Error("Object cannot be undefined for group " + group);
+  }
+  if (obj.key === undefined) {
+    throw new Error("Key cannot be undefined for group " + group);
+  }
+  //  if (dbcasekeys.includes(`${group}_${obj.key}`)) {
+  // FIXME: Need to re-add validation that key is legal for this field
+  if (obj.key.length > 0) {
+    return text(obj.key);
   }
   return "";
 }
 
-function casekeys(group, strList) {
+function casekeys(group, objList) {
+  if (group === undefined) {
+    throw new Error("Group cannot be undefined");
+  }
+  if (objList === undefined) {
+    throw new Error("objList cannot be undefined for group " + group);
+  }
   try {
     return as.array(
-      uniq((strList || []).map(k => casekey(group, k)).filter(x => !!x))
+      uniq((objList || []).map(k => casekey(group, k)).filter(x => !!x))
     );
   } catch (e) {
     console.error(
       "Attempting to convert and filter a list of keys for %s, but got %s for the list",
       group,
-      JSON.stringify(strList)
+      JSON.stringify(objList)
     );
     throw e;
   }
 }
 
-function tagkey(str) {
-  if (str && dbtagkeys.includes(str)) {
-    return text(str);
+function tagkey(obj) {
+  if (obj === undefined) {
+    throw new Error("Object cannot be undefined for tag");
+  }
+  if (obj.key === undefined) {
+    throw new Error("Key cannot be undefined for tag");
+  }
+  if (dbtagkeys.includes(obj.key)) {
+    return text(obj.key);
+  } else {
+    console.warn("failed tag: %s", obj.key);
   }
   return null;
 }
 
-function tagkeys(strList) {
-  return as.array(uniq((strList || []).map(tagkey).filter(x => !!x)));
+function tagkeys(objList) {
+  return as.array(uniq((objList || []).map(tagkey).filter(x => !!x)));
 }
 
 function localed(strList) {
@@ -186,30 +217,54 @@ function attachments(attList) {
 }
 
 function aMedium(obj) {
-  if (!obj.link) return null;
-  return {
-    link: asUrl(obj.link),
-    attribution: as.text(obj.attribution),
-    title: as.text(obj.title)
-  };
+  if (!obj.url) return null;
+  return [
+    '"(',
+    asUrl(obj.url),
+    ",",
+    // attribution: obj.attribution,
+    as.text(obj.attribution),
+    ",",
+    // title: obj.title
+    as.text(obj.title),
+    ')"'
+  ].join("");
 }
 
-function aPhoto(obj) {
+function aSourcedMedia(obj) {
   if (!obj.url) return null;
-  return {
-    url: asUrl(obj.url),
-    source_url: asUrl(obj.link),
-    attribution: as.text(obj.attribution),
-    title: as.text(obj.title)
-  };
+  return [
+    '"(',
+    asUrl(obj.url),
+    ",",
+    asUrl(obj.source_url),
+    ",",
+    // attribution: obj.attribution,
+    as.text(obj.attribution),
+    ",",
+    // title: obj.title
+    as.text(obj.title),
+    ')"'
+  ].join("");
+  // if (!obj.url) return null;
+  // return {
+  //   url: asUrl(obj.url),
+  //   source_url: asUrl(obj.link),
+  //   attribution: as.text(obj.attribution),
+  //   title: as.text(obj.title)
+  // };
+}
+
+function simpleArray(values) {
+  return "{" + values.join(",") + "}";
 }
 
 function media(mediaList) {
-  return as.array((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
+  return simpleArray((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
 }
 
-function photos(photoList) {
-  return as.array((photoList || []).map(aPhoto).filter(x => !!x)); // remove nulls
+function sourcedMedia(photoList) {
+  return simpleArray((photoList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
 }
 
 function boolean(value) {
@@ -269,7 +324,7 @@ const as = Object.assign({}, pgp.as, {
   localed,
   media,
   number,
-  photos,
+  sourcedMedia,
   strings,
   casekey,
   casekeys,
