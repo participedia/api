@@ -19,6 +19,8 @@ const researchStaticText = require("./static-text/research-static-text.js");
 const teachingStaticText = require("./static-text/teaching-static-text.js");
 const contentTypesText = require("./static-text/content-types-static-text.js");
 
+const { getUserOrCreateUser } = require("./api/helpers/user.js");
+
 // config express-session
 const sess = {
   secret: "THIS IS A RANDOM KEY",
@@ -58,8 +60,10 @@ passport.serializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function (user, done) {
-  done(null, user);
+passport.deserializeUser(async function (user, done) {
+  // get db user from auth0 user data
+  const dbUser = await getUserOrCreateUser(user._json);
+  done(null, dbUser);
 });
 
 // Perform the login, after login Auth0 will redirect to callback
@@ -160,11 +164,6 @@ let bodyParser = require("body-parser");
 let methodOverride = require("method-override");
 let cors = require("cors");
 let isUser = require("./api/middleware/isUser");
-const {
-  checkJwtRequired,
-  checkJwtOptional
-} = require("./api/helpers/checkJwt");
-let { ensureUser, preferUser } = require("./api/helpers/user");
 
 app.set("port", port);
 app.use(express.static("public", { index: false }));
@@ -174,11 +173,6 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cookieParser());
-// handle expired login tokens more gracefully
-app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
-app.use(
-  preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
-);
 app.use(errorhandler());
 
 const apicache = require("apicache");
@@ -222,16 +216,5 @@ app.get("/content-chooser", function(req, res) {
     static: staticText
   });
 });
-
-app.use("/s3/:path", checkJwtRequired);
-app.use(
-  "/s3",
-  require("react-dropzone-s3-uploader/s3router")({
-    bucket: "uploads.participedia.xyz",
-    region: "us-east-1", // optional
-    headers: { "Access-Control-Allow-Origin": "*" }, // optional
-    ACL: "private" // this is default
-  })
-);
 
 module.exports = app;

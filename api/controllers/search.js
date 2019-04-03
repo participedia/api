@@ -155,7 +155,7 @@ router.get("/", async function(req, res) {
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
       language: lang,
-      userId: req.user ? req.user.user_id : null
+      userId: req.user ? req.user.id : null
     });
     const total = Number(
       results.length ? results[0].total || results.length : 0
