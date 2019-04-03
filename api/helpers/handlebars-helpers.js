@@ -360,6 +360,7 @@ module.exports = {
   // user profile
   getInitials(username) {
     if (!username) return;
+
     let initials = "";
     const splitUsername = username.split(" ");
 

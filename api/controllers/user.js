@@ -111,16 +111,15 @@ router.get("/:userId", async function(req, res) {
 });
 
 router.get("/:userId/edit", requireAuthenticatedUser(), async function(req, res) {
+  // if user is not owner of this profile, redirect to profile view
+  if (req.user.id !== parseInt(req.params.userId)) {
+    return res.redirect(`/user/${req.params.userId}`);
+  }
+  
   try {
-    // check if logged in user id is the same as this profile id
-    if (parseInt(req.user.id) === parseInt(req.params.userId)) {
-      const data = await getUserById(req.params.userId, req, res, "edit");
-      // return html template
-      res.status(200).render(`user-edit`, data);
-    } else {
-      // if it's not the logged in user's profile, then redirect to homepage
-      res.redirect("/");
-    }
+    const data = await getUserById(req.params.userId, req, res, "edit");
+    // return html template
+    res.status(200).render(`user-edit`, data);
   } catch (error) {
     console.error("Problem in /user/:userId/edit");
     console.trace(error);
@@ -163,17 +162,23 @@ router.get("/", async function(req, res) {
  *
  */
 router.post("/", async function(req, res) {
+  // make sure we have a logged in user
+  if (!req.user) {
+    return res.status(401).json({ error: "You must be logged in to perform this action." });
+  }
+
+  // make sure profile is logged in user's profile
+  if (req.user.id !== parseInt(req.body.id)) {
+    return res.status(401)
+      .json({ error: "The user doesn't have permission to perform this operation." });
+  }
+
   try {
     let user = req.body;
-    let pictureUrl = user.picture_url || user.picture;
-    if (user.user_metadata && user.user_metadata.customPic) {
-      pictureUrl = user.user_metadata.customPic;
-    }
+
     await db.none(UPDATE_USER, {
-      id: user.id,
+      id: parseInt(user.id),
       name: user.name,
-      language: req.params.language || "en",
-      picture_url: pictureUrl,
       bio: user.bio || ""
     });
     res.status(200).json({ OK: true });
