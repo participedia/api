@@ -27,6 +27,8 @@ const {
   fixUpURLs
 } = require("../helpers/things");
 
+const secured = require("../middleware/secured");
+
 const articleText = require("../../static-text/article-text.js");
 
 /**
@@ -430,7 +432,7 @@ router.get("/:thingid/", async (req, res) => {
   returnByType(res, params, article, staticText, req.user);
 });
 
-router.get("/:thingid/edit", async (req, res) => {
+router.get("/:thingid/edit", secured(), async (req, res) => {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const articleRow = await db.one(CASE_EDIT_BY_ID, params);
