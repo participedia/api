@@ -214,5 +214,10 @@
   "Quick Submit": "Quick Submit",
   "close menu": "close menu",
   "open menu": "open menu",
-  "Newsletter Sign Up": "Newsletter Sign Up"
+  "Newsletter Sign Up": "Newsletter Sign Up",
+  "Supporters": "Supporters",
+  "about.supporters.p1": "Participedia is currently supported by the %sSocial Sciences and Humanities Research Council of Canada%s (SSHRC) through a five-year Partnership Grant beginning in April 2015.",
+  "about.supporters.p2": "The Design & technology Team operates out of the %sStudio for Extensive Aesthetics%s at Emily Carr University of Art & Design, and is supported by the %sCanada Research Chairs Program%sand the %sCanada Foundation for Innovation%s.",
+  "about.supporters.p3": "Translation management software for this website is provided by %sPhraseApp%s.",
+  "about.supporters.p4": "The project was previously funded by a two-year SSHRC Partnership Grant from April 2011-2013. And, an earlier version of the Participedia website included a prototype for German language functionality, developed under the generous support of the %sBertelsmann Foundation%s in 2012."
 }

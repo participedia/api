@@ -47,14 +47,42 @@
       {{/each}}
     {{/accordion}}
 
-    {{#> accordion title=(t static "Supporters")}}
-      <p>Participedia is currently supported by the <a href="http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx" target="_blank">Social Sciences and Humanities Research Council of Canada</a> (SSHRC) through a five-year Partnership Grant beginning in April 2015.</p>
+    {{#> accordion title=(t "Supporters")}}
+      <p>
+        {{{__
+          "about.supporters.p1"
+          "<a href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx' target='_blank'>"
+          "</a>"
+        }}}
+      </p>
 
-      <p>The Design & technology Team operates out of the <a href="https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology" target="_blank">Studio for Extensive Aesthetics</a> at Emily Carr University of Art & Design, and is supported by the <a href="http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx" target="_blank">Canada Research Chairs Program</a> and the <a href="https://www.innovation.ca/">Canada Foundation for Innovation</a>.</p>
+      <p>
+        {{{__
+          "about.supporters.p2"
+          "<a href='https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology' target='_blank'>"
+          "</a>"
+          "<a href='http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx' target='_blank'>"
+          "</a>"
+          "<a href='https://www.innovation.ca/'>"
+          "</a>"
+        }}}
+      </p>
 
-      <p>Translation management software for this website is provided by <a href="https://phraseapp.com" target="_blank">PhraseApp</a>.</p>
+      <p>
+        {{{__
+          "about.supporters.p3"
+          "<a href='https://phraseapp.com' target='_blank'>"
+          "</a>"
+        }}}
+      </p>
 
-      <p>The project was previously funded by a two-year SSHRC Partnership Grant from April 2011-2013. And, an earlier version of the Participedia website included a prototype for German language functionality, developed under the generous support of the <a href="http://www.bfna.org/" target="_blank">Bertelsmann Foundation</a> in 2012.</p>
+      <p>
+        {{{__
+           "about.supporters.p4"
+           "<a href='http://www.bfna.org/' target='_blank'>"
+           "</a>"
+         }}}
+      </p>
     {{/accordion}}
 
     {{#> accordion title=(t "Staff")}}
