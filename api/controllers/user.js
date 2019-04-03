@@ -5,7 +5,7 @@ let cache = require("apicache");
 let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
 const staticTextToBeAdded = require("../locales/en.js");
-const secured = require("../middleware/secured");
+const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
 async function getStaticText(language) {
   // merge localized text from the db with the keys that need to be added.
@@ -110,11 +110,17 @@ router.get("/:userId", async function(req, res) {
   }
 });
 
-router.get("/:userId/edit", secured(), async function(req, res) {
+router.get("/:userId/edit", requireAuthenticatedUser(), async function(req, res) {
   try {
-    const data = await getUserById(req.params.userId, req, res, "edit");
-    // return html template
-    res.status(200).render(`user-edit`, data);
+    // check if logged in user id is the same as this profile id
+    if (parseInt(req.user.id) === parseInt(req.params.userId)) {
+      const data = await getUserById(req.params.userId, req, res, "edit");
+      // return html template
+      res.status(200).render(`user-edit`, data);
+    } else {
+      // if it's not the logged in user's profile, then redirect to homepage
+      res.redirect("/");
+    }
   } catch (error) {
     console.error("Problem in /user/:userId/edit");
     console.trace(error);

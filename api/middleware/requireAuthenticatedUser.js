@@ -1,5 +1,5 @@
 module.exports = function () {
-  return function secured (req, res, next) {
+  return function requireAuthenticatedUser (req, res, next) {
     if (req.user) { return next(); }
     req.session.returnTo = req.originalUrl;
     res.redirect('/login');
