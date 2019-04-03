@@ -1,10 +1,10 @@
 UPDATE users SET
   (
-    name, picture_url, bio
+    name, bio
   )
 =
   (
-    ${name}, ${picture_url}, ${bio}
+    ${name}, ${bio}
   )
-  WHERE users.id = ${id}
+  WHERE id = ${id}
   ;
