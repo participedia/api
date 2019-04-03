@@ -362,35 +362,35 @@ async function updateCase(req, res) {
     //   "updatedCase before updating db: %s",
     //   JSON.stringify(updatedCase)
     // );
-    Object.keys(updatedCase)
-      .sort()
-      .forEach(key =>
-        console.log("updated %s => <| %s |>", key, updatedCase[key])
-      );
+    // Object.keys(updatedCase)
+    //   .sort()
+    //   .forEach(key =>
+    //     console.log("updated %s => <| %s |>", key, updatedCase[key])
+    //   );
     if (updatedText) {
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_CASE, updatedCase),
-          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+          t.none(UPDATE_CASE, updatedCase)
+          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     } else {
       await db.tx("update-case", t => {
         return t.batch([
-          t.none(UPDATE_CASE, updatedCase),
-          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+          t.none(UPDATE_CASE, updatedCase)
+          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     }
 
     // the client expects this request to respond with json
     // save successful response
-    console.log("Params for returning case: %s", JSON.stringify(params));
+    // console.log("Params for returning case: %s", JSON.stringify(params));
     res.status(200).json({
       OK: true,
-      object: await getCase(params)
+      article: await getCase(params)
     });
   } catch (error) {
     log.error(

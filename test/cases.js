@@ -60,11 +60,11 @@ describe("Cases", () => {
         err.should.have.status(400);
       }
     });
-    it.only("works with authentication", async () => {
+    it("works with authentication", async () => {
       const res = await addBasicCase();
       res.should.have.status(200);
       res.body.OK.should.be.true;
-      let returnedCase = res.body.object;
+      let returnedCase = res.body.article;
       returnedCase.id.should.be.a("number");
       console.log("returned case:\n%s", JSON.stringify(returnedCase, null, 4));
       returnedCase.videos.length.should.equal(2);
@@ -73,18 +73,7 @@ describe("Cases", () => {
 
   it("test SQL santization", async () => {
     const res = await addBasicCase();
-    res.should.have.status(201);
-  });
-
-  describe("Counting by country", () => {
-    it("returns stuff", async () => {
-      const res = await chai
-        .getJSON("/case/countsByCountry?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token);
-      let countryCounts = res.body.data.countryCounts;
-      countryCounts.should.have.property("france");
-      res.should.have.status(200);
-    });
+    res.should.have.status(200);
   });
 
   describe("Get case with authentication", () => {
@@ -102,50 +91,50 @@ describe("Cases", () => {
   });
 
   describe("Test edit API", () => {
-    it("Add case, then modify title and/or body", async () => {
+    it.only("Add case, then modify title and/or body", async () => {
       const res1 = await addBasicCase();
-      res1.should.have.status(201);
+      res1.should.have.status(200);
       res1.body.OK.should.be.true;
-      res1.body.data.thingid.should.be.a("number");
-      const origCase = res1.body.object;
+      res1.body.article.id.should.be.a("number");
+      const origCase = res1.body.article;
       origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.thingid);
+      origCase.id.should.equal(res1.body.article.id);
       const res2 = await chai
-        .putJSON("/case/" + res1.body.data.thingid + "?returns=json")
+        .postJSON("/case/" + res1.body.article.id + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Second Title" });
       res2.should.have.status(200);
-      const updatedCase1 = res2.body.data;
+      const updatedCase1 = res2.body.article;
       updatedCase1.title.should.equal("Second Title");
       updatedCase1.body.should.equal("First Body");
       const res3 = await chai
-        .putJSON("/case/" + res1.body.data.thingid + "?returns=json")
+        .postJSON("/case/" + res1.body.article.id + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ body: "Second Body" });
       res3.should.have.status(200);
-      const updatedCase2 = res3.body.data;
+      const updatedCase2 = res3.body.article;
       updatedCase2.title.should.equal("Second Title");
       updatedCase2.body.should.equal("Second Body");
       const res4 = await chai
-        .putJSON("/case/" + res1.body.data.thingid + "?returns=json")
+        .postJSON("/case/" + res1.body.article.id + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" });
       res4.should.have.status(200);
-      const updatedCase3 = res4.body.data;
+      const updatedCase3 = res4.body.article;
       updatedCase3.title.should.equal("Third Title");
       updatedCase3.body.should.equal("Third Body");
     });
 
     it("Add case, then modify some fields", async () => {
       const res1 = await addBasicCase();
-      res1.should.have.status(201);
+      res1.should.have.status(200);
       res1.body.OK.should.be.true;
-      res1.body.data.thingid.should.be.a("number");
-      const origCase = res1.body.object;
+      res1.body.article.id.should.be.a("number");
+      const origCase = res1.body.article;
       origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.data.thingid);
+      origCase.id.should.equal(res1.body.article.id);
       const res2 = await chai
-        .putJSON("/case/" + res1.body.data.thingid)
+        .postJSON("/case/" + res1.body.article.id)
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ issues: ["new issue"] });
       res2.should.have.status(200);
@@ -155,12 +144,12 @@ describe("Cases", () => {
 
     it("Add case, then modify lead image", async () => {
       const res1 = await addBasicCase();
-      res1.should.have.status(201);
+      res1.should.have.status(200);
       res1.body.OK.should.be.true;
-      const case1 = res1.body.data;
+      const case1 = res1.body.article;
       case1.photos.should.deep.equal(["CitizensAssembly_2.jpg"]);
       const res2 = await chai
-        .putJSON("/case/" + case1.id + "?returns=json")
+        .postJSON("/case/" + case1.id + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ photos: ["foobar.jpg"] });
       res2.should.have.status(200);
@@ -170,7 +159,7 @@ describe("Cases", () => {
       case2.photos.should.deep.equal(["foobar.jpg"]);
       expect(case2.updated_date > case1.updated_date).to.be.true;
       const res3 = await chai
-        .putJSON("/case/" + case1.id + "?returns=json")
+        .postJSON("/case/" + case1.id + "?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ photos: ["howzaboutthemjpegs.png"] });
       res3.should.have.status(200);
@@ -184,15 +173,15 @@ describe("Cases", () => {
     let case1 = null;
     it("Add case, should not be bookmarked", async () => {
       const res1 = await addBasicCase();
-      res1.should.have.status(201);
+      res1.should.have.status(200);
       res1.body.OK.should.be.true;
-      case1 = res1.body.object;
+      case1 = res1.body.article;
       case1.bookmarked.should.be.false;
       const booked = await chai
         .postJSON("/bookmark/add?returns=json")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({ bookmarkType: "case", thingid: case1.id });
-      booked.should.have.status(201);
+      booked.should.have.status(200);
     });
     it("Not authenticated, bookmarked should be false", async () => {
       const res2 = await chai
@@ -229,9 +218,9 @@ describe("Cases", () => {
             "https://ocs-pl.oktawave.com/v1/AUTH_e1d5d90a-20b9-49c9-a9cd-33fc2cb68df3/mrgugu-products/20150901170519_1afZHYJgZTruGxEc_1000-1000.jpg"
           ]
         });
-      res.should.have.status(201);
+      res.should.have.status(200);
       res.body.OK.should.be.true;
-      const theCase = res.body.data;
+      const theCase = res.body.article;
       theCase.photos.should.have.lengthOf(2);
     });
   });
