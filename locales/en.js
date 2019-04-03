@@ -206,5 +206,13 @@
   "Particpedia on GitHub": "Particpedia on GitHub",
   "Particpedia on Facebook": "Particpedia on Facebook",
   "Participedia on Twitter": "Participedia on Twitter",
-  "Participedia on LinkedIn": "Participedia on LinkedIn"
+  "Participedia on LinkedIn": "Participedia on LinkedIn",
+  "Home": "Home",
+  "Login": "Login",
+  "Sign out": "Sign out",
+  "Profile": "Profile",
+  "Quick Submit": "Quick Submit",
+  "close menu": "close menu",
+  "open menu": "open menu",
+  "Newsletter Sign Up": "Newsletter Sign Up"
 }
