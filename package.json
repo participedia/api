@@ -75,7 +75,9 @@
     "prettier": "^1.15.3",
     "watchify": "^3.11.0"
   },
-  "pre-commit": [ "lintJSON" ],
+  "pre-commit": [
+    "lintJSON"
+  ],
   "scripts": {
     "heroku-postbuild": "npm run build",
     "start": "nodemon server.js",

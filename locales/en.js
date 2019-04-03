@@ -197,5 +197,14 @@
   "Project Manager": "Project Manager",
   "Communications & Knowledge Mobilization Committee": "Communications & Knowledge Mobilization Committee",
   "Teaching Training & Mentoring Committee": "Teaching Training & Mentoring Committee",
-  "Research Design Committee": "Research Design Committee"
+  "Research Design Committee": "Research Design Committee",
+  "About": "About",
+  "News": "News",
+  "footer.tagline": "A global community sharing knowledge and stories about public participation",
+  "Help & Contact": "Help & Contact",
+  "Terms of Use": "Terms of Use",
+  "Particpedia on GitHub": "Particpedia on GitHub",
+  "Particpedia on Facebook": "Particpedia on Facebook",
+  "Participedia on Twitter": "Participedia on Twitter",
+  "Participedia on LinkedIn": "Participedia on LinkedIn"
 }
