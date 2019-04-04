@@ -5,107 +5,37 @@ const {
   USER_BY_ID,
   CREATE_USER_ID
 } = require("../helpers/db");
-const log = require("winston");
-const { checkJwtRequired, checkJwtOptional } = require("./checkJwt");
-const unless = require("express-unless");
 
-async function preferUser(req, res, next) {
-  console.log("preferUser()");
-  try {
-    checkJwtOptional(req, res, (err, req_, res_, next_) =>
-      commonUserHandler(false, err, req, res, next)
-    );
-  } catch (err) {
-    console.error("Error in preferUser: %s", JSON.stringify(err));
-  }
-}
-
-async function ensureUser(req, res, next) {
-  console.log("ensureUser()");
-  try {
-    checkJwtRequired(req, res, (err, req_, res_, next_) =>
-      commonUserHandler(true, err, req, res, next)
-    );
-  } catch (err) {
-    console.error("Error in ensureUser: %s", JSON.stringify(err));
-  }
-}
-
-async function commonUserHandler(required, err, req, res, next) {
-  //  try {
-  if (required !== true && require !== false) {
-    console.log("is required actually an error? %s", JSON.stringify(required));
-  }
-  if (err) {
-    console.error(
-      "%s %s (%s) in commonUserHandler: %s",
-      err.status,
-      err.name,
-      err.code,
-      err.message
-    );
-  }
-  let user = req.user && req.user._json;
-
-  const language = as.value(req.params.language || "en");
-  if (!user) {
-    if (required) {
-      return res.status(401).json({
-        message: "User must be logged in to perform this function"
-      });
-    } else {
-      // nothing more we can do without a user
-      return next();
-    }
-  }
-  if (required && !okToEdit(user)) {
-    res.status(401).json({
-      message: "User is not authorized to add or edit content."
-    });
-  }
-  let userIdObj = await db.oneOrNone(USER_BY_EMAIL, {
-    userEmail: user.email
+async function getUserOrCreateUser(auth0User) {
+  // check if we have a user in our db
+  const userByEmail = await db.oneOrNone(USER_BY_EMAIL, {
+    userEmail: auth0User.email
   });
-  // get full user object
-  let userObj = null;
-  if (userIdObj) {
-    userObj = await db.oneOrNone(USER_BY_ID, {
-      userId: userIdObj.id,
-      language
+
+  // if we don't have a user yet, create one
+  let createdUser;
+  if (!userByEmail) {
+    createdUser = await db.one(CREATE_USER_ID, {
+      userEmail: auth0User.email,
+      // if auth0User.name is null, use first part of email address for username
+      userName: auth0User.name || auth0User.email.substr(0, auth0User.email.indexOf("@")),
+      joinDate: auth0User.created_at,
+      auth0UserId: auth0User.id,
+      bio: "",
+      language: "en",
     });
   }
-  if (userObj) {
-    req.user = userObj.user;
-  } else {
-    console.warn("no userObj found for %s", JSON.stringify(req.user));
-    let newUser;
-    let pictureUrl = user.picture;
-    if (user.user_metadata && user.user_metadata.customPic) {
-      pictureUrl = user.user_metadata.customPic;
-    }
-    newUser = await db.one(CREATE_USER_ID, {
-      userEmail: user.email,
-      // if user.name is null, use first part of email address for username
-      userName: user.name || user.email.substr(0, user.email.indexOf("@")),
-      joinDate: user.created_at,
-      // TODO: fix auth0UserId error
-      // this line was throwing an error for auth0UserId being undefined,
-      // so changed it to null for now
-      // auth0UserId: auth0UserId,
-      auth0UserId: null,
-      pictureUrl: pictureUrl,
-      bio: ""
-    });
-    req.user.user_id = newUser.user_id;
-  }
-  next();
-  //  } catch (error) {
-  //    console.trace("Problem creating user", JSON.stringify(error));
-  //    return res.status(500).json({
-  //      OK: false,
-  //      error: error
-  //    });
-  //  }
+
+  // we either have an id from userByEmail or createdUser
+  const userId = (userByEmail && userByEmail.id) || (createdUser && createdUser.user_id);
+
+  // get full user object by id
+  result = await db.oneOrNone(USER_BY_ID, {
+    userId: userId,
+    language: "en",
+  });
+
+  return result.user;
 }
 
 function okToEdit(user) {
@@ -128,11 +58,7 @@ function okToEdit(user) {
   return true;
 }
 
-ensureUser.unless = unless;
-preferUser.unless = unless;
-
 module.exports = exports = {
-  ensureUser,
-  preferUser,
-  okToEdit
+  okToEdit,
+  getUserOrCreateUser,
 };

@@ -5,6 +5,7 @@ let cache = require("apicache");
 let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
 const staticTextToBeAdded = require("../locales/en.js");
+const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
 async function getStaticText(language) {
   // merge localized text from the db with the keys that need to be added.
@@ -109,18 +110,12 @@ router.get("/:userId", async function(req, res) {
   }
 });
 
-router.get("/:userId/edit", async function(req, res) {
-  //if there is no logged in user, redirect to /login
-  if (!req.user) {
-    req.session.returnTo = req.originalUrl;
-    return res.redirect("/login");
-  }
-
+router.get("/:userId/edit", requireAuthenticatedUser(), async function(req, res) {
   // if user is not owner of this profile, redirect to profile view
   if (req.user.id !== parseInt(req.params.userId)) {
     return res.redirect(`/user/${req.params.userId}`);
   }
-
+  
   try {
     const data = await getUserById(req.params.userId, req, res, "edit");
     // return html template
