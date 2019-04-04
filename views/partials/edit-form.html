@@ -28,19 +28,19 @@
 
     <div class="edit-buttons">
       <button type="submit" class="button button-light-grey">
-        {{> icon-submit }} Publish
+        {{> icon-submit }} {{t "Publish"}}
       </button>
 
-      <a href="?full=1" class="button button-dark-grey quickonly">Do Full Version</a>
+      <a href="?full=1" class="button button-dark-grey quickonly">{{t "Do Full Version"}}</a>
     </div>
 
     <div class="something-missing-prompt">
-      <h3>Something Missing?</h3>
-      <p>Suggest edits to this form by email to <a target="_blank" href="mailto:info@participedia.net?subject=Suggested form edits - {{article.type}}">info@participedia.net</a></p>
+      <h3>{{t "Something Missing?"}}</h3>
+      <p>{{t "Suggest edits..."}} <a target="_blank" href="mailto:info@participedia.net?subject=Suggested form edits - {{article.type}}">info@participedia.net</a></p>
     </div>
 
     <button type="submit" class="button button-red floating-action-button" title="Publish">
-      <span class="sr-only">Publish Article</span>
+      <span class="sr-only">{{t "Publish"}}</span>
       {{> icon-submit }}
     </button>
   </form>

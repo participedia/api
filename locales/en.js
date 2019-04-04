@@ -258,5 +258,8 @@
   "faq_a10_p7": "QUOTES: womens rights will return items that have womens followed by rights",
   "faq_a10_p8": "PARENTHESES: (bicycle or rally) and (womens rights and UK) will will group logical operations inside the parentheses as a group before applying the operators joining groups",
   "faq_q11": "How do I access my bookmarked content?",
-  "faq_a11": "Visit your personal profile page to access your bookmarked content."
+  "faq_a11": "Visit your personal profile page to access your bookmarked content.",
+  "Do Full Version": "Do Full Version",
+  "Something Missing?": "Something Missing?",
+  "Suggest edits...": "Suggest edits to this form by email to"
 }
