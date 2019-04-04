@@ -1,23 +1,92 @@
 <div class="contact-help-faq-container js-contact-help-faq-container" data-view="list" style="display: none;">
   <div class="header">
     <button class="icon-only back-btn js-back">{{> icon-back-arrow}}</button>
-    <h3>Participedia Help</h3>
-    <button class="icon-only close-btn js-close">{{> icon-close}}</button>
+    <h3>{{t "Participedia Help"}}</h3>
+    <button class="icon-only close-btn js-close">
+      <span class="sr-only">{{t "close FAQ pop over"}}</span>
+      {{> icon-close}}
+    </button>
   </div>
   <div class="content-area js-content-area">
     <div class="contact">
-      <h3>Contact Us</h3>
-      <a href="mailto: info@participedia.net" class="js-mail-link">Email Support Team</a>
+      <h3>{{t "Contact Us"}}</h3>
+      <a href="mailto: info@participedia.net" class="js-mail-link">{{t "Email Support Team"}}</a>
     </div>
     <div class="faq-list js-faq-list">
-      <h3>FAQ</h3>
+      <h3>{{t "FAQ"}}</h3>
       <ul class="unstyled-list">
-        {{#each (getFaqContent)}}
-          <li>
-            <a href="#">{{q}}</a>
-            <div class="faq-answer js-faq-answer">{{{a}}}</div>
-          </li>
-        {{/each}}
+        {{#> faq-item
+          question=(t "faq_q1")
+        }}
+          {{t "faq_a1"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q2")
+        }}
+          {{t "faq_a2"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q3")
+        }}
+          {{t "faq_a3"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q4")
+        }}
+          {{t "faq_a4"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q5")
+        }}
+          {{t "faq_a5"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q6")
+        }}
+          {{t "faq_a6"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q7")
+        }}
+          {{t "faq_a7"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q8")
+        }}
+          {{t "faq_a8"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q9")
+        }}
+          {{t "faq_a9"}}
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q10")
+        }}
+          <p>{{t "faq_a10_p1"}}</p>
+          <p>{{t "faq_a10_p2"}}</p>
+          <p>{{t "faq_a10_p3"}}</p>
+          <p>{{t "faq_a10_p4"}}</p>
+          <p>{{t "faq_a10_p5"}}</p>
+          <p>{{t "faq_a10_p6"}}</p>
+          <p>{{t "faq_a10_p7"}}</p>
+          <p>{{t "faq_a10_p8"}}</p>
+        {{/faq-item}}
+
+        {{#> faq-item
+          question=(t "faq_q11")
+        }}
+          {{t "faq_a11"}}
+        {{/faq-item}}
       </ul>
     </div>
   </div>

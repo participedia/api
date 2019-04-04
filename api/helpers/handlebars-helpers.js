@@ -1,6 +1,5 @@
 const moment = require("moment");
 const md5 = require("js-md5");
-const faqContent = require("./faq-content.js");
 const aboutData = require("./data/about-data.js");
 const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
@@ -435,11 +434,6 @@ module.exports = {
 
   isUserView(req) {
     return req.baseUrl === "/user" && req.path.indexOf("edit") === -1;
-  },
-
-  getFaqContent() {
-    // todo: get this as translated text from the server
-    return faqContent;
   },
 
   toUpperCase(text) {
