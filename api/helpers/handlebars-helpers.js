@@ -1,7 +1,6 @@
 const moment = require("moment");
 const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
-const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
 
 function toTitleCase(str) {
@@ -462,10 +461,6 @@ module.exports = {
 
   getStaffMembers() {
     return aboutData.staff.members;
-  },
-
-  getContentTypeData() {
-    return contentTypesData;
   },
 
   getYearFromDate(date, format) {

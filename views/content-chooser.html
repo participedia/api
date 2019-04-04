@@ -2,15 +2,29 @@
   <h2>{{t "content_types.header"}}</h2>
 
   <ul class="unstyled-list">
-    {{#each (getContentTypeData)}}
-      <li>
-        <a href="/{{slug}}/new" class="button button-red button-block">
-          {{> icon-add}}
-          {{t ../static titleKey}}
+    <li>
+      <a href="/case/new" class="button button-red button-block">
+        {{> icon-add}}
+        {{t "Case"}}
 
-        </a>
-        <p>{{t ../static descriptionKey}}</p>
-      </li>
-    {{/each}}
+      </a>
+      <p>{{t "content_types.case.description"}}</p>
+    </li>
+    <li>
+      <a href="/method/new" class="button button-red button-block">
+        {{> icon-add}}
+        {{t "Method"}}
+
+      </a>
+      <p>{{t "content_types.method.description"}}</p>
+    </li>
+    <li>
+      <a href="/organization/new" class="button button-red button-block">
+        {{> icon-add}}
+        {{t "Organization"}}
+
+      </a>
+      <p>{{t "content_types.organization.description"}}</p>
+    </li>
   </ul>
 </div>
