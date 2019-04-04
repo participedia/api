@@ -1,31 +1,31 @@
 <div class="pagination">
   <div class="pagination-string">
-    {{paginationNumResults cards req}} results of {{totalResults}}
-    {{#if req.query.query}} for "{{req.query.query}}" {{/if}}
-    (page {{getCurrentPage req}} of {{totalPages}})
+    {{paginationNumResults cards req}} {{t "results of"}} {{totalResults}}
+    {{#if req.query.query}} {{t "for"}} "{{req.query.query}}" {{/if}}
+    ({{t "page"}} {{getCurrentPage req}} {{t "of"}} {{totalPages}})
   </div>
   <ul class="unstyled-list pagination-nav js-pagination-nav">
     <li>
       <a href="/?page=1" data-page-num="1" class="icon-only">
-        <span class="sr-only">first page</span>
+        <span class="sr-only">{{t "first page"}}</span>
         {{> icon-double-arrow-left}}
       </a>
     </li>
     <li>
       <a href="/?page={{getPrevPageNum req}}" data-page-num="{{getPrevPageNum req}}" class="icon-only">
-        <span class="sr-only">previous</span>
+        <span class="sr-only">{{t "previous"}}</span>
         {{> icon-arrow-left}}
       </a>
     </li>
     <li>
       <a href="/?page={{getNextPageNum req pages}}" data-page-num="{{getNextPageNum req pages}}" class="icon-only">
-        <span class="sr-only">next</span>
+        <span class="sr-only">{{t "next"}}</span>
         {{> icon-arrow-right}}
       </a>
     </li>
     <li>
       <a href="/?page={{pages}}" data-page-num="{{pages}}" class="icon-only">
-        <span class="sr-only">last page</span>
+        <span class="sr-only">{{t "last page"}}</span>
         {{> icon-double-arrow-right}}
       </a>
     </li>
