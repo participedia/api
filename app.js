@@ -34,12 +34,6 @@ const isUser = require("./api/middleware/isUser");
 
 const port = process.env.PORT || 3001;
 
-const {
-  checkJwtRequired,
-  checkJwtOptional
-} = require("./api/helpers/checkJwt");
-const { ensureUser, preferUser } = require("./api/helpers/user");
-
 // CONFIGS
 AWS.config.update({ region: "us-east-1" });
 app.use(compression());
@@ -51,11 +45,6 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cookieParser());
-// handle expired login tokens more gracefully
-app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
-app.use(
-  preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
-);
 app.use(errorhandler());
 
 i18n.expressBind(app, {
