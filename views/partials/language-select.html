@@ -1,11 +1,6 @@
 <select name="locale" class="footer-language-select js-footer-language-select">
-  <option value="">Select Language</option>
-  {{#each (getLanguageOptions)}}
-    <option
-      value="{{this.key}}"
-      {{#if (isSelectedLanguage this.key)}}selected{{/if}}
-    >
-      {{this.value}}
-    </option>
-  {{/each}}
+  <option value="">{{t "Select Language"}}</option>
+  {{> language-select-option key="en" value=(t "English")}}
+  {{> language-select-option key="fr" value=(t "French")}}
+  {{> language-select-option key="de" value=(t "German")}}
 </select>

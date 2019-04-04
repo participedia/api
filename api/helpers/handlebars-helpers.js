@@ -86,14 +86,6 @@ module.exports = {
     return context && context.data && context.data.root && context.data.root.__(key);
   },
 
-  getLanguageOptions: () => {
-    return [
-      { key: "en", value: "English" },
-      { key: "fr", value: "French" },
-      { key: "de", value: "German" },
-    ];
-  },
-
   isSelectedLanguage: (lang, context) => {
     if (context && context.data && context.data.root) {
       return lang === context.data.root.req.cookies.locale;

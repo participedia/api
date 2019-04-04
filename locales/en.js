@@ -286,5 +286,8 @@
   "grid view": "grid view",
   "list view": "list view",
   "Edit": "Edit",
-  "Source": "Source"
+  "Source": "Source",
+  "English": "English",
+  "French": "French",
+  "German": "German"
 }
