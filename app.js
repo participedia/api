@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const Auth0Strategy = require("passport-auth0");
-const i18n = require('i18n-2');
+const i18n = require('i18n');
 const apicache = require("apicache");
 const express = require("express");
 const compression = require("compression");
@@ -47,16 +47,15 @@ app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cookieParser());
 app.use(errorhandler());
 
-i18n.expressBind(app, {
+i18n.configure({
   locales: ["en", "fr", "de"],
-  defaultLocale: "en",
-  cookieName: "locale",
+  cookie: "locale",
+  extension: ".js",
+  directory: "./locales",
+  updateFiles: false,
 });
 
-app.use((req, res, next) => {
-  req.i18n.setLocaleFromCookie();
-  next();
-});
+app.use(i18n.init);
 
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
 
