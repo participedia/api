@@ -221,27 +221,4 @@ describe("Cases", () => {
       case3.bookmarked.should.be.true;
     });
   });
-  describe("More case creation tests", () => {
-    it("Create with array of URLs", async () => {
-      const res = await chai
-        .postJSON("/case/new?returns=json")
-        .set("Cookie", "token=" + tokens.user_token)
-        .send({
-          // mandatory
-          title: "First Title",
-          body: "First Body",
-          // optional
-          photos: [
-            "https://s-media-cache-ak0.pinimg.com/736x/3d/2b/bf/3d2bbfd73ccaf488ab88d298ab7bc2d8.jpg",
-            "https://ocs-pl.oktawave.com/v1/AUTH_e1d5d90a-20b9-49c9-a9cd-33fc2cb68df3/mrgugu-products/20150901170519_1afZHYJgZTruGxEc_1000-1000.jpg"
-          ]
-        });
-      res.should.have.status(200);
-      res.body.OK.should.be.true;
-      const theCase = res.body.article;
-      theCase.photos.should.have.lengthOf(2);
-    });
-  });
 });
-
-module.exports = { addBasicCase };

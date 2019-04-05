@@ -54,7 +54,7 @@ async function queryBookmarks(req, res) {
     let userid = as.number(req.params.userid);
 
     if (!userid) {
-      userid = req.user.user_id; // put there by preferUser
+      userid = req.user.id; // put there by preferUser
     }
     lookupBookmarksById(req, res, userid);
   } catch (error) {
@@ -107,12 +107,12 @@ router.post("/add", async function addBookmark(req, res) {
         .json({ error: "Required parameter (thingid) wasn't specified" });
       return;
     }
-    if (!req.user.user_id) {
+    if (!req.user.id) {
       log.error("No user");
       res.status(400).json({ error: "User (userId) wasn't specified" });
       return;
     }
-    let userId = as.number(req.user.user_id);
+    let userId = as.number(req.user.id);
     let thingid = as.number(req.body.thingid);
     let bookmarkType = req.body.bookmarkType;
     const data1 = await db.oneOrNone(
@@ -131,7 +131,7 @@ router.post("/add", async function addBookmark(req, res) {
       "insert into bookmarks(bookmarktype, thingid, userid) VALUES(${bookmarkType},${thingid},${userId}) returning id",
       { bookmarkType, thingid, userId }
     );
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       status: "success",
       data: data2.id,
@@ -173,7 +173,7 @@ router.post("/add", async function addBookmark(req, res) {
 
 router.delete("/delete", async function updateUser(req, res) {
   try {
-    const userId = as.number(req.user.user_id);
+    const userId = as.number(req.user.id);
     const bookmarkType = req.body.bookmarkType;
     const thingid = as.number(req.body.thingid);
     const data1 = await db.one(

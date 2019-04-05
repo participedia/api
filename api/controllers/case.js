@@ -259,7 +259,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   return [updatedCase, er];
 }
 
-// Only changs to title, description, and/or body trigger a new author and version
+// Only changes to title, description, and/or body trigger a new author and version
 
 router.post("/:thingid", updateCase);
 
