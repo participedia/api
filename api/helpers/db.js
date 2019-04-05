@@ -1,6 +1,6 @@
 const promise = require("bluebird");
 const url = require("url");
-const { isArray, isObject, isDate, uniq } = require("lodash");
+const { isArray, isObject, isDate, isString, uniq } = require("lodash");
 const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -64,6 +64,7 @@ function ErrorReporter() {
       } catch (e) {
         self.errors.push(e.message);
         // console.error("Capturing error to report to client: " + e.message);
+        return e.message;
         // console.trace(e);
       }
     };
@@ -82,7 +83,14 @@ function integer(value) {
   if (value === "") {
     return null;
   }
-  return pgp.as.number(parseInt(value));
+  if (value === "NaN") {
+    throw new Error('Expected integer, got "NaN" as a string');
+  }
+  let retVal = pgp.as.number(parseInt(value));
+  if (Number.isNaN(retVal)) {
+    throw new Error("Expected integer value, got " + value);
+  }
+  return retVal;
 }
 
 // as.author
@@ -111,21 +119,25 @@ function attachment(att) {
   }
 }
 
+function escapedText(value) {
+  return `\\"${value}\\"`;
+}
+
 function asUrl(value) {
   if (!value) {
-    return "";
+    return escapedText("");
   }
   if (isObject(value)) {
     console.error("Expecting URL, received: %s", value);
     throw new Error("Not a URL: " + value);
-    return "";
+    return escapedText("");
   }
   try {
     if (!value.startsWith("http")) {
       value = process.env.ASSETS_URL + value;
     }
     // return new URL(value).href;
-    return as.text(new URL(value).href);
+    return escapedText(new URL(value).href);
   } catch (e) {
     console.error("Expected URL, received: %s", JSON.stringify(value));
     throw e;
@@ -163,6 +175,9 @@ function casekey(obj, group) {
   }
   if (obj === undefined) {
     throw new Error("Object cannot be undefined for group " + group);
+  }
+  if (obj === null || obj === "") {
+    return null;
   }
   if (obj.key === undefined) {
     throw new Error("Key cannot be undefined for group " + group);
@@ -234,6 +249,9 @@ function attachments(attList) {
 }
 
 function aMedium(obj) {
+  if (isString(obj)) {
+    obj = { url: obj, attribution: "", title: "" };
+  }
   if (!obj.url) return null;
   return [
     '"(',
@@ -249,6 +267,9 @@ function aMedium(obj) {
 }
 
 function aSourcedMedia(obj) {
+  if (isString(obj)) {
+    obj = { url: obj, source_url: "", attribution: "", title: "" };
+  }
   if (!obj.url) return null;
   return [
     '"(',
@@ -280,8 +301,8 @@ function media(mediaList) {
   return simpleArray((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
 }
 
-function sourcedMedia(photoList) {
-  return simpleArray((photoList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
+function sourcedMedia(mediaList) {
+  return simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
 }
 
 function boolean(value) {
@@ -321,6 +342,7 @@ function date(value) {
 
 // replace as.text, don't convert null to "null" because that's dumb
 function text(value) {
+  // FIXME: strip out ALL HTML
   return pgp.as.text(value || "");
 }
 

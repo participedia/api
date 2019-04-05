@@ -10,7 +10,7 @@ const { checkJwtRequired, checkJwtOptional } = require("./checkJwt");
 const unless = require("express-unless");
 
 async function preferUser(req, res, next) {
-  console.log("preferUser()");
+  // console.log("preferUser()");
   try {
     checkJwtOptional(req, res, (err, req_, res_, next_) =>
       commonUserHandler(false, err, req, res, next)
@@ -21,7 +21,7 @@ async function preferUser(req, res, next) {
 }
 
 async function ensureUser(req, res, next) {
-  console.log("ensureUser()");
+  // console.log("ensureUser()");
   try {
     checkJwtRequired(req, res, (err, req_, res_, next_) =>
       commonUserHandler(true, err, req, res, next)
@@ -34,7 +34,7 @@ async function ensureUser(req, res, next) {
 async function commonUserHandler(required, err, req, res, next) {
   //  try {
   if (required !== true && require !== false) {
-    console.log("is required actually an error? %s", JSON.stringify(required));
+    // console.log("is required actually an error? %s", JSON.stringify(required));
   }
   if (err) {
     console.error(

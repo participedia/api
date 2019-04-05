@@ -124,10 +124,6 @@ async function maybeUpdateUserText(req, res) {
   const newCase = req.body;
   const params = parseGetParams(req, "case");
   const oldCase = (await db.one(CASE_EDIT_BY_ID, params)).results;
-  console.warn(
-    "WTF does the old case look like? \n%s",
-    JSON.stringify(oldCase)
-  );
   if (!oldCase) {
     throw new Error("No case found for id %s", params.articleid);
   }
@@ -143,14 +139,14 @@ async function maybeUpdateUserText(req, res) {
   ["body", "title", "description"].forEach(key => {
     let value;
     if (key === "body") {
-      value = as.richtext(newCase[key]);
+      value = as.richtext(newCase[key] || oldCase[key]);
     } else {
-      value = as.text(newCase[key]);
+      value = as.text(newCase[key] || oldCase[key]);
     }
-    if (oldCase[key] !== value) {
+    if (newCase[key] && oldCase[key] !== newCase[key]) {
       textModified = true;
-      updatedText[key] = value;
     }
+    updatedText[key] = value;
   });
   if (textModified) {
     const author = {
@@ -170,7 +166,14 @@ function setConditional(
   updateFunction,
   key
 ) {
-  if (newObject[key] !== undefined) {
+  if (newObject[key] === undefined) {
+    // if we're updating a partial, we still need to rewrite the updated object
+    // from front-end format to save format
+    updatedObject[key] = errorReporter.try(updateFunction)(
+      updatedObject[key],
+      key
+    );
+  } else {
     updatedObject[key] = errorReporter.try(updateFunction)(newObject[key], key);
   }
 }
@@ -188,14 +191,9 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   }
 
   // media lists
-  [
-    "files",
-    "links",
-    "videos",
-    "audio",
-    "evaluation_reports",
-    "evaluation_links"
-  ].map(key => cond(key, as.media));
+  ["links", "videos", "audio", "evaluation_reports", "evaluation_links"].map(
+    key => cond(key, as.media)
+  );
   // photos and files are slightly different from other media as they have a source url too
   ["photos", "files"].map(key => cond(key, as.sourcedMedia));
   // boolean (would include "published" but we don't really support it)
@@ -266,7 +264,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
 router.post("/:thingid", updateCase);
 
 async function updateCase(req, res) {
-  cache.clear();
+  // cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
@@ -274,18 +272,9 @@ async function updateCase(req, res) {
   // console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
   // save any changes to the user-submitted text
   const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
-  // console.log("updatedText: %s", JSON.stringify(Object.keys(updatedText)));
+  // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
-  // console.warn(
-  //   "updatedCase before updating db: %s",
-  //   JSON.stringify(updatedCase)
-  // );
-  // Object.keys(updatedCase)
-  //   .sort()
-  //   .forEach(key =>
-  //     console.log("updated %s => <| %s |>", key, updatedCase[key])
-  //   );
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
@@ -304,13 +293,13 @@ async function updateCase(req, res) {
         ]);
       });
     }
-
     // the client expects this request to respond with json
     // save successful response
     // console.log("Params for returning case: %s", JSON.stringify(params));
+    const freshArticle = await getCase(params);
     res.status(200).json({
       OK: true,
-      article: await getCase(params)
+      article: freshArticle
     });
   } else {
     console.error("Reporting errors: %s", er.errors);

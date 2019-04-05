@@ -90,7 +90,7 @@ describe("Cases", () => {
   });
 
   describe("Test edit API", () => {
-    it.only("Add case, then modify title and/or body", async () => {
+    it("Add case, then modify title and/or body", async () => {
       const res1 = await addBasicCase();
       res1.should.have.status(200);
       res1.body.OK.should.be.true;
