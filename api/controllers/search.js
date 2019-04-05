@@ -144,9 +144,7 @@ router.get("/", async function(req, res) {
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
   const lang = as.value(req.query.language || "en");
-  const staticText = await db.one(
-    `select * from layout_localized where language = '${lang}';`
-  );
+
   const params = parseGetParams(req, filterFromReq(req));
   try {
     const results = await db.any(queryFileFromReq(req), {
@@ -187,7 +185,6 @@ router.get("/", async function(req, res) {
           results,
           user_query,
           parsed_query,
-          static: staticText,
           params,
           user: req.user || null
         });
@@ -197,7 +194,6 @@ router.get("/", async function(req, res) {
           pages,
           searchhits,
           results,
-          static: staticText,
           params,
           user: req.user || null
         });
@@ -213,7 +209,6 @@ router.get("/", async function(req, res) {
           pages,
           searchhits,
           results,
-          static: staticText,
           params,
           user: req.user || null
         });
