@@ -279,6 +279,8 @@
   "French": "French",
   "German": "German",
   "case": "case",
+  "method": "method",
+  "organization": "organization",
   "Data": "Data",
   "first_submitted_label": "First submitted by",
   "most_recent_label": "Most recent changes by",
