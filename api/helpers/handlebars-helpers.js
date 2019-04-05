@@ -79,7 +79,7 @@ module.exports = {
 
   instructional: (name, context) => i18n(`${name}_instructional`, context),
 
-  placeholder: (staticText, name) => i18n(`${name}_placeholder`, context),
+  placeholder: (name, context) => i18n(`${name}_placeholder`, context),
 
   t: (key, context) => i18n(key, context),
 

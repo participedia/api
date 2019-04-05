@@ -425,8 +425,7 @@ router.get("/:thingid/", async (req, res) => {
   const articleRow = await db.one(CASE_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(CASE_VIEW_STATIC, params);
-  returnByType(res, params, article, staticText, req.user);
+  returnByType(res, params, article, {}, req.user);
 });
 
 router.get("/:thingid/edit", requireAuthenticatedUser(), async (req, res) => {

@@ -1,6 +1,6 @@
 {{#if (getvalue article name) }}
 <dl>
-  <dt>{{label static name}}</dt>
+  <dt>{{label name}}</dt>
   {{#if (isArray article name)}}
     {{#each (getvalue article name) }}
       <dd>{{value}}</dd>
