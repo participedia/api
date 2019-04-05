@@ -101,16 +101,16 @@ module.exports = {
     }
   },
 
-  linkSetPlaceholder(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "placeholder");
+  linkSetPlaceholder: (name, attr, context) => {
+    return i18n(`${name}_${attr}_placeholder`, context);
   },
 
-  linkSetLabel(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "label");
+  linkSetLabel: (name, attr, context) => {
+    return i18n(`${name}_${attr}_label`, context);
   },
 
-  linkSetInstructional(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "instructional");
+  linkSetInstructional: (name, attr, context) => {
+    return i18n(`${name}_${attr}_instructional`, context);
   },
 
   // article helpers

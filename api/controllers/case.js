@@ -434,8 +434,7 @@ router.get("/:thingid/edit", requireAuthenticatedUser(), async (req, res) => {
   const articleRow = await db.one(CASE_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticResults = await db.one(CASE_EDIT_STATIC, params);
-  let staticText = staticResults.static;
+  let staticText = {};
   const authorsResult = await db.one(
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   );
