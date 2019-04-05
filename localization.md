@@ -65,8 +65,3 @@ Once this is done goto phraseapp.com and select the Participedia project, then g
 
 #### When keys and translations are changed via the PhraseApp.com editor
 When changes have been made via the PhraseApp editor we will need to sync them to our github repo and master branch. To do this go to phraseapp.com and select the Participedia project, then go to the Locales tab. From here we can choose the `Export to GitHub as pull request` option from the `GitHub Sync` select menu. Once a PR is created we can review and merge to master to see the updated translations.
-
-
-### Troubleshooting
-Q: Why are my locale json files are getting overwritten?
-A: This is likely caused by an error in the json, run `npm run lintJSON` to lint/validate your locale files and fix any issues.
