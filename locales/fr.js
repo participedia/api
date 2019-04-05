@@ -322,7 +322,7 @@
   "if_voting_value_supermajoritarian": "Super-majoritaire",
   "if_voting_value_unanimous": "Décision unanime",
   "impact_evidence_instructional": "Cette initiative a-t-elle contribué à un changement social et / ou politique?",
-  "impact_evidence_label": "evidence_sectionlabel",
+  "impact_evidence_label": "Preuve de l'impact",
   "impact_evidence_placeholder": "Ce travail a-t-il contribué à un changement social ou politique?",
   "implementers_of_change_instructional": "Sélectionnez jusqu'à trois types d'acteurs qui ont joué un rôle dans la mise en œuvre des idées issues de cette initiative.",
   "implementers_of_change_label": "Mise en œuvre du changement",
@@ -556,7 +556,7 @@
   "purposes_value_make_influence": "Prendre, influencer ou contester les décisions d'organisations privées",
   "purpose_label": "But/but",
   "purpose_sectionlabel": "But et approche",
-  "Quick Submit": "quick_submit_sectionlabel",
+  "Quick Submit": "Soumission rapide",
   "quick_submit_sectionlabel": "Soumission rapide",
   "recruitment_method_instructional": "Si pertinent pour ce cas, sélectionnez la méthode utilisée pour recruter un sous-ensemble limité de la population.",
   "recruitment_method_label": "Méthode de recrutement pour un sous-ensemble limité de population",
@@ -960,5 +960,6 @@
   "Welcome to Participedia": "Bienvenue à Participedia",
   "yes": "Oui",
   "Zoom Map In": "Zoom sur la carte",
-  "Zoom Map Out": "Zoom sur la carte"
+  "Zoom Map Out": "Zoom sur la carte",
+  "Search": "Rechercher"
 }

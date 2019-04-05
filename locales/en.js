@@ -960,5 +960,6 @@
   "evaluation_link_title_placeholder": "Title or description",
   "purposes_instructional": "Select and rank up to three purposes, with \"1\" indicating the most relevant.",
   "facetoface_online_or_both_instructional": "Did participants interact face-to-face, online, or both?",
-  "participants_interactions_instructional": "Select and rank up to three types of interactions in order of relevance, with with “1” indicating the most often used form of interaction."
+  "participants_interactions_instructional": "Select and rank up to three types of interactions in order of relevance, with with “1” indicating the most often used form of interaction.",
+  "Search": "Search"
 }
