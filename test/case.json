@@ -40,7 +40,7 @@
       "value": "Natural Resource Management"
     }
   ],
-  "brief_description": "First Description",
+  "description": "First Description",
   "body": "First Body",
   "tags": [
     {
@@ -257,7 +257,7 @@
   ],
   "method_types": [],
   "tools_techniques_types": [],
-  "specific_methods_tools_techniques": null,
+  "specific_methods_tools_techniques": [],
   "legality": { "key": "false", "lookup_key": "false", "value": "False" },
   "facilitators": { "key": "yes", "lookup_key": "yes", "value": "Yes" },
   "facilitator_training": { "key": "", "lookup_key": "", "value": "" },

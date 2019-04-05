@@ -96,8 +96,6 @@ describe("Cases", () => {
       res1.body.OK.should.be.true;
       res1.body.article.id.should.be.a("number");
       const origCase = res1.body.article;
-      origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.article.id);
       const res2 = await chai
         .postJSON("/case/" + res1.body.article.id + "?returns=json")
         .set("Cookie", "token=" + tokens.user_token)
@@ -130,15 +128,27 @@ describe("Cases", () => {
       res1.body.OK.should.be.true;
       res1.body.article.id.should.be.a("number");
       const origCase = res1.body.article;
-      origCase.id.should.be.a("number");
-      origCase.id.should.equal(res1.body.article.id);
+      origCase.general_issues.length.should.equal(4);
+      origCase.general_issues[0].key.should.equal("arts");
+      origCase.general_issues[1].key.should.equal("education");
+      origCase.general_issues[2].key.should.equal("environment");
+      origCase.general_issues[3].key.should.equal("planning");
       const res2 = await chai
         .postJSON("/case/" + res1.body.article.id)
         .set("Cookie", "token=" + tokens.user_token)
-        .send({ issues: ["new issue"] });
+        .send({
+          general_issues: [
+            {
+              key: "arts",
+              lookup_key: "general_issues_arts",
+              value: "Arts, Culture, & Recreation"
+            }
+          ]
+        });
       res2.should.have.status(200);
       const updatedCase1 = res2.body.article;
-      updatedCase1.issues.should.deep.equal(["new issue"]);
+      updatedCase1.general_issues.length.should.equal(1);
+      updatedCase1.general_issues[0].key.should.equal("arts");
     });
 
     it("Add case, then modify lead image", async () => {
@@ -146,25 +156,34 @@ describe("Cases", () => {
       res1.should.have.status(200);
       res1.body.OK.should.be.true;
       const case1 = res1.body.article;
-      case1.photos.should.deep.equal(["CitizensAssembly_2.jpg"]);
+      case1.photos.length.should.equal(4);
+      case1.photos[0].url.should.equal(
+        "https://s3.amazonaws.com/uploads.participedia.xyz/index.php__21.jpg"
+      );
       const res2 = await chai
         .postJSON("/case/" + case1.id + "?returns=json")
         .set("Cookie", "token=" + tokens.user_token)
-        .send({ photos: ["foobar.jpg"] });
+        .send({ photos: [{ url: "foobar.jpg" }] });
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
       should.exist(res2.body.article);
       const case2 = res2.body.article;
-      case2.photos.should.deep.equal(["foobar.jpg"]);
+      case2.photos.length.should.equal(1);
+      case2.photos[0].url.should.equal(
+        "https://s3.amazonaws.com/uploads.participedia.xyz/foobar.jpg"
+      );
       expect(case2.updated_date > case1.updated_date).to.be.true;
       const res3 = await chai
         .postJSON("/case/" + case1.id + "?returns=json")
         .set("Cookie", "token=" + tokens.user_token)
-        .send({ photos: ["howzaboutthemjpegs.png"] });
+        .send({ photos: [{ url: "howzaboutthemjpegs.png" }] });
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
       const case3 = res3.body.article;
-      case3.photos.should.deep.equal(["howzaboutthemjpegs.png"]);
+      case3.photos.length.should.equal(1);
+      case3.photos[0].url.should.equal(
+        "https://s3.amazonaws.com/uploads.participedia.xyz/howzaboutthemjpegs.png"
+      );
     });
   });
 

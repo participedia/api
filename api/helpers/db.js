@@ -134,7 +134,7 @@ function asUrl(value) {
   }
   try {
     if (!value.startsWith("http")) {
-      value = process.env.ASSETS_URL + value;
+      value = process.env.AWS_UPLOADS_URL + value;
     }
     // return new URL(value).href;
     return escapedText(new URL(value).href);
@@ -157,7 +157,7 @@ function id(obj) {
 
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
-  return as.array(uniq((idList || []).map(integer)));
+  return uniq((idList || []).map(id));
   // return (
   //   "ARRAY[" + idList.map(s => as.number(s.value)).join(", ") + "]::integer[]"
   // );
@@ -185,7 +185,7 @@ function casekey(obj, group) {
   //  if (dbcasekeys.includes(`${group}_${obj.key}`)) {
   // FIXME: Need to re-add validation that key is legal for this field
   if (obj.key.length > 0) {
-    return text(obj.key);
+    return obj.key;
   }
   return "";
 }
@@ -198,8 +198,8 @@ function casekeys(objList, group) {
     throw new Error("objList cannot be undefined for group " + group);
   }
   try {
-    return as.array(
-      uniq((objList || []).map(k => casekey(k, group)).filter(x => !!x))
+    return (
+      uniq((objList || []).map(k => casekey(k, group)).filter(x => !!x)) || "{}"
     );
   } catch (e) {
     console.error(
@@ -219,7 +219,7 @@ function tagkey(obj) {
     throw new Error("Key cannot be undefined for tag");
   }
   if (dbtagkeys.includes(obj.key)) {
-    return text(obj.key);
+    return obj.key;
   } else {
     console.warn("failed tag: %s", obj.key);
   }
@@ -227,25 +227,7 @@ function tagkey(obj) {
 }
 
 function tagkeys(objList) {
-  return as.array(uniq((objList || []).map(tagkey).filter(x => !!x)));
-}
-
-function localed(strList) {
-  // localed strings come in as as list of objects with {text, value}, we want value (the localization key)
-  if (strList && strList.length && isObject(strList[0])) {
-    return strings(strList.map(s => s.value));
-  } else {
-    // someone passes us a list of strings, yay!
-    return strings(strList);
-  }
-}
-
-function attachments(attList) {
-  if (attList.length && typeof attList[0] === "object") {
-    return strings(attList.map(a => a.url));
-  } else {
-    return strings(attList);
-  }
+  return uniq((objList || []).map(tagkey).filter(x => !!x));
 }
 
 function aMedium(obj) {
@@ -258,10 +240,10 @@ function aMedium(obj) {
     asUrl(obj.url),
     ",",
     // attribution: obj.attribution,
-    as.text(obj.attribution),
+    text(obj.attribution),
     ",",
     // title: obj.title
-    as.text(obj.title),
+    text(obj.title),
     ')"'
   ].join("");
 }
@@ -278,19 +260,12 @@ function aSourcedMedia(obj) {
     asUrl(obj.source_url),
     ",",
     // attribution: obj.attribution,
-    as.text(obj.attribution),
+    text(obj.attribution),
     ",",
     // title: obj.title
-    as.text(obj.title),
+    text(obj.title),
     ')"'
   ].join("");
-  // if (!obj.url) return null;
-  // return {
-  //   url: asUrl(obj.url),
-  //   source_url: asUrl(obj.link),
-  //   attribution: as.text(obj.attribution),
-  //   title: as.text(obj.title)
-  // };
 }
 
 function simpleArray(values) {
@@ -343,7 +318,7 @@ function date(value) {
 // replace as.text, don't convert null to "null" because that's dumb
 function text(value) {
   // FIXME: strip out ALL HTML
-  return pgp.as.text(value || "");
+  return value || "";
 }
 
 function richtext(value) {
@@ -354,17 +329,17 @@ function richtext(value) {
 const as = Object.assign({}, pgp.as, {
   boolean,
   author,
-  attachment,
-  attachments,
+  // attachment,
+  // attachments,
   date,
   id,
   ids,
   integer,
-  localed,
+  // localed,
   media,
   number,
   sourcedMedia,
-  strings,
+  // strings,
   casekey,
   casekeys,
   richtext,

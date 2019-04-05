@@ -6,9 +6,9 @@ INSERT INTO localized_texts (
   "timestamp",
   thingid
 ) VALUES (
-  ${body:raw},
-  ${title:raw},
-  ${description:raw},
+  ${body},
+  ${title},
+  ${description},
   ${language},
   'now',
   ${id}
