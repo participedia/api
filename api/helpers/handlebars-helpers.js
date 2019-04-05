@@ -20,25 +20,6 @@ function mapIdTitleToKeyValue(options) {
   });
 }
 
-function staticTextValue(staticText, key, type = null) {
-  let newKey;
-  if (type) {
-    newKey = `${key}_${type}`;
-  } else {
-    newKey = key;
-  }
-
-  if (!staticText) {
-    return newKey;
-  } else if (staticText.labels) {
-    return staticText.labels[newKey] || newKey;
-  } else {
-    // this makes the static keys work on the reader view for now
-    // since the format is different from the edit view
-    return staticText[newKey] || newKey;
-  }
-}
-
 function currentUrl(req) {
   const path = req.originalUrl;
   const host = req.headers.host;
@@ -308,19 +289,19 @@ module.exports = {
     }
   },
 
-  getHomeTabs() {
+  getHomeTabs(context) {
     return [
-      { title: "All", key: "all" },
-      { title: "Cases", key: "case" },
-      { title: "Methods", key: "method" },
-      { title: "Organizations", key: "organizations" },
+      { title: i18n("All", context), key: "all" },
+      { title: i18n("Cases", context), key: "case" },
+      { title: i18n("Methods", context), key: "method" },
+      { title: i18n("Organizations", context), key: "organizations" },
     ];
   },
 
-  getUserTabs() {
+  getUserTabs(context) {
     return [
-      { title: "Contributions", key: "contributions" },
-      { title: "Bookmarks", key: "bookmarks" },
+      { title: i18n("Contributions", context), key: "contributions" },
+      { title: i18n("Bookmarks", context), key: "bookmarks" },
     ];
   },
 
