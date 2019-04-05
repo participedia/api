@@ -105,7 +105,7 @@ SELECT
   get_case_localized_value('public_spectrum', public_spectrum, lookup) as public_spectrum,
   number_of_participants,
   get_case_localized_value('open_limited', open_limited, lookup) as open_limited,
-  get_case_localized_value('recruitment_method', recruitment_method, lookup) as recruitement_method,
+  get_case_localized_value('recruitment_method', recruitment_method, lookup) as recruitment_method,
   get_case_localized_list('targeted_participants', targeted_participants, lookup) as targeted_participants,
   get_case_localized_list('method_types', method_types, lookup) as method_types,
   get_case_localized_list('tools_techniques_types', tools_techniques_types, lookup) as tools_techniques_types,

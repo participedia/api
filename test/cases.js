@@ -53,7 +53,7 @@ describe("Cases", () => {
       try {
         const res = await chai
           .postJSON("/case/new?returns=json")
-          .set("Authorization", "Bearer " + tokens.user_token)
+          .set("Cookie", "token=" + tokens.user_token)
           .send({});
         should.exist(res.status);
       } catch (err) {
@@ -66,7 +66,6 @@ describe("Cases", () => {
       res.body.OK.should.be.true;
       let returnedCase = res.body.article;
       returnedCase.id.should.be.a("number");
-      console.log("returned case:\n%s", JSON.stringify(returnedCase, null, 4));
       returnedCase.videos.length.should.equal(2);
     });
   });
@@ -81,7 +80,7 @@ describe("Cases", () => {
       try {
         const res = await chai
           .getJSON("/case/100?returns=json")
-          .set("Authorization", "Bearer " + tokens.user_token);
+          .set("Cookie", "token=" + tokens.user_token);
         res.body.OK.should.equal(true);
         res.should.have.status(200);
       } catch (e) {
@@ -101,7 +100,7 @@ describe("Cases", () => {
       origCase.id.should.equal(res1.body.article.id);
       const res2 = await chai
         .postJSON("/case/" + res1.body.article.id + "?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({ title: "Second Title" });
       res2.should.have.status(200);
       const updatedCase1 = res2.body.article;
@@ -109,7 +108,7 @@ describe("Cases", () => {
       updatedCase1.body.should.equal("First Body");
       const res3 = await chai
         .postJSON("/case/" + res1.body.article.id + "?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({ body: "Second Body" });
       res3.should.have.status(200);
       const updatedCase2 = res3.body.article;
@@ -117,7 +116,7 @@ describe("Cases", () => {
       updatedCase2.body.should.equal("Second Body");
       const res4 = await chai
         .postJSON("/case/" + res1.body.article.id + "?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({ title: "Third Title", body: "Third Body" });
       res4.should.have.status(200);
       const updatedCase3 = res4.body.article;
@@ -135,7 +134,7 @@ describe("Cases", () => {
       origCase.id.should.equal(res1.body.article.id);
       const res2 = await chai
         .postJSON("/case/" + res1.body.article.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({ issues: ["new issue"] });
       res2.should.have.status(200);
       const updatedCase1 = res2.body.article;
@@ -150,7 +149,7 @@ describe("Cases", () => {
       case1.photos.should.deep.equal(["CitizensAssembly_2.jpg"]);
       const res2 = await chai
         .postJSON("/case/" + case1.id + "?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({ photos: ["foobar.jpg"] });
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
@@ -160,7 +159,7 @@ describe("Cases", () => {
       expect(case2.updated_date > case1.updated_date).to.be.true;
       const res3 = await chai
         .postJSON("/case/" + case1.id + "?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({ photos: ["howzaboutthemjpegs.png"] });
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
@@ -179,7 +178,7 @@ describe("Cases", () => {
       case1.bookmarked.should.be.false;
       const booked = await chai
         .postJSON("/bookmark/add?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({ bookmarkType: "case", thingid: case1.id });
       booked.should.have.status(200);
     });
@@ -195,7 +194,7 @@ describe("Cases", () => {
     it("Bookmarked should be true", async () => {
       const res3 = await chai
         .getJSON("/case/" + case1.id + "?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({});
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
@@ -207,7 +206,7 @@ describe("Cases", () => {
     it("Create with array of URLs", async () => {
       const res = await chai
         .postJSON("/case/new?returns=json")
-        .set("Authorization", "Bearer " + tokens.user_token)
+        .set("Cookie", "token=" + tokens.user_token)
         .send({
           // mandatory
           title: "First Title",

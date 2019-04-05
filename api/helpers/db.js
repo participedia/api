@@ -53,6 +53,23 @@ function sql(filename) {
   });
 }
 
+function ErrorReporter() {
+  this.errors = [];
+  let self = this;
+  this.hasErrors = () => this.errors.length > 0;
+  this.try = function(fn) {
+    return function(...args) {
+      try {
+        return fn(...args);
+      } catch (e) {
+        self.errors.push(e.message);
+        // console.error("Capturing error to report to client: " + e.message);
+        // console.trace(e);
+      }
+    };
+  };
+}
+
 // as.number, enhances existing as.number to cope with numbers as strings
 function number(value) {
   if (value === "") {
@@ -140,7 +157,7 @@ function strings(strList) {
   //  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
 }
 
-function casekey(group, obj) {
+function casekey(obj, group) {
   if (group === undefined) {
     throw new Error("Group cannot be undefined");
   }
@@ -158,7 +175,7 @@ function casekey(group, obj) {
   return "";
 }
 
-function casekeys(group, objList) {
+function casekeys(objList, group) {
   if (group === undefined) {
     throw new Error("Group cannot be undefined");
   }
@@ -167,7 +184,7 @@ function casekeys(group, objList) {
   }
   try {
     return as.array(
-      uniq((objList || []).map(k => casekey(group, k)).filter(x => !!x))
+      uniq((objList || []).map(k => casekey(k, group)).filter(x => !!x))
     );
   } catch (e) {
     console.error(
@@ -409,5 +426,6 @@ module.exports = {
   ORGANIZATION_EDIT_BY_ID,
   ORGANIZATION_EDIT_STATIC,
   ORGANIZATION_VIEW_BY_ID,
-  ORGANIZATION_VIEW_STATIC
+  ORGANIZATION_VIEW_STATIC,
+  ErrorReporter
 };

@@ -16,7 +16,8 @@ const {
   CASE_VIEW_STATIC,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
-  UPDATE_CASE
+  UPDATE_CASE,
+  ErrorReporter
 } = require("../helpers/db");
 
 const {
@@ -80,7 +81,7 @@ router.post("/new", async function postNewCase(req, res) {
     updateCase(req, res);
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
-    res.status(500).json({ OK: false, error: error });
+    res.status(400).json({ OK: false, error: error });
   }
   // Refresh search index
   // FIXME: This will never get called as we have already returned ff
@@ -122,7 +123,11 @@ async function maybeUpdateUserText(req, res) {
   // to localized_text or
   const newCase = req.body;
   const params = parseGetParams(req, "case");
-  const oldCase = (await db.one(CASE_VIEW_BY_ID, params)).results;
+  const oldCase = (await db.one(CASE_EDIT_BY_ID, params)).results;
+  console.warn(
+    "WTF does the old case look like? \n%s",
+    JSON.stringify(oldCase)
+  );
   if (!oldCase) {
     throw new Error("No case found for id %s", params.articleid);
   }
@@ -158,25 +163,30 @@ async function maybeUpdateUserText(req, res) {
   }
 }
 
+function setConditional(
+  updatedObject,
+  newObject,
+  errorReporter,
+  updateFunction,
+  key
+) {
+  if (newObject[key] !== undefined) {
+    updatedObject[key] = errorReporter.try(updateFunction)(newObject[key], key);
+  }
+}
+
 function getUpdatedCase(user, params, newCase, oldCase) {
-  const updatedCase = {};
+  const updatedCase = Object.assign({}, oldCase);
+  const er = new ErrorReporter();
+  const cond = (key, fn) => setConditional(updatedCase, newCase, er, fn, key);
   // admin-only
   if (user.isadmin) {
-    updatedCase.featured = as.boolean(newCase.featured || false);
-    updatedCase.hidden = as.boolean(newCase.hidden || false);
-    updatedCase.original_language = as.text(newCase.original_language || "en");
-    updatedCase.post_date = as.date(newCase.post_date || "now");
-  } else {
-    // need to check for oldCase otherwise get this error
-    // error: Exception in PUT /case/5239 => TypeError: Cannot read property 'featured' of undefined
-    // Trace: TypeError: Cannot read property 'featured' of undefined
-    // at getUpdatedCase (/Users/alannascott/code/participedia/api/api/controllers/case.js:162:47)
-
-    updatedCase.featured = as.boolean(oldCase.featured || false);
-    updatedCase.hidden = as.boolean(oldCase.hidden || false);
-    updatedCase.original_language = as.text(oldCase.original_language || "en");
-    updatedCase.post_date = as.date(oldCase.post_date || "now");
+    cond("featured", as.boolean);
+    cond("hidden", as.boolean);
+    cond("original_language", as.text);
+    cond("post_date", as.date);
   }
+
   // media lists
   [
     "files",
@@ -185,25 +195,15 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "audio",
     "evaluation_reports",
     "evaluation_links"
-  ].map(key => {
-    updatedCase[key] = as.media(newCase[key]);
-  });
+  ].map(key => cond(key, as.media));
   // photos and files are slightly different from other media as they have a source url too
-  ["photos", "files"].map(
-    key => (updatedCase[key] = as.sourcedMedia(newCase[key]))
-  );
+  ["photos", "files"].map(key => cond(key, as.sourcedMedia));
   // boolean (would include "published" but we don't really support it)
-  ["ongoing", "staff", "volunteers"].map(
-    key => (updatedCase[key] = as.boolean(newCase[key]))
-  );
+  ["ongoing", "staff", "volunteers"].map(key => cond(key, as.boolean));
   // yes/no (convert to boolean)
-  ["impact_evidence", "formal_evaluation"].map(
-    key => (updatedCase[key] = as.yesno(newCase[key]))
-  );
+  ["impact_evidence", "formal_evaluation"].map(key => cond(key, as.yesno));
   // number
-  ["number_of_participants"].map(
-    key => (updatedCase[key] = as.integer(newCase[key]))
-  );
+  ["number_of_participants"].map(key => cond(key, as.integer));
   // plain text
   [
     "original_language",
@@ -217,19 +217,13 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "latitude",
     "longitude",
     "funder"
-  ].map(key => (updatedCase[key] = newCase[key]));
+  ].map(key => cond(key, as.text));
   // date
-  ["start_date", "end_date", "post_date"].map(
-    key => (updatedCase[key] = as.date(newCase[key]))
-  );
+  ["start_date", "end_date", "post_date"].map(key => cond(key, as.date));
   // id
-  ["is_component_of", "primary_organizer"].map(
-    key => (updatedCase[key] = as.id(newCase[key]))
-  );
+  ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
   // list of ids
-  updatedCase.specific_methods_tools_techniques = as.ids(
-    newCase.specific_methods_tools_techniques
-  );
+  ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));
   // key
   [
     "scope_of_influence",
@@ -241,7 +235,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "open_limited",
     "recruitment_method",
     "time_limited"
-  ].map(key => (updatedCase[key] = as.casekey(key, newCase[key])));
+  ].map(key => cond(key, as.casekey));
   // list of keys
   [
     "general_issues",
@@ -260,85 +254,14 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "change_types",
     "implementers_of_change",
     "tools_techniques_types"
-  ].map(key => (updatedCase[key] = as.casekeys(key, newCase[key])));
+  ].map(key => cond(key, as.casekeys));
   // special list of keys
-  updatedCase.tags = as.tagkeys(newCase.tags);
-  updatedCase.id = params.articleid;
+  ["tags"].map(key => cond(key, as.tagkeys));
   // TODO save bookmarked on user
-  return updatedCase;
+  return [updatedCase, er];
 }
 
 // Only changs to title, description, and/or body trigger a new author and version
-
-// id, integer, immutable
-// type, 'case', immutable
-// title, plain text, new entry in localized_textx
-// general issues => convert to list of ids
-// specific topics => convert to list of ids
-// description plain text, new entry in localized texts
-// body, html needing sanitization, new entry in localized texts
-// tags, convert to list of keys
-// location_name
-// address1,
-// address2,
-// city,
-// province,
-// postal_code,
-// country,
-// latitude => null if 0'0"
-// longitude => null if 0'0"
-// scope, conert to key
-// has_components, immutable for now, discard
-// is_component_of, convert to id
-// files => full_files
-// links => full_links,
-// photos,
-// videos => full_videos,
-// audio,
-// start_date,
-// end_date,
-// ongoing,
-// time_limited, convert to list of keys
-// purposes, convert to list of keys
-// approaches, convert to list of keys
-// public_spectrum, convert to key
-// number_of_participants,
-// open_limited, convert to list of tags
-// recruitment_method, convert to tag
-// targeted_participants, convert to list of tags
-// method_types, convert to list of tags
-// tools_techniques, types, convert to list of tags
-// specific_methods_tools_techniques, convert to list of ids
-// legality, convert to tag
-// facilitators, convert to tag
-// facilitator_training, convert to tag
-// facetoface_online_or_both, convert to tag
-// participants_interactions, convert to list of tags
-// learning_resources, convert to list of tags
-// decision_methods, convert to list of tags
-// if_voting, convert to list of tags
-// insights_outcomes, convert to list of tags
-// primary_organizer, convert to id
-// organizer_types, convert to list of tags
-// funder, plain text
-// funder_types, convert to list of tags
-// staff, boolean
-// volunteers, boolean
-// impact_evidence, yes or no
-// change_types, convert to list of tags
-// implementers_of_change, convert to list of tags
-// formal_evaluation, yes or no
-// evaluation_reports, list of urls, strip off prefix
-// evaluation_links, list of urls, strip off prefix
-// bookmarked, list on user
-// creator, immutable, discard
-// last_updated_by, automatic, discard
-// original_language, immutable unless changed by admin
-// post_date, immutable unless changed by admin
-// published, true/false
-// updated_date, automatic, discard
-// featured, immutable unless changed by admin
-// hidden, immutable unless changed by admin
 
 router.post("/:thingid", updateCase);
 
@@ -347,26 +270,23 @@ async function updateCase(req, res) {
   const params = parseGetParams(req, "case");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
-  try {
-    const newCase = req.body;
-    // console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
-    // save any changes to the user-submitted text
-    const { updatedText, author, oldCase } = await maybeUpdateUserText(
-      req,
-      res
-    );
-    // console.log("updatedText: %s", JSON.stringify(Object.keys(updatedText)));
-    // console.log("author: %s", JSON.stringify(author));
-    const updatedCase = getUpdatedCase(user, params, newCase, oldCase);
-    // console.warn(
-    //   "updatedCase before updating db: %s",
-    //   JSON.stringify(updatedCase)
-    // );
-    // Object.keys(updatedCase)
-    //   .sort()
-    //   .forEach(key =>
-    //     console.log("updated %s => <| %s |>", key, updatedCase[key])
-    //   );
+  const newCase = req.body;
+  // console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
+  // save any changes to the user-submitted text
+  const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
+  // console.log("updatedText: %s", JSON.stringify(Object.keys(updatedText)));
+  // console.log("author: %s", JSON.stringify(author));
+  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+  // console.warn(
+  //   "updatedCase before updating db: %s",
+  //   JSON.stringify(updatedCase)
+  // );
+  // Object.keys(updatedCase)
+  //   .sort()
+  //   .forEach(key =>
+  //     console.log("updated %s => <| %s |>", key, updatedCase[key])
+  //   );
+  if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
         return t.batch([
@@ -392,21 +312,13 @@ async function updateCase(req, res) {
       OK: true,
       article: await getCase(params)
     });
-  } catch (error) {
-    log.error(
-      "Exception in PUT /%s/%s => %s",
-      type,
-      req.thingid || articleid,
-      error
-    );
-    console.trace(error);
-    // validation error response
-    // errors should be passed back to client as array of error messages
-    res.status(200).json({
+  } else {
+    console.error("Reporting errors: %s", er.errors);
+    res.status(400).json({
       OK: false,
-      errors: ["Title can not be empty.", "Some other validation issue"]
+      errors: er.errors
     });
-  } // end catch
+  }
 }
 
 /**
