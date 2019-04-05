@@ -259,9 +259,7 @@ const as = Object.assign({}, pgp.as, {
 const helpers = pgp.helpers;
 
 const CASE_EDIT_BY_ID = sql("../sql/case_edit_by_id.sql");
-const CASE_EDIT_STATIC = sql("../sql/case_edit_static.sql");
 const CASE_VIEW_BY_ID = sql("../sql/case_view_by_id.sql");
-const CASE_VIEW_STATIC = sql("../sql/case_view_static.sql");
 const METHOD_EDIT_BY_ID = sql("../sql/method_edit_by_id.sql");
 const METHOD_EDIT_STATIC = sql("../sql/method_edit_static.sql");
 const METHOD_VIEW_BY_ID = sql("../sql/method_view_by_id.sql");
