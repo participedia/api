@@ -69,21 +69,19 @@ function convertDMSToDD(degrees, minutes, seconds, direction) {
   return dd;
 }
 
+const i18n = (key, context) => context && context.data && context.data.root.__(key);
+
 module.exports = {
   // transalation helpers
-  label: (staticText, name) => staticTextValue(staticText, name, "label"),
+  label: (name, context) => i18n(`${name}_label`, context),
 
-  info: (staticText, name) => staticTextValue(staticText, name, "info"),
+  info: (name, context) => i18n(`${name}_info`, context),
 
-  instructional: (staticText, name) =>
-    staticTextValue(staticText, name, "instructional"),
+  instructional: (name, context) => i18n(`${name}_instructional`, context),
 
-  placeholder: (staticText, name) =>
-    staticTextValue(staticText, name, "placeholder"),
+  placeholder: (staticText, name) => i18n(`${name}_placeholder`, context),
 
-  t: (key, context) => {
-    return context && context.data && context.data.root && context.data.root.__(key);
-  },
+  t: (key, context) => i18n(key, context),
 
   isSelectedLanguage: (lang, context) => {
     if (context && context.data && context.data.root) {

@@ -182,7 +182,7 @@
   "private_settings": "Private Settings",
   "profile_picture": "profile picture",
   "public_profile": "Public Profile",
-  "publish": "Publish",
+  "Publish": "Publish",
   "Contribute": "Contribute",
   "Teach": "Teach",
   "home.tagline": "Participedia is a global community sharing knowledge and stories about public participation.",

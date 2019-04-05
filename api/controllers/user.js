@@ -7,13 +7,6 @@ let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
-async function getStaticText(language) {
-  const staticTextFromDB = await db.one(
-    `select * from layout_localized where language = '${language}';`
-  );
-  return staticTextFromDB;
-}
-
 async function getUserById(userId, req, res, view="view") {
   try {
     const language = req.params.language || "en";
@@ -35,8 +28,6 @@ async function getUserById(userId, req, res, view="view") {
       result.user.name = result.user.name.substr(0, atSymbolIndex);
     }
 
-    const staticText = await getStaticText(language);
-
     if (view === "edit") {
       // only return some keys on the user object for the edit view
       const userEditKeys = [
@@ -56,12 +47,10 @@ async function getUserById(userId, req, res, view="view") {
       userEditKeys.forEach(key => userEditJSON[key] = result.user[key]);
 
       return {
-        static: staticText,
         profile: userEditJSON,
       };
     } else {
       return {
-        static: staticText,
         profile: result.user,
       };
     }

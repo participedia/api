@@ -3,7 +3,7 @@
     <a href="https://gravatar.com/" target="_blank" class="user-profile-image-edit-mask">
       <div class="user-profile-image-initial">{{getInitials profile.name}}</div>
       {{#if (getGravatarUrl profile.email)}}
-        <img src="{{getGravatarUrl profile.email}}?s=160&d=blank" alt="profile_picture" width="160" height="160" />
+        <img src="{{getGravatarUrl profile.email}}?s=160&d=blank" alt='{{t "profile_picture"}}' width="160" height="160" />
       {{/if}}
       <div class="user-profile-image-edit-overlay">{{t "change"}}</div>
     </a>
@@ -22,12 +22,12 @@
 
       <fieldset>
         <h2>{{t "public_profile"}}</h2>
-        {{> edit-text name="name" value=profile.name placeholderText=static.name_placeholder}}
+        {{> edit-text name="name" value=profile.name placeholderText=(t "name_placeholder")}}
         {{> edit-richtext name="bio" value=profile.bio}}
       </fieldset>
 
       <button type="submit" class="button button-light-grey">
-        {{> icon-submit }} {{t "publish"}}
+        {{> icon-submit }} {{t "Publish"}}
       </button>
     </form>
   </div>
