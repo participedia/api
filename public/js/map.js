@@ -81,10 +81,13 @@ const map = {
       // on marker click, show article card in popover on map
       markerEl.addListener("click", event => {
         const popOverContentEl = document.createElement("div");
-
         // get card content from marker and set on content element
         popOverContentEl.classList = "article-card";
-        popOverContentEl.innerHTML = marker.content.querySelector("a").innerHTML;
+        popOverContentEl.innerHTML = marker.content.innerHTML;
+
+        // truncate article title to 45 chars
+        const articleTitleEl = popOverContentEl.querySelector(".article-card-title");
+        articleTitleEl.innerText = articleTitleEl.innerText.substring(0, 45) + "...";
 
         // if there is already a current pop over, remove it
         if (this.popOver) {

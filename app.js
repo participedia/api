@@ -8,6 +8,9 @@ var exphbs = require("express-handlebars");
 const fs = require("fs");
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const passport = require("passport");
+const Auth0Strategy = require("passport-auth0");
 
 // static text js objects
 const sharedStaticText = require("./static-text/shared-static-text.js");
@@ -15,6 +18,82 @@ const aboutStaticText = require("./static-text/about-static-text.js");
 const researchStaticText = require("./static-text/research-static-text.js");
 const teachingStaticText = require("./static-text/teaching-static-text.js");
 const contentTypesText = require("./static-text/content-types-static-text.js");
+
+const { getUserOrCreateUser } = require("./api/helpers/user.js");
+
+// config express-session
+const sess = {
+  secret: "THIS IS A RANDOM KEY",
+  cookie: {},
+  resave: false,
+  saveUninitialized: true
+};
+
+if (app.get("env") === "production") {
+  sess.cookie.secure = true; // serve secure cookies, requires https
+}
+
+app.use(session(sess));
+
+// Configure Passport to use Auth0
+const strategy = new Auth0Strategy({
+  domain: process.env.AUTH0_DOMAIN,
+  clientID: process.env.AUTH0_CLIENT_ID,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  callbackURL: "/redirect"
+  },
+  function (accessToken, refreshToken, extraParams, profile, done) {
+    // accessToken is the token to call Auth0 API (not needed in the most cases)
+    // extraParams.id_token has the JSON Web Token
+    // profile has all the information from the user
+    return done(null, profile);
+  }
+);
+
+passport.use(strategy);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// You can use this section to keep a smaller payload
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(async function (user, done) {
+  // get db user from auth0 user data
+  const dbUser = await getUserOrCreateUser(user._json);
+  done(null, dbUser);
+});
+
+// Perform the login, after login Auth0 will redirect to callback
+app.get("/login", passport.authenticate("auth0", {
+  scope: "openid email profile"
+}), function (req, res) {
+  res.redirect("/");
+});
+
+// Perform the final stage of authentication and redirect to previously requested URL or '/user'
+app.get("/redirect", function (req, res, next) {
+  passport.authenticate("auth0", function (err, user, info) {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect("/login"); }
+    req.logIn(user, function (err) {
+      if (err) { return next(err); }
+      const returnTo = req.session.returnTo;
+      delete req.session.returnTo;
+      // todo: return to original url where /login was requested from
+      res.redirect(returnTo || '/');
+    });
+  })(req, res, next);
+});
+
+// Perform session logout and redirect to homepage
+app.get("/logout", (req, res) => {
+  const currentUrl = `${req.protocol}://${req.headers.host}`;
+  req.logout();
+  res.redirect(`https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`);
+});
 
 var hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
@@ -85,11 +164,6 @@ let bodyParser = require("body-parser");
 let methodOverride = require("method-override");
 let cors = require("cors");
 let isUser = require("./api/middleware/isUser");
-const {
-  checkJwtRequired,
-  checkJwtOptional
-} = require("./api/helpers/checkJwt");
-let { ensureUser, preferUser } = require("./api/helpers/user");
 
 app.set("port", port);
 app.use(express.static("public", { index: false }));
@@ -99,11 +173,6 @@ app.use(cors());
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cookieParser());
-// handle expired login tokens more gracefully
-app.use(ensureUser.unless({ method: ["OPTIONS", "GET"] }));
-app.use(
-  preferUser.unless({ method: ["OPTIONS", "POST", "PUT", "DELETE", "PATCH"] })
-);
 app.use(errorhandler());
 
 const apicache = require("apicache");
@@ -146,22 +215,6 @@ app.get("/content-chooser", function(req, res) {
   res.status(200).render("content-chooser", {
     static: staticText
   });
-});
-
-app.use("/s3/:path", checkJwtRequired);
-app.use(
-  "/s3",
-  require("react-dropzone-s3-uploader/s3router")({
-    bucket: "uploads.participedia.xyz",
-    region: "us-east-1", // optional
-    headers: { "Access-Control-Allow-Origin": "*" }, // optional
-    ACL: "private" // this is default
-  })
-);
-
-app.get("/redirect", function(req, res) {
-  console.log("request URL: %s", req.originalUrl);
-  return res.status(200).render("experiments-edit");
 });
 
 module.exports = app;

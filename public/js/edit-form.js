@@ -52,14 +52,18 @@ const editForm = {
   },
 
   errorModalHtml(errors) {
-    const errorsHtml = errors.map(error => `<li>${error}</li>`).join("");
-    return `
-      <h3>Please fix the following issues</h3>
-      <ul>
-        ${errorsHtml}
-      </ul>
-      <button class="button button-red js-modal-close">OK</button>
-    `;
+    if (!Array.isArray(errors)) {
+      return `<h3>Sorry, something went wrong. Please try again.</h3>`;
+    } else {
+      const errorsHtml = errors.map(error => `<li>${error}</li>`).join("");
+      return `
+        <h3>Please fix the following issues</h3>
+        <ul>
+          ${errorsHtml}
+        </ul>
+        <button class="button button-red js-modal-close">OK</button>
+      `;
+    }
   },
 
   handleErrors(errors) {

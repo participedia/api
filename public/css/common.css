@@ -217,3 +217,16 @@ pre {
 .author-info time {
   display: block;
 }
+
+[data-bookmarked=true] .is-bookmarked {
+  display: block;
+}
+[data-bookmarked=true] .is-not-bookmarked {
+  display: none;
+}
+[data-bookmarked=false] .is-bookmarked {
+  display: none;
+}
+[data-bookmarked=false] .is-not-bookmarked {
+  display: block;
+}

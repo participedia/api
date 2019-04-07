@@ -6,6 +6,7 @@
         <li><a href="/about">About</a></li>
         <li><a href="/teaching">Teaching</a></li>
         <li><a href="/research">Research</a></li>
+        <li><a href="https://medium.com/@participediaproject" target="_blank">News</a></li>
         <li><a href="/help">Help & Contact</a></li>
         <li><a href="/legal">Terms of Use</a></li>
       </ul>
@@ -18,30 +19,19 @@
         </li>
         <li>
           {{#if req.user}}
-          <a href="/user/{{req.user.id}}" class="button button-dark-grey">
-            Profile
-          </a>
+            <a href="/user/{{req.user.id}}" class="button button-dark-grey">
+              Profile
+            </a>
           {{else}}
-          <button type="button" class="button button-dark-grey js-login-button">
-            Login
-          </button>
+            <a href="/login" class="button button-dark-grey">Login</a>
           {{/if}}
         </li>
         <li>
-          <div class="sidebar-menu-newsletter-container-mobile">
-            <a href="https://mailchi.mp/participedia/subscribe" target="_blank" class="button button-light-grey">
-              Newsletter Sign Up
-            </a>
-          </div>
+          <a href="https://mailchi.mp/participedia/subscribe" target="_blank" class="button button-light-grey">
+            Newsletter Sign Up
+          </a>
         </li>
       </ul>
-      <div class="sidebar-menu-newsletter-container-desktop">
-        <h4>Participedia Today</h4>
-        <p><small>Our email newsletter offers the latest information about participatory democratic innovations around the world, stories from our wide community of partners and contributors, invitations to conferences and events, and more.</small></p>
-        <a href="https://mailchi.mp/participedia/subscribe" target="_blank" class="button button-block button-light-grey">
-          Subscribe
-        </a>
-      </div>
     </div>
   </nav>
   <nav class="horizontal-menu">
@@ -72,24 +62,27 @@
       </li>
       <li>
         {{#if req.user}}
-        <a href="/user/{{req.user.id}}" class="header-profile-link">
-          <span class="sr-only">goto profile</span>
-          <div class="user-profile-image-initial">
-            {{getInitials req.user.name}}
+          <div class="profile-dropdown-button-container js-profile-dropdown-button-container">
+            <button class="button button-with-icon profile-dropdown-button-trigger js-profile-dropdown-button-trigger">
+              <div class="header-user-profile-image-initial user-profile-image-initial">
+                {{getInitials req.user.name}}
+              </div>
+              {{#if (getGravatarUrl req.user.email)}}
+                <img
+                  src="{{getGravatarUrl req.user.email}}?s=40&d=blank"
+                  alt="profile_picture"
+                  width="40"
+                  height="40"
+                />
+              {{/if}}
+            </button>
+            <div class="profile-dropdown-button-items js-profile-dropdown-button-items">
+              <a href="/user/{{req.user.id}}">Profile</a>
+              <a href="/logout">Sign out</a>
+            </div>
           </div>
-          {{#if (getGravatarUrl req.user.email)}}
-            <img
-              src="{{getGravatarUrl req.user.email}}?s=40&d=blank"
-              alt="profile_picture"
-              width="40"
-              height="40"
-            />
-          {{/if}}
-        </a>
         {{else}}
-        <button type="button" class="button button-dark-grey js-login-button">
-          Login
-        </button>
+          <a href="/login" class="button button-dark-grey">Login</a>
         {{/if}}
       </li>
     </ul>

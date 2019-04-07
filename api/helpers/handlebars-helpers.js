@@ -292,12 +292,12 @@ module.exports = {
 
   // tab helpers
   isTabActive(req, tabName) {
-    const tabParam = req.query && req.query.tab;
+    const tabParam = req.query && req.query.selectedCategory;
     // this is kind of hacky -- this will break in the case that when
     // have a default tab with the same name as a non-default tab on another page.
     // tab-contributions is default tab on /user/{id} (user-view)
     // tab-all is default tab on / (home-search)
-    const defaultTabs = ['tab-contributions', 'tab-all'];
+    const defaultTabs = ['contributions', 'all'];
     // if there is no param, make default tab active
     if ((!tabParam && defaultTabs.indexOf(tabName) > -1) || tabParam === tabName) {
       return "checked";
@@ -306,18 +306,36 @@ module.exports = {
 
   getHomeTabs() {
     return [
-      { title: "All", key: "tab-all" },
-      { title: "Cases", key: "tab-cases" },
-      { title: "Methods", key: "tab-methods" },
-      { title: "Organizations", key: "tab-organizations" },
+      { title: "All", key: "all" },
+      { title: "Cases", key: "case" },
+      { title: "Methods", key: "method" },
+      { title: "Organizations", key: "organizations" },
     ];
   },
 
   getUserTabs() {
     return [
-      { title: "Contributions", key: "tab-contributions" },
-      { title: "Bookmarks", key: "tab-bookmarks" },
+      { title: "Contributions", key: "contributions" },
+      { title: "Bookmarks", key: "bookmarks" },
     ];
+  },
+
+  isSelectedUserTab(req, category) {
+    const defaultTab = "contributions";
+    if (req.query.selectedCategory) {
+      return req.query.selectedCategory === category;
+    } else if (category === defaultTab) {
+      return true;
+    }
+  },
+
+  isSelectedHomeTab(req, category) {
+    const defaultTab = "all";
+    if (req.query.selectedCategory) {
+      return req.query.selectedCategory === category;
+    } else if (category === defaultTab) {
+      return true;
+    }
   },
 
   // location helpers
@@ -341,6 +359,8 @@ module.exports = {
 
   // user profile
   getInitials(username) {
+    if (!username) return;
+
     let initials = "";
     const splitUsername = username.split(" ");
 
@@ -416,6 +436,17 @@ module.exports = {
 
   isEqual(arg1, arg2) {
     return arg1 === arg2;
+  },
+
+  sanitizeName(name) {
+    // if name contains @, assume it's an email address, and strip the domain
+    // so we are not sharing email address' publicly
+    const atSymbolIndex = name.indexOf("@");
+    if (atSymbolIndex > 0) {
+      return name.substr(0, atSymbolIndex);
+    } else {
+      return name;
+    }
   },
 
   // data

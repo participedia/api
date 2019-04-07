@@ -16,6 +16,8 @@
       data-submit-type="full"
       class="js-edit-form"
     >
+      <input name="id" value="{{profile.id}}" type="hidden" />
+
       <p><strong>{{t static "member_since"}}</strong> {{getYearFromDate profile.join_date}}</p>
 
       <fieldset>

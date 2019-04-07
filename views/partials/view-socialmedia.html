@@ -1,18 +1,22 @@
 <ul class="unstyled-list social-links">
-  {{#if user}}
-    <li>
-      <a
-        href="#"
-        class="social-links-bookmark-link js-bookmark-link"
-        data-bookmarked="{{article.bookmarked}}"
-        data-type="{{article.type}}"
-        data-thing-id="{{article.id}}"
-        data-user-id="{{user.user_id}}"
-      >
+  <li>
+    <a
+      href="#"
+      class="js-bookmark-button"
+      data-bookmarked="{{article.bookmarked}}"
+      data-type="{{article.type}}"
+      data-thing-id="{{article.id}}"
+    >
+      <span class="is-bookmarked">
+        <span class="sr-only">Remove Bookmark</span>
         {{> icon-bookmark-fill}}
-      </a>
-    </li>
-  {{/if}}
+      </span>
+      <span class="is-not-bookmarked">
+        <span class="sr-only">Add Bookmark</span>
+        {{> icon-bookmark}}
+      </span>
+    </a>
+  </li>
   <li>
     <a href="{{shareLink 'facebook' article req}}" target="_blank">
       {{> icon-facebook}}

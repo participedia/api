@@ -109,7 +109,7 @@ router.post("/add", async function addBookmark(req, res) {
     }
     if (!req.user.id) {
       log.error("No user");
-      res.status(400).json({ error: "User (userId) wasn't specified" });
+      res.status(401).json({ error: "You must be logged in to perform this action." });
       return;
     }
     let userId = as.number(req.user.id);

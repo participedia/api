@@ -2,6 +2,7 @@ import FontFaceObserver from "fontfaceobserver";
 import header from "./header.js";
 import elementClosestPolyfill from "./polyfills/element.closest.polyfill.js";
 import contactHelpFaqWidget from "./contact-help-faq-widget.js";
+import headerProfileDropdownMenu from "./header-profile-dropdown-menu.js";
 
 function loadFonts() {
   const faktFont = new FontFaceObserver("Fakt");
@@ -21,4 +22,5 @@ document.addEventListener("DOMContentLoaded", () => {
   loadFonts();
   header.init();
   contactHelpFaqWidget.init();
+  headerProfileDropdownMenu.init();
 });
