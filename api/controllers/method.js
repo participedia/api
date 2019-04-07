@@ -114,7 +114,7 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:thingid", getEditXById("method"));
+router.post("/:thingid", getEditXById("method"));
 
 router.get("/:thingid/", async (req, res) => {
   /* This is the entry point for getting an article */
@@ -131,8 +131,7 @@ router.get("/:thingid/edit", async (req, res) => {
   const articleRow = await db.one(METHOD_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(METHOD_EDIT_STATIC, params);
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, null);
 });
 
 router.delete("/:id", function deleteMethod(req, res) {
