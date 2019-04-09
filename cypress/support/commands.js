@@ -45,21 +45,3 @@ Cypress.Commands.add(
     cy.wait(2000);
   }
 );
-
-Cypress.Commands.add("loginAsAdmin", (overrides = {}) => {
-  Cypress.log({
-    name: "loginAsAdmin"
-  });
-  // todo: create test admin account
-  // cy.login({
-  //   email: "",
-  //   password: "",
-  // });
-});
-
-Cypress.Commands.add("logout", (overrides = {}) => {
-  Cypress.log({
-    name: "logout"
-  });
-  cy.visit("/logout");
-});
