@@ -121,16 +121,6 @@ app.use((req, res, next) => {
 app.engine(".html", hbs.engine);
 app.set("view engine", ".html");
 
-if (
-  process.env.NODE_ENV === "test" &&
-  process.env.AUTH0_CLIENT_SECRET !== "notasecret"
-) {
-  console.error(
-    "CODING ERROR: Someone imported 'app' before 'setupenv' in the test suite"
-  );
-  process.exit(1);
-}
-
 // Better logging of "unhandled" promise exceptions
 process.on("unhandledRejection", function(reason, p) {
   console.warn(
