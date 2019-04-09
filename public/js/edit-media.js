@@ -65,9 +65,9 @@ const editMedia = {
 
       fileItemEl.innerHTML = template.innerHTML;
 
-      // set file name value on url field
-      const urlInputEl = fileItemEl.querySelector("input[data-attr='url']");
-      urlInputEl.value = files[i].name;
+      // set file name value on title field as a placeholder
+      const titleInputEl = fileItemEl.querySelector("input[data-attr='title']");
+      titleInputEl.value = files[i].name;
 
       // on all inputs set name to reflect index of item
       fileItemEl.querySelectorAll("input").forEach(el => {
