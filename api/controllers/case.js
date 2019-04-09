@@ -4,6 +4,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 const equals = require("deep-equal");
+const fs = require("fs");
 
 const {
   db,
@@ -31,6 +32,8 @@ const {
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
 const articleText = require("../../static-text/article-text.js");
+
+const CASE_STRUCTURE = fs.readFileSync("../helpers/data/case_structure.json");
 
 /**
  * @api {post} /case/new Create new case
@@ -354,28 +357,35 @@ router.get("/:thingid/", async (req, res) => {
   returnByType(res, params, article, staticText, req.user);
 });
 
+async function getEditStaticText() {
+  const staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+  staticText.authors = (await db.one(
+    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
+  )).authors;
+  staticText.cases = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
+    params
+  )).cases;
+  staticText.methods = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
+    params
+  )).methods;
+  staticText.labels = Object.assign({}, staticText.labels, articleText);
+}
+
 router.get("/:thingid/edit", requireAuthenticatedUser(), async (req, res) => {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = await getCase(params);
-  const staticResults = await db.one(CASE_EDIT_STATIC, params);
-  let staticText = staticResults.static;
-  const authorsResult = await db.one(
-    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
-  );
-  staticText.authors = authorsResult.authors;
-  const casesResult = await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
-    params
-  );
-  staticText.cases = casesResult.cases;
-  const methodsResult = await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
-    params
-  );
-  staticText.methods = methodsResult.methods;
+  const staticText = await getEditStaticText();
+  returnByType(res, params, article, staticText, req.user);
+});
 
-  staticText.labels = Object.assign({}, staticText.labels, articleText);
+router.get("/new", requireAuthenticatedUser(), async (req, res) => {
+  const params = parseGetParams(req, "case");
+  params.view = "edit";
+  const article = CASE_STRUCTURE;
+  const staticText = await getEditStaticText();
   returnByType(res, params, article, staticText, req.user);
 });
 
