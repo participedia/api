@@ -67,10 +67,12 @@ passport.deserializeUser(async function (user, done) {
 });
 
 // Perform the login, after login Auth0 will redirect to callback
-app.get("/login", passport.authenticate("auth0", {
-  scope: "openid email profile"
-}), function (req, res) {
-  res.redirect("/");
+app.get('/login', function(req, res, next) {
+  // set returnTo session var to referer so user is redirected to current page after login
+  req.session.returnTo = req.headers.referer;
+  passport.authenticate('auth0', {
+    scope: "openid email profile"
+  }, () => {})(req, res, next);
 });
 
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
@@ -82,7 +84,6 @@ app.get("/redirect", function (req, res, next) {
       if (err) { return next(err); }
       const returnTo = req.session.returnTo;
       delete req.session.returnTo;
-      // todo: return to original url where /login was requested from
       res.redirect(returnTo || '/');
     });
   })(req, res, next);
