@@ -63,6 +63,7 @@
     "chai": "^4.0.2",
     "chai-http": "^4.2.1",
     "csv": "^5.1.0",
+    "cypress": "^3.1.5",
     "eslint": "^5.12.1",
     "eslint-config-google": "^0.9.1",
     "eslint-config-prettier": "^4.0.0",
@@ -75,6 +76,9 @@
     "watchify": "^3.11.0"
   },
   "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run --browser chrome",
+    "cy:verify": "cypress verify",
     "heroku-postbuild": "npm run build",
     "start": "nodemon server.js",
     "watch": "npm-run-all --parallel watch:*",

@@ -18,7 +18,7 @@ const editMedia = {
   },
 
   handleInputChange(ev) {
-    this.renderUploadedFiles(ev);
+    this.renderUploadedFiles(ev.target);
   },
 
   toggleDropAreaClass(ev) {
@@ -27,11 +27,12 @@ const editMedia = {
 
   handleDrop(ev) {
     ev.preventDefault();
-
     this.toggleDropAreaClass(ev);
 
     const files = ev.dataTransfer.files;
-    ev.target.querySelector("input[name^='temporary-']").files = files;
+    const fileInputEl = ev.target.querySelector("input[name^='temporary-']");
+    fileInputEl.files = files;
+    this.renderUploadedFiles(fileInputEl);
   },
 
   setImageSrcAndFileValue(file, type, listEl, itemIndex) {
@@ -50,12 +51,12 @@ const editMedia = {
     reader.readAsDataURL(file);
   },
 
-  renderUploadedFiles(ev) {
-    const listEl = ev.target.closest(".form-group").querySelector(".js-edit-media-file-list");
+  renderUploadedFiles(fileInputEl) {
+    const listEl = fileInputEl.closest(".form-group").querySelector(".js-edit-media-file-list");
     const type = listEl.closest("ol").getAttribute("data-type");
     const name = listEl.getAttribute("data-name");
     const template = document.querySelector(`.js-edit-media-file-inputs-template-${name}`);
-    const files = ev.target.files;
+    const files = fileInputEl.files;
 
     // for each uploaded file, show the set of inputs as defined in the script/template element
     for (let i = 0; i < files.length; i++) {
@@ -64,9 +65,9 @@ const editMedia = {
 
       fileItemEl.innerHTML = template.innerHTML;
 
-      // set file name value on url field
-      const urlInputEl = fileItemEl.querySelector("input[data-attr='url']");
-      urlInputEl.value = files[i].name;
+      // set file name value on title field as a placeholder
+      const titleInputEl = fileItemEl.querySelector("input[data-attr='title']");
+      titleInputEl.value = files[i].name;
 
       // on all inputs set name to reflect index of item
       fileItemEl.querySelectorAll("input").forEach(el => {
@@ -85,7 +86,7 @@ const editMedia = {
       this.setImageSrcAndFileValue(files[i], type, listEl, itemIndex);
     }
     // clear temp input value and use hidden fields as source of truth for files to be uploaded
-    ev.target.value = "";
+    fileInputEl.value = "";
   },
 
   deleteFile(ev) {
