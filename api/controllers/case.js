@@ -1,6 +1,5 @@
 "use strict";
 const express = require("express");
-const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 const equals = require("deep-equal");
@@ -30,10 +29,8 @@ const {
 } = require("../helpers/things");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
-
 const articleText = require("../../static-text/article-text.js");
-
-const CASE_STRUCTURE = fs.readFileSync("../helpers/data/case_structure.json");
+const CASE_STRUCTURE = fs.readFileSync("api/helpers/data/case-structure.json");
 
 /**
  * @api {post} /case/new Create new case
@@ -60,11 +57,10 @@ const CASE_STRUCTURE = fs.readFileSync("../helpers/data/case_structure.json");
  *
  */
 
-router.post("/new", async function postNewCase(req, res) {
+async function postCaseNewHttp(req, res) {
   // create new `case` in db
   try {
     cache.clear();
-
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
@@ -83,7 +79,7 @@ router.post("/new", async function postNewCase(req, res) {
     });
     //    req.thingid = thing.thingid;
     req.params.thingid = thing.thingid;
-    updateCase(req, res);
+    await postCaseUpdateHttp(req, res);
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
     res.status(400).json({ OK: false, error: error });
@@ -95,7 +91,7 @@ router.post("/new", async function postNewCase(req, res) {
   // } catch (error) {
   //   log.error("Exception in POST /case/new => %s", error);
   // }
-});
+}
 
 /**
  * @api {put} /case/:caseId  Submit a new version of a case
@@ -266,9 +262,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
 
 // Only changes to title, description, and/or body trigger a new author and version
 
-router.post("/:thingid", updateCase);
-
-async function updateCase(req, res) {
+async function postCaseUpdateHttp(req, res) {
   // cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
@@ -348,14 +342,14 @@ async function getCase(params) {
   return article;
 }
 
-router.get("/:thingid/", async (req, res) => {
+async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params);
   const staticTextFromDB = await db.one(CASE_VIEW_STATIC, params);
   const staticText = Object.assign({}, staticTextFromDB, articleText);
   returnByType(res, params, article, staticText, req.user);
-});
+}
 
 async function getEditStaticText() {
   const staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
@@ -373,20 +367,34 @@ async function getEditStaticText() {
   staticText.labels = Object.assign({}, staticText.labels, articleText);
 }
 
-router.get("/:thingid/edit", requireAuthenticatedUser(), async (req, res) => {
+async function getCaseEditHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = await getCase(params);
   const staticText = await getEditStaticText();
   returnByType(res, params, article, staticText, req.user);
-});
+}
 
-router.get("/new", requireAuthenticatedUser(), async (req, res) => {
+async function getCaseNewHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = CASE_STRUCTURE;
   const staticText = await getEditStaticText();
   returnByType(res, params, article, staticText, req.user);
-});
+}
 
-module.exports = router;
+const router = express.Router(); // eslint-disable-line new-cap
+router.get("/:thingid/edit", requireAuthenticatedUser(), getCaseEditHttp);
+router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
+router.post("/new", requireAuthenticatedUser(), postCaseNewHttp);
+router.get("/:thingid", getCaseHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postCaseUpdateHttp);
+
+module.exports = {
+  case_: router,
+  getCaseEditHttp,
+  getCaseNewHttp,
+  postCaseNewHttp,
+  getCaseHttp,
+  postCaseUpdateHttp
+};
