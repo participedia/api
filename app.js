@@ -155,7 +155,7 @@ let port = process.env.PORT || 3001;
 // Actual Participedia APIS vs. Nodejs gunk
 let { case_ } = require("./api/controllers/case");
 let { method } = require("./api/controllers/method");
-let organization = require("./api/controllers/organization");
+let { organization } = require("./api/controllers/organization");
 let bookmark = require("./api/controllers/bookmark");
 let search = require("./api/controllers/search");
 let list = require("./api/controllers/list");
