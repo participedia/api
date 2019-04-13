@@ -1,11 +1,12 @@
-let fs = require("fs");
 let chai = require("chai");
-// let chaiHttp = require("chai-http");
-// let chaiHelpers = require("./helpers");
 let should = chai.should();
 let expect = chai.expect;
-// const { stub, match } = require('sinon')
-const { mockRequest, mockResponse } = require("mock-req-res");
+const {
+  getMocks,
+  getMocksAuth,
+  example_case,
+  addBasicCase
+} = require("./data/helpers.js");
 const {
   getCaseEditHttp,
   getCaseNewHttp,
@@ -13,66 +14,6 @@ const {
   getCaseHttp,
   postCaseUpdateHttp
 } = require("../api/controllers/case");
-
-let mockuser = {
-  id: 1,
-  hidden: null,
-  name: "mock user  ",
-  email: "jcarson3083@ecuad.ca",
-  language: "en",
-  language_1: "en",
-  accepted_date: "2016-11-16 14:28:43",
-  last_access_date: null,
-  login: null,
-  auth0_user_id: null,
-  join_date: "2019-04-10T18:24:31.337",
-  picture_url: null,
-  bio: "",
-  isadmin: false,
-  groups: [],
-  type: "user",
-  cases: [],
-  methods: [],
-  organizations: [],
-  bookmarks: []
-};
-
-let location = {
-  name: "Cleveland, OH, United States",
-  placeId: "ChIJLWto4y7vMIgRQhhi91XLBO0",
-  city: "Cleveland",
-  province: "Ohio",
-  country: "United States",
-  postal_code: "45701",
-  latitude: 41.49932,
-  longitude: -81.69436050000002
-};
-
-let example_case = JSON.parse(fs.readFileSync("test/data/case.json"));
-
-async function addBasicCase() {
-  const { req, res, ret } = getMocks({
-    user: mockuser,
-    body: example_case,
-    params: {}
-  });
-  await postCaseNewHttp(req, res);
-  return ret.body;
-}
-
-function getMocks(args) {
-  const req = mockRequest(
-    Object.assign({ query: { returns: "json" } }, args || {})
-  );
-  const ret = {};
-  const res = mockResponse({
-    json: body => {
-      // console.log("json() called");
-      ret.body = body;
-    }
-  });
-  return { req, res, ret };
-}
 
 describe("Cases", () => {
   describe("Lookup", () => {
@@ -95,7 +36,7 @@ describe("Cases", () => {
     });
     it("fails without content", async () => {
       try {
-        const { req, res, ret } = getMocks({ user: mockuser });
+        const { req, res, ret } = getMocksAuth({});
         await postCaseNewHttp(req, res);
       } catch (err) {
         err.should.have.status(400);
@@ -131,14 +72,13 @@ describe("Cases", () => {
       origCase.title.should.equal("First Title");
       origCase.body.should.equal("First Body");
       origCase.description.should.equal("First Description");
-      const { req, res, ret } = getMocks({
+      const { req, res, ret } = getMocksAuth({
         params: { thingid: origCase.id },
         body: {
           title: "Second Title",
           body: "Second Body",
           description: "Second Description"
-        },
-        user: mockuser
+        }
       });
       await postCaseUpdateHttp(req, res);
       const body2 = ret.body;
@@ -158,14 +98,13 @@ describe("Cases", () => {
       origCase.general_issues[1].key.should.equal("education");
       origCase.general_issues[2].key.should.equal("environment");
       origCase.general_issues[3].key.should.equal("planning");
-      const { req, res, ret } = getMocks({
+      const { req, res, ret } = getMocksAuth({
         params: { thingid: origCase.id },
         body: {
           general_issues: [
             { key: "arts", value: "Arts, Culture, & Recreation" }
           ]
-        },
-        user: mockuser
+        }
       });
       await postCaseUpdateHttp(req, res);
       const updatedCase = ret.body.article;
@@ -181,12 +120,11 @@ describe("Cases", () => {
       case1.photos[0].url.should.equal(
         "https://s3.amazonaws.com/uploads.participedia.xyz/index.php__21.jpg"
       );
-      const { req, res, ret } = getMocks({
+      const { req, res, ret } = getMocksAuth({
         params: { thingid: case1.id },
         body: {
           photos: [{ url: "foobar.jpg" }]
-        },
-        user: mockuser
+        }
       });
       await postCaseUpdateHttp(req, res);
       const case2 = ret.body.article;
