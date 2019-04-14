@@ -36,13 +36,14 @@ if (app.get("env") === "production") {
 app.use(session(sess));
 
 // Configure Passport to use Auth0
-const strategy = new Auth0Strategy({
-  domain: process.env.AUTH0_DOMAIN,
-  clientID: process.env.AUTH0_CLIENT_ID,
-  clientSecret: process.env.AUTH0_CLIENT_SECRET,
-  callbackURL: "/redirect"
+const strategy = new Auth0Strategy(
+  {
+    domain: process.env.AUTH0_DOMAIN,
+    clientID: process.env.AUTH0_CLIENT_ID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    callbackURL: "/redirect"
   },
-  function (accessToken, refreshToken, extraParams, profile, done) {
+  function(accessToken, refreshToken, extraParams, profile, done) {
     // accessToken is the token to call Auth0 API (not needed in the most cases)
     // extraParams.id_token has the JSON Web Token
     // profile has all the information from the user
@@ -56,34 +57,44 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // You can use this section to keep a smaller payload
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function(user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(async function (user, done) {
+passport.deserializeUser(async function(user, done) {
   // get db user from auth0 user data
   const dbUser = await getUserOrCreateUser(user._json);
   done(null, dbUser);
 });
 
 // Perform the login, after login Auth0 will redirect to callback
-app.get("/login", passport.authenticate("auth0", {
-  scope: "openid email profile"
-}), function (req, res) {
-  res.redirect("/");
-});
+app.get(
+  "/login",
+  passport.authenticate("auth0", {
+    scope: "openid email profile"
+  }),
+  function(req, res) {
+    res.redirect("/");
+  }
+);
 
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
-app.get("/redirect", function (req, res, next) {
-  passport.authenticate("auth0", function (err, user, info) {
-    if (err) { return next(err); }
-    if (!user) { return res.redirect("/login"); }
-    req.logIn(user, function (err) {
-      if (err) { return next(err); }
+app.get("/redirect", function(req, res, next) {
+  passport.authenticate("auth0", function(err, user, info) {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.redirect("/login");
+    }
+    req.logIn(user, function(err) {
+      if (err) {
+        return next(err);
+      }
       const returnTo = req.session.returnTo;
       delete req.session.returnTo;
       // todo: return to original url where /login was requested from
-      res.redirect(returnTo || '/');
+      res.redirect(returnTo || "/");
     });
   })(req, res, next);
 });
@@ -92,7 +103,9 @@ app.get("/redirect", function (req, res, next) {
 app.get("/logout", (req, res) => {
   const currentUrl = `${req.protocol}://${req.headers.host}`;
   req.logout();
-  res.redirect(`https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`);
+  res.redirect(
+    `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
+  );
 });
 
 var hbs = exphbs.create({
@@ -140,9 +153,9 @@ app.use(compression());
 let port = process.env.PORT || 3001;
 
 // Actual Participedia APIS vs. Nodejs gunk
-let case_ = require("./api/controllers/case");
-let method = require("./api/controllers/method");
-let organization = require("./api/controllers/organization");
+let { case_ } = require("./api/controllers/case");
+let { method } = require("./api/controllers/method");
+let { organization } = require("./api/controllers/organization");
 let bookmark = require("./api/controllers/bookmark");
 let search = require("./api/controllers/search");
 let list = require("./api/controllers/list");
@@ -153,7 +166,7 @@ let morgan = require("morgan");
 let bodyParser = require("body-parser");
 let methodOverride = require("method-override");
 let cors = require("cors");
-let isUser = require("./api/middleware/isUser");
+// let isUser = require("./api/middleware/isUser");
 
 app.set("port", port);
 app.use(express.static("public", { index: false }));

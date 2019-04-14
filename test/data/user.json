@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "hidden": null,
+  "name": "mock user",
+  "email": "jcarson3083@ecuad.ca",
+  "language": "en",
+  "language_1": "en",
+  "accepted_date": "2016-11-16 14:28:43",
+  "last_access_date": null,
+  "login": null,
+  "auth0_user_id": null,
+  "join_date": "2019-04-10T18:24:31.337",
+  "picture_url": null,
+  "bio": "",
+  "isadmin": false,
+  "groups": [],
+  "type": "user",
+  "cases": [],
+  "methods": [],
+  "organizations": [],
+  "bookmarks": []
+}
