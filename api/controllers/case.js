@@ -201,8 +201,10 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   ["ongoing", "staff", "volunteers"].map(key => cond(key, as.boolean));
   // yes/no (convert to boolean)
   ["impact_evidence", "formal_evaluation"].map(key => cond(key, as.yesno));
-  // number
+  // integer
   ["number_of_participants"].map(key => cond(key, as.integer));
+  // float
+  ["latitude", "longitude"].map(key => cond(key, as.float));
   // plain text
   [
     "original_language",
@@ -213,8 +215,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "province",
     "postal_code",
     "country",
-    "latitude",
-    "longitude",
     "funder"
   ].map(key => cond(key, as.text));
   // date
