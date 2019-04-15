@@ -8,17 +8,12 @@
     enctype="application/x-www-form-urlencoded"
     class="js-edit-form"
   >
-    <!-- todo: pass in user id from server once it's added to the json -->
-    <input type="hidden" name="user" value="14" />
+    <input type="hidden" name="user" value="{{req.user.id}}" />
 
-    {{!--
-      harcode values for fields that are required by the backend,
-      for features that have not yet been implemented on the frontend.
-    --}}
-    <input type="hidden" name="original_language" value="en" />
-    <input type="hidden" name="featured" value="false" />
-    <input type="hidden" name="hidden" value="false" />
-    {{!----}}
+    <!-- hidden fields for features that have not yet been implemented on the frontend. -->
+    <input type="hidden" name="original_language" value="{{article.original_language}}" />
+    <input type="hidden" name="featured" value="{{article.featured}}" />
+    <input type="hidden" name="hidden" value="{{article.hidden}}" />
 
     <div class="edit-form-author-info">
       {{> edit-submission-details }}
