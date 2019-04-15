@@ -404,7 +404,9 @@ module.exports = {
   },
 
   isNewView(req) {
-    return req.url === "/new";
+    const baseUrls = ["/case", "/method", "/organization"];
+    return baseUrls.includes(req.baseUrl) &&
+      req.path.indexOf("new") === 1;
   },
 
   isEditView(req) {
@@ -414,7 +416,9 @@ module.exports = {
 
   isReaderView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
-    return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") === -1;
+    return baseUrls.includes(req.baseUrl) &&
+      req.path.indexOf("edit") === -1 &&
+      req.path.indexOf("new") !== 1;
   },
 
   isHomeSearchView(req) {
