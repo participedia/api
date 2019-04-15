@@ -142,7 +142,7 @@ async function getMethodNewHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
   const article = METHOD_STRUCTURE;
-  const staticText = await getEditStaticText();
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 

@@ -351,7 +351,7 @@ async function getCaseHttp(req, res) {
   returnByType(res, params, article, staticText, req.user);
 }
 
-async function getEditStaticText() {
+async function getEditStaticText(params) {
   const staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
   staticText.authors = (await db.one(
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
@@ -365,13 +365,14 @@ async function getEditStaticText() {
     params
   )).methods;
   staticText.labels = Object.assign({}, staticText.labels, articleText);
+  return staticText;
 }
 
 async function getCaseEditHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = await getCase(params);
-  const staticText = await getEditStaticText();
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 
@@ -379,7 +380,7 @@ async function getCaseNewHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = CASE_STRUCTURE;
-  const staticText = await getEditStaticText();
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 
