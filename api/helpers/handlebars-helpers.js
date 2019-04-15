@@ -5,6 +5,17 @@ const aboutData = require("./data/about-data.js");
 const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
 
+const LOCATION_FIELD_NAMES = [
+  "address1",
+  "address2",
+  "city",
+  "province",
+  "postal_code",
+  "country",
+  "latitude",
+  "longitude"
+];
+
 function toTitleCase(str) {
   return str.replace(
     /\w\S*/g,
@@ -344,17 +355,18 @@ module.exports = {
     return `${coords.latitude},${coords.longitude}`;
   },
 
+  hasLocationData(article) {
+    let hasLocationData = false;
+    LOCATION_FIELD_NAMES.forEach((fieldName) => {
+      if (article[fieldName]) {
+        hasLocationData = true;
+      }
+    });
+    return hasLocationData;
+  },
+
   locationFieldNames() {
-    return [
-      "address1",
-      "address2",
-      "city",
-      "province",
-      "postal_code",
-      "country",
-      "latitude",
-      "longitude"
-    ];
+    return LOCATION_FIELD_NAMES;
   },
 
   // user profile
