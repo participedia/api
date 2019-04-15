@@ -403,6 +403,10 @@ module.exports = {
     return currentUrl(req);
   },
 
+  isNewView(req) {
+    return req.url === "/new";
+  },
+
   isEditView(req) {
     const baseUrls = ["/case", "/method", "/organization", "/user"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
