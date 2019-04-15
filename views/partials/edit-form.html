@@ -15,9 +15,12 @@
     <input type="hidden" name="featured" value="{{article.featured}}" />
     <input type="hidden" name="hidden" value="{{article.hidden}}" />
 
-    <div class="edit-form-author-info">
-      {{> edit-submission-details }}
-    </div>
+    {{#if (isEditView req)}}
+      <!-- only show contributor info on edit page -->
+      <div class="edit-form-author-info">
+        {{> edit-submission-details }}
+      </div>
+    {{/if}}
 
     {{> @partial-block }}
 
