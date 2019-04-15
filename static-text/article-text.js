@@ -37,4 +37,7 @@ module.exports = {
   audio_attribution_placeholder: "Owner or creator",
   audio_title_instructional: "Provide a title or description of this audio in 10 words or less.",
   audio_title_placeholder: "Title or description",
+  scope_of_influence_label: "Scope of Influence",
+  scope_of_influence_instructional: "What is the geographical or jurisdictional scope of this case?",
+  scope_of_influence_placeholder: "Select geographical or jurisdictional scope"
 };
