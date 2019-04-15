@@ -22,18 +22,12 @@ if (process.env.TESTLOCAL === "true") {
 }
 
 // We'll create a BEARER_TOKEN environment variable
-
 let userPayload = {
   sub: "1234567890",
   name: "asdasasd Doe",
   email: "joe@example.com",
   user_id: "123",
-  isadmin: true,
-  app_metadata: {
-    authorization: {
-      groups: ["Contributors", "Curators"]
-    }
-  }
+  isadmin: true
 };
 
 // taken from https://github.com/auth0/node-jsonwebtoken/issues/315#issuecomment-283136148

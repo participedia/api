@@ -42,7 +42,7 @@
   public_spectrum, // normalize to key
   number_of_participants, // must be integer
   open_limited, // normalize to key
-  recruitement_method, // normalize to key
+  recruitment_method, // normalize to key
   targeted_participants, // normalize to array of keys
   method_types, // normalize to array of keys
   tools_techniques_types, // normalize to array of keys

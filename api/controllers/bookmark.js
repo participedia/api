@@ -54,7 +54,7 @@ async function queryBookmarks(req, res) {
     let userid = as.number(req.params.userid);
 
     if (!userid) {
-      userid = req.user.user_id; // put there by preferUser
+      userid = req.user.id; // put there by preferUser
     }
     lookupBookmarksById(req, res, userid);
   } catch (error) {
@@ -131,7 +131,7 @@ router.post("/add", async function addBookmark(req, res) {
       "insert into bookmarks(bookmarktype, thingid, userid) VALUES(${bookmarkType},${thingid},${userId}) returning id",
       { bookmarkType, thingid, userId }
     );
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       status: "success",
       data: data2.id,

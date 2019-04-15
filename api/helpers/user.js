@@ -18,21 +18,24 @@ async function getUserOrCreateUser(auth0User) {
     createdUser = await db.one(CREATE_USER_ID, {
       userEmail: auth0User.email,
       // if auth0User.name is null, use first part of email address for username
-      userName: auth0User.name || auth0User.email.substr(0, auth0User.email.indexOf("@")),
+      userName:
+        auth0User.name ||
+        auth0User.email.substr(0, auth0User.email.indexOf("@")),
       joinDate: auth0User.created_at,
       auth0UserId: auth0User.id,
       bio: "",
-      language: "en",
+      language: "en"
     });
   }
 
   // we either have an id from userByEmail or createdUser
-  const userId = (userByEmail && userByEmail.id) || (createdUser && createdUser.user_id);
+  const userId =
+    (userByEmail && userByEmail.id) || (createdUser && createdUser.user_id);
 
   // get full user object by id
   result = await db.oneOrNone(USER_BY_ID, {
     userId: userId,
-    language: "en",
+    language: "en"
   });
 
   return result.user;
@@ -60,5 +63,5 @@ function okToEdit(user) {
 
 module.exports = exports = {
   okToEdit,
-  getUserOrCreateUser,
+  getUserOrCreateUser
 };
