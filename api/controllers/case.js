@@ -67,7 +67,8 @@ async function postCaseNewHttp(req, res) {
     let language = req.params.language || "en";
     if (!title) {
       return res.status(400).json({
-        message: "Cannot create Case without at least a title"
+        OK: false,
+        errors: ["Cannot create a case without at least a title."]
       });
     }
     const user_id = req.user.id;
@@ -379,7 +380,7 @@ async function getCaseEditHttp(req, res) {
 async function getCaseNewHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
-  const article = CASE_STRUCTURE;
+  const article = JSON.parse(CASE_STRUCTURE);
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
