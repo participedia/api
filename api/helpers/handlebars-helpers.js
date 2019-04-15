@@ -365,6 +365,16 @@ module.exports = {
     return hasLocationData;
   },
 
+  getLocationValue(article) {
+    const locationValues = LOCATION_FIELD_NAMES.map(field => {
+      if (field !== "latitude" && field !== "longitude") {
+        return article[field];
+      }
+    }).filter(field => field);
+
+    return locationValues.join(", ");
+  },
+
   locationFieldNames() {
     return LOCATION_FIELD_NAMES;
   },
