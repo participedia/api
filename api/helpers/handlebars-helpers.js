@@ -439,6 +439,7 @@ module.exports = {
   },
 
   sanitizeName(name) {
+    if (!name) return;
     // if name contains @, assume it's an email address, and strip the domain
     // so we are not sharing email address' publicly
     const atSymbolIndex = name.indexOf("@");
