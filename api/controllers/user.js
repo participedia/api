@@ -29,6 +29,10 @@ async function getUserById(userId, req, res, view = "view") {
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
 
+    if (result.user.bookmarks) {
+      result.user.bookmarks.forEach(b => (b.bookmarked = true));
+    }
+
     // if name contains @, assume it's an email address, and strip the domain
     // so we are not sharing email address' publicly
     const atSymbolIndex = result.user.name.indexOf("@");
@@ -179,11 +183,9 @@ router.post("/", async function(req, res) {
 
   // make sure profile is logged in user's profile
   if (req.user.id !== parseInt(req.body.id)) {
-    return res
-      .status(401)
-      .json({
-        error: "The user doesn't have permission to perform this operation."
-      });
+    return res.status(401).json({
+      error: "The user doesn't have permission to perform this operation."
+    });
   }
 
   try {
