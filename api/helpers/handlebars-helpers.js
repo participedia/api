@@ -209,7 +209,9 @@ module.exports = {
   },
 
   formatDate(article, name, format) {
-    return moment(article[name]).format(format);
+    if (article[name] && article[name] !== "") {
+      return moment(article[name]).format(format);
+    }
   },
 
   getCaseEditSubmitType(req) {
