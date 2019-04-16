@@ -1,4 +1,11 @@
-{{> article-edit-text name="location"}}
+{{#> edit-form-group quick-submit="true" name="location" is_required="false"}}
+  <input
+    type="text"
+    placeholder="{{placeholder static name}}"
+    name="location"
+    value="{{getLocationValue article}}"
+  />
+{{/ edit-form-group}}
 
 {{#each (locationFieldNames)}}
   <input

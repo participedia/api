@@ -17,6 +17,18 @@ var serialize = function (form) {
     // Don't serialize fields without a name, submits, buttons and reset inputs, and disabled fields
     if (!field.name || field.disabled || field.type === 'reset' || field.type === 'submit' || field.type === 'button') continue;
 
+    if (field.classList.contains("js-edit-multi-select")) {
+      // don't send field value for fields with .js-edit-multi-select
+      // since we use hidden fields to track the values of the selected items,
+      // and not the value of the select element
+      continue;
+    }
+
+    if (field.name.indexOf("temporary-") === 0) {
+      // don't send temporary fields to server
+      continue;
+    }
+
     // If a multi-select, get all selections
     if (field.type === 'select-multiple') {
       for (var n = 0; n < field.options.length; n++) {
