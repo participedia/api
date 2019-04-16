@@ -29,16 +29,16 @@ try {
 let db = pgp(config);
 
 let dbtagkeys;
-let dbcasekeys;
+// let dbcasekeys;
 
 async function initKeys() {
   // we're just getting the keys for validation, which are the same for
   // every language, so hard-coding 'en' here is OK.
-  dbcasekeys = (await db.one(`
-    SELECT to_json(array_agg(key)) AS keys
-    FROM localized_case_field_values
-    WHERE language = 'en';
-  `)).keys;
+  // dbcasekeys = (await db.one(`
+  //   SELECT to_json(array_agg(key)) AS keys
+  //   FROM localized_case_field_values
+  //   WHERE language = 'en';
+  // `)).keys;
   dbtagkeys = (await db.one(`
     SELECT to_json(array_agg(key)) as keys
     FROM rotate_tags_localized('en') AS tagvalues
