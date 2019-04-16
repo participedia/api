@@ -2,7 +2,7 @@ language: node_js
 sudo: false
 dist: trusty
 node_js:
-- '7'
+  - "11.2.0"
 addons:
   postgresql: "9.5"
 cache: yarn
@@ -10,11 +10,11 @@ notifications:
   slack:
     secure: P3d36qfC1cM/0G03VqZXrjbWT1ByBePul+0QAIykrG2H9UUBZpt/OQTNJWHdzMvtJKRE5vFllckDGdJZCJO5OSlczQz7w1QUhTqrK3iTP/FClHpW2qyl+PfTUXEsl0lVQMotoNEk6MOsGJEgrY7CkzEObkGE53QmWmwojXvKJn+5AGsz14f0lXvfqTep4M96GyAZlye7Xm3DHenBTGoemlkIhA+yl6ua6SVefwm3/XD90ZyYz+YOK6hCrVJIrMDrp7zVZ1w88QPcoYupduhghIAh7wjbMjSGxikzQYNbWcvrwgzevAK9JKNfflKyWnu4zppaYL2zO9gyE3eZlN2eSpHsKi9VM4FlM04ZK82YLVHeWZBKMm4Pj4jde2yDqax+AJnFDW0zeYJk/XU7NV2DByyFFzzd70bStUu1HilCC7A9NM4EgVVxHrsx8ubpOMFcsOew1Ow8qLC9N96gTazkXfCosic2uxUreF++mGzXQBfv4kgIiUw1p3uZ2QlqcjYbdvHv2Uo8CQMG2s4dcO55Rzd47bnYqudwqXzcDBwdung+5WrbM3llygpDl+mnS7eguH4DX95AspX7eiL1+QDgiqoqZQwt6iulXfyBpJVnAA7NrrJNDXkIGACDnKjJFhvpaZET5TbZQYp/2MA4hN/h/hASlQDkvDr/Nx2NKOMH+bc=
 services:
-- postgresql
+  - postgresql
 before_script:
-- psql -a -U postgres -c 'create database participedia;'
-- psql -a -U postgres -d participedia -f setup.sql
-- node migrations/import_json.js
+  - psql -a -U postgres -c 'create database participedia;'
+  - psql -a -U postgres -d participedia -f setup.sql
+  - node migrations/import_json.js
 # deploy:
 #   provider: heroku
 #   api_key:
