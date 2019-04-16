@@ -187,7 +187,7 @@ describe("Search", () => {
     });
   });
 
-  describe("get organizations in Canada", () => {
+  describe.skip("get organizations in Canada", () => {
     it("finds all Organizations with the term Canada", async () => {
       const res = await chai
         .getJSON("/search?query=Canada&selectedCategory=Organizations")
@@ -199,7 +199,7 @@ describe("Search", () => {
     });
   });
 
-  describe("get cases tagged 'nuclear'", () => {
+  describe.skip("get cases tagged 'nuclear'", () => {
     it("finds all Cases with the word nuclear", async () => {
       const res = await chai
         .getJSON("/search?query=nuclear&selectedCategory=Cases")
@@ -210,7 +210,7 @@ describe("Search", () => {
     });
   });
 
-  describe("Test full-text search", () => {
+  describe.skip("Test full-text search", () => {
     it("single-word search", async () => {
       const res = await chai.getJSON("/search?query=Budget").send({});
       res.should.have.status(200);
@@ -234,7 +234,7 @@ describe("Search", () => {
     });
   });
 
-  describe("Test cacheing", () => {
+  describe.skip("Test cacheing", () => {
     it("Will only be correct if cache is cleared", async () => {
       const res1 = await chai.getJSON("/search").send({});
       res1.should.have.status(200);
@@ -283,7 +283,7 @@ describe("Search", () => {
     });
   });
 
-  describe("Test resultType=map", () => {
+  describe.skip("Test resultType=map", () => {
     it("setup", setupFeatured);
 
     it.skip("find featured results", async () => {

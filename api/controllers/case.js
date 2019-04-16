@@ -30,7 +30,9 @@ const {
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 const articleText = require("../../static-text/article-text.js");
-const CASE_STRUCTURE = fs.readFileSync("api/helpers/data/case-structure.json");
+const CASE_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
+);
 
 /**
  * @api {post} /case/new Create new case
@@ -150,14 +152,14 @@ async function maybeUpdateUserText(req, res) {
     }
     updatedText[key] = value;
   });
+  const author = {
+    user_id: params.userid,
+    thingid: params.articleid
+  };
   if (textModified) {
-    const author = {
-      user_id: params.userid,
-      thingid: params.articleid
-    };
     return { updatedText, author, oldCase };
   } else {
-    return { updatedText: null, author: null, oldCase };
+    return { updatedText: null, author, oldCase };
   }
 }
 
@@ -288,6 +290,7 @@ async function postCaseUpdateHttp(req, res) {
     } else {
       await db.tx("update-case", t => {
         return t.batch([
+          t.none(INSERT_AUTHOR, author),
           t.none(UPDATE_CASE, updatedCase)
           // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
@@ -380,7 +383,7 @@ async function getCaseEditHttp(req, res) {
 async function getCaseNewHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
-  const article = JSON.parse(CASE_STRUCTURE);
+  const article = CASE_STRUCTURE;
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
