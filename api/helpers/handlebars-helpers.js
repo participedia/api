@@ -5,6 +5,17 @@ const aboutData = require("./data/about-data.js");
 const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
 
+const LOCATION_FIELD_NAMES = [
+  "address1",
+  "address2",
+  "city",
+  "province",
+  "postal_code",
+  "country",
+  "latitude",
+  "longitude"
+];
+
 function toTitleCase(str) {
   return str.replace(
     /\w\S*/g,
@@ -180,7 +191,9 @@ module.exports = {
   },
 
   formatDate(article, name, format) {
-    return moment(article[name]).format(format);
+    if (article[name] && article[name] !== "") {
+      return moment(article[name]).format(format);
+    }
   },
 
   getCaseEditSubmitType(req) {
@@ -321,17 +334,28 @@ module.exports = {
   },
 
   // location helpers
+  hasLocationData(article) {
+    let hasLocationData = false;
+    LOCATION_FIELD_NAMES.forEach((fieldName) => {
+      if (article[fieldName]) {
+        hasLocationData = true;
+      }
+    });
+    return hasLocationData;
+  },
+
+  getLocationValue(article) {
+    const locationValues = LOCATION_FIELD_NAMES.map(field => {
+      if (field !== "latitude" && field !== "longitude") {
+        return article[field];
+      }
+    }).filter(field => field);
+
+    return locationValues.join(", ");
+  },
+
   locationFieldNames() {
-    return [
-      "address1",
-      "address2",
-      "city",
-      "province",
-      "postal_code",
-      "country",
-      "latitude",
-      "longitude"
-    ];
+    return LOCATION_FIELD_NAMES;
   },
 
   // user profile
@@ -380,6 +404,12 @@ module.exports = {
     return currentUrl(req);
   },
 
+  isNewView(req) {
+    const baseUrls = ["/case", "/method", "/organization"];
+    return baseUrls.includes(req.baseUrl) &&
+      req.path.indexOf("new") === 1;
+  },
+
   isEditView(req) {
     const baseUrls = ["/case", "/method", "/organization", "/user"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
@@ -387,7 +417,9 @@ module.exports = {
 
   isReaderView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
-    return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") === -1;
+    return baseUrls.includes(req.baseUrl) &&
+      req.path.indexOf("edit") === -1 &&
+      req.path.indexOf("new") !== 1;
   },
 
   isHomeSearchView(req) {
@@ -416,6 +448,7 @@ module.exports = {
   },
 
   sanitizeName(name) {
+    if (!name) return;
     // if name contains @, assume it's an email address, and strip the domain
     // so we are not sharing email address' publicly
     const atSymbolIndex = name.indexOf("@");

@@ -1,12 +1,13 @@
-<dt>Location</dt>
-{{#with article}}
-  {{#if location_name}}<dd>{{ location_name }}</dd>{{/if}}
-  {{#if address1}}<dd>{{ address1 }}</dd>{{/if}}
-  {{#if address2}}<dd>{{ address2 }}</dd>{{/if}}
-  {{#if city}}<dd>{{ city }}</dd>{{/if}}
-  {{#if province}}<dd>{{ province }}</dd>{{/if}}
-  {{#if postal_code}}<dd>{{ postal_code }}</dd>{{/if}}
-  {{#if country}}<dd>{{ country }}</dd>{{/if}}
-  {{#if latitude}}<dd>{{latitude}}</dd>{{/if}}
-  {{#if longitude}}<dd>{{longitude}}</dd>{{/if}}
-{{/with}}
+{{#if (hasLocationData article)}}
+  <dt>Location</dt>
+  {{#with article}}
+    {{#if address1}}<dd>{{ address1 }}</dd>{{/if}}
+    {{#if address2}}<dd>{{ address2 }}</dd>{{/if}}
+    {{#if city}}<dd>{{ city }}</dd>{{/if}}
+    {{#if province}}<dd>{{ province }}</dd>{{/if}}
+    {{#if postal_code}}<dd>{{ postal_code }}</dd>{{/if}}
+    {{#if country}}<dd>{{ country }}</dd>{{/if}}
+    {{#if latitude}}<dd>{{latitude}}</dd>{{/if}}
+    {{#if longitude}}<dd>{{longitude}}</dd>{{/if}}
+  {{/with}}
+{{/if}}

@@ -144,7 +144,7 @@ async function getOrganizationNewHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
   const article = ORGANIZATION_STRUCTURE;
-  const staticText = await getEditStaticText();
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 

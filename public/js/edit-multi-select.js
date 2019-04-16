@@ -142,7 +142,7 @@ const editMultiSelect = {
     if (ranked) newItem.setAttribute("draggable", ranked);
     newItem.querySelector("span").innerText = value;
     newItemInput.value = key;
-    newItemInput.name = `${name}[${index}]`;
+    newItemInput.name = `${name}[${index}][key]`;
     return newItem;
   },
 
