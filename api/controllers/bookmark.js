@@ -107,7 +107,7 @@ router.post("/add", async function addBookmark(req, res) {
         .json({ error: "Required parameter (thingid) wasn't specified" });
       return;
     }
-    if (!req.user.id) {
+    if (!req.user) {
       log.error("No user");
       res.status(401).json({ error: "You must be logged in to perform this action." });
       return;
@@ -173,6 +173,9 @@ router.post("/add", async function addBookmark(req, res) {
 
 router.delete("/delete", async function updateUser(req, res) {
   try {
+    if (!req.user) {
+      return res.status(401).json({ error: "You must be logged in to perform this action." });
+    }
     const userId = as.number(req.user.id);
     const bookmarkType = req.body.bookmarkType;
     const thingid = as.number(req.body.thingid);
