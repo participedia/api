@@ -21,8 +21,8 @@ const {
   fixUpURLs
 } = require("../helpers/things");
 
-const ORGANIZATION_STRUCTURE = fs.readFileSync(
-  "api/helpers/data/organization-structure.json"
+const ORGANIZATION_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/organization-structure.json", "utf8")
 );
 
 /**

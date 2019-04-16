@@ -2,13 +2,15 @@ const fs = require("fs");
 const { mockRequest, mockResponse } = require("mock-req-res");
 const { postCaseNewHttp } = require("../../api/controllers/case");
 
-let example_case = JSON.parse(fs.readFileSync("test/data/case.json"));
-let example_method = JSON.parse(fs.readFileSync("test/data/method.json"));
-let example_organization = JSON.parse(
-  fs.readFileSync("test/data/organization.json")
+let example_case = JSON.parse(fs.readFileSync("test/data/case.json", "utf8"));
+let example_method = JSON.parse(
+  fs.readFileSync("test/data/method.json", "utf8")
 );
-let mock_user = JSON.parse(fs.readFileSync("test/data/user.json"));
-let mock_user2 = JSON.parse(fs.readFileSync("test/data/user2.json"));
+let example_organization = JSON.parse(
+  fs.readFileSync("test/data/organization.json", "utf8")
+);
+let mock_user = JSON.parse(fs.readFileSync("test/data/user.json", "utf8"));
+let mock_user2 = JSON.parse(fs.readFileSync("test/data/user2.json", "utf8"));
 
 async function addBasicCase() {
   const { req, res, ret } = getMocks({

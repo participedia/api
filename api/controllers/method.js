@@ -20,8 +20,8 @@ const {
   fixUpURLs
 } = require("../helpers/things");
 
-const METHOD_STRUCTURE = fs.readFileSync(
-  "api/helpers/data/method-structure.json"
+const METHOD_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/method-structure.json", "utf8")
 );
 
 /**

@@ -30,7 +30,9 @@ const {
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 const articleText = require("../../static-text/article-text.js");
-const CASE_STRUCTURE = fs.readFileSync("api/helpers/data/case-structure.json");
+const CASE_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
+);
 
 /**
  * @api {post} /case/new Create new case
