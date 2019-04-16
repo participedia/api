@@ -8,6 +8,7 @@ let example_organization = JSON.parse(
   fs.readFileSync("test/data/organization.json")
 );
 let mock_user = JSON.parse(fs.readFileSync("test/data/user.json"));
+let mock_user2 = JSON.parse(fs.readFileSync("test/data/user2.json"));
 
 async function addBasicCase() {
   const { req, res, ret } = getMocks({
@@ -34,7 +35,7 @@ function getMocks(args) {
 }
 
 function getMocksAuth(args) {
-  return getMocks(Object.assign({ user: mock_user }, args || {}));
+  return getMocks(Object.assign({ user: mock_user2 }, args || {}));
 }
 
 module.exports = {

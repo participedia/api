@@ -288,6 +288,7 @@ async function postCaseUpdateHttp(req, res) {
     } else {
       await db.tx("update-case", t => {
         return t.batch([
+          t.none(INSERT_AUTHOR, author),
           t.none(UPDATE_CASE, updatedCase)
           // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
