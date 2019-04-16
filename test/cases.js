@@ -89,16 +89,6 @@ describe("Cases", () => {
       updatedCase.title.should.equal("Second Title");
       updatedCase.body.should.equal("Second Body");
       updatedCase.description.should.equal("Second Description");
-      console.log("Original creator: %s", JSON.stringify(origCase.creator));
-      console.log(
-        "Original last updated by: %s",
-        JSON.stringify(origCase.last_updated_by)
-      );
-      console.log("Updated creator: %s", JSON.stringify(updatedCase.creator));
-      console.log(
-        "Updated last updated by: %s",
-        JSON.stringify(updatedCase.last_updated_by)
-      );
       updatedCase.last_updated_by.user_id.should.not.equal(
         origCase.last_updated_by.user_id
       );

@@ -1,38 +1,28 @@
-let tokens = require("./setupenv");
-let app = require("../app");
 let chai = require("chai");
-let chaiHttp = require("chai-http");
-let chaiHelpers = require("./helpers");
 let should = chai.should();
 let expect = chai.expect;
-chai.should();
-chai.use(chaiHttp);
-chai.use(chaiHelpers);
-
-async function addBasicOrganization() {
-  return chai
-    .postJSON("/organization/new")
-    .set("Authorization", "Bearer " + tokens.user_token)
-    .send({
-      // mandatory
-      title: "First Title",
-      body: "First Body",
-      // optional
-      images: [
-        "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg"
-      ],
-      vidURL: "https://www.youtube.com/watch?v=ZPoqNeR3_UA&t=11050s",
-      related_cases: [9, 10, 11, 12],
-      related_methods: [151, 152, 153],
-      related_organizations: [205, 206, 207]
-    });
-}
+const {
+  getMocks,
+  getMocksAuth,
+  example_organization,
+  addBasicOrganization
+} = require("./data/helpers.js");
+const {
+  getOrganizationEditHttp,
+  getOrganizationNewHttp,
+  postOrganizationNewHttp,
+  getOrganizationHttp,
+  postOrganizationUpdateHttp
+} = require("../api/controllers/organization");
 
 describe("Organizations", () => {
-  describe("Lookup", () => {
+  describe.only("Lookup", () => {
     it("finds organization 307", async () => {
-      const res = await chai.getJSON("/organization/307").send({});
-      res.should.have.status(200);
+      const { req, res, ret } = getMocks({ params: { thingid: 307 } });
+      await getOrganizationHttp(req, res);
+      const article = ret.body.article;
+      ret.body.OK.should.be.true;
+      article.id.should.equal(307);
     });
   });
   describe("Adding", () => {

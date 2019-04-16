@@ -10,9 +10,7 @@ const {
   as,
   CREATE_ORGANIZATION,
   ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_EDIT_STATIC,
-  ORGANIZATION_VIEW_BY_ID,
-  ORGANIZATION_VIEW_STATIC
+  ORGANIZATION_VIEW_BY_ID
 } = require("../helpers/db");
 
 const {
@@ -127,7 +125,7 @@ async function getOrganizationHttp(req, res) {
   const articleRow = await db.one(ORGANIZATION_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(ORGANIZATION_VIEW_STATIC, params);
+  const staticText = {};
   returnByType(res, params, article, staticText);
 }
 
@@ -136,7 +134,7 @@ async function getOrganizationEditHttp(req, res) {
   const articleRow = await db.one(ORGANIZATION_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(ORGANIZATION_EDIT_STATIC, params);
+  const staticText = {};
   returnByType(res, params, article, staticText);
 }
 

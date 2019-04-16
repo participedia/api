@@ -20,6 +20,24 @@ async function addBasicCase() {
   return ret.body;
 }
 
+async function addBasicMethod() {
+  const { req, res, ret } = getMocks({
+    user: mock_user,
+    body: example_method,
+    params: {}
+  });
+  await postMethodNewHttp(req, res);
+  return ret.body;
+}
+async function addBasicOrganization() {
+  const { req, res, ret } = getMocks({
+    user: mock_user,
+    body: example_organization,
+    params: {}
+  });
+  await postOrganizationNewHttp(req, res);
+  return ret.body;
+}
 function getMocks(args) {
   const req = mockRequest(
     Object.assign({ query: { returns: "json" } }, args || {})
@@ -42,5 +60,7 @@ module.exports = {
   getMocks,
   getMocksAuth,
   example_case,
-  addBasicCase
+  addBasicCase,
+  addBasicMethod,
+  addBasicOrganization
 };

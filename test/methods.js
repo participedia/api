@@ -16,7 +16,7 @@ const {
 } = require("../api/controllers/method");
 
 describe("Methods", () => {
-  describe("Lookup", () => {
+  describe.only("Lookup", () => {
     it("finds method 190", async () => {
       const { req, res, ret } = getMocks({ params: { thingid: 190 } });
       await getMethodHttp(req, res);
