@@ -75,7 +75,7 @@ async function processArticles(type) {
           if (err) console.log("error:", err);
         });
     } else {
-      // if there is no address data, set lat/lng to NULL rather than 0° 0' 0" N,0° 0' 0" E
+      // if there is no address data, set lat/lng to NULL
       saveArticle(article.type, article.id, null, null).then(() => {
         console.log(`NULL - ${article.type} #${article.id} - There is no address data, setting lat/lng as null`);
       });
