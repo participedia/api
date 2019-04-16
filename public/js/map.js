@@ -57,8 +57,8 @@ const map = {
     const markers = Array.prototype.slice.call(currentCardEls).map(el => {
       const latLng = el.getAttribute("data-lat-lng");
 
-      // if cards don't have valid lat,lng coords, don't render markers
-      if (!latLng || latLng === "NaN,NaN" || latLng === "0,0") return;
+      // if cards don't have lat,lng coords, don't render markers
+      if (!latLng) return;
 
       const latitude = latLng.split(",")[0];
       const longitude = latLng.split(",")[1];

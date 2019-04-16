@@ -71,8 +71,8 @@
   "province": "Greenpeace",
   "postal_code": "V5Z 2X3",
   "country": "France",
-  "latitude": "45° 11' 18.7044\" N",
-  "longitude": "5° 43' 28.2864\" E",
+  "latitude": 45.187044,
+  "longitude": 5.452864,
   "scope_of_influence": {
     "key": "citytown",
     "lookup_key": "scope_value_citytown",

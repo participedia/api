@@ -86,9 +86,23 @@ function integer(value) {
   if (value === "NaN") {
     throw new Error('Expected integer, got "NaN" as a string');
   }
-  let retVal = pgp.as.number(parseInt(value));
+  let retVal = pgp.as.number(parseInt(value, 10));
   if (Number.isNaN(retVal)) {
     throw new Error("Expected integer value, got " + value);
+  }
+  return retVal;
+}
+
+function asFloat(value) {
+  if (value === "") {
+    return null;
+  }
+  if (value === "NaN") {
+    throw new Error('Expected float, got "NaN" as a string');
+  }
+  let retVal = pgp.as.number(parseFloat(value));
+  if (Number.isNaN(retVal)) {
+    throw new Error("Expected float value, got " + value);
   }
   return retVal;
 }
@@ -335,6 +349,7 @@ const as = Object.assign({}, pgp.as, {
   id,
   ids,
   integer,
+  float: asFloat,
   // localed,
   media,
   number,
