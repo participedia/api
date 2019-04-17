@@ -69,10 +69,10 @@ SET
   change_types = ${change_types},
   implementers_of_change = ${implementers_of_change},
   tools_techniques_types = ${tools_techniques_types},
+  facilitators = ${facilitators},
 -- list of tag keys
   tags = ${tags}
 --  not in use, still in db
-  -- facilitators = ${facilitators},
   -- process_methods = ${process_methods:raw},
 WHERE
   id = ${id}

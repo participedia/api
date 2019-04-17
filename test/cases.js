@@ -51,13 +51,21 @@ describe("Cases", () => {
       returnedCase.creator.user_id.should.equal(
         returnedCase.last_updated_by.user_id
       );
-      returnedCase.scope_of_influence.key.should.equal(
-        example_case.scope_of_influence.key
-      );
-      returnedCase.public_spectrum.key.should.equal(
-        example_case.public_spectrum.key
-      );
-      returnedCase.legality.key.should.equal(example_case.legality.key);
+      // test key fields
+      [
+        "scope_of_influence",
+        "public_spectrum",
+        "legality",
+        "facilitators",
+        "facilitator_training",
+        "facetoface_online_or_both",
+        "open_limited",
+        "recruitment_method",
+        "time_limited"
+      ].forEach(key => {
+        console.log("testing %s", key);
+        returnedCase[key].key.should.equal(example_case[key]);
+      });
     });
   });
 

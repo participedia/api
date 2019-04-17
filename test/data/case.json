@@ -73,11 +73,7 @@
   "country": "France",
   "latitude": 45.187044,
   "longitude": 5.452864,
-  "scope_of_influence": {
-    "key": "citytown",
-    "lookup_key": "scope_value_citytown",
-    "value": "City/Town"
-  },
+  "scope_of_influence": "citytown",
   "has_components": [
     {
       "id": 111,
@@ -193,11 +189,7 @@
   "start_date": "2005-10-27T09:00:00",
   "end_date": null,
   "ongoing": true,
-  "time_limited": {
-    "key": "a",
-    "lookup_key": "time_limited_value_a",
-    "value": "A single, defined period of time"
-  },
+  "time_limited": "a",
   "purposes": [
     {
       "key": "make",
@@ -227,22 +219,10 @@
       "value": "Independent action"
     }
   ],
-  "public_spectrum": {
-    "key": "collaborate",
-    "lookup_key": "public_spectrum_value_collaborate",
-    "value": "Collaborate"
-  },
+  "public_spectrum": "collaborate",
   "number_of_participants": 12,
-  "open_limited": {
-    "key": "limited",
-    "lookup_key": "open_limited_value_limited",
-    "value": "Limited to Only Some Groups or Individuals"
-  },
-  "recruitment_method": {
-    "key": "random",
-    "lookup_key": "recruitment_method_value_random",
-    "value": "Random Sample"
-  },
+  "open_limited": "limited",
+  "recruitment_method": "random",
   "targeted_participants": [
     {
       "key": "youth",
@@ -258,14 +238,10 @@
   "method_types": [],
   "tools_techniques_types": [],
   "specific_methods_tools_techniques": [],
-  "legality": { "key": "false", "lookup_key": "false", "value": "False" },
-  "facilitators": { "key": "yes", "lookup_key": "yes", "value": "Yes" },
-  "facilitator_training": { "key": "", "lookup_key": "", "value": "" },
-  "facetoface_online_or_both": {
-    "key": "facetoface",
-    "lookup_key": "facetoface_online_or_both_value_facetoface",
-    "value": "Face-to-Face"
-  },
+  "legality": "false",
+  "facilitators": "yes",
+  "facilitator_training": "",
+  "facetoface_online_or_both": "facetoface",
   "participants_interactions": [
     {
       "key": "discussion",

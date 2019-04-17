@@ -204,6 +204,11 @@ function casekey(obj, group) {
   return "";
 }
 
+function casekeyflat(str, group) {
+  // FIXME: add validation of legal keys
+  return text(str);
+}
+
 function casekeys(objList, group) {
   if (group === undefined) {
     throw new Error("Group cannot be undefined");
@@ -356,6 +361,7 @@ const as = Object.assign({}, pgp.as, {
   sourcedMedia,
   // strings,
   casekey,
+  casekeyflat,
   casekeys,
   richtext,
   tagkeys,
