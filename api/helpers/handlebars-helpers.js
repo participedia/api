@@ -64,24 +64,6 @@ function getFirstPhotoUrl(article) {
   return article.photos[0].url;
 }
 
-function parseDMS(input) {
-  // expects input formatted as "0° 0' 0" N,0° 0' 0" E"
-  const parts = input.split(/[^\d\w\.]+/);
-  return {
-    latitude: convertDMSToDD(parts[0], parts[1], parts[2], parts[3]),
-    longitude: convertDMSToDD(parts[4], parts[5], parts[6], parts[7]),
-  };
-}
-
-function convertDMSToDD(degrees, minutes, seconds, direction) {
-  let dd = Number(degrees) + Number(minutes) / 60 + Number(seconds) / (60 * 60);
-
-  if (direction === "S" || direction === "W") {
-    dd = dd * -1;
-  } // Don't do anything for N or E
-  return dd;
-}
-
 module.exports = {
   // transalation helpers
   label: (staticText, name) => staticTextValue(staticText, name, "label"),
@@ -354,11 +336,6 @@ module.exports = {
   },
 
   // location helpers
-  parseLatLng(latitude, longitude) {
-    const coords = parseDMS(`${latitude},${longitude}`);
-    return `${coords.latitude},${coords.longitude}`;
-  },
-
   hasLocationData(article) {
     let hasLocationData = false;
     LOCATION_FIELD_NAMES.forEach((fieldName) => {

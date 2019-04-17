@@ -44,12 +44,6 @@ const fixUpURLs = function(article) {
       }
     });
   }
-  if (article.longitude.startsWith("0° 0' 0\"")) {
-    article.longitude = "";
-  }
-  if (article.latitude.startsWith("0° 0' 0\"")) {
-    article.latitude = "";
-  }
 };
 
 const returnByType = (res, params, article, static, user) => {

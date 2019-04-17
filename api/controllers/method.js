@@ -9,9 +9,7 @@ const {
   as,
   CREATE_METHOD,
   METHOD_EDIT_BY_ID,
-  METHOD_EDIT_STATIC,
-  METHOD_VIEW_BY_ID,
-  METHOD_VIEW_STATIC
+  METHOD_VIEW_BY_ID
 } = require("../helpers/db");
 
 const {
@@ -22,8 +20,8 @@ const {
   fixUpURLs
 } = require("../helpers/things");
 
-const METHOD_STRUCTURE = fs.readFileSync(
-  "api/helpers/data/method-structure.json"
+const METHOD_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/method-structure.json", "utf8")
 );
 
 /**
@@ -126,7 +124,7 @@ async function getMethodHttp(req, res) {
   const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(METHOD_VIEW_STATIC, params);
+  const staticText = {};
   returnByType(res, params, article, staticText);
 }
 

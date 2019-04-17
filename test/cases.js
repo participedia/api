@@ -48,10 +48,13 @@ describe("Cases", () => {
       let returnedCase = body.article;
       returnedCase.id.should.be.a("number");
       returnedCase.videos.length.should.equal(2);
+      returnedCase.creator.user_id.should.equal(
+        returnedCase.last_updated_by.user_id
+      );
     });
   });
 
-  it.skip("test SQL santization", async () => {
+  it.skip("test SQL sanitization", async () => {
     const body = await addBasicCase();
     // actually test this!
   });
@@ -86,6 +89,9 @@ describe("Cases", () => {
       updatedCase.title.should.equal("Second Title");
       updatedCase.body.should.equal("Second Body");
       updatedCase.description.should.equal("Second Description");
+      updatedCase.last_updated_by.user_id.should.not.equal(
+        origCase.last_updated_by.user_id
+      );
     });
 
     it("Add case, then modify some fields", async () => {

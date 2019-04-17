@@ -29,16 +29,16 @@ try {
 let db = pgp(config);
 
 let dbtagkeys;
-let dbcasekeys;
+// let dbcasekeys;
 
 async function initKeys() {
   // we're just getting the keys for validation, which are the same for
   // every language, so hard-coding 'en' here is OK.
-  dbcasekeys = (await db.one(`
-    SELECT to_json(array_agg(key)) AS keys
-    FROM localized_case_field_values
-    WHERE language = 'en';
-  `)).keys;
+  // dbcasekeys = (await db.one(`
+  //   SELECT to_json(array_agg(key)) AS keys
+  //   FROM localized_case_field_values
+  //   WHERE language = 'en';
+  // `)).keys;
   dbtagkeys = (await db.one(`
     SELECT to_json(array_agg(key)) as keys
     FROM rotate_tags_localized('en') AS tagvalues
@@ -86,9 +86,23 @@ function integer(value) {
   if (value === "NaN") {
     throw new Error('Expected integer, got "NaN" as a string');
   }
-  let retVal = pgp.as.number(parseInt(value));
+  let retVal = pgp.as.number(parseInt(value, 10));
   if (Number.isNaN(retVal)) {
     throw new Error("Expected integer value, got " + value);
+  }
+  return retVal;
+}
+
+function asFloat(value) {
+  if (value === "") {
+    return null;
+  }
+  if (value === "NaN") {
+    throw new Error('Expected float, got "NaN" as a string');
+  }
+  let retVal = pgp.as.number(parseFloat(value));
+  if (Number.isNaN(retVal)) {
+    throw new Error("Expected float value, got " + value);
   }
   return retVal;
 }
@@ -335,6 +349,7 @@ const as = Object.assign({}, pgp.as, {
   id,
   ids,
   integer,
+  float: asFloat,
   // localed,
   media,
   number,
@@ -357,13 +372,9 @@ const CASE_EDIT_STATIC = sql("../sql/case_edit_static.sql");
 const CASE_VIEW_BY_ID = sql("../sql/case_view_by_id.sql");
 const CASE_VIEW_STATIC = sql("../sql/case_view_static.sql");
 const METHOD_EDIT_BY_ID = sql("../sql/method_edit_by_id.sql");
-const METHOD_EDIT_STATIC = sql("../sql/method_edit_static.sql");
 const METHOD_VIEW_BY_ID = sql("../sql/method_view_by_id.sql");
-const METHOD_VIEW_STATIC = sql("../sql/method_view_static.sql");
 const ORGANIZATION_EDIT_BY_ID = sql("../sql/organization_edit_by_id.sql");
-const ORGANIZATION_EDIT_STATIC = sql("../sql/organization_edit_static.sql");
 const ORGANIZATION_VIEW_BY_ID = sql("../sql/organization_view_by_id.sql");
-const ORGANIZATION_VIEW_STATIC = sql("../sql/organization_view_static.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
@@ -417,12 +428,8 @@ module.exports = {
   CASE_VIEW_BY_ID,
   CASE_VIEW_STATIC,
   METHOD_EDIT_BY_ID,
-  METHOD_EDIT_STATIC,
   METHOD_VIEW_BY_ID,
-  METHOD_VIEW_STATIC,
   ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_EDIT_STATIC,
   ORGANIZATION_VIEW_BY_ID,
-  ORGANIZATION_VIEW_STATIC,
   ErrorReporter
 };
