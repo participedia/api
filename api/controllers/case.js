@@ -33,6 +33,7 @@ const articleText = require("../../static-text/article-text.js");
 const CASE_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
 );
+const caseFieldOptions = require("../helpers/case-field-options.js");
 
 /**
  * @api {post} /case/new Create new case
@@ -356,7 +357,8 @@ async function getCaseHttp(req, res) {
 }
 
 async function getEditStaticText(params) {
-  const staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+
   staticText.authors = (await db.one(
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   )).authors;
@@ -368,7 +370,15 @@ async function getEditStaticText(params) {
     "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
     params
   )).methods;
+  staticText.organizations = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
+    params
+  )).organizations;
+
+  staticText = Object.assign({}, staticText, caseFieldOptions);
+
   staticText.labels = Object.assign({}, staticText.labels, articleText);
+
   return staticText;
 }
 

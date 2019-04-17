@@ -40,5 +40,8 @@ module.exports = {
   scope_of_influence_label: "Scope of Influence",
   scope_of_influence_instructional: "What is the geographical or jurisdictional scope of this case?",
   scope_of_influence_placeholder: "Select geographical or jurisdictional scope",
-  body_placeholder: "<h3>Problems and Purpose</h3> <h3>Background</h3> <h3>History and Context</h3> <h3>Organizing, Supporting, and Funding Entities</h3> <h3>Participant Recruitment and Selection</h3> <h3>Methods and Tools Used</h3> <h3>Deliberation, Decisions, and Public Interaction</h3> <h3>Influence, Outcomes, and Effects</h3> <h3>Analysis and Lessons Learned</h3><h3>See Also</h3> <h3>References</h3> <h3>External Links</h3> <h3>Notes</h3>"
+  body_placeholder: "<h3>Problems and Purpose</h3> <h3>Background</h3> <h3>History and Context</h3> <h3>Organizing, Supporting, and Funding Entities</h3> <h3>Participant Recruitment and Selection</h3> <h3>Methods and Tools Used</h3> <h3>Deliberation, Decisions, and Public Interaction</h3> <h3>Influence, Outcomes, and Effects</h3> <h3>Analysis and Lessons Learned</h3><h3>See Also</h3> <h3>References</h3> <h3>External Links</h3> <h3>Notes</h3>",
+  description_label: "Brief Description",
+  description_instructional: "Enter tweet-length (280 characters or less) description of this case.",
+  facilitators_placeholder: "Did facilitators help guide participants?"
 };
