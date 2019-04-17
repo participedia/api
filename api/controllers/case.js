@@ -31,6 +31,7 @@ const {
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 const articleText = require("../../static-text/article-text.js");
 const CASE_STRUCTURE = fs.readFileSync("api/helpers/data/case-structure.json");
+const caseFieldOptions = require("../helpers/case-field-options.js");
 
 /**
  * @api {post} /case/new Create new case
@@ -353,7 +354,8 @@ async function getCaseHttp(req, res) {
 }
 
 async function getEditStaticText(params) {
-  const staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+
   staticText.authors = (await db.one(
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   )).authors;
@@ -370,43 +372,10 @@ async function getEditStaticText(params) {
     params
   )).organizations;
 
-  // we don't have the correct options values or they are missing altogether
-  // from localized text from the db, so hardcoding the options values here for now.
-  staticText.legality = [
-    { key: "yes", value: "Yes"},
-    { key: "no", value: "No"}
-  ];
-  staticText.facilitators = [
-    { key: "yes", value: "Yes"},
-    { key: "no", value: "No"},
-    { key: "not_applicable", value: "Not applicable"}
-  ];
-  staticText.decision_methods = [
-    { key: "opinion", value: "Opinion Survey" },
-    { key: "idea", value: "Idea Generation" },
-    { key: "general", value: "General Agreement/Consensus" },
-    { key: "voting", value: "Voting" },
-    { key: "not_applicable", value: "Not Applicable" },
-    { key: "dont", value: "Don’t Know" }
-  ];
-  staticText.staff = [
-    { key: "yes", value: "Yes"},
-    { key: "no", value: "No"}
-  ];
-  staticText.volunteers = [
-    { key: "yes", value: "Yes"},
-    { key: "no", value: "No"}
-  ];
-  staticText.impact_evidence = [
-    { key: "yes", value: "Yes"},
-    { key: "no", value: "No"}
-  ];
-  staticText.formal_evaluation = [
-    { key: "yes", value: "Yes"},
-    { key: "no", value: "No"}
-  ];
+  staticText = Object.assign({}, staticText, caseFieldOptions);
 
   staticText.labels = Object.assign({}, staticText.labels, articleText);
+
   return staticText;
 }
 
