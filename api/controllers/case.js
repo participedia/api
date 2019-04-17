@@ -271,7 +271,7 @@ async function postCaseUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
-  // console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
+  console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
   // save any changes to the user-submitted text
   const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
   // console.log("updatedText: %s", JSON.stringify(updatedText));

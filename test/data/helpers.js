@@ -62,6 +62,8 @@ module.exports = {
   getMocks,
   getMocksAuth,
   example_case,
+  example_method,
+  example_organization,
   addBasicCase,
   addBasicMethod,
   addBasicOrganization
