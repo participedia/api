@@ -37,14 +37,17 @@ var serialize = function (form) {
       }
     }
 
+    if (field.type === "checkbox") {
+      serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.checked));
+    }
+
     // convert rich text fields
     if (field.getAttribute("data-field-type") === "richtext") {
       const richtextValue = form.querySelector(`[data-name=richtext-${field.name}] [contenteditable="true"]`).innerHTML;
       serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(richtextValue));
     }
 
-    // Convert field data to a query string
-    else if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
+    else if (field.type !== 'checkbox' && field.type !== 'radio') {
       serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value));
     }
   }
