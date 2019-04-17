@@ -365,6 +365,47 @@ async function getEditStaticText(params) {
     "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
     params
   )).methods;
+  staticText.organizations = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
+    params
+  )).organizations;
+
+  // we don't have the correct options values or they are missing altogether
+  // from localized text from the db, so hardcoding the options values here for now.
+  staticText.legality = [
+    { key: "yes", value: "Yes"},
+    { key: "no", value: "No"}
+  ];
+  staticText.facilitators = [
+    { key: "yes", value: "Yes"},
+    { key: "no", value: "No"},
+    { key: "not_applicable", value: "Not applicable"}
+  ];
+  staticText.decision_methods = [
+    { key: "opinion", value: "Opinion Survey" },
+    { key: "idea", value: "Idea Generation" },
+    { key: "general", value: "General Agreement/Consensus" },
+    { key: "voting", value: "Voting" },
+    { key: "not_applicable", value: "Not Applicable" },
+    { key: "dont", value: "Don’t Know" }
+  ];
+  staticText.staff = [
+    { key: "yes", value: "Yes"},
+    { key: "no", value: "No"}
+  ];
+  staticText.volunteers = [
+    { key: "yes", value: "Yes"},
+    { key: "no", value: "No"}
+  ];
+  staticText.impact_evidence = [
+    { key: "yes", value: "Yes"},
+    { key: "no", value: "No"}
+  ];
+  staticText.formal_evaluation = [
+    { key: "yes", value: "Yes"},
+    { key: "no", value: "No"}
+  ];
+
   staticText.labels = Object.assign({}, staticText.labels, articleText);
   return staticText;
 }

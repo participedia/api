@@ -103,6 +103,8 @@ module.exports = {
       return mapIdTitleToKeyValue(staticText["cases"]);
     } else if (name === "specific_methods_tools_techniques") {
       return mapIdTitleToKeyValue(staticText["methods"]);
+    } else if (name === "primary_organizer") {
+      return mapIdTitleToKeyValue(staticText["organizations"]);
     } else {
       return staticText[name];
     }
