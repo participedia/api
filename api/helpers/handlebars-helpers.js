@@ -120,10 +120,23 @@ module.exports = {
 
   getArticleSelectValue: (article, name) => {
     if (!article[name]) return null;
-    const key = article[name].key;
+
+    // some article select fields have values like  { key: "value"},
+    // and others like for impact_evidence and formal_evaluation have a
+    // string like "value" which represents the key
+
+    let key;
+    if(article[name].key) {
+      key = article[name].key
+    } else {
+      key = article[name];
+    }
+
     const selectedItemInArray = caseFieldOptions[name].filter(options => options.key === key);
     if (selectedItemInArray.length > 0) {
-      return caseFieldOptions[name].filter(options => options.key === key)[0].value;
+      if (selectedItemInArray[0].value !== "") {
+        return selectedItemInArray[0].value;
+      }
     }
   },
 
