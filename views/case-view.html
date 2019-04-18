@@ -53,7 +53,7 @@
   <section>
     {{> view-list name="types_of_methods" }}
     {{> view-list name="types_of_tools_techniques" }}
-    {{> view-text name="specific_tools" }}
+    {{> view-list name="specific_methods_tools_techniques" }}
     {{> view-list name="legality" }}
     {{> view-text name="facilitators" }}
     {{> view-text name="facilitator_training" }}
@@ -75,8 +75,8 @@
   <section>
     {{> view-text name="funder" }}
     {{> view-list name="funder_type" }}
-    {{> view-list name="staff" }}
-    {{> view-list name="volunteers" }}
+    {{> view-boolean name="staff" }}
+    {{> view-boolean name="volunteers" }}
   </section>
 
   <!-- Evidence of Impact -->
