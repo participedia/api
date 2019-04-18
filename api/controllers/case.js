@@ -238,7 +238,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "open_limited",
     "recruitment_method",
     "time_limited"
-  ].map(key => cond(key, as.casekey));
+  ].map(key => cond(key, as.casekeyflat));
   // list of keys
   [
     "general_issues",
@@ -272,12 +272,14 @@ async function postCaseUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
+
   // console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
   // save any changes to the user-submitted text
   const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+  // console.log("updated case: %s", JSON.stringify(updatedCase));
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
@@ -301,6 +303,7 @@ async function postCaseUpdateHttp(req, res) {
     // save successful response
     // console.log("Params for returning case: %s", JSON.stringify(params));
     const freshArticle = await getCase(params);
+    console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
       article: freshArticle
@@ -340,10 +343,18 @@ async function postCaseUpdateHttp(req, res) {
  *
  */
 
+function keyFieldsToObjects(article) {
+  // do this for all key fields eventually
+  ["scope_of_influence", "legality"].forEach(
+    key => (article[key] = { key: article[key] })
+  );
+}
+
 async function getCase(params) {
   const articleRow = await db.one(CASE_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
+  keyFieldsToObjects(article);
   return article;
 }
 

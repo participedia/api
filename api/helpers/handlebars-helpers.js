@@ -4,6 +4,7 @@ const faqContent = require("./faq-content.js");
 const aboutData = require("./data/about-data.js");
 const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
+const caseFieldOptions = require("./case-field-options.js");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -115,6 +116,19 @@ module.exports = {
   isArray: (article, name) => {
     const value = article[name];
     return value && value.constructor === Array;
+  },
+
+  getArticleSelectValue: (article, name) => {
+    if (!article[name]) return null;
+    const key = article[name].key;
+    const selectedItemInArray = caseFieldOptions[name].filter(options => options.key === key);
+    if (selectedItemInArray.length > 0) {
+      return caseFieldOptions[name].filter(options => options.key === key)[0].value;
+    }
+  },
+
+  getArticleSelectKey: (article, name) => {
+    return article[name] && article[name].key;
   },
 
   getvalue: (article, name) => {
