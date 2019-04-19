@@ -141,7 +141,13 @@ module.exports = {
   },
 
   getArticleSelectKey: (article, name) => {
-    return article[name] && article[name].key;
+    if (!article[name]) return;
+
+    if (article[name].key) {
+      return article[name].key;
+    } else {
+      return article[name];
+    }
   },
 
   getvalue: (article, name) => {
