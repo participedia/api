@@ -548,4 +548,18 @@ module.exports = {
     { key: "non_profit_non_gov", value: "Non-Profit or Non Governmental" },
     { key: "higher_ed", value: "Higher Education or Research" }
   ],
+  level_polarization: [
+    { key: "not", value: "Not polarized" },
+    { key: "low", value: "Low polarization" },
+    { key: "moderate", value: "Moderate polarization" },
+    { key: "polarized", value: "Polarized" },
+    { key: "high", value: "High polarization" },
+  ],
+  level_complexity: [
+    { key: "very_low", value: "Very Low Complexity" },
+    { key: "low", value: "Low Complexity" },
+    { key: "moderate", value: "Moderate Complexity" },
+    { key: "high", value: "High Complexity" },
+    { key: "very_high", value: "Very High Complexity" },
+  ]
 };
