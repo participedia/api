@@ -5,7 +5,6 @@ module.exports = {
   name_label: "Name of Organization",
   name_instructional: "Enter the name of this organization",
   name_placeholder: "Enter title in 10 words or less",
-  description_narrative_sectionlabel: "Description and Narrative",
   focus_areas_sectionlabel: "Focus Areas",
   sector_label: "Sector",
   sector_instructional: "In what sector does this organization operate?",

@@ -1,1 +1,25 @@
-<article>method-view</artiicle>
+{{#> view-container}}
+  <section>
+    {{> view-list name="facetoface_online_or_both"}}
+  </section>
+
+  <section>
+    {{> view-list name="method_types"}}
+  </section>
+
+  <section>
+    {{> view-media-list name="files"}}
+    {{> view-media-list name="links"}}
+    {{> view-media-list name="videos"}}
+    {{> view-media-list name="audio"}}
+  </section>
+
+  <section>
+    {{> view-text name="number_participants"}}
+  </section>
+
+  <section>
+    {{> view-list name="types_interaction"}}
+    {{> view-list name="facilitation"}}
+  </section>
+{{/view-container}}

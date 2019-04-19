@@ -9,7 +9,8 @@ const {
   as,
   CREATE_METHOD,
   METHOD_EDIT_BY_ID,
-  METHOD_VIEW_BY_ID
+  METHOD_VIEW_BY_ID,
+  CASE_EDIT_STATIC
 } = require("../helpers/db");
 
 const {
@@ -20,9 +21,25 @@ const {
   fixUpURLs
 } = require("../helpers/things");
 
+const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
+
 const METHOD_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/method-structure.json", "utf8")
 );
+
+const articleText = require("../../static-text/article-text.js");
+const methodText = require("../../static-text/method-text.js");
+const methodFieldOptions = require("../helpers/method-field-options.js");
+
+async function getEditStaticText(params) {
+  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+
+  staticText = Object.assign({}, staticText, methodFieldOptions);
+
+  staticText.labels = Object.assign({}, staticText.labels, methodText, articleText);
+
+  return staticText;
+}
 
 /**
  * @api {post} /method/new Create new method
@@ -130,10 +147,13 @@ async function getMethodHttp(req, res) {
 
 async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
+  params.view = "edit";
   const articleRow = await db.one(METHOD_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  returnByType(res, params, article, null);
+  const staticText = await getEditStaticText(params);
+
+  returnByType(res, params, article, staticText);
 }
 
 async function getMethodNewHttp(req, res) {
@@ -145,11 +165,11 @@ async function getMethodNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
-router.post("/new", postMethodNewHttp);
-router.post("/:thingid", postMethodUpdateHttp);
+router.post("/new", requireAuthenticatedUser(), postMethodNewHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
 router.get("/:thingid/", getMethodHttp);
-router.get("/:thingid/edit", getMethodEditHttp);
-router.get("/new", getMethodNewHttp);
+router.get("/:thingid/edit", requireAuthenticatedUser(), getMethodEditHttp);
+router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
 
 module.exports = {
   method: router,

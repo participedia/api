@@ -219,4 +219,67 @@ module.exports = {
     { key: "youth", value: "Youth Employment" },
     { key: "youth_issues", value: "Youth Issues" }
   ],
+  facetoface_online_or_both: [
+    { key: "facetoface", value: "Face-to-Face" },
+    { key: "online", value: "Online" },
+    { key: "both", value: "Both" }
+  ],
+  method_types: [
+    { key: "collaborative", value: "Collaborative approaches" },
+    {
+      key: "community",
+      value: "Community development, organizing, and mobilization"
+    },
+    { key: "deliberative", value: "Deliberative and dialogic process" },
+    { key: "direct", value: "Direct democracy" },
+    { key: "evaluation", value: "Evaluation, oversight, and social auditing" },
+    { key: "experiential", value: "Experiential and immersive education" },
+    { key: "informal", value: "Informal conversation spaces" },
+    { key: "informal_participation", value: "Informal participation" },
+    { key: "internal", value: "Internal management or organization" },
+    { key: "longterm", value: "Long-term civic bodies" },
+    { key: "participantled", value: "Participant-led meetings" },
+    { key: "participatory", value: "Participatory arts" },
+    { key: "planning", value: "Planning" },
+    { key: "protest", value: "Protest" },
+    { key: "public", value: "Public budgeting" },
+    { key: "public_meetings", value: "Public meetings" },
+    { key: "research", value: "Research or experimental method" }
+  ],
+  purposes: [
+    {
+      key: "make",
+      value:
+        "Make, influence, or challenge decisions of government and public bodies"
+    },
+    {
+      key: "make_influence",
+      value: "Make, influence, or challenge decisions of private organizations"
+    },
+    { key: "deliver", value: "Deliver goods & services" },
+    {
+      key: "develop",
+      value:
+        "Develop the civic capacities of individuals, communities, and/or civil society organizations"
+    },
+    { key: "academic", value: "Academic research" }
+  ],
+  public_spectrum: [
+    { key: "inform", value: "Inform" },
+    { key: "consult", value: "Consult" },
+    { key: "involve", value: "Involve" },
+    { key: "collaborate", value: "Collaborate" },
+    { key: "empower", value: "Empower" },
+    { key: "not", value: "Not applicable or not relevant" }
+  ],
+  scope_of_influence: [
+    { key: "organization", value: "Organization" },
+    { key: "neighbourhood", value: "Neighbourhood" },
+    { key: "city/town", value: "City/Town" },
+    { key: "metropolitan", value: "Metropolitan Area" },
+    { key: "regional", value: "Regional" },
+    { key: "national", value: "National" },
+    { key: "multinational", value: "Multinational" },
+    { key: "no_geo", value: "No Geographical Limits" }
+  ],
 };
