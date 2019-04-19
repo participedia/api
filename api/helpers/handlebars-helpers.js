@@ -120,15 +120,35 @@ module.exports = {
 
   getArticleSelectValue: (article, name) => {
     if (!article[name]) return null;
-    const key = article[name].key;
+
+    // some article select fields have values like  { key: "value"},
+    // and others like for impact_evidence and formal_evaluation have a
+    // string like "value" which represents the key
+
+    let key;
+    if(article[name].key) {
+      key = article[name].key
+    } else {
+      key = article[name];
+    }
+
     const selectedItemInArray = caseFieldOptions[name].filter(options => options.key === key);
     if (selectedItemInArray.length > 0) {
-      return caseFieldOptions[name].filter(options => options.key === key)[0].value;
+      if (selectedItemInArray[0].value !== "") {
+        return selectedItemInArray[0].value;
+      }
     }
   },
 
   getArticleSelectKey: (article, name) => {
-    return article[name] && article[name].key;
+    if (!article[name]) return;
+    if (article[name].hasOwnProperty("key")) {
+      return article[name].key;
+    } else if (article[name].hasOwnProperty("id")) {
+      return article[name].id;
+    } else {
+      return article[name];
+    }
   },
 
   getvalue: (article, name) => {
@@ -168,7 +188,7 @@ module.exports = {
     }
   },
 
-  getArticleKey: (article, name, key) => {
+  getArticleListKey: (article, name, key) => {
     return article[name] && article[name][key];
   },
 
@@ -176,7 +196,7 @@ module.exports = {
     const options = article[name];
     if (options && options.length > 0) {
       return options.find(item => {
-        return item.key === optionKey;
+        return item && item.key === optionKey;
       });
     }
   },

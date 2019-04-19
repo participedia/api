@@ -226,7 +226,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   // id
   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
   // list of ids
-  ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));
+  ["specific_methods_tools_techniques", "has_components"].map(key => cond(key, as.ids));
   // key
   [
     "scope_of_influence",

@@ -21,7 +21,7 @@
   <fieldset class="components fullonly">
     <h2 class="fieldset-header">{{t static "components_sectionlabel"}}</h2>
     {{> edit-multi-select name="has_components" }}
-    {{> edit-multi-select name="is_component_of" }}
+    {{> article-edit-select name="is_component_of" }}
   </fieldset>
   <fieldset class="media">
     <h2 class="fieldset-header">{{t static "media_sectionlabel"}}</h2>
@@ -75,8 +75,8 @@
     <h2 class="fieldset-header">{{t static "resources_sectionlabel"}}</h2>
     {{> article-edit-text name="funder" }}
     {{> edit-multi-select name="funder_types" max=3 }}
-    {{> article-edit-select name="staff" }}
-    {{> article-edit-select name="volunteers" }}
+    {{> edit-boolean name="staff" }}
+    {{> edit-boolean name="volunteers" }}
   </fieldset>
   <fieldset class="evidence_of_impact fullonly">
     <h2 class="fieldset-header">{{t static "evidence_sectionlabel"}}</h2>
