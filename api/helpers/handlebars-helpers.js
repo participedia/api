@@ -187,7 +187,7 @@ module.exports = {
     }
   },
 
-  getArticleKey: (article, name, key) => {
+  getArticleListKey: (article, name, key) => {
     return article[name] && article[name][key];
   },
 
