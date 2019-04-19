@@ -3,11 +3,7 @@
   <dt>{{label static name}}</dt>
   {{#if (isArray article name)}}
     {{#each (getvalue article name) }}
-      {{#if (isEqual ../name "specific_methods_tools_techniques")}}
-        <dd><a href="/{{lookup this "type"}}/{{lookup this "id"}}">{{lookup this "title"}}</a></dd>
-      {{else}}
-        <dd>{{value}}</dd>
-      {{/if}}
+      <dd>{{value}}</dd>
     {{/each}}
   {{else}}
     <dd>{{getArticleSelectValue article name}}</dd>

@@ -162,11 +162,9 @@ function urls(urlList) {
   return as.array(uniq((urlList || []).map(asUrl).filter(x => !!x)));
 }
 
-function id(obj) {
-  if (!obj) {
-    return null;
-  }
-  return as.integer(obj.id);
+function id(string) {
+  if (!string) return;
+  return parseInt(string);
 }
 
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers

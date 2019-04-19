@@ -142,9 +142,10 @@ module.exports = {
 
   getArticleSelectKey: (article, name) => {
     if (!article[name]) return;
-
-    if (article[name].key) {
+    if (article[name].hasOwnProperty("key")) {
       return article[name].key;
+    } else if (article[name].hasOwnProperty("id")) {
+      return article[name].id;
     } else {
       return article[name];
     }
