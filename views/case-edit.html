@@ -1,3 +1,5 @@
+{{log article}}
+
 {{#> edit-form}}
   <fieldset class="overview">
     <h2 class="fieldset-header">{{t static "overview_sectionlabel"}}</h2>
@@ -21,7 +23,7 @@
   <fieldset class="components fullonly">
     <h2 class="fieldset-header">{{t static "components_sectionlabel"}}</h2>
     {{> edit-multi-select name="has_components" }}
-    {{> edit-multi-select name="is_component_of" }}
+    {{> article-edit-select name="is_component_of" }}
   </fieldset>
   <fieldset class="media">
     <h2 class="fieldset-header">{{t static "media_sectionlabel"}}</h2>
