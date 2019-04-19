@@ -1,71 +1,4 @@
-const caseFieldOptions = {
-  legality: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
-  staff: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
-  volunteers: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
-  impact_evidence: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
-  formal_evaluation: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
-  facilitators: [
-    { key: "yes", value: "Yes" },
-    { key: "no", value: "No" },
-    { key: "not_applicable", value: "Not applicable" }
-  ],
-  decision_methods: [
-    { key: "opinion", value: "Opinion Survey" },
-    { key: "idea", value: "Idea Generation" },
-    { key: "general", value: "General Agreement/Consensus" },
-    { key: "voting", value: "Voting" },
-    { key: "yes", value: "Yes" },
-    { key: "dont", value: "Don’t Know" }
-  ],
-  tags: [
-    { key: "accessibility", value: "Accessibility" },
-    { key: "activism", value: "Activism" },
-    { key: "agenda", value: "Agenda Formation" },
-    { key: "animal", value: "Animal Protection & Welfare" },
-    { key: "architecture", value: "Architecture & Design" },
-    { key: "capacity", value: "Capacity Building" },
-    { key: "civic_infra", value: "Civic Infrastructure" },
-    { key: "civic_roles", value: "Civic Roles & Powers" },
-    { key: "civil", value: "Civil Infrastructure" },
-    { key: "conflict", value: "Conflict Resolution" },
-    { key: "decision", value: "Decision-Making" },
-    { key: "democratic", value: "Democratic Innovation" },
-    { key: "dialogue", value: "Dialogue & Deliberation" },
-    { key: "digital", value: "Digital/New Technologies" },
-    { key: "direct", value: "Direct Action" },
-    { key: "educational", value: "Educational Resources & Opportunities" },
-    { key: "empowerment", value: "Empowerment" },
-    { key: "environment", value: "Environment" },
-    { key: "formal", value: "Formal/Structured Participation" },
-    { key: "gender", value: "Gender" },
-    { key: "global", value: "Global Affairs" },
-    { key: "human", value: "Human Rights" },
-    { key: "inclusiveness", value: "Inclusiveness" },
-    { key: "indigenous", value: "Indigenous Issues" },
-    { key: "informal", value: "Informal Participation" },
-    { key: "initiative", value: "Initiative Process" },
-    { key: "internal", value: "Internal- & Self-Management" },
-    { key: "mapping", value: "Mapping & Analysis" },
-    { key: "online", value: "Online" },
-    { key: "oversight", value: "Oversight & Monitoring" },
-    { key: "participatory", value: "Participatory Budgeting" },
-    { key: "planning", value: "Planning & Development" },
-    { key: "political", value: "Political Institutions" },
-    { key: "public_opinion", value: "Public Opinion" },
-    { key: "public_services", value: "Public Services" },
-    { key: "race", value: "Race" },
-    { key: "research", value: "Research/Study" },
-    { key: "rural", value: "Rural" },
-    { key: "science", value: "Science Communication" },
-    { key: "social_media", value: "Social Media" },
-    { key: "social_welfare", value: "Social Welfare" },
-    { key: "stateholder", value: "Stakeholder Engagement" },
-    { key: "storytelling", value: "Storytelling" },
-    { key: "sustainability", value: "Sustainability & Green Living" },
-    { key: "transparency", value: "Transparency & Accountability" },
-    { key: "urban", value: "Urban" },
-    { key: "youth", value: "Youth & Student Engagement" }
-  ],
+module.exports = {
   general_issues: [
     {
       key: "agriculture",
@@ -286,19 +219,32 @@ const caseFieldOptions = {
     { key: "youth", value: "Youth Employment" },
     { key: "youth_issues", value: "Youth Issues" }
   ],
-  scope_of_influence: [
-    { key: "organization", value: "Organization" },
-    { key: "neighbourhood", value: "Neighbourhood" },
-    { key: "city/town", value: "City/Town" },
-    { key: "metropolitan", value: "Metropolitan Area" },
-    { key: "regional", value: "Regional" },
-    { key: "national", value: "National" },
-    { key: "multinational", value: "Multinational" },
-    { key: "no_geo", value: "No Geographical Limits" }
+  facetoface_online_or_both: [
+    { key: "facetoface", value: "Face-to-Face" },
+    { key: "online", value: "Online" },
+    { key: "both", value: "Both" }
   ],
-  time_limited: [
-    { key: "a", value: "A single, defined period of time" },
-    { key: "repeated", value: "Repeated over time" }
+  method_types: [
+    { key: "collaborative", value: "Collaborative approaches" },
+    {
+      key: "community",
+      value: "Community development, organizing, and mobilization"
+    },
+    { key: "deliberative", value: "Deliberative and dialogic process" },
+    { key: "direct", value: "Direct democracy" },
+    { key: "evaluation", value: "Evaluation, oversight, and social auditing" },
+    { key: "experiential", value: "Experiential and immersive education" },
+    { key: "informal", value: "Informal conversation spaces" },
+    { key: "informal_participation", value: "Informal participation" },
+    { key: "internal", value: "Internal management or organization" },
+    { key: "longterm", value: "Long-term civic bodies" },
+    { key: "participantled", value: "Participant-led meetings" },
+    { key: "participatory", value: "Participatory arts" },
+    { key: "planning", value: "Planning" },
+    { key: "protest", value: "Protest" },
+    { key: "public", value: "Public budgeting" },
+    { key: "public_meetings", value: "Public meetings" },
+    { key: "research", value: "Research or experimental method" }
   ],
   purposes: [
     {
@@ -317,6 +263,95 @@ const caseFieldOptions = {
         "Develop the civic capacities of individuals, communities, and/or civil society organizations"
     },
     { key: "academic", value: "Academic research" }
+  ],
+  public_spectrum: [
+    { key: "inform", value: "Inform" },
+    { key: "consult", value: "Consult" },
+    { key: "involve", value: "Involve" },
+    { key: "collaborate", value: "Collaborate" },
+    { key: "empower", value: "Empower" },
+    { key: "not", value: "Not applicable or not relevant" }
+  ],
+  scope_of_influence: [
+    { key: "organization", value: "Organization" },
+    { key: "neighbourhood", value: "Neighbourhood" },
+    { key: "city/town", value: "City/Town" },
+    { key: "metropolitan", value: "Metropolitan Area" },
+    { key: "regional", value: "Regional" },
+    { key: "national", value: "National" },
+    { key: "multinational", value: "Multinational" },
+    { key: "no_geo", value: "No Geographical Limits" }
+  ],
+  legality: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
+  staff: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
+  volunteers: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
+  impact_evidence: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
+  formal_evaluation: [{ key: "yes", value: "Yes" }, { key: "no", value: "No" }],
+  facilitators: [
+    { key: "yes", value: "Yes" },
+    { key: "no", value: "No" },
+    { key: "not_applicable", value: "Not applicable" }
+  ],
+  decision_methods: [
+    { key: "opinion", value: "Opinion Survey" },
+    { key: "idea", value: "Idea Generation" },
+    { key: "general", value: "General Agreement/Consensus" },
+    { key: "voting", value: "Voting" },
+    { key: "yes", value: "Yes" },
+    { key: "dont", value: "Don’t Know" }
+  ],
+  tags: [
+    { key: "accessibility", value: "Accessibility" },
+    { key: "activism", value: "Activism" },
+    { key: "agenda", value: "Agenda Formation" },
+    { key: "animal", value: "Animal Protection & Welfare" },
+    { key: "architecture", value: "Architecture & Design" },
+    { key: "capacity", value: "Capacity Building" },
+    { key: "civic_infra", value: "Civic Infrastructure" },
+    { key: "civic_roles", value: "Civic Roles & Powers" },
+    { key: "civil", value: "Civil Infrastructure" },
+    { key: "conflict", value: "Conflict Resolution" },
+    { key: "decision", value: "Decision-Making" },
+    { key: "democratic", value: "Democratic Innovation" },
+    { key: "dialogue", value: "Dialogue & Deliberation" },
+    { key: "digital", value: "Digital/New Technologies" },
+    { key: "direct", value: "Direct Action" },
+    { key: "educational", value: "Educational Resources & Opportunities" },
+    { key: "empowerment", value: "Empowerment" },
+    { key: "environment", value: "Environment" },
+    { key: "formal", value: "Formal/Structured Participation" },
+    { key: "gender", value: "Gender" },
+    { key: "global", value: "Global Affairs" },
+    { key: "human", value: "Human Rights" },
+    { key: "inclusiveness", value: "Inclusiveness" },
+    { key: "indigenous", value: "Indigenous Issues" },
+    { key: "informal", value: "Informal Participation" },
+    { key: "initiative", value: "Initiative Process" },
+    { key: "internal", value: "Internal- & Self-Management" },
+    { key: "mapping", value: "Mapping & Analysis" },
+    { key: "online", value: "Online" },
+    { key: "oversight", value: "Oversight & Monitoring" },
+    { key: "participatory", value: "Participatory Budgeting" },
+    { key: "planning", value: "Planning & Development" },
+    { key: "political", value: "Political Institutions" },
+    { key: "public_opinion", value: "Public Opinion" },
+    { key: "public_services", value: "Public Services" },
+    { key: "race", value: "Race" },
+    { key: "research", value: "Research/Study" },
+    { key: "rural", value: "Rural" },
+    { key: "science", value: "Science Communication" },
+    { key: "social_media", value: "Social Media" },
+    { key: "social_welfare", value: "Social Welfare" },
+    { key: "stateholder", value: "Stakeholder Engagement" },
+    { key: "storytelling", value: "Storytelling" },
+    { key: "sustainability", value: "Sustainability & Green Living" },
+    { key: "transparency", value: "Transparency & Accountability" },
+    { key: "urban", value: "Urban" },
+    { key: "youth", value: "Youth & Student Engagement" }
+  ],
+  time_limited: [
+    { key: "a", value: "A single, defined period of time" },
+    { key: "repeated", value: "Repeated over time" }
   ],
   approaches: [
     { key: "advocacy", value: "Advocacy" },
@@ -350,14 +385,6 @@ const caseFieldOptions = {
     { key: "protest", value: "Protest" },
     { key: "research", value: "Research" },
     { key: "social", value: "Social mobilization" }
-  ],
-  public_spectrum: [
-    { key: "inform", value: "Inform" },
-    { key: "consult", value: "Consult" },
-    { key: "involve", value: "Involve" },
-    { key: "collaborate", value: "Collaborate" },
-    { key: "empower", value: "Empower" },
-    { key: "not", value: "Not applicable or not relevant" }
   ],
   open_limited: [
     { key: "open", value: "Open to All" },
@@ -394,28 +421,6 @@ const caseFieldOptions = {
     { key: "women", value: "Women" },
     { key: "youth", value: "Youth" }
   ],
-  method_types: [
-    { key: "collaborative", value: "Collaborative approaches" },
-    {
-      key: "community",
-      value: "Community development, organizing, and mobilization"
-    },
-    { key: "deliberative", value: "Deliberative and dialogic process" },
-    { key: "direct", value: "Direct democracy" },
-    { key: "evaluation", value: "Evaluation, oversight, and social auditing" },
-    { key: "experiential", value: "Experiential and immersive education" },
-    { key: "informal", value: "Informal conversation spaces" },
-    { key: "informal_participation", value: "Informal participation" },
-    { key: "internal", value: "Internal management or organization" },
-    { key: "longterm", value: "Long-term civic bodies" },
-    { key: "participantled", value: "Participant-led meetings" },
-    { key: "participatory", value: "Participatory arts" },
-    { key: "planning", value: "Planning" },
-    { key: "protest", value: "Protest" },
-    { key: "public", value: "Public budgeting" },
-    { key: "public_meetings", value: "Public meetings" },
-    { key: "research", value: "Research or experimental method" }
-  ],
   tools_techniques_types: [
     { key: "manage", value: "Manage and/or allocate money or resources" },
     { key: "collect", value: "Collect, analyse and/or solicit feedback" },
@@ -437,11 +442,6 @@ const caseFieldOptions = {
     { key: "professional", value: "Professional Facilitators" },
     { key: "trained", value: "Trained, Nonprofessional Facilitators" },
     { key: "untrained", value: "Untrained, Nonprofessional Facilitators" }
-  ],
-  facetoface_online_or_both: [
-    { key: "facetoface", value: "Face-to-Face" },
-    { key: "online", value: "Online" },
-    { key: "both", value: "Both" }
   ],
   participants_interactions: [
     { key: "acting", value: "Acting, Drama, or Roleplay" },
@@ -541,7 +541,25 @@ const caseFieldOptions = {
     { key: "experts", value: "Experts" },
     { key: "corporations", value: "Corporations" },
     { key: "dont", value: "Don't Know" }
+  ],
+  sector: [
+    { key: "for_profit", value: "For Profit" },
+    { key: "government", value: "Government" },
+    { key: "non_profit_non_gov", value: "Non-Profit or Non Governmental" },
+    { key: "higher_ed", value: "Higher Education or Research" }
+  ],
+  level_polarization: [
+    { key: "not", value: "Not polarized" },
+    { key: "low", value: "Low polarization" },
+    { key: "moderate", value: "Moderate polarization" },
+    { key: "polarized", value: "Polarized" },
+    { key: "high", value: "High polarization" },
+  ],
+  level_complexity: [
+    { key: "very_low", value: "Very Low Complexity" },
+    { key: "low", value: "Low Complexity" },
+    { key: "moderate", value: "Moderate Complexity" },
+    { key: "high", value: "High Complexity" },
+    { key: "very_high", value: "Very High Complexity" },
   ]
 };
-
-module.exports = caseFieldOptions;

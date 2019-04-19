@@ -33,7 +33,7 @@ const articleText = require("../../static-text/article-text.js");
 const CASE_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
 );
-const caseFieldOptions = require("../helpers/case-field-options.js");
+const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 /**
  * @api {post} /case/new Create new case
@@ -386,7 +386,7 @@ async function getEditStaticText(params) {
     params
   )).organizations;
 
-  staticText = Object.assign({}, staticText, caseFieldOptions);
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
 
   staticText.labels = Object.assign({}, staticText.labels, articleText);
 
