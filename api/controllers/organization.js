@@ -22,6 +22,8 @@ const {
   fixUpURLs
 } = require("../helpers/things");
 
+const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
+
 const ORGANIZATION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/organization-structure.json", "utf8")
 );
@@ -167,11 +169,11 @@ async function getOrganizationNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
-router.post("/new", postOrganizationNewHttp);
-router.post("/:thingid", postOrganizationUpdateHttp);
+router.post("/new", requireAuthenticatedUser(), postOrganizationNewHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postOrganizationUpdateHttp);
 router.get("/:thingid/", getOrganizationHttp);
-router.get("/:thingid/edit", getOrganizationEditHttp);
-router.get("/new", getOrganizationNewHttp);
+router.get("/:thingid/edit", requireAuthenticatedUser(), getOrganizationEditHttp);
+router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 
 module.exports = {
   organization: router,
