@@ -5,7 +5,7 @@
 
     {{> article-edit-text name="name" is_required=true quick-submit=true}}
     {{> article-edit-location}}
-    {{> edit-multi-select name="scope_operations"}}
+    {{> edit-multi-select name="scope_operations" max=3}}
   </fieldset>
 
   <fieldset>
@@ -40,8 +40,8 @@
   <fieldset class="fullonly">
     <h2 class="fieldset-header">{{t static "tools_techniques_sectionlabel"}}</h2>
 
-    {{> edit-multi-select name="type_method" max=3}}
-    {{> edit-multi-select name="type_tool" max=3}}
-    {{> edit-multi-select name="methods_tools_techniques" max=3}}
+    {{> edit-multi-select name="method_types" max=3}}
+    {{> edit-multi-select name="tools_techniques_types" max=3}}
+    {{> edit-multi-select name="specific_methods_tools_techniques" max=3}}
   </fieldset>
 {{/ edit-form}}
