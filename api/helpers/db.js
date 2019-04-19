@@ -171,10 +171,8 @@ function id(obj) {
 
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
-  return uniq((idList || []).map(id));
-  // return (
-  //   "ARRAY[" + idList.map(s => as.number(s.value)).join(", ") + "]::integer[]"
-  // );
+  if (!idList) return [];
+  return idList.map(item => parseInt(item.key, 10));
 }
 
 // as.strings
