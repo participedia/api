@@ -5,6 +5,8 @@
 
   <section>
     {{> view-list name="method_types"}}
+    {{> view-list name="purposes" max=3}}
+    {{> view-list name="public_spectrum"}}
   </section>
 
   <section>
@@ -15,11 +17,21 @@
   </section>
 
   <section>
+    {{> view-list name="open_limited" }}
+    {{> view-list name="recruitment_method" }}
     {{> view-text name="number_participants"}}
   </section>
 
   <section>
-    {{> view-list name="types_interaction"}}
-    {{> view-list name="facilitation"}}
+    {{> view-list name="participants_interactions" }}
+    {{> view-list name="facilitators" }}
+    {{> view-list name="decision_methods" }}
+    {{> view-list name="if_voting" }}
+  </section>
+
+  <section>
+    {{> view-list name="scope_of_influence" max=3}}
+    {{> view-list name="level_polarization" }}
+    {{> view-list name="level_complexity" }}
   </section>
 {{/view-container}}
