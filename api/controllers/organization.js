@@ -29,7 +29,7 @@ const ORGANIZATION_STRUCTURE = JSON.parse(
 );
 const articleText = require("../../static-text/article-text.js");
 const organizationText = require("../../static-text/organization-text.js");
-const organizationFieldOptions = require("../helpers/organization-field-options.js");
+const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 async function getEditStaticText(params) {
   let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
@@ -39,7 +39,7 @@ async function getEditStaticText(params) {
     params
   )).methods;
 
-  staticText = Object.assign({}, staticText, organizationFieldOptions);
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
 
   staticText.labels = Object.assign({}, staticText.labels, organizationText, articleText);
 

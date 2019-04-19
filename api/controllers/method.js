@@ -29,12 +29,12 @@ const METHOD_STRUCTURE = JSON.parse(
 
 const articleText = require("../../static-text/article-text.js");
 const methodText = require("../../static-text/method-text.js");
-const methodFieldOptions = require("../helpers/method-field-options.js");
+const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 async function getEditStaticText(params) {
   let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
 
-  staticText = Object.assign({}, staticText, methodFieldOptions);
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
 
   staticText.labels = Object.assign({}, staticText.labels, methodText, articleText);
 
