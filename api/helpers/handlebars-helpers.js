@@ -196,7 +196,7 @@ module.exports = {
     const options = article[name];
     if (options && options.length > 0) {
       return options.find(item => {
-        return item.key === optionKey;
+        return item && item.key === optionKey;
       });
     }
   },
