@@ -75,7 +75,6 @@ describe("Cases", () => {
         "evaluation_reports",
         "evaluation_links"
       ].forEach(key => {
-        console.log(">>>>> testing %s", key);
         returnedCase[key].length.should.equal(example_case[key].length);
         for (let i = 0; i < returnedCase[key].length; i++) {
           // returnedCase[key][i].url.should.equal(example_case[key][i].url);

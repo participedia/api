@@ -302,10 +302,10 @@ async function postCaseUpdateHttp(req, res) {
     // save successful response
     // console.log("Params for returning case: %s", JSON.stringify(params));
     const freshArticle = await getCase(params);
-    console.log(
-      "fresh article files: %s",
-      JSON.stringify(freshArticle.files, null, 2)
-    );
+    // console.log(
+    //   "fresh article files: %s",
+    //   JSON.stringify(freshArticle.files, null, 2)
+    // );
     res.status(200).json({
       OK: true,
       article: freshArticle
