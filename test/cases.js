@@ -63,8 +63,29 @@ describe("Cases", () => {
         "recruitment_method",
         "time_limited"
       ].forEach(key => {
-        console.log("testing %s", key);
         returnedCase[key].key.should.equal(example_case[key]);
+      });
+      // test media fields
+      [
+        "files",
+        "links",
+        "videos",
+        "audio",
+        "photos",
+        "evaluation_reports",
+        "evaluation_links"
+      ].forEach(key => {
+        console.log(">>>>> testing %s", key);
+        returnedCase[key].length.should.equal(example_case[key].length);
+        for (let i = 0; i < returnedCase[key].length; i++) {
+          // returnedCase[key][i].url.should.equal(example_case[key][i].url);
+          expect(returnedCase[key][i].attribution).to.equal(
+            example_case[key][i].attribution
+          );
+          expect(returnedCase[key][i].title).to.equal(
+            example_case[key][i].title
+          );
+        }
       });
     });
   });
