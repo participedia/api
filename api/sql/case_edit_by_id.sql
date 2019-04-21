@@ -37,7 +37,7 @@ SELECT
   get_case_edit_localized_value(${lang},'recruitment_method', recruitment_method) as recruitment_method,
   COALESCE(get_case_edit_localized_list(${lang},'targeted_participants', targeted_participants), '{}') as targeted_participants,
   COALESCE(get_case_edit_localized_list(${lang},'method_types', method_types), '{}') as method_types,
-  COALESCE(get_case_edit_localized_list(${lang},'tools_techniques_types', tools_techniques_types), '{}') as tools_techniques_types,
+  COALESCE(tools_techniques_types, '{}') as tools_techniques_types,
   COALESCE(get_object_title_list(specific_methods_tools_techniques, ${lang}), '{}') as specific_methods_tools_techniques,
   get_case_edit_localized_value(${lang},'legality', legality) as legality,
   get_case_edit_localized_value(${lang},'facilitators', facilitators) as facilitators,
