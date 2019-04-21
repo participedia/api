@@ -162,19 +162,15 @@ function urls(urlList) {
   return as.array(uniq((urlList || []).map(asUrl).filter(x => !!x)));
 }
 
-function id(obj) {
-  if (!obj) {
-    return null;
-  }
-  return as.integer(obj.id);
+function id(string) {
+  if (!string) return;
+  return parseInt(string);
 }
 
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
-  return uniq((idList || []).map(id));
-  // return (
-  //   "ARRAY[" + idList.map(s => as.number(s.value)).join(", ") + "]::integer[]"
-  // );
+  if (!idList) return [];
+  return idList.map(item => parseInt(item.key, 10));
 }
 
 // as.strings

@@ -4,6 +4,7 @@ const faqContent = require("./faq-content.js");
 const aboutData = require("./data/about-data.js");
 const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
+const sharedFieldOptions = require("./shared-field-options.js");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -85,6 +86,8 @@ module.exports = {
       return mapIdTitleToKeyValue(staticText["cases"]);
     } else if (name === "specific_methods_tools_techniques") {
       return mapIdTitleToKeyValue(staticText["methods"]);
+    } else if (name === "primary_organizer") {
+      return mapIdTitleToKeyValue(staticText["organizations"]);
     } else {
       return staticText[name];
     }
@@ -113,6 +116,39 @@ module.exports = {
   isArray: (article, name) => {
     const value = article[name];
     return value && value.constructor === Array;
+  },
+
+  getArticleSelectValue: (article, name) => {
+    if (!article[name]) return null;
+
+    // some article select fields have values like  { key: "value"},
+    // and others like for impact_evidence and formal_evaluation have a
+    // string like "value" which represents the key
+
+    let key;
+    if(article[name].key) {
+      key = article[name].key
+    } else {
+      key = article[name];
+    }
+
+    const selectedItemInArray = sharedFieldOptions[name].filter(options => options.key === key);
+    if (selectedItemInArray.length > 0) {
+      if (selectedItemInArray[0].value !== "") {
+        return selectedItemInArray[0].value;
+      }
+    }
+  },
+
+  getArticleSelectKey: (article, name) => {
+    if (!article[name]) return;
+    if (article[name].hasOwnProperty("key")) {
+      return article[name].key;
+    } else if (article[name].hasOwnProperty("id")) {
+      return article[name].id;
+    } else {
+      return article[name];
+    }
   },
 
   getvalue: (article, name) => {
@@ -152,7 +188,7 @@ module.exports = {
     }
   },
 
-  getArticleKey: (article, name, key) => {
+  getArticleListKey: (article, name, key) => {
     return article[name] && article[name][key];
   },
 
@@ -160,7 +196,7 @@ module.exports = {
     const options = article[name];
     if (options && options.length > 0) {
       return options.find(item => {
-        return item.key === optionKey;
+        return item && item.key === optionKey;
       });
     }
   },
