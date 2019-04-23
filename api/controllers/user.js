@@ -196,7 +196,7 @@ router.post("/", async function(req, res) {
       name: user.name,
       bio: user.bio || ""
     });
-    res.status(200).json({ OK: true });
+    res.status(200).json({ OK: true, user: { id: user.id } });
   } catch (error) {
     log.error("Exception in POST /user => %s", error);
     if (error.message && error.message == "No data returned from the query.") {

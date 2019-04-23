@@ -36,7 +36,7 @@ const editForm = {
       const response = JSON.parse(xhr.response);
 
       if (response.OK) {
-        this.handleSuccess(response.article);
+        this.handleSuccess(response);
       } else {
         this.handleErrors(response.errors);
       }
@@ -45,9 +45,14 @@ const editForm = {
     xhr.send(formData);
   },
 
-  handleSuccess(article) {
-    // redirect to article reader page
-    location.href = `/${article.type}/${article.id}`;
+  handleSuccess(response) {
+    if (response.user) {
+      // redirect to user profile page
+      location.href = `/user/${response.user.id}`;
+    } else if (response.article) {
+      // redirect to article reader page
+      location.href = `/${response.article.type}/${response.article.id}`;
+    }
   },
 
   errorModalHtml(errors) {
