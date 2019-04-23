@@ -196,11 +196,11 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   }
 
   // media lists
-  ["links", "videos", "audio", "evaluation_reports", "evaluation_links"].map(
+  ["links", "videos", "audio", "evaluation_links"].map(
     key => cond(key, as.media)
   );
   // photos and files are slightly different from other media as they have a source url too
-  ["photos", "files"].map(key => cond(key, as.sourcedMedia));
+  ["photos", "files", "evaluation_reports"].map(key => cond(key, as.sourcedMedia));
   // boolean (would include "published" but we don't really support it)
   ["ongoing", "staff", "volunteers"].map(key => cond(key, as.boolean));
   // yes/no (convert to boolean)

@@ -15,6 +15,7 @@ const log = require("winston");
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 let config;
+const uploadToAWS = require("./upload-to-aws.js");
 
 try {
   config = parse(connectionString);
@@ -268,9 +269,16 @@ function aSourcedMedia(obj) {
     obj = { url: obj, source_url: "", attribution: "", title: "" };
   }
   if (!obj.url) return null;
+
+  // if url is not already an amazon url, upload the file
+  let url = obj.url;
+  if (url.indexOf("https://s3.amazonaws.com") < 0) {
+    url = uploadToAWS(obj.url, obj.title);
+  }
+
   return [
     '"(',
-    asUrl(obj.url),
+    asUrl(url),
     ",",
     asUrl(obj.source_url),
     ",",

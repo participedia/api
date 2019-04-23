@@ -51,6 +51,23 @@ const editMedia = {
     reader.readAsDataURL(file);
   },
 
+  clearAndHideLastItem(fileItemEl) {
+    // clear image src
+    const img = fileItemEl.querySelector("img");
+    if (img) {
+      img.setAttribute("src", "");
+    }
+
+    // clear all inputs
+    fileItemEl.querySelectorAll("input").forEach(el => {
+      el.name = `${name}[0][${el.getAttribute('data-attr')}]`;
+      el.value = "";
+    });
+
+    // hide item
+    fileItemEl.style.display = "none";
+  },
+
   renderUploadedFiles(fileInputEl) {
     const listEl = fileInputEl.closest(".form-group").querySelector(".js-edit-media-file-list");
     const type = listEl.closest("ol").getAttribute("data-type");
@@ -97,7 +114,14 @@ const editMedia = {
       ev.preventDefault();
       const liEl = ev.target.closest("li");
       const listEl = liEl.closest("ol");
-      liEl.parentNode.removeChild(liEl);
+
+      // if it's the last item, don't remove it, just clear the field values and hide it
+      // we need to send up empty fieldset data in order to delete it
+      if (listEl.querySelectorAll(".js-edit-media-file-list-item").length === 1) {
+        this.clearAndHideLastItem(liEl);
+      } else {
+        liEl.parentNode.removeChild(liEl);
+      }
       this.updateNameAttrOnFileUploadInputs(listEl);
     }
   },
