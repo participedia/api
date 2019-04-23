@@ -39,7 +39,7 @@ describe("user controller", () => {
     cy.get("button[type='submit']").click();
 
     // the name field is updated with new name
-    cy.get(".user-view-name").should("be", newName);
+    cy.get(".user-view-name").should('exist').and('contain', newName);
   });
 
   it("visits someone else's profile page", () => {
