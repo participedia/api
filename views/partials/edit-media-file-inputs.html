@@ -2,12 +2,14 @@
   <section>
     <ul class="unstyled-list edit-media-file-attribution-inputs">
       <li>
-        <img src="{{getLinkSetValue article name index 'url'}}" />
+        {{#if (isEqual name "photos")}}
+          <img src="{{getLinkSetValue article name index 'url'}}" />
+        {{/if}}
         <input
           data-attr="url"
           type="hidden"
           name="{{linkSetFieldName name index 'url'}}"
-          value=""
+          value="{{getLinkSetValue article name index 'url'}}"
         />
       </li>
       <li>

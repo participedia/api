@@ -46,5 +46,10 @@ module.exports = {
   description_instructional: "Enter tweet-length (280 characters or less) description of this case.",
   facilitators_placeholder: "Did facilitators help guide participants?",
   description_narrative_sectionlabel: "Description and Narrative",
-
+  evaluation_reports_link_instructional: "If applicable, provide a link to where the original file was sourced.",
+  evaluation_reports_link_placeholder: "Link to original",
+  evaluation_reports_attribution_instructional: "Who is the original owner or creator of this file?",
+  evaluation_reports_attribution_placeholder: "Owner or creator",
+  evaluation_reports_title_instructional: "Provide a title or description of this file in 10 words or less.",
+  evaluation_reports_title_placeholder: "Title or description"
 };

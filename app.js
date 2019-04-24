@@ -144,8 +144,6 @@ process.on("unhandledRejection", function(reason, p) {
 
 let express = require("express");
 let compression = require("compression");
-let AWS = require("aws-sdk");
-AWS.config.update({ region: "us-east-1" });
 app.use(compression());
 let port = process.env.PORT || 3001;
 
