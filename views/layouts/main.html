@@ -10,8 +10,6 @@
     gtag("js", new Date());
     gtag("config", "{{GA_TRACKING_ID}}");
   </script>
-  <script type="text/javascript" src="https://unpkg.com/flickity@2/dist/flickity.pkgd.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/flickity-fullscreen@1/fullscreen.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="shortcut icon" href="/favicon.ico">
@@ -64,6 +62,8 @@
   {{/if}}
 
   {{#if (isReaderView req)}}
+    <script type="text/javascript" src="/js/vendor/flickity@2.2.0-flickity.pkgd.js"></script>
+    <script type="text/javascript" src="/js/vendor/flickity-fullscreen@1.1.1-fullscreen.js"></script>
     <script type="text/javascript" src="/build/js/reader-view.bundle.js"></script>
   {{/if}}
 
