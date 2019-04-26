@@ -152,9 +152,6 @@ module.exports = {
   },
 
   getvalue: (article, name) => {
-    if (name === "scope_of_influence") {
-
-    }
     const item = article[name];
     if (!item) return;
 
