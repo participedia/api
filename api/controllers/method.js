@@ -36,7 +36,12 @@ async function getEditStaticText(params) {
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
-  staticText.labels = Object.assign({}, staticText.labels, methodText, articleText);
+  staticText.labels = Object.assign(
+    {},
+    staticText.labels,
+    methodText,
+    articleText
+  );
 
   return staticText;
 }
@@ -165,16 +170,17 @@ async function getMethodNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
-router.post("/new", requireAuthenticatedUser(), postMethodNewHttp);
-router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
 router.get("/:thingid/", getMethodHttp);
 router.get("/:thingid/edit", requireAuthenticatedUser(), getMethodEditHttp);
 router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
+router.post("/new", requireAuthenticatedUser(), postMethodNewHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
 
 module.exports = {
   method: router,
-  postMethodNewHttp,
-  postMethodUpdateHttp,
   getMethodHttp,
-  getMethodEditHttp
+  getMethodEditHttp,
+  getMethodNewHttp,
+  postMethodNewHttp,
+  postMethodUpdateHttp
 };

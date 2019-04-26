@@ -8,15 +8,15 @@ const {
   addBasicMethod
 } = require("./data/helpers.js");
 const {
+  getMethodHttp,
   getMethodEditHttp,
   getMethodNewHttp,
   postMethodNewHttp,
-  getMethodHttp,
   postMethodUpdateHttp
 } = require("../api/controllers/method");
 
 describe("Methods", () => {
-  describe.only("Lookup", () => {
+  describe("Lookup", () => {
     it("finds method 190", async () => {
       const { req, res, ret } = getMocks({ params: { thingid: 190 } });
       await getMethodHttp(req, res);
@@ -27,7 +27,7 @@ describe("Methods", () => {
   });
   describe("Adding", () => {
     it("fails without authentication", async () => {
-      const { req, res, ret } = getMocks({ body: example_case });
+      const { req, res, ret } = getMocks({ body: example_method });
       try {
         await postMethodNewHttp(req, res);
       } catch (err) {
@@ -42,12 +42,12 @@ describe("Methods", () => {
         err.should.have.status(400);
       }
     });
-    it.skip("works with authentication", async () => {
+    it("works with authentication", async () => {
       const res = await addBasicMethod();
       res.should.have.status(201);
       res.body.OK.should.be.true;
       res.body.data.thingid.should.be.a("number");
-      let returnedMethod = res.body.object;
+      let returnedMethod = res.body.article;
       returnedMethod.links.should.have.lengthOf(2);
       returnedMethod.tags.should.have.lengthOf(3);
       returnedMethod.links.should.deep.equal([
@@ -57,13 +57,13 @@ describe("Methods", () => {
       returnedMethod.tags.should.deep.equal(["OIDP2017", "Tag1", "Tag2"]);
     });
   });
-  describe.skip("Test edit API", () => {
+  describe("Test edit API", () => {
     it("Add method, then modify title and/or body", async () => {
       const res1 = await addBasicMethod();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       res1.body.data.thingid.should.be.a("number");
-      const origMethod = res1.body.object;
+      const origMethod = res1.body.article;
       origMethod.id.should.be.a("number");
       origMethod.id.should.equal(res1.body.data.thingid);
       const res2 = await chai
@@ -95,7 +95,7 @@ describe("Methods", () => {
       const res1 = await addBasicMethod();
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
-      const method1 = res1.body.object;
+      const method1 = res1.body.article;
       method1.images.should.deep.equal([
         "https://cdn.thinglink.me/api/image/756598547733807104/"
       ]);
@@ -130,7 +130,7 @@ describe("Methods", () => {
       method1_new.tags.should.deep.equal(tags);
     });
     it("Add method, then change links", async () => {
-      const res1 = await addBasicMethod();
+      const method1 = (await addBasicMethod()).article;
       const method1 = res1.body.object;
       const links = ["https://xkcd.com/", "http://girlgeniusonline.com/"];
       const res2 = await chai

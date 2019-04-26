@@ -1,6 +1,16 @@
 const fs = require("fs");
 const { mockRequest, mockResponse } = require("mock-req-res");
 const { postCaseNewHttp } = require("../../api/controllers/case");
+const {
+  getMethodHttp,
+  getMethodEditHttp,
+  getMethodNewHttp,
+  postMethodNewHttp,
+  postMethodUpdateHttp
+} = require("../../api/controllers/method");
+const {
+  postOrganizationNewHttp
+} = require("../../api/controllers/organization");
 
 let example_case = JSON.parse(fs.readFileSync("test/data/case.json", "utf8"));
 let example_method = JSON.parse(
@@ -31,6 +41,23 @@ async function addBasicMethod() {
   await postMethodNewHttp(req, res);
   return ret.body;
 }
+
+async function updateMethod(id, blob) {
+  const { req, res, ret } = getMocks({
+    params: { thingid: id }
+  });
+  await postMethodUpdateHttp(req, res);
+  return ret.body;
+}
+
+async function getMethod(id) {
+  const { req, res, ret } = getMocks({
+    user: null,
+    body: null,
+    params: { thingid: id }
+  });
+}
+
 async function addBasicOrganization() {
   const { req, res, ret } = getMocks({
     user: mock_user,
