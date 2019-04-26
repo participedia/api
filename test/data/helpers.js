@@ -15,7 +15,11 @@ const {
   postMethodUpdateHttp
 } = require("../../api/controllers/method");
 const {
-  postOrganizationNewHttp
+  getOrganizationEditHttp,
+  getOrganizationNewHttp,
+  postOrganizationNewHttp,
+  getOrganizationHttp,
+  postOrganizationUpdateHttp
 } = require("../../api/controllers/organization");
 
 let example_case = JSON.parse(fs.readFileSync("test/data/case.json", "utf8"));
@@ -27,6 +31,12 @@ let example_organization = JSON.parse(
 );
 let mock_user = JSON.parse(fs.readFileSync("test/data/user.json", "utf8"));
 let mock_user2 = JSON.parse(fs.readFileSync("test/data/user2.json", "utf8"));
+
+async function getCase(id) {
+  const { req, res, ret } = getMocks({ params: { thingid: id } });
+  await getCaseHttp(req, res);
+  return ret.body;
+}
 
 async function addBasicCase() {
   const { req, res, ret } = getMocks({
@@ -67,10 +77,10 @@ async function updateMethod(id, blob) {
 
 async function getMethod(id) {
   const { req, res, ret } = getMocks({
-    user: null,
-    body: null,
     params: { thingid: id }
   });
+  await getMethodHttp(req, res);
+  return ret.body;
 }
 
 async function addBasicOrganization() {
@@ -82,6 +92,23 @@ async function addBasicOrganization() {
   await postOrganizationNewHttp(req, res);
   return ret.body;
 }
+
+async function updateOrganization(id, blob) {
+  const { req, res, ret } = getMocks({
+    params: { thingid: id }
+  });
+  await postOrganizationUpdateHttp(req, res);
+  return ret.body;
+}
+
+async function getOrganization(id) {
+  const { req, res, ret } = getMocks({
+    params: { thingid: id }
+  });
+  await getOrganizationHttp(req, res);
+  return ret.body;
+}
+
 function getMocks(args) {
   const req = mockRequest(
     Object.assign({ query: { returns: "json" } }, args || {})
@@ -106,7 +133,13 @@ module.exports = {
   example_case,
   example_method,
   example_organization,
+  getCase,
+  getMethod,
+  getOrganization,
   addBasicCase,
   addBasicMethod,
-  addBasicOrganization
+  addBasicOrganization,
+  updateCase,
+  updateMethod,
+  updateOrganization
 };
