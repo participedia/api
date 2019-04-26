@@ -1,6 +1,12 @@
 const fs = require("fs");
 const { mockRequest, mockResponse } = require("mock-req-res");
-const { postCaseNewHttp } = require("../../api/controllers/case");
+const {
+  getCaseEditHttp,
+  getCaseNewHttp,
+  postCaseNewHttp,
+  getCaseHttp,
+  postCaseUpdateHttp
+} = require("../../api/controllers/case");
 const {
   getMethodHttp,
   getMethodEditHttp,
@@ -29,6 +35,15 @@ async function addBasicCase() {
     params: {}
   });
   await postCaseNewHttp(req, res);
+  return ret.body;
+}
+
+async function updateCase(id, blob) {
+  const { req, res, ret } = getMocksAuth({
+    params: { thingid: id },
+    body: blob
+  });
+  await postCaseUpdateHttp(req, res);
   return ret.body;
 }
 
