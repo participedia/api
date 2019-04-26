@@ -144,15 +144,13 @@ describe("Cases", () => {
       const { req, res, ret } = getMocksAuth({
         params: { thingid: case1.id },
         body: {
-          photos: [{ url: "foobar.jpg" }]
+          photos: [{ url: "http://foobar.com/test.jpg" }]
         }
       });
       await postCaseUpdateHttp(req, res);
       const case2 = ret.body.article;
       case2.photos.length.should.equal(1);
-      case2.photos[0].url.should.equal(
-        "https://s3.amazonaws.com/uploads.participedia.xyz/foobar.jpg"
-      );
+      case2.photos[0].url.should.equal("http://foobar.com/test.jpg");
       expect(case2.updated_date > case1.updated_date).to.be.true;
     });
   });

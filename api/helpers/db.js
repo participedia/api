@@ -64,7 +64,7 @@ function ErrorReporter() {
         return fn(...args);
       } catch (e) {
         self.errors.push(e.message);
-        // console.error("Capturing error to report to client: " + e.message);
+        // console.trace("Capturing error to report to client: " + e.message);
         return e.message;
         // console.trace(e);
       }
@@ -163,8 +163,11 @@ function urls(urlList) {
   return as.array(uniq((urlList || []).map(asUrl).filter(x => !!x)));
 }
 
-function id(string) {
-  if (!string) return;
+function id(string, field) {
+  if (!string) return null;
+  if (isObject(string)) {
+    string = string.id;
+  }
   return parseInt(string);
 }
 
@@ -272,7 +275,8 @@ function aSourcedMedia(obj) {
 
   // if url is not already an amazon url, upload the file
   let url = obj.url;
-  if (url.indexOf("https://s3.amazonaws.com") < 0) {
+  // some types of sourced media are links, anything already a link does not need to be uploaded
+  if (!url.startsWith("http")) {
     url = uploadToAWS(obj.url, obj.title);
   }
 

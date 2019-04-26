@@ -196,11 +196,11 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   }
 
   // media lists
-  ["links", "videos", "audio", "evaluation_links"].map(
-    key => cond(key, as.media)
-  );
+  ["links", "videos", "audio"].map(key => cond(key, as.media));
   // photos and files are slightly different from other media as they have a source url too
-  ["photos", "files", "evaluation_reports"].map(key => cond(key, as.sourcedMedia));
+  ["photos", "files", "evaluation_reports", "evaluation_links"].map(key =>
+    cond(key, as.sourcedMedia)
+  );
   // boolean (would include "published" but we don't really support it)
   ["ongoing", "staff", "volunteers"].map(key => cond(key, as.boolean));
   // yes/no (convert to boolean)
@@ -226,7 +226,9 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   // id
   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
   // list of ids
-  ["specific_methods_tools_techniques", "has_components"].map(key => cond(key, as.ids));
+  ["specific_methods_tools_techniques", "has_components"].map(key =>
+    cond(key, as.ids)
+  );
   // key
   [
     "scope_of_influence",
@@ -303,7 +305,7 @@ async function postCaseUpdateHttp(req, res) {
     // save successful response
     // console.log("Params for returning case: %s", JSON.stringify(params));
     const freshArticle = await getCase(params);
-    console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
+    // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
       article: freshArticle
