@@ -22,12 +22,12 @@ CREATE FUNCTION urls_to_files(urls text[]) RETURNS full_file[]
 $_$;
 
 ALTER TABLE cases ADD COLUMN evaluation_reports_full full_file[] DEFAULT '{}';
-ALTER TABLE cases ADD COLUMN evaluation_links_full full_file[] DEFAULT '{}';
+ALTER TABLE cases ADD COLUMN evaluation_links_full full_link[] DEFAULT '{}';
 
 UPDATE cases SET evaluation_reports_full = urls_to_files(evaluation_reports) WHERE evaluation_reports <> '{}';
 
 UPDATE cases SET evaluation_links_full =
-urls_to_files(evaluation_links) WHERE evaluation_links <> '{}';
+urls_to_links(evaluation_links) WHERE evaluation_links <> '{}';
 
 ALTER TABLE cases DROP COLUMN evaluation_reports;
 ALTER TABLE cases RENAME COLUMN evaluation_reports_full TO evaluation_reports;
