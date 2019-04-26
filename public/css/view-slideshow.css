@@ -197,7 +197,7 @@ html.is-flickity-fullscreen {
 
 /* CUSTOM FLICKITY STYLES */
 .carousel {
-  background: #222;
+  background: #fff;
 }
 
 .carousel-cell {
@@ -250,8 +250,7 @@ html.is-flickity-fullscreen {
 }
 
 .flickity-button, .flickity-button:hover {
-  background: transparent;
-  color: #fff;
+  color: #333;
 }
 
 .carousel-cell-image-title {
@@ -273,4 +272,9 @@ html.is-flickity-fullscreen {
 
 .carousel-cell-image-title a {
   color: #fff;
+}
+
+.flickity-prev-next-button {
+  width: 24px;
+  height: 24px;
 }
