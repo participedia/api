@@ -132,6 +132,8 @@ async function maybeUpdateUserText(req, res) {
   if (!oldCase) {
     throw new Error("No case found for id %s", params.articleid);
   }
+  fixUpURLs(oldCase);
+  keyFieldsToObjects(oldCase);
   let textModified = false;
   const updatedText = {
     body: oldCase.body,
@@ -196,11 +198,13 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   }
 
   // media lists
-  ["links", "videos", "audio", "evaluation_links"].map(
-    key => cond(key, as.media)
+  ["links", "videos", "audio", "evaluation_links"].map(key =>
+    cond(key, as.media)
   );
   // photos and files are slightly different from other media as they have a source url too
-  ["photos", "files", "evaluation_reports"].map(key => cond(key, as.sourcedMedia));
+  ["photos", "files", "evaluation_reports"].map(key =>
+    cond(key, as.sourcedMedia)
+  );
   // boolean (would include "published" but we don't really support it)
   ["ongoing", "staff", "volunteers"].map(key => cond(key, as.boolean));
   // yes/no (convert to boolean)
@@ -226,7 +230,9 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   // id
   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
   // list of ids
-  ["specific_methods_tools_techniques", "has_components"].map(key => cond(key, as.ids));
+  ["specific_methods_tools_techniques", "has_components"].map(key =>
+    cond(key, as.ids)
+  );
   // key
   [
     "scope_of_influence",
@@ -273,13 +279,19 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
 
-  // console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
+  // console.log(
+  //   "Received tools_techniques_types from client: >>> \n%s\n",
+  //   JSON.stringify(newCase.tools_techniques_types, null, 2)
+  // );
   // save any changes to the user-submitted text
   const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
-  // console.log("updated case: %s", JSON.stringify(updatedCase));
+  // console.log(
+  //   "updated case tools_techniques_types: %s",
+  //   JSON.stringify(updatedCase.tools_techniques_types)
+  // );
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
@@ -303,7 +315,7 @@ async function postCaseUpdateHttp(req, res) {
     // save successful response
     // console.log("Params for returning case: %s", JSON.stringify(params));
     const freshArticle = await getCase(params);
-    console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
+    // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
       article: freshArticle
@@ -347,6 +359,14 @@ function keyFieldsToObjects(article) {
   // do this for all key fields eventually
   ["scope_of_influence", "legality"].forEach(
     key => (article[key] = { key: article[key] })
+  );
+  ["tools_techniques_types"].forEach(
+    key =>
+      (article[key] = article[key].map(item => {
+        return {
+          key: item
+        };
+      }))
   );
 }
 

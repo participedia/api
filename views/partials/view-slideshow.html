@@ -1,17 +1,39 @@
 {{#if (hasPhoto article)}}
-  <div class="js-carousel-container" style="visibility: hidden">
-    <div class="carousel carousel-main js-carousel-main">
-      {{#each article.photos}}
-        <div class="carousel-cell">
-          <img class="carousel-image" data-flickity-lazyload="{{url}}" alt="{{title}}" />
-          {{#if title}}<p>{{title}}</p>{{/if}}
-        </div>
-      {{/each}}
-    </div>
-    <div class="carousel carousel-nav js-carousel-nav">
-      {{#each article.photos}}
-        <img class="carousel-image" data-flickity-lazyload="{{url}}" alt="thumbnail" />
-      {{/each}}
-    </div>
+  <div
+    class="carousel carousel-main"
+    data-flickity='{ "wrapAround": true, "contain": true, "pageDots": false, "fullscreen": true, "lazyLoad": 1 }'
+  >
+    {{#each article.photos}}
+      <div class="carousel-cell">
+        <img
+          class="carousel-cell-image"
+          data-flickity-lazyload="{{url}}"
+          alt="{{title}}"
+        />
+        {{#if title}}
+          <div class="carousel-cell-image-title">
+            <span>
+              {{#if source_url}}
+                <a href="{{source_url}}" target="_blank">{{title}}</a>
+              {{else}}
+                {{title}}
+              {{/if}}
+              {{#if attribution}} - {{attribution}} {{/if}}
+            </span>
+          </div>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+
+  <div
+    class="carousel carousel-nav"
+    data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false, "wrapAround": true }'
+  >
+    {{#each article.photos}}
+      <div class="carousel-cell">
+        <img class="carousel-cell-image" src="{{url}}" alt="{{title}}" />
+      </div>
+    {{/each}}
   </div>
 {{/if}}

@@ -221,15 +221,13 @@ header a {
 }
 
 .profile-dropdown-button-container .profile-dropdown-button-items {
-  opacity: 0;
-  z-index: 10;
   position: absolute;
   top: 50px;
   left: -188px;
   background-color: #fff;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
   width: 200px;
-  display: flex;
+  display: none;
   flex-direction: column;
   padding: 15px;
 }

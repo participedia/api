@@ -63,8 +63,28 @@ describe("Cases", () => {
         "recruitment_method",
         "time_limited"
       ].forEach(key => {
-        console.log("testing %s", key);
         returnedCase[key].key.should.equal(example_case[key]);
+      });
+      // test media fields
+      [
+        "files",
+        "links",
+        "videos",
+        "audio",
+        "photos",
+        "evaluation_reports",
+        "evaluation_links"
+      ].forEach(key => {
+        returnedCase[key].length.should.equal(example_case[key].length);
+        for (let i = 0; i < returnedCase[key].length; i++) {
+          // returnedCase[key][i].url.should.equal(example_case[key][i].url);
+          expect(returnedCase[key][i].attribution).to.equal(
+            example_case[key][i].attribution
+          );
+          expect(returnedCase[key][i].title).to.equal(
+            example_case[key][i].title
+          );
+        }
       });
     });
   });
@@ -144,15 +164,13 @@ describe("Cases", () => {
       const { req, res, ret } = getMocksAuth({
         params: { thingid: case1.id },
         body: {
-          photos: [{ url: "foobar.jpg" }]
+          photos: [{ url: "http://foobar.com/test.jpg" }]
         }
       });
       await postCaseUpdateHttp(req, res);
       const case2 = ret.body.article;
       case2.photos.length.should.equal(1);
-      case2.photos[0].url.should.equal(
-        "https://s3.amazonaws.com/uploads.participedia.xyz/foobar.jpg"
-      );
+      case2.photos[0].url.should.equal("http://foobar.com/test.jpg");
       expect(case2.updated_date > case1.updated_date).to.be.true;
     });
   });

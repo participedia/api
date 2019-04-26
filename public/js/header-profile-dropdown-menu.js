@@ -11,11 +11,11 @@ const headerProfileDropdownMenu = {
         const itemsContainerEl = containerEl.querySelector(".js-profile-dropdown-button-items");
         if (isOpen) {
           // close items
-          itemsContainerEl.style.opacity = 0;
+          itemsContainerEl.style.display = "none";
           containerEl.setAttribute("state", "closed");
         } else {
           // open items
-          itemsContainerEl.style.opacity = 1;
+          itemsContainerEl.style.display = "flex";
           containerEl.setAttribute("state", "open");
         }
       }
