@@ -29,7 +29,6 @@
     "express-session": "1.15.6",
     "express-unless": "^0.3.0",
     "faucet": "^0.0.1",
-    "flickity-as-nav-for": "^2.0.1",
     "fontfaceobserver": "^2.1.0",
     "js-md5": "0.7.3",
     "json-pretty": "^0.0.1",
