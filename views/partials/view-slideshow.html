@@ -3,24 +3,24 @@
     class="carousel carousel-main"
     data-flickity='{ "wrapAround": true, "contain": true, "pageDots": false, "fullscreen": true, "lazyLoad": 1 }'
   >
-    {{#each article.photos}} {{log this}}
-    <div class="carousel-cell">
-      <img
-        class="carousel-cell-image"
-        data-flickity-lazyload="{{url}}"
-        alt="{{title}}"
-      />
-      {{#if title}}
-        <div class="carousel-cell-image-title">
-          <span>
-            {{#if source_url}}
-              <a href="{{source_url}}" target="_blank">{{title}}</a>
-            {{else}}
-              {{title}}
-            {{/if}}
-            {{#if attribution}} - {{attribution}} {{/if}}
-          </span>
-        </div>
+    {{#each article.photos}}
+      <div class="carousel-cell">
+        <img
+          class="carousel-cell-image"
+          data-flickity-lazyload="{{url}}"
+          alt="{{title}}"
+        />
+        {{#if title}}
+          <div class="carousel-cell-image-title">
+            <span>
+              {{#if source_url}}
+                <a href="{{source_url}}" target="_blank">{{title}}</a>
+              {{else}}
+                {{title}}
+              {{/if}}
+              {{#if attribution}} - {{attribution}} {{/if}}
+            </span>
+          </div>
         {{/if}}
       </div>
     {{/each}}
