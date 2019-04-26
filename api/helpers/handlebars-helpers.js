@@ -152,10 +152,18 @@ module.exports = {
   },
 
   getvalue: (article, name) => {
+    if (name === "scope_of_influence") {
+
+    }
     const item = article[name];
-    if (item && item.hasOwnProperty("value")) {
+    if (!item) return;
+
+    if (item.hasOwnProperty("value")) {
       // if the item is an object with a value key, return that
       return item.value;
+    } else if (!item.hasOwnProperty("value") && item.hasOwnProperty("key")) {
+      // if the item doesn't not have a value and has a key, return the key
+      return item.key;
     } else {
       // otherwise just return the item
       return item;
