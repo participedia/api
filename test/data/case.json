@@ -97,89 +97,89 @@
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/aa62ac2b-f732-4b4c-b09a-f8d27c826fde_pilot_evaluation_2017.pdf",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/3470b895-9222-46e4-916c-4c8357d5c65d_pilot_evaluation_2016.pdf",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/69b72b1f-169a-4e2d-823b-dff1f4c8bd7f_pilot_proposal_2015.pdf",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/bdb32cf2-66d7-48b3-8669-dab4f24442b6_pilot_evaluation2_2015.pdf",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/18f9e511-72e2-4fd3-912f-8527daf1504f_pilot_evaluation_2015.pdf",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     }
   ],
   "links": [
     {
       "url": "https://www.winnipeg.ca/interhom/Budget/2018BudgetEngagement/default.stm",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://www.winnipeg.ca/interhom/Budget/2018Budget/default.stm",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     }
   ],
   "photos": [
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/index.php__21.jpg",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/index.php2__7.jpg",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/China_0.png",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/lundi-matin-lors-de-la-conference-de-presse-du-ccreg.jpg",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     }
   ],
   "videos": [
     {
       "url": "http://www.youtube.com/watch?v=eGXXwD4xbTs",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "http://www.youtube.com/watch?v=Xbcpwueb4z4&feature=related",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     }
   ],
   "audio": [
     {
       "url": "https://soundcloud.com/fusionstein/blue-cabbage",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     }
   ],
   "start_date": "2005-10-27T09:00:00",
@@ -366,28 +366,28 @@
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/c06d292f-2f94-4ada-828b-baf95a53cd41_651-4430-2-PB.pdf",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/89acfd0a-25bf-41aa-8f25-f1d95438dcfd_MSPBalochistanCase_study211117fromMuhammad.docx",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     }
   ],
   "evaluation_links": [
     {
       "url": "https://ajph.aphapublications.org/doi/abs/10.2105/AJPH.2015.302706",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     },
     {
       "url": "http://journals.sagepub.com/doi/abs/10.1177/1095796015620171?journalCode=nlfa",
       "source_url": "",
-      "attribution": "",
-      "title": ""
+      "attribution": null,
+      "title": null
     }
   ],
   "bookmarked": false,

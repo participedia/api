@@ -132,6 +132,8 @@ async function maybeUpdateUserText(req, res) {
   if (!oldCase) {
     throw new Error("No case found for id %s", params.articleid);
   }
+  fixUpURLs(oldCase);
+  keyFieldsToObjects(oldCase);
   let textModified = false;
   const updatedText = {
     body: oldCase.body,
@@ -275,13 +277,19 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
 
-  // console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
+  // console.log(
+  //   "Received tools_techniques_types from client: >>> \n%s\n",
+  //   JSON.stringify(newCase.tools_techniques_types, null, 2)
+  // );
   // save any changes to the user-submitted text
   const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
-  // console.log("updated case: %s", JSON.stringify(updatedCase));
+  // console.log(
+  //   "updated case tools_techniques_types: %s",
+  //   JSON.stringify(updatedCase.tools_techniques_types)
+  // );
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
@@ -349,6 +357,14 @@ function keyFieldsToObjects(article) {
   // do this for all key fields eventually
   ["scope_of_influence", "legality"].forEach(
     key => (article[key] = { key: article[key] })
+  );
+  ["tools_techniques_types"].forEach(
+    key =>
+      (article[key] = article[key].map(item => {
+        return {
+          key: item
+        };
+      }))
   );
 }
 
