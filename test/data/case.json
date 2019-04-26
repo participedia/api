@@ -92,11 +92,7 @@
       "title": "Il Padule Che Vorremmo (Ponte Buggianese, Italy)"
     }
   ],
-  "is_component_of": {
-    "id": 101,
-    "type": "case",
-    "title": "Participatory Urban Planning in Ospizio District (Reggio Emilia, Italy)"
-  },
+  "is_component_of": 101,
   "files": [
     {
       "url": "https://s3.amazonaws.com/uploads.participedia.xyz/aa62ac2b-f732-4b4c-b09a-f8d27c826fde_pilot_evaluation_2017.pdf",
@@ -368,13 +364,13 @@
   "formal_evaluation": null,
   "evaluation_reports": [
     {
-      "url": "c06d292f-2f94-4ada-828b-baf95a53cd41_651-4430-2-PB.pdf",
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/c06d292f-2f94-4ada-828b-baf95a53cd41_651-4430-2-PB.pdf",
       "source_url": "",
       "attribution": null,
       "title": null
     },
     {
-      "url": "89acfd0a-25bf-41aa-8f25-f1d95438dcfd_MSPBalochistanCase_study211117fromMuhammad.docx",
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/89acfd0a-25bf-41aa-8f25-f1d95438dcfd_MSPBalochistanCase_study211117fromMuhammad.docx",
       "source_url": "",
       "attribution": null,
       "title": null
