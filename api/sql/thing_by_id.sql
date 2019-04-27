@@ -11,7 +11,6 @@ WITH full_thing AS (
     texts.description,
     first_author(${thingid}) AS creator,
     last_author(${thingid}) AS last_updated_by,
-    ${case_only:raw}
     bookmarked(${table:name}.type, ${thingid}, ${userId})
 FROM
     ${table:name},

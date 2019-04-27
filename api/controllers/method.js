@@ -105,11 +105,11 @@ async function postMethodNewHttp(req, res) {
     return res.status(500).json({ OK: false, error: error });
   }
   // Refresh search index
-  try {
-    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
-  } catch (error) {
-    log.error("Exception in POST /method/new => %s", error);
-  }
+  // try {
+  //   db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
+  // } catch (error) {
+  //   log.error("Exception in POST /method/new => %s", error);
+  // }
 }
 
 /**

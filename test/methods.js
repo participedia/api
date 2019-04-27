@@ -37,24 +37,21 @@ describe("Methods", () => {
     it("fails without content", async () => {
       try {
         const { req, res, ret } = getMocksAuth({});
-        await postCaseNewHttp(req, res);
+        await postMethodNewHttp(req, res);
+        fail();
       } catch (err) {
-        err.should.have.status(400);
+        console.error("Error: %s", err);
       }
     });
-    it("works with authentication", async () => {
-      const res = await addBasicMethod();
-      res.should.have.status(201);
-      res.body.OK.should.be.true;
-      res.body.data.thingid.should.be.a("number");
-      let returnedMethod = res.body.article;
-      returnedMethod.links.should.have.lengthOf(2);
-      returnedMethod.tags.should.have.lengthOf(3);
-      returnedMethod.links.should.deep.equal([
-        "http://killsixbilliondemons.com/",
-        "http://dresdencodak.com/"
-      ]);
-      returnedMethod.tags.should.deep.equal(["OIDP2017", "Tag1", "Tag2"]);
+    it.only("works with authentication", async () => {
+      const body = await addBasicMethod();
+      body.OK.should.be.true;
+      const article = body.article;
+      article.id.should.be.a("number");
+      article.links.should.have.lengthOf(1);
+      article.tags.should.have.lengthOf(2);
+      article.links[0].url.should.equal("http://killsixbilliondemons.com/");
+      returnedMethod.tags.should.deep.equal(["first", "tag"]);
     });
   });
   describe("Test edit API", () => {
@@ -131,8 +128,20 @@ describe("Methods", () => {
     });
     it("Add method, then change links", async () => {
       const method1 = (await addBasicMethod()).article;
-      const method1 = res1.body.object;
-      const links = ["https://xkcd.com/", "http://girlgeniusonline.com/"];
+      const links = [
+        { url: "https://xkcd.com/" },
+        { url: "http://girlgeniusonline.com/" }
+      ];
+      const { req, res, ret } = getMocksAuth({
+        params: { thingid: method1.id },
+        body: {
+          title: "Second Title",
+          body: "Second Body",
+          description: "Second Description"
+        }
+      });
+      await postCaseUpdateHttp(req, res);
+
       const res2 = await chai
         .putJSON("/method/" + method1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
