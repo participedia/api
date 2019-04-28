@@ -10,12 +10,15 @@ const {
   CREATE_METHOD,
   METHOD_EDIT_BY_ID,
   METHOD_VIEW_BY_ID,
-  CASE_EDIT_STATIC
+  INSERT_AUTHOR,
+  INSERT_LOCALIZED_TEXT,
+  UPDATE_METHOD,
+  ErrorReporter
 } = require("../helpers/db");
 
 const {
-  getEditXById,
-  addRelatedList,
+  setConditional,
+  maybeUpdateUserText,
   parseGetParams,
   returnByType,
   fixUpURLs
@@ -30,21 +33,6 @@ const METHOD_STRUCTURE = JSON.parse(
 const articleText = require("../../static-text/article-text.js");
 const methodText = require("../../static-text/method-text.js");
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
-
-async function getEditStaticText(params) {
-  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
-
-  staticText = Object.assign({}, staticText, sharedFieldOptions);
-
-  staticText.labels = Object.assign(
-    {},
-    staticText.labels,
-    methodText,
-    articleText
-  );
-
-  return staticText;
-}
 
 /**
  * @api {post} /method/new Create new method
@@ -72,39 +60,34 @@ async function getEditStaticText(params) {
  */
 async function postMethodNewHttp(req, res) {
   // create new `method` in db
-  // req.body *should* contain:
-  //   title
-  //   body (or "summary"?)
-  //   photo
-  //   video
-  //   location
-  //   related methods
   try {
     cache.clear();
-
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
     let language = req.params.language || "en";
     if (!title) {
       return res.status(400).json({
-        message: "Cannot create Method without at least a title"
+        OK: false,
+        errors: ["Cannot create a method without at least a title."]
       });
     }
-    const user_id = req.user.user_id;
+    const user_id = req.user.id;
     const thing = await db.one(CREATE_METHOD, {
       title,
       body,
       description,
       language
     });
-    req.thingid = thing.thingid;
-    return getEditXById("method")(req, res);
+    //    req.thingid = thing.thingid;
+    req.params.thingid = thing.thingid;
+    await postMethodUpdateHttp(req, res);
   } catch (error) {
     log.error("Exception in POST /method/new => %s", error);
-    return res.status(500).json({ OK: false, error: error });
+    res.status(400).json({ OK: false, error: error });
   }
   // Refresh search index
+  // FIXME: This will never get called as we have already returned ff
   // try {
   //   db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
   // } catch (error) {
@@ -138,7 +121,83 @@ async function postMethodNewHttp(req, res) {
  *
  */
 
-const postMethodUpdateHttp = getEditXById("method");
+async function getMethod(params) {
+  const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
+  const article = articleRow.results;
+  fixUpURLs(article);
+  keyFieldsToObjects(article);
+  return article;
+}
+
+function keyFieldsToObjects(article) {
+  // nothing yet, but want to be compatible with cases
+}
+
+async function postMethodUpdateHttp(req, res) {
+  // cache.clear();
+  const params = parseGetParams(req, "method");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
+  const newMethod = req.body;
+
+  // console.log(
+  //   "Received tools_techniques_types from client: >>> \n%s\n",
+  //   JSON.stringify(newMethod.tools_techniques_types, null, 2)
+  // );
+  // save any changes to the user-submitted text
+  const { updatedText, author, oldMethod } = await maybeUpdateUserText(
+    req,
+    res,
+    keyFieldsToObjects
+  );
+  // console.log("updatedText: %s", JSON.stringify(updatedText));
+  // console.log("author: %s", JSON.stringify(author));
+  const [updatedMethod, er] = getUpdatedMethod(
+    user,
+    params,
+    newMethod,
+    oldMethod
+  );
+  // console.log(
+  //   "updated method tools_techniques_types: %s",
+  //   JSON.stringify(updatedMethod.tools_techniques_types)
+  // );
+  if (!er.hasErrors()) {
+    if (updatedText) {
+      await db.tx("update-method", t => {
+        return t.batch([
+          t.none(INSERT_AUTHOR, author),
+          t.none(INSERT_LOCALIZED_TEXT, updatedText),
+          t.none(UPDATE_METHOD, updatedMethod)
+          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+        ]);
+      });
+    } else {
+      await db.tx("update-method", t => {
+        return t.batch([
+          t.none(INSERT_AUTHOR, author),
+          t.none(UPDATE_METHOD, updatedMethod)
+          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+        ]);
+      });
+    }
+    // the client expects this request to respond with json
+    // save successful response
+    // console.log("Params for returning method: %s", JSON.stringify(params));
+    const freshArticle = await getMethod(params);
+    // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
+    res.status(200).json({
+      OK: true,
+      article: freshArticle
+    });
+  } else {
+    console.error("Reporting errors: %s", er.errors);
+    res.status(400).json({
+      OK: false,
+      errors: er.errors
+    });
+  }
+}
 
 async function getMethodHttp(req, res) {
   /* This is the entry point for getting an article */

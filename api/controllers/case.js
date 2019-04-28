@@ -21,8 +21,8 @@ const {
 } = require("../helpers/db");
 
 const {
-  getEditXById,
-  addRelatedList,
+  setConditional,
+  maybeUpdateUserText,
   parseGetParams,
   returnByType,
   fixUpURLs
@@ -123,68 +123,6 @@ async function postCaseNewHttp(req, res) {
  *
  */
 
-async function maybeUpdateUserText(req, res) {
-  // if none of the user-submitted text fields have changed, don't add a record
-  // to localized_text or
-  const newCase = req.body;
-  const params = parseGetParams(req, "case");
-  const oldCase = (await db.one(CASE_EDIT_BY_ID, params)).results;
-  if (!oldCase) {
-    throw new Error("No case found for id %s", params.articleid);
-  }
-  fixUpURLs(oldCase);
-  keyFieldsToObjects(oldCase);
-  let textModified = false;
-  const updatedText = {
-    body: oldCase.body,
-    title: oldCase.title,
-    description: oldCase.description,
-    language: params.lang,
-    type: "case",
-    id: params.articleid
-  };
-  ["body", "title", "description"].forEach(key => {
-    let value;
-    if (key === "body") {
-      value = as.richtext(newCase[key] || oldCase[key]);
-    } else {
-      value = as.text(newCase[key] || oldCase[key]);
-    }
-    if (newCase[key] && oldCase[key] !== newCase[key]) {
-      textModified = true;
-    }
-    updatedText[key] = value;
-  });
-  const author = {
-    user_id: params.userid,
-    thingid: params.articleid
-  };
-  if (textModified) {
-    return { updatedText, author, oldCase };
-  } else {
-    return { updatedText: null, author, oldCase };
-  }
-}
-
-function setConditional(
-  updatedObject,
-  newObject,
-  errorReporter,
-  updateFunction,
-  key
-) {
-  if (newObject[key] === undefined) {
-    // if we're updating a partial, we still need to rewrite the updated object
-    // from front-end format to save format
-    updatedObject[key] = errorReporter.try(updateFunction)(
-      updatedObject[key],
-      key
-    );
-  } else {
-    updatedObject[key] = errorReporter.try(updateFunction)(newObject[key], key);
-  }
-}
-
 function getUpdatedCase(user, params, newCase, oldCase) {
   const updatedCase = Object.assign({}, oldCase);
   const er = new ErrorReporter();
@@ -284,7 +222,11 @@ async function postCaseUpdateHttp(req, res) {
   //   JSON.stringify(newCase.tools_techniques_types, null, 2)
   // );
   // save any changes to the user-submitted text
-  const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
+  const { updatedText, author, oldCase } = await maybeUpdateUserText(
+    req,
+    res,
+    keyFieldsToObjects
+  );
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);

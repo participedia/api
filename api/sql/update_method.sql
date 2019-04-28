@@ -8,37 +8,27 @@ SET
 -- automatic
   updated_date = 'now',
 -- media lists
-  -- full_files = ${files},
-  -- full_links = ${links},
-  -- full_videos = ${videos},
-  -- audio = ${audio},
-  -- photos = ${photos},
-  images = ${images},
-  -- evaluation_reports = ${evaluation_reports},
-  -- evaluation_links = ${evaluation_links},
+  files = ${files},
+  links = ${links},
+  videos = ${videos},
+  audio = ${audio},
+  photos = ${photos},
 -- boolean
-  facilitated = ${facilitated},
--- yes/no
-  impact_evidence = ${impact_evidence},
-  formal_evaluation = ${formal_evaluation},
--- number
-  number_of_participants = ${number_of_participants},
--- plain text
--- key
-  completeness = ${completeness},
-  geographical_scope = ${geographical_scope},
+  facilitator = ${facilitator},
+-- keys
+  facetoface_online_or_both = ${facetoface_online_or_both},
+  public_spectrum = ${public_spectrum},
+  open_limited = ${open_limited},
   recruitment_method = ${recruitment_method},
-  decision_method = ${decision_method},
-  if_voting = ${if_voting},
-  issue_polarization = ${issue_polarization},
-  issue_technical_complexity = ${issue_technical_complexity},
-  issue_interdependency = ${issue_interdependency},
+  level_polarization = ${level_polarization},
+  scope_of_influence = ${scope_of_influence},
 -- list of keys
-  participant_selections = ${participant_selections},
-  communication_modes = ${communication_modes},
-  public_interaction_methods = ${public_interaction_methods},
-  typical_purposes = ${typical_purposes},
-  communication_outcomes = ${communication_outcomes}
+  method_types = ${method_types},
+  number_of_participants = ${number_of_participants},
+  scope_of_influence = ${scope_of_influence},
+  participants_interactions = ${participants_interactions},
+  decision_methods = ${decision_methods},
+  if_voting = ${if_voting}
 WHERE
   id = ${id}
 ;

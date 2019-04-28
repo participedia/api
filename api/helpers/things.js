@@ -414,6 +414,69 @@ const uniq = list => {
   return newList;
 };
 
+async function maybeUpdateUserText(req, res, keyFieldsToObjects) {
+  // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
+  // if none of the user-submitted text fields have changed, don't add a record
+  // to localized_text or
+  const newCase = req.body;
+  const params = parseGetParams(req, "case");
+  const oldCase = (await db.one(CASE_EDIT_BY_ID, params)).results;
+  if (!oldCase) {
+    throw new Error("No case found for id %s", params.articleid);
+  }
+  fixUpURLs(oldCase);
+  keyFieldsToObjects(oldCase);
+  let textModified = false;
+  const updatedText = {
+    body: oldCase.body,
+    title: oldCase.title,
+    description: oldCase.description,
+    language: params.lang,
+    type: "case",
+    id: params.articleid
+  };
+  ["body", "title", "description"].forEach(key => {
+    let value;
+    if (key === "body") {
+      value = as.richtext(newCase[key] || oldCase[key]);
+    } else {
+      value = as.text(newCase[key] || oldCase[key]);
+    }
+    if (newCase[key] && oldCase[key] !== newCase[key]) {
+      textModified = true;
+    }
+    updatedText[key] = value;
+  });
+  const author = {
+    user_id: params.userid,
+    thingid: params.articleid
+  };
+  if (textModified) {
+    return { updatedText, author, oldCase };
+  } else {
+    return { updatedText: null, author, oldCase };
+  }
+}
+
+function setConditional(
+  updatedObject,
+  newObject,
+  errorReporter,
+  updateFunction,
+  key
+) {
+  if (newObject[key] === undefined) {
+    // if we're updating a partial, we still need to rewrite the updated object
+    // from front-end format to save format
+    updatedObject[key] = errorReporter.try(updateFunction)(
+      updatedObject[key],
+      key
+    );
+  } else {
+    updatedObject[key] = errorReporter.try(updateFunction)(newObject[key], key);
+  }
+}
+
 module.exports = {
   returnThingByRequest,
   getEditXById,
@@ -424,5 +487,7 @@ module.exports = {
   uniq,
   fixUpURLs,
   parseGetParams,
-  returnByType
+  returnByType,
+  setConditional,
+  maybeUpdateUserText
 };
