@@ -1,14 +1,12 @@
 -- Create table for legal field
 -- This is because fields share yes, no, not applicable, and don't know keys
 
-DROP TABLE IF EXISTS legal_case_field_keys;
 CREATE TABLE legal_case_field_keys(
   field TEXT NOT NULL,
   key TEXT NOT NULL,
   ordering INTEGER NOT NULL
 );
 
-DROP TABLE IF EXISTS localized_short_values;
 CREATE TABLE localized_short_values(
   language TEXT NOT NULL,
   key TEXT NOT NULL,
@@ -72,7 +70,6 @@ SELECT * from insert_fields('funder_types');
 SELECT * from insert_fields('change_types');
 SELECT * from insert_fields('implementers_of_change');
 
-DROP TABLE IF EXISTS localized_case_field_values;
 CREATE TABLE localized_case_field_values(
   language TEXT NOT NULL,
   key TEXT NOT NULL,

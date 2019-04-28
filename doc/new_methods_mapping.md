@@ -6,7 +6,7 @@ All new method changes based on the [Method Fields Spec](https://docs.google.com
 
 ## Unchanged properties:
 
-id, type, title, description, body, original_language, post_date, published, updated_date, featured, hidden
+id, type, title, description, body, original_language, post_date, published, updated_date, featured, hidden, recruitment_method
 
 ## Removed properties
 
@@ -19,9 +19,7 @@ facetoface_online_or_both key
 method_types key[]
 public_spectrum key
 open_limited key
-recruitment_method key
 number_of_participants key[]
-scope_of_influence key[]
 participants_interactions key[]
 
 ## Properties that require changes
@@ -78,9 +76,9 @@ Action: change value from key to key[]
 ### geographical_scope
 
 Current: `geographical_scope key`
-New: `scope_of_influence key`
+New: `scope_of_influence key[]`
 
-Action: Rename from `geographical_scope` to `scope_of_influence` and clean up data.
+Action: Rename from `geographical_scope` to `scope_of_influence`, change from key to list of keys, and clean up data.
 
 Keys currently used in `geographical_scope`:
 
@@ -95,10 +93,10 @@ Regional (e.g. State, Province, Autonomous Region)
 
 Will be mapped to:
 
-international
-local
-national
-regional
+ARRAY[international]
+ARRAY[local]
+ARRAY[national]
+ARRAY[regional]
 
 ### facilitated
 

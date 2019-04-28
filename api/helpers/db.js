@@ -30,20 +30,7 @@ try {
 }
 let db = pgp(config);
 
-let dbtagkeys;
-// let dbcasekeys;
-
-function initKeys() {
-  // we're just getting the keys for validation, which are the same for
-  // every language, so hard-coding 'en' here is OK.
-  // dbcasekeys = (await db.one(`
-  //   SELECT to_json(array_agg(key)) AS keys
-  //   FROM localized_case_field_values
-  //   WHERE language = 'en';
-  // `)).keys;
-  dbtagkeys = JSON.parse(fs.readFileSync("api/helpers/data/tagkeys.json"));
-}
-initKeys();
+const dbtagkeys = JSON.parse(fs.readFileSync("api/helpers/data/tagkeys.json"));
 
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {

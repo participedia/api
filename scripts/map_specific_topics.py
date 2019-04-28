@@ -831,8 +831,6 @@ print()
 # write function to map things.keys to localized_values {key: keyLookup: value:} objects, i.e., a specialized form of get_localized_list()
 # DONE
 
-# move get_case_by_id() to migration_014 and change tags to use new function
-# DONE
 
 # remove any duplicates in things.tags
 
