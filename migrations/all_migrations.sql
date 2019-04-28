@@ -32,3 +32,4 @@
 \include 'migrations/migration_031.sql'
 \include 'migrations/migration_032.sql'
 \include 'migrations/migration_033.sql'
+-- \include 'migrations/migration_034.sql'

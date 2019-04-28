@@ -55,7 +55,7 @@ ALTER TABLE things RENAME COLUMN full_links TO links;
 ALTER TABLE things ADD COLUMN photos full_file[] DEFAULT '{}';
 
 UPDATE things set photos = b.photos from (
-  select a.id, array_agg((a.photo,'','','')::photo) as photos from (
+  select a.id, array_agg((a.photo,'','','')::full_file) as photos from (
     select id, unnest(images) as photo from things where array_length(images, 1) > 0
   ) as a group by id
 ) as b where b.id = things.id;

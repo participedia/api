@@ -6,6 +6,7 @@ const options = {
   promiseLib: promise, // use bluebird as promise library
   capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
 };
+const fs = require("fs");
 //if (process.env.LOG_QUERY === "true") {
 options.query = evt => (process.env.LAST_QUERY = evt.query);
 //}
@@ -32,7 +33,7 @@ let db = pgp(config);
 let dbtagkeys;
 // let dbcasekeys;
 
-async function initKeys() {
+function initKeys() {
   // we're just getting the keys for validation, which are the same for
   // every language, so hard-coding 'en' here is OK.
   // dbcasekeys = (await db.one(`
@@ -40,13 +41,9 @@ async function initKeys() {
   //   FROM localized_case_field_values
   //   WHERE language = 'en';
   // `)).keys;
-  dbtagkeys = (await db.one(`
-    SELECT to_json(array_agg(key)) as keys
-    FROM rotate_tags_localized('en') AS tagvalues
-    WHERE tagvalues.key <> 'language';
-  `)).keys;
+  dbtagkeys = JSON.parse(fs.readFileSync("api/helpers/data/tagkeys.json"));
 }
-initKeys().then(() => console.log("keys initialized")); // we'll need these when users submit data
+initKeys();
 
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {
