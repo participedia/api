@@ -1,9 +1,11 @@
+-- migrations on .xyz
 \include 'migrations/migration_002.sql'
 \include 'migrations/migration_003.sql'
 \include 'migrations/migration_004.sql'
-\include 'migrations/migration_005.sql'
 -- \include 'migrations/migration_006.sql' -- redundant, skip
 \include 'migrations/migration_007.sql'
+
+-- new migrations
 \include 'migrations/migration_008.sql'
 \include 'migrations/migration_009.sql'
 \include 'migrations/migration_010.sql'
