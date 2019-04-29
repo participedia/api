@@ -1,17 +1,16 @@
 "use strict";
 const express = require("express");
-const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
+const fs = require("fs");
 
 const {
   db,
   as,
   CREATE_METHOD,
   METHOD_EDIT_BY_ID,
-  METHOD_EDIT_STATIC,
   METHOD_VIEW_BY_ID,
-  METHOD_VIEW_STATIC
+  CASE_EDIT_STATIC
 } = require("../helpers/db");
 
 const {
@@ -21,6 +20,26 @@ const {
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
+
+const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
+
+const METHOD_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/method-structure.json", "utf8")
+);
+
+const articleText = require("../../static-text/article-text.js");
+const methodText = require("../../static-text/method-text.js");
+const sharedFieldOptions = require("../helpers/shared-field-options.js");
+
+async function getEditStaticText(params) {
+  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
+
+  staticText.labels = Object.assign({}, staticText.labels, methodText, articleText);
+
+  return staticText;
+}
 
 /**
  * @api {post} /method/new Create new method
@@ -46,7 +65,7 @@ const {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.post("/new", async function(req, res) {
+async function postMethodNewHttp(req, res) {
   // create new `method` in db
   // req.body *should* contain:
   //   title
@@ -86,7 +105,7 @@ router.post("/new", async function(req, res) {
   } catch (error) {
     log.error("Exception in POST /method/new => %s", error);
   }
-});
+}
 
 /**
  * @api {put} /method/:id  Submit a new version of a method
@@ -114,30 +133,48 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:thingid", getEditXById("method"));
+const postMethodUpdateHttp = getEditXById("method");
 
-router.get("/:thingid/", async (req, res) => {
+async function getMethodHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "method");
   const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(METHOD_VIEW_STATIC, params);
+  const staticText = {};
   returnByType(res, params, article, staticText);
-});
+}
 
-router.get("/:thingid/edit", async (req, res) => {
+async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
+  params.view = "edit";
   const articleRow = await db.one(METHOD_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(METHOD_EDIT_STATIC, params);
+  const staticText = await getEditStaticText(params);
+
   returnByType(res, params, article, staticText);
-});
+}
 
-router.delete("/:id", function deleteMethod(req, res) {
-  // let id = req.swagger.params.id.value;
-  res.status(200).json(req.body);
-});
+async function getMethodNewHttp(req, res) {
+  const params = parseGetParams(req, "method");
+  params.view = "edit";
+  const article = METHOD_STRUCTURE;
+  const staticText = await getEditStaticText(params);
+  returnByType(res, params, article, staticText, req.user);
+}
 
-module.exports = router;
+const router = express.Router(); // eslint-disable-line new-cap
+router.post("/new", requireAuthenticatedUser(), postMethodNewHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
+router.get("/:thingid/", getMethodHttp);
+router.get("/:thingid/edit", requireAuthenticatedUser(), getMethodEditHttp);
+router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
+
+module.exports = {
+  method: router,
+  postMethodNewHttp,
+  postMethodUpdateHttp,
+  getMethodHttp,
+  getMethodEditHttp
+};

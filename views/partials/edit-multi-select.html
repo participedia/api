@@ -20,13 +20,29 @@
   >
     {{#each (getOptions article name)}}
       {{#if (isSelectedInArray ../article ../name this.key)}}
-        {{> edit-multi-select-li
-          name=../name
-          key=this.key
-          value=this.value
-          ranked=../ranked
-          index=@index
-        }}
+        {{#if (isEqual ../name "specific_methods_tools_techniques")}}
+          {{!--
+            specific_methods_tools_techniques object is shaped like
+            {id: "1", type: "method", title: "My Title" }
+            while all others are
+            { key: "key", value: "value" }
+          --}}
+          {{> edit-multi-select-li
+            name=../name
+            key=this.id
+            value=this.title
+            ranked=../ranked
+            index=@index
+          }}
+        {{else}}
+          {{> edit-multi-select-li
+            name=../name
+            key=this.key
+            value=this.value
+            ranked=../ranked
+            index=@index
+          }}
+        {{/if}}
       {{/if}}
     {{/each}}
   </ol>

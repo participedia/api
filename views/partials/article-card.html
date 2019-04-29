@@ -1,4 +1,10 @@
-<li class="article-card" data-featured="{{featured}}" data-lat-lng="{{parseLatLng latitude longitude}}">
+<li
+  class="article-card"
+  data-featured="{{featured}}"
+  {{#if latitude}}
+    data-lat-lng="{{latitude}}, {{longitude}}"
+  {{/if}}
+>
   <a href="/{{type}}/{{id}}">
     <div
       class="article-card-img"

@@ -36,7 +36,7 @@ const editForm = {
       const response = JSON.parse(xhr.response);
 
       if (response.OK) {
-        this.handleSuccess();
+        this.handleSuccess(response);
       } else {
         this.handleErrors(response.errors);
       }
@@ -45,10 +45,14 @@ const editForm = {
     xhr.send(formData);
   },
 
-  handleSuccess() {
-    // remove `/edit` from current url & redirect to reader view
-    // eg: /case/1234/edit => /case/1234
-    location.href = location.pathname.slice(0, location.pathname.length - 5);;
+  handleSuccess(response) {
+    if (response.user) {
+      // redirect to user profile page
+      location.href = `/user/${response.user.id}`;
+    } else if (response.article) {
+      // redirect to article reader page
+      location.href = `/${response.article.type}/${response.article.id}`;
+    }
   },
 
   errorModalHtml(errors) {
@@ -76,7 +80,10 @@ const editForm = {
     modal.open();
 
     // attach event listener for new close button inserted in modal
-    modalContentEl.querySelector(".js-modal-close").addEventListener("click", modal.close);
+    const closeBtn = modalContentEl.querySelector(".js-modal-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", modal.close);
+    }
   },
 }
 

@@ -2,6 +2,18 @@ const moment = require("moment");
 const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
+const sharedFieldOptions = require("./shared-field-options.js");
+
+const LOCATION_FIELD_NAMES = [
+  "address1",
+  "address2",
+  "city",
+  "province",
+  "postal_code",
+  "country",
+  "latitude",
+  "longitude"
+];
 
 function toTitleCase(str) {
   return str.replace(
@@ -32,24 +44,6 @@ function getFirstPhotoUrl(article) {
   return article.photos[0].url;
 }
 
-function parseDMS(input) {
-  // expects input formatted as "0° 0' 0" N,0° 0' 0" E"
-  const parts = input.split(/[^\d\w\.]+/);
-  return {
-    latitude: convertDMSToDD(parts[0], parts[1], parts[2], parts[3]),
-    longitude: convertDMSToDD(parts[4], parts[5], parts[6], parts[7]),
-  };
-}
-
-function convertDMSToDD(degrees, minutes, seconds, direction) {
-  let dd = Number(degrees) + Number(minutes) / 60 + Number(seconds) / (60 * 60);
-
-  if (direction === "S" || direction === "W") {
-    dd = dd * -1;
-  } // Don't do anything for N or E
-  return dd;
-}
-
 const i18n = (key, context) => context && context.data && context.data.root.__(key);
 
 module.exports = {
@@ -77,6 +71,8 @@ module.exports = {
       return mapIdTitleToKeyValue(staticText["cases"]);
     } else if (name === "specific_methods_tools_techniques") {
       return mapIdTitleToKeyValue(staticText["methods"]);
+    } else if (name === "primary_organizer") {
+      return mapIdTitleToKeyValue(staticText["organizations"]);
     } else {
       return staticText[name];
     }
@@ -107,11 +103,49 @@ module.exports = {
     return value && value.constructor === Array;
   },
 
+  getArticleSelectValue: (article, name) => {
+    if (!article[name]) return null;
+
+    // some article select fields have values like  { key: "value"},
+    // and others like for impact_evidence and formal_evaluation have a
+    // string like "value" which represents the key
+
+    let key;
+    if(article[name].key) {
+      key = article[name].key
+    } else {
+      key = article[name];
+    }
+
+    const selectedItemInArray = sharedFieldOptions[name].filter(options => options.key === key);
+    if (selectedItemInArray.length > 0) {
+      if (selectedItemInArray[0].value !== "") {
+        return selectedItemInArray[0].value;
+      }
+    }
+  },
+
+  getArticleSelectKey: (article, name) => {
+    if (!article[name]) return;
+    if (article[name].hasOwnProperty("key")) {
+      return article[name].key;
+    } else if (article[name].hasOwnProperty("id")) {
+      return article[name].id;
+    } else {
+      return article[name];
+    }
+  },
+
   getvalue: (article, name) => {
     const item = article[name];
-    if (item && item.hasOwnProperty("value")) {
+    if (!item) return;
+
+    if (item.hasOwnProperty("value")) {
       // if the item is an object with a value key, return that
       return item.value;
+    } else if (!item.hasOwnProperty("value") && item.hasOwnProperty("key")) {
+      // if the item doesn't not have a value and has a key, return the key
+      return item.key;
     } else {
       // otherwise just return the item
       return item;
@@ -144,7 +178,7 @@ module.exports = {
     }
   },
 
-  getArticleKey: (article, name, key) => {
+  getArticleListKey: (article, name, key) => {
     return article[name] && article[name][key];
   },
 
@@ -152,7 +186,7 @@ module.exports = {
     const options = article[name];
     if (options && options.length > 0) {
       return options.find(item => {
-        return item.key === optionKey;
+        return item && item.key === optionKey;
       });
     }
   },
@@ -183,7 +217,9 @@ module.exports = {
   },
 
   formatDate(article, name, format) {
-    return moment(article[name]).format(format);
+    if (article[name] && article[name] !== "") {
+      return moment(article[name]).format(format);
+    }
   },
 
   getCaseEditSubmitType(req) {
@@ -324,22 +360,28 @@ module.exports = {
   },
 
   // location helpers
-  parseLatLng(latitude, longitude) {
-    const coords = parseDMS(`${latitude},${longitude}`);
-    return `${coords.latitude},${coords.longitude}`;
+  hasLocationData(article) {
+    let hasLocationData = false;
+    LOCATION_FIELD_NAMES.forEach((fieldName) => {
+      if (article[fieldName]) {
+        hasLocationData = true;
+      }
+    });
+    return hasLocationData;
+  },
+
+  getLocationValue(article) {
+    const locationValues = LOCATION_FIELD_NAMES.map(field => {
+      if (field !== "latitude" && field !== "longitude") {
+        return article[field];
+      }
+    }).filter(field => field);
+
+    return locationValues.join(", ");
   },
 
   locationFieldNames() {
-    return [
-      "address1",
-      "address2",
-      "city",
-      "province",
-      "postal_code",
-      "country",
-      "latitude",
-      "longitude"
-    ];
+    return LOCATION_FIELD_NAMES;
   },
 
   // user profile
@@ -388,6 +430,12 @@ module.exports = {
     return currentUrl(req);
   },
 
+  isNewView(req) {
+    const baseUrls = ["/case", "/method", "/organization"];
+    return baseUrls.includes(req.baseUrl) &&
+      req.path.indexOf("new") === 1;
+  },
+
   isEditView(req) {
     const baseUrls = ["/case", "/method", "/organization", "/user"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
@@ -395,7 +443,9 @@ module.exports = {
 
   isReaderView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
-    return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") === -1;
+    return baseUrls.includes(req.baseUrl) &&
+      req.path.indexOf("edit") === -1 &&
+      req.path.indexOf("new") !== 1;
   },
 
   isHomeSearchView(req) {
@@ -419,6 +469,7 @@ module.exports = {
   },
 
   sanitizeName(name) {
+    if (!name) return;
     // if name contains @, assume it's an email address, and strip the domain
     // so we are not sharing email address' publicly
     const atSymbolIndex = name.indexOf("@");

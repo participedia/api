@@ -7,18 +7,22 @@ let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
-async function getUserById(userId, req, res, view="view") {
+async function getUserById(userId, req, res, view = "view") {
   try {
     const language = req.params.language || "en";
 
     const result = await db.oneOrNone(USER_BY_ID, {
       userId: userId,
-      language: language,
+      language: language
     });
     if (!result) {
       return res
         .status(404)
         .json({ OK: false, error: `User not found for user_id ${userId}` });
+    }
+
+    if (result.user.bookmarks) {
+      result.user.bookmarks.forEach(b => (b.bookmarked = true));
     }
 
     // if name contains @, assume it's an email address, and strip the domain
@@ -44,7 +48,7 @@ async function getUserById(userId, req, res, view="view") {
         "join_date"
       ];
       const userEditJSON = {};
-      userEditKeys.forEach(key => userEditJSON[key] = result.user[key]);
+      userEditKeys.forEach(key => (userEditJSON[key] = result.user[key]));
 
       return {
         profile: userEditJSON,
@@ -91,14 +95,22 @@ router.get("/:userId", async function(req, res) {
     const data = await getUserById(req.params.userId, req, res, "view");
 
     // return html template
-    res.status(200).render(`user-view`, data);
+    const returnType = req.query.returns || "html";
+    if (returnType === "html") {
+      res.status(200).render(`user-view`, data);
+    } else if (returnType === "json") {
+      res.status(200).json(data);
+    }
   } catch (error) {
     console.error("Problem in /user/:userId");
     console.trace(error);
   }
 });
 
-router.get("/:userId/edit", requireAuthenticatedUser(), async function(req, res) {
+router.get("/:userId/edit", requireAuthenticatedUser(), async function(
+  req,
+  res
+) {
   // if user is not owner of this profile, redirect to profile view
   if (req.user.id !== parseInt(req.params.userId)) {
     return res.redirect(`/user/${req.params.userId}`);
@@ -152,13 +164,16 @@ router.get("/", async function(req, res) {
 router.post("/", async function(req, res) {
   // make sure we have a logged in user
   if (!req.user) {
-    return res.status(401).json({ error: "You must be logged in to perform this action." });
+    return res
+      .status(401)
+      .json({ error: "You must be logged in to perform this action." });
   }
 
   // make sure profile is logged in user's profile
   if (req.user.id !== parseInt(req.body.id)) {
-    return res.status(401)
-      .json({ error: "The user doesn't have permission to perform this operation." });
+    return res.status(401).json({
+      error: "The user doesn't have permission to perform this operation."
+    });
   }
 
   try {
@@ -169,7 +184,7 @@ router.post("/", async function(req, res) {
       name: user.name,
       bio: user.bio || ""
     });
-    res.status(200).json({ OK: true });
+    res.status(200).json({ OK: true, user: { id: user.id } });
   } catch (error) {
     log.error("Exception in POST /user => %s", error);
     if (error.message && error.message == "No data returned from the query.") {

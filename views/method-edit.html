@@ -1,1 +1,64 @@
-<article>method-edit</article>
+{{#> edit-form}}
+  <fieldset>
+    <h2 class="fieldset-header">{{t static "overview_sectionlabel"}}</h2>
+    <h2 class="fieldset-header quickonly">{{t static "quick_submit_sectionlabel"}}</h2>
+
+    {{> article-edit-text name="title" is_required=true quick-submit=true}}
+    {{> article-edit-select name="facetoface_online_or_both" quick-submit=true}}
+  </fieldset>
+
+  <fieldset>
+    <h2 class="fieldset-header">{{t static "type_purpose_sectionlabel"}}</h2>
+
+    {{> edit-multi-select name="method_types" quick-submit=true max=3}}
+    {{> edit-multi-select name="purposes" max=3}}
+    {{> article-edit-select name="public_spectrum"}}
+
+
+  </fieldset>
+
+  <fieldset>
+    <h2 class="fieldset-header">{{t static "description_narrative_sectionlabel"}}</h2>
+
+    {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
+    {{> edit-richtext
+      name="body"
+      value=(getvalue article "body")
+      placeholderText=(placeholder static "body")
+    }}
+  </fieldset>
+
+  <fieldset>
+    <h2 class="fieldset-header">{{t static "media_sectionlabel"}}</h2>
+
+    {{> edit-media name="files" quick-submit=true}}
+    {{> edit-link-set name="links" quick-submit=true}}
+    {{> edit-media name="photos" quick-submit=true}}
+    {{> edit-link-set name="videos" quick-submit=true}}
+    {{> edit-link-set name="audio" quick-submit=true}}
+  </fieldset>
+
+  <fieldset class="fullonly">
+    <h2 class="fieldset-header">{{t static "participants_sectionlabel"}}</h2>
+    {{> article-edit-select name="open_limited" }}
+    {{> article-edit-select name="recruitment_method" }}
+    {{> edit-number name="number_of_participants" }}
+  </fieldset>
+
+   <fieldset class="fullonly">
+    <h2 class="fieldset-header">{{t static "process_sectionlabel"}}</h2>
+
+    {{> edit-multi-select name="participants_interactions" }}
+    {{> article-edit-select name="facilitators" }}
+    {{> edit-multi-select name="decision_methods" }}
+    {{> edit-multi-select name="if_voting" }}
+  </fieldset>
+
+  <fieldset class="fullonly">
+    <h2 class="fieldset-header">{{t static "suitable_for_sectionlabel"}}</h2>
+
+    {{> edit-multi-select name="scope_of_influence" max=3}}
+    {{> article-edit-select name="level_polarization" }}
+    {{> article-edit-select name="level_complexity" }}
+  </fieldset>
+{{/edit-form}}

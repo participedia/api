@@ -211,6 +211,8 @@ header a {
 .main-content {
   padding-top: 30px;
   margin-top: 60px;
+  /* make min height the height of the viewport minus height of footer, padding/margin, header, so that footer always looks fixed to bottom */
+  min-height: calc(100VH - 227px - 90px - 60px);
 }
 
 /* profile img/button with dropdown menu */
@@ -219,15 +221,13 @@ header a {
 }
 
 .profile-dropdown-button-container .profile-dropdown-button-items {
-  opacity: 0;
-  z-index: 10;
   position: absolute;
   top: 50px;
   left: -188px;
   background-color: #fff;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
   width: 200px;
-  display: flex;
+  display: none;
   flex-direction: column;
   padding: 15px;
 }

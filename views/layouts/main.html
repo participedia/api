@@ -10,7 +10,6 @@
     gtag("js", new Date());
     gtag("config", "{{GA_TRACKING_ID}}");
   </script>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="shortcut icon" href="/favicon.ico">
@@ -55,7 +54,16 @@
     <script type="text/javascript" src="/build/js/edit-view.bundle.js"></script>
   {{/if}}
 
+  {{#if (isNewView req)}}
+    {{!-- import google api for the autocomplete widget --}}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYi8w5HOVTr3HyioFkAKUK_PofGow_7uA&libraries=places&language={{static.language}}"></script>
+    <script type="text/javascript" src="/js/polyfills/DragDropTouch.js"></script>
+    <script type="text/javascript" src="/build/js/edit-view.bundle.js"></script>
+  {{/if}}
+
   {{#if (isReaderView req)}}
+    <script type="text/javascript" src="/js/vendor/flickity@2.2.0-flickity.pkgd.js"></script>
+    <script type="text/javascript" src="/js/vendor/flickity-fullscreen@1.1.1-fullscreen.js"></script>
     <script type="text/javascript" src="/build/js/reader-view.bundle.js"></script>
   {{/if}}
 

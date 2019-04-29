@@ -29,23 +29,20 @@ const shortKeys = titleKeys.concat([
 const mediumKeys = shortKeys.concat(["body", "bookmarked", "location"]);
 
 const fixUpURLs = function(article) {
+  // FIXME: need to handle all media objects and source_urls for sourced media
   if (article.photos && article.photos.length) {
-    article.photos.forEach(
-      img =>
-        (img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url))
-    );
+    article.photos.forEach(img => {
+      if (!img.url.startsWith("http")) {
+        img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url);
+      }
+    });
   }
   if (article.files && article.files.length) {
-    article.files.forEach(
-      file =>
-        (file.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(file.url))
-    );
-  }
-  if (article.longitude.startsWith("0° 0' 0\"")) {
-    article.longitude = "";
-  }
-  if (article.latitude.startsWith("0° 0' 0\"")) {
-    article.latitude = "";
+    article.files.forEach(file => {
+      if (!file.url.startsWith("http")) {
+        file.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(file.url);
+      }
+    });
   }
 };
 
@@ -82,9 +79,7 @@ const parseGetParams = function(req, type) {
     view: as.value(req.params.view || "view"),
     articleid: as.number(req.params.thingid || req.params.articleid),
     lang: as.value(req.query.language || "en"),
-    userid: req.user
-      ? as.number(req.user.id )
-      : null,
+    userid: req.user ? as.number(req.user.id) : null,
     returns: as.value(req.query.returns || "html")
   });
 };

@@ -1,8 +1,8 @@
 <div class="edit-form-author-info">
 {{#if user.isadmin}}
-  <button class="button button-red edit-submission-details-btn js-edit-submission-details-btn">
+  <a class="button button-red edit-submission-details-btn js-edit-submission-details-btn">
     {{t "Edit Submission Details"}}
-  </button>
+  </a>
 {{/if}}
 
 <div class="js-view-submission-details">
@@ -15,14 +15,14 @@
       <strong>{{t "First Submitted By"}}</strong>
       <input
         type="text"
-        name="creator_name"
+        id="js-creator-name"
         value="{{article.creator.name}}"
         autocomplete="false"
         autocomplete="off"
       />
       <input
         type="hidden"
-        name="creator_user_id"
+        name="creator"
         value="{{article.creator.user_id}}"
       />
     </p>
@@ -30,7 +30,7 @@
       <strong>{{t "First Submitted Date"}}</strong>
       <input
         type="date"
-        value="{{formatDate article post_date 'YYYY-MM-DD'}}"
+        value="{{formatDate article "post_date" "YYYY-MM-DD"}}"
         name="post_date"
       />
     </p>
@@ -39,14 +39,14 @@
       <strong>{{t "Most Recent Changes By"}}</strong>
       <input
         type="text"
-        name="last_updated_by_name"
+        id="js-last-updated-by-name"
         value="{{article.last_updated_by.name}}"
         autocomplete="false"
         autocomplete="off"
       />
       <input
         type="hidden"
-        name="last_updated_by_user_id"
+        name="last_updated_by"
         value="{{article.last_updated_by.user_id}}"
       />
     </p>
@@ -54,7 +54,7 @@
       <strong>{{t "Most Recent Change"}}</strong>
       <input
         type="date"
-        value="{{formatDate article updated_date 'YYYY-MM-DD'}}"
+        value="{{formatDate article "updated_date" "YYYY-MM-DD"}}"
         name="updated_date"
       />
     </p>

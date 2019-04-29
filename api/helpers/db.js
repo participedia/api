@@ -1,6 +1,6 @@
 const promise = require("bluebird");
 const url = require("url");
-const { isArray, isObject, isDate, uniq } = require("lodash");
+const { isArray, isObject, isDate, isString, uniq } = require("lodash");
 const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -15,6 +15,7 @@ const log = require("winston");
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 let config;
+const uploadToAWS = require("./upload-to-aws.js");
 
 try {
   config = parse(connectionString);
@@ -29,16 +30,16 @@ try {
 let db = pgp(config);
 
 let dbtagkeys;
-let dbcasekeys;
+// let dbcasekeys;
 
 async function initKeys() {
   // we're just getting the keys for validation, which are the same for
   // every language, so hard-coding 'en' here is OK.
-  dbcasekeys = (await db.one(`
-    SELECT to_json(array_agg(key)) AS keys
-    FROM localized_case_field_values
-    WHERE language = 'en';
-  `)).keys;
+  // dbcasekeys = (await db.one(`
+  //   SELECT to_json(array_agg(key)) AS keys
+  //   FROM localized_case_field_values
+  //   WHERE language = 'en';
+  // `)).keys;
   dbtagkeys = (await db.one(`
     SELECT to_json(array_agg(key)) as keys
     FROM rotate_tags_localized('en') AS tagvalues
@@ -53,6 +54,24 @@ function sql(filename) {
   });
 }
 
+function ErrorReporter() {
+  this.errors = [];
+  let self = this;
+  this.hasErrors = () => this.errors.length > 0;
+  this.try = function(fn) {
+    return function(...args) {
+      try {
+        return fn(...args);
+      } catch (e) {
+        self.errors.push(e.message);
+        // console.trace("Capturing error to report to client: " + e.message);
+        return e.message;
+        // console.trace(e);
+      }
+    };
+  };
+}
+
 // as.number, enhances existing as.number to cope with numbers as strings
 function number(value) {
   if (value === "") {
@@ -65,7 +84,28 @@ function integer(value) {
   if (value === "") {
     return null;
   }
-  return pgp.as.number(parseInt(value));
+  if (value === "NaN") {
+    throw new Error('Expected integer, got "NaN" as a string');
+  }
+  let retVal = pgp.as.number(parseInt(value, 10));
+  if (Number.isNaN(retVal)) {
+    throw new Error("Expected integer value, got " + value);
+  }
+  return retVal;
+}
+
+function asFloat(value) {
+  if (value === "") {
+    return null;
+  }
+  if (value === "NaN") {
+    throw new Error('Expected float, got "NaN" as a string');
+  }
+  let retVal = pgp.as.number(parseFloat(value));
+  if (Number.isNaN(retVal)) {
+    throw new Error("Expected float value, got " + value);
+  }
+  return retVal;
 }
 
 // as.author
@@ -94,28 +134,47 @@ function attachment(att) {
   }
 }
 
+function escapedText(value) {
+  return `\\"${value}\\"`;
+}
+
 function asUrl(value) {
   if (!value) {
-    return null;
+    return escapedText("");
   }
   if (isObject(value)) {
-    console.error("Expecting URL, received: %s", JSON.stringify(value));
+    console.error("Expecting URL, received: %s", value);
+    throw new Error("Not a URL: " + value);
+    return escapedText("");
   }
-  return as.text(new URL(value).href);
+  try {
+    if (!value.startsWith("http")) {
+      value = process.env.AWS_UPLOADS_URL + value;
+    }
+    // return new URL(value).href;
+    return escapedText(new URL(value).href);
+  } catch (e) {
+    console.error("Expected URL, received: %s", JSON.stringify(value));
+    throw e;
+  }
 }
 
 function urls(urlList) {
   return as.array(uniq((urlList || []).map(asUrl).filter(x => !!x)));
 }
 
-const id = integer;
+function id(string, field) {
+  if (!string) return null;
+  if (isObject(string)) {
+    string = string.id;
+  }
+  return parseInt(string);
+}
 
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
-  return as.array(uniq((idList || []).map(integer)));
-  // return (
-  //   "ARRAY[" + idList.map(s => as.number(s.value)).join(", ") + "]::integer[]"
-  // );
+  if (!idList) return [];
+  return idList.map(item => parseInt(item.key, 10));
 }
 
 // as.strings
@@ -124,73 +183,128 @@ function strings(strList) {
   //  return "ARRAY[" + strList.map(s => as.text(s)).join(", ") + "]::text[]";
 }
 
-function casekey(group, str) {
-  if (str && dbcasekeys.includes(`${group}_${str}`)) {
-    return str;
+function casekey(obj, group) {
+  if (group === undefined) {
+    throw new Error("Group cannot be undefined");
+  }
+  if (obj === undefined) {
+    throw new Error("Object cannot be undefined for group " + group);
+  }
+  if (obj === null || obj === "") {
+    return null;
+  }
+  if (obj.key === undefined) {
+    throw new Error("Key cannot be undefined for group " + group);
+  }
+  //  if (dbcasekeys.includes(`${group}_${obj.key}`)) {
+  // FIXME: Need to re-add validation that key is legal for this field
+  if (obj.key.length > 0) {
+    return obj.key;
   }
   return "";
 }
 
-function casekeys(group, strList) {
-  return as.array(
-    uniq((strList || []).map(k => casekey(group, k)).filter(x => !!x))
-  );
+function casekeyflat(str, group) {
+  // FIXME: add validation of legal keys
+  return text(str);
 }
 
-function tagkey(str) {
-  if (str && dbtagkeys.includes(str)) {
-    return text(str);
+function casekeys(objList, group) {
+  if (group === undefined) {
+    throw new Error("Group cannot be undefined");
+  }
+  if (objList === undefined) {
+    throw new Error("objList cannot be undefined for group " + group);
+  }
+  try {
+    return (
+      uniq((objList || []).map(k => casekey(k, group)).filter(x => !!x)) || "{}"
+    );
+  } catch (e) {
+    console.error(
+      "Attempting to convert and filter a list of keys for %s, but got %s for the list",
+      group,
+      JSON.stringify(objList)
+    );
+    throw e;
+  }
+}
+
+function tagkey(obj) {
+  if (obj === undefined) {
+    throw new Error("Object cannot be undefined for tag");
+  }
+  if (obj.key === undefined) {
+    throw new Error("Key cannot be undefined for tag");
+  }
+  if (dbtagkeys.includes(obj.key)) {
+    return obj.key;
+  } else {
+    console.warn("failed tag: %s", obj.key);
   }
   return null;
 }
 
-function tagkeys(strList) {
-  return as.array(uniq((strList || []).map(tagkey).filter(x => !!x)));
-}
-
-function localed(strList) {
-  // localed strings come in as as list of objects with {text, value}, we want value (the localization key)
-  if (strList && strList.length && isObject(strList[0])) {
-    return strings(strList.map(s => s.value));
-  } else {
-    // someone passes us a list of strings, yay!
-    return strings(strList);
-  }
-}
-
-function attachments(attList) {
-  if (attList.length && typeof attList[0] === "object") {
-    return strings(attList.map(a => a.url));
-  } else {
-    return strings(attList);
-  }
+function tagkeys(objList) {
+  return uniq((objList || []).map(tagkey).filter(x => !!x));
 }
 
 function aMedium(obj) {
-  if (!obj.link) return null;
-  return {
-    link: asUrl(obj.link),
-    attribution: as.text(obj.attribution),
-    title: as.text(obj.title)
-  };
+  if (isString(obj)) {
+    obj = { url: obj, attribution: "", title: "" };
+  }
+  if (!obj.url) return null;
+  return [
+    '"(',
+    asUrl(obj.url),
+    ",",
+    // attribution: obj.attribution,
+    text(obj.attribution),
+    ",",
+    // title: obj.title
+    text(obj.title),
+    ')"'
+  ].join("");
 }
 
-function aPhoto(obj) {
+function aSourcedMedia(obj) {
+  if (isString(obj)) {
+    obj = { url: obj, source_url: "", attribution: "", title: "" };
+  }
   if (!obj.url) return null;
-  return {
-    url: asUrl(obj.url),
-    source_url: asUrl(obj.link),
-    attribution: as.text(obj.attribution),
-    title: as.text(obj.title)
-  };
+
+  // if url is not already an amazon url, upload the file
+  let url = obj.url;
+  // some types of sourced media are links, anything already a link does not need to be uploaded
+  if (!url.startsWith("http")) {
+    url = uploadToAWS(obj.url, obj.title);
+  }
+
+  return [
+    '"(',
+    asUrl(url),
+    ",",
+    asUrl(obj.source_url),
+    ",",
+    // attribution: obj.attribution,
+    text(obj.attribution),
+    ",",
+    // title: obj.title
+    text(obj.title),
+    ')"'
+  ].join("");
+}
+
+function simpleArray(values) {
+  return "{" + values.join(",") + "}";
 }
 
 function media(mediaList) {
-  return as.array((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
+  return simpleArray((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
 }
 
-function photos(photoList) {
-  return as.array((photoList || []).map(aPhoto).filter(x => !!x)); // remove nulls
+function sourcedMedia(mediaList) {
+  return simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
 }
 
 function boolean(value) {
@@ -230,25 +344,34 @@ function date(value) {
 
 // replace as.text, don't convert null to "null" because that's dumb
 function text(value) {
-  return pgp.as.text(value || "");
+  // FIXME: strip out ALL HTML
+  return value || "";
+}
+
+function richtext(value) {
+  // FIXME: only allow white-listed HTML
+  return text(value);
 }
 
 const as = Object.assign({}, pgp.as, {
   boolean,
   author,
-  attachment,
-  attachments,
+  // attachment,
+  // attachments,
   date,
   id,
   ids,
   integer,
-  localed,
+  float: asFloat,
+  // localed,
   media,
   number,
-  photos,
-  strings,
+  sourcedMedia,
+  // strings,
   casekey,
+  casekeyflat,
   casekeys,
+  richtext,
   tagkeys,
   text,
   url: asUrl,
@@ -261,13 +384,9 @@ const helpers = pgp.helpers;
 const CASE_EDIT_BY_ID = sql("../sql/case_edit_by_id.sql");
 const CASE_VIEW_BY_ID = sql("../sql/case_view_by_id.sql");
 const METHOD_EDIT_BY_ID = sql("../sql/method_edit_by_id.sql");
-const METHOD_EDIT_STATIC = sql("../sql/method_edit_static.sql");
 const METHOD_VIEW_BY_ID = sql("../sql/method_view_by_id.sql");
-const METHOD_VIEW_STATIC = sql("../sql/method_view_static.sql");
 const ORGANIZATION_EDIT_BY_ID = sql("../sql/organization_edit_by_id.sql");
-const ORGANIZATION_EDIT_STATIC = sql("../sql/organization_edit_static.sql");
 const ORGANIZATION_VIEW_BY_ID = sql("../sql/organization_view_by_id.sql");
-const ORGANIZATION_VIEW_STATIC = sql("../sql/organization_view_static.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
@@ -319,11 +438,8 @@ module.exports = {
   CASE_EDIT_BY_ID,
   CASE_VIEW_BY_ID,
   METHOD_EDIT_BY_ID,
-  METHOD_EDIT_STATIC,
   METHOD_VIEW_BY_ID,
-  METHOD_VIEW_STATIC,
   ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_EDIT_STATIC,
   ORGANIZATION_VIEW_BY_ID,
-  ORGANIZATION_VIEW_STATIC
+  ErrorReporter
 };

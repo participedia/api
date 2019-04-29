@@ -14,7 +14,7 @@ let {
 } = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
 let log = require("winston");
-const { supportedTypes, parseGetParams  } = require("../helpers/things");
+const { supportedTypes, parseGetParams } = require("../helpers/things");
 
 const RESPONSE_LIMIT = 20;
 
@@ -135,7 +135,7 @@ const limitFromReq = req => {
 
 // Should not return things that aren't displayable as SearchHits (i.e. Users...)
 
-// two factors for search: if there is a selectecCategory then filter by it, always
+// two factors for search: if there is a selectedCategory then filter by it, always
 // if there is no query OR the query is "featured" then return all featured items
 // One further item: need an alternative search which returns only map-level items and has no pagination
 

@@ -1,43 +1,58 @@
-/*!
- * Serialize all form data into a query string
- * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
- * @param  {Node}   form The form to serialize
- * @return {String}      The serialized form data
- */
-var serialize = function (form) {
-
+function serialize(form) {
   // Setup our serialized data
-  var serialized = [];
+  const serialized = [];
 
   // Loop through each field in the form
-  for (var i = 0; i < form.elements.length; i++) {
-
-    var field = form.elements[i];
+  for (let i = 0; i < form.elements.length; i++) {
+    const field = form.elements[i];
 
     // Don't serialize fields without a name, submits, buttons and reset inputs, and disabled fields
-    if (!field.name || field.disabled || field.type === 'reset' || field.type === 'submit' || field.type === 'button') continue;
-
-    // If a multi-select, get all selections
-    if (field.type === 'select-multiple') {
+    if (
+      !field.name ||
+      field.disabled ||
+      field.type === "reset" ||
+      field.type === "submit" ||
+      field.type === "button"
+    ) {
+      continue;
+    } else if (field.classList.contains("js-edit-multi-select")) {
+      // don't send field value for fields with .js-edit-multi-select
+      // since we use hidden fields to track the values of the selected items,
+      // and not the value of the select element
+      continue;
+    } else if (field.name.indexOf("temporary-") === 0) {
+      // don't send temporary fields to server
+      continue;
+    } else if (field.type === "select-multiple") {
+      // If a multi-select, get all selections
       for (var n = 0; n < field.options.length; n++) {
         if (!field.options[n].selected) continue;
-        serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.options[n].value));
+        serialized.push(
+          encodeURIComponent(field.name) +
+            "=" +
+            encodeURIComponent(field.options[n].value)
+        );
       }
-    }
-
-    // convert rich text fields
-    if (field.getAttribute("data-field-type") === "richtext") {
-      const richtextValue = form.querySelector(`[data-name=richtext-${field.name}] [contenteditable="true"]`).innerHTML;
-      serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(richtextValue));
-    }
-
-    // Convert field data to a query string
-    else if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
-      serialized.push(encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value));
+    } else if (field.type === "checkbox") {
+      serialized.push(
+        encodeURIComponent(field.name) + "=" + encodeURIComponent(field.checked)
+      );
+    } else if (field.getAttribute("data-field-type") === "richtext") {
+      // convert rich text fields
+      const richtextValue = form.querySelector(
+        `[data-name=richtext-${field.name}] [contenteditable="true"]`
+      ).innerHTML;
+      serialized.push(
+        encodeURIComponent(field.name) + "=" + encodeURIComponent(richtextValue)
+      );
+    } else if (field.type !== "checkbox" && field.type !== "radio") {
+      serialized.push(
+        encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value)
+      );
     }
   }
 
-  return serialized.join('&');
-};
+  return serialized.join("&");
+}
 
 export default serialize;

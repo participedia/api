@@ -1,5 +1,5 @@
-let tokens = require("./setupenv");
-let app = require("../app");
+const tokens = require("./setupenv");
+const app = require("../app");
 
 module.exports = function(chai, utils) {
   var Assertion = chai.Assertion;

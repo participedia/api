@@ -1,9 +1,9 @@
 "use strict";
 const express = require("express");
-const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
 const equals = require("deep-equal");
+const fs = require("fs");
 
 const {
   db,
@@ -14,7 +14,8 @@ const {
   CASE_VIEW_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
-  UPDATE_CASE
+  UPDATE_CASE,
+  ErrorReporter
 } = require("../helpers/db");
 
 const {
@@ -26,6 +27,10 @@ const {
 } = require("../helpers/things");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
+const CASE_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
+);
+const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 /**
  * @api {post} /case/new Create new case
@@ -52,18 +57,18 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
  *
  */
 
-router.post("/new", async function postNewCase(req, res) {
+async function postCaseNewHttp(req, res) {
   // create new `case` in db
   try {
     cache.clear();
-
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
     let language = req.params.language || "en";
     if (!title) {
       return res.status(400).json({
-        message: "Cannot create Case without at least a title"
+        OK: false,
+        errors: ["Cannot create a case without at least a title."]
       });
     }
     const user_id = req.user.id;
@@ -73,20 +78,21 @@ router.post("/new", async function postNewCase(req, res) {
       description,
       language
     });
-    req.thingid = thing.thingid;
-    getEditXById("case")(req, res);
+    //    req.thingid = thing.thingid;
+    req.params.thingid = thing.thingid;
+    await postCaseUpdateHttp(req, res);
   } catch (error) {
     log.error("Exception in POST /case/new => %s", error);
-    res.status(500).json({ OK: false, error: error });
+    res.status(400).json({ OK: false, error: error });
   }
   // Refresh search index
   // FIXME: This will never get called as we have already returned ff
-  try {
-    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
-  } catch (error) {
-    log.error("Exception in POST /case/new => %s", error);
-  }
-});
+  // try {
+  //   db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
+  // } catch (error) {
+  //   log.error("Exception in POST /case/new => %s", error);
+  // }
+}
 
 /**
  * @api {put} /case/:caseId  Submit a new version of a case
@@ -119,7 +125,12 @@ async function maybeUpdateUserText(req, res) {
   // to localized_text or
   const newCase = req.body;
   const params = parseGetParams(req, "case");
-  const oldCase = (await db.one(CASE_VIEW_BY_ID, params)).results;
+  const oldCase = (await db.one(CASE_EDIT_BY_ID, params)).results;
+  if (!oldCase) {
+    throw new Error("No case found for id %s", params.articleid);
+  }
+  fixUpURLs(oldCase);
+  keyFieldsToObjects(oldCase);
   let textModified = false;
   const updatedText = {
     body: oldCase.body,
@@ -130,67 +141,78 @@ async function maybeUpdateUserText(req, res) {
     id: params.articleid
   };
   ["body", "title", "description"].forEach(key => {
-    if (newCase[key] !== oldCase[key]) {
-      textModified = true;
-      updatedText[key] = oldCase[key];
+    let value;
+    if (key === "body") {
+      value = as.richtext(newCase[key] || oldCase[key]);
+    } else {
+      value = as.text(newCase[key] || oldCase[key]);
     }
+    if (newCase[key] && oldCase[key] !== newCase[key]) {
+      textModified = true;
+    }
+    updatedText[key] = value;
   });
+  const author = {
+    user_id: params.userid,
+    thingid: params.articleid
+  };
   if (textModified) {
-    const author = {
-      user_id: params.userid,
-      type: "case",
-      id: params.articleid
-    };
     return { updatedText, author, oldCase };
   } else {
-    return { updateText: null, author: null, oldCase };
+    return { updatedText: null, author, oldCase };
+  }
+}
+
+function setConditional(
+  updatedObject,
+  newObject,
+  errorReporter,
+  updateFunction,
+  key
+) {
+  if (newObject[key] === undefined) {
+    // if we're updating a partial, we still need to rewrite the updated object
+    // from front-end format to save format
+    updatedObject[key] = errorReporter.try(updateFunction)(
+      updatedObject[key],
+      key
+    );
+  } else {
+    updatedObject[key] = errorReporter.try(updateFunction)(newObject[key], key);
   }
 }
 
 function getUpdatedCase(user, params, newCase, oldCase) {
-  const updatedCase = {};
+  const updatedCase = Object.assign({}, oldCase);
+  const er = new ErrorReporter();
+  const cond = (key, fn) => setConditional(updatedCase, newCase, er, fn, key);
   // admin-only
   if (user.isadmin) {
-    updatedCase.featured = as.boolean(newCase.featured);
-    updatedCase.hidden = as.boolean(newCase.hidden);
-    updatedCase.original_language = as.text(newCase.original_langauge);
-    updatedCase.post_date = as.date(newCase.post_date);
-  } else if (oldCase) {
-    // need to check for oldCase otherwise get this error
-    // error: Exception in PUT /case/5239 => TypeError: Cannot read property 'featured' of undefined
-    // Trace: TypeError: Cannot read property 'featured' of undefined
-    // at getUpdatedCase (/Users/alannascott/code/participedia/api/api/controllers/case.js:162:47)
-
-    updatedCase.featured = as.boolean(oldCase.featured);
-    updatedCase.hidden = as.boolean(oldCase.hidden);
-    updatedCase.original_language = as.text(oldCase.original_language);
-    updatedCase.post_date = as.date(oldCase.post_date);
+    cond("featured", as.boolean);
+    cond("hidden", as.boolean);
+    cond("original_language", as.text);
+    cond("post_date", as.date);
   }
+
   // media lists
-  [
-    "files",
-    "links",
-    "videos",
-    "audio",
-    "evaluation_reports",
-    "evaluation_links"
-  ].map(key => (updatedCase[key] = as.media(newCase[key])));
-  // photos are slightly different from other media as they have a source url too
-  updatedCase.photos = as.photos(newCase.photos);
+  ["links", "videos", "audio", "evaluation_links"].map(key =>
+    cond(key, as.media)
+  );
+  // photos and files are slightly different from other media as they have a source url too
+  ["photos", "files", "evaluation_reports"].map(key =>
+    cond(key, as.sourcedMedia)
+  );
   // boolean (would include "published" but we don't really support it)
-  ["ongoing", "staff", "volunteers"].map(
-    key => (updatedCase[key] = as.boolean(newCase[key]))
-  );
+  ["ongoing", "staff", "volunteers"].map(key => cond(key, as.boolean));
   // yes/no (convert to boolean)
-  ["impact_evidence", "formal_evaluation"].map(
-    key => (updatedCase[key] = as.yesno(newCase[key]))
-  );
-  // number
-  ["number_of_participants"].map(
-    key => (updatedCase[key] = as.integer(newCase[key]))
-  );
+  ["impact_evidence", "formal_evaluation"].map(key => cond(key, as.yesno));
+  // integer
+  ["number_of_participants"].map(key => cond(key, as.integer));
+  // float
+  ["latitude", "longitude"].map(key => cond(key, as.float));
   // plain text
   [
+    "original_language",
     "location_name",
     "address1",
     "address2",
@@ -198,40 +220,34 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "province",
     "postal_code",
     "country",
-    "latitude",
-    "longitude",
     "funder"
-  ].map(key => (updatedCase[key] = as.text(newCase[key])));
+  ].map(key => cond(key, as.text));
   // date
-  ["start_date", "end_date"].map(
-    key => (updatedCase[key] = as.date(newCase[key]))
-  );
+  ["start_date", "end_date", "post_date"].map(key => cond(key, as.date));
   // id
-  ["is_component_of", "primary_organizer"].map(
-    key => (updatedCase[key] = as.id(newCase[key]))
-  );
+  ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
   // list of ids
-  updatedCase.specific_methods_tools_techniques = as.ids(
-    newCase.specific_methods_tools_techniques
+  ["specific_methods_tools_techniques", "has_components"].map(key =>
+    cond(key, as.ids)
   );
   // key
   [
-    "scope",
+    "scope_of_influence",
     "public_spectrum",
     "legality",
     "facilitators",
     "facilitator_training",
-    "facetoface_online_or_both"
-  ].map(key => (updatedCase[key] = as.casekey(newCase[key])));
+    "facetoface_online_or_both",
+    "open_limited",
+    "recruitment_method",
+    "time_limited"
+  ].map(key => cond(key, as.casekeyflat));
   // list of keys
   [
     "general_issues",
     "specific_topics",
-    "time_limited",
     "purposes",
     "approaches",
-    "open_limited",
-    "recruitment_method",
     "targeted_participants",
     "method_types",
     "participants_interactions",
@@ -244,152 +260,71 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "change_types",
     "implementers_of_change",
     "tools_techniques_types"
-  ].map(key => (updatedCase[key] = as.casekeys(key, newCase[key])));
+  ].map(key => cond(key, as.casekeys));
   // special list of keys
-  updatedCase.tags = as.tagkeys(newCase.tags);
-  updatedCase.id = params.articleid;
+  ["tags"].map(key => cond(key, as.tagkeys));
   // TODO save bookmarked on user
-  return updatedCase;
+  return [updatedCase, er];
 }
 
-// Only changs to title, description, and/or body trigger a new author and version
+// Only changes to title, description, and/or body trigger a new author and version
 
-// id, integer, immutable
-// type, 'case', immutable
-// title, plain text, new entry in localized_textx
-// general issues => convert to list of ids
-// specific topics => convert to list of ids
-// description plain text, new entry in localized texts
-// body, html needing sanitization, new entry in localized texts
-// tags, convert to list of keys
-// location_name
-// address1,
-// address2,
-// city,
-// province,
-// postal_code,
-// country,
-// latitude => null if 0'0"
-// longitude => null if 0'0"
-// scope, conert to key
-// has_components, immutable for now, discard
-// is_component_of, convert to id
-// files => full_files
-// links => full_links,
-// photos,
-// videos => full_videos,
-// audio,
-// start_date,
-// end_date,
-// ongoing,
-// time_limited, convert to list of keys
-// purposes, convert to list of keys
-// approaches, convert to list of keys
-// public_spectrum, convert to key
-// number_of_participants,
-// open_limited, convert to list of tags
-// recruitment_method, convert to tag
-// targeted_participants, convert to list of tags
-// method_types, convert to list of tags
-// tools_techniques, types, convert to list of tags
-// specific_methods_tools_techniques, convert to list of ids
-// legality, convert to tag
-// facilitators, convert to tag
-// facilitator_training, convert to tag
-// facetoface_online_or_both, convert to tag
-// participants_interactions, convert to list of tags
-// learning_resources, convert to list of tags
-// decision_methods, convert to list of tags
-// if_voting, convert to list of tags
-// insights_outcomes, convert to list of tags
-// primary_organizer, convert to id
-// organizer_types, convert to list of tags
-// funder, plain text
-// funder_types, convert to list of tags
-// staff, boolean
-// volunteers, boolean
-// impact_evidence, yes or no
-// change_types, convert to list of tags
-// implementers_of_change, convert to list of tags
-// formal_evaluation, yes or no
-// evaluation_reports, list of urls, strip off prefix
-// evaluation_links, list of urls, strip off prefix
-// bookmarked, list on user
-// creator, immutable, discard
-// last_updated_by, automatic, discard
-// original_language, immutable unless changed by admin
-// post_date, immutable unless changed by admin
-// published, true/false
-// updated_date, automatic, discard
-// featured, immutable unless changed by admin
-// hidden, immutable unless changed by admin
-
-router.post("/:thingid", async (req, res) => {
-  cache.clear();
+async function postCaseUpdateHttp(req, res) {
+  // cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
-  try {
-    const newCase = req.body;
-    console.log("Received from client: >>> \n%s\n", JSON.stringify(newCase));
-    // save any changes to the user-submitted text
-    const { updatedText, author, oldCase } = maybeUpdateUserText(req, res);
-    const updatedCase = getUpdatedCase(user, params, newCase, oldCase);
-    console.warn("updatedCase: %s", JSON.stringify(updatedCase));
+  const newCase = req.body;
+
+  // console.log(
+  //   "Received tools_techniques_types from client: >>> \n%s\n",
+  //   JSON.stringify(newCase.tools_techniques_types, null, 2)
+  // );
+  // save any changes to the user-submitted text
+  const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
+  // console.log("updatedText: %s", JSON.stringify(updatedText));
+  // console.log("author: %s", JSON.stringify(author));
+  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+  // console.log(
+  //   "updated case tools_techniques_types: %s",
+  //   JSON.stringify(updatedCase.tools_techniques_types)
+  // );
+  if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_CASE, updatedCase),
-          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+          t.none(UPDATE_CASE, updatedCase)
+          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     } else {
-      /*
-        TODO: fix this transaction
-        this transaction returns this error even when an original_language
-        key is passed from the client
-
-        error: Exception in PUT /case/5239 => BatchError {
-          stat: { total: 2, succeeded: 1, failed: 1, duration: 7652 }
-            errors: [
-              0: Error: Property 'original_language' doesn't exist.
-
-      */
-      // await db.tx("update-case", t => {
-      //   return t.batch([
-      //     t.none(UPDATE_CASE, updatedCase),
-      //     t.none("REFRESH MATERIALIZED VIEW search_index_en;")
-      //   ]);
-      // });
+      await db.tx("update-case", t => {
+        return t.batch([
+          t.none(INSERT_AUTHOR, author),
+          t.none(UPDATE_CASE, updatedCase)
+          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+        ]);
+      });
     }
-
     // the client expects this request to respond with json
     // save successful response
+    // console.log("Params for returning case: %s", JSON.stringify(params));
+    const freshArticle = await getCase(params);
+    // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
+      article: freshArticle
     });
-
-  } catch (error) {
-    log.error(
-      "Exception in PUT /%s/%s => %s",
-      type,
-      req.thingid || articleid,
-      error
-    );
-    console.trace(error);
-    // validation error response
-    // errors should be passed back to client as array of error messages
-    res.status(200).json({
+  } else {
+    console.error("Reporting errors: %s", er.errors);
+    res.status(400).json({
       OK: false,
-      errors: [
-        "Title can not be empty.",
-        "Some other validation issue",
-      ],
+      errors: er.errors
     });
-  } // end catch
-});
+  }
+}
 
 /**
  * @api {get} /case/:thingid Get the last version of a case
@@ -417,38 +352,92 @@ router.post("/:thingid", async (req, res) => {
  *
  */
 
-router.get("/:thingid/", async (req, res) => {
-  /* This is the entry point for getting an article */
-  const params = parseGetParams(req, "case");
+function keyFieldsToObjects(article) {
+  // do this for all key fields eventually
+  ["scope_of_influence", "legality"].forEach(
+    key => (article[key] = { key: article[key] })
+  );
+  ["tools_techniques_types"].forEach(
+    key =>
+      (article[key] = article[key].map(item => {
+        return {
+          key: item
+        };
+      }))
+  );
+}
+
+async function getCase(params) {
   const articleRow = await db.one(CASE_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  returnByType(res, params, article, {}, req.user);
-});
+  keyFieldsToObjects(article);
+  return article;
+}
 
-router.get("/:thingid/edit", requireAuthenticatedUser(), async (req, res) => {
+async function getCaseHttp(req, res) {
+  /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
-  params.view = "edit";
-  const articleRow = await db.one(CASE_EDIT_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
-  let staticText = {};
-  const authorsResult = await db.one(
+  const article = await getCase(params);
+  const staticTextFromDB = await db.one(CASE_VIEW_STATIC, params);
+  const staticText = Object.assign({}, staticTextFromDB, articleText);
+  returnByType(res, params, article, staticText, req.user);
+}
+
+async function getEditStaticText(params) {
+  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+
+  staticText.authors = (await db.one(
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
-  );
-  staticText.authors = authorsResult.authors;
-  const casesResult = await db.one(
+  )).authors;
+  staticText.cases = (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
     params
-  );
-  staticText.cases = casesResult.cases;
-  const methodsResult = await db.one(
+  )).cases;
+  staticText.methods = (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
     params
-  );
-  staticText.methods = methodsResult.methods;
+  )).methods;
+  staticText.organizations = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
+    params
+  )).organizations;
 
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
+
+  staticText.labels = Object.assign({}, staticText.labels, articleText);
+
+  return staticText;
+}
+
+async function getCaseEditHttp(req, res) {
+  const params = parseGetParams(req, "case");
+  params.view = "edit";
+  const article = await getCase(params);
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
-});
+}
 
-module.exports = router;
+async function getCaseNewHttp(req, res) {
+  const params = parseGetParams(req, "case");
+  params.view = "edit";
+  const article = CASE_STRUCTURE;
+  const staticText = await getEditStaticText(params);
+  returnByType(res, params, article, staticText, req.user);
+}
+
+const router = express.Router(); // eslint-disable-line new-cap
+router.get("/:thingid/edit", requireAuthenticatedUser(), getCaseEditHttp);
+router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
+router.post("/new", requireAuthenticatedUser(), postCaseNewHttp);
+router.get("/:thingid", getCaseHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postCaseUpdateHttp);
+
+module.exports = {
+  case_: router,
+  getCaseEditHttp,
+  getCaseNewHttp,
+  postCaseNewHttp,
+  getCaseHttp,
+  postCaseUpdateHttp
+};

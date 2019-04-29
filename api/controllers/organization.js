@@ -1,18 +1,17 @@
 "use strict";
 
 const express = require("express");
-const router = express.Router(); // eslint-disable-line new-cap
 const cache = require("apicache");
 const log = require("winston");
+const fs = require("fs");
 
 const {
   db,
   as,
   CREATE_ORGANIZATION,
   ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_EDIT_STATIC,
   ORGANIZATION_VIEW_BY_ID,
-  ORGANIZATION_VIEW_STATIC
+  CASE_EDIT_STATIC
 } = require("../helpers/db");
 
 const {
@@ -22,6 +21,30 @@ const {
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
+
+const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
+
+const ORGANIZATION_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/organization-structure.json", "utf8")
+);
+const articleText = require("../../static-text/article-text.js");
+const organizationText = require("../../static-text/organization-text.js");
+const sharedFieldOptions = require("../helpers/shared-field-options.js");
+
+async function getEditStaticText(params) {
+  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+
+  staticText.methods = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
+    params
+  )).methods;
+
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
+
+  staticText.labels = Object.assign({}, staticText.labels, organizationText, articleText);
+
+  return staticText;
+}
 
 /**
  * @api {post} /organization/new Create new organization
@@ -47,7 +70,7 @@ const {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
-router.post("/new", async function(req, res) {
+async function postOrganizationNewHttp(req, res) {
   // create new `organization` in db
   // req.body *should* contain:
   //   title
@@ -87,7 +110,7 @@ router.post("/new", async function(req, res) {
   } catch (error) {
     log.error("Exception in POST /organization/new => %s", error);
   }
-});
+}
 
 /**
  * @api {put} /organization/:id  Submit a new version of a organization
@@ -115,30 +138,48 @@ router.post("/new", async function(req, res) {
  *
  */
 
-router.put("/:thingid", getEditXById("organization"));
+const postOrganizationUpdateHttp = getEditXById("organization");
 
-router.get("/:thingid/", async (req, res) => {
+async function getOrganizationHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "organization");
   const articleRow = await db.one(ORGANIZATION_VIEW_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(ORGANIZATION_VIEW_STATIC, params);
+  const staticText = {};
   returnByType(res, params, article, staticText);
-});
+}
 
-router.get("/:thingid/edit", async (req, res) => {
+async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
+  params.view = "edit";
   const articleRow = await db.one(ORGANIZATION_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await db.one(ORGANIZATION_EDIT_STATIC, params);
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText);
-});
+}
 
-router.delete("/:id", function deleteOrganization(req, res) {
-  // let orgId = req.swagger.params.id.value;
-  res.status(200).json(req.body);
-});
+async function getOrganizationNewHttp(req, res) {
+  const params = parseGetParams(req, "organization");
+  params.view = "edit";
+  const article = ORGANIZATION_STRUCTURE;
+  const staticText = await getEditStaticText(params);
+  returnByType(res, params, article, staticText, req.user);
+}
 
-module.exports = router;
+const router = express.Router(); // eslint-disable-line new-cap
+router.post("/new", requireAuthenticatedUser(), postOrganizationNewHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postOrganizationUpdateHttp);
+router.get("/:thingid/", getOrganizationHttp);
+router.get("/:thingid/edit", requireAuthenticatedUser(), getOrganizationEditHttp);
+router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
+
+module.exports = {
+  organization: router,
+  postOrganizationNewHttp,
+  postOrganizationUpdateHttp,
+  getOrganizationHttp,
+  getOrganizationEditHttp,
+  getOrganizationNewHttp
+};

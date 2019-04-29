@@ -1,4 +1,4 @@
-/*! Flickity v2.1.2
+/*! Flickity v2.2.0
 https://flickity.metafizzy.co
 ---------------------------------------------- */
 
@@ -73,7 +73,7 @@ https://flickity.metafizzy.co
 }
 
 .flickity-button-icon {
-  fill: #333;
+  fill: currentColor;
 }
 
 /* ---- previous/next buttons ---- */
@@ -137,91 +137,144 @@ https://flickity.metafizzy.co
   opacity: 1;
 }
 
-.carousel-nav {
-  margin-bottom: 45px;
+/* Flickity fullscreen v1.0.1
+------------------------- */
+
+.flickity-enabled.is-fullscreen {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: hsla(0, 0%, 0%, 0.9);
+  padding-bottom: 35px;
+  z-index: 1;
+}
+
+.flickity-enabled.is-fullscreen .flickity-page-dots {
+  bottom: 10px;
+}
+
+.flickity-enabled.is-fullscreen .flickity-page-dots .dot {
+  background: white;
+}
+
+/* prevent page scrolling when flickity is fullscreen */
+html.is-flickity-fullscreen {
+  overflow: hidden;
+}
+
+/* ---- flickity-fullscreen-button ---- */
+
+.flickity-fullscreen-button {
+  display: block;
+  right: 10px;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+/* right-to-left */
+.flickity-rtl .flickity-fullscreen-button {
+  right: auto;
+  left: 10px;
+}
+
+.flickity-fullscreen-button-exit { display: none; }
+
+.flickity-enabled.is-fullscreen .flickity-fullscreen-button-exit { display: block; }
+.flickity-enabled.is-fullscreen .flickity-fullscreen-button-view { display: none; }
+
+.flickity-fullscreen-button .flickity-button-icon {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 4px;
+  top: 4px;
+}
+
+
+/* CUSTOM FLICKITY STYLES */
+.carousel {
+  background: #fff;
 }
 
 .carousel-cell {
   width: 100%;
   height: 300px;
-  background: #222;
+  margin-right: 10px;
+  /* center images in cells with flexbox */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.carousel-cell p {
-  position: absolute;
-  bottom: -55px;
-  background-color: rgba(21,21,21,.6);
-  width: 100%;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.875rem;
-  padding: 10px;
-  box-sizing: border-box;
-  transition: bottom 0.3s ease-out;
-}
-
-.carousel:hover p {
-  bottom: -16px;
-}
-
-.carousel-image {
-  display: block;
+.carousel.is-fullscreen .carousel-cell {
   height: 100%;
-  min-width: 150px;
-  max-width: 100%;
 }
 
-.carousel-nav .carousel-image {
-  height: 75px;
-  min-width: unset;
-  max-width: unset;
-  margin-right: 15px;
-  border: 7px solid #fff;
-}
-
-.carousel.is-fullscreen .carousel-image {
-  height: auto;
+.carousel-cell-image {
+  display: block;
   max-height: 100%;
 }
 
-.flickity-button {
-  background: transparent;
+.carousel-nav {
+  background-color: #fff;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  padding: 4px 0;
+}
+.carousel-nav .carousel-cell {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fff;
+}
+.carousel-nav .carousel-cell-image {
+  width: 100px;
 }
 
-.flickity-button-icon {
-  fill: white;
+.carousel.is-fullscreen .carousel-cell-image {
+  max-width: 100%;
 }
 
-.flickity-button:hover {
-  background: transparent;
+.flickity-enabled.is-fullscreen {
+  z-index: 2;
 }
 
-.flickity-button:hover .flickity-button-icon {
-  fill: #808080;
+.carousel-nav .carousel-cell.is-nav-selected {
+  border: 1px solid red;
 }
 
-.flickity-prev-next-button.previous {
-  left: -5px;
-}
-.flickity-prev-next-button.next {
-  right: -5px;
+.flickity-button, .flickity-button:hover {
+  color: #333;
 }
 
-.carousel-nav .flickity-button-icon {
-  fill: #000;
+.carousel-cell-image-title {
+  position: absolute;
+  background-color: rgba(21,21,21,.6);
+  color: #fff;
+  width: 100%;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity .25s ease-in-out;
+}
+.carousel-cell:hover .carousel-cell-image-title {
+  opacity: 1;
+}
+.carousel-cell-image-title span {
+  padding: 12px;
+  display: block;
 }
 
-.carousel-nav .flickity-viewport {
-  margin: 0 45px;
+.carousel-cell-image-title a {
+  color: #fff;
 }
 
-.carousel-nav  .flickity-prev-next-button .flickity-button-icon {
-  top: 40%;
-  width: 30%;
-  height: 30%;
+.flickity-prev-next-button {
+  width: 24px;
+  height: 24px;
 }

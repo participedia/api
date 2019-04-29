@@ -301,6 +301,7 @@ input[type=number]::-webkit-inner-spin-button {
 .edit-media-file-list[data-type="image"] img {
   display: block;
   margin-bottom: 1rem;
+  max-width: 50%;
 }
 
 .edit-multi-select-list > li,

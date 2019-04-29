@@ -14,7 +14,7 @@ let fs = require("fs");
 const UPDATE_USER = sql("../sql/update_user.sql");
 
 function rename_all_users() {
-  let users = JSON.parse(fs.readFileSync("migrations/users.json"));
+  let users = JSON.parse(fs.readFileSync("migrations/users.json", "utf8"));
   users.forEach(async function(user) {
     await db.none(UPDATE_USER, {
       id: user.id,

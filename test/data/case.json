@@ -1,0 +1,410 @@
+{
+  "type": "case",
+  "title": "First Title",
+  "general_issues": [
+    {
+      "key": "arts",
+      "lookup_key": "general_issues_value_arts",
+      "value": "Arts, Culture, & Recreation"
+    },
+    {
+      "key": "education",
+      "lookup_key": "general_issues_value_education",
+      "value": "Education"
+    },
+    {
+      "key": "environment",
+      "lookup_key": "general_issues_value_environment",
+      "value": "Environment"
+    },
+    {
+      "key": "planning",
+      "lookup_key": "general_issues_value_planning",
+      "value": "Planning & Development"
+    }
+  ],
+  "specific_topics": [
+    {
+      "key": "citizenship",
+      "lookup_key": "specific_topics_value_citizenship",
+      "value": "Citizenship & Role of Citizens"
+    },
+    {
+      "key": "citizenship",
+      "lookup_key": "specific_topics_value_citizenship",
+      "value": "Citizenship & Role of Citizens"
+    },
+    {
+      "key": "natural_resource",
+      "lookup_key": "specific_topics_value_natural_resource",
+      "value": "Natural Resource Management"
+    }
+  ],
+  "description": "First Description",
+  "body": "First Body",
+  "tags": [
+    {
+      "key": "sustainability",
+      "lookup_key": "sustainability",
+      "value": "Sustainability & Green Living"
+    },
+    {
+      "key": "animal",
+      "lookup_key": "animal",
+      "value": "Animal Protection & Welfare"
+    },
+    {
+      "key": "environment",
+      "lookup_key": "environment",
+      "value": "Environment"
+    },
+    {
+      "key": "planning",
+      "lookup_key": "planning",
+      "value": "Planning & Development"
+    }
+  ],
+  "location_name": "San Muerte",
+  "address1": "123 Rue de Morgue",
+  "address2": "c/o Albertus Magnus",
+  "city": "Grenoble",
+  "province": "Greenpeace",
+  "postal_code": "V5Z 2X3",
+  "country": "France",
+  "latitude": 45.187044,
+  "longitude": 5.452864,
+  "scope_of_influence": "citytown",
+  "has_components": [
+    {
+      "id": 111,
+      "type": "case",
+      "title": "South East Ontario Citizens' Reference Panel Integrated Health Services Plan"
+    },
+    {
+      "id": 117,
+      "type": "case",
+      "title": "The District of Columbia Neighbourhood Action Initiative"
+    },
+    { "id": 130, "type": "case", "title": "Icelandic National Forum 2010" },
+    {
+      "id": 113,
+      "type": "case",
+      "title": "Il Padule Che Vorremmo (Ponte Buggianese, Italy)"
+    }
+  ],
+  "is_component_of": 101,
+  "files": [
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/aa62ac2b-f732-4b4c-b09a-f8d27c826fde_pilot_evaluation_2017.pdf",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/3470b895-9222-46e4-916c-4c8357d5c65d_pilot_evaluation_2016.pdf",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/69b72b1f-169a-4e2d-823b-dff1f4c8bd7f_pilot_proposal_2015.pdf",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/bdb32cf2-66d7-48b3-8669-dab4f24442b6_pilot_evaluation2_2015.pdf",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/18f9e511-72e2-4fd3-912f-8527daf1504f_pilot_evaluation_2015.pdf",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    }
+  ],
+  "links": [
+    {
+      "url": "https://www.winnipeg.ca/interhom/Budget/2018BudgetEngagement/default.stm",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://www.winnipeg.ca/interhom/Budget/2018Budget/default.stm",
+      "attribution": null,
+      "title": null
+    }
+  ],
+  "photos": [
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/index.php__21.jpg",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/index.php2__7.jpg",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/China_0.png",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/lundi-matin-lors-de-la-conference-de-presse-du-ccreg.jpg",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    }
+  ],
+  "videos": [
+    {
+      "url": "http://www.youtube.com/watch?v=eGXXwD4xbTs",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "http://www.youtube.com/watch?v=Xbcpwueb4z4&feature=related",
+      "attribution": null,
+      "title": null
+    }
+  ],
+  "audio": [
+    {
+      "url": "https://soundcloud.com/fusionstein/blue-cabbage",
+      "attribution": null,
+      "title": null
+    }
+  ],
+  "start_date": "2005-10-27T09:00:00",
+  "end_date": null,
+  "ongoing": true,
+  "time_limited": "a",
+  "purposes": [
+    {
+      "key": "make",
+      "lookup_key": "purposes_value_make",
+      "value": "Make, influence, or challenge decisions of government and public bodies"
+    },
+    {
+      "key": "develop",
+      "lookup_key": "purposes_value_develop",
+      "value": "Develop the civic capacities of individuals, communities, and/or civil society organizations"
+    }
+  ],
+  "approaches": [
+    {
+      "key": "coproduction",
+      "lookup_key": "approaches_value_coproduction",
+      "value": "Co-production in form of partnership and/or contract with government and/or public bodies"
+    },
+    {
+      "key": "informal",
+      "lookup_key": "approaches_value_informal",
+      "value": "Informal engagement by intermediaries with nongovernmental authorities"
+    },
+    {
+      "key": "independent",
+      "lookup_key": "approaches_value_independent",
+      "value": "Independent action"
+    }
+  ],
+  "public_spectrum": "collaborate",
+  "number_of_participants": 12,
+  "open_limited": "limited",
+  "recruitment_method": "random",
+  "targeted_participants": [
+    {
+      "key": "youth",
+      "lookup_key": "targeted_participants_value_youth",
+      "value": "Youth"
+    },
+    {
+      "key": "lgbt",
+      "lookup_key": "targeted_participants_value_lgbt",
+      "value": "Gay/Lesbian/Bisexual/Transgender"
+    }
+  ],
+  "method_types": [],
+  "tools_techniques_types": [],
+  "specific_methods_tools_techniques": [],
+  "legality": "false",
+  "facilitators": "yes",
+  "facilitator_training": "",
+  "facetoface_online_or_both": "facetoface",
+  "participants_interactions": [
+    {
+      "key": "discussion",
+      "lookup_key": "participants_interactions_value_discussion",
+      "value": "Discussion, Dialogue, or Deliberation"
+    },
+    {
+      "key": "listenwatch",
+      "lookup_key": "participants_interactions_value_listenwatch",
+      "value": "Listen/Watch as Spectator"
+    },
+    {
+      "key": "express",
+      "lookup_key": "participants_interactions_value_express",
+      "value": "Express Opinions/Preferences Only"
+    }
+  ],
+  "learning_resources": [
+    {
+      "key": "written",
+      "lookup_key": "learning_resources_value_written",
+      "value": "Written Briefing Materials"
+    },
+    {
+      "key": "video",
+      "lookup_key": "learning_resources_value_video",
+      "value": "Video Presentations"
+    },
+    {
+      "key": "teachins",
+      "lookup_key": "learning_resources_value_teachins",
+      "value": "Teach-ins"
+    }
+  ],
+  "decision_methods": [
+    {
+      "key": "voting",
+      "lookup_key": "decision_methods_value_voting",
+      "value": "Voting"
+    }
+  ],
+  "if_voting": [
+    {
+      "key": "preferential",
+      "lookup_key": "if_voting_value_preferential",
+      "value": "Preferential Voting"
+    }
+  ],
+  "insights_outcomes": [
+    {
+      "key": "public_hearingsmeetings",
+      "lookup_key": "insights_outcomes_value_public_hearingsmeetings",
+      "value": "Public Hearings/Meetings"
+    }
+  ],
+  "primary_organizer": null,
+  "organizer_types": [
+    {
+      "key": "philanthropic",
+      "lookup_key": "organizer_types_value_philanthropic",
+      "value": "Philanthropic Organization"
+    },
+    {
+      "key": "community",
+      "lookup_key": "organizer_types_value_community",
+      "value": "Community Based Organization"
+    }
+  ],
+  "funder": "Epsicopal Catholic Bank",
+  "funder_types": [
+    {
+      "key": "individual",
+      "lookup_key": "funder_types_value_individual",
+      "value": "Individual"
+    },
+    {
+      "key": "international",
+      "lookup_key": "funder_types_value_international",
+      "value": "International Organization"
+    },
+    {
+      "key": "philanthropic",
+      "lookup_key": "funder_types_value_philanthropic",
+      "value": "Philanthropic Organization"
+    }
+  ],
+  "staff": true,
+  "volunteers": true,
+  "impact_evidence": "yes",
+  "change_types": [
+    {
+      "key": "changes",
+      "lookup_key": "change_types_value_changes",
+      "value": "Changes in people’s knowledge, attitudes, and behavior"
+    },
+    {
+      "key": "changes_public",
+      "lookup_key": "change_types_value_changes_public",
+      "value": "Changes in public policy"
+    },
+    {
+      "key": "conflict",
+      "lookup_key": "change_types_value_conflict",
+      "value": "Conflict transformation"
+    }
+  ],
+  "implementers_of_change": [
+    {
+      "key": "stakeholder",
+      "lookup_key": "implementers_of_change_value_stakeholder",
+      "value": "Stakeholder Organizations"
+    },
+    {
+      "key": "appointed",
+      "lookup_key": "implementers_of_change_value_appointed",
+      "value": "Appointed Public Servants"
+    },
+    {
+      "key": "experts",
+      "lookup_key": "implementers_of_change_value_experts",
+      "value": "Experts"
+    }
+  ],
+  "formal_evaluation": null,
+  "evaluation_reports": [
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/c06d292f-2f94-4ada-828b-baf95a53cd41_651-4430-2-PB.pdf",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "https://s3.amazonaws.com/uploads.participedia.xyz/89acfd0a-25bf-41aa-8f25-f1d95438dcfd_MSPBalochistanCase_study211117fromMuhammad.docx",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    }
+  ],
+  "evaluation_links": [
+    {
+      "url": "https://ajph.aphapublications.org/doi/abs/10.2105/AJPH.2015.302706",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    },
+    {
+      "url": "http://journals.sagepub.com/doi/abs/10.1177/1095796015620171?journalCode=nlfa",
+      "source_url": "",
+      "attribution": null,
+      "title": null
+    }
+  ],
+  "bookmarked": false,
+  "creator": {
+    "user_id": 371,
+    "timestamp": "2017-10-31T13:37:45",
+    "name": "Paulinecescau"
+  },
+  "last_updated_by": {
+    "user_id": 371,
+    "timestamp": "2017-10-31T13:37:45",
+    "name": "Paulinecescau"
+  },
+  "original_language": "en",
+  "post_date": "2011-06-14T11:47:04",
+  "published": true,
+  "updated_date": "2017-10-31T13:37:45",
+  "featured": false,
+  "hidden": false
+}

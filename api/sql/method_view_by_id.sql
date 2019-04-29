@@ -9,14 +9,14 @@ WITH full_thing AS (
     texts.body,
     texts.title,
     texts.description,
-    first_author(${thingid}) AS creator,
-    last_author(${thingid}) AS last_updated_by,
-    bookmarked('method', ${thingid}, ${userid})
+    first_author(${articleid}) AS creator,
+    last_author(${articleid}) AS last_updated_by,
+    bookmarked('method', ${articleid}, ${userid})
 FROM
     methods,
-    get_localized_texts(${thingid}, ${lang}) AS texts
+    get_localized_texts(${articleid}, ${lang}) AS texts
 WHERE
-    methods.id = ${thingid}
+    methods.id = ${articleid}
 )
 SELECT to_json(full_thing.*) results FROM full_thing
 ;

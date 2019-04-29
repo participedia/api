@@ -5,7 +5,7 @@
     {{> article-edit-text name="title" is_required=true quick-submit=true}}
     {{> edit-multi-select ranked=true name="general_issues" quick-submit=true max=3 }}
     {{> edit-multi-select ranked=true name="specific_topics" max=3 }}
-    {{> edit-textarea name="brief_description" quick-submit=true charLimit=280}}
+    {{> edit-textarea name="description" quick-submit=true charLimit=280}}
     {{> edit-richtext
       name="body"
       value=(getvalue article "body")
@@ -16,11 +16,10 @@
   <fieldset class="location">
     <h2 class="fieldset-header">{{t "location_sectionlabel"}}</h2>
     {{> article-edit-location quick-submit=true}}
-    {{> article-edit-select name="scope" }}
+    {{> article-edit-select name="scope_of_influence" }}
   </fieldset>
   <fieldset class="components fullonly">
     <h2 class="fieldset-header">{{t "components_sectionlabel"}}</h2>
-    {{> edit-multi-select name="has_components" }}
     {{> edit-multi-select name="is_component_of" }}
   </fieldset>
   <fieldset class="media">
@@ -47,7 +46,7 @@
   <fieldset class="participants fullonly">
     <h2 class="fieldset-header">{{t "participants_sectionlabel"}}</h2>
     {{> edit-number name="number_of_participants" }}
-    {{> article-edit-select name="open_or_limited" }}
+    {{> article-edit-select name="open_limited" }}
     {{> article-edit-select name="recruitment_method" }}
     {{> edit-multi-select name="targeted_participants" max=3 }}
   </fieldset>
@@ -68,15 +67,15 @@
   </fieldset>
   <fieldset class="organizations_and_supporters fullonly">
     <h2 class="fieldset-header">{{t "organizers_sectionlabel"}}</h2>
-    {{> article-edit-select name="primary_organizer" }} <!-- missing organizations in static json -->
+    {{> article-edit-select name="primary_organizer" }}
     {{> edit-multi-select name="organizer_types" max=3 }}
   </fieldset>
   <fieldset class="resources fullonly">
     <h2 class="fieldset-header">{{t "resources_sectionlabel"}}</h2>
     {{> article-edit-text name="funder" }}
     {{> edit-multi-select name="funder_types" max=3 }}
-    {{> article-edit-select name="staff" }}
-    {{> article-edit-select name="volunteers" }}
+    {{> edit-boolean name="staff" }}
+    {{> edit-boolean name="volunteers" }}
   </fieldset>
   <fieldset class="evidence_of_impact fullonly">
     <h2 class="fieldset-header">{{t "evidence_sectionlabel"}}</h2>

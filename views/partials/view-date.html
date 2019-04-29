@@ -1,9 +1,9 @@
-{{#if (getvalue this name)}}
+{{#if (getvalue article name)}}
 <dl>
   <dt>{{label name}}</dt>
   <dd>
-    <time datetime="{{formatDate article name "MMMM M, YYYY"}}">
-      {{formatDate this name "MMMM M, YYYY"}}
+    <time datetime="{{getvalue article name}}">
+      {{formatDate article name "MMMM D, YYYY"}}
     </time>
   </dd>
 </dl>
