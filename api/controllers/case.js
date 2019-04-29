@@ -133,6 +133,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     cond("hidden", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
+  } else {
   }
 
   // media lists
@@ -219,19 +220,16 @@ async function postCaseUpdateHttp(req, res) {
   //   JSON.stringify(newCase.tools_techniques_types, null, 2)
   // );
   // save any changes to the user-submitted text
-  const { updatedText, author, oldCase } = await maybeUpdateUserText(
-    req,
-    res,
-    "case",
-    keyFieldsToObjects
-  );
+  const {
+    updatedText,
+    author,
+    oldArticle: oldCase
+  } = await maybeUpdateUserText(req, res, "case", keyFieldsToObjects);
+  // console.log("oldCase: %s", JSON.stringify(oldCase, null, 2));
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
-  // console.log(
-  //   "updated case tools_techniques_types: %s",
-  //   JSON.stringify(updatedCase.tools_techniques_types)
-  // );
+  //console.log("updated case: %s", JSON.stringify(updatedCase, null, 2));
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
