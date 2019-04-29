@@ -5,7 +5,9 @@ const {
   getMocks,
   getMocksAuth,
   example_method,
-  addBasicMethod
+  getMethod,
+  addBasicMethod,
+  updateMethod
 } = require("./data/helpers.js");
 const {
   getMethodHttp,
@@ -43,88 +45,61 @@ describe("Methods", () => {
         console.error("Error: %s", err);
       }
     });
-    it.only("works with authentication", async () => {
+    it("works with authentication", async () => {
       const body = await addBasicMethod();
       body.OK.should.be.true;
       const article = body.article;
       article.id.should.be.a("number");
       article.links.should.have.lengthOf(1);
-      article.tags.should.have.lengthOf(2);
-      article.links[0].url.should.equal("http://killsixbilliondemons.com/");
-      returnedMethod.tags.should.deep.equal(["first", "tag"]);
+      article.links[0].url.should.equal("https://killsixbilliondemons.com/");
     });
   });
   describe("Test edit API", () => {
     it("Add method, then modify title and/or body", async () => {
-      const res1 = await addBasicMethod();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      res1.body.data.thingid.should.be.a("number");
-      const origMethod = res1.body.article;
+      const body1 = await addBasicMethod();
+      body1.OK.should.be.true;
+      const origMethod = body1.article;
       origMethod.id.should.be.a("number");
-      origMethod.id.should.equal(res1.body.data.thingid);
-      const res2 = await chai
-        .putJSON("/method/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ title: "Second Title" }); // empty update
-      res2.should.have.status(200);
-      const updatedMethod1 = res2.body.data;
+      const body2 = await updateMethod(origMethod.id, {
+        title: "Second Title"
+      });
+      const updatedMethod1 = body2.article;
       updatedMethod1.title.should.equal("Second Title");
       updatedMethod1.body.should.equal("First Body");
-      const res3 = await chai
-        .putJSON("/method/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ body: "Second Body" }); // empty update
-      res3.should.have.status(200);
-      const updatedMethod2 = res3.body.data;
+      const body3 = await updateMethod(origMethod.id, { body: "Second Body" });
+      const updatedMethod2 = body3.article;
       updatedMethod2.title.should.equal("Second Title");
       updatedMethod2.body.should.equal("Second Body");
-      const res4 = await chai
-        .putJSON("/method/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ title: "Third Title", body: "Third Body" }); // empty update
-      res4.should.have.status(200);
-      const updatedMethod3 = res4.body.data;
+      const body4 = await updateMethod(origMethod.id, {
+        title: "Third Title",
+        body: "Third Body"
+      });
+      const updatedMethod3 = body4.article;
       updatedMethod3.title.should.equal("Third Title");
       updatedMethod3.body.should.equal("Third Body");
     });
     it("Add method, then modify lead image", async () => {
-      const res1 = await addBasicMethod();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      const method1 = res1.body.article;
-      method1.images.should.deep.equal([
-        "https://cdn.thinglink.me/api/image/756598547733807104/"
-      ]);
-      const res2 = await chai
-        .putJSON("/method/" + method1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ images: ["foobar.jpg"] });
-      res2.should.have.status(200);
-      res2.body.OK.should.be.true;
-      should.exist(res2.body.data);
-      const method2 = res2.body.data;
-      method2.images.should.deep.equal(["foobar.jpg"]);
+      const body1 = await addBasicMethod();
+      body1.OK.should.be.true;
+      const method1 = body1.article;
+      method1.photos[0].url.should.equal("http://example.com/picture.jpg");
+      const body2 = await updateMethod(method1.id, {
+        photos: [{ url: "http://garfield.com/jon.png" }]
+      });
+      body2.OK.should.be.true;
+      should.exist(body2.article);
+      const method2 = body2.article;
+      method2.photos[0].url.should.equal("http://garfield.com/jon.png");
       expect(method2.updated_date > method1.updated_date).to.be.true;
-      const res3 = await chai
-        .putJSON("/method/" + method1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ images: ["howzaboutthemjpegs.png"] });
-      res3.should.have.status(200);
-      res3.body.OK.should.be.true;
-      const method3 = res3.body.data;
-      method3.images.should.deep.equal(["howzaboutthemjpegs.png"]);
-    });
-    it("Add method, then change tags", async () => {
-      const res1 = await addBasicMethod();
-      const method1 = res1.body.object;
-      const tags = ["foo", "bar"];
-      const res2 = await chai
-        .putJSON("/method/" + method1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ tags });
-      const method1_new = res2.body.data;
-      method1_new.tags.should.deep.equal(tags);
+      const photos = [method1.photos[0]];
+      photos.push(method2.photos[0]);
+      photos.push({ url: "https://wonderwall.com/howzaboutthemjpegs.png" });
+      const body3 = await updateMethod(method1.id, { photos: photos });
+      body3.OK.should.be.true;
+      const method3 = body3.article;
+      method3.photos[2].url.should.equal(
+        "https://wonderwall.com/howzaboutthemjpegs.png"
+      );
     });
     it("Add method, then change links", async () => {
       const method1 = (await addBasicMethod()).article;
@@ -132,22 +107,14 @@ describe("Methods", () => {
         { url: "https://xkcd.com/" },
         { url: "http://girlgeniusonline.com/" }
       ];
-      const { req, res, ret } = getMocksAuth({
-        params: { thingid: method1.id },
-        body: {
-          title: "Second Title",
-          body: "Second Body",
-          description: "Second Description"
-        }
-      });
-      await postCaseUpdateHttp(req, res);
-
-      const res2 = await chai
-        .putJSON("/method/" + method1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ links });
-      const method1_new = res2.body.data;
-      method1_new.links.should.deep.equal(links);
+      const method2 = (await updateMethod(method1.id, {
+        title: "Second Title",
+        body: "Second Body",
+        description: "Second Description",
+        links: links
+      })).article;
+      method2.links[0].url.should.equal(links[0].url);
+      method2.links[1].url.should.equal(links[1].url);
     });
   });
 });

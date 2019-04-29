@@ -153,7 +153,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   ["latitude", "longitude"].map(key => cond(key, as.float));
   // plain text
   [
-    "original_language",
     "location_name",
     "address1",
     "address2",
@@ -164,13 +163,11 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "funder"
   ].map(key => cond(key, as.text));
   // date
-  ["start_date", "end_date", "post_date"].map(key => cond(key, as.date));
+  ["start_date", "end_date"].map(key => cond(key, as.date));
   // id
   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
   // list of ids
-  ["specific_methods_tools_techniques", "has_components"].map(key =>
-    cond(key, as.ids)
-  );
+  ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));
   // key
   [
     "scope_of_influence",
@@ -225,6 +222,7 @@ async function postCaseUpdateHttp(req, res) {
   const { updatedText, author, oldCase } = await maybeUpdateUserText(
     req,
     res,
+    "case",
     keyFieldsToObjects
   );
   // console.log("updatedText: %s", JSON.stringify(updatedText));

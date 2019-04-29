@@ -11,7 +11,7 @@ WITH full_thing AS (
     hidden,
     first_author(${articleid}) AS creator,
     last_author(${articleid}) AS last_updated_by,
-    bookmarked('method', ${articleid}, ${userid})
+    bookmarked('method', ${articleid}, ${userid}),
     -- user-contributed content
     texts.title,
     texts.description,
@@ -28,7 +28,6 @@ WITH full_thing AS (
     open_limited,
     recruitment_method,
     level_polarization,
-    scope_of_influence,
     -- key lists
     method_types,
     number_of_participants,
@@ -37,7 +36,7 @@ WITH full_thing AS (
     decision_methods,
     if_voting,
     -- boolean
-    facilitator,
+    facilitator
 FROM
     methods,
     get_localized_texts(${articleid}, ${lang}) AS texts

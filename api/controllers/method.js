@@ -145,11 +145,11 @@ async function postMethodUpdateHttp(req, res) {
   //   JSON.stringify(newMethod.tools_techniques_types, null, 2)
   // );
   // save any changes to the user-submitted text
-  const { updatedText, author, oldMethod } = await maybeUpdateUserText(
-    req,
-    res,
-    keyFieldsToObjects
-  );
+  const {
+    updatedText,
+    author,
+    oldArticle: oldMethod
+  } = await maybeUpdateUserText(req, res, "method", keyFieldsToObjects);
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedMethod, er] = getUpdatedMethod(
@@ -158,10 +158,9 @@ async function postMethodUpdateHttp(req, res) {
     newMethod,
     oldMethod
   );
-  // console.log(
-  //   "updated method tools_techniques_types: %s",
-  //   JSON.stringify(updatedMethod.tools_techniques_types)
-  // );
+  // console.log("new method: \n%s", JSON.stringify(newMethod, null, 2));
+  // console.log("old method: \n%s", JSON.stringify(oldMethod, null, 2));
+  // console.log("updated method : \n%s", JSON.stringify(updatedMethod, null, 2));
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-method", t => {
@@ -197,6 +196,47 @@ async function postMethodUpdateHttp(req, res) {
       errors: er.errors
     });
   }
+}
+
+function getUpdatedMethod(user, params, newMethod, oldMethod) {
+  const updatedMethod = Object.assign({}, oldMethod);
+  const er = new ErrorReporter();
+  const cond = (key, fn) =>
+    setConditional(updatedMethod, newMethod, er, fn, key);
+  // admin-only
+  if (user.isadmin) {
+    cond("featured", as.boolean);
+    cond("hidden", as.boolean);
+    cond("original_language", as.text);
+    cond("post_date", as.date);
+  }
+
+  // media lists
+  ["links", "videos", "audio"].map(key => cond(key, as.media));
+  // photos and files are slightly different from other media as they have a source url too
+  ["photos", "files"].map(key => cond(key, as.sourcedMedia));
+  // boolean (would include "published" but we don't really support it)
+  ["facilitator"].map(key => cond(key, as.boolean));
+  // key
+  [
+    "facetoface_online_or_both",
+    "public_spectrum",
+    "open_limited",
+    "recruitment_method",
+    "level_polarization",
+    "scope_of_influence"
+  ].map(key => cond(key, as.methodkeyflat));
+  // list of keys
+  [
+    "method_types",
+    "number_of_participants",
+    "scope_of_influence",
+    "participants_interactions",
+    "decision_methods",
+    "if_voting"
+  ].map(key => cond(key, as.methodkeys));
+  // TODO save bookmarked on user
+  return [updatedMethod, er];
 }
 
 async function getMethodHttp(req, res) {

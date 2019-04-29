@@ -58,8 +58,7 @@ async function updateCase(id, blob) {
 }
 
 async function addBasicMethod() {
-  const { req, res, ret } = getMocks({
-    user: mock_user,
+  const { req, res, ret } = getMocksAuth({
     body: example_method,
     params: {}
   });
@@ -68,8 +67,9 @@ async function addBasicMethod() {
 }
 
 async function updateMethod(id, blob) {
-  const { req, res, ret } = getMocks({
-    params: { thingid: id }
+  const { req, res, ret } = getMocksAuth({
+    params: { thingid: id },
+    body: blob
   });
   await postMethodUpdateHttp(req, res);
   return ret.body;
@@ -84,8 +84,7 @@ async function getMethod(id) {
 }
 
 async function addBasicOrganization() {
-  const { req, res, ret } = getMocks({
-    user: mock_user,
+  const { req, res, ret } = getMocksAuth({
     body: example_organization,
     params: {}
   });
@@ -94,8 +93,9 @@ async function addBasicOrganization() {
 }
 
 async function updateOrganization(id, blob) {
-  const { req, res, ret } = getMocks({
-    params: { thingid: id }
+  const { req, res, ret } = getMocksAuth({
+    params: { thingid: id },
+    body: blob
   });
   await postOrganizationUpdateHttp(req, res);
   return ret.body;
@@ -131,15 +131,15 @@ module.exports = {
   getMocks,
   getMocksAuth,
   example_case,
-  example_method,
-  example_organization,
   getCase,
-  getMethod,
-  getOrganization,
   addBasicCase,
-  addBasicMethod,
-  addBasicOrganization,
   updateCase,
+  example_method,
+  getMethod,
+  addBasicMethod,
   updateMethod,
+  example_organization,
+  getOrganization,
+  addBasicOrganization,
   updateOrganization
 };

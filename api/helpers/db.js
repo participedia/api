@@ -48,9 +48,8 @@ function ErrorReporter() {
         return fn(...args);
       } catch (e) {
         self.errors.push(e.message);
-        // console.trace("Capturing error to report to client: " + e.message);
+        console.trace("Capturing error to report to client: " + e.message);
         return e.message;
-        // console.trace(e);
       }
     };
   };
@@ -214,6 +213,10 @@ function casekeys(objList, group) {
   }
 }
 
+const methodkey = casekey;
+const methodkeyflat = casekeyflat;
+const methodkeys = casekeys;
+
 function tagkey(obj) {
   if (obj === undefined) {
     throw new Error("Object cannot be undefined for tag");
@@ -287,8 +290,15 @@ function media(mediaList) {
   return simpleArray((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
 }
 
-function sourcedMedia(mediaList) {
-  return simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
+function sourcedMedia(mediaList, key) {
+  if (key === "photos") {
+    console.log("mediaList: %s", JSON.stringify(mediaList, null, 2));
+  }
+  let ret = simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
+  if (key === "photos") {
+    console.log("Photos for DB: %s", ret);
+  }
+  return ret;
 }
 
 function boolean(value) {
@@ -354,6 +364,9 @@ const as = Object.assign({}, pgp.as, {
   // strings,
   casekey,
   casekeyflat,
+  methodkey,
+  methodkeyflat,
+  methodkeys,
   casekeys,
   richtext,
   tagkeys,
@@ -394,6 +407,8 @@ const LIST_TITLES = sql("../sql/list_titles.sql");
 const LIST_SHORT = sql("../sql/list_short.sql");
 const UPDATE_USER = sql("../sql/update_user.sql");
 const UPDATE_CASE = sql("../sql/update_case.sql");
+const UPDATE_METHOD = sql("../sql/update_method.sql");
+const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
 
 module.exports = {
   db,
@@ -421,6 +436,8 @@ module.exports = {
   LIST_SHORT,
   UPDATE_USER,
   UPDATE_CASE,
+  UPDATE_METHOD,
+  UPDATE_ORGANIZATION,
   CASE_EDIT_BY_ID,
   CASE_EDIT_STATIC,
   CASE_VIEW_BY_ID,

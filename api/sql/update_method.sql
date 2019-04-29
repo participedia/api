@@ -21,7 +21,6 @@ SET
   open_limited = ${open_limited},
   recruitment_method = ${recruitment_method},
   level_polarization = ${level_polarization},
-  scope_of_influence = ${scope_of_influence},
 -- list of keys
   method_types = ${method_types},
   number_of_participants = ${number_of_participants},

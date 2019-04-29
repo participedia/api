@@ -7,6 +7,7 @@ ALTER TABLE methods DROP COLUMN public_interaction_methods;
 ALTER TABLE methods DROP COLUMN issue_technical_complexity;
 ALTER TABLE methods DROP COLUMN issue_interdependency;
 ALTER TABLE methods DROP COLUMN communication_outcomes;
+ALTER TABLE methods DROP COLUMN participant_selections;
 
 ALTER TABLE methods ADD COLUMN facetoface_online_or_both TEXT default '';
 ALTER TABLE methods ADD COLUMN method_types TEXT[] default '{}';
@@ -14,7 +15,7 @@ ALTER TABLE methods ADD COLUMN public_spectrum TEXT default '';
 ALTER TABLE methods ADD COLUMN open_limited TEXT default '';
 ALTER TABLE methods ADD COLUMN number_of_participants TEXT[] default '{}';
 ALTER TABLE methods ADD COLUMN scope_of_influence TEXT[] default '{}';
-ALTER TABLE methods ADD COLUMN participants_interactsion TEXT[] default '{}';
+ALTER TABLE methods ADD COLUMN participants_interactions TEXT[] default '{}';
 
 ALTER TABLE methods ADD COLUMN decision_methods TEXT[] default '{}';
 -- populate decision methods
@@ -46,4 +47,4 @@ UPDATE methods SET scope_of_influence = ARRAY['regional'] WHERE geographical_sco
 
 ALTER TABLE methods DROP COLUMN geographical_scope;
 
-ALTER TABLE methods RENAME facilitated TO facilitators;
+ALTER TABLE methods RENAME facilitated TO facilitator;

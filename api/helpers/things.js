@@ -414,35 +414,41 @@ const uniq = list => {
   return newList;
 };
 
-async function maybeUpdateUserText(req, res, keyFieldsToObjects) {
+let queries = {
+  case: CASE_EDIT_BY_ID,
+  method: METHOD_EDIT_BY_ID,
+  organization: ORGANIZATION_EDIT_BY_ID
+};
+
+async function maybeUpdateUserText(req, res, type, keyFieldsToObjects) {
   // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
   // if none of the user-submitted text fields have changed, don't add a record
   // to localized_text or
-  const newCase = req.body;
-  const params = parseGetParams(req, "case");
-  const oldCase = (await db.one(CASE_EDIT_BY_ID, params)).results;
-  if (!oldCase) {
-    throw new Error("No case found for id %s", params.articleid);
+  const newArticle = req.body;
+  const params = parseGetParams(req, type);
+  const oldArticle = (await db.one(queries[type], params)).results;
+  if (!oldArticle) {
+    throw new Error("No %s found for id %s", type, params.articleid);
   }
-  fixUpURLs(oldCase);
-  keyFieldsToObjects(oldCase);
+  fixUpURLs(oldArticle);
+  keyFieldsToObjects(oldArticle);
   let textModified = false;
   const updatedText = {
-    body: oldCase.body,
-    title: oldCase.title,
-    description: oldCase.description,
+    body: oldArticle.body,
+    title: oldArticle.title,
+    description: oldArticle.description,
     language: params.lang,
-    type: "case",
+    type: type,
     id: params.articleid
   };
   ["body", "title", "description"].forEach(key => {
     let value;
     if (key === "body") {
-      value = as.richtext(newCase[key] || oldCase[key]);
+      value = as.richtext(newArticle[key] || oldArticle[key]);
     } else {
-      value = as.text(newCase[key] || oldCase[key]);
+      value = as.text(newArticle[key] || oldArticle[key]);
     }
-    if (newCase[key] && oldCase[key] !== newCase[key]) {
+    if (newArticle[key] && oldArticle[key] !== newArticle[key]) {
       textModified = true;
     }
     updatedText[key] = value;
@@ -452,9 +458,9 @@ async function maybeUpdateUserText(req, res, keyFieldsToObjects) {
     thingid: params.articleid
   };
   if (textModified) {
-    return { updatedText, author, oldCase };
+    return { updatedText, author, oldArticle };
   } else {
-    return { updatedText: null, author, oldCase };
+    return { updatedText: null, author, oldArticle };
   }
 }
 

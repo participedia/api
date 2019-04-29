@@ -1,19 +1,15 @@
 {
   "type": "method",
+  "title": "First Title",
+  "description": "First Description",
+  "body": "First Body",
   "original_language": "en",
   "post_date": "2016-09-22T08:28:57",
   "published": true,
   "updated_date": "2016-09-22T08:28:57",
-  "location_name": "",
-  "address1": "",
-  "address2": "",
-  "city": "",
-  "province": "",
-  "postal_code": "",
-  "country": "",
-  "files": [],
-  "tags": ["first", "tag"],
   "featured": false,
+  "hidden": false,
+  "files": [],
   "links": [
     {
       "url": "https://killsixbilliondemons.com",
@@ -21,29 +17,27 @@
       "attribution": ""
     }
   ],
-  "hidden": false,
   "videos": [],
-  "images": [],
-  "completeness": "partial",
-  "facilitated": false,
-  "geographical_scope": "Local (e.g. Neighbourhood, City/Town, Metropolitan Area)",
-  "participant_selections": [],
-  "recruitment_method": "",
-  "communication_modes": [
-    "Discussion, Dialogue, or Deliberation",
-    "Acting/Drama"
+  "photos": [
+    {
+      "url": "http://example.com/picture.jpg",
+      "source_url": "",
+      "title": "generic photo",
+      "attribution": "anonymous"
+    }
   ],
-  "decision_method": "",
-  "if_voting": "",
-  "public_interaction_methods": [],
-  "issue_polarization": "4 - Polarized",
-  "issue_technical_complexity": "4 - Quite Complex",
-  "issue_interdependency": "",
-  "typical_purposes": [],
-  "communication_outcomes": [],
-  "latitude": null,
-  "longitude": null,
-  "body": "First body",
-  "title": "First title",
-  "description": "First description"
+  "audio": [],
+  "facilitator": false,
+  "facetoface_online_or_both": "",
+  "public_spectrum": "",
+  "open_limited": "",
+  "recruitment_method": "",
+  "level_polarization": "",
+  "scope_of_influence": "",
+  "method_types": [],
+  "number_of_participants": [],
+  "scope_of_influence": [],
+  "participants_interactions": [],
+  "decision_methods": [],
+  "if_voting": []
 }
