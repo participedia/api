@@ -1,6 +1,6 @@
 phraseapp:
-  access_token: 3e2a7f4b5e1d775b7bfb194cfe5f3a132512ff78a2267912f537189cab5ec2e9
-  project_id: d864306f30e27ba8439630bc90c6ce91
+  access_token: process.env.PHRASE_APP_ACCESS_TOKEN
+  project_id: process.env.PHRASE_APP_PROJECT_ID
   push:
     sources:
     - file: ./locales/<locale_name>.js
