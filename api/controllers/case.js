@@ -32,6 +32,30 @@ const CASE_STRUCTURE = JSON.parse(
 );
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
+async function getEditStaticText() {
+  let staticText = {};
+
+  staticText.authors = (await db.one(
+    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
+  )).authors;
+  staticText.cases = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
+    params
+  )).cases;
+  staticText.methods = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
+    params
+  )).methods;
+  staticText.organizations = (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
+    params
+  )).organizations;
+
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
+
+  return staticText;
+}
+
 /**
  * @api {post} /case/new Create new case
  * @apiGroup Cases
@@ -379,42 +403,15 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params);
-  const staticTextFromDB = await db.one(CASE_VIEW_STATIC, params);
-  const staticText = Object.assign({}, staticTextFromDB, articleText);
+  const staticText = getEditStaticText();
   returnByType(res, params, article, staticText, req.user);
-}
-
-async function getEditStaticText(params) {
-  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
-
-  staticText.authors = (await db.one(
-    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
-  )).authors;
-  staticText.cases = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
-    params
-  )).cases;
-  staticText.methods = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
-    params
-  )).methods;
-  staticText.organizations = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
-    params
-  )).organizations;
-
-  staticText = Object.assign({}, staticText, sharedFieldOptions);
-
-  staticText.labels = Object.assign({}, staticText.labels, articleText);
-
-  return staticText;
 }
 
 async function getCaseEditHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = await getCase(params);
-  const staticText = await getEditStaticText(params);
+  const staticText = await getEditStaticText();
   returnByType(res, params, article, staticText, req.user);
 }
 
@@ -422,7 +419,7 @@ async function getCaseNewHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = CASE_STRUCTURE;
-  const staticText = await getEditStaticText(params);
+  const staticText = await getEditStaticText();
   returnByType(res, params, article, staticText, req.user);
 }
 

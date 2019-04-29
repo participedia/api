@@ -3,7 +3,8 @@
 const path = require("path");
 const process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
-const app = require("express")();
+const express = require("express");
+const app = express();
 const exphbs = require("express-handlebars");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
@@ -12,9 +13,7 @@ const passport = require("passport");
 const Auth0Strategy = require("passport-auth0");
 const i18n = require('i18n');
 const apicache = require("apicache");
-const express = require("express");
 const compression = require("compression");
-const AWS = require("aws-sdk");
 const errorhandler = require("errorhandler");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -23,19 +22,18 @@ const cors = require("cors");
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
-const case_ = require("./api/controllers/case");
-const method = require("./api/controllers/method");
-const organization = require("./api/controllers/organization");
+const { case_ } = require("./api/controllers/case");
+const { method } = require("./api/controllers/method");
+const { organization } = require("./api/controllers/organization");
 const bookmark = require("./api/controllers/bookmark");
 const search = require("./api/controllers/search");
 const list = require("./api/controllers/list");
 const user = require("./api/controllers/user");
-const isUser = require("./api/middleware/isUser");
+const { getUserOrCreateUser } = require("./api/helpers/user.js");
 
 const port = process.env.PORT || 3001;
 
 // CONFIGS
-AWS.config.update({ region: "us-east-1" });
 app.use(compression());
 app.set("port", port);
 app.use(express.static("public", { index: false }));
@@ -48,7 +46,7 @@ app.use(cookieParser());
 app.use(errorhandler());
 
 i18n.configure({
-  locales: ["en", "fr"],
+  locales: ["en"],
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
@@ -56,8 +54,6 @@ i18n.configure({
 });
 
 app.use(i18n.init);
-
-const { getUserOrCreateUser } = require("./api/helpers/user.js");
 
 // config express-session
 const sess = {
@@ -176,9 +172,6 @@ app.use((req, res, next) => {
   res.locals.GA_TRACKING_ID = getGATrackingId();
   next();
 });
-
-app.engine(".html", hbs.engine);
-app.set("view engine", ".html");
 
 // Better logging of "unhandled" promise exceptions
 process.on("unhandledRejection", function(reason, p) {

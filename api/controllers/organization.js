@@ -27,12 +27,10 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 const ORGANIZATION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/organization-structure.json", "utf8")
 );
-const articleText = require("../../static-text/article-text.js");
-const organizationText = require("../../static-text/organization-text.js");
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
-async function getEditStaticText(params) {
-  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+async function getEditStaticText() {
+  let staticText = {};
 
   staticText.methods = (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
@@ -40,8 +38,6 @@ async function getEditStaticText(params) {
   )).methods;
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
-
-  staticText.labels = Object.assign({}, staticText.labels, organizationText, articleText);
 
   return staticText;
 }

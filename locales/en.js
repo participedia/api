@@ -961,5 +961,18 @@
   "purposes_instructional": "Select and rank up to three purposes, with \"1\" indicating the most relevant.",
   "facetoface_online_or_both_instructional": "Did participants interact face-to-face, online, or both?",
   "participants_interactions_instructional": "Select and rank up to three types of interactions in order of relevance, with with “1” indicating the most often used form of interaction.",
-  "Search": "Search"
+  "Search": "Search",
+  "focus_areas_sectionlabel": "Focus Areas",
+  "sector_label": "Sector",
+  "sector_instructional": "In what sector does this organization operate?",
+  "sector_placeholder": "Select a sector",
+  "tools_techniques_sectionlabel": "Tools and Techniques",
+  "type_purpose_sectionlabel": "Type & Purpose",
+  "suitable_for_sectionlabel": "Suitable For",
+  "level_polarization_label": "Level of Polarization This Method Can Handle",
+  "level_polarization_instructional": "Select the level of political polarization this method can handle.",
+  "level_polarization_placeholder": "Select level of polarization",
+  "level_complexity_label": "Level of Complexity This Method Can Handle",
+  "level_complexity_instructional": "Select the level of complexity this method can handle.",
+  "level_complexity_placeholder": "Select level of complexity"
 }
