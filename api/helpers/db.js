@@ -291,14 +291,7 @@ function media(mediaList) {
 }
 
 function sourcedMedia(mediaList, key) {
-  if (key === "photos") {
-    console.log("mediaList: %s", JSON.stringify(mediaList, null, 2));
-  }
-  let ret = simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
-  if (key === "photos") {
-    console.log("Photos for DB: %s", ret);
-  }
-  return ret;
+  return simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
 }
 
 function boolean(value) {

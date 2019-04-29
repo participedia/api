@@ -35,7 +35,7 @@ WITH full_thing AS (
     participants_interactions,
     decision_methods,
     if_voting,
-    -- boolean
+    -- yesno
     facilitator
 FROM
     methods,

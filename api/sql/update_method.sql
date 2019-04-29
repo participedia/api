@@ -13,7 +13,7 @@ SET
   videos = ${videos},
   audio = ${audio},
   photos = ${photos},
--- boolean
+-- yesno
   facilitator = ${facilitator},
 -- keys
   facetoface_online_or_both = ${facetoface_online_or_both},

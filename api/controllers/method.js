@@ -216,7 +216,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
   // photos and files are slightly different from other media as they have a source url too
   ["photos", "files"].map(key => cond(key, as.sourcedMedia));
   // boolean (would include "published" but we don't really support it)
-  ["facilitator"].map(key => cond(key, as.boolean));
+  ["facilitator"].map(key => cond(key, as.yesno));
   // key
   [
     "facetoface_online_or_both",

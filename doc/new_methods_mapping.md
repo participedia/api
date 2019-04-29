@@ -103,10 +103,9 @@ ARRAY[regional]
 Currently: `facilitated boolean`
 New: `facilitator yes|no`
 
-facilitated is currently a boolean
+facilitated is currently a boolean, needs to be text "yes" or "no"
 
-Action: rename to facilitators
-Question: remain boolean or map to yesno?
+Action: rename to facilitators, map true values to "yes" , false values to "no"
 
 ### files, images
 
