@@ -29,12 +29,11 @@ const ORGANIZATION_STRUCTURE = JSON.parse(
 );
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
-async function getEditStaticText() {
+async function getEditStaticText(params) {
   let staticText = {};
 
   staticText.methods = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
-    params
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;", params
   )).methods;
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);

@@ -78,7 +78,7 @@ const parseGetParams = function(req, type) {
     type,
     view: as.value(req.params.view || "view"),
     articleid: as.number(req.params.thingid || req.params.articleid),
-    lang: as.value(req.query.language || "en"),
+    lang: as.value(req.cookies.locale || "en"),
     userid: req.user ? as.number(req.user.id) : null,
     returns: as.value(req.query.returns || "html")
   });

@@ -32,7 +32,7 @@ const CASE_STRUCTURE = JSON.parse(
 );
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
-async function getEditStaticText() {
+async function getEditStaticText(params) {
   let staticText = {};
 
   staticText.authors = (await db.one(
@@ -403,7 +403,7 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params);
-  const staticText = getEditStaticText();
+  const staticText = getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 
@@ -411,7 +411,7 @@ async function getCaseEditHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = await getCase(params);
-  const staticText = await getEditStaticText();
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 
@@ -419,7 +419,7 @@ async function getCaseNewHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = CASE_STRUCTURE;
-  const staticText = await getEditStaticText();
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 

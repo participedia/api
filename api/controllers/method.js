@@ -29,15 +29,13 @@ const METHOD_STRUCTURE = JSON.parse(
 
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
-async function getEditStaticText() {
+async function getEditStaticText(params) {
   let staticText = {};
-
   staticText.authors = (await db.one(
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   )).authors;
   staticText.methods = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
-    params
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;", params
   )).methods;
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
@@ -155,7 +153,7 @@ async function getMethodEditHttp(req, res) {
   const articleRow = await db.one(METHOD_EDIT_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  const staticText = await getEditStaticText();
+  const staticText = await getEditStaticText(params);
 
   returnByType(res, params, article, staticText);
 }
@@ -164,7 +162,7 @@ async function getMethodNewHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
   const article = METHOD_STRUCTURE;
-  const staticText = await getEditStaticText();
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 
