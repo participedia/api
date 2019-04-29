@@ -20,6 +20,10 @@ in HBS template:
 {{{__ "about.cases.example" "<a href='/case/5008'>" "</a>"}}}
 ```
 
+### Getting localized text in a controller
+```
+req.__("title_label")
+```
 
 ### Key Best Practices
 - for single words and short titles or phrases, use the actual text as the key.
