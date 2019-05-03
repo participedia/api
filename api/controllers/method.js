@@ -34,6 +34,10 @@ const articleText = require("../../static-text/article-text.js");
 const methodText = require("../../static-text/method-text.js");
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
+function getEditStaticText(params) {
+  return {};
+}
+
 /**
  * @api {post} /method/new Create new method
  * @apiGroup Methods
@@ -216,7 +220,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
   // photos and files are slightly different from other media as they have a source url too
   ["photos", "files"].map(key => cond(key, as.sourcedMedia));
   // boolean (would include "published" but we don't really support it)
-  ["facilitator"].map(key => cond(key, as.yesno));
+  ["facilitators"].map(key => cond(key, as.yesno));
   // key
   [
     "facetoface_online_or_both",
