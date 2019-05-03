@@ -133,7 +133,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     cond("hidden", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
-  } else {
   }
 
   // media lists
