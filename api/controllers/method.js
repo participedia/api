@@ -34,6 +34,10 @@ const articleText = require("../../static-text/article-text.js");
 const methodText = require("../../static-text/method-text.js");
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
+function getEditStaticText(params) {
+  return {};
+}
+
 /**
  * @api {post} /method/new Create new method
  * @apiGroup Methods
