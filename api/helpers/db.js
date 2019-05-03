@@ -290,7 +290,7 @@ function media(mediaList) {
   return simpleArray((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
 }
 
-function sourcedMedia(mediaList, key) {
+function sourcedMedia(mediaList) {
   return simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
 }
 
