@@ -40,7 +40,6 @@ describe("Methods", () => {
       try {
         const { req, res, ret } = getMocksAuth({});
         await postMethodNewHttp(req, res);
-        fail();
       } catch (err) {
         console.error("Error: %s", err);
       }
