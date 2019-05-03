@@ -36,7 +36,7 @@ WITH full_thing AS (
     decision_methods,
     if_voting,
     -- yesno
-    facilitator
+    facilitators
 FROM
     methods,
     get_localized_texts(${articleid}, ${lang}) AS texts

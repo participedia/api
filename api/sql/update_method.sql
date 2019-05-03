@@ -14,7 +14,7 @@ SET
   audio = ${audio},
   photos = ${photos},
 -- yesno
-  facilitator = ${facilitator},
+  facilitators = ${facilitators},
 -- keys
   facetoface_online_or_both = ${facetoface_online_or_both},
   public_spectrum = ${public_spectrum},
