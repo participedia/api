@@ -12,6 +12,7 @@ const {
   INSERT_AUTHOR,
   CASE_EDIT_BY_ID,
   CASE_VIEW_BY_ID,
+  THING_BY_ID,
   METHOD_EDIT_BY_ID,
   METHOD_VIEW_BY_ID,
   ORGANIZATION_EDIT_BY_ID,
@@ -44,6 +45,23 @@ const fixUpURLs = function(article) {
       }
     });
   }
+};
+
+const getThingByType_id_lang_userId = async function(
+  type,
+  thingid,
+  lang,
+  userId
+) {
+  let table = type + "s";
+  const thing = await db.one(THING_BY_ID, {
+    table,
+    type,
+    thingid,
+    lang,
+    userId
+  });
+  return thing.results;
 };
 
 const returnByType = (res, params, article, static, user) => {
@@ -90,12 +108,11 @@ const returnThingByRequest = async function(type, req, res) {
     req,
     type
   ));
-  const article = await getThingByType_id_lang_userId_view(
+  const article = await getThingByType_id_lang_userId(
     type,
     thingid,
     lang,
-    userid,
-    view
+    userid
   );
   const static = await db.one(
     `select * from ${type}_${view}_localized where language = '${lang}';`
@@ -144,13 +161,12 @@ function getEditXById(type) {
       // FIXME: Figure out how to get all of this done as one transaction
       lang = as.value(req.params.language || "en");
       user = req.user;
-      userId = user.user_id;
-      oldThing = await getThingByType_id_lang_userId_view(
+      userId = user.id;
+      oldThing = await getThingByType_id_lang_userId(
         type,
         thingid,
         lang,
-        userId,
-        view
+        userId
       );
       newThing = req.body;
       // console.log("Received from client: >>> \n%s\n", JSON.stringify(newThing));
@@ -219,20 +235,24 @@ function getEditXById(type) {
             }
           } else if (
             // fields that are lists of strings
-            [
-              "tags",
-              "links",
-              "images",
-              "videos",
-              "files",
-              "if_voting",
-              "evaluation_reports",
-              "evaluation_links"
-            ].includes(key)
+            ["tags", "if_voting"].includes(key)
           ) {
             updatedThingFields.push({
               key: as.name(key),
               value: as.strings(value)
+            });
+          } else if (
+            // fields that are rich links
+            ["links", "images", "videos", "evaluation_links"].includes(key)
+          ) {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.media(value)
+            });
+          } else if (["files", "evaluation_reports"]) {
+            updatedThingFields.push({
+              key: as.name(key),
+              value: as.sourcedMedia(value)
             });
           } else if (
             // fields that are arrays of text (localized), value pairs
@@ -324,16 +344,17 @@ function getEditXById(type) {
           // INSERT new text row
           await db.none(INSERT_LOCALIZED_TEXT, updatedText);
         }
+        updatedThingFields.id = thingid;
         // Update last_updated
         updatedThingFields.push({ key: "updated_date", value: as.text("now") });
         // UPDATE the thing row
-        await db.none(UPDATE_NOUN, {
-          keyvalues: updatedThingFields
-            .map(field => field.key + " = " + field.value)
-            .join(", "),
-          type: type,
-          id: thingid
-        });
+        if (type === "method") {
+          await db.none(UPDATE_METHOD, updatedThingFields);
+        } else if (type === "organization") {
+          await db.none(UPDATE_ORGANIZATION, updatedThingFields);
+        } else {
+          throw new Error("Trying to save unknown type: %s", type);
+        }
         // INSERT row for X__authors
         await db.none(INSERT_AUTHOR, {
           user_id: userId,
@@ -341,12 +362,11 @@ function getEditXById(type) {
           id: thingid
         });
         // update materialized view for search
-        retThing = await getThingByType_id_lang_userId_view(
+        retThing = await getThingByType_id_lang_userId(
           type,
           as.number(thingid),
           lang,
-          userId,
-          view
+          userId
         );
         if (req.thingid) {
           res.status(201).json({
@@ -366,6 +386,7 @@ function getEditXById(type) {
         error
       );
       console.trace(error);
+      console.error("Last Query: \n%s", process.env.LAST_QUERY);
       res.status(500).json({
         OK: false,
         error: error
@@ -393,6 +414,75 @@ const uniq = list => {
   return newList;
 };
 
+let queries = {
+  case: CASE_EDIT_BY_ID,
+  method: METHOD_EDIT_BY_ID,
+  organization: ORGANIZATION_EDIT_BY_ID
+};
+
+async function maybeUpdateUserText(req, res, type, keyFieldsToObjects) {
+  // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
+  // if none of the user-submitted text fields have changed, don't add a record
+  // to localized_text or
+  const newArticle = req.body;
+  const params = parseGetParams(req, type);
+  const oldArticle = (await db.one(queries[type], params)).results;
+  if (!oldArticle) {
+    throw new Error("No %s found for id %s", type, params.articleid);
+  }
+  fixUpURLs(oldArticle);
+  keyFieldsToObjects(oldArticle);
+  let textModified = false;
+  const updatedText = {
+    body: oldArticle.body,
+    title: oldArticle.title,
+    description: oldArticle.description,
+    language: params.lang,
+    type: type,
+    id: params.articleid
+  };
+  ["body", "title", "description"].forEach(key => {
+    let value;
+    if (key === "body") {
+      value = as.richtext(newArticle[key] || oldArticle[key]);
+    } else {
+      value = as.text(newArticle[key] || oldArticle[key]);
+    }
+    if (newArticle[key] && oldArticle[key] !== newArticle[key]) {
+      textModified = true;
+    }
+    updatedText[key] = value;
+  });
+  const author = {
+    user_id: params.userid,
+    thingid: params.articleid
+  };
+  if (textModified) {
+    return { updatedText, author, oldArticle };
+  } else {
+    return { updatedText: null, author, oldArticle };
+  }
+}
+
+function setConditional(
+  updatedObject,
+  newObject,
+  errorReporter,
+  updateFunction,
+  key
+) {
+  if (newObject[key] === undefined) {
+    // if we're updating a partial, we still need to rewrite the updated object
+    // from front-end format to save format
+    updatedObject[key] = errorReporter.try(updateFunction)(
+      updatedObject[key],
+      key
+    );
+  } else {
+    updatedObject[key] = errorReporter.try(updateFunction)(newObject[key], key);
+  }
+}
+
 module.exports = {
   returnThingByRequest,
   getEditXById,
@@ -403,5 +493,7 @@ module.exports = {
   uniq,
   fixUpURLs,
   parseGetParams,
-  returnByType
+  returnByType,
+  setConditional,
+  maybeUpdateUserText
 };
