@@ -223,8 +223,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "public_spectrum",
     "open_limited",
     "recruitment_method",
-    "level_polarization",
-    "scope_of_influence"
+    "level_polarization"
   ].map(key => cond(key, as.methodkeyflat));
   // list of keys
   [
