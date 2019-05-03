@@ -101,7 +101,7 @@ ARRAY[regional]
 ### facilitated
 
 Currently: `facilitated boolean`
-New: `facilitator yes|no`
+New: `facilitators yes|no`
 
 facilitated is currently a boolean, needs to be text "yes" or "no"
 

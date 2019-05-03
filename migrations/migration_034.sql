@@ -47,7 +47,7 @@ UPDATE methods SET scope_of_influence = ARRAY['regional'] WHERE geographical_sco
 
 ALTER TABLE methods DROP COLUMN geographical_scope;
 
-ALTER TABLE methods ADD COLUMN facilitator TEXT DEFAULT null;
-UPDATE methods SET facilitator = 'yes' WHERE facilitated = TRUE;
-UPDATE methods SET facilitator = 'no' WHERE facilitated = FALSE;
+ALTER TABLE methods ADD COLUMN facilitators TEXT DEFAULT null;
+UPDATE methods SET facilitators = 'yes' WHERE facilitated = TRUE;
+UPDATE methods SET facilitators = 'no' WHERE facilitated = FALSE;
 ALTER TABLE methods DROP COLUMN facilitated;
