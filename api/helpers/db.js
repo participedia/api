@@ -55,6 +55,33 @@ function ErrorReporter() {
   };
 }
 
+db.listUsers = async function listUsers() {
+  return (await db.one(
+    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
+  )).authors;
+};
+
+db.listCases = async function listCases(lang) {
+  return (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
+    { lang }
+  )).cases;
+};
+
+db.listMethods = async function listMethods(lang) {
+  return (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
+    { lang }
+  )).methods;
+};
+
+db.listOrganizations = async function listOrganizations(lang) {
+  return (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
+    { lang }
+  )).organizations;
+};
+
 // as.number, enhances existing as.number to cope with numbers as strings
 function number(value) {
   if (value === "") {
@@ -213,9 +240,12 @@ function casekeys(objList, group) {
   }
 }
 
-const methodkey = casekey;
-const methodkeyflat = casekeyflat;
+const methodkey = casekeyflat;
 const methodkeys = casekeys;
+
+const organizationkey = casekey;
+const organizationkeyflat = casekeyflat;
+const organizationkeys = casekeys;
 
 function tagkey(obj) {
   if (obj === undefined) {
@@ -357,10 +387,11 @@ const as = Object.assign({}, pgp.as, {
   // strings,
   casekey,
   casekeyflat,
-  methodkey,
-  methodkeyflat,
-  methodkeys,
   casekeys,
+  methodkey,
+  methodkeys,
+  organizationkey,
+  organizationkeys,
   richtext,
   tagkeys,
   text,

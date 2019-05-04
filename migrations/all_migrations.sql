@@ -77,4 +77,4 @@
 -- migrate methods to new model and clean up
 \include 'migrations/migration_034.sql'
 -- migrate organizations to new model and clean up
-\include 'migrations/migration_35.sql'
+\include 'migrations/migration_035.sql'

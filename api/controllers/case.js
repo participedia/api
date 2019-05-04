@@ -325,23 +325,13 @@ async function getCaseHttp(req, res) {
 }
 
 async function getEditStaticText(params) {
+  const lang = params.lang;
   let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
 
-  staticText.authors = (await db.one(
-    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
-  )).authors;
-  staticText.cases = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
-    params
-  )).cases;
-  staticText.methods = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
-    params
-  )).methods;
-  staticText.organizations = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
-    params
-  )).organizations;
+  staticText.authors = await db.listUsers();
+  staticText.cases = await db.listCases(lang);
+  staticText.methods = await db.listMethods(lang);
+  staticText.organizations = await db.listOrganizations(lang);
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
