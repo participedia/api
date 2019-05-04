@@ -23,7 +23,7 @@ SELECT
   country,
   latitude,
   longitude,
-  to_json(COALESCE(images, '{}')) AS images,
+  to_json(COALESCE(photos, '{}')) AS photos,
   to_json(COALESCE(videos, '{}')) AS videos,
   updated_date
 FROM

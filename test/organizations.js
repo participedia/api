@@ -107,28 +107,28 @@ describe("Organizations", () => {
       res1.should.have.status(201);
       res1.body.OK.should.be.true;
       const organization1 = res1.body.object;
-      organization1.images.should.deep.equal([
+      organization1.photos.should.deep.equal([
         "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg"
       ]);
       const res2 = await chai
         .putJSON("/organization/" + organization1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ images: ["foobar.jpg"] });
+        .send({ photos: ["foobar.jpg"] });
       res2.should.have.status(200);
       res2.body.OK.should.be.true;
       should.exist(res2.body.data);
       const organization2 = res2.body.data;
-      organization2.images.should.deep.equal(["foobar.jpg"]);
+      organization2.photos.should.deep.equal(["foobar.jpg"]);
       expect(organization2.updated_date > organization1.updated_date).to.be
         .true;
       const res3 = await chai
         .putJSON("/organization/" + organization1.id)
         .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ images: ["howzaboutthemjpegs.png"] });
+        .send({ photos: ["howzaboutthemjpegs.png"] });
       res3.should.have.status(200);
       res3.body.OK.should.be.true;
       const organization3 = res3.body.data;
-      organization3.images.should.deep.equal(["howzaboutthemjpegs.png"]);
+      organization3.photos.should.deep.equal(["howzaboutthemjpegs.png"]);
     });
     it.skip("Try to change featured flag", async () => {
       const res1 = await addBasicOrganization();
