@@ -5,18 +5,20 @@ const {
   getMocks,
   getMocksAuth,
   example_organization,
-  addBasicOrganization
+  getOrganization,
+  addBasicOrganization,
+  updateOrganization
 } = require("./data/helpers.js");
 const {
-  getOrganizationEditHttp,
-  getOrganizationNewHttp,
-  postOrganizationNewHttp,
   getOrganizationHttp,
+  getOrganizationEditHttp,
+  postOrganizationNewHttp,
+  getOrganizationNewHttp,
   postOrganizationUpdateHttp
 } = require("../api/controllers/organization");
 
 describe("Organizations", () => {
-  describe.only("Lookup", () => {
+  describe("Lookup", () => {
     it("finds organization 307", async () => {
       const { req, res, ret } = getMocks({ params: { thingid: 307 } });
       await getOrganizationHttp(req, res);
@@ -25,110 +27,62 @@ describe("Organizations", () => {
       article.id.should.equal(307);
     });
   });
+
   describe("Adding", () => {
     it("fails without authentication", async () => {
-      try {
-        const res = await chai.postJSON("/organization/new").send({});
-        should.exist(res.status);
-      } catch (err) {
-        err.should.have.status(401);
-      }
+      const { req, res, ret } = getMocks({ body: example_organization });
+      await postOrganizationNewHttp(req, res);
+      ret.body.OK.should.be.false;
     });
     it("fails without content", async () => {
-      try {
-        const res = await chai
-          .postJSON("/organization/new")
-          .set("Authorization", "Bearer " + tokens.user_token)
-          .send({});
-        should.exist(res.status);
-      } catch (err) {
-        err.should.have.status(400);
-      }
+      const { req, res, ret } = getMocksAuth({});
+      await postOrganizationNewHttp(req, res);
+      console.log("ret: %s", JSON.stringify(ret, null, 2));
+      ret.body.OK.should.be.false;
     });
     it("works with authentication", async () => {
-      const res = await chai
-        .postJSON("/organization/new")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({
-          // mandatory
-          title: "Up the organization",
-          body: "Guerilla Marketing",
-          // optional
-          vidURL: "https://www.youtube.com/watch?v=KVc6rywClWk&t=2078s"
-        });
-      res.should.have.status(201);
-    });
-  });
-  describe("Get organization with tags", () => {
-    it("should have 5 tags", async () => {
-      const res = await chai.getJSON("/organization/212").send({});
-      res.body.OK.should.equal(true);
-      res.should.have.status(200);
-      let the_organization = res.body.data;
-      the_organization.tags.should.have.lengthOf(5);
+      const body = await addBasicOrganization();
+      body.OK.should.be.true;
+      const article = body.article;
+      article.id.should.be.a("number");
+      article.links.should.have.lengthOf(1);
+      article.links[0].url.should.equal("https://killsixbilliondemons.com/");
     });
   });
   describe("Test edit API", () => {
     it("Add organization, then modify title and/or body", async () => {
-      const res1 = await addBasicOrganization();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      res1.body.data.thingid.should.be.a("number");
-      const origOrganization = res1.body.object;
+      const body1 = await addBasicOrganization();
+      body1.OK.should.be.true;
+      const origOrganization = body1.article;
       origOrganization.id.should.be.a("number");
-      origOrganization.id.should.equal(res1.body.data.thingid);
-      const res2 = await chai
-        .putJSON("/organization/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ title: "Second Title" }); // empty update
-      res2.should.have.status(200);
-      const updatedOrganization1 = res2.body.data;
+      const body2 = await updateOrganization(origOrganization.id, {
+        title: "Second Title"
+      });
+      const updatedOrganization1 = body2.article;
       updatedOrganization1.title.should.equal("Second Title");
       updatedOrganization1.body.should.equal("First Body");
-      const res3 = await chai
-        .putJSON("/organization/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ body: "Second Body" }); // empty update
-      res3.should.have.status(200);
-      const updatedOrganization2 = res3.body.data;
+      const body3 = await updateOrganization(origOrganization.id, {
+        body: "Second Body"
+      });
+      const updatedOrganization2 = body3.article;
       updatedOrganization2.title.should.equal("Second Title");
       updatedOrganization2.body.should.equal("Second Body");
-      const res4 = await chai
-        .putJSON("/organization/" + res1.body.data.thingid)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ title: "Third Title", body: "Third Body" }); // empty update
-      res4.should.have.status(200);
-      const updatedOrganization3 = res4.body.data;
-      updatedOrganization3.title.should.equal("Third Title");
-      updatedOrganization3.body.should.equal("Third Body");
     });
     it("Add organization, then modify lead image", async () => {
-      const res1 = await addBasicOrganization();
-      res1.should.have.status(201);
-      res1.body.OK.should.be.true;
-      const organization1 = res1.body.object;
-      organization1.photos.should.deep.equal([
-        "https://images-na.ssl-images-amazon.com/images/I/91-KWP5kiJL.jpg"
-      ]);
-      const res2 = await chai
-        .putJSON("/organization/" + organization1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ photos: ["foobar.jpg"] });
-      res2.should.have.status(200);
-      res2.body.OK.should.be.true;
-      should.exist(res2.body.data);
-      const organization2 = res2.body.data;
-      organization2.photos.should.deep.equal(["foobar.jpg"]);
+      const body1 = await addBasicOrganization();
+      body1.OK.should.be.true;
+      const organization1 = body1.article;
+      organization1.photos[0].url.should.equal(
+        "http://example.com/picture.jpg"
+      );
+      const body2 = await updateOrganization(organization1.id, {
+        photos: [{ url: "http://garfield.com/jon.png" }]
+      });
+      body2.OK.should.be.true;
+      const organization2 = body2.article;
+      organization2.photos[0].url.should.equal("http://garfield.com/jon.png");
       expect(organization2.updated_date > organization1.updated_date).to.be
         .true;
-      const res3 = await chai
-        .putJSON("/organization/" + organization1.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ photos: ["howzaboutthemjpegs.png"] });
-      res3.should.have.status(200);
-      res3.body.OK.should.be.true;
-      const organization3 = res3.body.data;
-      organization3.photos.should.deep.equal(["howzaboutthemjpegs.png"]);
     });
     it.skip("Try to change featured flag", async () => {
       const res1 = await addBasicOrganization();

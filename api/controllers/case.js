@@ -17,6 +17,10 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
+  listUsers,
+  listCases,
+  listMethods,
+  listOrganizations,
   ErrorReporter
 } = require("../helpers/db");
 
@@ -328,10 +332,10 @@ async function getEditStaticText(params) {
   const lang = params.lang;
   let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
 
-  staticText.authors = await db.listUsers();
-  staticText.cases = await db.listCases(lang);
-  staticText.methods = await db.listMethods(lang);
-  staticText.organizations = await db.listOrganizations(lang);
+  staticText.authors = await listUsers();
+  staticText.cases = await listCases(lang);
+  staticText.methods = await listMethods(lang);
+  staticText.organizations = await listOrganizations(lang);
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 

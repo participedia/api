@@ -14,6 +14,8 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_ORGANIZATION,
+  listUsers,
+  listMethods,
   ErrorReporter
 } = require("../helpers/db");
 
@@ -36,9 +38,10 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 async function getEditStaticText(params) {
   let staticText = {};
+  const lang = params.lang;
 
-  staticText.authors = await db.listUsers();
-  staticText.methods = await db.listMethods(lang);
+  staticText.authors = await listUsers();
+  staticText.methods = await listMethods(lang);
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
@@ -81,6 +84,7 @@ async function postOrganizationNewHttp(req, res) {
     let language = req.params.language || "en";
     if (!title) {
       return res.status(400).json({
+        OK: false,
         message: "Cannot create Organization without at least a title"
       });
     }
@@ -166,15 +170,15 @@ async function postOrganizationUpdateHttp(req, res) {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_METHOD, updatedMethod)
+          t.none(UPDATE_ORGANIZATION, updatedOrganization)
           // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     } else {
-      await db.tx("update-method", t => {
+      await db.tx("update-organization", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
-          t.none(UPDATE_METHOD, updatedMethod)
+          t.none(UPDATE_ORGANIZATION, updatedOrganization)
           // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
@@ -202,7 +206,7 @@ function getUpdatedOrganization(
   const updatedOrganization = Object.assign({}, oldOrganization);
   const er = new ErrorReporter();
   const cond = (key, fn) =>
-    setConditional(updatedMethod, newMethod, er, fn, key);
+    setConditional(updatedOrganization, newOrganization, er, fn, key);
   // admin-only
   if (user.isadmin) {
     cond("featured", as.boolean);

@@ -14,6 +14,7 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
+  listUsers,
   ErrorReporter
 } = require("../helpers/db");
 
@@ -37,8 +38,7 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 async function getEditStaticText(params) {
   let staticText = {};
-
-  staticText.authors = await db.listUsers();
+  staticText.authors = await listUsers();
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 

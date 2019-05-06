@@ -29,19 +29,13 @@ describe("Cases", () => {
   describe("Adding", () => {
     it("fails without authentication", async () => {
       const { req, res, ret } = getMocks({ body: example_case });
-      try {
-        await postCaseNewHttp(req, res);
-      } catch (err) {
-        err.should.have.status(401);
-      }
+      await postCaseNewHttp(req, res);
+      ret.body.OK.should.be.false;
     });
     it("fails without content", async () => {
-      try {
-        const { req, res, ret } = getMocksAuth({});
-        await postCaseNewHttp(req, res);
-      } catch (err) {
-        err.should.have.status(400);
-      }
+      const { req, res, ret } = getMocksAuth({});
+      await postCaseNewHttp(req, res);
+      ret.body.OK.should.be.false;
     });
     it("works with authentication", async () => {
       const body = await addBasicCase();

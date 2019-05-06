@@ -20,7 +20,7 @@ SET
   city = ${city},
   province = ${province},
   postal_code = ${postal_code},
-  country = ${country}
+  country = ${country},
 -- floats
   latitude = ${latitude},
   longitude = ${longitude},

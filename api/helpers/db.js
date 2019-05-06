@@ -55,32 +55,32 @@ function ErrorReporter() {
   };
 }
 
-db.listUsers = async function listUsers() {
+async function listUsers() {
   return (await db.one(
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   )).authors;
-};
+}
 
-db.listCases = async function listCases(lang) {
+async function listCases(lang) {
   return (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
     { lang }
   )).cases;
-};
+}
 
-db.listMethods = async function listMethods(lang) {
+async function listMethods(lang) {
   return (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
     { lang }
   )).methods;
-};
+}
 
-db.listOrganizations = async function listOrganizations(lang) {
+async function listOrganizations(lang) {
   return (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
     { lang }
   )).organizations;
-};
+}
 
 // as.number, enhances existing as.number to cope with numbers as strings
 function number(value) {
@@ -439,6 +439,10 @@ module.exports = {
   as,
   helpers,
   pgp,
+  listUsers,
+  listCases,
+  listMethods,
+  listOrganizations,
   INSERT_LOCALIZED_TEXT,
   UPDATE_NOUN,
   INSERT_AUTHOR,
