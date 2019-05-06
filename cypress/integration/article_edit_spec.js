@@ -1,9 +1,12 @@
 const CYPRESS_TEST_EMAIL = "alanna.scott+cypress_test@gmail.com";
 const CYPRESS_TEST_PASSWORD = "cypress";
 
-// add method and case when those pages are working
-// const articleTypes = ["case", "method", "organization"];
-const articleTypes = ["case"];
+const articleTypes = ["case", "method", "organization"];
+const articleIds = {
+  case: 2,
+  organization: 200,
+  method: 145,
+};
 
 articleTypes.forEach(type => editFormTest(type));
 
@@ -13,8 +16,8 @@ function editFormTest(type) {
       cy.visit(`/logout`);
     });
 
-    it(`not authenticated and visits /${type}/{id}/edit`, () => {
-      cy.visit(`/${type}/2/edit`);
+    it(`not authenticated and visits /${type}/${articleIds[type]}/edit`, () => {
+      cy.visit(`/${type}/${articleIds[type]}/edit`);
       cy.url().should("include", "https://participedia.auth0.com/login");
     });
 
@@ -28,8 +31,8 @@ function editFormTest(type) {
       cy.login();
     });
 
-    it(`authenticated and visits /${type}/{id}/edit`, () => {
-      cy.visit(`/${type}/2/edit`);
+    it(`authenticated and visits /${type}/${articleIds[type]}/edit`, () => {
+      cy.visit(`/${type}/${articleIds[type]}/edit`)
 
       // it has a submit button
       cy.get("[data-cy='main-form-submit']").should("be.visible");
@@ -50,7 +53,7 @@ function editFormTest(type) {
       cy.get("[data-cy='main-form-submit']").click();
 
       // if form was submitted successfully it will redirect to the view page
-      cy.url().should("eq", `http://localhost:3001/${type}/2`);
+      cy.url().should("eq", `http://localhost:3001/${type}/${articleIds[type]}`);
     });
   });
 }
