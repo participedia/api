@@ -22,7 +22,7 @@ WITH all_featured  AS (
     country,
     latitude,
     longitude,
-    to_json(COALESCE(images, '{}')) AS images,
+    to_json(COALESCE(photos, '{}')) AS photos,
     to_json(COALESCE(videos, '{}')) as videos,
     updated_date,
     bookmarked(type, id, ${userId})

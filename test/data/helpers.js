@@ -118,6 +118,10 @@ function getMocks(args) {
     json: body => {
       // console.log("json() called");
       ret.body = body;
+    },
+    status: stat => {
+      console.log("status(%s)", stat);
+      ret.status = stat;
     }
   });
   return { req, res, ret };

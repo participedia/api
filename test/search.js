@@ -222,7 +222,7 @@ describe("Search", () => {
       item.type.should.be.a("string");
       item.updated_date.should.be.a("string");
       item.bookmarked.should.be.a("boolean");
-      item.should.have.property("images");
+      item.should.have.property("photos");
     });
 
     it("multi-word search", async () => {

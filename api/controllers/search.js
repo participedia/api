@@ -164,12 +164,14 @@ router.get("/", async function(req, res) {
     const pages = Math.max(limit ? Math.ceil(total / limit) : 1, 1); // Don't divide by zero limit, don't return page 1 of 1
     results.forEach(obj => {
       // massage results for display
-      if (obj.images.length) {
-        obj.images = obj.images.map(
-          img => process.env.AWS_UPLOADS_URL + encodeURIComponent(img)
-        );
+      if (obj.photos.length) {
+        obj.photos.forEach(img => {
+          if (!img.url.startsWith("http")) {
+            img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url);
+          }
+        });
       } else {
-        obj.images = [randomTexture()];
+        obj.photos = [{ url: randomTexture() }];
       }
       delete obj.total;
     });

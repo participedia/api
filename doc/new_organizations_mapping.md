@@ -15,9 +15,8 @@ tags, executive_director
 ## New properties and their types
 
 audio full_link[]
-scope_operations key (question: why not scope_of_influence?)
+scope_of_influence key[]
 specific_topics key[]
-audio full_link[]
 type_method key[]
 type_tool key[]
 specific_methods_tools_techniques id[]
@@ -88,41 +87,41 @@ environment
 governance (English: Governance & Political Institutions (e.g. constitutions, legal systems, electoral systems))
 health
 housing
-human_rights (English: Human Rights & Civil Rights)
-identity_diversity
-immigration_migration
+human (English: Human Rights & Civil Rights)
+identity
+immigration
 international (English: International Affairs)
 labor (English: Labor & Work)
 law (English: Law Enforcement, Criminal Justice & Corrections)
 media (English: Media, Telecommunications & Information)
-national_security (
-planning_development
-science_technology
-social_welfare
+national (
+planning
+science
+social
 transportation
 
 Full mapping:
 
-Aging -> social_welfare
+Aging -> social
 Arts & Culture -> arts
 Budgeting -> economics
-Children & Youth -> social_welfare
-Community Development -> planning_development
+Children & Youth -> DELETE
+Community Development -> DELETE
 Economic Development -> economics
 Education & Schools -> education
 Environment -> environment
-Gender & Racial Equality -> human_rights
+Gender & Racial Equality -> DELETE
 Health -> health
 Higher Education & Lifelong Learning -> education
-Human Rights -> human_rights
-Identity & Diversity -> identity_diversity
-Immigration -> immigration_migration
+Human Rights -> human
+Identity & Diversity -> identity
+Immigration -> immigration
 International Aid & Development -> international
 International Trade & Global Economy -> international
 Law Enforcement, Criminal Justice, & Corrections -> law
-National & International Security -> national_security
-Other -> No Mapping, will be deleted
-Planning (e.g. Urban planning, Transportation, etc.) -> planning_development
+National & International Security -> national
+Other -> DELETE
+Planning (e.g. Urban planning, Transportation, etc.) -> planning
 Political Institutions (e.g. Constitutions, Legal Systems, Electoral Systems) -> governance
-Poverty Reduction -> human_rights
-Science & Technology -> science_technology
+Poverty Reduction -> social
+Science & Technology -> science

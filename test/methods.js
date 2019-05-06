@@ -30,19 +30,15 @@ describe("Methods", () => {
   describe("Adding", () => {
     it("fails without authentication", async () => {
       const { req, res, ret } = getMocks({ body: example_method });
-      try {
-        await postMethodNewHttp(req, res);
-      } catch (err) {
-        err.should.have.status(401);
-      }
+      await postMethodNewHttp(req, res);
+      ret.body.OK.should.be.false;
+      // ret.body.status.should.equal(400);
     });
     it("fails without content", async () => {
-      try {
-        const { req, res, ret } = getMocksAuth({});
-        await postMethodNewHttp(req, res);
-      } catch (err) {
-        console.error("Error: %s", err);
-      }
+      const { req, res, ret } = getMocksAuth({});
+      await postMethodNewHttp(req, res);
+      ret.body.OK.should.be.false;
+      // ret.status.should.equal(400);
     });
     it("works with authentication", async () => {
       const body = await addBasicMethod();

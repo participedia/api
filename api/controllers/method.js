@@ -1,4 +1,5 @@
 "use strict";
+
 const express = require("express");
 const cache = require("apicache");
 const log = require("winston");
@@ -13,6 +14,7 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
+  listUsers,
   ErrorReporter
 } = require("../helpers/db");
 
@@ -34,8 +36,15 @@ const articleText = require("../../static-text/article-text.js");
 const methodText = require("../../static-text/method-text.js");
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
-function getEditStaticText(params) {
-  return {};
+async function getEditStaticText(params) {
+  let staticText = {};
+  staticText.authors = await listUsers();
+
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
+
+  staticText.labels = Object.assign({}, methodText, articleText);
+
+  return staticText;
 }
 
 /**
@@ -83,7 +92,6 @@ async function postMethodNewHttp(req, res) {
       description,
       language
     });
-    //    req.thingid = thing.thingid;
     req.params.thingid = thing.thingid;
     await postMethodUpdateHttp(req, res);
   } catch (error) {
@@ -138,7 +146,7 @@ function keyFieldsToObjects(article) {
 }
 
 async function postMethodUpdateHttp(req, res) {
-  // cache.clear();
+  cache.clear();
   const params = parseGetParams(req, "method");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
@@ -228,7 +236,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "open_limited",
     "recruitment_method",
     "level_polarization"
-  ].map(key => cond(key, as.methodkeyflat));
+  ].map(key => cond(key, as.methodkey));
   // list of keys
   [
     "method_types",
@@ -259,7 +267,6 @@ async function getMethodEditHttp(req, res) {
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = await getEditStaticText(params);
-
   returnByType(res, params, article, staticText);
 }
 

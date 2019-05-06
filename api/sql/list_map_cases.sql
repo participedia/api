@@ -2,7 +2,7 @@ SELECT
     cases.id,
     'case' as type,
     to_json(get_location(things.id)) AS location,
-    to_json(cases.images) AS images,
+    to_json(cases.photos) AS photos,
     localized_texts.title AS title
 FROM
     cases,

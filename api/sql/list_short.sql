@@ -6,7 +6,7 @@ WITH shorts AS (
       id,
       type,
       title,
-      COALESCE(images, '{}'),
+      COALESCE(photos, '{}') as photos,
       post_date,
       updated_date)::object_short)
   FROM things, localized_texts
