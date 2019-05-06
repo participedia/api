@@ -1,10 +1,10 @@
-{{#> accordion title=(t static titleKey) small=true}}
+{{#> accordion title=(t titleKey) small=true}}
   {{#if descriptionKey}}
-    <p>{{t static descriptionKey}}</p>
+    <p>{{t descriptionKey}}</p>
   {{/if}}
   {{#each members}}
     <dl class="people">
-      <dt>{{name}}{{#if titleKey}}, {{t static titleKey}}{{/if}}</dt>
+      <dt>{{name}}{{#if titleKey}}, {{t titleKey}}{{/if}}</dt>
       {{# each descriptors}}
         <dd>{{this}}</dd>
       {{/each}}

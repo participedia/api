@@ -50,7 +50,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
       });
     }
     const titlelist = await db.any(TITLES_FOR_THINGS, {
-      language: as.value(req.query.language || "en"),
+      language: as.value(req.cookies.locale || "en"),
       limit: response_limit,
       offset: offset,
       type: objType
@@ -143,10 +143,7 @@ router.get("/", async function(req, res) {
   const user_query = req.query.query || "";
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
-  const lang = as.value(req.query.language || "en");
-  const staticText = await db.one(
-    `select * from layout_localized where language = '${lang}';`
-  );
+  const lang = as.value(req.cookies.locale || "en");
   const params = parseGetParams(req, filterFromReq(req));
   try {
     const results = await db.any(queryFileFromReq(req), {
@@ -189,7 +186,6 @@ router.get("/", async function(req, res) {
           results,
           user_query,
           parsed_query,
-          static: staticText,
           params,
           user: req.user || null
         });
@@ -199,7 +195,6 @@ router.get("/", async function(req, res) {
           pages,
           searchhits,
           results,
-          static: staticText,
           params,
           user: req.user || null
         });
@@ -215,7 +210,6 @@ router.get("/", async function(req, res) {
           pages,
           searchhits,
           results,
-          static: staticText,
           params,
           user: req.user || null
         });
@@ -237,12 +231,12 @@ router.get("/map", async function(req, res) {
     const RESPONSE_LIMIT = 1000;
     const offset = 0;
     const cases = await db.any(LIST_MAP_CASES, {
-      language: as.value(req.query.language || "en"),
+      language: as.value(req.cookies.locale || "en"),
       limit: RESPONSE_LIMIT,
       offset: offset
     });
     const orgs = await db.any(LIST_MAP_ORGANIZATIONS, {
-      language: as.value(req.query.language || "en"),
+      language: as.value(req.cookies.locale || "en"),
       limit: RESPONSE_LIMIT,
       offset: offset
     });

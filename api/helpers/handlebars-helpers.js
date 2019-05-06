@@ -1,8 +1,6 @@
 const moment = require("moment");
 const md5 = require("js-md5");
-const faqContent = require("./faq-content.js");
 const aboutData = require("./data/about-data.js");
-const contentTypesData = require("./data/content-types-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
 const sharedFieldOptions = require("./shared-field-options.js");
 
@@ -34,25 +32,6 @@ function mapIdTitleToKeyValue(options) {
   });
 }
 
-function staticTextValue(staticText, key, type = null) {
-  let newKey;
-  if (type) {
-    newKey = `${key}_${type}`;
-  } else {
-    newKey = key;
-  }
-
-  if (!staticText) {
-    return newKey;
-  } else if (staticText.labels) {
-    return staticText.labels[newKey] || newKey;
-  } else {
-    // this makes the static keys work on the reader view for now
-    // since the format is different from the edit view
-    return staticText[newKey] || newKey;
-  }
-}
-
 function currentUrl(req) {
   const path = req.originalUrl;
   const host = req.headers.host;
@@ -65,19 +44,25 @@ function getFirstPhotoUrl(article) {
   return article.photos[0].url;
 }
 
+const i18n = (key, context) => context && context.data && context.data.root.__(key);
+
 module.exports = {
   // transalation helpers
-  label: (staticText, name) => staticTextValue(staticText, name, "label"),
+  label: (name, context) => i18n(`${name}_label`, context),
 
-  info: (staticText, name) => staticTextValue(staticText, name, "info"),
+  info: (name, context) => i18n(`${name}_info`, context),
 
-  instructional: (staticText, name) =>
-    staticTextValue(staticText, name, "instructional"),
+  instructional: (name, context) => i18n(`${name}_instructional`, context),
 
-  placeholder: (staticText, name) =>
-    staticTextValue(staticText, name, "placeholder"),
+  placeholder: (name, context) => i18n(`${name}_placeholder`, context),
 
-  t: (staticText, key) => staticTextValue(staticText, key),
+  t: (key, context) => i18n(key, context),
+
+  isSelectedLanguage: (lang, context) => {
+    if (context && context.data && context.data.root) {
+      return lang === context.data.root.req.cookies.locale;
+    }
+  },
 
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
@@ -93,16 +78,16 @@ module.exports = {
     }
   },
 
-  linkSetPlaceholder(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "placeholder");
+  linkSetPlaceholder: (name, attr, context) => {
+    return i18n(`${name}_${attr}_placeholder`, context);
   },
 
-  linkSetLabel(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "label");
+  linkSetLabel: (name, attr, context) => {
+    return i18n(`${name}_${attr}_label`, context);
   },
 
-  linkSetInstructional(staticText, name, attr) {
-    return staticTextValue(staticText, `${name}_${attr}`, "instructional");
+  linkSetInstructional: (name, attr, context) => {
+    return i18n(`${name}_${attr}_instructional`, context);
   },
 
   // article helpers
@@ -340,19 +325,19 @@ module.exports = {
     }
   },
 
-  getHomeTabs() {
+  getHomeTabs(context) {
     return [
-      { title: "All", key: "all" },
-      { title: "Cases", key: "case" },
-      { title: "Methods", key: "method" },
-      { title: "Organizations", key: "organizations" },
+      { title: i18n("All", context), key: "all" },
+      { title: i18n("Cases", context), key: "case" },
+      { title: i18n("Methods", context), key: "method" },
+      { title: i18n("Organizations", context), key: "organizations" },
     ];
   },
 
-  getUserTabs() {
+  getUserTabs(context) {
     return [
-      { title: "Contributions", key: "contributions" },
-      { title: "Bookmarks", key: "bookmarks" },
+      { title: i18n("Contributions", context), key: "contributions" },
+      { title: i18n("Bookmarks", context), key: "bookmarks" },
     ];
   },
 
@@ -471,11 +456,6 @@ module.exports = {
     return req.baseUrl === "/user" && req.path.indexOf("edit") === -1;
   },
 
-  getFaqContent() {
-    // todo: get this as translated text from the server
-    return faqContent;
-  },
-
   toUpperCase(text) {
     return text.toUpperCase();
   },
@@ -511,10 +491,6 @@ module.exports = {
 
   getStaffMembers() {
     return aboutData.staff.members;
-  },
-
-  getContentTypeData() {
-    return contentTypesData;
   },
 
   getYearFromDate(date, format) {

@@ -13,13 +13,13 @@
 
     <div class="article-card-content">
       <div class="article-card-meta">
-        <h5>{{toUpperCase type}}</h5>
+        <h5>{{toUpperCase (t type)}}</h5>
         <h3 class="article-card-title">{{title}}</h3>
 
         {{#if description}}
           <p class="article-card-description">{{description}}</p>
         {{/if}}
-        <p class="small">Submitted {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
+        <p class="small">{{t "Submitted"}} {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
       </div>
       <a
         href="#"
@@ -29,18 +29,18 @@
         data-thing-id="{{id}}"
       >
         <span class="is-bookmarked">
-          <span class="sr-only">Remove Bookmark</span>
+          <span class="sr-only">{{t "Remove Bookmark"}}</span>
           {{> icon-bookmark-fill}}
         </span>
         <span class="is-not-bookmarked">
-          <span class="sr-only">Add Bookmark</span>
+          <span class="sr-only">{{t "Add Bookmark"}}</span>
           {{> icon-bookmark}}
         </span>
       </a>
     </div>
 
     <button type="button" class="icon-only close-card-btn js-close-card-btn">
-      <span class="sr-only">Close Card</span>
+      <span class="sr-only">{{t "Close Card"}}</span>
       {{> icon-close}}
     </button>
   </a>

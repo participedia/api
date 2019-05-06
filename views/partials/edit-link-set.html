@@ -3,10 +3,10 @@
   {{#if quick-submit}}data-quick-submit="{{quick-submit}}"{{/if}}
 >
   <label for="{{name}}" {{#if is_required}}data-required={{is_required}}{{/if}}>
-    {{linkSetLabel static name 'link'}}
+    {{linkSetLabel name 'link'}}
   </label>
-  {{#if (linkSetInstructional static name 'link')}}
-    <p>{{linkSetInstructional static name 'link'}}</p>
+  {{#if (linkSetInstructional name 'link')}}
+    <p>{{linkSetInstructional name 'link'}}</p>
   {{/if}}
 
   {{#if (isEmptyArray article name)}}
@@ -26,7 +26,7 @@
       }}
     {{/each}}
   {{/if}}
-  <a href="#" class="js-add-link-set" data-for="{{name}}">+ {{t static "add_another_link"}}</a>
+  <a href="#" class="js-add-link-set" data-for="{{name}}">+ {{t "add_another_link"}}</a>
 
   <script type="text/template" class="js-edit-link-set-inputs-template-{{name}}">
     {{> edit-link-set-inputs

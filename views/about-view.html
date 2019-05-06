@@ -1,68 +1,96 @@
 <div class="static-view-container">
-  <h1>{{t static "Welcome to Participedia"}}</h1>
-  <h2>{{t static "about.tagline"}}</h2>
+  <h1>{{t "Welcome to Participedia"}}</h1>
+  <h2>{{t "about.tagline"}}</h2>
 
   <div class="video-embed-container">
     <iframe src="https://player.vimeo.com/video/219546454" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
   </div>
 
   <section>
-    <h2>{{t static "Get Involved"}}</h2>
-    <p>{{{t static "about.get_involved.p1"}}}</p>
+    <h2>{{t "Get Involved"}}</h2>
+    <p>{{{t "about.get_involved.p1"}}}</p>
 
-    <h3>{{t static "Explore"}}</h3>
-    <p>{{{t static "about.explore.p1"}}}</p>
+    <h3>{{t "Explore"}}</h3>
+    <p>{{{t "about.explore.p1"}}}</p>
 
-    <h3>{{t static "Contribute"}}</h3>
-    <p>{{t static "about.contribute.p1"}}</p>
+    <h3>{{t "Contribute"}}</h3>
+    <p>{{t "about.contribute.p1"}}</p>
 
-    <h3>{{t static "Teach"}}</h3>
-    <p>{{t static "about.teach.p1"}}</p>
+    <h3>{{t "Teach"}}</h3>
+    <p>{{t "about.teach.p1"}}</p>
   </section>
 
   <section>
-    <h2>{{t static "Community"}}</h2>
-    <p>{{t static "about.community.p1"}}</p>
-    <p>{{t static "about.community.p2"}}</p>
+    <h2>{{t "Community"}}</h2>
+    <p>{{t "about.community.p1"}}</p>
+    <p>{{t "about.community.p2"}}</p>
   </section>
 
   <section>
-    {{#> accordion title=(t static "Members")}}
-      <p>{{t static "about.members.p1"}}</p>
+    {{#> accordion title=(t "Members")}}
+      <p>{{t "about.members.p1"}}</p>
     {{/accordion}}
 
-    {{#> accordion title=(t static "Partners")}}
-      <p>{{t static "about.partners.p1"}}</p>
+    {{#> accordion title=(t "Partners")}}
+      <p>{{t "about.partners.p1"}}</p>
 
       {{#each (getPartnersData)}}
         {{> about-section static=../static}}
       {{/each}}
     {{/accordion}}
 
-    {{#> accordion title=(t static "Committees")}}
-      <p>{{t static "about.committees.p1"}}</p>
+    {{#> accordion title=(t "Committees")}}
+      <p>{{t "about.committees.p1"}}</p>
 
       {{#each (getCommitteesData)}}
         {{> about-section static=../static}}
       {{/each}}
     {{/accordion}}
 
-    {{#> accordion title=(t static "Supporters")}}
-      <p>Participedia is currently supported by the <a href="http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx" target="_blank">Social Sciences and Humanities Research Council of Canada</a> (SSHRC) through a five-year Partnership Grant beginning in April 2015.</p>
+    {{#> accordion title=(t "Supporters")}}
+      <p>
+        {{{__
+          "about.supporters.p1"
+          "<a href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx' target='_blank'>"
+          "</a>"
+        }}}
+      </p>
 
-      <p>The Design & technology Team operates out of the <a href="https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology" target="_blank">Studio for Extensive Aesthetics</a> at Emily Carr University of Art & Design, and is supported by the <a href="http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx" target="_blank">Canada Research Chairs Program</a> and the <a href="https://www.innovation.ca/">Canada Foundation for Innovation</a>.</p>
+      <p>
+        {{{__
+          "about.supporters.p2"
+          "<a href='https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology' target='_blank'>"
+          "</a>"
+          "<a href='http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx' target='_blank'>"
+          "</a>"
+          "<a href='https://www.innovation.ca/'>"
+          "</a>"
+        }}}
+      </p>
 
-      <p>Translation management software for this website is provided by <a href="https://phraseapp.com" target="_blank">PhraseApp</a>.</p>
+      <p>
+        {{{__
+          "about.supporters.p3"
+          "<a href='https://phraseapp.com' target='_blank'>"
+          "</a>"
+        }}}
+      </p>
 
-      <p>The project was previously funded by a two-year SSHRC Partnership Grant from April 2011-2013. And, an earlier version of the Participedia website included a prototype for German language functionality, developed under the generous support of the <a href="http://www.bfna.org/" target="_blank">Bertelsmann Foundation</a> in 2012.</p>
+      <p>
+        {{{__
+           "about.supporters.p4"
+           "<a href='http://www.bfna.org/' target='_blank'>"
+           "</a>"
+         }}}
+      </p>
     {{/accordion}}
 
-    {{#> accordion title=(t static "Staff")}}
-      <p>{{t static "about.staff.p1"}}</p>
+    {{#> accordion title=(t "Staff")}}
+      <p>{{t "about.staff.p1"}}</p>
 
       {{#each (getStaffMembers)}}
         <dl class="people">
-          <dt>{{name}}{{#if titleKey}}, {{t static titleKey}}{{/if}}</dt>
+          <dt>{{name}}{{#if titleKey}}, {{t titleKey}}{{/if}}</dt>
           {{# each descriptors}}
             <dd>{{this}}</dd>
           {{/each}}
@@ -73,41 +101,59 @@
   </section>
 
   <section>
-    <h2>{{t static "Content"}}</h2>
-    <p>{{t static "about.content.p1"}}</p>
+    <h2>{{t "Content"}}</h2>
+    <p>{{t "about.content.p1"}}</p>
 
-    {{#> accordion title=(t static "Cases")}}
-      <p>{{t static "about.cases.p1"}}</p>
+    {{#> accordion title=(t "Cases")}}
+      <p>{{t "about.cases.p1"}}</p>
       <ul>
-        <li>{{{t static "about.cases.example"}}}</li>
+        <li>{{{__ "about.cases.example" "<a href='/case/5008'>" "</a>"}}}</li>
       </ul>
     {{/accordion}}
 
-    {{#> accordion title=(t static "Methods")}}
-      <p>{{t static "about.methods.p1"}}</p>
+    {{#> accordion title=(t "Methods")}}
+      <p>{{t "about.methods.p1"}}</p>
       <ul>
-        <li>{{{t static "about.methods.example"}}}</li>
+        <li>{{{__ "about.methods.example" "<a href='/method/145'>" "</a>"}}}</li>
       </ul>
     {{/accordion}}
 
-    {{#> accordion title=(t static "Tools/Techniques")}}
-      <p>{{t static "about.tools_techniques.p1"}}</p>
+    {{#> accordion title=(t "Tools/Techniques")}}
+      <p>{{t "about.tools_techniques.p1"}}</p>
       <ul>
-        <li>{{{t static "about.tools_techniques.example"}}}</li>
+        <li>
+          {{{__
+            "about.tools_techniques.example"
+            "<a href='/method/147'>"
+            "</a>"
+            "<a href='/method/5507'>"
+            "</a>"
+            "<a href='/method/565'>"
+            "</a>"
+            "<a href='/method/5309'>"
+            "</a>"
+          }}}
+        </li>
       </ul>
     {{/accordion}}
 
-    {{#> accordion title=(t static "Organizations")}}
-      <p>{{t static "about.organizations.p1"}}</p>
+    {{#> accordion title=(t "Organizations")}}
+      <p>{{t "about.organizations.p1"}}</p>
       <ul>
-        <li>{{{t static "about.organizations.example"}}}</li>
+        <li>
+          {{{__
+            "about.organizations.example"
+            "<a href='/organization/4997'>"
+            "</a>"
+          }}}
+        </li>
       </ul>
     {{/accordion}}
 
-    {{#> accordion title=(t static "Teaching Resources")}}
-      <p>{{t static "about.teaching_resources.p1"}}</p>
+    {{#> accordion title=(t "Teaching Resources")}}
+      <p>{{t "about.teaching_resources.p1"}}</p>
       <ul>
-        <li>{{{t static "about.teaching_resources.example"}}}</li>
+        <li>{{{t "about.teaching_resources.example"}}}</li>
       </ul>
     {{/accordion}}
   </section>

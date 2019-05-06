@@ -2,33 +2,33 @@
   <nav class="sidebar-menu js-sidebar-menu" id="sidebar-menu">
     <div class="sidebar-menu-inner-container">
       <ul class="nav-list sidebar-menu-main-menu">
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About</a></li>
-        <li><a href="/teaching">Teaching</a></li>
-        <li><a href="/research">Research</a></li>
-        <li><a href="https://medium.com/@participediaproject" target="_blank">News</a></li>
-        <li><a href="/help">Help & Contact</a></li>
-        <li><a href="/legal">Terms of Use</a></li>
+        <li><a href="/">{{t "Home"}}</a></li>
+        <li><a href="/about">{{t "About"}}</a></li>
+        <li><a href="/teaching">{{t "Teaching"}}</a></li>
+        <li><a href="/research">{{t "Research"}}</a></li>
+        <li><a href="https://medium.com/@participediaproject" target="_blank">{{t "News"}}</a></li>
+        <li><a href="/help">{{t "Help & Contact"}}</a></li>
+        <li><a href="/legal">{{t "Terms of Use"}}</a></li>
       </ul>
 
       <ul class="nav-list sidebar-menu-additional-nav">
         <li>
           <a href="/content-chooser" class="button button-red">
-            {{> icon-add }} Quick Submit
+            {{> icon-add }} {{t "Quick Submit"}}
           </a>
         </li>
         <li>
           {{#if req.user}}
             <a href="/user/{{req.user.id}}" class="button button-dark-grey">
-              Profile
+              {{t "Profile"}}
             </a>
           {{else}}
-            <a href="/login" class="button button-dark-grey">Login</a>
+            <a href="/login" class="button button-dark-grey">{{t "Login"}}</a>
           {{/if}}
         </li>
         <li>
           <a href="https://mailchi.mp/participedia/subscribe" target="_blank" class="button button-light-grey">
-            Newsletter Sign Up
+            {{t "Newsletter Sign Up"}}
           </a>
         </li>
       </ul>
@@ -38,18 +38,18 @@
     <ul class="nav-list">
       <li class="menu-icon-container">
         <a href="#sidebar-menu" class="sidebar-menu-closed">
-          <span class="sr-only">open menu</span>
+          <span class="sr-only">{{t "open menu"}}</span>
           {{> icon-hamburger }}
         </a>
         <a href="#" class="sidebar-menu-open">
-          <span class="sr-only">close menu</span>
+          <span class="sr-only">{{t "close menu"}}</span>
           {{> icon-hamburger }}
         </a>
       </li>
       <li class="header-logo-container"><a href="/">Participedia</a></li>
       <li class="header-search-container">
         <form action="/">
-          <input name="query" type="text" placeholder="Search" value="{{req.query.query}}" />
+          <input name="query" type="text" placeholder={{t "Search"}} value="{{req.query.query}}" />
           <div class="icon-container">
             {{> icon-search }}
           </div>
@@ -57,7 +57,7 @@
       </li>
       <li class="quick-submit-container">
         <a href="/content-chooser" class="button button-white">
-          {{> icon-add }} Quick Submit
+          {{> icon-add }} {{t "Quick Submit"}}
         </a>
       </li>
       <li>
@@ -70,19 +70,19 @@
               {{#if (getGravatarUrl req.user.email)}}
                 <img
                   src="{{getGravatarUrl req.user.email}}?s=40&d=blank"
-                  alt="profile_picture"
+                  alt="{{t "profile_picture"}}"
                   width="40"
                   height="40"
                 />
               {{/if}}
             </button>
             <div class="profile-dropdown-button-items js-profile-dropdown-button-items">
-              <a href="/user/{{req.user.id}}">Profile</a>
-              <a href="/logout">Sign out</a>
+              <a href="/user/{{req.user.id}}">{{t "Profile"}}</a>
+              <a href="/logout">{{t "Sign out"}}</a>
             </div>
           </div>
         {{else}}
-          <a href="/login" class="button button-dark-grey">Login</a>
+          <a href="/login" class="button button-dark-grey">{{t "Login"}}</a>
         {{/if}}
       </li>
     </ul>

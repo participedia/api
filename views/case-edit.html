@@ -1,7 +1,7 @@
 {{#> edit-form}}
   <fieldset class="overview">
-    <h2 class="fieldset-header">{{t static "overview_sectionlabel"}}</h2>
-    <h2 class="fieldset-header quickonly">{{t static "quick_submit_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "overview_sectionlabel"}}</h2>
+    <h2 class="fieldset-header quickonly">{{t "quick_submit_sectionlabel"}}</h2>
     {{> article-edit-text name="title" is_required=true quick-submit=true}}
     {{> edit-multi-select ranked=true name="general_issues" quick-submit=true max=3 }}
     {{> edit-multi-select ranked=true name="specific_topics" max=3 }}
@@ -14,16 +14,16 @@
     {{> edit-multi-select name="tags" }}
   </fieldset>
   <fieldset class="location">
-    <h2 class="fieldset-header">{{t static "location_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "location_sectionlabel"}}</h2>
     {{> article-edit-location quick-submit=true}}
     {{> article-edit-select name="scope_of_influence" }}
   </fieldset>
   <fieldset class="components fullonly">
-    <h2 class="fieldset-header">{{t static "components_sectionlabel"}}</h2>
-    {{> article-edit-select name="is_component_of" }}
+    <h2 class="fieldset-header">{{t "components_sectionlabel"}}</h2>
+    {{> edit-multi-select name="is_component_of" }}
   </fieldset>
   <fieldset class="media">
-    <h2 class="fieldset-header">{{t static "media_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "media_sectionlabel"}}</h2>
     {{> edit-link-set name="links" quick-submit=true}}
     {{> edit-media name="files" quick-submit=true}}
     {{> edit-media name="photos" type="image" quick-submit=true}}
@@ -31,27 +31,27 @@
     {{> edit-link-set name="audio" quick-submit=true}}
   </fieldset>
   <fieldset class="date_and_duration">
-    <h2 class="fieldset-header">{{t static "date_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "date_sectionlabel"}}</h2>
     {{> edit-date name="start_date" quick-submit=true}}
     {{> edit-date name="end_date" quick-submit=true}}
     {{> edit-boolean name="ongoing" quick-submit=true}}
     {{> article-edit-select name="time_limited" }}
   </fieldset>
   <fieldset class="purpose_and_approach fullonly">
-    <h2 class="fieldset-header">{{t static "purpose_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "purpose_sectionlabel"}}</h2>
     {{> edit-multi-select ranked=true name="purposes" max=3 }}
     {{> edit-multi-select ranked=true name="approaches" max=3 }}
     {{> article-edit-select name="public_spectrum" }}
   </fieldset>
   <fieldset class="participants fullonly">
-    <h2 class="fieldset-header">{{t static "participants_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "participants_sectionlabel"}}</h2>
     {{> edit-number name="number_of_participants" }}
     {{> article-edit-select name="open_limited" }}
     {{> article-edit-select name="recruitment_method" }}
     {{> edit-multi-select name="targeted_participants" max=3 }}
   </fieldset>
   <fieldset class="process fullonly">
-    <h2 class="fieldset-header">{{t static "process_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "process_sectionlabel"}}</h2>
     {{> edit-multi-select ranked=true name="method_types" max=3 }}
     {{> edit-multi-select ranked=true name="tools_techniques_types" max=3 }}
     {{> edit-multi-select name="specific_methods_tools_techniques" }}
@@ -66,19 +66,19 @@
     {{> edit-multi-select name="insights_outcomes" max=3 }}
   </fieldset>
   <fieldset class="organizations_and_supporters fullonly">
-    <h2 class="fieldset-header">{{t static "organizers_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "organizers_sectionlabel"}}</h2>
     {{> article-edit-select name="primary_organizer" }}
     {{> edit-multi-select name="organizer_types" max=3 }}
   </fieldset>
   <fieldset class="resources fullonly">
-    <h2 class="fieldset-header">{{t static "resources_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "resources_sectionlabel"}}</h2>
     {{> article-edit-text name="funder" }}
     {{> edit-multi-select name="funder_types" max=3 }}
     {{> edit-boolean name="staff" }}
     {{> edit-boolean name="volunteers" }}
   </fieldset>
   <fieldset class="evidence_of_impact fullonly">
-    <h2 class="fieldset-header">{{t static "evidence_sectionlabel"}}</h2>
+    <h2 class="fieldset-header">{{t "evidence_sectionlabel"}}</h2>
     {{> article-edit-select name="impact_evidence" }}
     {{> edit-multi-select ranked=true name="change_types" max=5 }}
     {{> edit-multi-select ranked=true name="implementers_of_change" max=3 }}

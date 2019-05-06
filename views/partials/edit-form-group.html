@@ -3,12 +3,12 @@
   {{#if quick-submit}}data-quick-submit="{{quick-submit}}"{{/if}}
 >
   <label for="{{name}}" {{#if is_required}}data-required={{is_required}}{{/if}}>
-    {{#if (label static name)}}
-      {{label static name}}
+    {{#if (label name)}}
+      {{label name}}
     {{/if}}
   </label>
-  {{#if (instructional static name)}}
-    <p>{{instructional static name}}</p>
+  {{#if (instructional name)}}
+    <p>{{instructional name}}</p>
   {{/if}}
   {{> @partial-block }}
 </div>

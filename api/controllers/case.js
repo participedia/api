@@ -11,9 +11,7 @@ const {
   CASES_BY_COUNTRY,
   CREATE_CASE,
   CASE_EDIT_BY_ID,
-  CASE_EDIT_STATIC,
   CASE_VIEW_BY_ID,
-  CASE_VIEW_STATIC,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
@@ -33,7 +31,6 @@ const {
 } = require("../helpers/things");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
-const articleText = require("../../static-text/article-text.js");
 const CASE_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
 );
@@ -323,8 +320,7 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params);
-  const staticTextFromDB = await db.one(CASE_VIEW_STATIC, params);
-  const staticText = Object.assign({}, staticTextFromDB, articleText);
+  const staticText = getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
 

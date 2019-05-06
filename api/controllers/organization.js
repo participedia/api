@@ -32,8 +32,6 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 const ORGANIZATION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/organization-structure.json", "utf8")
 );
-const articleText = require("../../static-text/article-text.js");
-const organizationText = require("../../static-text/organization-text.js");
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 async function getEditStaticText(params) {

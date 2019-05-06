@@ -1,5 +1,4 @@
 <dl>
-  {{! label and value are custom helpers, see app.js }}
-  <dt>{{label static name}}</dt>
-  <dd>{{#if (getvalue article name) }}{{ static.yes }}{{else}}{{ static.no }}{{/if}}</dd>
+  <dt>{{label name}}</dt>
+  <dd>{{#if (getvalue article name) }}{{t "yes" }}{{else}}{{t "no" }}{{/if}}</dd>
 </dl>

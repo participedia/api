@@ -1,41 +1,52 @@
 <div class="static-view-container">
-  <h1>{{t static "Research"}}</h1>
-  <h2>{{t static "research.tagline"}}</h2>
+  <h1>{{t "Research"}}</h1>
+  <h2>{{t "research.tagline"}}</h2>
 
-  {{#> accordion title=(t static "Methodology")}}
-    <p>{{t static "research.methodology.p1"}}</p>
+  {{#> accordion title=(t "Methodology")}}
+    <p>{{t "research.methodology.p1"}}</p>
 
-    <p>{{{t static "research.methodology.p2"}}}</p>
+    <p>{{{__ "research.methodology.p2" "<a href='http://archonfung.net/docs/articles/2011/FungParticipedia201112.pdf'>" "</a>"}}}</p>
   {{/accordion}}
 
-  {{#> accordion title=(t static "Data Repository")}}
-    <p><strong>{{t static "research.data_repository.dataverse"}}</strong></p>
+  {{#> accordion title=(t "Data Repository")}}
+    <p><strong>{{t "research.data_repository.dataverse"}}</strong></p>
 
-    <p>{{{t static "research.data_repository.p1"}}}</p>
+    <p>
+      {{{__
+        "research.data_repository.p1"
+        "<a href='https://dataverse.harvard.edu/dataverse/Participedia' target='_blank'>"
+        "</a>"
+      }}}
+    </p>
 
-    <p>{{t static "research.data_repository.p2"}}</p>
+    <p>{{t "research.data_repository.p2"}}</p>
 
     <ul>
-      <li>{{t static "research.data_repository.feature.1"}}</li>
-      <li>{{t static "research.data_repository.feature.2"}}</li>
-      <li>{{t static "research.data_repository.feature.3"}}</li>
-      <li>{{t static "research.data_repository.feature.4"}}</li>
-      <li>{{t static "research.data_repository.feature.5"}}</li>
-      <li>{{t static "research.data_repository.feature.6"}}</li>
-      <li>{{t static "research.data_repository.feature.7"}}</li>
-      <li>{{t static "research.data_repository.feature.8"}}</li>
+      <li>{{t "research.data_repository.feature.1"}}</li>
+      <li>{{t "research.data_repository.feature.2"}}</li>
+      <li>{{t "research.data_repository.feature.3"}}</li>
+      <li>{{t "research.data_repository.feature.4"}}</li>
+      <li>{{t "research.data_repository.feature.5"}}</li>
+      <li>{{t "research.data_repository.feature.6"}}</li>
+      <li>{{t "research.data_repository.feature.7"}}</li>
+      <li>{{t "research.data_repository.feature.8"}}</li>
     </ul>
 
-    <p>{{{t static "research.data_repository.questions"}}}</p>
+    <p>
+      {{{__
+        "research.data_repository.questions"
+        "<a href='mailto:data@participedia.net'>data@participedia.net</a>"
+      }}}
+    </p>
   {{/accordion}}
 
-  {{#> accordion title=(t static "Surveys")}}
-    <p>{{t static "research.surveys.p1"}}</p>
+  {{#> accordion title=(t "Surveys")}}
+    <p>{{t "research.surveys.p1"}}</p>
 
-    <p>{{t static "research.surveys.p2"}}</p>
+    <p>{{t "research.surveys.p2"}}</p>
 
-    <p>{{t static "research.surveys.p3"}}</p>
+    <p>{{t "research.surveys.p3"}}</p>
 
-    <p>{{t static "research.surveys.p4"}}</p>
+    <p>{{t "research.surveys.p4"}}</p>
   {{/accordion}}
 </div>

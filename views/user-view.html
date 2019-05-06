@@ -2,21 +2,21 @@
   <div class="user-profile-image">
     <div class="user-profile-image-initial">{{getInitials profile.name}}</div>
     {{#if (getGravatarUrl profile.email)}}
-      <img src="{{getGravatarUrl profile.email}}?s=160&d=blank" alt="{{t static "profile_picture"}}" width="160" height="160" />
+      <img src="{{getGravatarUrl profile.email}}?s=160&d=blank" alt="{{t "profile_picture"}}" width="160" height="160" />
     {{/if}}
   </div>
   <div class="user-main-content">
     {{!-- if user is logged in, show edit profile button --}}
     {{#if (isProfileOwner req.user profile)}}
       <div class="user-view-edit-profile-button">
-        <a href="/user/{{profile.id}}/edit" class="button button-red">{{t static "edit_profile"}}</a>
+        <a href="/user/{{profile.id}}/edit" class="button button-red">{{t "edit_profile"}}</a>
       </div>
     {{/if}}
 
     <h2 class="user-view-name">{{profile.name}}</h2>
     {{#if profile.join_date}}
       <span class="small">
-        <strong>{{t static "member_since"}}</strong> {{getYearFromDate profile.join_date}}
+        <strong>{{t "member_since"}}</strong> {{getYearFromDate profile.join_date}}
       </span>
       </br>
     {{/if}}

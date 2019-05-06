@@ -403,9 +403,7 @@ const as = Object.assign({}, pgp.as, {
 const helpers = pgp.helpers;
 
 const CASE_EDIT_BY_ID = sql("../sql/case_edit_by_id.sql");
-const CASE_EDIT_STATIC = sql("../sql/case_edit_static.sql");
 const CASE_VIEW_BY_ID = sql("../sql/case_view_by_id.sql");
-const CASE_VIEW_STATIC = sql("../sql/case_view_static.sql");
 const METHOD_EDIT_BY_ID = sql("../sql/method_edit_by_id.sql");
 const METHOD_VIEW_BY_ID = sql("../sql/method_view_by_id.sql");
 const ORGANIZATION_EDIT_BY_ID = sql("../sql/organization_edit_by_id.sql");
@@ -467,9 +465,7 @@ module.exports = {
   UPDATE_METHOD,
   UPDATE_ORGANIZATION,
   CASE_EDIT_BY_ID,
-  CASE_EDIT_STATIC,
   CASE_VIEW_BY_ID,
-  CASE_VIEW_STATIC,
   METHOD_EDIT_BY_ID,
   METHOD_VIEW_BY_ID,
   ORGANIZATION_EDIT_BY_ID,

@@ -1,0 +1,15 @@
+phraseapp:
+  access_token: process.env.PHRASE_APP_ACCESS_TOKEN
+  project_id: process.env.PHRASE_APP_PROJECT_ID
+  push:
+    sources:
+    - file: ./locales/<locale_name>.js
+      params:
+        file_format: node_json
+        update_translations: true
+  pull:
+    targets:
+    - file: ./locales/<locale_name>.js
+      params:
+        file_format: node_json
+        update_translations: true

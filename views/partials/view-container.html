@@ -1,7 +1,7 @@
 <div class="reader-view">
   <aside>
     <!-- Data and Metadata -->
-    <h2>{{static.data_sectionlabel}}</h2>
+    <h2>{{t "Data"}}</h2>
 
     {{> @partial-block }}
   </aside>
@@ -33,8 +33,8 @@
 <a
   href="/{{article.type}}/{{article.id}}/edit"
   class="button button-red floating-action-button"
-  title="Edit Article"
+  title="{{t 'Edit'}} {{t article.type}}"
 >
-  <span class="sr-only">Edit Article</span>
+  <span class="sr-only">{{t "Edit"}} {{t article.type}}</span>
   {{> icon-edit }}
 </a>

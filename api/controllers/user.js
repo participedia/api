@@ -4,16 +4,8 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
-const staticTextToBeAdded = require("../locales/en.js");
-const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
-async function getStaticText(language) {
-  // merge localized text from the db with the keys that need to be added.
-  const staticTextFromDB = await db.one(
-    `select * from layout_localized where language = '${language}';`
-  );
-  return Object.assign({}, staticTextToBeAdded, staticTextFromDB);
-}
+const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
 async function getUserById(userId, req, res, view = "view") {
   try {
@@ -40,8 +32,6 @@ async function getUserById(userId, req, res, view = "view") {
       result.user.name = result.user.name.substr(0, atSymbolIndex);
     }
 
-    const staticText = await getStaticText(language);
-
     if (view === "edit") {
       // only return some keys on the user object for the edit view
       const userEditKeys = [
@@ -61,13 +51,11 @@ async function getUserById(userId, req, res, view = "view") {
       userEditKeys.forEach(key => (userEditJSON[key] = result.user[key]));
 
       return {
-        static: staticText,
-        profile: userEditJSON
+        profile: userEditJSON,
       };
     } else {
       return {
-        static: staticText,
-        profile: result.user
+        profile: result.user,
       };
     }
   } catch (error) {

@@ -1,25 +1,59 @@
 "use strict";
 
-let path = require("path");
-let process = require("process");
+const path = require("path");
+const process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
-let app = require("express")();
-var exphbs = require("express-handlebars");
+const express = require("express");
+const app = express();
+const exphbs = require("express-handlebars");
 const fs = require("fs");
-const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const Auth0Strategy = require("passport-auth0");
+const i18n = require("i18n");
+const apicache = require("apicache");
+const compression = require("compression");
+const errorhandler = require("errorhandler");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
+const cors = require("cors");
 
-// static text js objects
-const sharedStaticText = require("./static-text/shared-static-text.js");
-const aboutStaticText = require("./static-text/about-static-text.js");
-const researchStaticText = require("./static-text/research-static-text.js");
-const teachingStaticText = require("./static-text/teaching-static-text.js");
-const contentTypesText = require("./static-text/content-types-static-text.js");
-
+// Actual Participedia APIS vs. Nodejs gunk
+const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
+const { case_ } = require("./api/controllers/case");
+const { method } = require("./api/controllers/method");
+const { organization } = require("./api/controllers/organization");
+const bookmark = require("./api/controllers/bookmark");
+const search = require("./api/controllers/search");
+const list = require("./api/controllers/list");
+const user = require("./api/controllers/user");
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
+
+const port = process.env.PORT || 3001;
+
+// CONFIGS
+app.use(compression());
+app.set("port", port);
+app.use(express.static("public", { index: false }));
+app.use(morgan("dev")); // request logging
+app.use(methodOverride()); // Do we actually use/need this?
+app.use(cors());
+app.use(bodyParser.json({ limit: "5mb" }));
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
+app.use(cookieParser());
+app.use(errorhandler());
+
+i18n.configure({
+  locales: ["en"],
+  cookie: "locale",
+  extension: ".js",
+  directory: "./locales",
+  updateFiles: false,
+});
+
+app.use(i18n.init);
 
 // config express-session
 const sess = {
@@ -105,12 +139,23 @@ app.get("/logout", (req, res) => {
   );
 });
 
-var hbs = exphbs.create({
+const cache = apicache.middleware;
+apicache.options({
+  debug: true,
+  enabled: false,
+  successCodes: [200, 201]
+});
+// TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
+
+const hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: "main",
   extname: ".html",
   helpers: handlebarsHelpers
 });
+
+app.engine(".html", hbs.engine);
+app.set("view engine", ".html");
 
 // make data available as local vars in templates
 app.use((req, res, next) => {
@@ -128,9 +173,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.engine(".html", hbs.engine);
-app.set("view engine", ".html");
-
 // Better logging of "unhandled" promise exceptions
 process.on("unhandledRejection", function(reason, p) {
   console.warn(
@@ -142,46 +184,7 @@ process.on("unhandledRejection", function(reason, p) {
   // application specific logging here
 });
 
-let express = require("express");
-let compression = require("compression");
-app.use(compression());
-let port = process.env.PORT || 3001;
-
-// Actual Participedia APIS vs. Nodejs gunk
-let { case_ } = require("./api/controllers/case");
-let { method } = require("./api/controllers/method");
-let { organization } = require("./api/controllers/organization");
-let bookmark = require("./api/controllers/bookmark");
-let search = require("./api/controllers/search");
-let list = require("./api/controllers/list");
-let user = require("./api/controllers/user");
-
-let errorhandler = require("errorhandler");
-let morgan = require("morgan");
-let bodyParser = require("body-parser");
-let methodOverride = require("method-override");
-let cors = require("cors");
-// let isUser = require("./api/middleware/isUser");
-
-app.set("port", port);
-app.use(express.static("public", { index: false }));
-app.use(morgan("dev")); // request logging
-app.use(methodOverride()); // Do we actually use/need this?
-app.use(cors());
-app.use(bodyParser.json({ limit: "5mb" }));
-app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
-app.use(cookieParser());
-app.use(errorhandler());
-
-const apicache = require("apicache");
-const cache = apicache.middleware;
-apicache.options({
-  debug: true,
-  enabled: false,
-  successCodes: [200, 201]
-});
-// TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
-
+// ROUTES
 app.use("/", cache("5 minutes"), search);
 
 app.use("/case", case_);
@@ -192,27 +195,19 @@ app.use("/user", user);
 app.use("/bookmark", bookmark);
 
 app.get("/about", function(req, res) {
-  const staticText = Object.assign({}, sharedStaticText, aboutStaticText);
-  res.status(200).render("about-view", { static: staticText });
+  res.status(200).render("about-view");
 });
 app.get("/legal", function(req, res) {
   res.status(200).render("legal-view");
 });
 app.get("/research", function(req, res) {
-  const staticText = Object.assign({}, sharedStaticText, researchStaticText);
-  res.status(200).render("research-view", { static: staticText });
+  res.status(200).render("research-view");
 });
 app.get("/teaching", function(req, res) {
-  const staticText = Object.assign({}, sharedStaticText, teachingStaticText);
-  res.status(200).render("teaching-view", {
-    static: staticText
-  });
+  res.status(200).render("teaching-view");
 });
 app.get("/content-chooser", function(req, res) {
-  const staticText = Object.assign({}, sharedStaticText, contentTypesText);
-  res.status(200).render("content-chooser", {
-    static: staticText
-  });
+  res.status(200).render("content-chooser");
 });
 
 module.exports = app;

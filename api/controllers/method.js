@@ -32,8 +32,6 @@ const METHOD_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/method-structure.json", "utf8")
 );
 
-const articleText = require("../../static-text/article-text.js");
-const methodText = require("../../static-text/method-text.js");
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 async function getEditStaticText(params) {
