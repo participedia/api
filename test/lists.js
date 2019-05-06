@@ -32,15 +32,5 @@ describe("Lists", () => {
       const theCase = result.cases[0];
       theCase.should.have.all.keys(shortKeys);
     });
-    it.skip("Get all the medium objects", async () => {
-      const res = await chai.getJSON("/list/medium").send({});
-      res.should.have.status(200);
-      const result = res.body.data;
-      result.cases.should.have.lenthOf.at.least(599);
-      result.methods.should.have.lengthOf.at.least(148);
-      result.organizations.should.have.lengthOf.at.least(427);
-      const theCase = result.cases[0];
-      theCase.should.have.all.keys(mediumKeys);
-    });
   });
 });

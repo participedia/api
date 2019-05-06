@@ -4,9 +4,9 @@ WITH shorts AS (
     things.type,
     array_agg((
       id,
-      type,
       title,
-      COALESCE(photos, '{}') as photos,
+      type,
+      COALESCE(photos, '{}'),
       post_date,
       updated_date)::object_short)
   FROM things, localized_texts
