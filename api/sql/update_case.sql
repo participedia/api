@@ -8,9 +8,9 @@ SET
 -- automatic
   updated_date = 'now',
 -- media lists
-  full_files = ${files},
-  full_links = ${links},
-  full_videos = ${videos},
+  files = ${files},
+  links = ${links},
+  videos = ${videos},
   audio = ${audio},
   photos = ${photos},
   evaluation_reports = ${evaluation_reports},

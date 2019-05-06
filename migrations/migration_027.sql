@@ -18,9 +18,6 @@ $_$;
 DROP FUNCTION IF EXISTS get_case_localized_list_or_null(text, text[], json);
 DROP FUNCTION IF EXISTS get_case_localized_list(text, text[], json);
 DROP FUNCTION IF EXISTS get_case_localized_value(text, text, json);
-DROP FUNCTION IF EXISTS get_case_view_by_id(integer, text, integer);
-DROP FUNCTION IF EXISTS get_case_edit_by_id(integer, text, integer);
-DROP FUNCTION IF EXISTS get_case_by_id(integer, text, integer);
 
 CREATE OR REPLACE FUNCTION localized_short_value(lang text, key text) RETURNS localized_value
   LANGUAGE sql STABLE
@@ -42,7 +39,6 @@ CREATE OR REPLACE FUNCTION only_localized_case_edit_value(lang text, field text,
   ;
 $_$;
 
-DROP FUNCTION IF EXISTS only_localized_case_view_value(text, text, text);
 CREATE OR REPLACE FUNCTION only_localized_case_view_value(lang text, field text, name text) RETURNS localized_value
   LANGUAGE sql STABLE
   AS $_$

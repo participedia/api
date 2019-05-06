@@ -15,12 +15,16 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
+  listUsers,
+  listCases,
+  listMethods,
+  listOrganizations,
   ErrorReporter
 } = require("../helpers/db");
 
 const {
-  getEditXById,
-  addRelatedList,
+  setConditional,
+  maybeUpdateUserText,
   parseGetParams,
   returnByType,
   fixUpURLs
@@ -31,30 +35,6 @@ const CASE_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
 );
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
-
-async function getEditStaticText(params) {
-  let staticText = {};
-
-  staticText.authors = (await db.one(
-    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
-  )).authors;
-  staticText.cases = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
-    params
-  )).cases;
-  staticText.methods = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
-    params
-  )).methods;
-  staticText.organizations = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
-    params
-  )).organizations;
-
-  staticText = Object.assign({}, staticText, sharedFieldOptions);
-
-  return staticText;
-}
 
 /**
  * @api {post} /case/new Create new case
@@ -144,68 +124,6 @@ async function postCaseNewHttp(req, res) {
  *
  */
 
-async function maybeUpdateUserText(req, res) {
-  // if none of the user-submitted text fields have changed, don't add a record
-  // to localized_text or
-  const newCase = req.body;
-  const params = parseGetParams(req, "case");
-  const oldCase = (await db.one(CASE_EDIT_BY_ID, params)).results;
-  if (!oldCase) {
-    throw new Error("No case found for id %s", params.articleid);
-  }
-  fixUpURLs(oldCase);
-  keyFieldsToObjects(oldCase);
-  let textModified = false;
-  const updatedText = {
-    body: oldCase.body,
-    title: oldCase.title,
-    description: oldCase.description,
-    language: params.lang,
-    type: "case",
-    id: params.articleid
-  };
-  ["body", "title", "description"].forEach(key => {
-    let value;
-    if (key === "body") {
-      value = as.richtext(newCase[key] || oldCase[key]);
-    } else {
-      value = as.text(newCase[key] || oldCase[key]);
-    }
-    if (newCase[key] && oldCase[key] !== newCase[key]) {
-      textModified = true;
-    }
-    updatedText[key] = value;
-  });
-  const author = {
-    user_id: params.userid,
-    thingid: params.articleid
-  };
-  if (textModified) {
-    return { updatedText, author, oldCase };
-  } else {
-    return { updatedText: null, author, oldCase };
-  }
-}
-
-function setConditional(
-  updatedObject,
-  newObject,
-  errorReporter,
-  updateFunction,
-  key
-) {
-  if (newObject[key] === undefined) {
-    // if we're updating a partial, we still need to rewrite the updated object
-    // from front-end format to save format
-    updatedObject[key] = errorReporter.try(updateFunction)(
-      updatedObject[key],
-      key
-    );
-  } else {
-    updatedObject[key] = errorReporter.try(updateFunction)(newObject[key], key);
-  }
-}
-
 function getUpdatedCase(user, params, newCase, oldCase) {
   const updatedCase = Object.assign({}, oldCase);
   const er = new ErrorReporter();
@@ -236,7 +154,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   ["latitude", "longitude"].map(key => cond(key, as.float));
   // plain text
   [
-    "original_language",
     "location_name",
     "address1",
     "address2",
@@ -247,13 +164,11 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "funder"
   ].map(key => cond(key, as.text));
   // date
-  ["start_date", "end_date", "post_date"].map(key => cond(key, as.date));
+  ["start_date", "end_date"].map(key => cond(key, as.date));
   // id
   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
   // list of ids
-  ["specific_methods_tools_techniques", "has_components"].map(key =>
-    cond(key, as.ids)
-  );
+  ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));
   // key
   [
     "scope_of_influence",
@@ -305,14 +220,16 @@ async function postCaseUpdateHttp(req, res) {
   //   JSON.stringify(newCase.tools_techniques_types, null, 2)
   // );
   // save any changes to the user-submitted text
-  const { updatedText, author, oldCase } = await maybeUpdateUserText(req, res);
+  const {
+    updatedText,
+    author,
+    oldArticle: oldCase
+  } = await maybeUpdateUserText(req, res, "case", keyFieldsToObjects);
+  // console.log("oldCase: %s", JSON.stringify(oldCase, null, 2));
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
-  // console.log(
-  //   "updated case tools_techniques_types: %s",
-  //   JSON.stringify(updatedCase.tools_techniques_types)
-  // );
+  //console.log("updated case: %s", JSON.stringify(updatedCase, null, 2));
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
@@ -405,6 +322,22 @@ async function getCaseHttp(req, res) {
   const article = await getCase(params);
   const staticText = getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
+}
+
+async function getEditStaticText(params) {
+  const lang = params.lang;
+  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+
+  staticText.authors = await listUsers();
+  staticText.cases = await listCases(lang);
+  staticText.methods = await listMethods(lang);
+  staticText.organizations = await listOrganizations(lang);
+
+  staticText = Object.assign({}, staticText, sharedFieldOptions);
+
+  staticText.labels = Object.assign({}, staticText.labels, articleText);
+
+  return staticText;
 }
 
 async function getCaseEditHttp(req, res) {

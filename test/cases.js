@@ -5,7 +5,9 @@ const {
   getMocks,
   getMocksAuth,
   example_case,
-  addBasicCase
+  getCase,
+  addBasicCase,
+  updateCase
 } = require("./data/helpers.js");
 const {
   getCaseEditHttp,
@@ -18,29 +20,22 @@ const {
 describe("Cases", () => {
   describe("Lookup", () => {
     it("finds case 100", async () => {
-      const { req, res, ret } = getMocks({ params: { thingid: 100 } });
-      await getCaseHttp(req, res);
-      const article = ret.body.article;
-      ret.body.OK.should.be.true;
+      const body = await getCase(100);
+      const article = body.article;
+      body.OK.should.be.true;
       article.id.should.equal(100);
     });
   });
   describe("Adding", () => {
     it("fails without authentication", async () => {
       const { req, res, ret } = getMocks({ body: example_case });
-      try {
-        await postCaseNewHttp(req, res);
-      } catch (err) {
-        err.should.have.status(401);
-      }
+      await postCaseNewHttp(req, res);
+      ret.body.OK.should.be.false;
     });
     it("fails without content", async () => {
-      try {
-        const { req, res, ret } = getMocksAuth({});
-        await postCaseNewHttp(req, res);
-      } catch (err) {
-        err.should.have.status(400);
-      }
+      const { req, res, ret } = getMocksAuth({});
+      await postCaseNewHttp(req, res);
+      ret.body.OK.should.be.false;
     });
     it("works with authentication", async () => {
       const body = await addBasicCase();
@@ -110,16 +105,11 @@ describe("Cases", () => {
       origCase.title.should.equal("First Title");
       origCase.body.should.equal("First Body");
       origCase.description.should.equal("First Description");
-      const { req, res, ret } = getMocksAuth({
-        params: { thingid: origCase.id },
-        body: {
-          title: "Second Title",
-          body: "Second Body",
-          description: "Second Description"
-        }
+      const body2 = await updateCase(origCase.id, {
+        title: "Second Title",
+        body: "Second Body",
+        description: "Second Description"
       });
-      await postCaseUpdateHttp(req, res);
-      const body2 = ret.body;
       const updatedCase = body2.article;
       updatedCase.title.should.equal("Second Title");
       updatedCase.body.should.equal("Second Body");
@@ -139,16 +129,9 @@ describe("Cases", () => {
       origCase.general_issues[1].key.should.equal("education");
       origCase.general_issues[2].key.should.equal("environment");
       origCase.general_issues[3].key.should.equal("planning");
-      const { req, res, ret } = getMocksAuth({
-        params: { thingid: origCase.id },
-        body: {
-          general_issues: [
-            { key: "arts", value: "Arts, Culture, & Recreation" }
-          ]
-        }
-      });
-      await postCaseUpdateHttp(req, res);
-      const updatedCase = ret.body.article;
+      const updatedCase = (await updateCase(origCase.id, {
+        general_issues: [{ key: "arts", value: "Arts, Culture, & Recreation" }]
+      })).article;
       updatedCase.general_issues.length.should.equal(1);
       updatedCase.general_issues[0].key.should.equal("arts");
     });

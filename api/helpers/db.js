@@ -6,9 +6,10 @@ const options = {
   promiseLib: promise, // use bluebird as promise library
   capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
 };
-if (process.env.LOG_QUERY === "true") {
-  options.query = evt => console.info("Executing query %s", evt.query);
-}
+const fs = require("fs");
+//if (process.env.LOG_QUERY === "true") {
+options.query = evt => (process.env.LAST_QUERY = evt.query);
+//}
 const pgp = require("pg-promise")(options);
 const path = require("path");
 const log = require("winston");
@@ -29,24 +30,7 @@ try {
 }
 let db = pgp(config);
 
-let dbtagkeys;
-// let dbcasekeys;
-
-async function initKeys() {
-  // we're just getting the keys for validation, which are the same for
-  // every language, so hard-coding 'en' here is OK.
-  // dbcasekeys = (await db.one(`
-  //   SELECT to_json(array_agg(key)) AS keys
-  //   FROM localized_case_field_values
-  //   WHERE language = 'en';
-  // `)).keys;
-  dbtagkeys = (await db.one(`
-    SELECT to_json(array_agg(key)) as keys
-    FROM rotate_tags_localized('en') AS tagvalues
-    WHERE tagvalues.key <> 'language';
-  `)).keys;
-}
-initKeys().then(() => console.log("keys initialized")); // we'll need these when users submit data
+const dbtagkeys = JSON.parse(fs.readFileSync("api/helpers/data/tagkeys.json"));
 
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {
@@ -64,12 +48,38 @@ function ErrorReporter() {
         return fn(...args);
       } catch (e) {
         self.errors.push(e.message);
-        // console.trace("Capturing error to report to client: " + e.message);
+        console.trace("Capturing error to report to client: " + e.message);
         return e.message;
-        // console.trace(e);
       }
     };
   };
+}
+
+async function listUsers() {
+  return (await db.one(
+    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
+  )).authors;
+}
+
+async function listCases(lang) {
+  return (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
+    { lang }
+  )).cases;
+}
+
+async function listMethods(lang) {
+  return (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
+    { lang }
+  )).methods;
+}
+
+async function listOrganizations(lang) {
+  return (await db.one(
+    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
+    { lang }
+  )).organizations;
 }
 
 // as.number, enhances existing as.number to cope with numbers as strings
@@ -230,6 +240,13 @@ function casekeys(objList, group) {
   }
 }
 
+const methodkey = casekeyflat;
+const methodkeys = casekeys;
+
+const organizationkey = casekey;
+const organizationkeyflat = casekeyflat;
+const organizationkeys = casekeys;
+
 function tagkey(obj) {
   if (obj === undefined) {
     throw new Error("Object cannot be undefined for tag");
@@ -371,6 +388,10 @@ const as = Object.assign({}, pgp.as, {
   casekey,
   casekeyflat,
   casekeys,
+  methodkey,
+  methodkeys,
+  organizationkey,
+  organizationkeys,
   richtext,
   tagkeys,
   text,
@@ -408,12 +429,18 @@ const LIST_TITLES = sql("../sql/list_titles.sql");
 const LIST_SHORT = sql("../sql/list_short.sql");
 const UPDATE_USER = sql("../sql/update_user.sql");
 const UPDATE_CASE = sql("../sql/update_case.sql");
+const UPDATE_METHOD = sql("../sql/update_method.sql");
+const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
 
 module.exports = {
   db,
   as,
   helpers,
   pgp,
+  listUsers,
+  listCases,
+  listMethods,
+  listOrganizations,
   INSERT_LOCALIZED_TEXT,
   UPDATE_NOUN,
   INSERT_AUTHOR,
@@ -435,6 +462,8 @@ module.exports = {
   LIST_SHORT,
   UPDATE_USER,
   UPDATE_CASE,
+  UPDATE_METHOD,
+  UPDATE_ORGANIZATION,
   CASE_EDIT_BY_ID,
   CASE_VIEW_BY_ID,
   METHOD_EDIT_BY_ID,

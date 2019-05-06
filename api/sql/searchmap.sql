@@ -27,7 +27,7 @@ SELECT
   texts.title,
   texts.description,
   substring(texts.body for 500) AS body,
-  to_json(COALESCE(images, '{}')) AS images,
+  to_json(COALESCE(photos, '{}')) AS photos,
   to_json(COALESCE(videos, '{}')) AS videos,
   updated_date
 FROM
