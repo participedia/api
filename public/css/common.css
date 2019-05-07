@@ -32,6 +32,11 @@ html {
   visibility: hidden;
 }
 
+.no-focus-outline *:focus,
+.no-focus-outline *:focus {
+  outline: none;
+}
+
 /* Typography */
 body {
   font-size: 1rem; /* 16px */
