@@ -1,11 +1,9 @@
 <li
   class="article-card"
-  data-featured="{{featured}}"
-  {{#if latitude}}
-    data-lat-lng="{{latitude}}, {{longitude}}"
-  {{/if}}
+  data-type="{{type}}"
+  data-i18n-type="{{toUpperCase (t type)}}"
 >
-  <a href="/{{type}}/{{id}}">
+  <a href="/{{type}}/{{id}}" class="js-article-link">
     <div
       class="article-card-img"
       style="background-image: url('{{getFirstImageForArticle this}}')"
@@ -19,7 +17,10 @@
         {{#if description}}
           <p class="article-card-description">{{description}}</p>
         {{/if}}
-        <p class="small">{{t "Submitted"}} {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
+        <p class="small">
+          {{t "Submitted"}}
+          <span class="js-article-date">{{formatDate this "updated_date" "MMMM M, YYYY"}}</span>
+        </p>
       </div>
       <a
         href="#"
