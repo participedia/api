@@ -326,7 +326,7 @@ async function getCaseHttp(req, res) {
 
 async function getEditStaticText(params) {
   const lang = params.lang;
-  let staticText = (await db.one(CASE_EDIT_STATIC, params)).static;
+  let staticText = {};
 
   staticText.authors = await listUsers();
   staticText.cases = await listCases(lang);
@@ -334,8 +334,6 @@ async function getEditStaticText(params) {
   staticText.organizations = await listOrganizations(lang);
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
-
-  staticText.labels = Object.assign({}, staticText.labels, articleText);
 
   return staticText;
 }
