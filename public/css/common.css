@@ -1,6 +1,7 @@
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Medium.ttf");
+  src: url("/fonts/FaktWeb-Medium.woff2") format("woff2"),
+       url("/fonts/FaktWeb-Medium.woff") format("woff");
   font-weight: 800;
   font-style: bold;
   font-display: swap;
@@ -8,7 +9,8 @@
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Normal.ttf");
+  src: url("/fonts/FaktWeb-Normal.woff2") format("woff2"),
+       url("/fonts/FaktWeb-Normal.woff") format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -16,7 +18,8 @@
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Blond.ttf");
+  src: url("/fonts/FaktWeb-Blond.woff2") format("woff2"),
+       url("/fonts/FaktWeb-Blond.woff") format("woff");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
