@@ -141,6 +141,7 @@ const searchFilters = {
     const xPosOfCurrentButton =
       currentButton.getBoundingClientRect().x + currentButton.getBoundingClientRect().width;
     const shouldRenderOnRight = window.innerWidth - xPosOfCurrentButton < 300;
+    const isMobile = window.innerWidth < 801;
 
     // toggle current popover if you click the same chip button again
     if (currentPopOverEl.classList.contains("show-filter-list-popover")) {
@@ -154,7 +155,7 @@ const searchFilters = {
       // show popover
       currentButton.classList.add("search-filters-chip-open")
       currentPopOverEl.classList.add("show-filter-list-popover");
-      if (shouldRenderOnRight) {
+      if (shouldRenderOnRight && !isMobile) {
         const popOverOffset = currentPopOverEl.clientWidth - currentButton.clientWidth;
         currentPopOverEl.style.marginLeft = `-${popOverOffset}px`;
       }
