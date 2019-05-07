@@ -1,4 +1,10 @@
-import { updateUrlParams } from "./utils/utils.js";
+import { updateUrlParams, removeUrlParams } from "./utils/utils.js";
+import searchFiltersList from "../../api/helpers/search-filters-list.js";
+
+const SEARCH_FILTER_KEYS = [];
+searchFiltersList.case.forEach(item => {
+  item.fieldNameKeys.forEach(key => SEARCH_FILTER_KEYS.push(key));
+});
 
 const tabsWithCards = {
   init() {
@@ -24,8 +30,7 @@ const tabsWithCards = {
     // update url param to indicate current tab
     this.tabInputEls.forEach(el => {
       el.addEventListener("click", event => {
-        updateUrlParams("selectedCategory", event.target.id);
-        window.location.href = window.location.href;
+        this.updateParamAndGo("selectedCategory", event.target.id);
       });
     });
   },
@@ -47,9 +52,17 @@ const tabsWithCards = {
       // toggle checked attr on inputs
       this.tabInputEls.forEach(el => el.checked = el.id === newTabId);
       // update url
-      updateUrlParams("selectedCategory", newTabId);
-      window.location.href = window.location.href;
+      this.updateParamAndGo("selectedCategory", newTabId);
     });
+  },
+
+  updateParamAndGo(key, value) {
+    // remove search filter params when changing tabs
+    removeUrlParams(SEARCH_FILTER_KEYS);
+
+    // update new param
+    updateUrlParams(key, value);
+    window.location.href = window.location.href;
   },
 
   initSortBy() {
@@ -59,8 +72,7 @@ const tabsWithCards = {
       if (link) {
         event.preventDefault();
         const sortBy = link.getAttribute("data-sortby");
-        updateUrlParams("sortby", sortBy);
-        window.location.href = window.location.href;
+        this.updateParamAndGo("sortby", sortBy);
       }
     });
   },

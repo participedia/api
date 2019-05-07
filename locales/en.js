@@ -988,5 +988,9 @@
   "evaluation_reports_attribution_instructional": "Who is the original owner or creator of this file?",
   "evaluation_reports_attribution_placeholder": "Owner or creator",
   "evaluation_reports_title_instructional": "Provide a title or description of this file in 10 words or less.",
-  "evaluation_reports_title_placeholder": "Title or description"
+  "evaluation_reports_title_placeholder": "Title or description",
+  "country_label": "Country",
+  "Clear Category": "Clear Category",
+  "Filter": "Filter",
+  "Clear All": "Clear All"
 }

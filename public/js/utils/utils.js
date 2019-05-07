@@ -20,6 +20,27 @@ function updateUrlParams(key, value) {
   history.pushState({}, "", `${basePath}?${newParamsString.slice(0, -1)}`);
 }
 
+function removeUrlParams(keysToRemove) {
+  if (!window.location.search) return;
+  const paramsToKeep = {};
+  window.location.search
+    .split("?")[1].split("&").map(p => p.split("="))
+    .forEach(param => {
+      if (!keysToRemove.includes(param[0])) {
+        paramsToKeep[param[0]] = param[1];
+      }
+    });
+
+  let newParamsString = "";
+  Object.keys(paramsToKeep).forEach(key => {
+    newParamsString += `${key}=${paramsToKeep[key]}&`;
+  });
+
+  // update url without reloading page
+  const basePath = window.location.origin + window.location.pathname;
+  history.pushState({}, "", `${basePath}?${newParamsString.slice(0, -1)}`);
+}
+
 function xhrReq(action, url, data = {}, successCB = null, errorCB = null) {
   const errorCodes = [500, 400, 401];
   const request = new XMLHttpRequest();
@@ -36,6 +57,7 @@ function xhrReq(action, url, data = {}, successCB = null, errorCB = null) {
 }
 
 export {
+  removeUrlParams,
   updateUrlParams,
   xhrReq,
 }

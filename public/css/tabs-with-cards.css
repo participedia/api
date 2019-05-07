@@ -8,20 +8,21 @@
   display: none;
 }
 
-.tab-container input {
+.tab-container-input {
   display: none;
 }
 
-.tab-container label {
+.tab-container-label {
   padding: .5rem;
   display: inline-block;
   text-decoration: none;
   border-bottom: 4px solid transparent;
   cursor: pointer;
+  font-weight: 600;
 }
 
-.tab-container label:hover,
-.tab-container input:checked + label {
+.tab-container-label:hover,
+.tab-container-input:checked + .tab-container-label {
   border-bottom: 4px solid #ec2024;
 }
 
@@ -219,7 +220,7 @@
 
 .dropdown-button-container .dropdown-button-items {
   opacity: 0;
-  z-index: 10;
+  z-index: -10;
   position: absolute;
   left: -120px;
   background-color: #fff;

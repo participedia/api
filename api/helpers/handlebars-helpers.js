@@ -3,6 +3,8 @@ const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
 const sharedFieldOptions = require("./shared-field-options.js");
+const searchFiltersList = require("./search-filters-list.js");
+const countries = require("./countries.js");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -506,4 +508,17 @@ module.exports = {
   getYearFromDate(date, format) {
     return moment(date).year();
   },
+
+  // search filters
+  searchFiltersSections(type) {
+    return searchFiltersList[type];
+  },
+
+  getOptionsForFilterKey(key) {
+    if (key === "country") {
+      return countries;
+    } else {
+      return sharedFieldOptions[key];
+    }
+  }
 };
