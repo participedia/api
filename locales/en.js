@@ -755,7 +755,6 @@
   "organizers_sectionlabel": "Organizers",
   "resources_sectionlabel": "Resources",
   "evidence_sectionlabel": "Evidence of Impact",
-  "title_label": "Title of Case",
   "title_instructional": "Give this public participation project or event a descriptive title in 10 words or less. For example, “Brazilian Dialogue on Diversity\" or \"New York City Public Issues Forum.\"",
   "title_placeholder": "Enter title in 10 words or less",
   "general_issues_label": "General Issues",
@@ -988,5 +987,8 @@
   "evaluation_reports_attribution_instructional": "Who is the original owner or creator of this file?",
   "evaluation_reports_attribution_placeholder": "Owner or creator",
   "evaluation_reports_title_instructional": "Provide a title or description of this file in 10 words or less.",
-  "evaluation_reports_title_placeholder": "Title or description"
+  "evaluation_reports_title_placeholder": "Title or description",
+  "Title of Method": "Title of Method",
+  "Title of Organization": "Title of Organization",
+  "Title of Case": "Title of Case"
 }

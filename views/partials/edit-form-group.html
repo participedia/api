@@ -3,7 +3,9 @@
   {{#if quick-submit}}data-quick-submit="{{quick-submit}}"{{/if}}
 >
   <label for="{{name}}" {{#if is_required}}data-required={{is_required}}{{/if}}>
-    {{#if (label name)}}
+    {{#if labelKey}}
+      {{t labelKey}}
+    {{else if (label name)}}
       {{label name}}
     {{/if}}
   </label>
