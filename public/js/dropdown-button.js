@@ -13,11 +13,13 @@ const dropdownButton = {
         if (isOpen) {
           // close items
           itemsContainerEl.style.opacity = 0;
+          itemsContainerEl.style.zIndex = -10;
           svgEl.style.transform = "rotate(0)";
           containerEl.setAttribute("state", "closed");
         } else {
           // open items
           itemsContainerEl.style.opacity = 1;
+          itemsContainerEl.style.zIndex = 10;
           svgEl.style.transform = "rotate(180deg)";
           containerEl.setAttribute("state", "open");
         }
