@@ -228,7 +228,7 @@ function getUpdatedOrganization(
   ].map(key => cond(key, as.text));
   ["latitude", "longitude"].map(key => cond(key, as.float));
   // key
-  ["sector"].map(key => cond(key, as.organizationkey));
+  ["sector"].map(key => cond(key, as.organizationkeyflat));
   // list of keys
   [
     "scope_of_influence",
