@@ -4,7 +4,7 @@
     class="edit-multi-select js-edit-multi-select"
     {{#if ranked}}data-ranked="true"{{/if}}
   >
-    <option value="">{{placeholder name}}</option>
+    <option value="">{{placeholder article name}}</option>
     {{#each (getArticleOptions static name)}}
       <option
         value="{{this.key}}"

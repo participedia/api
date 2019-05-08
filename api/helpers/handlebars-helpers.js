@@ -48,13 +48,13 @@ const i18n = (key, context) => context && context.data && context.data.root.__(k
 
 module.exports = {
   // transalation helpers
-  label: (name, context) => i18n(`${name}_label`, context),
+  label: (article, name, context) => i18n(`${article.type}_${name}_label`, context),
 
-  info: (name, context) => i18n(`${name}_info`, context),
+  info: (article, name, context) => i18n(`${article.type}_${name}_info`, context),
 
-  instructional: (name, context) => i18n(`${name}_instructional`, context),
+  instructional: (article, name, context) => i18n(`${article.type}_${name}_instructional`, context),
 
-  placeholder: (name, context) => i18n(`${name}_placeholder`, context),
+  placeholder: (article, name, context) => i18n(`${article.type}_${name}_placeholder`, context),
 
   t: (key, context) => i18n(key, context),
 
