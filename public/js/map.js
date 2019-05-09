@@ -99,7 +99,7 @@ const map = {
   },
 
   getCachedResults(key) {
-    const CACHE_TIMEOUT = Date.now() - 3600000; // 1 hour
+    const CACHE_TIMEOUT = Date.now() - 300000; // 5mins === 300000ms
     const data = window.sessionStorage.getItem(key);
 
     if(!data) return null;
