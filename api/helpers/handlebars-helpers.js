@@ -158,6 +158,23 @@ module.exports = {
     }
   },
 
+  getArrayOfValues: (article, name) => {
+    const arrayOfItems = article[name];
+    if (!arrayOfItems || arrayOfItems.length === 0) return;
+    const value = (key) => {
+      const option = SHARED_FIELD_OPTIONS[name].filter(x => x.key === key)[0];
+      if (!option) return key;
+      return option.value;
+    };
+    return arrayOfItems.map(item => {
+      if (typeof item === "string") {
+        return value(item);
+      } else {
+        return value(item.key);
+      }
+    });
+  },
+
   getvalue: (article, name) => {
     const item = article[name];
     if (!item) return;
