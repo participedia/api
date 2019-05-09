@@ -19,8 +19,16 @@
     {{#if max}}data-max="{{max}}"{{/if}}
   >
     {{#each (getOptions article name)}}
-      {{#if (isSelectedInArray ../article ../name this.key)}}
-        {{#if (isEqual ../name "specific_methods_tools_techniques")}}
+      {{#if (isSelectedInArray ../article ../name this)}}
+        {{#if (isString this)}}
+          {{> edit-multi-select-li
+            name=../name
+            key=this
+            value=(getValueForKey ../name this)
+            ranked=../ranked
+            index=@index
+          }}
+        {{else if (isEqual ../name "specific_methods_tools_techniques")}}
           {{!--
             specific_methods_tools_techniques object is shaped like
             {id: "1", type: "method", title: "My Title" }

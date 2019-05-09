@@ -2,7 +2,7 @@ const moment = require("moment");
 const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
-const sharedFieldOptions = require("./shared-field-options.js");
+const SHARED_FIELD_OPTIONS = require("./shared-field-options.js");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -139,7 +139,7 @@ module.exports = {
       key = article[name];
     }
 
-    const selectedItemInArray = sharedFieldOptions[name].filter(options => options.key === key);
+    const selectedItemInArray = SHARED_FIELD_OPTIONS[name].filter(options => options.key === key);
     if (selectedItemInArray.length > 0) {
       if (selectedItemInArray[0].value !== "") {
         return selectedItemInArray[0].value;
@@ -204,11 +204,16 @@ module.exports = {
     return article[name] && article[name][key];
   },
 
-  isSelectedInArray: (article, name, optionKey) => {
+  isSelectedInArray: (article, name, option) => {
     const options = article[name];
     if (options && options.length > 0) {
       return options.find(item => {
-        return item && item.key === optionKey;
+        if (!item) return;
+        if (typeof item === "string") {
+          return item === option;
+        } else {
+          return item.key === option.key;
+        }
       });
     }
   },
@@ -218,6 +223,12 @@ module.exports = {
     if (options) {
       return options.key === optionKey;
     }
+  },
+
+  getValueForKey(name, optionKey) {
+    const option = SHARED_FIELD_OPTIONS[name].filter(x => x.key === optionKey);
+    if (!option[0]) return;
+    return option[0].value;
   },
 
   getOptions: (article, name) => {
@@ -488,6 +499,10 @@ module.exports = {
 
   isEqual(arg1, arg2) {
     return arg1 === arg2;
+  },
+
+  isString(x) {
+    return typeof x === "string";
   },
 
   sanitizeName(name) {
