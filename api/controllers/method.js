@@ -231,7 +231,8 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "public_spectrum",
     "open_limited",
     "recruitment_method",
-    "level_polarization"
+    "level_polarization",
+    "level_complexity"
   ].map(key => cond(key, as.methodkey));
   // integers
   ["number_of_participants"].map(key => cond(key, as.integer));
