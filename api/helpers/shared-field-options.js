@@ -1,3 +1,44 @@
+const methodTypes = [
+  { key: "collaborative", value: "Collaborative approaches" },
+  {
+    key: "community",
+    value: "Community development, organizing, and mobilization"
+  },
+  { key: "deliberative", value: "Deliberative and dialogic process" },
+  { key: "direct", value: "Direct democracy" },
+  { key: "evaluation", value: "Evaluation, oversight, and social auditing" },
+  { key: "experiential", value: "Experiential and immersive education" },
+  { key: "informal", value: "Informal conversation spaces" },
+  { key: "informal_participation", value: "Informal participation" },
+  { key: "internal", value: "Internal management or organization" },
+  { key: "longterm", value: "Long-term civic bodies" },
+  { key: "participantled", value: "Participant-led meetings" },
+  { key: "participatory", value: "Participatory arts" },
+  { key: "planning", value: "Planning" },
+  { key: "protest", value: "Protest" },
+  { key: "public", value: "Public budgeting" },
+  { key: "public_meetings", value: "Public meetings" },
+  { key: "research", value: "Research or experimental method" }
+];
+
+const toolsTechniquesTypes = [
+  { key: "manage", value: "Manage and/or allocate money or resources" },
+  { key: "collect", value: "Collect, analyse and/or solicit feedback" },
+  {
+    key: "facilitate",
+    value: "Facilitate dialogue, discussion, and/or deliberation"
+  },
+  { key: "facilitate_decisionmaking", value: "Facilitate decision-making" },
+  { key: "legislation", value: "Legislation, policy, or frameworks" },
+  { key: "recruit", value: "Recruit or select participants" },
+  { key: "plan", value: "Plan, map and/or visualise options and proposals" },
+  {
+    key: "propose",
+    value: "Propose and/or develop policies, ideas, and recommendations"
+  },
+  { key: "inform", value: "Inform, educate and/or raise awareness" }
+];
+
 module.exports = {
   general_issues: [
     {
@@ -224,28 +265,8 @@ module.exports = {
     { key: "online", value: "Online" },
     { key: "both", value: "Both" }
   ],
-  method_types: [
-    { key: "collaborative", value: "Collaborative approaches" },
-    {
-      key: "community",
-      value: "Community development, organizing, and mobilization"
-    },
-    { key: "deliberative", value: "Deliberative and dialogic process" },
-    { key: "direct", value: "Direct democracy" },
-    { key: "evaluation", value: "Evaluation, oversight, and social auditing" },
-    { key: "experiential", value: "Experiential and immersive education" },
-    { key: "informal", value: "Informal conversation spaces" },
-    { key: "informal_participation", value: "Informal participation" },
-    { key: "internal", value: "Internal management or organization" },
-    { key: "longterm", value: "Long-term civic bodies" },
-    { key: "participantled", value: "Participant-led meetings" },
-    { key: "participatory", value: "Participatory arts" },
-    { key: "planning", value: "Planning" },
-    { key: "protest", value: "Protest" },
-    { key: "public", value: "Public budgeting" },
-    { key: "public_meetings", value: "Public meetings" },
-    { key: "research", value: "Research or experimental method" }
-  ],
+  type_method: methodTypes,
+  method_types: methodTypes,
   purposes: [
     {
       key: "make",
@@ -421,23 +442,8 @@ module.exports = {
     { key: "women", value: "Women" },
     { key: "youth", value: "Youth" }
   ],
-  tools_techniques_types: [
-    { key: "manage", value: "Manage and/or allocate money or resources" },
-    { key: "collect", value: "Collect, analyse and/or solicit feedback" },
-    {
-      key: "facilitate",
-      value: "Facilitate dialogue, discussion, and/or deliberation"
-    },
-    { key: "facilitate_decisionmaking", value: "Facilitate decision-making" },
-    { key: "legislation", value: "Legislation, policy, or frameworks" },
-    { key: "recruit", value: "Recruit or select participants" },
-    { key: "plan", value: "Plan, map and/or visualise options and proposals" },
-    {
-      key: "propose",
-      value: "Propose and/or develop policies, ideas, and recommendations"
-    },
-    { key: "inform", value: "Inform, educate and/or raise awareness" }
-  ],
+  tools_techniques_types: toolsTechniquesTypes,
+  type_tool: toolsTechniquesTypes,
   facilitator_training: [
     { key: "professional", value: "Professional Facilitators" },
     { key: "trained", value: "Trained, Nonprofessional Facilitators" },
