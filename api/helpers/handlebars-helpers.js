@@ -48,13 +48,25 @@ const i18n = (key, context) => context && context.data && context.data.root.__(k
 
 module.exports = {
   // transalation helpers
-  label: (article, name, context) => i18n(`${article.type}_${name}_label`, context),
+  label: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_label`, context);
+  },
 
-  info: (article, name, context) => i18n(`${article.type}_${name}_info`, context),
+  info: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_info`, context);
+  },
 
-  instructional: (article, name, context) => i18n(`${article.type}_${name}_instructional`, context),
+  instructional: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_instructional`, context);
+  },
 
-  placeholder: (article, name, context) => i18n(`${article.type}_${name}_placeholder`, context),
+  placeholder: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_placeholder`, context);
+  },
 
   t: (key, context) => i18n(key, context),
 
