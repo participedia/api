@@ -233,10 +233,11 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "recruitment_method",
     "level_polarization"
   ].map(key => cond(key, as.methodkey));
+  // integers
+  ["number_of_participants"].map(key => cond(key, as.integer));
   // list of keys
   [
     "method_types",
-    "number_of_participants",
     "scope_of_influence",
     "participants_interactions",
     "decision_methods",
