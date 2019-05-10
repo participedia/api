@@ -472,7 +472,7 @@
   "method_edit_level_complexity_instructional": "Select the level of complexity this method can handle.",
   "method_edit_level_complexity_placeholder": "Select level of complexity",
   "method_view_level_complexity_label": "Level of Complexity This Method Can Handle",
-    "case_edit_title_label": "Title of Case",
+  "case_edit_title_label": "Title of Case",
   "case_edit_title_instructional": "Give this public participation project or event a descriptive title in 10 words or less. For example, “Brazilian Dialogue on Diversity\" or \"New York City Public Issues Forum.\"",
   "case_edit_title_placeholder": "Enter title in 10 words or less",
   "case_view_title_label": "Title of Case",
@@ -706,5 +706,10 @@
   "case_edit_evaluation_links_title_instructional": "Provide a title or description of this linked content in 10 words or less.",
   "case_edit_evaluation_links_title_placeholder": "Title or description",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "Search": "Search",
+  "add_another_link": "Add another link",
+  "type_purpose_sectionlabel": "Type & Purpose",
+  "suitable_for_sectionlabel": "Suitable For",
+  "organization_view_links_label": "Links"
 }
