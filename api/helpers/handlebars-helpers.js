@@ -252,10 +252,10 @@ module.exports = {
     }
   },
 
-  getValueForKey(name, optionKey) {
+  getEditValueForKey(name, optionKey) {
     const option = SHARED_FIELD_OPTIONS[name].filter(x => x.key === optionKey);
     if (!option[0]) return;
-    return option[0].value;
+    return option[0].longValue || option[0].value;
   },
 
   getOptions: (article, name) => {

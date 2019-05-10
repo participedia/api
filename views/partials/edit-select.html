@@ -6,7 +6,11 @@
         value="{{this.key}}"
         {{#if (isEqual ../selectedValue this.key)}}selected{{/if}}
       >
-        {{this.value}}
+        {{#if this.longValue}}
+          {{this.longValue}}
+        {{else}}
+          {{this.value}}
+        {{/if}}
       </option>
     {{/each}}
   </select>
