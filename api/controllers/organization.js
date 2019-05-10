@@ -272,6 +272,7 @@ async function getOrganizationNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
+router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 router.post("/new", requireAuthenticatedUser(), postOrganizationNewHttp);
 router.post(
   "/:thingid",
@@ -284,7 +285,6 @@ router.get(
   requireAuthenticatedUser(),
   getOrganizationEditHttp
 );
-router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 
 module.exports = {
   organization: router,
