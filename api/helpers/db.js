@@ -403,12 +403,9 @@ const as = Object.assign({}, pgp.as, {
 
 const helpers = pgp.helpers;
 
-const CASE_EDIT_BY_ID = sql("../sql/case_edit_by_id.sql");
-const CASE_VIEW_BY_ID = sql("../sql/case_view_by_id.sql");
-const METHOD_EDIT_BY_ID = sql("../sql/method_edit_by_id.sql");
-const METHOD_VIEW_BY_ID = sql("../sql/method_view_by_id.sql");
-const ORGANIZATION_EDIT_BY_ID = sql("../sql/organization_edit_by_id.sql");
-const ORGANIZATION_VIEW_BY_ID = sql("../sql/organization_view_by_id.sql");
+const CASE_BY_ID = sql("../sql/case_by_id.sql");
+const METHOD_BY_ID = sql("../sql/method_view_by_id.sql");
+const ORGANIZATION_BY_ID = sql("../sql/organization_view_by_id.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
