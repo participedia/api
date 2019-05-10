@@ -8,7 +8,8 @@ WITH shorts AS (
       type,
       COALESCE(photos, '{}'),
       post_date,
-      updated_date)::object_short)
+      updated_date,
+      false)::object_short)
   FROM things, localized_texts
   WHERE things.id = localized_texts.thingid AND
         things.hidden = false AND
