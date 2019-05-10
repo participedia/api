@@ -40,6 +40,7 @@ SELECT
   to_json(COALESCE(things.photos, '{}')) AS photos,
   to_json(COALESCE(things.videos, '{}')) AS videos,
   things.updated_date,
+  things.post_date,
   bookmarked(things.type, things.id, ${userId}),
   total_selections.total,
   all_selections.rank
