@@ -49,6 +49,18 @@ req.__("title_label")
 }
 ```
 
+### Dynamic keys
+
+values for field options can be retrieved using this key format:
+`name:${fieldName}-key:${fieldOptionKey}`
+eg: name:implementers_of_change-key:experts
+
+labels, instructional text and placeholders for articles are in this format:
+`${article.type}_${view}_${name}_label`
+eg: case_edit_title_label
+eg: case_view_title_label
+
+
 ### Working with PhraseApp
 
 #### When keys and translations are changed via code

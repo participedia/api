@@ -25,4 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
   contactHelpFaqWidget.init();
   headerProfileDropdownMenu.init();
   languageSelect.init();
+
+  // Listen to tab events to enable outlines (accessibility improvement)
+  document.body.addEventListener("keyup", function(e) {
+    if (e.which === 9) { /* tab key */
+      document.documentElement.classList.remove("no-focus-outline");
+    }
+  });
 });

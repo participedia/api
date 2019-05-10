@@ -25,6 +25,7 @@ WITH all_featured  AS (
     to_json(COALESCE(photos, '{}')) AS photos,
     to_json(COALESCE(videos, '{}')) as videos,
     updated_date,
+    post_date,
     bookmarked(type, id, ${userId})
   FROM
     things,

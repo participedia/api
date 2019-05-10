@@ -25,7 +25,8 @@ SELECT
   longitude,
   to_json(COALESCE(photos, '{}')) AS photos,
   to_json(COALESCE(videos, '{}')) AS videos,
-  updated_date
+  updated_date,
+  post_date
 FROM
   things,
   get_localized_texts(things.id, ${language}) AS texts

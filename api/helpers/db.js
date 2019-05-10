@@ -391,6 +391,7 @@ const as = Object.assign({}, pgp.as, {
   methodkey,
   methodkeys,
   organizationkey,
+  organizationkeyflat,
   organizationkeys,
   richtext,
   tagkeys,

@@ -9,7 +9,7 @@
     {{> edit-richtext
       name="body"
       value=(getvalue article "body")
-      placeholderText=(placeholder static "body")
+      placeholderText=(placeholder article "body")
     }}
     {{> edit-multi-select name="tags" }}
   </fieldset>

@@ -228,7 +228,7 @@ function getUpdatedOrganization(
   ].map(key => cond(key, as.text));
   ["latitude", "longitude"].map(key => cond(key, as.float));
   // key
-  ["sector"].map(key => cond(key, as.organizationkey));
+  ["sector"].map(key => cond(key, as.organizationkeyflat));
   // list of keys
   [
     "scope_of_influence",
@@ -272,6 +272,7 @@ async function getOrganizationNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
+router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 router.post("/new", requireAuthenticatedUser(), postOrganizationNewHttp);
 router.post(
   "/:thingid",
@@ -284,7 +285,6 @@ router.get(
   requireAuthenticatedUser(),
   getOrganizationEditHttp
 );
-router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 
 module.exports = {
   organization: router,
