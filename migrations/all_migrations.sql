@@ -78,3 +78,5 @@
 \include 'migrations/migration_034.sql'
 -- migrate organizations to new model and clean up
 \include 'migrations/migration_035.sql'
+-- update object_short to include post_date and bookmarked
+\include 'migrations/migration_036.sql'
