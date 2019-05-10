@@ -36,7 +36,11 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 async function getEditStaticText(params) {
   let staticText = {};
-  staticText.authors = await listUsers();
+  try {
+    staticText.authors = await listUsers();
+  } catch (e) {
+    console.error("Error reading users");
+  }
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
@@ -275,10 +279,11 @@ async function getMethodNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
-router.get("/:thingid/", getMethodHttp);
 router.get("/:thingid/edit", requireAuthenticatedUser(), getMethodEditHttp);
 router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
 router.post("/new", requireAuthenticatedUser(), postMethodNewHttp);
+// these have to come *after* /new or BAD THINGS HAPPEN
+router.get("/:thingid/", getMethodHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
 
 module.exports = {
