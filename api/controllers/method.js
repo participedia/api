@@ -238,15 +238,14 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "level_polarization",
     "level_complexity"
   ].map(key => cond(key, as.methodkey));
-  // integers
-  ["number_of_participants"].map(key => cond(key, as.integer));
   // list of keys
   [
     "method_types",
     "scope_of_influence",
     "participants_interactions",
     "decision_methods",
-    "if_voting"
+    "if_voting",
+    "number_of_participants"
   ].map(key => cond(key, as.methodkeys));
   // TODO save bookmarked on user
   return [updatedMethod, er];

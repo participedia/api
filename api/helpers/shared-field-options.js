@@ -495,7 +495,7 @@ module.exports = {
   sector: ["for_profit", "government", "non_profit_non_gov", "higher_ed"],
   level_polarization: ["not", "low", "moderate", "polarized", "high"],
   level_complexity: ["very_low", "low", "moderate", "high", "very_high"],
-  number_participants: [
+  number_of_participants: [
     "individuals",
     "small",
     "medium",
