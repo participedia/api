@@ -6,11 +6,7 @@
         value="{{this.key}}"
         {{#if (isEqual ../selectedValue this.key)}}selected{{/if}}
       >
-        {{#if this.longValue}}
-          {{this.longValue}}
-        {{else}}
-          {{this.value}}
-        {{/if}}
+        {{i18nEditFieldValue ../name this.key}}
       </option>
     {{/each}}
   </select>

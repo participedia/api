@@ -112,6 +112,20 @@ module.exports = {
     return i18n(`${article.type}_${view}_${name}_${attr}_instructional`, context);
   },
 
+  i18nEditFieldValue: (name, key, context) => {
+    const defaultKey = `name:${name}-key:${key}`;
+    const longKey = `${defaultKey}-longValue`;
+    const i18nValue = i18n(defaultKey, context);
+    const i18nLongValue = i18n(longKey, context);
+
+    // if there is no value for the long key, it will just return the key, so if the value doesn't match the key, then return that.
+    if (i18nLongValue !== longKey) {
+      return i18nLongValue;
+    } else {
+      return i18nValue;
+    }
+  },
+
   // article helpers
   getFirstImageForArticle: (article) => {
     if (article.photos && article.photos.length > 0) {
@@ -135,7 +149,7 @@ module.exports = {
     return value && value.constructor === Array;
   },
 
-  getArticleSelectValue: (article, name) => {
+  getArticleSelectValue: (article, name, context) => {
     if (!article[name]) return null;
 
     // some article select fields have values like  { key: "value"},
@@ -149,12 +163,7 @@ module.exports = {
       key = article[name];
     }
 
-    const selectedItemInArray = SHARED_FIELD_OPTIONS[name].filter(options => options.key === key);
-    if (selectedItemInArray.length > 0) {
-      if (selectedItemInArray[0].value !== "") {
-        return selectedItemInArray[0].value;
-      }
-    }
+    return i18n(`name:${name}-key:${key}`, context);
   },
 
   getArticleSelectKey: (article, name) => {
@@ -168,19 +177,15 @@ module.exports = {
     }
   },
 
-  getArrayOfValues: (article, name) => {
+  getArrayOfValues: (article, name, context) => {
     const arrayOfItems = article[name];
     if (!arrayOfItems || arrayOfItems.length === 0) return;
-    const value = (key) => {
-      const option = SHARED_FIELD_OPTIONS[name].filter(x => x.key === key)[0];
-      if (!option) return key;
-      return option.value;
-    };
+
     return arrayOfItems.map(item => {
       if (typeof item === "string") {
-        return value(item);
+        return i18n(`name:${name}-key:${item}`, context);
       } else {
-        return value(item.key);
+        return i18n(`name:${name}-key:${item.key}`, context);
       }
     });
   },
@@ -250,12 +255,6 @@ module.exports = {
     if (options) {
       return options.key === optionKey;
     }
-  },
-
-  getEditValueForKey(name, optionKey) {
-    const option = SHARED_FIELD_OPTIONS[name].filter(x => x.key === optionKey);
-    if (!option[0]) return;
-    return option[0].longValue || option[0].value;
   },
 
   getOptions: (article, name) => {

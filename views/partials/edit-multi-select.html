@@ -9,11 +9,7 @@
       <option
         value="{{this.key}}"
       >
-        {{#if this.longValue}}
-          {{this.longValue}}
-        {{else}}
-          {{this.value}}
-        {{/if}}
+        {{i18nEditFieldValue ../name this.key}}
       </option>
     {{/each}}
   </select>
@@ -28,7 +24,7 @@
           {{> edit-multi-select-li
             name=../name
             key=this
-            value=(getEditValueForKey ../name this)
+            value=(i18nEditFieldValue ../name this)
             ranked=../ranked
             index=@index
           }}
@@ -50,7 +46,7 @@
           {{> edit-multi-select-li
             name=../name
             key=this.key
-            value=(getEditValueForKey ../name this.key)
+            value=(i18nEditFieldValue ../name this.key)
             ranked=../ranked
             index=@index
           }}
