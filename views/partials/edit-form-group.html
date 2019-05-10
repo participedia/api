@@ -3,11 +3,9 @@
   {{#if quick-submit}}data-quick-submit="{{quick-submit}}"{{/if}}
 >
   <label for="{{name}}" {{#if is_required}}data-required={{is_required}}{{/if}}>
-    {{#if (label article name)}}
-      {{label article name}}
-    {{/if}}
+    {{label article name}}
   </label>
-  {{#if (instructional article name)}}
+  {{#if (hasInstructional article name)}}
     <p>{{instructional article name}}</p>
   {{/if}}
   {{> @partial-block }}
