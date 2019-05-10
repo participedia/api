@@ -43,8 +43,6 @@ async function getEditStaticText(params) {
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
-  staticText.labels = Object.assign({}, organizationText, articleText);
-
   return staticText;
 }
 
