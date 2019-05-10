@@ -2,7 +2,6 @@ const moment = require("moment");
 const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
-const sharedFieldOptions = require("./shared-field-options.js");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -48,13 +47,32 @@ const i18n = (key, context) => context && context.data && context.data.root.__(k
 
 module.exports = {
   // transalation helpers
-  label: (name, context) => i18n(`${name}_label`, context),
+  label: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_label`, context);
+  },
 
-  info: (name, context) => i18n(`${name}_info`, context),
+  info: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_info`, context);
+  },
 
-  instructional: (name, context) => i18n(`${name}_instructional`, context),
+  hasInstructional: (article, name, context) => {
+    const view = context.data.root.params.view;
+    const key = `${article.type}_${view}_${name}_instructional`;
+    const i18nValue = i18n(key, context);
+    return i18nValue !== key;
+  },
 
-  placeholder: (name, context) => i18n(`${name}_placeholder`, context),
+  instructional: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_instructional`, context);
+  },
+
+  placeholder: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_placeholder`, context);
+  },
 
   t: (key, context) => i18n(key, context),
 
@@ -67,7 +85,7 @@ module.exports = {
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
     // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
-    if (name === "has_components" || name === "is_component_of") {
+    if (name === "is_component_of") {
       return mapIdTitleToKeyValue(staticText["cases"]);
     } else if (name === "specific_methods_tools_techniques") {
       return mapIdTitleToKeyValue(staticText["methods"]);
@@ -78,16 +96,47 @@ module.exports = {
     }
   },
 
-  linkSetPlaceholder: (name, attr, context) => {
-    return i18n(`${name}_${attr}_placeholder`, context);
+  linkSetPlaceholder: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_${attr}_placeholder`, context);
   },
 
-  linkSetLabel: (name, attr, context) => {
-    return i18n(`${name}_${attr}_label`, context);
+  linkSetLabel: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_${attr}_label`, context);
   },
 
-  linkSetInstructional: (name, attr, context) => {
-    return i18n(`${name}_${attr}_instructional`, context);
+  linkSetInstructional: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_${attr}_instructional`, context);
+  },
+
+  i18nEditFieldValue: (name, option, context) => {
+    const defaultKey = `name:${name}-key:${option}`;
+    const longKey = `${defaultKey}-longValue`;
+    const i18nValue = i18n(defaultKey, context);
+    const i18nLongValue = i18n(longKey, context);
+
+    const fieldNamesMappedToListOfArticles = {
+      is_component_of: "cases",
+      specific_methods_tools_techniques: "methods",
+      primary_organizer: "organizations"
+    };
+
+    // if the name is one that maps to list of articles return that value
+    if (Object.keys(fieldNamesMappedToListOfArticles).includes(name)) {
+      const articleType = fieldNamesMappedToListOfArticles[name];
+      const options = context.data.root.static[articleType];
+      return option.value;
+    }
+
+    // if there is a longValue, return that
+    // otherwise return the default value
+    else if (i18nLongValue !== longKey) {
+      return i18nLongValue;
+    } else {
+      return i18nValue;
+    }
   },
 
   // article helpers
@@ -113,7 +162,7 @@ module.exports = {
     return value && value.constructor === Array;
   },
 
-  getArticleSelectValue: (article, name) => {
+  getArticleSelectValue: (article, name, context) => {
     if (!article[name]) return null;
 
     // some article select fields have values like  { key: "value"},
@@ -127,12 +176,7 @@ module.exports = {
       key = article[name];
     }
 
-    const selectedItemInArray = sharedFieldOptions[name].filter(options => options.key === key);
-    if (selectedItemInArray.length > 0) {
-      if (selectedItemInArray[0].value !== "") {
-        return selectedItemInArray[0].value;
-      }
-    }
+    return i18n(`name:${name}-key:${key}`, context);
   },
 
   getArticleSelectKey: (article, name) => {
@@ -144,6 +188,19 @@ module.exports = {
     } else {
       return article[name];
     }
+  },
+
+  getArrayOfValues: (article, name, context) => {
+    const arrayOfItems = article[name];
+    if (!arrayOfItems || arrayOfItems.length === 0) return;
+
+    return arrayOfItems.map(item => {
+      if (typeof item === "string") {
+        return i18n(`name:${name}-key:${item}`, context);
+      } else {
+        return i18n(`name:${name}-key:${item.key}`, context);
+      }
+    });
   },
 
   getvalue: (article, name) => {
@@ -192,11 +249,16 @@ module.exports = {
     return article[name] && article[name][key];
   },
 
-  isSelectedInArray: (article, name, optionKey) => {
+  isSelectedInArray: (article, name, option) => {
     const options = article[name];
     if (options && options.length > 0) {
       return options.find(item => {
-        return item && item.key === optionKey;
+        if (!item) return;
+        if (typeof item === "string") {
+          return item === option;
+        } else {
+          return item.key === option.key;
+        }
       });
     }
   },
@@ -476,6 +538,10 @@ module.exports = {
 
   isEqual(arg1, arg2) {
     return arg1 === arg2;
+  },
+
+  isString(x) {
+    return typeof x === "string";
   },
 
   sanitizeName(name) {

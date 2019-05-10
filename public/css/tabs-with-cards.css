@@ -18,6 +18,7 @@
   text-decoration: none;
   border-bottom: 4px solid transparent;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .tab-container label:hover,
@@ -219,7 +220,7 @@
 
 .dropdown-button-container .dropdown-button-items {
   opacity: 0;
-  z-index: 10;
+  z-index: -10;
   position: absolute;
   left: -120px;
   background-color: #fff;
@@ -227,7 +228,7 @@
   width: 200px;
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 25px;
 }
 
 .dropdown-button-container .dropdown-button-items a {
