@@ -23,11 +23,12 @@ const {
 const titleKeys = ["id", "title"];
 const shortKeys = titleKeys.concat([
   "type",
-  "images",
+  "photos",
   "post_date",
-  "updated_date"
+  "updated_date",
+  "bookmarked"
 ]);
-const mediumKeys = shortKeys.concat(["body", "bookmarked", "location"]);
+const mediumKeys = shortKeys.concat(["body", "location"]);
 
 const fixUpURLs = function(article) {
   // FIXME: need to handle all media objects and source_urls for sourced media

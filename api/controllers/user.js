@@ -21,9 +21,9 @@ async function getUserById(userId, req, res, view = "view") {
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
 
-    if (result.user.bookmarks) {
-      result.user.bookmarks.forEach(b => (b.bookmarked = true));
-    }
+    // if (result.user.bookmarks) {
+    //   result.user.bookmarks.forEach(b => (b.bookmarked = true));
+    // }
 
     // if name contains @, assume it's an email address, and strip the domain
     // so we are not sharing email address' publicly
@@ -51,11 +51,11 @@ async function getUserById(userId, req, res, view = "view") {
       userEditKeys.forEach(key => (userEditJSON[key] = result.user[key]));
 
       return {
-        profile: userEditJSON,
+        profile: userEditJSON
       };
     } else {
       return {
-        profile: result.user,
+        profile: result.user
       };
     }
   } catch (error) {
