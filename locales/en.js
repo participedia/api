@@ -1314,5 +1314,17 @@
   "name:level_complexity-key:low": "Low Complexity",
   "name:level_complexity-key:moderate": "Moderate Complexity",
   "name:level_complexity-key:high": "High Complexity",
-  "name:level_complexity-key:very_high": "Very High Complexity"
+  "name:level_complexity-key:very_high": "Very High Complexity",
+  "name:number_participants-key:individuals": "Individuals",
+  "name:number_participants-key:small": "Small groups",
+  "name:number_participants-key:small-longValue": "Small groups (e.g. less than 20 people)",
+  "name:number_participants-key:medium": "Medium size groups",
+  "name:number_participants-key:medium-longValue": "Medium size groups (e.g. around 50-100 people)",
+  "name:number_participants-key:large": "Large groups",
+  "name:number_participants-key:large-longValue": "Large groups (eg. more than 100 people)",
+  "name:number_participants-key:no_limit": "There is no limit to the number of people who can participate",
+  "method_edit_number_participants_label": "Number of Participants",
+  "method_view_number_participants_label": "Number of Participants",
+  "method_edit_number_participants_instructional": "Select and rank up to three group sizes that this method can accommodate, with “1” indicating the optimal size.",
+  "method_edit_number_participants_placeholder": "Select & rank up to 3 sizes"
 }
