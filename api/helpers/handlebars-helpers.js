@@ -90,16 +90,19 @@ module.exports = {
     }
   },
 
-  linkSetPlaceholder: (name, attr, context) => {
-    return i18n(`${name}_${attr}_placeholder`, context);
+  linkSetPlaceholder: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_${attr}_placeholder`, context);
   },
 
-  linkSetLabel: (name, attr, context) => {
-    return i18n(`${name}_${attr}_label`, context);
+  linkSetLabel: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_${attr}_label`, context);
   },
 
-  linkSetInstructional: (name, attr, context) => {
-    return i18n(`${name}_${attr}_instructional`, context);
+  linkSetInstructional: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_${attr}_instructional`, context);
   },
 
   // article helpers
