@@ -7,9 +7,9 @@
     <option value="">{{placeholder article name}}</option>
     {{#each (getArticleOptions static name)}}
       <option
-        value="{{this.key}}"
+        value="{{this}}"
       >
-        {{i18nEditFieldValue ../name this.key}}
+        {{i18nEditFieldValue ../name this}}
       </option>
     {{/each}}
   </select>

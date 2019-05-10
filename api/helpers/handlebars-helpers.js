@@ -2,7 +2,6 @@ const moment = require("moment");
 const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
-const SHARED_FIELD_OPTIONS = require("./shared-field-options.js");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -86,7 +85,7 @@ module.exports = {
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
     // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
-    if (name === "has_components" || name === "is_component_of") {
+    if (name === "is_component_of") {
       return mapIdTitleToKeyValue(staticText["cases"]);
     } else if (name === "specific_methods_tools_techniques") {
       return mapIdTitleToKeyValue(staticText["methods"]);
@@ -112,14 +111,28 @@ module.exports = {
     return i18n(`${article.type}_${view}_${name}_${attr}_instructional`, context);
   },
 
-  i18nEditFieldValue: (name, key, context) => {
-    const defaultKey = `name:${name}-key:${key}`;
+  i18nEditFieldValue: (name, option, context) => {
+    const defaultKey = `name:${name}-key:${option}`;
     const longKey = `${defaultKey}-longValue`;
     const i18nValue = i18n(defaultKey, context);
     const i18nLongValue = i18n(longKey, context);
 
-    // if there is no value for the long key, it will just return the key, so if the value doesn't match the key, then return that.
-    if (i18nLongValue !== longKey) {
+    const fieldNamesMappedToListOfArticles = {
+      is_component_of: "cases",
+      specific_methods_tools_techniques: "methods",
+      primary_organizer: "organizations"
+    };
+
+    // if the name is one that maps to list of articles return that value
+    if (Object.keys(fieldNamesMappedToListOfArticles).includes(name)) {
+      const articleType = fieldNamesMappedToListOfArticles[name];
+      const options = context.data.root.static[articleType];
+      return option.value;
+    }
+
+    // if there is a longValue, return that
+    // otherwise return the default value
+    else if (i18nLongValue !== longKey) {
       return i18nLongValue;
     } else {
       return i18nValue;
