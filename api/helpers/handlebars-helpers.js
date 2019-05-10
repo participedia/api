@@ -57,7 +57,6 @@ module.exports = {
     const view = context.data.root.params.view;
     return i18n(`${article.type}_${view}_${name}_info`, context);
   },
-
   hasInstructional: (article, name, context) => {
     const view = context.data.root.params.view;
     const key = `${article.type}_${view}_${name}_instructional`;
@@ -109,7 +108,10 @@ module.exports = {
 
   linkSetInstructional: (article, name, attr, context) => {
     const view = context.data.root.params.view;
-    return i18n(`${article.type}_${view}_${name}_${attr}_instructional`, context);
+    return i18n(
+      `${article.type}_${view}_${name}_${attr}_instructional`,
+      context
+    );
   },
 
   i18nEditFieldValue: (name, option, context) => {
@@ -177,18 +179,7 @@ module.exports = {
       key = article[name];
     }
 
-<<<<<<< HEAD
-    const selectedItemInArray = sharedFieldOptions[name].filter(
-      options => options.key === key
-    );
-    if (selectedItemInArray.length > 0) {
-      if (selectedItemInArray[0].value !== "") {
-        return selectedItemInArray[0].value;
-      }
-    }
-=======
     return i18n(`name:${name}-key:${key}`, context);
->>>>>>> 7cad9c39ab73d722b2d402c32b0069ef98355814
   },
 
   getArticleSelectKey: (article, name) => {
