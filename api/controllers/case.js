@@ -326,14 +326,12 @@ async function getCaseHttp(req, res) {
 
 async function getEditStaticText(params) {
   const lang = params.lang;
-  let staticText = {};
+  let staticText = Object.assign({}, sharedFieldOptions);
 
   staticText.authors = await listUsers();
   staticText.cases = await listCases(lang);
   staticText.methods = await listMethods(lang);
   staticText.organizations = await listOrganizations(lang);
-
-  staticText = Object.assign({}, staticText, sharedFieldOptions);
 
   return staticText;
 }

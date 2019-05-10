@@ -27,7 +27,7 @@ function mapIdTitleToKeyValue(options) {
   return options.map(item => {
     return {
       key: item.id,
-      value: item.title,
+      value: item.title
     };
   });
 }
@@ -44,10 +44,11 @@ function getFirstPhotoUrl(article) {
   return article.photos[0].url;
 }
 
-const i18n = (key, context) => context && context.data && context.data.root.__(key);
+const i18n = (key, context) =>
+  context && context.data && context.data.root.__(key);
 
 module.exports = {
-  // transalation helpers
+  // translation helpers
   label: (name, context) => i18n(`${name}_label`, context),
 
   info: (name, context) => i18n(`${name}_info`, context),
@@ -91,7 +92,7 @@ module.exports = {
   },
 
   // article helpers
-  getFirstImageForArticle: (article) => {
+  getFirstImageForArticle: article => {
     if (article.photos && article.photos.length > 0) {
       // search pages return photos for articles in this format
       return article.photos[0].url;
@@ -121,13 +122,15 @@ module.exports = {
     // string like "value" which represents the key
 
     let key;
-    if(article[name].key) {
-      key = article[name].key
+    if (article[name].key) {
+      key = article[name].key;
     } else {
       key = article[name];
     }
 
-    const selectedItemInArray = sharedFieldOptions[name].filter(options => options.key === key);
+    const selectedItemInArray = sharedFieldOptions[name].filter(
+      options => options.key === key
+    );
     if (selectedItemInArray.length > 0) {
       if (selectedItemInArray[0].value !== "") {
         return selectedItemInArray[0].value;
@@ -163,8 +166,8 @@ module.exports = {
   },
 
   hasValue: (article, name) => {
-    if (!article){
-      return 'undefined ' + name;
+    if (!article) {
+      return "undefined " + name;
     }
     const item = article[name];
 
@@ -246,7 +249,7 @@ module.exports = {
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       twitter: `https://twitter.com/home?status=${title} - ${url}`,
-      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
+      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`
     };
     return shareUrls[type];
   },
@@ -313,7 +316,7 @@ module.exports = {
   },
 
   getNextPageNum(req, totalPages) {
-    const currentPageNum = req.query && parseInt(req.query.page) || 1;
+    const currentPageNum = (req.query && parseInt(req.query.page)) || 1;
     if (currentPageNum !== parseInt(totalPages)) {
       return currentPageNum + 1;
     } else {
@@ -328,9 +331,12 @@ module.exports = {
     // have a default tab with the same name as a non-default tab on another page.
     // tab-contributions is default tab on /user/{id} (user-view)
     // tab-all is default tab on / (home-search)
-    const defaultTabs = ['contributions', 'all'];
+    const defaultTabs = ["contributions", "all"];
     // if there is no param, make default tab active
-    if ((!tabParam && defaultTabs.indexOf(tabName) > -1) || tabParam === tabName) {
+    if (
+      (!tabParam && defaultTabs.indexOf(tabName) > -1) ||
+      tabParam === tabName
+    ) {
       return "checked";
     }
   },
@@ -340,14 +346,14 @@ module.exports = {
       { title: i18n("All", context), key: "all" },
       { title: i18n("Cases", context), key: "case" },
       { title: i18n("Methods", context), key: "method" },
-      { title: i18n("Organizations", context), key: "organizations" },
+      { title: i18n("Organizations", context), key: "organizations" }
     ];
   },
 
   getUserTabs(context) {
     return [
       { title: i18n("Contributions", context), key: "contributions" },
-      { title: i18n("Bookmarks", context), key: "bookmarks" },
+      { title: i18n("Bookmarks", context), key: "bookmarks" }
     ];
   },
 
@@ -372,7 +378,7 @@ module.exports = {
   // location helpers
   hasLocationData(article) {
     let hasLocationData = false;
-    LOCATION_FIELD_NAMES.forEach((fieldName) => {
+    LOCATION_FIELD_NAMES.forEach(fieldName => {
       if (article[fieldName]) {
         hasLocationData = true;
       }
@@ -442,8 +448,7 @@ module.exports = {
 
   isNewView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
-    return baseUrls.includes(req.baseUrl) &&
-      req.path.indexOf("new") === 1;
+    return baseUrls.includes(req.baseUrl) && req.path.indexOf("new") === 1;
   },
 
   isEditView(req) {
@@ -453,9 +458,11 @@ module.exports = {
 
   isReaderView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
-    return baseUrls.includes(req.baseUrl) &&
+    return (
+      baseUrls.includes(req.baseUrl) &&
       req.path.indexOf("edit") === -1 &&
-      req.path.indexOf("new") !== 1;
+      req.path.indexOf("new") !== 1
+    );
   },
 
   isHomeSearchView(req) {
@@ -505,5 +512,5 @@ module.exports = {
 
   getYearFromDate(date, format) {
     return moment(date).year();
-  },
+  }
 };
