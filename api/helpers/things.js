@@ -382,7 +382,7 @@ let queries = {
   organization: ORGANIZATION_BY_ID
 };
 
-async function maybeUpdateUserText(req, res, type, keyFieldsToObjects) {
+async function maybeUpdateUserText(req, res, type) {
   // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
   // if none of the user-submitted text fields have changed, don't add a record
   // to localized_text or
@@ -393,7 +393,6 @@ async function maybeUpdateUserText(req, res, type, keyFieldsToObjects) {
     throw new Error("No %s found for id %s", type, params.articleid);
   }
   fixUpURLs(oldArticle);
-  keyFieldsToObjects(oldArticle);
   let textModified = false;
   const updatedText = {
     body: oldArticle.body,

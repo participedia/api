@@ -136,12 +136,7 @@ async function getMethod(params) {
   const articleRow = await db.one(METHOD_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  keyFieldsToObjects(article);
   return article;
-}
-
-function keyFieldsToObjects(article) {
-  // nothing yet, but want to be compatible with cases
 }
 
 async function postMethodUpdateHttp(req, res) {
@@ -160,7 +155,7 @@ async function postMethodUpdateHttp(req, res) {
     updatedText,
     author,
     oldArticle: oldMethod
-  } = await maybeUpdateUserText(req, res, "method", keyFieldsToObjects);
+  } = await maybeUpdateUserText(req, res, "method");
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedMethod, er] = getUpdatedMethod(
@@ -237,13 +232,12 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "level_polarization",
     "level_complexity"
   ].map(key => cond(key, as.methodkey));
-  // integers
-  ["number_of_participants"].map(key => cond(key, as.integer));
   // list of keys
   [
     "method_types",
     "scope_of_influence",
     "participants_interactions",
+    "number_of_participants",
     "decision_methods",
     "if_voting"
   ].map(key => cond(key, as.methodkeys));

@@ -223,7 +223,7 @@ async function postCaseUpdateHttp(req, res) {
     updatedText,
     author,
     oldArticle: oldCase
-  } = await maybeUpdateUserText(req, res, "case", keyFieldsToObjects);
+  } = await maybeUpdateUserText(req, res, "case");
   // console.log("oldCase: %s", JSON.stringify(oldCase, null, 2));
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
@@ -292,26 +292,10 @@ async function postCaseUpdateHttp(req, res) {
  *
  */
 
-function keyFieldsToObjects(article) {
-  // do this for all key fields eventually
-  ["scope_of_influence", "legality"].forEach(
-    key => (article[key] = { key: article[key] })
-  );
-  ["tools_techniques_types"].forEach(
-    key =>
-      (article[key] = article[key].map(item => {
-        return {
-          key: item
-        };
-      }))
-  );
-}
-
 async function getCase(params) {
   const articleRow = await db.one(CASE_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  keyFieldsToObjects(article);
   return article;
 }
 

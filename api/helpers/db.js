@@ -8,7 +8,8 @@ const options = {
 };
 const fs = require("fs");
 //if (process.env.LOG_QUERY === "true") {
-options.query = evt => (process.env.LAST_QUERY = evt.query);
+// options.query = evt => (process.env.LAST_QUERY = evt.query);
+// options.query = evt => console.log("QUERY: %s", evt.query);
 //}
 const pgp = require("pg-promise")(options);
 const path = require("path");
@@ -203,6 +204,9 @@ function casekey(obj, group) {
   if (obj === null || obj === "") {
     return null;
   }
+  if (isString(obj)) {
+    return obj; // FIXME: test to see if it is a valid key
+  }
   if (obj.key === undefined) {
     throw new Error("Key cannot be undefined for group " + group);
   }
@@ -250,6 +254,14 @@ const organizationkeys = casekeys;
 function tagkey(obj) {
   if (obj === undefined) {
     throw new Error("Object cannot be undefined for tag");
+  }
+  if (isString(obj)) {
+    if (dbtagkeys.includes(obj)) {
+      return obj;
+    } else {
+      console.warn("failed tag: %s", obj);
+      return null;
+    }
   }
   if (obj.key === undefined) {
     throw new Error("Key cannot be undefined for tag");

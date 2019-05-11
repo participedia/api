@@ -17,7 +17,7 @@ SELECT
   country,
   latitude,
   longitude,
-  gscope_of_influence,
+  scope_of_influence,
   get_components(id, ${lang}) as has_components,
   get_object_title(is_component_of, ${lang}) as is_component_of,
   files,
