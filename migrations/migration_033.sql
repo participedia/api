@@ -31,9 +31,9 @@ ALTER TABLE things DROP COLUMN longitude;
 ALTER TABLE things RENAME COLUMN lat TO latitude;
 ALTER TABLE things RENAME COLUMN long TO longitude;
 
-DROP TYPE geolocation CASCADE;
--- The cascade will also delete type object_medium (currently unused)
--- and function get_location(integer) which we will redefine below
+DROP TYPE object_medium; -- unused
+DROP FUNCTION get_location(integer); -- replaced
+DROP TYPE geolocation;
 CREATE TYPE geolocation AS (
 	name text,
 	address1 text,

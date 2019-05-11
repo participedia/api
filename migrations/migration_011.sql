@@ -1,8 +1,8 @@
-CREATE TYPE localized_value AS (
-  key text,
-  lookup_key text,
-  value text
-);
+-- CREATE TYPE localized_value AS (
+--   key text,
+--   lookup_key text,
+--   value text
+-- );
 
 --
 -- move from files as array of urls to full_files as array of composite types
@@ -106,7 +106,6 @@ ALTER TABLE cases ADD COLUMN method_types text[] DEFAULT '{}';
 ALTER TABLE cases ADD COLUMN tools_techniques_types text[] DEFAULT '{}';
 
 UPDATE cases SET scope_of_influence = ltrim(rtrim(scope_of_influence, '}'), '{');
-ALTER TABLE case_view_localized RENAME COLUMN scope_value_citytown TO "scope_value_city/town";
 
 --
 -- Name: get_title(integer, text); Type: FUNCTION; Schema: public; Owner: -

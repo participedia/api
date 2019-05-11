@@ -9,8 +9,7 @@ const {
   db,
   as,
   CREATE_METHOD,
-  METHOD_EDIT_BY_ID,
-  METHOD_VIEW_BY_ID,
+  METHOD_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
@@ -134,15 +133,10 @@ async function postMethodNewHttp(req, res) {
  */
 
 async function getMethod(params) {
-  const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
+  const articleRow = await db.one(METHOD_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
-  keyFieldsToObjects(article);
   return article;
-}
-
-function keyFieldsToObjects(article) {
-  // nothing yet, but want to be compatible with cases
 }
 
 async function postMethodUpdateHttp(req, res) {
@@ -161,7 +155,7 @@ async function postMethodUpdateHttp(req, res) {
     updatedText,
     author,
     oldArticle: oldMethod
-  } = await maybeUpdateUserText(req, res, "method", keyFieldsToObjects);
+  } = await maybeUpdateUserText(req, res, "method");
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedMethod, er] = getUpdatedMethod(
@@ -238,13 +232,12 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "level_polarization",
     "level_complexity"
   ].map(key => cond(key, as.methodkey));
-  // integers
-  ["number_of_participants"].map(key => cond(key, as.integer));
   // list of keys
   [
     "method_types",
     "scope_of_influence",
     "participants_interactions",
+    "number_of_participants",
     "decision_methods",
     "if_voting"
   ].map(key => cond(key, as.methodkeys));
@@ -255,7 +248,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
 async function getMethodHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "method");
-  const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
+  const articleRow = await db.one(METHOD_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = {};
@@ -265,7 +258,7 @@ async function getMethodHttp(req, res) {
 async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
-  const articleRow = await db.one(METHOD_EDIT_BY_ID, params);
+  const articleRow = await db.one(METHOD_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = await getEditStaticText(params);

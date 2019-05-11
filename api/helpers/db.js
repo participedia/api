@@ -8,7 +8,8 @@ const options = {
 };
 const fs = require("fs");
 //if (process.env.LOG_QUERY === "true") {
-options.query = evt => (process.env.LAST_QUERY = evt.query);
+// options.query = evt => (process.env.LAST_QUERY = evt.query);
+// options.query = evt => console.log("QUERY: %s", evt.query);
 //}
 const pgp = require("pg-promise")(options);
 const path = require("path");
@@ -203,6 +204,9 @@ function casekey(obj, group) {
   if (obj === null || obj === "") {
     return null;
   }
+  if (isString(obj)) {
+    return obj; // FIXME: test to see if it is a valid key
+  }
   if (obj.key === undefined) {
     throw new Error("Key cannot be undefined for group " + group);
   }
@@ -250,6 +254,14 @@ const organizationkeys = casekeys;
 function tagkey(obj) {
   if (obj === undefined) {
     throw new Error("Object cannot be undefined for tag");
+  }
+  if (isString(obj)) {
+    if (dbtagkeys.includes(obj)) {
+      return obj;
+    } else {
+      console.warn("failed tag: %s", obj);
+      return null;
+    }
   }
   if (obj.key === undefined) {
     throw new Error("Key cannot be undefined for tag");
@@ -403,12 +415,9 @@ const as = Object.assign({}, pgp.as, {
 
 const helpers = pgp.helpers;
 
-const CASE_EDIT_BY_ID = sql("../sql/case_edit_by_id.sql");
-const CASE_VIEW_BY_ID = sql("../sql/case_view_by_id.sql");
-const METHOD_EDIT_BY_ID = sql("../sql/method_edit_by_id.sql");
-const METHOD_VIEW_BY_ID = sql("../sql/method_view_by_id.sql");
-const ORGANIZATION_EDIT_BY_ID = sql("../sql/organization_edit_by_id.sql");
-const ORGANIZATION_VIEW_BY_ID = sql("../sql/organization_view_by_id.sql");
+const CASE_BY_ID = sql("../sql/case_by_id.sql");
+const METHOD_BY_ID = sql("../sql/method_by_id.sql");
+const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
@@ -465,11 +474,8 @@ module.exports = {
   UPDATE_CASE,
   UPDATE_METHOD,
   UPDATE_ORGANIZATION,
-  CASE_EDIT_BY_ID,
-  CASE_VIEW_BY_ID,
-  METHOD_EDIT_BY_ID,
-  METHOD_VIEW_BY_ID,
-  ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_VIEW_BY_ID,
+  CASE_BY_ID,
+  METHOD_BY_ID,
+  ORGANIZATION_BY_ID,
   ErrorReporter
 };

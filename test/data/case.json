@@ -1,69 +1,11 @@
 {
   "type": "case",
   "title": "First Title",
-  "general_issues": [
-    {
-      "key": "arts",
-      "lookup_key": "general_issues_value_arts",
-      "value": "Arts, Culture, & Recreation"
-    },
-    {
-      "key": "education",
-      "lookup_key": "general_issues_value_education",
-      "value": "Education"
-    },
-    {
-      "key": "environment",
-      "lookup_key": "general_issues_value_environment",
-      "value": "Environment"
-    },
-    {
-      "key": "planning",
-      "lookup_key": "general_issues_value_planning",
-      "value": "Planning & Development"
-    }
-  ],
-  "specific_topics": [
-    {
-      "key": "citizenship",
-      "lookup_key": "specific_topics_value_citizenship",
-      "value": "Citizenship & Role of Citizens"
-    },
-    {
-      "key": "citizenship",
-      "lookup_key": "specific_topics_value_citizenship",
-      "value": "Citizenship & Role of Citizens"
-    },
-    {
-      "key": "natural_resource",
-      "lookup_key": "specific_topics_value_natural_resource",
-      "value": "Natural Resource Management"
-    }
-  ],
+  "general_issues": ["arts", "education", "environment", "planning"],
+  "specific_topics": ["citizenship", "natural_resources"],
   "description": "First Description",
   "body": "First Body",
-  "tags": [
-    {
-      "key": "sustainability",
-      "lookup_key": "sustainability",
-      "value": "Sustainability & Green Living"
-    },
-    {
-      "key": "animal",
-      "lookup_key": "animal",
-      "value": "Animal Protection & Welfare"
-    },
-    {
-      "key": "environment",
-      "lookup_key": "environment",
-      "value": "Environment"
-    },
-    {
-      "key": "planning",
-      "lookup_key": "planning",
-      "value": "Planning & Development"
-    }
-  ],
+  "tags": ["sustainability", "animal", "environment", "planning"],
   "location_name": "San Muerte",
   "address1": "123 Rue de Morgue",
   "address2": "c/o Albertus Magnus",
@@ -186,51 +128,13 @@
   "end_date": null,
   "ongoing": true,
   "time_limited": "a",
-  "purposes": [
-    {
-      "key": "make",
-      "lookup_key": "purposes_value_make",
-      "value": "Make, influence, or challenge decisions of government and public bodies"
-    },
-    {
-      "key": "develop",
-      "lookup_key": "purposes_value_develop",
-      "value": "Develop the civic capacities of individuals, communities, and/or civil society organizations"
-    }
-  ],
-  "approaches": [
-    {
-      "key": "coproduction",
-      "lookup_key": "approaches_value_coproduction",
-      "value": "Co-production in form of partnership and/or contract with government and/or public bodies"
-    },
-    {
-      "key": "informal",
-      "lookup_key": "approaches_value_informal",
-      "value": "Informal engagement by intermediaries with nongovernmental authorities"
-    },
-    {
-      "key": "independent",
-      "lookup_key": "approaches_value_independent",
-      "value": "Independent action"
-    }
-  ],
+  "purposes": ["make", "develop"],
+  "approaches": ["coproduction", "informal", "independent"],
   "public_spectrum": "collaborate",
   "number_of_participants": 12,
   "open_limited": "limited",
   "recruitment_method": "random",
-  "targeted_participants": [
-    {
-      "key": "youth",
-      "lookup_key": "targeted_participants_value_youth",
-      "value": "Youth"
-    },
-    {
-      "key": "lgbt",
-      "lookup_key": "targeted_participants_value_lgbt",
-      "value": "Gay/Lesbian/Bisexual/Transgender"
-    }
-  ],
+  "targeted_participants": ["youth", "lgbt"],
   "method_types": [],
   "tools_techniques_types": [],
   "specific_methods_tools_techniques": [],
@@ -238,129 +142,19 @@
   "facilitators": "yes",
   "facilitator_training": "",
   "facetoface_online_or_both": "facetoface",
-  "participants_interactions": [
-    {
-      "key": "discussion",
-      "lookup_key": "participants_interactions_value_discussion",
-      "value": "Discussion, Dialogue, or Deliberation"
-    },
-    {
-      "key": "listenwatch",
-      "lookup_key": "participants_interactions_value_listenwatch",
-      "value": "Listen/Watch as Spectator"
-    },
-    {
-      "key": "express",
-      "lookup_key": "participants_interactions_value_express",
-      "value": "Express Opinions/Preferences Only"
-    }
-  ],
-  "learning_resources": [
-    {
-      "key": "written",
-      "lookup_key": "learning_resources_value_written",
-      "value": "Written Briefing Materials"
-    },
-    {
-      "key": "video",
-      "lookup_key": "learning_resources_value_video",
-      "value": "Video Presentations"
-    },
-    {
-      "key": "teachins",
-      "lookup_key": "learning_resources_value_teachins",
-      "value": "Teach-ins"
-    }
-  ],
-  "decision_methods": [
-    {
-      "key": "voting",
-      "lookup_key": "decision_methods_value_voting",
-      "value": "Voting"
-    }
-  ],
-  "if_voting": [
-    {
-      "key": "preferential",
-      "lookup_key": "if_voting_value_preferential",
-      "value": "Preferential Voting"
-    }
-  ],
-  "insights_outcomes": [
-    {
-      "key": "public_hearingsmeetings",
-      "lookup_key": "insights_outcomes_value_public_hearingsmeetings",
-      "value": "Public Hearings/Meetings"
-    }
-  ],
+  "participants_interactions": ["discussion", "listenwatch", "express"],
+  "learning_resources": ["written", "video", "teaching"],
+  "decision_methods": ["voting", "preferential"],
+  "insights_outcomes": ["public_hearingsmeetings"],
   "primary_organizer": null,
-  "organizer_types": [
-    {
-      "key": "philanthropic",
-      "lookup_key": "organizer_types_value_philanthropic",
-      "value": "Philanthropic Organization"
-    },
-    {
-      "key": "community",
-      "lookup_key": "organizer_types_value_community",
-      "value": "Community Based Organization"
-    }
-  ],
+  "organizer_types": ["philanthropic", "community"],
   "funder": "Epsicopal Catholic Bank",
-  "funder_types": [
-    {
-      "key": "individual",
-      "lookup_key": "funder_types_value_individual",
-      "value": "Individual"
-    },
-    {
-      "key": "international",
-      "lookup_key": "funder_types_value_international",
-      "value": "International Organization"
-    },
-    {
-      "key": "philanthropic",
-      "lookup_key": "funder_types_value_philanthropic",
-      "value": "Philanthropic Organization"
-    }
-  ],
+  "funder_types": ["individual", "international", "philanthropic"],
   "staff": true,
   "volunteers": true,
   "impact_evidence": "yes",
-  "change_types": [
-    {
-      "key": "changes",
-      "lookup_key": "change_types_value_changes",
-      "value": "Changes in people’s knowledge, attitudes, and behavior"
-    },
-    {
-      "key": "changes_public",
-      "lookup_key": "change_types_value_changes_public",
-      "value": "Changes in public policy"
-    },
-    {
-      "key": "conflict",
-      "lookup_key": "change_types_value_conflict",
-      "value": "Conflict transformation"
-    }
-  ],
-  "implementers_of_change": [
-    {
-      "key": "stakeholder",
-      "lookup_key": "implementers_of_change_value_stakeholder",
-      "value": "Stakeholder Organizations"
-    },
-    {
-      "key": "appointed",
-      "lookup_key": "implementers_of_change_value_appointed",
-      "value": "Appointed Public Servants"
-    },
-    {
-      "key": "experts",
-      "lookup_key": "implementers_of_change_value_experts",
-      "value": "Experts"
-    }
-  ],
+  "change_types": ["changes", "changes_public", "conflict"],
+  "implementers_of_change": ["stakeholder", "appointed", "experts"],
   "formal_evaluation": null,
   "evaluation_reports": [
     {

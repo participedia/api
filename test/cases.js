@@ -58,7 +58,9 @@ describe("Cases", () => {
         "recruitment_method",
         "time_limited"
       ].forEach(key => {
-        returnedCase[key].key.should.equal(example_case[key]);
+        console.log("returnedCase[%s] = %s", key, returnedCase[key]);
+        console.log("example_case[%s] = %s", key, example_case[key]);
+        returnedCase[key].should.equal(example_case[key]);
       });
       // test media fields
       [
@@ -125,15 +127,15 @@ describe("Cases", () => {
       body1.article.id.should.be.a("number");
       const origCase = body1.article;
       origCase.general_issues.length.should.equal(4);
-      origCase.general_issues[0].key.should.equal("arts");
-      origCase.general_issues[1].key.should.equal("education");
-      origCase.general_issues[2].key.should.equal("environment");
-      origCase.general_issues[3].key.should.equal("planning");
+      origCase.general_issues[0].should.equal("arts");
+      origCase.general_issues[1].should.equal("education");
+      origCase.general_issues[2].should.equal("environment");
+      origCase.general_issues[3].should.equal("planning");
       const updatedCase = (await updateCase(origCase.id, {
         general_issues: [{ key: "arts", value: "Arts, Culture, & Recreation" }]
       })).article;
       updatedCase.general_issues.length.should.equal(1);
-      updatedCase.general_issues[0].key.should.equal("arts");
+      updatedCase.general_issues[0].should.equal("arts");
     });
 
     it("Add case, then modify lead image", async () => {

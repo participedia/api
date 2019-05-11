@@ -10,13 +10,9 @@ const {
   INSERT_LOCALIZED_TEXT,
   UPDATE_NOUN,
   INSERT_AUTHOR,
-  CASE_EDIT_BY_ID,
-  CASE_VIEW_BY_ID,
-  THING_BY_ID,
-  METHOD_EDIT_BY_ID,
-  METHOD_VIEW_BY_ID,
-  ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_VIEW_BY_ID
+  CASE_BY_ID,
+  METHOD_BY_ID,
+  ORGANIZATION_BY_ID
 } = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
@@ -48,23 +44,6 @@ const fixUpURLs = function(article) {
   }
 };
 
-const getThingByType_id_lang_userId = async function(
-  type,
-  thingid,
-  lang,
-  userId
-) {
-  let table = type + "s";
-  const thing = await db.one(THING_BY_ID, {
-    table,
-    type,
-    thingid,
-    lang,
-    userId
-  });
-  return thing.results;
-};
-
 const returnByType = (res, params, article, static, user) => {
   const { returns, type, view } = params;
   switch (returns) {
@@ -77,7 +56,7 @@ const returnByType = (res, params, article, static, user) => {
         layout: false
       });
     case "json":
-      return res.status(200).json({ OK: true, article, static, user, params });
+      return res.status(200).json({ OK: true, article });
     case "csv":
       // TODO: implement CSV
       return res.status(500, "CSV not implemented yet").render();
@@ -101,24 +80,6 @@ const parseGetParams = function(req, type) {
     userid: req.user ? as.number(req.user.id) : null,
     returns: as.value(req.query.returns || "html")
   });
-};
-
-/* This is the entry point for getting an article */
-const returnThingByRequest = async function(type, req, res) {
-  const { articleid, lang, userid, view } = (params = parseGetParams(
-    req,
-    type
-  ));
-  const article = await getThingByType_id_lang_userId(
-    type,
-    thingid,
-    lang,
-    userid
-  );
-  const static = await db.one(
-    `select * from ${type}_${view}_localized where language = '${lang}';`
-  );
-  returnByType(req)(res, params, thing, static);
 };
 
 /* I can't believe basic set operations are not part of ES5 Sets */
@@ -416,12 +377,12 @@ const uniq = list => {
 };
 
 let queries = {
-  case: CASE_EDIT_BY_ID,
-  method: METHOD_EDIT_BY_ID,
-  organization: ORGANIZATION_EDIT_BY_ID
+  case: CASE_BY_ID,
+  method: METHOD_BY_ID,
+  organization: ORGANIZATION_BY_ID
 };
 
-async function maybeUpdateUserText(req, res, type, keyFieldsToObjects) {
+async function maybeUpdateUserText(req, res, type) {
   // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
   // if none of the user-submitted text fields have changed, don't add a record
   // to localized_text or
@@ -432,7 +393,6 @@ async function maybeUpdateUserText(req, res, type, keyFieldsToObjects) {
     throw new Error("No %s found for id %s", type, params.articleid);
   }
   fixUpURLs(oldArticle);
-  keyFieldsToObjects(oldArticle);
   let textModified = false;
   const updatedText = {
     body: oldArticle.body,
@@ -485,7 +445,6 @@ function setConditional(
 }
 
 module.exports = {
-  returnThingByRequest,
   getEditXById,
   supportedTypes,
   titleKeys,
