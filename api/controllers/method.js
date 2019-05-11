@@ -239,7 +239,8 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "participants_interactions",
     "number_of_participants",
     "decision_methods",
-    "if_voting"
+    "if_voting",
+    "number_of_participants"
   ].map(key => cond(key, as.methodkeys));
   // TODO save bookmarked on user
   return [updatedMethod, er];

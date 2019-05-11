@@ -1314,5 +1314,13 @@
   "name:level_complexity-key:low": "Low Complexity",
   "name:level_complexity-key:moderate": "Moderate Complexity",
   "name:level_complexity-key:high": "High Complexity",
-  "name:level_complexity-key:very_high": "Very High Complexity"
+  "name:level_complexity-key:very_high": "Very High Complexity",
+  "name:number_of_participants-key:individuals": "Individuals",
+  "name:number_of_participants-key:small": "Small groups",
+  "name:number_of_participants-key:small-longValue": "Small groups (e.g. less than 20 people)",
+  "name:number_of_participants-key:medium": "Medium size groups",
+  "name:number_of_participants-key:medium-longValue": "Medium size groups (e.g. around 50-100 people)",
+  "name:number_of_participants-key:large": "Large groups",
+  "name:number_of_participants-key:large-longValue": "Large groups (eg. more than 100 people)",
+  "name:number_of_participants-key:no_limit": "There is no limit to the number of people who can participate"
 }
