@@ -9,8 +9,7 @@ const {
   db,
   as,
   CREATE_ORGANIZATION,
-  ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_VIEW_BY_ID,
+  ORGANIZATION_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_ORGANIZATION,
@@ -132,7 +131,7 @@ async function postOrganizationNewHttp(req, res) {
  */
 
 async function getOrganization(params) {
-  const article = (await db.one(ORGANIZATION_VIEW_BY_ID, params)).results;
+  const article = (await db.one(ORGANIZATION_BY_ID, params)).results;
   fixUpURLs(article);
   keyFieldsToObjects(article);
   return article;
@@ -246,7 +245,7 @@ function getUpdatedOrganization(
 async function getOrganizationHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "organization");
-  const articleRow = await db.one(ORGANIZATION_VIEW_BY_ID, params);
+  const articleRow = await db.one(ORGANIZATION_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = {};
@@ -256,7 +255,7 @@ async function getOrganizationHttp(req, res) {
 async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
-  const articleRow = await db.one(ORGANIZATION_EDIT_BY_ID, params);
+  const articleRow = await db.one(ORGANIZATION_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = await getEditStaticText(params);

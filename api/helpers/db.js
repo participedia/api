@@ -404,8 +404,8 @@ const as = Object.assign({}, pgp.as, {
 const helpers = pgp.helpers;
 
 const CASE_BY_ID = sql("../sql/case_by_id.sql");
-const METHOD_BY_ID = sql("../sql/method_view_by_id.sql");
-const ORGANIZATION_BY_ID = sql("../sql/organization_view_by_id.sql");
+const METHOD_BY_ID = sql("../sql/method_by_id.sql");
+const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
@@ -462,11 +462,8 @@ module.exports = {
   UPDATE_CASE,
   UPDATE_METHOD,
   UPDATE_ORGANIZATION,
-  CASE_EDIT_BY_ID,
-  CASE_VIEW_BY_ID,
-  METHOD_EDIT_BY_ID,
-  METHOD_VIEW_BY_ID,
-  ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_VIEW_BY_ID,
+  CASE_BY_ID,
+  METHOD_BY_ID,
+  ORGANIZATION_BY_ID,
   ErrorReporter
 };

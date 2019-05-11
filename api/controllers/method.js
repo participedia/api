@@ -9,8 +9,7 @@ const {
   db,
   as,
   CREATE_METHOD,
-  METHOD_EDIT_BY_ID,
-  METHOD_VIEW_BY_ID,
+  METHOD_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
@@ -134,7 +133,7 @@ async function postMethodNewHttp(req, res) {
  */
 
 async function getMethod(params) {
-  const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
+  const articleRow = await db.one(METHOD_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
   keyFieldsToObjects(article);
@@ -255,7 +254,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
 async function getMethodHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "method");
-  const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
+  const articleRow = await db.one(METHOD_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = {};
@@ -265,7 +264,7 @@ async function getMethodHttp(req, res) {
 async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
-  const articleRow = await db.one(METHOD_EDIT_BY_ID, params);
+  const articleRow = await db.one(METHOD_BY_ID, params);
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = await getEditStaticText(params);

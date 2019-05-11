@@ -1,8 +1,9 @@
 -- Move methods to new model
 
+DROP MATERIALIZED VIEW search_index_en; -- will be forced by below anyway
 -- can't delete tags or location fields becaue they are part of parent model
 ALTER TABLE methods DROP COLUMN completeness;
-ALTER TABLE methods DROP COLUMN communication_modes CASCADE;
+ALTER TABLE methods DROP COLUMN communication_modes;
 ALTER TABLE methods DROP COLUMN public_interaction_methods;
 ALTER TABLE methods DROP COLUMN issue_technical_complexity;
 ALTER TABLE methods DROP COLUMN issue_interdependency;
