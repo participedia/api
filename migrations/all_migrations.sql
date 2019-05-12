@@ -80,3 +80,7 @@
 \include 'migrations/migration_035.sql'
 -- update object_short to include post_date and bookmarked
 \include 'migrations/migration_036.sql'
+-- create table for new localization keys
+\include 'migrations/migration_037.sql'
+-- create search index
+\include 'migrations/migration_038.sql'

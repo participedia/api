@@ -97,11 +97,11 @@ async function postOrganizationNewHttp(req, res) {
     return res.status(400).json({ OK: false, error: error });
   }
   // Refresh search index
-  // try {
-  //   db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
-  // } catch (error) {
-  //   log.error("Exception in POST /organization/new => %s", error);
-  // }
+  try {
+    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
+  } catch (error) {
+    log.error("Exception in POST /organization/new => %s", error);
+  }
 }
 
 /**
@@ -159,16 +159,16 @@ async function postOrganizationUpdateHttp(req, res) {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_ORGANIZATION, updatedOrganization)
-          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+          t.none(UPDATE_ORGANIZATION, updatedOrganization),
+          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     } else {
       await db.tx("update-organization", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
-          t.none(UPDATE_ORGANIZATION, updatedOrganization)
-          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+          t.none(UPDATE_ORGANIZATION, updatedOrganization),
+          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     }
