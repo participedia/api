@@ -53,10 +53,18 @@ module.exports = {
     return i18n(`${article.type}_${view}_${name}_label`, context);
   },
 
+  hasInfo: (article, name, context) => {
+    const view = context.data.root.params.view;
+    const key = `${article.type}_${view}_${name}_info`;
+    const i18nValue = i18n(key, context);
+    return i18nValue !== key;
+  },
+
   info: (article, name, context) => {
     const view = context.data.root.params.view;
     return i18n(`${article.type}_${view}_${name}_info`, context);
   },
+
   hasInstructional: (article, name, context) => {
     const view = context.data.root.params.view;
     const key = `${article.type}_${view}_${name}_instructional`;

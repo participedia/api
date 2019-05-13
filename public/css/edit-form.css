@@ -415,6 +415,10 @@ input[type=number]::-webkit-inner-spin-button {
   margin-bottom: 120px;
 }
 
+.info-modal-trigger img {
+  margin-bottom: -2px;
+}
+
 @media (max-width: 1000px) {
   .edit-form {
     width: 65%;
