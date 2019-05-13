@@ -32,6 +32,13 @@ try {
 let db = pgp(config);
 
 const dbtagkeys = JSON.parse(fs.readFileSync("api/helpers/data/tagkeys.json"));
+const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
+
+db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
+  keys: i18n_en
+})
+  .then(() => console.log("i18n updated"))
+  .catch(error => console.error(error));
 
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {
