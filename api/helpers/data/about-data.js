@@ -242,13 +242,6 @@ const partners = [
         ]
       },
       {
-        "name": "June Webber",
-        "descriptors": [
-          "Coady International Institute",
-          "St. Francis Xavier University"
-        ]
-      },
-      {
         "name": "Melissa Williams",
         "descriptors": [
           "Department of Political Science",
