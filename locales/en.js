@@ -486,7 +486,7 @@
   "case_edit_description_placeholder": "Enter tweet-length description",
   "case_view_description_label": "Brief Description",
   "case_edit_body_label": "Narrative",
-  "case_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our guidelines as you prepare your case entry.",
+  "case_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://docs.google.com/document/d/1lzhV6aoslzqaj9XhOtVUOHbSJYOPK0tiXg0ALzIkN-w/edit\" target=\"_blank\">guidelines</a> as you prepare your case entry.",
   "case_edit_body_placeholder": "Problems and Purpose\nBackground History and Context\nOrganizing, Supporting, and Funding Entities\nParticipant Recruitment and Selection\nMethods and Tools Used\nWhat Went On: Process, Interaction, and Participation\nInfluence, Outcomes, and Effects\nAnalysis and Lessons Learned\nSee Also\nReferences\nExternal Links\nNotes",
   "case_view_body_label": "Narrative",
   "case_edit_tags_label": "Tags",
