@@ -58,8 +58,6 @@ describe("Cases", () => {
         "recruitment_method",
         "time_limited"
       ].forEach(key => {
-        console.log("returnedCase[%s] = %s", key, returnedCase[key]);
-        console.log("example_case[%s] = %s", key, example_case[key]);
         returnedCase[key].should.equal(example_case[key]);
       });
       // test media fields

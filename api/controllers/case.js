@@ -88,12 +88,6 @@ async function postCaseNewHttp(req, res) {
     log.error("Exception in POST /case/new => %s", error);
     res.status(400).json({ OK: false, error: error });
   }
-  // Refresh search index
-  try {
-    db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
-  } catch (error) {
-    log.error("Exception in POST /case/new => %s", error);
-  }
 }
 
 /**
@@ -234,16 +228,14 @@ async function postCaseUpdateHttp(req, res) {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_CASE, updatedCase),
-          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+          t.none(UPDATE_CASE, updatedCase)
         ]);
       });
     } else {
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
-          t.none(UPDATE_CASE, updatedCase),
-          t.none("REFRESH MATERIALIZED VIEW search_index_en;")
+          t.none(UPDATE_CASE, updatedCase)
         ]);
       });
     }
@@ -256,6 +248,7 @@ async function postCaseUpdateHttp(req, res) {
       OK: true,
       article: freshArticle
     });
+    db.none("REFRESH MATERIALIZED VIEW search_index_en;");
   } else {
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({

@@ -280,3 +280,15 @@ SELECT
 ;
 
 CREATE INDEX idx_fts_search_en ON search_index_en USING gin(document);
+
+-- CREATE FUNCTION update_search() RETURNS trigger
+--   LANGUAGE sql STABLE
+--   AS $_$
+--   REFRESH MATERIALIZED VIEW search_index_en;
+-- $_$;
+--
+-- create trigger search_insert after insert on things
+--     for each statement execute procedure update_search();
+--
+-- create trigger search_update after update on things
+--     for each statement execute procedure update_search();
