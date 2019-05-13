@@ -6,7 +6,20 @@
     {{label article name}}
   </label>
   {{#if (hasInstructional article name)}}
-    <p>{{instructional article name}}</p>
+    <p>
+      {{{instructional article name}}}
+      {{#if (hasInfo article name)}}
+        <a
+          href="#"
+          class="info-modal-trigger js-info-modal-trigger"
+          data-field-label="{{label article name}}"
+          data-info-text="{{info article name}}"
+        >
+          <span class="sr-only">more info for {{label article name}}</span>
+          <img src="/images/info-icon.svg" height="16" />
+        </a>
+      {{/if}}
+    </p>
   {{/if}}
   {{> @partial-block }}
 </div>

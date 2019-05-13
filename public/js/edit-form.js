@@ -13,6 +13,36 @@ const editForm = {
         this.sendFormData(event);
       });
     }
+
+    const infoTriggerEls = document.querySelectorAll(".js-info-modal-trigger");
+    for (let i = 0; i < infoTriggerEls.length; i++) {
+      infoTriggerEls[i].addEventListener("click", event => {
+        this.openInfoModal(event);
+      });
+    }
+  },
+
+  openInfoModal(event) {
+    event.preventDefault();
+    const triggerEl = event.target.closest("a");
+    const label = triggerEl.getAttribute("data-field-label");
+    const infoText = triggerEl.getAttribute("data-info-text");
+    const modalId = "#modal-container";
+    const modal = new Modal(modalId, {
+      closingSelector: ".js-modal-close",
+    });
+    const modalContentEl = document.querySelector(`${modalId} .c-dialog__content`);
+    modalContentEl.innerHTML = `
+      <h3>${label}</h3>
+      <p>${infoText}</p>
+    `;
+    modal.open();
+
+    // attach event listener for new close button inserted in modal
+    const closeBtn = modalContentEl.querySelector(".js-modal-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", modal.close);
+    }
   },
 
   sendFormData(event) {
