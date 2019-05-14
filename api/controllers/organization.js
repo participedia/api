@@ -14,6 +14,7 @@ const {
   INSERT_LOCALIZED_TEXT,
   UPDATE_ORGANIZATION,
   listUsers,
+  refreshSearch,
   listMethods,
   ErrorReporter
 } = require("../helpers/db");
@@ -37,8 +38,8 @@ async function getEditStaticText(params) {
   let staticText = {};
   const lang = params.lang;
 
-  staticText.authors = await listUsers();
-  staticText.methods = await listMethods(lang);
+  staticText.authors = listUsers();
+  staticText.methods = listMethods(lang);
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
@@ -169,7 +170,7 @@ async function postOrganizationUpdateHttp(req, res) {
       OK: true,
       article: freshArticle
     });
-    db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    refreshSearch();
   } else {
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({

@@ -63,31 +63,83 @@ function ErrorReporter() {
   };
 }
 
-async function listUsers() {
-  return (await db.one(
-    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
-  )).authors;
+function randomDelay() {
+  // return a number of milliseconds between 3 and 8 minutes
+  // used to refresh caached objects as needed
+  // 3 minutes = 1000 * 60 * 3 = 180,000
+  // 5 minutes = 1000 * 60 * 5 = 300,000
+  return 180000 + Math.random() * 300000;
 }
 
-async function listCases(lang) {
-  return (await db.one(
+let _users;
+let _cases;
+let _methods;
+let _organizations;
+let _searchDirty = true;
+
+async function _listUsers() {
+  _users = (await db.one(
+    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
+  )).authors;
+  setTimeout(_listUsers, randomDelay());
+  console.log("user cache refreshed");
+}
+_listUsers();
+
+async function _listCases(lang) {
+  _cases = (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
     { lang }
   )).cases;
+  setTimeout(_listCases, randomDelay());
 }
+_listCases().then(() => console.log("cases cached"));
 
-async function listMethods(lang) {
-  return (await db.one(
+async function _listMethods(lang) {
+  _methods = (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
     { lang }
   )).methods;
+  setTimeout(_listMethods, randomDelay());
 }
+_listMethods().then(() => console.log("methods cached"));
 
-async function listOrganizations(lang) {
-  return (await db.one(
+async function _listOrganizations(lang) {
+  _organizations = (await db.one(
     "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
     { lang }
   )).organizations;
+  setTimeout(_listOrganizations, randomDelay());
+}
+_listOrganizations().then(() => console.log("organizations cached"));
+
+async function _refreshSearch() {
+  if (_searchDirty) {
+    _searchDirty = false;
+    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+  }
+  setTimeout(_refreshSearch, randomDelay());
+}
+_refreshSearch().then(() => console.log("search refreshed"));
+
+function refreshSearch() {
+  _searchDirty = true;
+}
+
+function listUsers() {
+  return _users;
+}
+
+function listCases() {
+  return _cases;
+}
+
+function listMethods() {
+  return _methods;
+}
+
+function listOrganizations() {
+  return _organizations;
 }
 
 // as.number, enhances existing as.number to cope with numbers as strings
@@ -458,6 +510,7 @@ module.exports = {
   listCases,
   listMethods,
   listOrganizations,
+  refreshSearch,
   INSERT_LOCALIZED_TEXT,
   UPDATE_NOUN,
   INSERT_AUTHOR,
