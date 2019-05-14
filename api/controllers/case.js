@@ -314,28 +314,11 @@ async function getEditStaticText(params) {
 
 async function getCaseEditHttp(req, res) {
   let startTime = new Date();
-  console.warn("start getCaseEditHttp");
   const params = parseGetParams(req, "case");
-  console.warn(
-    "Elapsed after parseGetParams(): %s",
-    (new Date() - startTime) / 1000 + "s"
-  );
   params.view = "edit";
   const article = await getCase(params);
-  console.warn(
-    "Elapsed after getCase(): %s",
-    (new Date() - startTime) / 1000 + "s"
-  );
   const staticText = await getEditStaticText(params);
-  console.warn(
-    "Elapsed after getEditStaticText(): %s",
-    (new Date() - startTime) / 1000 + "s"
-  );
   returnByType(res, params, article, staticText, req.user);
-  console.warn(
-    "end getCaseEditHttp, elapsed: %s",
-    (new Date() - startTime) / 1000 + "s"
-  );
 }
 
 async function getCaseNewHttp(req, res) {
