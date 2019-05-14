@@ -14,6 +14,7 @@ const {
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
   listUsers,
+  refreshSearch,
   ErrorReporter
 } = require("../helpers/db");
 
@@ -36,7 +37,7 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 async function getEditStaticText(params) {
   let staticText = {};
   try {
-    staticText.authors = await listUsers();
+    staticText.authors = listUsers();
   } catch (e) {
     console.error("Error reading users");
   }
@@ -186,7 +187,7 @@ async function postMethodUpdateHttp(req, res) {
       OK: true,
       article: freshArticle
     });
-    db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    refreshSearch();
   } else {
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({

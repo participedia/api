@@ -18,6 +18,7 @@ const {
   listCases,
   listMethods,
   listOrganizations,
+  refreshSearch,
   ErrorReporter
 } = require("../helpers/db");
 
@@ -248,7 +249,7 @@ async function postCaseUpdateHttp(req, res) {
       OK: true,
       article: freshArticle
     });
-    db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    refreshSearch();
   } else {
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({
@@ -303,10 +304,10 @@ async function getEditStaticText(params) {
   const lang = params.lang;
   let staticText = Object.assign({}, sharedFieldOptions);
 
-  staticText.authors = await listUsers();
-  staticText.cases = await listCases(lang);
-  staticText.methods = await listMethods(lang);
-  staticText.organizations = await listOrganizations(lang);
+  staticText.authors = listUsers();
+  staticText.cases = listCases(lang);
+  staticText.methods = listMethods(lang);
+  staticText.organizations = listOrganizations(lang);
 
   return staticText;
 }
