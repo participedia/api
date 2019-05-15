@@ -75,7 +75,6 @@ $_$;
 -- ORDER BY thingid;
 -- $_$;
 
-
 CREATE MATERIALIZED VIEW search_index_en AS
 
 WITH allauthors AS (
