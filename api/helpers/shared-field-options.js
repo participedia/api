@@ -252,6 +252,7 @@ module.exports = {
     "public_meetings",
     "research"
   ],
+  purpose_method: ["make", "make_influence", "deliver", "develop", "academic"],
   purposes: ["make", "make_influence", "deliver", "develop", "academic"],
   public_spectrum: [
     "inform",
