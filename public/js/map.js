@@ -163,8 +163,13 @@ const map = {
         popOverContentEl.innerHTML = marker.content.innerHTML;
 
         // update type
-        const articleTypeEl = popOverContentEl.querySelector(".article-card-meta h5");
-        articleTypeEl.innerHTML = marker.content.getAttribute("data-i18n-type");
+        const articleTypeEl = popOverContentEl.querySelector(".js-article-card-meta h5");
+
+        if (marker.featured) {
+          articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-featured-${marker.type}`);
+        } else {
+          articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-${marker.type}`);
+        }
 
         // update image
         const articleImageEl = popOverContentEl.querySelector(".article-card-img");
