@@ -123,7 +123,7 @@ const map = {
     } else if (currentTab === "all") {
       // cases and orgs
       return results.filter(article => article.type === "case" || article.type === "organization");
-    } else if (currentTab === "method")
+    } else if (currentTab === "method") {
       // none for methods
       return null;
     }
