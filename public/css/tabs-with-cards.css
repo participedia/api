@@ -283,8 +283,12 @@
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 580px) {
   .pagination {
     flex-direction: column;
+  }
+  .pagination-nav {
+    margin-left: -8px;
+    margin-top: 16px;
   }
 }

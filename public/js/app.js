@@ -6,7 +6,9 @@ import headerProfileDropdownMenu from "./header-profile-dropdown-menu.js";
 import languageSelect from "./language-select.js";
 
 function loadFonts() {
-  const faktFont = new FontFaceObserver("Fakt");
+  const faktFont = new FontFaceObserver("Fakt", {
+    weight: 600,
+  });
   faktFont.load().then(() => {
     document.documentElement.style.visibility = "visible";
   }, () => {
