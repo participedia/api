@@ -221,7 +221,7 @@ function asUrl(value) {
   }
   try {
     if (!value.startsWith("http")) {
-      value = process.env.AWS_UPLOADS_URL + value;
+      value = "https://" + value;
     }
     // return new URL(value).href;
     return escapedText(new URL(value).href);
