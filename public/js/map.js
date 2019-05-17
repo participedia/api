@@ -139,7 +139,7 @@ const map = {
         id: article.id,
         type: article.type,
         photo: article.photos && article.photos[0].url,
-        submittedDate: article.updated_date,
+        submittedDate: article.post_date,
         title: article.title,
         featured: article.featured,
         position: new google.maps.LatLng(latitude, longitude),
