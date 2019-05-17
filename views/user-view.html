@@ -33,12 +33,15 @@
       {{/if}}
     </div>
 
-    <div role="tabpanel" class="tab-bookmarks">
-      {{#if (isSelectedUserTab req "bookmarks")}}
-        {{> cards-container
-          cards=profile.bookmarks
-        }}
-      {{/if}}
-    </div>
+    {{#if (isProfileOwner req.user profile)}}
+      <div role="tabpanel" class="tab-bookmarks">
+        {{#if (isSelectedUserTab req "bookmarks")}}
+          {{> cards-container
+            cards=profile.bookmarks
+          }}
+        {{/if}}
+      </div>
+    {{/if}}
+
   {{/tabs-with-cards}}
 </div>
