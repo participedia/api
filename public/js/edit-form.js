@@ -1,5 +1,6 @@
 import serialize from "./utils/serialize.js";
 import Modal from "a11y-dialog-component";
+import loadingGifBase64 from "./loading-gif-base64.js";
 
 const editForm = {
   init() {
@@ -75,6 +76,22 @@ const editForm = {
     }
 
     xhr.send(formData);
+    this.openPublishingFeedbackModal();
+  },
+
+  openPublishingFeedbackModal() {
+    const modalId = "#modal-container";
+    const modal = new Modal(modalId, {
+      closingSelector: ".js-modal-close",
+    });
+    const modalContentEl = document.querySelector(`${modalId} .c-dialog__content`);
+    modalContentEl.innerHTML = `
+      <div style="display:flex; flex-direction:column; justify-content:center; align-items: center; height: 200px">
+        <h3>Publishing</h3>
+        <img src=${loadingGifBase64} />
+      </div>
+    `;
+    modal.open();
   },
 
   handleSuccess(response) {
