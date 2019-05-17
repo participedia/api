@@ -50,8 +50,7 @@
   word-break: break-word;
 }
 
-.reader-view .body-content h3 {
-  /* style h3 tags as h2 tags within body content only */
+.reader-view .body-content h2 {
   font-size: 1.75rem;
   line-height: 1.875rem;
   font-weight: 600;
