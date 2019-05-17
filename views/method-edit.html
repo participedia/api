@@ -10,8 +10,8 @@
   <fieldset>
     <h2 class="fieldset-header">{{t "type_purpose_sectionlabel"}}</h2>
 
-    {{> edit-multi-select name="method_types" quick-submit=true max=3}}
-    {{> edit-multi-select name="purpose_method" max=3}}
+    {{> edit-multi-select name="method_types" quick-submit=true max=3 ranked=true}}
+    {{> edit-multi-select name="purpose_method" max=3 ranked=true}}
     {{> article-edit-select name="public_spectrum"}}
 
 
@@ -41,17 +41,17 @@
   <fieldset class="fullonly">
     <h2 class="fieldset-header">{{t "participants_sectionlabel"}}</h2>
     {{> article-edit-select name="open_limited" }}
-    {{> article-edit-select name="recruitment_method" }}
-    {{> edit-multi-select name="number_of_participants" max=3}}
+    {{> article-edit-select name="recruitment_method"}}
+    {{> edit-multi-select name="number_of_participants" max=3 ranked=true }}
   </fieldset>
 
    <fieldset class="fullonly">
     <h2 class="fieldset-header">{{t "process_sectionlabel"}}</h2>
 
-    {{> edit-multi-select name="participants_interactions" }}
+    {{> edit-multi-select name="participants_interactions" max=3 ranked=true }}
     {{> article-edit-select name="facilitators" }}
-    {{> edit-multi-select name="decision_methods" }}
-    {{> edit-multi-select name="if_voting" }}
+    {{> edit-multi-select name="decision_methods" max=3 ranked=true }}
+    {{> edit-multi-select name="if_voting" max=3 ranked=true }}
   </fieldset>
 
   <fieldset class="fullonly">
