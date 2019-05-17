@@ -286,7 +286,7 @@
   "organization_view_description_label": "Brief Description",
   "organization_edit_body_label": "Narrative",
   "organization_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://docs.google.com/document/d/1lzhV6aoslzqaj9XhOtVUOHbSJYOPK0tiXg0ALzIkN-w/edit\" target=\"_blank\">guidelines</a> as you prepare your entry.",
-  "organization_edit_body_placeholder": "<h3>Mission and Purpose</h3><h3>Origins and Development</h3><h3>Organizational Structure, Membership, and Funding</h3><h3>Specializations, Methods and Tools</h3><h3>Major Projects and Events</h3><h3>Analysis and Lessons Learned</h3><h3>Publications</h3><h3>See Also</h3><h3>References</h3><h3>External Links</h3><h3>Notes</h3>",
+  "organization_edit_body_placeholder": "<h2>Mission and Purpose</h2><h2>Origins and Development</h2><h2>Organizational Structure, Membership, and Funding</h2><h2>Specializations, Methods and Tools</h2><h2>Major Projects and Events</h2><h2>Analysis and Lessons Learned</h2><h2>Publications</h2><h2>See Also</h2><h2>References</h2><h2>External Links</h2><h2>Notes</h2>",
   "organization_view_body_label": "Narrative",
   "organization_edit_sector_label": "Sector",
   "organization_edit_sector_instructional": "In what sector does this organization operate?",
@@ -383,7 +383,7 @@
   "method_view_description_label": "Brief Description",
   "method_edit_body_label": "Narrative",
   "method_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://docs.google.com/document/d/1lzhV6aoslzqaj9XhOtVUOHbSJYOPK0tiXg0ALzIkN-w/edit\" target=\"_blank\">guidelines</a> as you prepare your entry.",
-  "method_edit_body_placeholder": "<h3>Problems and Purpose</h3><h3>Origins and Development</h3><h3>Participant Recruitment and Selection</h3><h3>How it Works: Process, Interaction, and Decision-Making</h3><h3>Influence, Outcomes, and Effects</h3><h3>Analysis and Lessons Learned</h3><h3>See Also</h3><h3>References</h3><h3>External Links</h3><h3>Notes</h3>",
+  "method_edit_body_placeholder": "<h2>Problems and Purpose</h2><h2>Origins and Development</h2><h2>Participant Recruitment and Selection</h2><h2>How it Works: Process, Interaction, and Decision-Making</h2><h2>Influence, Outcomes, and Effects</h2><h2>Analysis and Lessons Learned</h2><h2>See Also</h2><h2>References</h2><h2>External Links</h2><h2>Notes</h2>",
   "method_view_body_label": "Narrative",
   "method_edit_files_label": "Files",
   "method_edit_files_instructional": "Upload relevant documents here. Supported file types include: rtf, txt, doc, docx, xls, xlsx, pdf, ppt, pptx, pps, ppsx, odt, ods and odp. Max file size is 5MB.",
@@ -487,7 +487,7 @@
   "case_view_description_label": "Brief Description",
   "case_edit_body_label": "Narrative",
   "case_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://docs.google.com/document/d/1lzhV6aoslzqaj9XhOtVUOHbSJYOPK0tiXg0ALzIkN-w/edit\" target=\"_blank\">guidelines</a> as you prepare your case entry.",
-  "case_edit_body_placeholder": "<h3>Problems and Purpose</h3><h3>Background History and Context</h3><h3>Organizing, Supporting, and Funding Entities</h3><h3>Participant Recruitment and Selection</h3><h3>Methods and Tools Used</h3><h3>What Went On: Process, Interaction, and Participation</h3><h3>Influence, Outcomes, and Effects</h3><h3>Analysis and Lessons Learned</h3><h3>See Also</h3><h3>References</h3><h3>External Links</h3><h3>Notes</h3>",
+  "case_edit_body_placeholder": "<h2>Problems and Purpose</h2><h2>Background History and Context</h2><h2>Organizing, Supporting, and Funding Entities</h2><h2>Participant Recruitment and Selection</h2><h2>Methods and Tools Used</h2><h2>What Went On: Process, Interaction, and Participation</h2><h2>Influence, Outcomes, and Effects</h2><h2>Analysis and Lessons Learned</h2><h2>See Also</h2><h2>References</h2><h2>External Links</h2><h2>Notes</h2>",
   "case_view_body_label": "Narrative",
   "case_edit_tags_label": "Tags",
   "case_edit_tags_instructional": "Select the tags that best describe this case. ",
@@ -1344,5 +1344,6 @@
   "method_edit_method_types_info": "There is huge variety in the range of participatory methods. To help narrow it down, select and rank up to three of the following types of methods that best describe the specific method you are entering. Specifying what type of method your entry is makes it easier for Participedia users to find it.",
   "method_edit_public_spectrum_info": "The IAP2 Spectrum of Public Participation is designed to identify the level of public participation within any community engagement process. Each level increases the amount of influence the public can have over final decision-making, and the spectrum assumes that choosing a higher level encompasses the levels below.",
   "method_edit_level_polarization_info": "Select the level of political polarization this method can handle\nInfo bubble: Low polarization exists when a public participation initiative can assume basic agreement on goals, such as people’s desire for emergency fire services. High polarization exists when public attitudes are strongly divided between two or more options. This is often linked to partisanship, long-standing animosities, and low trust. ",
-  "method_edit_level_complexity_info": "An example of low complexity would be a neighborhood decision about appropriate playground equipment for a park. More complex issues involve high levels of technical/ scientific intricacy, are highly interdependent with other issues, and require solutions that are based on balancing trade-offs between different goals and values. Some examples of highly complex issues include health care reform, climate change, or migration."
+  "method_edit_level_complexity_info": "An example of low complexity would be a neighborhood decision about appropriate playground equipment for a park. More complex issues involve high levels of technical/ scientific intricacy, are highly interdependent with other issues, and require solutions that are based on balancing trade-offs between different goals and values. Some examples of highly complex issues include health care reform, climate change, or migration.",
+  "Featured [type]": "Featured %s"
 }

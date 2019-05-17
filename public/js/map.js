@@ -113,15 +113,19 @@ const map = {
 
   filterResultsForTab(results) {
     const currentTab = document.querySelector(".js-tab-container input:checked").id;
-
-    // return filtered results for cases and organizations, otherwise return all results
     if (currentTab === "organizations") {
       // NOTE: currentTab for organizations is plural, but article type is singular
+      // organizations only
       return results.filter(article => article.type === "organization");
-    } else if (currentTab === "case"){
+    } else if (currentTab === "case") {
+      // cases only
       return results.filter(article => article.type === "case");
-    } else {
-      return results;
+    } else if (currentTab === "all") {
+      // cases and orgs
+      return results.filter(article => article.type === "case" || article.type === "organization");
+    } else if (currentTab === "method") {
+      // none for methods
+      return null;
     }
   },
 
@@ -139,7 +143,7 @@ const map = {
         id: article.id,
         type: article.type,
         photo: article.photos && article.photos[0].url,
-        submittedDate: article.updated_date,
+        submittedDate: article.post_date,
         title: article.title,
         featured: article.featured,
         position: new google.maps.LatLng(latitude, longitude),
@@ -163,15 +167,20 @@ const map = {
         popOverContentEl.innerHTML = marker.content.innerHTML;
 
         // update type
-        const articleTypeEl = popOverContentEl.querySelector(".article-card-meta h5");
-        articleTypeEl.innerHTML = marker.content.getAttribute("data-i18n-type");
+        const articleTypeEl = popOverContentEl.querySelector(".js-article-card-meta h5");
+
+        if (marker.featured) {
+          articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-featured-${marker.type}`);
+        } else {
+          articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-${marker.type}`);
+        }
 
         // update image
-        const articleImageEl = popOverContentEl.querySelector(".article-card-img");
+        const articleImageEl = popOverContentEl.querySelector(".js-article-card-img");
         articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
 
         // update title & truncate to 45 chars
-        const articleTitleEl = popOverContentEl.querySelector(".article-card-title");
+        const articleTitleEl = popOverContentEl.querySelector(".js-article-card-title");
         if (marker.title.length < 46) {
           articleTitleEl.innerText = marker.title;
         } else {

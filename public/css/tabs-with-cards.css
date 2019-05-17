@@ -75,6 +75,7 @@
 .article-card-meta h5 {
   margin: 0;
   font-weight: normal;
+  text-transform: uppercase;
 }
 
 .article-card button {
