@@ -1292,6 +1292,10 @@ input[type=number]::-webkit-inner-spin-button {
   height: 200px;
 }
 
+.user-view-bio img {
+  width: 100%;
+}
+
 .ql-toolbar.ql-snow {
   border: 1px solid #000;
 }

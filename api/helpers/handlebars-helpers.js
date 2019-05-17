@@ -421,10 +421,22 @@ module.exports = {
   },
 
   getUserTabs(context) {
-    return [
-      { title: i18n("Contributions", context), key: "contributions" },
-      { title: i18n("Bookmarks", context), key: "bookmarks" }
-    ];
+    // if it's the profile owner making the request, return contributions and bookmarks.
+    // otherwise return contributions only
+    const profile = context.data.root.profile;
+    const user = context.data.root.req.user;
+
+    if ((user && user.id) === (profile && profile.id)) {
+      return [
+        { title: i18n("Contributions", context), key: "contributions" },
+        { title: i18n("Bookmarks", context), key: "bookmarks" }
+      ];
+    } else {
+      return [
+        { title: i18n("Contributions", context), key: "contributions" }
+      ];
+    }
+
   },
 
   isSelectedUserTab(req, category) {
