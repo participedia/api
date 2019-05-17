@@ -59,6 +59,14 @@
   margin-bottom: 0;
 }
 
+.reader-view .body-content img {
+  width: 100%;
+}
+.reader-view .body-content blockquote {
+  border-left: 4px solid #ccc;
+  padding-left: 10px;
+}
+
 /* bookmark link */
 .reader-view .bookmark-link {
   display: none;
