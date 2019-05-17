@@ -106,7 +106,7 @@ app.get("/login", function(req, res, next) {
   // set returnTo session var to referer so user is redirected to current page after login
   req.session.returnTo = req.headers.referer;
   passport.authenticate("auth0", {
-    scope: "openid email profile"
+    scope: "offline openid email profile"
   }, () => {})(req, res, next);
 });
 
