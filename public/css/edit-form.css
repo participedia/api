@@ -310,6 +310,12 @@ input[type=number]::-webkit-inner-spin-button {
   border-radius: 2px;
   margin-bottom: 15px;
   display: flex;
+  background-color: #fff;
+}
+
+.edit-multi-select-list[data-draggable=true] > li,
+.edit-media-file-list[data-draggable=true] > li {
+  cursor: grab;
 }
 
 .edit-media-file-list > li {
@@ -347,8 +353,8 @@ input[type=number]::-webkit-inner-spin-button {
   display: flex;
 }
 
-.edit-multi-select-list li:not([draggable]) .reorder-handle,
-.edit-media-file-list li:not([draggable]) .reorder-handle {
+.edit-multi-select-list:not([data-draggable]) .reorder-handle,
+.edit-media-file-list:not([data-draggable]) .reorder-handle {
   display: none;
 }
 

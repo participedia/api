@@ -15,6 +15,7 @@
   </select>
   <ol
     class="unstyled-list edit-multi-select-list js-edit-multi-select-list"
+    {{#if ranked}}data-draggable="true"{{/if}}
     data-name="{{name}}"
     {{#if max}}data-max="{{max}}"{{/if}}
   >
@@ -25,7 +26,6 @@
             name=../name
             key=this
             value=(i18nEditFieldValue ../name this)
-            ranked=../ranked
             index=@index
           }}
         {{else if (isEqual ../name "specific_methods_tools_techniques")}}
@@ -39,7 +39,6 @@
             name=../name
             key=this.id
             value=this.title
-            ranked=../ranked
             index=@index
           }}
         {{else}}
@@ -47,7 +46,6 @@
             name=../name
             key=this.key
             value=(i18nEditFieldValue ../name this.key)
-            ranked=../ranked
             index=@index
           }}
         {{/if}}
@@ -55,8 +53,6 @@
     {{/each}}
   </ol>
   <script type="text/template" id="js-edit-multi-select-list-item">
-    {{> edit-multi-select-li
-      ranked=false
-    }}
+    {{> edit-multi-select-li }}
   </script>
 {{/ edit-form-group}}
