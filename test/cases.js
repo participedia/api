@@ -166,14 +166,21 @@ describe("Cases", () => {
       const body1 = await addBasicCase();
       body1.OK.should.be.true;
       const case1 = body1.article;
-      case1.photos.length.should.equal(4);
+      case1.photos.length.should.equal(3);
       case1.photos[0].url.should.equal(
         "https://s3.amazonaws.com/uploads.participedia.xyz/index.php__21.jpg"
       );
       const { req, res, ret } = getMocksAuth({
         params: { thingid: case1.id },
         body: {
-          photos: [{ url: "http://foobar.com/test.jpg" }]
+          photos: [
+            {
+              url: "http://foobar.com/test.jpg",
+              source_url: "https://example.com/foobar",
+              title: "Right ho!",
+              attribution: "Marie Osmond"
+            }
+          ]
         }
       });
       await postCaseUpdateHttp(req, res);

@@ -246,6 +246,9 @@ function id(string, field) {
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
   if (!idList) return [];
+  if (idList.length && isObject(idList[0])) {
+    return idList.map(item => parseInt(item.id, 10));
+  }
   return idList;
   // return idList.map(item => parseInt(item.key, 10));
 }

@@ -64,5 +64,6 @@
   "number_of_participants": ["no_limit"],
   "participants_interactions": ["discussion", "informal"],
   "decision_methods": ["idea", "voting"],
-  "if_voting": ["preferential", "unanimous"]
+  "if_voting": ["preferential", "unanimous"],
+  "purpose_method": ["develop", "academic"]
 }

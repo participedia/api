@@ -133,7 +133,14 @@ describe("Methods", () => {
       const method1 = body1.article;
       method1.photos[0].url.should.equal("http://example.com/picture.jpg");
       const body2 = await updateMethod(method1.id, {
-        photos: [{ url: "http://garfield.com/jon.png" }]
+        photos: [
+          {
+            url: "http://garfield.com/jon.png",
+            source_url: "https://example.com/garfields_tomb",
+            title: "Jon lays a wreath",
+            attribution: "Cleveland Plain Dealer"
+          }
+        ]
       });
       body2.OK.should.be.true;
       should.exist(body2.article);
@@ -142,7 +149,12 @@ describe("Methods", () => {
       expect(method2.updated_date > method1.updated_date).to.be.true;
       const photos = [method1.photos[0]];
       photos.push(method2.photos[0]);
-      photos.push({ url: "https://wonderwall.com/howzaboutthemjpegs.png" });
+      photos.push({
+        url: "https://wonderwall.com/howzaboutthemjpegs.png",
+        source_url: "https://example.com/ugh",
+        attribution: "The Red Menace",
+        title: "Whatever"
+      });
       const body3 = await updateMethod(method1.id, { photos: photos });
       body3.OK.should.be.true;
       const method3 = body3.article;
@@ -153,8 +165,16 @@ describe("Methods", () => {
     it("Add method, then change links", async () => {
       const method1 = (await addBasicMethod()).article;
       const links = [
-        { url: "https://xkcd.com/" },
-        { url: "http://girlgeniusonline.com/" }
+        {
+          url: "https://xkcd.com/",
+          title: "xkcd",
+          attribution: "Randall Monroe"
+        },
+        {
+          url: "http://girlgeniusonline.com/",
+          title: "Girl Genius",
+          attribution: "Professors Foglio"
+        }
       ];
       const method2 = (await updateMethod(method1.id, {
         title: "Second Title",

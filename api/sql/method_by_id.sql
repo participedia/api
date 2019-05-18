@@ -37,7 +37,7 @@ WITH full_thing AS (
     participants_interactions,
     decision_methods,
     if_voting,
-    purpose_method,
+    purpose_method
 FROM
     methods,
     get_localized_texts(${articleid}, ${lang}) AS texts
