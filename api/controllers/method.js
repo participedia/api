@@ -214,10 +214,9 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
   ["links", "videos", "audio"].map(key => cond(key, as.media));
   // photos and files are slightly different from other media as they have a source url too
   ["photos", "files"].map(key => cond(key, as.sourcedMedia));
-  // boolean (would include "published" but we don't really support it)
-  ["facilitators"].map(key => cond(key, as.yesno));
   // key
   [
+    "facilitators",
     "facetoface_online_or_both",
     "public_spectrum",
     "open_limited",
@@ -233,7 +232,8 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "number_of_participants",
     "decision_methods",
     "if_voting",
-    "number_of_participants"
+    "number_of_participants",
+    "purpose_method"
   ].map(key => cond(key, as.methodkeys));
   // TODO save bookmarked on user
   return [updatedMethod, er];

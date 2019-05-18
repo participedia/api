@@ -37,12 +37,11 @@ describe("Cases", () => {
       await postCaseNewHttp(req, res);
       ret.body.OK.should.be.false;
     });
-    it.only("works with authentication", async () => {
+    it("works with authentication", async () => {
       const body = await addBasicCase();
       body.OK.should.be.true;
       let returnedCase = body.article;
       returnedCase.id.should.be.a("number");
-      returnedCase.videos.length.should.equal(2);
       returnedCase.creator.user_id.should.equal(
         returnedCase.last_updated_by.user_id
       );
@@ -167,14 +166,21 @@ describe("Cases", () => {
       const body1 = await addBasicCase();
       body1.OK.should.be.true;
       const case1 = body1.article;
-      case1.photos.length.should.equal(4);
+      case1.photos.length.should.equal(3);
       case1.photos[0].url.should.equal(
         "https://s3.amazonaws.com/uploads.participedia.xyz/index.php__21.jpg"
       );
       const { req, res, ret } = getMocksAuth({
         params: { thingid: case1.id },
         body: {
-          photos: [{ url: "http://foobar.com/test.jpg" }]
+          photos: [
+            {
+              url: "http://foobar.com/test.jpg",
+              source_url: "https://example.com/foobar",
+              title: "Right ho!",
+              attribution: "Marie Osmond"
+            }
+          ]
         }
       });
       await postCaseUpdateHttp(req, res);
