@@ -81,7 +81,7 @@ async function postOrganizationNewHttp(req, res) {
     if (!title) {
       return res.status(400).json({
         OK: false,
-        message: "Cannot create Organization without at least a title"
+        errors: ["Cannot create Organization without at least a title"],
       });
     }
     const user_id = req.user.id;
