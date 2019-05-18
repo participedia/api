@@ -121,8 +121,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   const updatedCase = Object.assign({}, oldCase);
   const er = new ErrorReporter();
   const cond = (key, fn) => setConditional(updatedCase, newCase, er, fn, key);
-  console.log("newCase.if_voting: %s", newCase.if_voting);
-  console.log("oldCase.if_voting: %s", oldCase.if_voting);
   // admin-only
   if (user.isadmin) {
     cond("featured", as.boolean);

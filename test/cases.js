@@ -81,7 +81,6 @@ describe("Cases", () => {
       ].forEach(key => {
         let ret = returnedCase[key];
         let exp = example_case[key];
-        console.log("testing %s", key);
         ret.length.should.equal(exp.length);
         for (var i = 0; i < ret.length; i++) {
           ret[i].should.equal(exp[i]);

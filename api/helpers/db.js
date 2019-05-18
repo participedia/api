@@ -76,7 +76,7 @@ async function _listUsers() {
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   )).authors;
   setTimeout(_listUsers, randomDelay());
-  console.log("user cache refreshed");
+  // console.log("user cache refreshed");
 }
 
 async function _listCases(lang) {
