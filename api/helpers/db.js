@@ -246,7 +246,8 @@ function id(string, field) {
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
   if (!idList) return [];
-  return idList.map(item => parseInt(item.key, 10));
+  return idList;
+  // return idList.map(item => parseInt(item.key, 10));
 }
 
 // as.strings
@@ -339,22 +340,27 @@ function tagkeys(objList) {
   return uniq((objList || []).map(tagkey).filter(x => !!x));
 }
 
+function FullFile(obj) {
+  this.rawType = true;
+  this.toPostgres = () =>
+    pgp.as.format(
+      "(${url}, ${source_url}, ${attribution}, ${title})::full_file",
+      obj
+    );
+}
+
+function FullLink(obj) {
+  this.rawType = true;
+  this.toPostgres = () =>
+    pgp.as.format("(${url}, ${attribution}, ${title})::full_link", obj);
+}
+
 function aMedium(obj) {
   if (isString(obj)) {
     obj = { url: obj, attribution: "", title: "" };
   }
   if (!obj.url) return null;
-  return [
-    '"(',
-    asUrl(obj.url),
-    ",",
-    // attribution: obj.attribution,
-    text(obj.attribution),
-    ",",
-    // title: obj.title
-    text(obj.title),
-    ')"'
-  ].join("");
+  return new FullLink(obj);
 }
 
 function aSourcedMedia(obj) {
@@ -366,35 +372,18 @@ function aSourcedMedia(obj) {
   // if url is not already an amazon url, upload the file
   let url = obj.url;
   // some types of sourced media are links, anything already a link does not need to be uploaded
-  if (!url.startsWith("http")) {
-    url = uploadToAWS(obj.url, obj.title);
+  if (!obj.url.startsWith("http")) {
+    obj.url = uploadToAWS(obj.url, obj.title);
   }
-
-  return [
-    '"(',
-    asUrl(url),
-    ",",
-    asUrl(obj.source_url),
-    ",",
-    // attribution: obj.attribution,
-    text(obj.attribution),
-    ",",
-    // title: obj.title
-    text(obj.title),
-    ')"'
-  ].join("");
-}
-
-function simpleArray(values) {
-  return "{" + values.join(",") + "}";
+  return new FullFile(obj);
 }
 
 function media(mediaList) {
-  return simpleArray((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
+  return (mediaList || []).map(aMedium).filter(x => !!x); // remove nulls
 }
 
 function sourcedMedia(mediaList) {
-  return simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
+  return (mediaList || []).map(aSourcedMedia).filter(x => !!x); // remove nulls
 }
 
 function boolean(value) {

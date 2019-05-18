@@ -37,7 +37,7 @@ describe("Cases", () => {
       await postCaseNewHttp(req, res);
       ret.body.OK.should.be.false;
     });
-    it("works with authentication", async () => {
+    it.only("works with authentication", async () => {
       const body = await addBasicCase();
       body.OK.should.be.true;
       let returnedCase = body.article;
@@ -60,6 +60,33 @@ describe("Cases", () => {
       ].forEach(key => {
         returnedCase[key].should.equal(example_case[key]);
       });
+      // test key list fields
+      [
+        "general_issues",
+        "specific_topics",
+        "purposes",
+        "approaches",
+        "targeted_participants",
+        "method_types",
+        "participants_interactions",
+        "learning_resources",
+        "decision_methods",
+        "if_voting",
+        "insights_outcomes",
+        "organizer_types",
+        "funder_types",
+        "change_types",
+        "implementers_of_change",
+        "tools_techniques_types"
+      ].forEach(key => {
+        let ret = returnedCase[key];
+        let exp = example_case[key];
+        console.log("testing %s", key);
+        ret.length.should.equal(exp.length);
+        for (var i = 0; i < ret.length; i++) {
+          ret[i].should.equal(exp[i]);
+        }
+      });
       // test media fields
       [
         "files",
@@ -72,13 +99,14 @@ describe("Cases", () => {
       ].forEach(key => {
         returnedCase[key].length.should.equal(example_case[key].length);
         for (let i = 0; i < returnedCase[key].length; i++) {
-          // returnedCase[key][i].url.should.equal(example_case[key][i].url);
-          expect(returnedCase[key][i].attribution).to.equal(
-            example_case[key][i].attribution
-          );
-          expect(returnedCase[key][i].title).to.equal(
-            example_case[key][i].title
-          );
+          let ret = returnedCase[key][i];
+          let exp = example_case[key][i];
+          expect(ret.attribution).to.equal(exp.attribution);
+          expect(ret.title).to.equal(exp.title);
+          expect(ret.url).to.equal(exp.url);
+          if (exp.source_url) {
+            expect(ret.source_url).to.equal(exp.source_url);
+          }
         }
       });
     });
