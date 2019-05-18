@@ -23,11 +23,13 @@ WITH full_thing AS (
     links,
     audio,
     -- key values
+    facilitators,
     facetoface_online_or_both,
     public_spectrum,
     open_limited,
     recruitment_method,
     level_polarization,
+    level_complexity,
     -- key lists
     method_types,
     number_of_participants,
@@ -35,8 +37,7 @@ WITH full_thing AS (
     participants_interactions,
     decision_methods,
     if_voting,
-    -- yesno
-    facilitators
+    purpose_method,
 FROM
     methods,
     get_localized_texts(${articleid}, ${lang}) AS texts

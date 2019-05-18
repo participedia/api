@@ -37,12 +37,11 @@ describe("Cases", () => {
       await postCaseNewHttp(req, res);
       ret.body.OK.should.be.false;
     });
-    it.only("works with authentication", async () => {
+    it("works with authentication", async () => {
       const body = await addBasicCase();
       body.OK.should.be.true;
       let returnedCase = body.article;
       returnedCase.id.should.be.a("number");
-      returnedCase.videos.length.should.equal(2);
       returnedCase.creator.user_id.should.equal(
         returnedCase.last_updated_by.user_id
       );

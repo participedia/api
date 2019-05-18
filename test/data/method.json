@@ -9,34 +9,60 @@
   "title": "First Title",
   "description": "First Description",
   "body": "First Body",
-  "files": [],
+  "files": [
+    {
+      "url": "https://example.com/firstfile.pdf",
+      "source_url": "https://example.com/firstsource/",
+      "title": "My first file",
+      "attribution": "Atilla the Hun"
+    },
+    {
+      "url": "https://example.com/secondfile.xml",
+      "source_url": "https://example.com/secondsource/",
+      "title": "My second file",
+      "attribution": "Jane Goodall"
+    }
+  ],
   "links": [
     {
       "url": "https://killsixbilliondemons.com",
-      "title": "",
-      "attribution": ""
+      "title": "Kill Six Billion Demons",
+      "attribution": "Abbaddon"
     }
   ],
-  "videos": [],
+  "videos": [
+    {
+      "url": "https://youtube.com/xrbrbl",
+      "title": "Naked mole rats",
+      "attribution": "The primitive skills channel"
+    }
+  ],
   "photos": [
     {
       "url": "http://example.com/picture.jpg",
-      "source_url": "",
+      "source_url": "https://stockphoto.com/",
       "title": "generic photo",
       "attribution": "anonymous"
     }
   ],
-  "audio": [],
+  "audio": [
+    {
+      "url": "http://example.com/firstvoice.au",
+      "title": "Come here Watson, I need you.",
+      "attribution": "Johans Kessler"
+    }
+  ],
   "facilitators": "no",
   "facetoface_online_or_both": "both",
-  "public_spectrum": "",
-  "open_limited": "",
-  "recruitment_method": "",
-  "level_polarization": "",
-  "scope_of_influence": [],
-  "method_types": [],
-  "number_of_participants": [],
-  "participants_interactions": [],
-  "decision_methods": [],
-  "if_voting": []
+  "public_spectrum": "inform",
+  "open_limited": "open_to",
+  "recruitment_method": "random",
+  "level_polarization": "moderate",
+  "level_complexity": "moderate",
+  "scope_of_influence": ["organization", "national"],
+  "method_types": ["collaborative", "direct"],
+  "number_of_participants": ["no_limit"],
+  "participants_interactions": ["discussion", "informal"],
+  "decision_methods": ["idea", "voting"],
+  "if_voting": ["preferential", "unanimous"]
 }
