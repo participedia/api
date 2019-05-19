@@ -40,6 +40,34 @@ function sql(filename) {
   });
 }
 
+const CASE_BY_ID = sql("../sql/case_by_id.sql");
+const METHOD_BY_ID = sql("../sql/method_by_id.sql");
+const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
+const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
+const UPDATE_NOUN = sql("../sql/update_noun.sql");
+const INSERT_AUTHOR = sql("../sql/insert_author.sql");
+const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
+const USER_BY_ID = sql("../sql/user_by_id.sql");
+const CREATE_USER_ID = sql("../sql/create_user_id.sql");
+const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
+const CREATE_CASE = sql("../sql/create_case.sql");
+const CREATE_METHOD = sql("../sql/create_method.sql");
+const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
+const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
+const SEARCH = sql("../sql/search.sql");
+const FEATURED_MAP = sql("../sql/featuredmap.sql");
+const FEATURED = sql("../sql/featured.sql");
+const SEARCH_MAP = sql("../sql/searchmap.sql");
+const LIST_ARTICLES = sql("../sql/list_articles.sql");
+const LIST_MAP_CASES = sql("../sql/list_map_cases.sql");
+const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
+const LIST_TITLES = sql("../sql/list_titles.sql");
+const LIST_SHORT = sql("../sql/list_short.sql");
+const UPDATE_USER = sql("../sql/update_user.sql");
+const UPDATE_CASE = sql("../sql/update_case.sql");
+const UPDATE_METHOD = sql("../sql/update_method.sql");
+const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
+
 function ErrorReporter() {
   this.errors = [];
   let self = this;
@@ -80,26 +108,24 @@ async function _listUsers() {
 }
 
 async function _listCases(lang) {
-  _cases = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
-    { lang }
-  )).cases;
+  try {
+    _cases = await db.many(LIST_ARTICLES, { type: "cases", lang });
+  } catch (e) {
+    console.error("Error in _listCases: %s", e.message);
+  }
   setTimeout(_listCases, randomDelay());
 }
 
 async function _listMethods(lang) {
-  _methods = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
-    { lang }
-  )).methods;
+  _methods = await db.many(LIST_ARTICLES, { type: "methods", lang });
   setTimeout(_listMethods, randomDelay());
 }
 
 async function _listOrganizations(lang) {
-  _organizations = (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
-    { lang }
-  )).organizations;
+  _organizations = await db.many(LIST_ARTICLES, {
+    type: "organizations",
+    lang
+  });
   setTimeout(_listOrganizations, randomDelay());
 }
 
@@ -113,9 +139,9 @@ async function _refreshSearch() {
 
 if (!process.env.MIGRATIONS) {
   _listUsers();
-  _listCases().then(() => console.log("cases cached"));
-  _listMethods().then(() => console.log("methods cached"));
-  _listOrganizations().then(() => console.log("organizations cached"));
+  _listCases("en").then(() => console.log("cases cached"));
+  _listMethods("en").then(() => console.log("methods cached"));
+  _listOrganizations("en").then(() => console.log("organizations cached"));
   _refreshSearch().then(() => console.log("search refreshed"));
   db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
     keys: i18n_en
@@ -468,33 +494,6 @@ const as = Object.assign({}, pgp.as, {
 
 const helpers = pgp.helpers;
 
-const CASE_BY_ID = sql("../sql/case_by_id.sql");
-const METHOD_BY_ID = sql("../sql/method_by_id.sql");
-const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
-const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
-const UPDATE_NOUN = sql("../sql/update_noun.sql");
-const INSERT_AUTHOR = sql("../sql/insert_author.sql");
-const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
-const USER_BY_ID = sql("../sql/user_by_id.sql");
-const CREATE_USER_ID = sql("../sql/create_user_id.sql");
-const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
-const CREATE_CASE = sql("../sql/create_case.sql");
-const CREATE_METHOD = sql("../sql/create_method.sql");
-const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
-const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
-const SEARCH = sql("../sql/search.sql");
-const FEATURED_MAP = sql("../sql/featuredmap.sql");
-const FEATURED = sql("../sql/featured.sql");
-const SEARCH_MAP = sql("../sql/searchmap.sql");
-const LIST_MAP_CASES = sql("../sql/list_map_cases.sql");
-const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
-const LIST_TITLES = sql("../sql/list_titles.sql");
-const LIST_SHORT = sql("../sql/list_short.sql");
-const UPDATE_USER = sql("../sql/update_user.sql");
-const UPDATE_CASE = sql("../sql/update_case.sql");
-const UPDATE_METHOD = sql("../sql/update_method.sql");
-const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
-
 module.exports = {
   db,
   as,
@@ -520,6 +519,7 @@ module.exports = {
   FEATURED_MAP,
   FEATURED,
   SEARCH_MAP,
+  LIST_ARTICLES,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
   LIST_TITLES,

@@ -296,19 +296,21 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params);
-  const staticText = getEditStaticText(params);
+  const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
+}
+
+function print(name, obj) {
+  console.log("%s: %s", name, JSON.stringify(obj, null, 2));
 }
 
 async function getEditStaticText(params) {
   const lang = params.lang;
   let staticText = Object.assign({}, sharedFieldOptions);
-
   staticText.authors = listUsers();
   staticText.cases = listCases(lang);
   staticText.methods = listMethods(lang);
   staticText.organizations = listOrganizations(lang);
-
   return staticText;
 }
 
