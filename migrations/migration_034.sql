@@ -28,10 +28,10 @@ UPDATE methods SET  level_polarization = 'not_polarized' WHERE level_polarizatio
 UPDATE methods SET  level_polarization = 'not_polarized' WHERE level_polarization = '1 - Not Polarized';
 UPDATE methods SET  level_polarization = 'low_polarization' WHERE level_polarization = '2_not_very_polarized';
 UPDATE methods SET  level_polarization = 'low_polarization' WHERE level_polarization = '2 - Not Very Polarized';
-UPDATE methods SET  level_polarization = 'moderate_polarization' WHERE level_polarization = '3_somewhate_polarized';
+UPDATE methods SET  level_polarization = 'moderate_polarization' WHERE level_polarization = '3_somewhat_polarized';
 UPDATE methods SET  level_polarization = 'moderate_polarization' WHERE level_polarization = '3 - Somewhat Polarized';
 UPDATE methods SET  level_polarization = 'polarized' WHERE level_polarization = '4_polarized';
-UPDATE methods SET  level_polarization = 'polarized' WHERE level_polarization = '4 Polarized';
+UPDATE methods SET  level_polarization = 'polarized' WHERE level_polarization = '4 - Polarized';
 UPDATE methods SET  level_polarization = 'high_polarization' WHERE level_polarization = '5 - Very Polarized';
 
 ALTER TABLE methods DROP COLUMN if_voting;
