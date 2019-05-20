@@ -7,6 +7,7 @@ import editWarning from './edit-warning.js';
 import editSubmissionDetails from "./edit-submission-details.js";
 import editTextarea from './edit-textarea.js';
 import editForm from './edit-form.js';
+import editAutocomplete from './edit-autocomplete.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   editMultiSelect.init();
@@ -18,4 +19,5 @@ document.addEventListener("DOMContentLoaded", () => {
   editSubmissionDetails.init();
   editTextarea.init();
   editForm.init();
+  editAutocomplete.init();
 });

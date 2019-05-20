@@ -1,0 +1,20 @@
+<div
+    class="
+      edit-autocomplete-selected-item
+      js-edit-autocomplete-selected-item-{{name}}
+      {{#if isTemplate}}
+        js-edit-autocomplete-selected-item-{{name}}-template
+      {{/if}}
+    "
+    {{#if isTemplate}}
+      style="display: none"
+    {{/if}}
+  >
+  <span>{{name}}</span>
+  <button
+    class="icon-only js-edit-autocomplete-remove-item"
+    data-name="{{name}}"
+  >
+    {{> icon-close }}
+  </button>
+</div>

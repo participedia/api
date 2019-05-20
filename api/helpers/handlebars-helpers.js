@@ -214,6 +214,18 @@ module.exports = {
     });
   },
 
+  editAutocompleteGetSelectedLabel: (article, name) => {
+    const selected = article[name];
+    if (!selected) return;
+    return selected.title;
+  },
+
+  editAutocompleteGetSelectedId: (article, name) => {
+    const selected = article[name];
+    if (!selected) return;
+    return selected.id;
+  },
+
   getvalue: (article, name) => {
     const item = article[name];
     if (!item) return;
