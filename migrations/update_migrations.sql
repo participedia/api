@@ -42,3 +42,5 @@
 \include 'migrations/migration_037.sql'
 -- create search index
 \include 'migrations/migration_038.sql'
+-- add columns level_complexity and purpose_method
+\include 'migrations/migration_039.sql'
