@@ -11,7 +11,7 @@ WITH full_thing AS (
     hidden,
     first_author(${articleid}) AS creator,
     last_author(${articleid}) AS last_updated_by,
-    bookmarked('method', ${articleid}, ${userid}),
+    bookmarked('organization', ${articleid}, ${userid}),
     -- user-contributed content
     texts.title,
     texts.description,
