@@ -1,9 +1,4 @@
-WITH
-texts AS (
-  SELECT * FROM localized_texts
-  WHERE localized_texts.language = ${language}
-),
-user_bookmarks AS (
+WITH user_bookmarks AS (
   SELECT * FROM (
     SELECT
       bookmarks.thingid as id,
@@ -15,12 +10,12 @@ user_bookmarks AS (
       true as bookmarked
     FROM
       bookmarks,
-      texts,
-      things
+      things,
+      get_localized_texts(things.id, ${language}) AS texts
     WHERE
+      things.hidden = false AND
       bookmarks.userid = ${userId} AND
       bookmarks.thingid = things.id AND
-      bookmarks.thingid = texts.thingid AND
       bookmarks.bookmarktype = things.type
   ) t ORDER BY updated_date
 ),
@@ -31,12 +26,13 @@ authored_things AS (
     authors.thingid,
     things.updated_date
   FROM
-    texts,
     authors,
-    things
+    things,
+    get_localized_texts(things.id, ${language}) AS texts
   WHERE
     texts.thingid = authors.thingid AND
     texts.thingid = things.id AND
+    things.hidden = false AND
     authors.user_id = ${userId}
   ORDER BY authors.thingid, things.updated_date
 ),

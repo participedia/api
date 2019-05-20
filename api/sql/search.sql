@@ -45,7 +45,8 @@ SELECT
   total_selections.total,
   all_selections.rank
 FROM all_selections, total_selections, things
-WHERE all_selections.id = things.id
+WHERE all_selections.id = things.id AND
+      things.hidden = false
 ORDER BY all_selections.rank DESC
 OFFSET ${offset}
 LIMIT ${limit}
