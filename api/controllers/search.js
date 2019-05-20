@@ -108,6 +108,13 @@ const limitFromReq = req => {
   return limit;
 };
 
+const sortbyFromReq = req => {
+  if (req.query.sortby === "post_date") {
+    return "post_date";
+  }
+  return "updated_date";
+};
+
 /**
  * @api {get} /search Search through the cases
  * @apiGroup Search
@@ -152,7 +159,8 @@ router.get("/", async function(req, res) {
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
       language: lang,
-      userId: req.user ? req.user.id : null
+      userId: req.user ? req.user.id : null,
+      sortby: sortbyFromReq(req)
     });
     const total = Number(
       results.length ? results[0].total || results.length : 0
