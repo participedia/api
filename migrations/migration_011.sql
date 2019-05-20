@@ -1,9 +1,3 @@
--- CREATE TYPE localized_value AS (
---   key text,
---   lookup_key text,
---   value text
--- );
-
 --
 -- move from files as array of urls to full_files as array of composite types
 --
