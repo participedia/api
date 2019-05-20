@@ -4,6 +4,7 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
+let { fixUpURLs } = require("../helpers/things");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
@@ -20,6 +21,10 @@ async function getUserById(userId, req, res, view = "view") {
         .status(404)
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
+    result.user.bookmarks.forEach(fixUpURLs);
+    result.user.cases.forEach(fixUpURLs);
+    result.user.methods.forEach(fixUpURLs);
+    result.user.organizations.forEach(fixUpURLs);
 
     // if (result.user.bookmarks) {
     //   result.user.bookmarks.forEach(b => (b.bookmarked = true));

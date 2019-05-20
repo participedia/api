@@ -9,7 +9,7 @@ const options = {
 const fs = require("fs");
 //if (process.env.LOG_QUERY === "true") {
 // options.query = evt => (process.env.LAST_QUERY = evt.query);
-// options.query = evt => console.log("QUERY: %s", evt.query);
+options.query = evt => console.log("QUERY: %s", evt.query);
 //}
 const pgp = require("pg-promise")(options);
 const path = require("path");
@@ -107,24 +107,24 @@ async function _listUsers() {
   // console.log("user cache refreshed");
 }
 
-async function _listCases(lang) {
+async function _listCases() {
   try {
-    _cases = await db.many(LIST_ARTICLES, { type: "cases", lang });
+    _cases = await db.many(LIST_ARTICLES, { type: "cases", lang: "en" });
   } catch (e) {
     console.error("Error in _listCases: %s", e.message);
   }
   setTimeout(_listCases, randomDelay());
 }
 
-async function _listMethods(lang) {
-  _methods = await db.many(LIST_ARTICLES, { type: "methods", lang });
+async function _listMethods() {
+  _methods = await db.many(LIST_ARTICLES, { type: "methods", lang: "en" });
   setTimeout(_listMethods, randomDelay());
 }
 
-async function _listOrganizations(lang) {
+async function _listOrganizations() {
   _organizations = await db.many(LIST_ARTICLES, {
     type: "organizations",
-    lang
+    lang: "en"
   });
   setTimeout(_listOrganizations, randomDelay());
 }
@@ -139,9 +139,9 @@ async function _refreshSearch() {
 
 if (!process.env.MIGRATIONS) {
   _listUsers();
-  _listCases("en").then(() => console.log("cases cached"));
-  _listMethods("en").then(() => console.log("methods cached"));
-  _listOrganizations("en").then(() => console.log("organizations cached"));
+  _listCases().then(() => console.log("cases cached"));
+  _listMethods().then(() => console.log("methods cached"));
+  _listOrganizations().then(() => console.log("organizations cached"));
   _refreshSearch().then(() => console.log("search refreshed"));
   db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
     keys: i18n_en
