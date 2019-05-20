@@ -24,6 +24,7 @@ UPDATE methods SET decision_methods = ARRAY[decision_method] where decision_meth
 ALTER TABLE methods DROP COLUMN decision_method;
 
 ALTER TABLE methods RENAME COLUMN issue_polarization TO level_polarization;
+UPDATE methods SET  level_polarization = 'not_polarized' WHERE level_polarization = 'not';
 UPDATE methods SET  level_polarization = 'not_polarized' WHERE level_polarization = '1_not_polarized';
 UPDATE methods SET  level_polarization = 'not_polarized' WHERE level_polarization = '1 - Not Polarized';
 UPDATE methods SET  level_polarization = 'low_polarization' WHERE level_polarization = '2_not_very_polarized';
