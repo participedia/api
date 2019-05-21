@@ -358,10 +358,6 @@ input[type=number]::-webkit-inner-spin-button {
   display: none;
 }
 
-.edit-multi-select {
-  color: #757575;
-}
-
 .edit-autocomplete-selected-item {
   margin-top: 15px;
   border: 1px solid #e6e6e6;
