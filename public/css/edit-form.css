@@ -358,8 +358,19 @@ input[type=number]::-webkit-inner-spin-button {
   display: none;
 }
 
-.edit-multi-select {
-  color: #757575;
+.edit-autocomplete-selected-item {
+  margin-top: 15px;
+  border: 1px solid #e6e6e6;
+  border-radius: 2px;
+  display: flex;
+  background-color: #fff;
+}
+.edit-autocomplete-selected-item span {
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+  padding: 8px;
+  line-height: 1.2em;
 }
 
 .edit-media-drag-drop-area {

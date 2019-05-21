@@ -1,0 +1,38 @@
+{{#> edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
+<input
+  type="text"
+  class="js-edit-autocomplete"
+  data-name="{{name}}"
+  value=""
+  placeholder="{{placeholder article name}}"
+  autocomplete="false"
+  autocomplete="off"
+/>
+
+<ol
+  class="unstyled-list edit-edit-autocomplete-list js-edit-autocomplete-list"
+  data-name="{{name}}"
+  {{#if max}}data-max="{{max}}"{{/if}}
+  {{#if multi}}data-multi="true"{{/if}}
+>
+  {{#each (editAutocompleteGetSelectedItems article name)}}
+    {{> edit-autocomplete-selected-item
+      name=../name
+      index=@index
+      title=this.title
+      value=this.id
+      multi=../multi
+    }}
+  {{/each}}
+</ol>
+
+<script type="text/template" id="js-edit-autocomplete-selected-item-template">
+  {{> edit-autocomplete-selected-item name=name }}
+</script>
+
+<ul class="js-edit-autocomplete-options-{{name}}" style="display: none;">
+  {{#each (getArticleOptions static name)}}
+  <li data-key="{{key}}">{{value}}</li>
+  {{/each}}
+</ul>
+{{/ edit-form-group}}
