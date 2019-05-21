@@ -275,8 +275,8 @@ function ids(idList) {
   if (idList.length && isObject(idList[0])) {
     return idList.map(item => parseInt(item.id, 10));
   }
-  return idList;
-  // return idList.map(item => parseInt(item.key, 10));
+  // filter out empty values and map to integers
+  return idList.filter(item => item !== "").map(item => parseInt(item, 10));
 }
 
 // as.strings

@@ -56,7 +56,7 @@
     <h2 class="fieldset-header">{{t "process_sectionlabel"}}</h2>
     {{> edit-multi-select ranked=true name="method_types" max=3 }}
     {{> edit-multi-select ranked=true name="tools_techniques_types" max=3 }}
-    {{> edit-multi-select name="specific_methods_tools_techniques" }}
+    {{> edit-autocomplete name="specific_methods_tools_techniques" multi=true }}
     {{> article-edit-select name="legality" }}
     {{> article-edit-select name="facilitators" }}
     {{> article-edit-select name="facilitator_training" }}
@@ -69,7 +69,7 @@
   </fieldset>
   <fieldset class="organizations_and_supporters fullonly">
     <h2 class="fieldset-header">{{t "organizers_sectionlabel"}}</h2>
-    {{> article-edit-select name="primary_organizer" }}
+    {{> edit-autocomplete name="primary_organizer" }}
     {{> edit-multi-select name="organizer_types" max=3 }}
   </fieldset>
   <fieldset class="resources fullonly">

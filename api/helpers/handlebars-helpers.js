@@ -214,13 +214,28 @@ module.exports = {
     });
   },
 
+  editAutocompleteGetSelectedItems: (article, name) => {
+    const selectedItems = article[name];
+    if (!selectedItems) return;
+
+    if (Array.isArray(selectedItems) && selectedItems.length === 0) {
+      return null;
+    } else if (Array.isArray(selectedItems) && selectedItems.length > 0) {
+      return selectedItems;
+    } else {
+      return [selectedItems];
+    }
+  },
+
   editAutocompleteGetSelectedLabel: (article, name) => {
+    if (!article) return;
     const selected = article[name];
     if (!selected) return;
     return selected.title;
   },
 
   editAutocompleteGetSelectedId: (article, name) => {
+    if (!article) return;
     const selected = article[name];
     if (!selected) return;
     return selected.id;
