@@ -504,7 +504,7 @@
   "case_edit_is_component_of_label": "Make This Case a Component of Another Case",
   "case_edit_is_component_of_instructional": "A case can only be a component of one other case, and the other case must already be published on Participedia. Type to search for an existing case in Participedia to label this case as a component of it. Select one. ",
   "case_edit_is_component_of_placeholder": "Search for existing case/parent",
-  "case_view_is_component_of_label": "Make This Case a Component of Another Case",
+  "case_view_is_component_of_label": "Parent of this Case",
   "case_edit_files_label": "Files",
   "case_edit_files_instructional": "Upload relevant documents here. Supported file types include: rtf, txt, doc, docx, xls, xlsx, pdf, ppt, pptx, pps, ppsx, odt, ods and odp. Max file size is 5MB.",
   "case_edit_files_placeholder": "Click to select or drag and drop files here",
@@ -1052,6 +1052,8 @@
   "name:decision_methods-key:voting-longValue": "Voting (i.e. any type of formal vote; please provide more detail in next field)",
   "name:decision_methods-key:n/a": "Not Applicable",
   "name:decision_methods-key:n/a-longValue": "Not Applicable (e.g. votes are not typically taken at protest demonstrations)",
+  "name:decision_methods-key:na": "Not Applicable",
+  "name:decision_methods-key:na-longValue": "Not Applicable (e.g. votes are not typically taken at protest demonstrations)",
   "name:decision_methods-key:dont": "Don’t Know",
   "name:tags-key:accessibility": "Accessibility",
   "name:tags-key:activism": "Activism",
@@ -1345,5 +1347,6 @@
   "method_edit_public_spectrum_info": "The IAP2 Spectrum of Public Participation is designed to identify the level of public participation within any community engagement process. Each level increases the amount of influence the public can have over final decision-making, and the spectrum assumes that choosing a higher level encompasses the levels below.",
   "method_edit_level_polarization_info": "Select the level of political polarization this method can handle\nInfo bubble: Low polarization exists when a public participation initiative can assume basic agreement on goals, such as people’s desire for emergency fire services. High polarization exists when public attitudes are strongly divided between two or more options. This is often linked to partisanship, long-standing animosities, and low trust. ",
   "method_edit_level_complexity_info": "An example of low complexity would be a neighborhood decision about appropriate playground equipment for a park. More complex issues involve high levels of technical/ scientific intricacy, are highly interdependent with other issues, and require solutions that are based on balancing trade-offs between different goals and values. Some examples of highly complex issues include health care reform, climate change, or migration.",
-  "Featured [type]": "Featured %s"
+  "Featured [type]": "Featured %s",
+  "case_view_has_components_label": "Components of this Case"
 }
