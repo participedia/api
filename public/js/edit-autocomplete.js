@@ -26,12 +26,11 @@ const editAutocomplete = {
     if (!buttonEl) return;
 
     const currentLiEl = buttonEl.closest("li");
-    const name = currentLiEl.getAttribute("data-name");
     const parentListEl = currentLiEl.parentNode;
     const numItems = parentListEl.querySelectorAll("li").length;
 
-    // if we have more than 1 item, remove it
-    // if there is only 1 item left, clear the value
+    // if we have more than 1 item, remove it from the list
+    // if there is only 1 item left, clear the value and hide it
     if (numItems > 1) {
       parentListEl.removeChild(currentLiEl);
     } else {
@@ -60,17 +59,17 @@ const editAutocomplete = {
     );
     const isMulti = listToAppendToEl.getAttribute("data-multi");
     const numItems = listToAppendToEl.querySelectorAll("li").length;
-    // if it's a single item autocomplete
     if (!isMulti && numItems > 0) {
-      // update the field
+      // if it's a single item autocomplete, update the existing item and make visible
       const currentLiEl = listToAppendToEl.querySelectorAll("li")[0];
-      // update selected label
+      // update label
       currentLiEl.querySelector("span").innerText = item.label;
       // update value on hidden input
       currentLiEl.querySelector("input").value = item.value;
       currentLiEl.style.display = "flex";
     } else {
-      // if it's a multi field autocomplete, or there was no value, insert new item
+      // if it's a multi field autocomplete,
+      // or if it's the first item getting added, insert a new item
       const template = document.getElementById(
         "js-edit-autocomplete-selected-item-template"
       );
@@ -89,11 +88,11 @@ const editAutocomplete = {
       } else {
         hiddenEl.name = name;
       }
-      // update selected label
+      // update label
       newItemEl.querySelector("span").innerText = item.label;
       // update value on hidden input
       hiddenEl.value = item.value;
-      //append template li to list
+      //append template item to list
       listToAppendToEl.insertAdjacentElement("beforeend", newItemEl);
     }
   },
