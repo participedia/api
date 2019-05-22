@@ -1348,5 +1348,10 @@
   "method_edit_level_polarization_info": "Select the level of political polarization this method can handle\nInfo bubble: Low polarization exists when a public participation initiative can assume basic agreement on goals, such as people’s desire for emergency fire services. High polarization exists when public attitudes are strongly divided between two or more options. This is often linked to partisanship, long-standing animosities, and low trust. ",
   "method_edit_level_complexity_info": "An example of low complexity would be a neighborhood decision about appropriate playground equipment for a park. More complex issues involve high levels of technical/ scientific intricacy, are highly interdependent with other issues, and require solutions that are based on balancing trade-offs between different goals and values. Some examples of highly complex issues include health care reform, climate change, or migration.",
   "Featured [type]": "Featured %s",
-  "case_view_has_components_label": "Components of this Case"
+  "case_view_has_components_label": "Components of this Case",
+  "case_edit_featured_label": "Featured",
+  "case_edit_featured_instructional": "Featured articles are displayed first on the home page",
+  "case_edit_hidden_label": "Hidden",
+  "case_edit_hidden_instructional": "Hidden articles will not show up in search results",
+  "Admin Only": "Admin Only"
 }
