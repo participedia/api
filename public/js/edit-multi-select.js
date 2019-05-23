@@ -87,7 +87,7 @@ const editMultiSelect = {
     } else if (!hasNotReachedMax()) {
       // insert error text & open modal
       const errorText = `You can not add more than ${maxItems} items to this field.`;
-      modal.updateModal(errorText, "");
+      modal.updateModal(errorText);
       modal.openModal("aria-modal");
     }
 
