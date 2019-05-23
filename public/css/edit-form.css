@@ -168,7 +168,8 @@ input[type=number]::-webkit-inner-spin-button {
   display: none;
 }
 
-[data-submit-type=quick] .fieldset-header.quickonly {
+[data-submit-type=quick] .fieldset-header.quickonly,
+.admin-only .fieldset-header {
   display: block;
 }
 
@@ -1301,6 +1302,10 @@ input[type=number]::-webkit-inner-spin-button {
 
 .user-main-content .rich-text-editor-container {
   height: 200px;
+}
+
+.user-view-bio {
+  margin-top: 2em;
 }
 
 .user-view-bio img {

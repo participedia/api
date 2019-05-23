@@ -24,7 +24,8 @@ const tabsWithCards = {
     // update url param to indicate current tab
     this.tabInputEls.forEach(el => {
       el.addEventListener("click", event => {
-        window.location.href = `${window.location.origin}/?selectedCategory=${event.target.id}`;
+        window.location.href =
+          `${window.location.origin + window.location.pathname}?selectedCategory=${event.target.id}`;
       });
     });
   },
@@ -46,7 +47,8 @@ const tabsWithCards = {
       // toggle checked attr on inputs
       this.tabInputEls.forEach(el => el.checked = el.id === newTabId);
       // go to new tab
-      window.location.href = `${window.location.origin}/?selectedCategory=${newTabId}`;
+      window.location.href =
+        `${window.location.origin + window.location.pathname}?selectedCategory=${newTabId}`;
     });
   },
 
