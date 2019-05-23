@@ -11,7 +11,6 @@
     "node": "11.2.0"
   },
   "dependencies": {
-    "a11y-dialog-component": "5.1.0",
     "apicache": "^1.1.1",
     "async": "^2.3.0",
     "autocompleter": "^4.0.2",

@@ -1,5 +1,5 @@
-import Modal from "a11y-dialog-component";
 import Sortable from "sortablejs";
+import modal from "./modal.js";
 
 const toArray = (nodeList) => Array.prototype.slice.call(nodeList);
 
@@ -12,11 +12,6 @@ const editMultiSelect = {
     this.bindRemoveItemClicks();
     this.bindOnSelectChange();
     this.initSortableLists();
-
-    this.modalId = "#modal-container";
-    this.modal = new Modal(this.modalId, {
-      closingSelector: ".js-modal-close",
-    });
   },
 
   initSortableLists() {
@@ -91,9 +86,9 @@ const editMultiSelect = {
       currentList.append(newItemHTML);
     } else if (!hasNotReachedMax()) {
       // insert error text & open modal
-      const errorText = `<p>You can not add more than ${maxItems} items to this field.</p>`;
-      document.querySelector(`${this.modalId} .c-dialog__content`).innerHTML = errorText;
-      this.modal.open();
+      const errorText = `You can not add more than ${maxItems} items to this field.`;
+      modal.updateModal(errorText, "");
+      modal.openModal("aria-modal");
     }
 
     // reset select to show placeholder/first option

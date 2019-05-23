@@ -1,16 +1,9 @@
-<div id="modal-container" class="c-dialog" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="dialog-title" aria-describedby="dialog-description" tabindex="-1">
-  <div role="document" class="c-dialog__box">
-    <div class="c-dialog__content-container">
-      <div class="c-dialog__content">
-        <!-- content to be inserted via JS before opening modal -->
-      </div>
-      <div class="c-dialog__close-icon">
-        <button type="button" aria-label="Close this window" class="icon-only js-modal-close">
-          {{> icon-close}}
-        </button>
-      </div>
+<div id="aria-modal" data-modal>
+  <div class="aria-modal-document" data-modal-document>
+    <div class="aria-modal-content" data-modal-content>
+      <!-- content to be inserted via JS before opening modal -->
     </div>
-    <div class="c-dialog__footer">
+    <div class="aria-modal-footer" data-modal-footer>
       <!-- content to be inserted via JS before opening modal -->
     </div>
   </div>
