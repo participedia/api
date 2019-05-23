@@ -1353,5 +1353,6 @@
   "case_edit_featured_instructional": "Featured articles are displayed first on the home page",
   "case_edit_hidden_label": "Hidden",
   "case_edit_hidden_instructional": "Hidden articles will not show up in search results",
-  "Admin Only": "Admin Only"
+  "Admin Only": "Admin Only",
+  "404_error_msg": "Sorry, this page doesn't exist"
 }
