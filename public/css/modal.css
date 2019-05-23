@@ -35,18 +35,24 @@ body.modal-open {
   top: 0;
   transform: translateY(0%);
   visibility: visible;
-  width: 65%;
+  width: 45%;
   z-index: 10; /* this should be more than enough... */
 }
 
-.aria-modal-document {
-  padding: 20px 40px 20px 20px;
+@media (max-width: 1000px) {
+  .a11y-modal {
+    width: 65%;
+  }
 }
 
 @media screen and (max-width: 700px) {
   .a11y-modal {
     width: 90%;
   }
+}
+
+.aria-modal-document {
+  padding: 20px 40px 20px 20px;
 }
 
 .js [data-modal],
