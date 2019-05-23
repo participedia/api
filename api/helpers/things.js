@@ -46,6 +46,12 @@ const fixUpURLs = function(article) {
 
 const returnByType = (res, params, article, static, user) => {
   const { returns, type, view } = params;
+
+  // if article is hidden and user is not admin, return 404
+  if (article.hidden && (!user || (user && !user.isadmin))) {
+    return res.status(404).render("404");
+  }
+
   switch (returns) {
     case "htmlfrag":
       return res.status(200).render(type + "-" + view, {

@@ -210,4 +210,11 @@ app.get("/content-chooser", function(req, res) {
   res.status(200).render("content-chooser");
 });
 
+
+// 404 error handling
+// this should always be after all routes to catch all invalid urls
+app.use((req, res, next) => {
+  res.status(404).render("404");
+});
+
 module.exports = app;
