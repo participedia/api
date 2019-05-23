@@ -101,6 +101,7 @@ const editAutocomplete = {
     const options = this.getOptions(autocompleteEl);
     const name = autocompleteEl.getAttribute("data-name");
     autocomplete({
+      minLength: 1,
       input: autocompleteEl,
       fetch: (text, update) => {
         const suggestions = options.filter(n =>
