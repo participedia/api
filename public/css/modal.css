@@ -1,72 +1,130 @@
-.c-dialog {
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  background-color: rgba(0, 0, 0, .75);
-}
-
-.c-dialog p {
-  margin: 0;
-  margin-bottom: 1rem;
-}
-
-.c-dialog__box {
-  margin: auto;
-  background-color: #fff;
-  padding: 20px;
-  box-sizing: border-box;
-  width: 45%;
-}
-
-.c-dialog[aria-hidden="true"] {
+/**
+ * Trigger styling
+ */
+[data-modal-open][hidden] {
   display: none;
 }
 
-.c-dialog__footer,
-.c-dialog__header {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+/**
+ * When a modal dialog is open, don't allow scrolling of content
+ * beneath (on desktop). Also useful in negating instances of
+ * double scroll bars.
+ * (browser window + dialog if long enough content)
+ */
+body.modal-open {
+  overflow: hidden;
 }
 
-.c-dialog__content-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-
-.c-dialog__content {
-  flex-basis: 100%;
-  padding-right: 1rem;
-}
-
-/* makes the first text element align with top up of close icon */
-.c-dialog__content p:first-child,
-.c-dialog__content h3:first-child {
-  margin-top: -5px;
-}
-
-.c-dialog__close-icon button.icon-only {
-  padding: 0px;
+/**
+ * Modal Dialog base styling
+ */
+.js [data-modal],
+.a11y-modal {
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  border: 0;
+  bottom: 0;
+  box-shadow: 0 0 1800px 400px rgba(0, 0, 0, .75);
+  left: 0;
+  margin: auto;
+  max-height: 100%;
+  opacity: 1;
+  overflow: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: translateY(0%);
+  visibility: visible;
+  width: 45%;
+  z-index: 10; /* this should be more than enough... */
 }
 
 @media (max-width: 1000px) {
-  .c-dialog__box {
+  .a11y-modal {
     width: 65%;
   }
 }
 
-@media (max-width: 700px) {
-  .c-dialog__box {
-    width: calc(100% - 4rem);
+@media screen and (max-width: 700px) {
+  .a11y-modal {
+    width: 90%;
   }
 }
 
+.aria-modal-document {
+  padding: 20px 40px 20px 20px;
+}
+
+.js [data-modal],
+.a11y-modal {
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity .2s ease-in-out, transform .2s ease-in-out;
+}
 
 
+/**
+ * To allow for CSS animations, hidden modal dialogs are
+ * not set to display: none, but rather the following rule
+ * set, in combination with the dialog's default
+ * position: fixed, will keep dialogs hidden from
+ * all users until opened.
+ *
+ * This also solves an issue with iOS VO + Safari not allowing
+ * modal dialogs to be focused, if the dialog is initially
+ * set to "display: none".
+ */
+.js [data-modal][hidden]
+.a11y-modal[hidden] {
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15vh);
+  visibility: hidden;
+}
+
+.a11y-modal__close-btn {
+  border: none;
+}
+
+.is-icon-btn {
+  background: none;
+  border: none;
+  height: 1em;
+  padding: 0;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 1em;
+}
+
+[data-modal-x] {
+  border-right: 2px solid #808080;
+  bottom: 0;
+  display: block;
+  height: 1em;
+  left: 0;
+  margin: auto;
+  pointer-events: none;
+  position: relative;
+  right: 0;
+  top: 0;
+  transform: rotate(45deg);
+  width: 1px;
+}
+
+[data-modal-x]:after {
+  border-right: 2px solid #808080;
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: rotate(-90deg);
+  width: 100%;
+}
+
+.aria-modal-content {
+  margin-bottom: 20px;
+}

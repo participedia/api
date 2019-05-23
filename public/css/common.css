@@ -235,3 +235,11 @@ pre {
 [data-bookmarked=false] .is-not-bookmarked {
   display: block;
 }
+
+.loading-modal-content {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items: center;
+  height: 200px;
+}

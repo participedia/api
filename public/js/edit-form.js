@@ -1,6 +1,6 @@
 import serialize from "./utils/serialize.js";
-import Modal from "a11y-dialog-component";
 import loadingGifBase64 from "./loading-gif-base64.js";
+import modal from "./modal.js";
 
 const editForm = {
   init() {
@@ -30,22 +30,12 @@ const editForm = {
     const triggerEl = event.target.closest("a");
     const label = triggerEl.getAttribute("data-field-label");
     const infoText = triggerEl.getAttribute("data-info-text");
-    const modalId = "#modal-container";
-    const modal = new Modal(modalId, {
-      closingSelector: ".js-modal-close",
-    });
-    const modalContentEl = document.querySelector(`${modalId} .c-dialog__content`);
-    modalContentEl.innerHTML = `
+    const content = `
       <h3>${label}</h3>
       <p>${infoText}</p>
     `;
-    modal.open();
-
-    // attach event listener for new close button inserted in modal
-    const closeBtn = modalContentEl.querySelector(".js-modal-close");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", modal.close);
-    }
+    modal.updateModal(content);
+    modal.openModal("aria-modal");
   },
 
   sendFormData(event) {
@@ -63,6 +53,10 @@ const editForm = {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     xhr.onreadystatechange = () => {
+      if (xhr.readyState === 2) {
+        this.openPublishingFeedbackModal();
+      }
+
       // wait for request to be done
       if (xhr.readyState !== xhr.DONE) return;
 
@@ -76,22 +70,17 @@ const editForm = {
     }
 
     xhr.send(formData);
-    this.openPublishingFeedbackModal();
   },
 
   openPublishingFeedbackModal() {
-    const modalId = "#modal-container";
-    const modal = new Modal(modalId, {
-      closingSelector: ".js-modal-close",
-    });
-    const modalContentEl = document.querySelector(`${modalId} .c-dialog__content`);
-    modalContentEl.innerHTML = `
-      <div style="display:flex; flex-direction:column; justify-content:center; align-items: center; height: 200px">
+    const content = `
+      <div class="loading-modal-content">
         <h3>Publishing</h3>
         <img src=${loadingGifBase64} />
       </div>
     `;
-    modal.open();
+    modal.updateModal(content);
+    modal.openModal("aria-modal");
   },
 
   handleSuccess(response) {
@@ -114,25 +103,14 @@ const editForm = {
         <ul>
           ${errorsHtml}
         </ul>
-        <button class="button button-red js-modal-close">OK</button>
       `;
     }
   },
 
   handleErrors(errors) {
-    const modalId = "#modal-container";
-    const modal = new Modal(modalId, {
-      closingSelector: ".js-modal-close",
-    });
-    const modalContentEl = document.querySelector(`${modalId} .c-dialog__content`);
-    modalContentEl.innerHTML = this.errorModalHtml(errors);
-    modal.open();
-
-    // attach event listener for new close button inserted in modal
-    const closeBtn = modalContentEl.querySelector(".js-modal-close");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", modal.close);
-    }
+    const content = this.errorModalHtml(errors);
+    modal.updateModal(content);
+    modal.openModal("aria-modal", { showCloseBtn: true });
   },
 }
 
