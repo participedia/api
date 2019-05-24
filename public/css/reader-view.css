@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 120px;
+  word-break: break-word;
 }
 
 .reader-view aside {
