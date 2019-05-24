@@ -10,18 +10,20 @@ const hamburgerMenu = {
   },
 
   bindMenuClicks() {
-    document.querySelector(".js-menu-icon-container").addEventListener("click", e => {
-      const menuTriggerEl = e.target.closest("a");
-      if (menuTriggerEl) {
-        this.handleMenuClick(e);
-      }
-    });
+    document
+      .querySelector(".js-menu-icon-container")
+      .addEventListener("click", e => {
+        const menuTriggerEl = e.target.closest("a");
+        if (menuTriggerEl) {
+          this.handleMenuClick(e);
+        }
+      });
   },
 
   bindCloseAnywhere() {
-    const bgClickElement = document.querySelector('.js-sidebar-menu');
-    bgClickElement.addEventListener('click', () => {
-      location.href = '#';
+    const bgClickElement = document.querySelector(".js-sidebar-menu");
+    bgClickElement.addEventListener("click", () => {
+      location.href = "#";
     });
   },
 
@@ -34,9 +36,7 @@ const hamburgerMenu = {
     } else {
       document.querySelector("body").classList.remove("sidebar-menu-is-open");
     }
-  },
+  }
 };
 
 export default hamburgerMenu;
-
-
