@@ -36,13 +36,13 @@
   </nav>
   <nav class="horizontal-menu">
     <ul class="nav-list">
-      <li class="menu-icon-container">
-        <a href="#sidebar-menu" class="sidebar-menu-closed">
-          <span class="sr-only">{{t "open menu"}}</span>
+      <li class="menu-icon-container js-menu-icon-container">
+        <a href="#sidebar-menu" class="sidebar-menu-close" data-menu-is-open>
+          <span class="sr-only">{{t "close menu"}}</span>
           {{> icon-hamburger }}
         </a>
-        <a href="#" class="sidebar-menu-open">
-          <span class="sr-only">{{t "close menu"}}</span>
+        <a href="#" class="sidebar-menu-open" data-menu-is-closed>
+          <span class="sr-only">{{t "open menu"}}</span>
           {{> icon-hamburger }}
         </a>
       </li>
