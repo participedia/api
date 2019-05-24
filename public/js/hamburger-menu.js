@@ -1,18 +1,28 @@
 const hamburgerMenu = {
   init() {
     this.bindCloseAnywhere();
+    this.bindMenuClicks();
 
+    // if the menu is already open on load, toggle body class
+    if (location.hash === "#sidebar-menu") {
+      document.querySelector("body").classList.add("sidebar-menu-is-open");
+    }
+  },
+
+  bindMenuClicks() {
     document.querySelector(".js-menu-icon-container").addEventListener("click", e => {
       const menuTriggerEl = e.target.closest("a");
       if (menuTriggerEl) {
         this.handleMenuClick(e);
       }
     });
+  },
 
-    // if the menu is open on load, toggle body class
-    if (location.hash === "#sidebar-menu") {
-      document.querySelector("body").classList.add("sidebar-menu-is-open");
-    }
+  bindCloseAnywhere() {
+    const bgClickElement = document.querySelector('.js-sidebar-menu');
+    bgClickElement.addEventListener('click', () => {
+      location.href = '#';
+    });
   },
 
   handleMenuClick(e) {
@@ -24,13 +34,6 @@ const hamburgerMenu = {
     } else {
       document.querySelector("body").classList.remove("sidebar-menu-is-open");
     }
-  },
-
-  bindCloseAnywhere() {
-    const bgClickElement = document.querySelector('.js-sidebar-menu');
-    bgClickElement.addEventListener('click', () => {
-      location.href = '#';
-    });
   },
 };
 
