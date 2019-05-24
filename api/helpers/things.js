@@ -62,7 +62,7 @@ const returnByType = (res, params, article, static, user) => {
         layout: false
       });
     case "json":
-      return res.status(200).json({ OK: true, article, static });
+      return res.status(200).json({ OK: true, article });
     case "csv":
       // TODO: implement CSV
       return res.status(500, "CSV not implemented yet").render();
