@@ -17,7 +17,6 @@ const tabsWithCards = {
     // cards ui
     this.initCardLayout();
     this.initPagination();
-    this.initSortBy();
   },
 
   initDesktopTabNav() {
@@ -49,19 +48,6 @@ const tabsWithCards = {
       // go to new tab
       window.location.href =
         `${window.location.origin + window.location.pathname}?selectedCategory=${newTabId}`;
-    });
-  },
-
-  initSortBy() {
-    const sortByMenuEl = this.viewEl.querySelector(".js-sort-by-items");
-    sortByMenuEl.addEventListener("click", event => {
-      const link = event.target.closest("a");
-      if (link) {
-        event.preventDefault();
-        const sortBy = link.getAttribute("data-sortby");
-        updateUrlParams("sortby", sortBy);
-        window.location.href = window.location.href;
-      }
     });
   },
 

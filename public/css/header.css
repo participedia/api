@@ -112,13 +112,21 @@ header a {
 }
 
 .sidebar-menu-open .icon-fill,
-.sidebar-menu-closed:hover .icon-fill {
+.sidebar-menu-close:hover .icon-fill {
   fill: #808080;
 }
 
 .sidebar-menu-open:hover .icon-fill,
-.sidebar-menu-closed .icon-fill {
+.sidebar-menu-close .icon-fill {
   fill: #ffffff;
+}
+
+/*
+  this class gets added to the html element when the sidebar menu is open,
+  which disables scrolling of the page while it's open
+*/
+.sidebar-menu-is-open {
+  overflow: hidden;
 }
 
 .quick-submit-container {
@@ -150,10 +158,11 @@ header a {
   position: fixed;
   top: 61px;
   left: -300px;
-  height: 100%;
+  height: calc(100VH - 60px);
   margin-bottom: 272px;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.23);
   transition: all .3s ease;
+  overflow: scroll;
 }
 
 #sidebar-menu:target {
@@ -187,7 +196,7 @@ header a {
 #sidebar-menu + .horizontal-menu .sidebar-menu-open {
   display: none;
 }
-#sidebar-menu + .horizontal-menu .sidebar-menu-closed {
+#sidebar-menu + .horizontal-menu .sidebar-menu-close {
   display: flex;
 }
 
@@ -195,7 +204,7 @@ header a {
 #sidebar-menu:target + .horizontal-menu .sidebar-menu-open {
   display: flex;
 }
-#sidebar-menu:target + .horizontal-menu .sidebar-menu-closed {
+#sidebar-menu:target + .horizontal-menu .sidebar-menu-close {
   display: none;
 }
 
