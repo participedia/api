@@ -140,7 +140,7 @@
   "Publish": "Publish",
   "Contribute": "Contribute",
   "Teach": "Teach",
-  "home.tagline": "Participedia is a global community sharing knowledge and stories about public participation.",
+  "home.tagline": "A global community sharing knowledge and stories about public participation and democratic innovations",
   "Participedia Project Director and Co-founder": "Participedia Project Director and Co-founder",
   "Participedia Co-founder": "Participedia Co-founder",
   "Chair, Communication & Knowledge Mobilization Committee": "Chair, Communication & Knowledge Mobilization Committee",
@@ -1354,5 +1354,9 @@
   "case_edit_hidden_label": "Hidden",
   "case_edit_hidden_instructional": "Hidden articles will not show up in search results",
   "Admin Only": "Admin Only",
-  "404_error_msg": "Sorry, this page doesn't exist"
+  "404_error_msg": "Sorry, this page doesn't exist",
+  "Cases & Organizations": "Cases & Organizations",
+  "Featured Entries": "Featured Entries",
+  "map information": "map information",
+  "Click anywhere to activate map": "Click anywhere to activate map"
 }

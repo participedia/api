@@ -3,23 +3,12 @@ import mapStyle from "./map-style.js";
 import PopOver from "./GoogleMapsPopOver.js";
 import { xhrReq } from "./utils/utils.js";
 
-const markerIcon = {
-  path: "M14.1,7.1C14.1,3.2,11,0,7.1,0S0,3.2,0,7.1C0,12.4,7.1,20,7.1,20S14.1,12.4,14.1,7.1z M4.7,7.1 c0-1.3,1.1-2.4,2.4-2.4s2.4,1.1,2.4,2.4s-1,2.4-2.4,2.4C5.8,9.4,4.7,8.4,4.7,7.1z",
-  fillColor: "#000",
-  strokeColor: "#000",
-  fillOpacity: 1,
-  scale: 1,
-  anchor: new google.maps.Point(7, 20),
-};
-
-const featuredMarkerIcon = Object.assign({}, markerIcon, {
-  fillColor: "#ec2024",
-  strokeColor: "#ec2024",
-});
+const defaultMarkerIcon = "/images/default-marker.svg";
+const featuredMarkerIcon = "/images/featured-marker.svg";
 
 const map = {
   init() {
-    const mapEl = document.querySelector(".js-map-container");
+    const mapEl = document.querySelector(".js-map-inner");
     const isMethodTab = document.getElementById("method").checked;
 
     if (!mapEl) return;
@@ -38,6 +27,44 @@ const map = {
       // don't fetch results if we are on the methods tab
       this.fetchMapResults();
     }
+  },
+
+  initMapOverlay() {
+    const mapOverlayTriggerEl = document.querySelector(".js-map-overlay-trigger");
+
+    this.mapControls = document.querySelector(".js-map-controls");
+    this.mapOverlayEl = document.querySelector(".js-map-overlay");
+    this.mapLegend = document.querySelector(".js-map-legend");
+
+    this.mapOverlayEl.addEventListener("click", e => {
+      window.sessionStorage.setItem("participedia:mapActivated", "true");
+      this.hideMapOverlay();
+    });
+
+    mapOverlayTriggerEl.addEventListener("click", e => {
+      this.showMapOverlay();
+    });
+
+    // if user has already clicked to activate map in the current browser session,
+    // don't show overlay, show legend
+    if (window.sessionStorage.getItem("participedia:mapActivated")) {
+      this.hideMapOverlay();
+    } else {
+      this.showMapOverlay();
+    }
+  },
+
+  showMapOverlay() {
+    this.closePopOver();
+    this.mapOverlayEl.style.display = "block";
+    this.mapLegend.style.display = "none";
+    this.mapControls.style.display = "none";
+  },
+
+  hideMapOverlay() {
+    this.mapOverlayEl.style.display = "none";
+    this.mapLegend.style.display = "flex";
+    this.mapControls.style.display = "block";
   },
 
   initZoomControls(map) {
@@ -129,6 +156,31 @@ const map = {
     }
   },
 
+  closePopOver() {
+    const openMarker = document.querySelector(".js-pop-over");
+    if (openMarker) {
+      openMarker.parentNode.removeChild(openMarker);
+    }
+  },
+
+  dropMarkers(markers) {
+    // use setTimeout to animate the markers appearing on screen
+    for (let i = 0; i < markers.length; i++) {
+      setTimeout(() => {
+        this.createMarker(markers[i]);
+      }, i * 5);
+    }
+  },
+
+  createMarker(marker) {
+    const markerPopOver = new google.maps.Marker({
+      position: marker.position,
+      map: this.map,
+      icon: marker.featured === true ? featuredMarkerIcon : defaultMarkerIcon,
+    });
+    this.bindClickEventForMarker(markerPopOver, marker);
+  },
+
   renderMarkers(results) {
     const articleCardsContainer = document.querySelector(".js-cards-container");
     const filteredResults = this.filterResultsForTab(results);
@@ -149,67 +201,79 @@ const map = {
         position: new google.maps.LatLng(latitude, longitude),
         content: articleCardsContainer.querySelector("li"),
       };
-    });
+    }).filter(m => m !== undefined);
 
     // render markers
-    markers.filter(m => m !== undefined).forEach(marker => {
-      const markerEl = new google.maps.Marker({
-        position: marker.position,
-        map: this.map,
-        icon: marker.featured === true ? featuredMarkerIcon : markerIcon,
+    this.dropMarkers(markers);
+    this.initMapOverlay();
+  },
+
+  bindClickEventForMarker(markerEl, marker) {
+    // on marker click, show article card in popover on map
+    markerEl.addListener("click", event => {
+      const popOverContentEl = document.createElement("div");
+      // get card content from marker and set on content element
+      popOverContentEl.classList = "article-card";
+      popOverContentEl.innerHTML = marker.content.innerHTML;
+
+      // update type
+      const articleTypeEl = popOverContentEl.querySelector(".js-article-card-meta h5");
+
+      if (marker.featured) {
+        articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-featured-${marker.type}`);
+      } else {
+        articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-${marker.type}`);
+      }
+
+      // update image
+      const articleImageEl = popOverContentEl.querySelector(".js-article-card-img");
+      articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
+
+      // update title & truncate to 45 chars
+      const articleTitleEl = popOverContentEl.querySelector(".js-article-card-title");
+      if (marker.title.length < 50) {
+        articleTitleEl.innerText = marker.title;
+      } else {
+        articleTitleEl.innerText = marker.title.substring(0, 40) + "...";
+      }
+
+      // update submitted at
+      const articleSubmittedDate = popOverContentEl.querySelector(".js-article-date");
+      articleSubmittedDate.innerHtml = moment(marker.submittedDate).format("MMMM M, YYYY");
+
+      // update links
+      const articleLinks = Array.prototype.slice.call(
+        popOverContentEl.querySelectorAll(".js-article-link")
+      );
+      articleLinks.forEach(el => {
+        el.setAttribute("href", `/${marker.type}/${marker.id}`);
       });
 
-      // on marker click, show article card in popover on map
-      markerEl.addListener("click", event => {
-        const popOverContentEl = document.createElement("div");
-        // get card content from marker and set on content element
-        popOverContentEl.classList = "article-card";
-        popOverContentEl.innerHTML = marker.content.innerHTML;
+      // if there is already a current pop over, remove it
+      if (this.popOver) {
+        this.popOver.setMap(null);
+      }
 
-        // update type
-        const articleTypeEl = popOverContentEl.querySelector(".js-article-card-meta h5");
+      // insert pop over
+      this.popOver = new PopOver(marker.position, popOverContentEl);
+      this.popOver.setMap(this.map);
 
-        if (marker.featured) {
-          articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-featured-${marker.type}`);
-        } else {
-          articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-${marker.type}`);
-        }
+      // on screen widths less than 1100 the legend overlaps the marker card,
+      // so in this case, hide the legend when the marker is shown
+      if (window.innerWidth < 1100) {
+        this.mapLegend.style.display = "none";
+      }
 
-        // update image
-        const articleImageEl = popOverContentEl.querySelector(".js-article-card-img");
-        articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
-
-        // update title & truncate to 45 chars
-        const articleTitleEl = popOverContentEl.querySelector(".js-article-card-title");
-        if (marker.title.length < 46) {
-          articleTitleEl.innerText = marker.title;
-        } else {
-          articleTitleEl.innerText = marker.title.substring(0, 45) + "...";
-        }
-
-        // update submitted at
-        const articleSubmittedDate = popOverContentEl.querySelector(".js-article-date");
-        articleSubmittedDate.innerHtml = moment(marker.submittedDate).format("MMMM M, YYYY");
-
-        // update links
-        const articleLinks = Array.prototype.slice.call(
-          popOverContentEl.querySelectorAll(".js-article-link")
-        );
-        articleLinks.forEach(el => {
-          el.setAttribute("href", `/${marker.type}/${marker.id}`);
-        });
-
-        // if there is already a current pop over, remove it
-        if (this.popOver) {
-          this.popOver.setMap(null);
-        }
-
-        // insert pop over
-        this.popOver = new PopOver(marker.position, popOverContentEl);
-        this.popOver.setMap(this.map);
+      // remove pop over on close button click
+      this.popOver.anchor.addEventListener("click", event => {
+        const closeButtonEl = event.target.closest(".js-close-card-btn");
+        if (!closeButtonEl) return;
+        this.popOver.setMap(null);
+        // show legend when marker is closed
+        this.mapLegend.style.display = "flex";
       });
     });
-  },
+  }
 };
 
 export default map;
