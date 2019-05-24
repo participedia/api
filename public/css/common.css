@@ -254,3 +254,33 @@ pre {
   justify-content: center;
   align-items: center;
 }
+
+.floating-action-button {
+  margin: 0;
+  border-radius: 2em;
+  position: fixed;
+  bottom: 60px;
+  right: 30px;
+  box-shadow: 0px 0px 20px 1px #B3B3B3;
+  height: 60px;
+  width: 60px;
+  min-width: 60px;
+  padding: 0;
+}
+
+.floating-action-button svg {
+  padding: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.home-search-body .floating-action-button {
+  display: none;
+}
+
+@media (max-width: 950px) {
+  .home-search-body .floating-action-button {
+    display: flex;
+  }
+}
+
