@@ -116,6 +116,7 @@
     "resetlocaldb": "dropdb \"participedia\"; createdb \"participedia\"; psql -d \"participedia\" -f setup.sql; MIGRATIONS=true DATABASE_URL=postgres://${USER}@localhost:5432/participedia node migrations/import_json.js; psql -d \"participedia\" -f migrations/all_migrations.sql",
     "migrateuplocal": "psql -d \"participedia\" -f migrations/update_migrations.sql",
     "migrateupstage": "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/update_migrations.sql",
+    "migrateupprod": "psql -d \"${DATABASE_PROD_URL}\" -f migratsion/update_migrations.sql",
     "resettestfunctions": "psql -d participedia-test -f migrations/functions.sql",
     "resetlocalfunctions": "psql -d participedia -f migrations/functions.sql",
     "resetstagefunctions": "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/functions.sql",
