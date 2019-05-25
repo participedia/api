@@ -26,20 +26,30 @@ const shortKeys = titleKeys.concat([
 ]);
 const mediumKeys = shortKeys.concat(["body", "location"]);
 
+function fixedEncodeURIComponent(str) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+    return "%" + c.charCodeAt(0).toString(16);
+  });
+}
+
+function encodeURL(url) {
+  if (url.startsWith("http")) {
+    return url;
+  } else {
+    return process.env.AWS_UPLOADS_URL + fixedURIComponent(url);
+  }
+}
+
 const fixUpURLs = function(article) {
   // FIXME: need to handle all media objects and source_urls for sourced media
   if (article.photos && article.photos.length) {
-    article.photos.forEach(img => {
-      if (!img.url.startsWith("http")) {
-        img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url);
-      }
+    article.photos.forEach(obj => {
+      obj.url = encodeURL(obj.url);
     });
   }
   if (article.files && article.files.length) {
-    article.files.forEach(file => {
-      if (!file.url.startsWith("http")) {
-        file.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(file.url);
-      }
+    article.files.forEach(obj => {
+      obj.url = encodeURL(obj.url);
     });
   }
 };
