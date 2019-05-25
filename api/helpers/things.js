@@ -36,7 +36,7 @@ function encodeURL(url) {
   if (url.startsWith("http")) {
     return url;
   } else {
-    return process.env.AWS_UPLOADS_URL + fixedURIComponent(url);
+    return process.env.AWS_UPLOADS_URL + fixedEncodeURIComponent(url);
   }
 }
 
