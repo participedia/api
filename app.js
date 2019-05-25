@@ -1,5 +1,7 @@
 "use strict";
 
+// deploy on heroku-18 stack
+
 const path = require("path");
 const process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
@@ -50,7 +52,7 @@ i18n.configure({
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
-  updateFiles: false,
+  updateFiles: false
 });
 
 app.use(i18n.init);
@@ -105,9 +107,13 @@ passport.deserializeUser(async function(user, done) {
 app.get("/login", function(req, res, next) {
   // set returnTo session var to referer so user is redirected to current page after login
   req.session.returnTo = req.headers.referer;
-  passport.authenticate("auth0", {
-    scope: "offline openid email profile"
-  }, () => {})(req, res, next);
+  passport.authenticate(
+    "auth0",
+    {
+      scope: "offline openid email profile"
+    },
+    () => {}
+  )(req, res, next);
 });
 
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
@@ -209,7 +215,6 @@ app.get("/teaching", function(req, res) {
 app.get("/content-chooser", function(req, res) {
   res.status(200).render("content-chooser");
 });
-
 
 // 404 error handling
 // this should always be after all routes to catch all invalid urls
