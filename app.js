@@ -70,6 +70,7 @@ if (app.get("env") === "production") {
 }
 
 app.use(session(sess));
+app.set("trust proxy", 1);
 
 // Configure Passport to use Auth0
 const strategy = new Auth0Strategy(
@@ -84,7 +85,7 @@ const strategy = new Auth0Strategy(
     // extraParams.id_token has the JSON Web Token
     // profile has all the information from the user
     console.log("auth accessToken: %s", accessToken);
-    console.log("auth refreshToken: %s", refreshTonek);
+    console.log("auth refreshToken: %s", refreshToken);
     console.log("auth extraParams: %s", JSON.stringify(extraParams));
     console.log("auth profile: %s", JSON.stringify(profile));
     return done(null, profile);
