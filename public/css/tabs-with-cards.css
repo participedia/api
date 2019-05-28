@@ -144,8 +144,8 @@
 .pop-over .article-card {
   background-color: #fff;
   padding: 15px;
-  height: 290px;
-  width: 290px;
+  height: 260px;
+  width: 263px;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -154,7 +154,7 @@
 
 .pop-over .article-card-img {
   width: 100%;
-  height: 155px;
+  height: 125px;
 }
 
 .pop-over .close-card-btn {
@@ -290,5 +290,15 @@
   .pagination-nav {
     margin-left: -8px;
     margin-top: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .pop-over .article-card {
+    width: 230px;
+  }
+
+  .pop-over .article-card h3 {
+    font-size: 16px;
   }
 }

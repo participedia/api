@@ -23,13 +23,6 @@ const PopOver = function(position, content) {
   this.anchor.style.position = "absolute";
   this.anchor.appendChild(pixelOffset);
 
-  // remove pop over on close button click
-  this.anchor.addEventListener("click", event => {
-    const closeButtonEl = event.target.closest(".js-close-card-btn");
-    if (!closeButtonEl) return;
-    this.setMap(null);
-  });
-
   // Optionally stop clicks, etc., from bubbling up to the map.
   this.stopEventPropagation();
 };
@@ -61,7 +54,7 @@ PopOver.prototype.draw = function() {
     // show marker in center of map
     const popOverWidth = this.anchor.getClientRects()[0].width;
     this.anchor.style.left = `-${popOverWidth/2}px`;
-    this.anchor.style.top = "-160px";
+    this.anchor.style.top = "-147px";
   }
   if (this.anchor.style.display !== display) {
     this.anchor.style.display = display;

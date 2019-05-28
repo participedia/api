@@ -550,6 +550,15 @@ module.exports = {
     return allContributions;
   },
 
+  isNotLoggedIn(req) {
+    const user = req.user;
+    if (!user) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
   // utilities
   currentUrl(req) {
     return currentUrl(req);
