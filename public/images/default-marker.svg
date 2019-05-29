@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="12px" height="16px" viewBox="0 0 12 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="12px" height="18px" viewBox="0 0 12 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
     <title>default-marker</title>
     <desc>Created with Sketch.</desc>
     <defs>
-        <polygon id="path-1" points="0 -1.77635684e-15 11.2854 -1.77635684e-15 11.2854 15.9888 0 15.9888"></polygon>
+        <polygon id="path-1" points="0 0 12 0 12 18 0 18"></polygon>
     </defs>
     <g id="default-marker" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-3">
+        <g id="Group-3-Copy">
             <mask id="mask-2" fill="white">
                 <use xlink:href="#path-1"></use>
             </mask>
             <g id="Clip-2"></g>
-            <path d="M3.7624,5.643 C3.7624,4.608 4.6094,3.762 5.6434,3.762 C6.6774,3.762 7.5244,4.608 7.5244,5.643 C7.5244,6.678 6.6874,7.524 5.6434,7.524 C4.6094,7.524 3.7624,6.678 3.7624,5.643 M11.2854,5.643 C11.2854,2.53 8.7564,-1.77635684e-15 5.6434,-1.77635684e-15 C2.5304,-1.77635684e-15 -0.0006,2.53 -0.0006,5.643 C-0.0006,9.875 5.6434,15.989 5.6434,15.989 C5.6434,15.989 11.2854,9.875 11.2854,5.643" id="Fill-1" fill="#000000" mask="url(#mask-2)"></path>
+            <path d="M4.00106326,6.35274251 C4.00106326,5.18756645 4.90164806,4.23516167 6.00106326,4.23516167 C7.10047847,4.23516167 8.00106326,5.18756645 8.00106326,6.35274251 C8.00106326,7.51791857 7.11111111,8.47032335 6.00106326,8.47032335 C4.90164806,8.47032335 4.00106326,7.51791857 4.00106326,6.35274251 M12,6.35274251 C12,2.84820814 9.31100478,0 6.00106326,0 C2.69112174,0 0,2.84820814 0,6.35274251 C0,11.1170179 6.00106326,18 6.00106326,18 C6.00106326,18 12,11.1170179 12,6.35274251" id="Fill-1" fill="#000000" mask="url(#mask-2)"></path>
         </g>
     </g>
 </svg>
