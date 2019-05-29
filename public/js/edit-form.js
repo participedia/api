@@ -12,7 +12,11 @@ const editForm = {
     for (let i = 0; i < submitButtonEls.length; i++) {
       submitButtonEls[i].addEventListener("click", event => {
         // set flag so we can check in the unload event if the user is actually trying to submit the form
-        sessionStorage.setItem("submitButtonClick", "true");
+        try {
+          window.sessionStorage.setItem("submitButtonClick", "true");
+        } catch (err) {
+          console.warn(err);
+        }
         this.sendFormData(event);
       });
     }
