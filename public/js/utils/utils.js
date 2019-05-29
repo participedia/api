@@ -1,3 +1,15 @@
+function getValueForParam(paramName) {
+  const params = window.location.search;
+  const newParams = {};
+
+  if (params) {
+    params.split("?")[1].split("&").map(p => p.split("="))
+      .forEach(param => newParams[param[0]] = param[1]);
+  }
+
+  return newParams[paramName];
+}
+
 function updateUrlParams(key, value) {
   const params = window.location.search;
   const newParams = {};
@@ -36,6 +48,7 @@ function xhrReq(action, url, data = {}, successCB = null, errorCB = null) {
 }
 
 export {
+  getValueForParam,
   updateUrlParams,
   xhrReq,
 }
