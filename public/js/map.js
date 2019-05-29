@@ -37,7 +37,11 @@ const map = {
     this.mapLegend = document.querySelector(".js-map-legend");
 
     this.mapOverlayEl.addEventListener("click", e => {
-      window.sessionStorage.setItem("participedia:mapActivated", "true");
+      try {
+        window.sessionStorage.setItem("participedia:mapActivated", "true");
+      } catch (err) {
+        console.warn(err);
+      }
       this.hideMapOverlay();
     });
 
@@ -122,7 +126,11 @@ const map = {
       updatedAt: Date.now(),
       results: results,
     };
-    window.sessionStorage.setItem(key, JSON.stringify(data));
+    try {
+      window.sessionStorage.setItem(key, JSON.stringify(data));
+    } catch (err) {
+      console.warn(err);
+    }
   },
 
   getCachedResults(key) {

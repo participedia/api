@@ -22,7 +22,11 @@ const editWarning = {
         }
       } else {
         // it was a submit click, so we can reset the flag before the request continues
-        sessionStorage.setItem("submitButtonClick", "false");
+        try {
+          window.sessionStorage.setItem("submitButtonClick", "false");
+        } catch (err) {
+          console.warn(err);
+        }
       }
     });
   }
