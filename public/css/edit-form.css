@@ -144,6 +144,10 @@ input[type=number]::-webkit-inner-spin-button {
   background-color: #fff;
 }
 
+.edit-form[data-view-new] .edit-form-author-info {
+  display: none;
+}
+
 .edit-form .fieldset-header {
   margin-bottom: 30px;
 }
