@@ -2,7 +2,7 @@
 
 Welcome to Participedia!
 
-Participedia is a global community sharing knowledge and stories about public participation.
+A global community sharing knowledge and stories about public participation and democratic innovations.
 
 Documentation formerly in the README has been updated and moved to the
 [Wiki](https://github.com/participedia/api/wiki) for ease of maintenance and

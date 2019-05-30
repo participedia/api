@@ -94,6 +94,7 @@
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   padding: 0 15px;
+  font-weight: 100;
 }
 
 .map-overlay-footer {
