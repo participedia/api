@@ -50,8 +50,6 @@ const editForm = {
 
     const formData = serialize(formEl);
 
-    // TODO: before we make the request, make sure required fields are not empty
-
     const xhr = new XMLHttpRequest();
     xhr.open('POST', formEl.getAttribute("action"), true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -64,12 +62,19 @@ const editForm = {
       // wait for request to be done
       if (xhr.readyState !== xhr.DONE) return;
 
-      const response = JSON.parse(xhr.response);
-
-      if (response.OK) {
-        this.handleSuccess(response);
+      if (xhr.status === 413) {
+        // todo i18n this error message
+        this.handleErrors([
+          "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total)."
+        ]);
       } else {
-        this.handleErrors(response.errors);
+        const response = JSON.parse(xhr.response);
+
+        if (response.OK) {
+          this.handleSuccess(response);
+        } else {
+          this.handleErrors(response.errors);
+        }
       }
     }
 
