@@ -24,7 +24,7 @@
 
     {{> edit-submission-details }}
 
-    {{#if user.isadmin}}
+    {{#if req.user.isadmin}}
       <fieldset class="admin-only">
         <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
         {{> edit-boolean name="featured" quick-submit=true}}
