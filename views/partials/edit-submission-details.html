@@ -1,5 +1,5 @@
 <div class="edit-form-author-info">
-  {{#if user.isadmin}}
+  {{#if req.user.isadmin}}
     <a class="button button-red edit-submission-details-btn js-edit-submission-details-btn">
       {{t "Edit Submission Details"}}
     </a>
@@ -9,7 +9,7 @@
     {{> view-authors }}
   </div>
 
-  {{#if user.isadmin}}
+  {{#if req.user.isadmin}}
     <div class="js-admin-edit-submission-details" style="display: none;">
       <p>
         <strong>{{t "First Submitted By"}}</strong>
