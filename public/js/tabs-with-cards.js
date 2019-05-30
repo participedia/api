@@ -1,4 +1,4 @@
-import { updateUrlParams } from "./utils/utils.js";
+import { getValueForParam, updateUrlParams } from "./utils/utils.js";
 
 const tabsWithCards = {
   init() {
@@ -19,12 +19,22 @@ const tabsWithCards = {
     this.initPagination();
   },
 
+  navigateToTab(category) {
+    const query = getValueForParam("query");
+    let url = `${window.location.origin + window.location.pathname}?selectedCategory=${category}`;
+
+    if (query) {
+      url = `${url}&query=${query}`;
+    }
+
+    window.location.href = url;
+  },
+
   initDesktopTabNav() {
     // update url param to indicate current tab
     this.tabInputEls.forEach(el => {
       el.addEventListener("click", event => {
-        window.location.href =
-          `${window.location.origin + window.location.pathname}?selectedCategory=${event.target.id}`;
+        this.navigateToTab(event.target.id);
       });
     });
   },
@@ -46,8 +56,7 @@ const tabsWithCards = {
       // toggle checked attr on inputs
       this.tabInputEls.forEach(el => el.checked = el.id === newTabId);
       // go to new tab
-      window.location.href =
-        `${window.location.origin + window.location.pathname}?selectedCategory=${newTabId}`;
+      this.navigateToTab(newTabId);
     });
   },
 
