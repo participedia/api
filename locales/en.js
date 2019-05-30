@@ -26,7 +26,7 @@
   "about.rdc.description": "The Research Design Committee is responsible for setting the strategic direction of PPedia’s research agenda.",
   "about.rdc.title": "Research Design Committee",
   "about.staff.p1": "Participedia's core team of staff members maintain day-to-day operations, support the community, and ensure project goals are continuously attained and refined.",
-  "about.tagline": "A global community sharing knowledge and stories about public participation",
+  "about.tagline": "A global community sharing knowledge and stories about public participation and democratic innovations",
   "about.teach.p1": "Use Participedia in the classroom to engage students and showcase their research.",
   "about.ttmc.decription": "The Teaching Training and Mentoring Committee is responsible for developing outputs and implement actions for the integration of Participedia materials into pedagogy, teaching, student involvement and the training of practitioners and public officials.",
   "about.ttmc.title": "Teaching Training & Mentoring Committee",
