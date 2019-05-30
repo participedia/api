@@ -8,7 +8,11 @@ const modal = {
 
   openModal(id, options = {}) {
     // open the modal
-    ARIAmodal.openModal({}, id);
+    // using setTimeout with 1 ms delay to simulate the _.defer function,
+    // which forces the program to wait until the current call stack has cleared before calling open
+    setTimeout(() => {
+      ARIAmodal.openModal(options, id);
+    }, 1);
 
     // if we are showing the close button,
     // make it visible and attach click handler
@@ -17,7 +21,7 @@ const modal = {
       modalEl.querySelector("[data-modal-footer]").style.display = "block";
       modalEl.addEventListener("click", e => {
         if (e.target.closest("[data-modal-close]")) {
-          ARIAmodal.closeModal({}, id);
+          ARIAmodal.closeModal(options, id);
         }
       });
     } else {
