@@ -1,6 +1,11 @@
 <article
   class="edit-form"
   data-submit-type="{{getCaseEditSubmitType req}}"
+  {{#if (isEditView req)}}
+    data-view-edit
+  {{else}}
+    data-view-new
+  {{/if}}
 >
   <form
     {{#if (isEditView req)}}
@@ -17,9 +22,7 @@
     <!-- hidden fields for features that have not yet been implemented on the frontend. -->
     <input type="hidden" name="original_language" value="{{article.original_language}}" />
 
-    <div class="edit-form-author-info">
-      {{> edit-submission-details }}
-    </div>
+    {{> edit-submission-details }}
 
     {{#if user.isadmin}}
       <fieldset class="admin-only">

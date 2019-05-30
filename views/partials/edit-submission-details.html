@@ -1,66 +1,68 @@
-{{#if user.isadmin}}
-  <a class="button button-red edit-submission-details-btn js-edit-submission-details-btn">
-    {{t "Edit Submission Details"}}
-  </a>
-{{/if}}
+<div class="edit-form-author-info">
+  {{#if user.isadmin}}
+    <a class="button button-red edit-submission-details-btn js-edit-submission-details-btn">
+      {{t "Edit Submission Details"}}
+    </a>
+  {{/if}}
 
-<div class="js-view-submission-details">
-  {{> view-authors }}
-</div>
-
-{{#if user.isadmin}}
-  <div class="js-admin-edit-submission-details" style="display: none;">
-    <p>
-      <strong>{{t "First Submitted By"}}</strong>
-      <input
-        type="text"
-        id="js-creator-name"
-        value="{{article.creator.name}}"
-        autocomplete="false"
-        autocomplete="off"
-      />
-      <input
-        type="hidden"
-        name="creator"
-        value="{{article.creator.user_id}}"
-      />
-    </p>
-    <p>
-      <strong>{{t "First Submitted Date"}}</strong>
-      <input
-        type="date"
-        value="{{formatDate article "post_date" "YYYY-MM-DD"}}"
-        name="post_date"
-      />
-    </p>
-
-    <p>
-      <strong>{{t "Most Recent Changes By"}}</strong>
-      <input
-        type="text"
-        id="js-last-updated-by-name"
-        value="{{article.last_updated_by.name}}"
-        autocomplete="false"
-        autocomplete="off"
-      />
-      <input
-        type="hidden"
-        name="last_updated_by"
-        value="{{article.last_updated_by.user_id}}"
-      />
-    </p>
-    <p>
-      <strong>{{t "Most Recent Change"}}</strong>
-      <input
-        type="date"
-        value="{{formatDate article "updated_date" "YYYY-MM-DD"}}"
-        name="updated_date"
-      />
-    </p>
+  <div class="js-view-submission-details">
+    {{> view-authors }}
   </div>
-  <ul class="js-author-list" style="display: none;">
-    {{#each static.authors}}
-      <li data-user-id="{{id}}">{{title}}</li>
-    {{/each}}
-  </ul>
-{{/if}}
+
+  {{#if user.isadmin}}
+    <div class="js-admin-edit-submission-details" style="display: none;">
+      <p>
+        <strong>{{t "First Submitted By"}}</strong>
+        <input
+          type="text"
+          id="js-creator-name"
+          value="{{article.creator.name}}"
+          autocomplete="false"
+          autocomplete="off"
+        />
+        <input
+          type="hidden"
+          name="creator"
+          value="{{article.creator.user_id}}"
+        />
+      </p>
+      <p>
+        <strong>{{t "First Submitted Date"}}</strong>
+        <input
+          type="date"
+          value="{{formatDate article "post_date" "YYYY-MM-DD"}}"
+          name="post_date"
+        />
+      </p>
+
+      <p>
+        <strong>{{t "Most Recent Changes By"}}</strong>
+        <input
+          type="text"
+          id="js-last-updated-by-name"
+          value="{{article.last_updated_by.name}}"
+          autocomplete="false"
+          autocomplete="off"
+        />
+        <input
+          type="hidden"
+          name="last_updated_by"
+          value="{{article.last_updated_by.user_id}}"
+        />
+      </p>
+      <p>
+        <strong>{{t "Most Recent Change"}}</strong>
+        <input
+          type="date"
+          value="{{formatDate article "updated_date" "YYYY-MM-DD"}}"
+          name="updated_date"
+        />
+      </p>
+    </div>
+    <ul class="js-author-list" style="display: none;">
+      {{#each static.authors}}
+        <li data-user-id="{{id}}">{{title}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
+</div>
