@@ -398,11 +398,12 @@ function aSourcedMedia(obj) {
   }
   if (!obj.url) return null;
 
-  // if url is not already an amazon url, upload the file
-  let url = obj.url;
-  // some types of sourced media are links, anything already a link does not need to be uploaded
-  if (!obj.url.startsWith("http")) {
+  // if the url string is a data uri, upload to aws
+  // otherwise it's already been uploaded and doesn't start with http, add the aws url base
+  if (obj.url.startsWith("data:")) {
     obj.url = uploadToAWS(obj.url, obj.title);
+  } else if (!obj.url.startsWith("http")) {
+    obj.url = process.env.AWS_UPLOADS_URL + obj.url;
   }
   return new FullFile(obj);
 }
