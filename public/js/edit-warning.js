@@ -10,10 +10,9 @@ const editWarning = {
 
     window.addEventListener("beforeunload", (e) => {
       // when the form is submitted we set a flag, if it's a submit click, we don't want to show the warning
-      const isSubmitClick = sessionStorage.getItem("participedia:submitButtonClick") === "true";
-      const hasBeenSaved = sessionStorage.getItem("participedia:hasBeenSaved") === "true";
+      const isSubmitClick = sessionStorage.getItem("submitButtonClick") === "true";
 
-      if (!isSubmitClick && !hasBeenSaved) {
+      if (!isSubmitClick) {
         const currentFormData = serialize(formEl);
         // check if form data changed and if it was show default confirmation dialog
         if (initialFormData !== currentFormData) {
@@ -22,11 +21,9 @@ const editWarning = {
           return "";              // Gecko and WebKit
         }
       } else {
-        // it was a submit click or it's already been saved,
-        // so we can reset the flags before the request continues
+        // it was a submit click, so we can reset the flag before the request continues
         try {
-          window.sessionStorage.setItem("participedia:submitButtonClick", "false");
-          window.sessionStorage.setItem("participedia:hasBeenSaved", "false");
+          window.sessionStorage.setItem("submitButtonClick", "false");
         } catch (err) {
           console.warn(err);
         }

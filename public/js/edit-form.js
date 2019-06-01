@@ -9,13 +9,11 @@ const editForm = {
 
     if (!submitButtonEls) return;
 
-    this.formEl = document.querySelector(".js-edit-form");
-
     for (let i = 0; i < submitButtonEls.length; i++) {
       submitButtonEls[i].addEventListener("click", event => {
         // set flag so we can check in the unload event if the user is actually trying to submit the form
         try {
-          window.sessionStorage.setItem("participedia:submitButtonClick", "true");
+          window.sessionStorage.setItem("submitButtonClick", "true");
         } catch (err) {
           console.warn(err);
         }
@@ -30,32 +28,17 @@ const editForm = {
       });
     }
 
-    this.initialFormData = serialize(this.formEl);
-    // click handler for do full version button
+    // do full version click
     document.querySelector(".js-do-full-version")
-      .addEventListener("click", e => this.handleFullVersionClick(e))
-  },
-
-  handleFullVersionClick(e) {
-    e.preventDefault();
-    const currentFormData = serialize(this.formEl);
-    const changesHaveBeenMade = this.initialFormData !== currentFormData;
-
-    if (changesHaveBeenMade) {
-      // if changes have been made,
-      // save changes, then redirect to full version
-      this.sendFormData(e, { redirectToFullVersion: true });
-
-      // save a flag so we know we already saved the form
-      try {
-        window.sessionStorage.setItem("participedia:hasBeenSaved", "true");
-      } catch (err) {
-        console.warn(err);
-      }
-    } else {
-      // otherwise just go to the full version directly
-      window.location.href = e.target.href;
-    }
+      .addEventListener("click", e => {
+        e.preventDefault();
+        const articleEl = document.querySelector("[data-submit-type]");
+        const type = articleEl.setAttribute("data-submit-type", "full");
+        // update url param
+        history.pushState({}, document.title, `${window.location.href}?full=1`);
+        // scroll to top
+        window.scrollTo(0, 0);
+      });
   },
 
   openInfoModal(event) {
@@ -71,7 +54,7 @@ const editForm = {
     modal.openModal("aria-modal");
   },
 
-  sendFormData(event, options = {}) {
+  sendFormData(event) {
     event.preventDefault();
     const formEl = event.target.closest("form");
 
@@ -100,7 +83,7 @@ const editForm = {
         const response = JSON.parse(xhr.response);
 
         if (response.OK) {
-          this.handleSuccess(response, options);
+          this.handleSuccess(response);
         } else {
           this.handleErrors(response.errors);
         }
@@ -121,13 +104,10 @@ const editForm = {
     modal.openModal("aria-modal");
   },
 
-  handleSuccess(response, options) {
+  handleSuccess(response) {
     if (response.user) {
       // redirect to user profile page
       location.href = `/user/${response.user.id}`;
-    } else if (response.article && options.redirectToFullVersion) {
-      // redirect to full version
-      location.href = `/${response.article.type}/${response.article.id}/edit?full=1`;
     } else {
       // redirect to article reader page
       location.href = `/${response.article.type}/${response.article.id}`;
