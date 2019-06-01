@@ -27,6 +27,19 @@ const editForm = {
         this.openInfoModal(event);
       });
     }
+
+    // do full version click
+    document.querySelector(".js-do-full-version")
+      .addEventListener("click", e => {
+        e.preventDefault();
+        const articleEl = document.querySelector("[data-submit-type]");
+        // change submit type attribute
+        articleEl.setAttribute("data-submit-type", "full");
+        // update url param
+        history.pushState({}, document.title, `${window.location.href}?full=1`);
+        // scroll to top
+        window.scrollTo(0, 0);
+      });
   },
 
   openInfoModal(event) {
