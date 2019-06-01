@@ -108,7 +108,7 @@ const editForm = {
     if (response.user) {
       // redirect to user profile page
       location.href = `/user/${response.user.id}`;
-    } else {
+    } else if (response.article) {
       // redirect to article reader page
       location.href = `/${response.article.type}/${response.article.id}`;
     }
