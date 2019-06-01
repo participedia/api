@@ -33,7 +33,8 @@ const editForm = {
       .addEventListener("click", e => {
         e.preventDefault();
         const articleEl = document.querySelector("[data-submit-type]");
-        const type = articleEl.setAttribute("data-submit-type", "full");
+        // change submit type attribute
+        articleEl.setAttribute("data-submit-type", "full");
         // update url param
         history.pushState({}, document.title, `${window.location.href}?full=1`);
         // scroll to top
