@@ -237,7 +237,7 @@ async function getOrganizationHttp(req, res) {
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = {};
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getOrganizationEditHttp(req, res) {
@@ -247,7 +247,7 @@ async function getOrganizationEditHttp(req, res) {
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getOrganizationNewHttp(req, res) {

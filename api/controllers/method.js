@@ -246,7 +246,7 @@ async function getMethodHttp(req, res) {
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = {};
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getMethodEditHttp(req, res) {
@@ -256,7 +256,7 @@ async function getMethodEditHttp(req, res) {
   const article = articleRow.results;
   fixUpURLs(article);
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getMethodNewHttp(req, res) {
