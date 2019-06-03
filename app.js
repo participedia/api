@@ -43,6 +43,7 @@ app.use((req, res, next) => {
   ) {
     res.redirect("https://participedia.net" + req.originalUrl);
   }
+  next();
 });
 // CONFIGS
 app.use(compression());
