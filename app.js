@@ -35,6 +35,15 @@ const { getUserOrCreateUser } = require("./api/helpers/user.js");
 
 const port = process.env.PORT || 3001;
 
+// canonicalize url
+app.use((req, res, next) => {
+  if (
+    process.env.NODE_ENV === "production" &&
+    req.hostname !== "participedia.net"
+  ) {
+    res.redirect("https://participedia.net" + req.originalUrl);
+  }
+});
 // CONFIGS
 app.use(compression());
 app.set("port", port);
@@ -42,8 +51,8 @@ app.use(express.static("public", { index: false }));
 app.use(morgan("dev")); // request logging
 app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "5mb" }));
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(cookieParser());
 app.use(errorhandler());
 
