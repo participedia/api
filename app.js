@@ -35,6 +35,16 @@ const { getUserOrCreateUser } = require("./api/helpers/user.js");
 
 const port = process.env.PORT || 3001;
 
+// canonicalize url
+app.use((req, res, next) => {
+  if (
+    process.env.NODE_ENV === "production" &&
+    req.hostname !== "participedia.net"
+  ) {
+    res.redirect("https://participedia.net" + req.originalUrl);
+  }
+  next();
+});
 // CONFIGS
 app.use(compression());
 app.set("port", port);
