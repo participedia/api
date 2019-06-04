@@ -248,7 +248,7 @@ async function postCaseUpdateHttp(req, res) {
     // the client expects this request to respond with json
     // save successful response
     // console.log("Params for returning case: %s", JSON.stringify(params));
-    const freshArticle = await getCase(params);
+    const freshArticle = await getCase(params, res);
     // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
@@ -290,8 +290,14 @@ async function postCaseUpdateHttp(req, res) {
  *
  */
 
-async function getCase(params) {
-  const articleRow = await db.one(CASE_BY_ID, params);
+async function getCase(params, res) {
+  let articleRow;
+  try {
+    articleRow = await db.one(CASE_BY_ID, params);;
+  } catch (error) {
+    // if no entry is found, render the 404 page
+    return res.status(404).render("404");
+  }
   const article = articleRow.results;
   fixUpURLs(article);
   return article;
@@ -300,7 +306,7 @@ async function getCase(params) {
 async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
-  const article = await getCase(params);
+  const article = await getCase(params, res);
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
@@ -323,7 +329,7 @@ async function getCaseEditHttp(req, res) {
   let startTime = new Date();
   const params = parseGetParams(req, "case");
   params.view = "edit";
-  const article = await getCase(params);
+  const article = await getCase(params, res);
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }

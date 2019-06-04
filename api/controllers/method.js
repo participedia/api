@@ -126,8 +126,14 @@ async function postMethodNewHttp(req, res) {
  *
  */
 
-async function getMethod(params) {
-  const articleRow = await db.one(METHOD_BY_ID, params);
+async function getMethod(params, res) {
+  let articleRow;
+  try {
+    articleRow = await db.one(METHOD_BY_ID, params);
+  } catch (error) {
+    // if no entry is found, render the 404 page
+    return res.status(404).render("404");
+  }
   const article = articleRow.results;
   fixUpURLs(article);
   return article;
@@ -186,7 +192,7 @@ async function postMethodUpdateHttp(req, res) {
     // the client expects this request to respond with json
     // save successful response
     // console.log("Params for returning method: %s", JSON.stringify(params));
-    const freshArticle = await getMethod(params);
+    const freshArticle = await getMethod(params, res);
     // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
@@ -247,9 +253,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
 async function getMethodHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "method");
-  const articleRow = await db.one(METHOD_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+  const article = await getMethod(params, res);
   const staticText = {};
   returnByType(res, params, article, staticText, req.user);
 }
@@ -257,9 +261,7 @@ async function getMethodHttp(req, res) {
 async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
-  const articleRow = await db.one(METHOD_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+  const article = await getMethod(params, res);
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
