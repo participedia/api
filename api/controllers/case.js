@@ -291,16 +291,15 @@ async function postCaseUpdateHttp(req, res) {
  */
 
 async function getCase(params, res) {
-  let articleRow;
   try {
-    articleRow = await db.one(CASE_BY_ID, params);;
+    const articleRow = await db.one(CASE_BY_ID, params);
+    const article = articleRow.results;
+    fixUpURLs(article);
+    return article;
   } catch (error) {
     // if no entry is found, render the 404 page
-    return res.status(404).render("404");
+    return res.sendStatus("404");
   }
-  const article = articleRow.results;
-  fixUpURLs(article);
-  return article;
 }
 
 async function getCaseHttp(req, res) {

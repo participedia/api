@@ -127,16 +127,15 @@ async function postMethodNewHttp(req, res) {
  */
 
 async function getMethod(params, res) {
-  let articleRow;
   try {
-    articleRow = await db.one(METHOD_BY_ID, params);
+    const articleRow = await db.one(METHOD_BY_ID, params);
+    const article = articleRow.results;
+    fixUpURLs(article);
+    return article;
   } catch (error) {
     // if no entry is found, render the 404 page
-    return res.status(404).render("404");
+    return res.sendStatus("404");
   }
-  const article = articleRow.results;
-  fixUpURLs(article);
-  return article;
 }
 
 async function postMethodUpdateHttp(req, res) {
