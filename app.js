@@ -32,7 +32,7 @@ const search = require("./api/controllers/search");
 const list = require("./api/controllers/list");
 const user = require("./api/controllers/user");
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
-const oldDotNetUrlHandler = require("./api/helpers/oldDotNetUrlHandler.js");
+const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
 
 const port = process.env.PORT || 3001;
 

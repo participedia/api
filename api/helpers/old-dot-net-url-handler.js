@@ -1,14 +1,10 @@
-const ARTICLE_TYPE_INDEX_IN_OLD_URL = 4;
+const OLD_DOT_NET_URLS_MAP = require("./old-dot-net-urls-map.json");
 
-const oldDotNetUrlsMappedToId = {
-  "/en/methods/participatory-rural-appraisal": 4907,
-  "/en/cases/whats-big-idea-hepburn-shire-councils-plan": 4496,
-  "/en/organizations/21st-century-dialogue": 4456,
-};
+const ARTICLE_TYPE_INDEX_IN_OLD_URL = 4;
 
 const oldDotNetUrlHandler = {
   hasMatch(path) {
-    return oldDotNetUrlsMappedToId[path];
+    return OLD_DOT_NET_URLS_MAP[path];
   },
 
   getNewUrl(path) {
@@ -16,7 +12,7 @@ const oldDotNetUrlHandler = {
     const isMethod = path.indexOf("methods") === ARTICLE_TYPE_INDEX_IN_OLD_URL;
     const isOrganization = path.indexOf("organizations") === ARTICLE_TYPE_INDEX_IN_OLD_URL;
 
-    const id = oldDotNetUrlsMappedToId[path];
+    const id = OLD_DOT_NET_URLS_MAP[path];
     let newUrl = "";
     if (isCase) {
       newUrl = "/case/" + id;
