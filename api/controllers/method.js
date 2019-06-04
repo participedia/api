@@ -140,6 +140,11 @@ async function postMethodUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = req.body;
 
+  // if this is a new method, we don't have a post_date yet, so we set it here
+  if (!newMethod.post_date) {
+    newMethod.post_date = Date.now();
+  }
+
   // console.log(
   //   "Received tools_techniques_types from client: >>> \n%s\n",
   //   JSON.stringify(newMethod.tools_techniques_types, null, 2)
