@@ -44,7 +44,7 @@ function getFirstPhotoUrl(article) {
 }
 
 function getPageTitle(req, article, context) {
-  const path = req.route.path;
+  const path = req.route && req.route.path;
   const titleByPath = {
     "/": "Participedia",
     "/about": i18n("About", context) + " – Participedia",

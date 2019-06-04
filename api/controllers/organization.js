@@ -125,10 +125,16 @@ async function postOrganizationNewHttp(req, res) {
  *
  */
 
-async function getOrganization(params) {
-  const article = (await db.one(ORGANIZATION_BY_ID, params)).results;
-  fixUpURLs(article);
-  return article;
+async function getOrganization(params, res) {
+  try {
+    const articleRow = await db.one(ORGANIZATION_BY_ID, params);
+    const article = articleRow.results;
+    fixUpURLs(article);
+    return article;
+  } catch (error) {
+    // if no entry is found, render the 404 page
+    return res.sendStatus("404");
+  }
 }
 
 async function postOrganizationUpdateHttp(req, res) {
@@ -171,7 +177,7 @@ async function postOrganizationUpdateHttp(req, res) {
         ]);
       });
     }
-    const freshArticle = await getOrganization(params);
+    const freshArticle = await getOrganization(params, res);
     res.status(200).json({
       OK: true,
       article: freshArticle
@@ -239,9 +245,8 @@ function getUpdatedOrganization(
 async function getOrganizationHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "organization");
-  const articleRow = await db.one(ORGANIZATION_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+
+  const article = await getOrganization(params, res);
   const staticText = {};
   returnByType(res, params, article, staticText, req.user);
 }
@@ -249,9 +254,7 @@ async function getOrganizationHttp(req, res) {
 async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
-  const articleRow = await db.one(ORGANIZATION_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+  const article = await getOrganization(params, res);
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
