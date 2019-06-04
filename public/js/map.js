@@ -247,7 +247,7 @@ const map = {
 
       // update submitted at
       const articleSubmittedDate = popOverContentEl.querySelector(".js-article-date");
-      articleSubmittedDate.innerHtml = moment(marker.submittedDate).format("MMMM M, YYYY");
+      articleSubmittedDate.innerHTML = moment(marker.submittedDate).format("MMMM M, YYYY");
 
       // update links
       const articleLinks = Array.prototype.slice.call(
