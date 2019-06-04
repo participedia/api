@@ -32,6 +32,7 @@ const search = require("./api/controllers/search");
 const list = require("./api/controllers/list");
 const user = require("./api/controllers/user");
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
+const oldDotNetUrlHandler = require("./api/helpers/oldDotNetUrlHandler.js");
 
 const port = process.env.PORT || 3001;
 
@@ -226,6 +227,16 @@ app.get("/teaching", function(req, res) {
 });
 app.get("/content-chooser", function(req, res) {
   res.status(200).render("content-chooser");
+});
+
+// redirect old .net urls to their new urls
+app.use((req, res, next) => {
+  const path = req.originalUrl;
+  if (oldDotNetUrlHandler.hasMatch(path)) {
+    // redirect old .net urls to new urls
+    return res.redirect(oldDotNetUrlHandler.getNewUrl(path));
+  }
+  next();
 });
 
 // 404 error handling
