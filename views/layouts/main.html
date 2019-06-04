@@ -15,11 +15,9 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/style.css">
 
-  {{#if (isReaderPage params)}}
-    {{{socialTagsTemplate article req}}}
-  {{/if}}
+  {{{socialTagsTemplate article req}}}
 
-  <title>Participedia</title>
+  <title>{{getPageTitle req article}}</title>
 </head>
 
 {{!--
