@@ -137,6 +137,12 @@ async function postOrganizationUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
+
+  // if this is a new organization, we don't have a post_date yet, so we set it here
+  if (!newOrganization.post_date) {
+    newOrganization.post_date = Date.now();
+  }
+
   const {
     updatedText,
     author,

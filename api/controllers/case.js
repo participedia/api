@@ -208,6 +208,11 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
 
+  // if this is a new case, we don't have a post_date yet, so we set it here
+  if (!newCase.post_date) {
+    newCase.post_date = Date.now();
+  }
+
   // console.log(
   //   "Received tools_techniques_types from client: >>> \n%s\n",
   //   JSON.stringify(newCase.tools_techniques_types, null, 2)
