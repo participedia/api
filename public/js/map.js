@@ -95,7 +95,7 @@ const map = {
   },
 
   fetchMapResults() {
-    let url = `/?resultType=map`;
+    let url = `/?resultType=map&returns=json`;
     const query = this.getQueryParam();
     if (query) {
       url = `${url}&query=${query}`;
