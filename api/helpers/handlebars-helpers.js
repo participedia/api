@@ -43,13 +43,13 @@ function getFirstPhotoUrl(article) {
   return article.photos[0].url;
 }
 
-function getPageTitle(req, article) {
+function getPageTitle(req, article, context) {
   const path = req.route.path;
   const titleByPath = {
     "/": "Participedia",
-    "/about": "About – Participedia",
-    "/teaching": "Teaching – Participedia",
-    "/research": "Research – Participedia",
+    "/about": i18n("About", context) + " – Participedia",
+    "/teaching": i18n("Teaching", context) + " – Participedia",
+    "/research": i18n("Research", context) + " – Participedia",
   };
   if (article && article.title) {
     return article.title + " – Participedia";
@@ -380,14 +380,14 @@ module.exports = {
     return params && params.view && params.view === "view";
   },
 
-  getPageTitle(req, article) {
-    return getPageTitle(req, article);
+  getPageTitle(req, article, context) {
+    return getPageTitle(req, article, context);
   },
 
   socialTagsTemplate(article, req, context) {
     const defaultPhotoUrl = `https://${req.headers.host}/images/participedia-social-img.jpg`;
     const url = currentUrl(req);
-    const title = getPageTitle(req, article);
+    const title = getPageTitle(req, article, context);
     const description = (article && article.description) || i18n("main_tagline", context);
     const imageUrl = (article && getFirstPhotoUrl(article)) || defaultPhotoUrl;
     return socialTagsTemplate(title, description, url, imageUrl);
