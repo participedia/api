@@ -108,6 +108,7 @@ passport.deserializeUser(async function(user, done) {
 app.get("/login", function(req, res, next) {
   // set returnTo session var to referer so user is redirected to current page after login
   req.session.returnTo = req.headers.referer;
+  req.session.refreshAndClose = req.query.refreshAndClose;
   passport.authenticate(
     "auth0",
     {
@@ -131,9 +132,14 @@ app.get("/redirect", function(req, res, next) {
       if (err) {
         return next(err);
       }
-      const returnTo = req.session.returnTo;
+      let returnToUrl = req.session.returnTo;
+      const refreshAndClose = req.session.refreshAndClose
       delete req.session.returnTo;
-      res.redirect(returnTo || "/");
+      delete req.session.refreshAndClose;
+      if (refreshAndClose === "true") {
+        returnToUrl = returnToUrl + "?refreshAndClose=true"
+      }
+      res.redirect(returnToUrl || "/");
     });
   })(req, res, next);
 });

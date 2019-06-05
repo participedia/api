@@ -27,7 +27,11 @@ const modal = {
     } else {
       modalEl.querySelector("[data-modal-footer]").style.display = "none";
     }
-  }
+  },
+
+  closeModal() {
+    ARIAmodal.closeModal();
+  },
 };
 
 export default modal;

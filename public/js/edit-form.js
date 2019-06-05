@@ -27,6 +27,10 @@ const editForm = {
         this.openInfoModal(event);
       });
     }
+
+    if (window.location.search.indexOf("refreshAndClose") > 0) {
+      window.close();
+    }
   },
 
   openInfoModal(event) {
@@ -88,10 +92,18 @@ const editForm = {
     const content = `
       <h3>It looks like you're not logged in...</h3>
       <p>Click the button below to refresh your session in a new tab, then you'll be redirected back here to save your changes.</p>
-      <a href="/login?refreshAndClose=1" target="_blank" class="button button-red">Refresh Session</a>
+      <a href="/login?refreshAndClose=true" target="_blank" class="button button-red js-refresh-btn">Refresh Session</a>
     `;
     modal.updateModal(content);
     modal.openModal("aria-modal");
+    document.querySelector(".js-refresh-btn").addEventListener("click", () => {
+      try {
+        window.sessionStorage.setItem("submitButtonClick", "false");
+      } catch (err) {
+        console.warn(err);
+      }
+      modal.closeModal()
+    });
   },
 
   openPublishingFeedbackModal() {
