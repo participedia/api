@@ -27,6 +27,12 @@ const editForm = {
         this.openInfoModal(event);
       });
     }
+    
+    // if this page was loaded with the refreshAndClose param, we can close it programmatically
+    // this is part of the flow to refresh auth state
+    if (window.location.search.indexOf("refreshAndClose") > 0) {
+      window.close();
+    }
 
     // do full version click
     document.querySelector(".js-do-full-version")
@@ -75,8 +81,11 @@ const editForm = {
       // wait for request to be done
       if (xhr.readyState !== xhr.DONE) return;
 
-      if (xhr.status === 413) {
-        // todo i18n this error message
+      if (xhr.status === 0) {
+        // if user is not logged in
+        this.openAuthWarning();
+      } else if (xhr.status === 413) {
+        // if file uploads are too large
         this.handleErrors([
           "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total)."
         ]);
@@ -92,6 +101,24 @@ const editForm = {
     }
 
     xhr.send(formData);
+  },
+
+  openAuthWarning() {
+    const content = `
+      <h3>It looks like you're not logged in...</h3>
+      <p>Click the button below to refresh your session in a new tab, then you'll be redirected back here to save your changes.</p>
+      <a href="/login?refreshAndClose=true" target="_blank" class="button button-red js-refresh-btn">Refresh Session</a>
+    `;
+    modal.updateModal(content);
+    modal.openModal("aria-modal");
+    document.querySelector(".js-refresh-btn").addEventListener("click", () => {
+      try {
+        window.sessionStorage.setItem("submitButtonClick", "false");
+      } catch (err) {
+        console.warn(err);
+      }
+      modal.closeModal()
+    });
   },
 
   openPublishingFeedbackModal() {
