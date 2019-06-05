@@ -270,7 +270,7 @@ pre {
 
 .reader-view .floating-action-button,
 .edit-form .floating-action-button  {
-  right: 0;
+  right: -75px;
   margin-right: 27%;
 }
 
@@ -286,7 +286,7 @@ pre {
 
 @media (max-width: 1000px) {
   .edit-form .floating-action-button {
-    right: 0;
+    right: -75px;
     margin-right: 17.8%;
   }
 }
