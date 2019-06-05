@@ -4,10 +4,11 @@
   overflow: auto;
   box-sizing: border-box;
   border: 1px solid #000;
+  border-top: 0;
 }
 
-.autocomplete * {
-  font: inherit;
+.autocomplete strong {
+  font-weight: 800;
 }
 
 .autocomplete > div {

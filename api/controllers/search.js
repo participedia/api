@@ -182,9 +182,6 @@ router.get("/", async function(req, res) {
     });
     let OK = true;
     let returnType = req.query.returns;
-    if (req.accepts("json", "html") === "json") {
-      returnType = "json";
-    }
     switch (returnType) {
       case "json":
         return res.status(200).json({

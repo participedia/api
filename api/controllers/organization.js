@@ -125,10 +125,16 @@ async function postOrganizationNewHttp(req, res) {
  *
  */
 
-async function getOrganization(params) {
-  const article = (await db.one(ORGANIZATION_BY_ID, params)).results;
-  fixUpURLs(article);
-  return article;
+async function getOrganization(params, res) {
+  try {
+    const articleRow = await db.one(ORGANIZATION_BY_ID, params);
+    const article = articleRow.results;
+    fixUpURLs(article);
+    return article;
+  } catch (error) {
+    // if no entry is found, render the 404 page
+    return res.sendStatus("404");
+  }
 }
 
 async function postOrganizationUpdateHttp(req, res) {
@@ -137,6 +143,12 @@ async function postOrganizationUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
+
+  // if this is a new organization, we don't have a post_date yet, so we set it here
+  if (!newOrganization.post_date) {
+    newOrganization.post_date = Date.now();
+  }
+
   const {
     updatedText,
     author,
@@ -165,7 +177,7 @@ async function postOrganizationUpdateHttp(req, res) {
         ]);
       });
     }
-    const freshArticle = await getOrganization(params);
+    const freshArticle = await getOrganization(params, res);
     res.status(200).json({
       OK: true,
       article: freshArticle
@@ -233,21 +245,18 @@ function getUpdatedOrganization(
 async function getOrganizationHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "organization");
-  const articleRow = await db.one(ORGANIZATION_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+
+  const article = await getOrganization(params, res);
   const staticText = {};
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
-  const articleRow = await db.one(ORGANIZATION_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+  const article = await getOrganization(params, res);
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getOrganizationNewHttp(req, res) {

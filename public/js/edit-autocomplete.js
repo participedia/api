@@ -104,11 +104,18 @@ const editAutocomplete = {
       minLength: 1,
       input: autocompleteEl,
       fetch: (text, update) => {
-        const suggestions = options.filter(n =>
-          n.label.toLowerCase().startsWith(text.toLowerCase())
-        );
-        update(suggestions);
+        const match = text.toLowerCase();
+        const matches = options.filter(n => n.label.toLowerCase().indexOf(match) !== -1);
+        update(matches);
       },
+      render: (item, value) => {
+        const itemElement = document.createElement("div");
+        const regex = new RegExp(value, "gi");
+        const inner = item.label.replace(regex, match => `<strong>${match}</strong>`);
+        itemElement.innerHTML = inner;
+        return itemElement;
+      },
+      emptyMsg: "No matches found",
       onSelect: item => {
         this.addSelectedItem(name, item);
         // clear autocomplete field
