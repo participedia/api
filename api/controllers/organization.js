@@ -39,7 +39,7 @@ async function getEditStaticText(params) {
   const lang = params.lang;
 
   staticText.authors = listUsers();
-  staticText.methods = listMethods(lang);
+  staticText.methods = listMethods(lang).filter(article => !article.hidden);
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
