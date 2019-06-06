@@ -32,6 +32,15 @@ function fixedEncodeURIComponent(str) {
   });
 }
 
+function getLanguage(req) {
+  // once we have translations for user generated content in all supported languages,
+  // we can use the locale cookie to query by language.
+  // currently if the locale is set to something other than "en", no results are returned,
+  // so hardcoding "en" here
+  // return getLanguage(req);
+  return "en";
+}
+
 function encodeURL(url) {
   if (url.startsWith("http")) {
     return url;
@@ -92,7 +101,7 @@ const parseGetParams = function(req, type) {
     type,
     view: as.value(req.params.view || "view"),
     articleid: as.number(req.params.thingid || req.params.articleid),
-    lang: as.value(req.cookies.locale || "en"),
+    lang: as.value(getLanguage(req)),
     userid: req.user ? as.number(req.user.id) : null,
     returns: as.value(req.query.returns || "html")
   });
