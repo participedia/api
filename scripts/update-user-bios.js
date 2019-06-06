@@ -47,7 +47,7 @@ async function handleRow(row) {
 }
 
 function parseUserData() {
-  fs.createReadStream("./csv/user-export-from-old-dot-net.csv")
+  fs.createReadStream("./scripts/user-export-from-old-dot-net.csv")
     .pipe(parse({delimiter: ","}))
     .on("data", (row) => {
       handleRow(row);
