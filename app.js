@@ -235,6 +235,12 @@ app.get("/content-chooser", function(req, res) {
   res.status(200).render("content-chooser");
 });
 
+// redirect old user profile for tanyapuravankara to new url
+// we are only doing it for this user account, since it gets hits on google
+app.get("/en/people/tanyapuravankara", function(req, res) {
+  return res.redirect("/user/8198");
+});
+
 // redirect old .net urls to their new urls
 app.use((req, res, next) => {
   const path = req.originalUrl;
