@@ -59,7 +59,7 @@ app.use(cookieParser());
 app.use(errorhandler());
 
 i18n.configure({
-  locales: ["en"],
+  locales: ["en", "fr"],
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
