@@ -268,6 +268,12 @@ pre {
   padding: 0;
 }
 
+.reader-view .floating-action-button,
+.edit-form .floating-action-button  {
+  right: -75px;
+  margin-right: 27%;
+}
+
 .floating-action-button svg {
   padding: 0;
   width: 16px;
@@ -278,9 +284,29 @@ pre {
   display: none;
 }
 
+@media (max-width: 1000px) {
+  .edit-form .floating-action-button {
+    right: -75px;
+    margin-right: 17.8%;
+  }
+}
+
+@media (max-width: 850px) {
+  .reader-view .floating-action-button {
+    right: 30px;
+    margin-right: 0;
+  }
+}
+
 @media (max-width: 950px) {
   .home-search-body .floating-action-button {
     display: flex;
   }
 }
 
+@media (max-width: 700px) {
+  .edit-form .floating-action-button {
+    right: 34px;
+    margin-right: 0;
+  }
+}
