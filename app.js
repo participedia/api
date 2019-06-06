@@ -66,6 +66,14 @@ i18n.configure({
   updateFiles: false
 });
 
+app.use((req, res, next) => {
+  // set english as the default locale, if it's not already set
+  if (!req.cookies.locale) {
+    res.cookie("locale", "en");
+  }
+  next();
+});
+
 app.use(i18n.init);
 
 // config express-session

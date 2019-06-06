@@ -101,10 +101,18 @@ module.exports = {
 
   t: (key, context) => i18n(key, context),
 
-  isSelectedLanguage: (lang, context) => {
-    if (context && context.data && context.data.root) {
-      return lang === context.data.root.req.cookies.locale;
+  getLocale(context) {
+    const req = context.data.root.req;
+    if (req.cookies.locale) {
+      return req.cookies.locale;
+    } else {
+      return "en";
     }
+  },
+
+  isSelectedLanguage: (lang, context) => {
+    const req = context.data.root.req;
+    return lang === req.cookies.locale;
   },
 
   getArticleOptions: (staticText, name) => {
