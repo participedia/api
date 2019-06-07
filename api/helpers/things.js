@@ -37,7 +37,7 @@ function getLanguage(req) {
   // we can use the locale cookie to query by language.
   // currently if the locale is set to something other than "en", no results are returned,
   // so hardcoding "en" here
-  // return getLanguage(req);
+  // return req.cookies.locale || "en";
   return "en";
 }
 
