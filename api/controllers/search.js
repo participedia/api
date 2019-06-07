@@ -124,22 +124,25 @@ const sortbyFromReq = req => {
 
 const keyFacetFromReq = (req, name) => {
   let value = req.query[name];
+  console.log("### key %s facet value: %s", name, value);
   return value ? ` AND ${name} ='${value}' ` : "";
 };
 
 const keyListFacetFromReq = (req, name) => {
   let value = req.query[name];
+  console.log("### key %s facet list value: %s", name, value);
   if (!value) {
     return "";
   }
   value = as.array(value.split(","));
-  return ` AND ${name} && '${value}' `;
+  return ` AND ${name} && ${value} `;
 };
 
 const facetsFromReq = req => {
   if (typeFromReq(req) !== "case") {
     return "";
   }
+  console.log(">>> query: %s", JSON.stringify(req.query));
   const keys = [
     "country",
     "scope_of_influence",
@@ -159,7 +162,7 @@ const facetsFromReq = req => {
     "change_types"
   ];
   let keyFacets = keys.map(key => keyFacetFromReq(req, key));
-  let keyListFacets = keys.map(key => keyListFacetFromReq(req, key));
+  let keyListFacets = keyLists.map(key => keyListFacetFromReq(req, key));
   return keyFacets.join("") + keyListFacets.join("");
 };
 
