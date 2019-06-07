@@ -9,7 +9,7 @@ const options = {
 const fs = require("fs");
 //if (process.env.LOG_QUERY === "true") {
 // options.query = evt => (process.env.LAST_QUERY = evt.query);
-options.query = evt => console.log("QUERY: %s", evt.query);
+// options.query = evt => console.log("QUERY: %s", evt.query);
 //}
 const pgp = require("pg-promise")(options);
 const path = require("path");
