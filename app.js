@@ -59,11 +59,19 @@ app.use(cookieParser());
 app.use(errorhandler());
 
 i18n.configure({
-  locales: ["en"],
+  locales: ["en", "fr"],
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
   updateFiles: false
+});
+
+app.use((req, res, next) => {
+  // set english as the default locale, if it's not already set
+  if (!req.cookies.locale) {
+    res.cookie("locale", "en");
+  }
+  next();
 });
 
 app.use(i18n.init);

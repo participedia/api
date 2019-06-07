@@ -559,7 +559,6 @@
   "case_view_end_date_label": "End Date",
   "case_edit_ongoing_label": "Ongoing",
   "case_edit_ongoing_instructional": "This case is ongoing",
-  "case_edit_ongoing_placeholder": "",
   "case_view_ongoing_label": "Ongoing",
   "case_edit_time_limited_label": "Time Limited or Repeated?",
   "case_edit_time_limited_instructional": "Did this case take place over a single, defined period of days, weeks or months? Or was the entire process repeated over time? Select one.",
