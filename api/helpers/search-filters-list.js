@@ -8,9 +8,7 @@ const searchFiltersList = {
     {
       sectionKey: "location",
       sectionLabel: "Location",
-      // todo: add country once data is in correct format
-      // fieldNameKeys: ["country", "scope_of_influence"]
-      fieldNameKeys: ["scope_of_influence"]
+      fieldNameKeys: ["country", "scope_of_influence"]
     },
     {
       sectionKey: "purpose_and_approach",

@@ -678,7 +678,12 @@ module.exports = {
 
   getOptionsForFilterKey(name, context) {
     if (name === "country") {
-      return countries;
+      return countries.map(item => {
+        return {
+          key: item.value,
+          value: i18n(item.value, context),
+        };
+      });
     } else {
       return sharedFieldOptions[name].map(key => {
         return {
