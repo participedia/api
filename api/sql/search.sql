@@ -13,6 +13,7 @@ WITH all_selections AS (SELECT
 FROM search_index_${language:raw}
 WHERE document @@ to_tsquery('english', ${query})
   ${filter:raw}
+   and scope_of_influence = 'neighborhood' 
 ORDER BY rank DESC
 ),
 total_selections AS (

@@ -75,13 +75,15 @@ const singularLowerCase = name =>
   (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
 
 // just get the type, if specified
-const typeFromReq = req =>
-  singularLowerCase(req.query.selectedCategory || "Alls");
+const typeFromReq = req => {
+  let cat = singularLowerCase(req.query.selectedCategory || "Alls");
+  return cat === "all" ? "thing" : cat;
+};
 
 // like it says on the tin
 const filterFromReq = req => {
   const cat = typeFromReq(req);
-  return cat === "all" ? "" : `AND type = '${cat}'`;
+  return cat === "thing" ? "" : `AND type = '${cat}'`;
 };
 
 const queryFileFromReq = req => {
@@ -118,6 +120,47 @@ const sortbyFromReq = req => {
     return "post_date";
   }
   return "updated_date";
+};
+
+const keyFacetFromReq = (req, name) => {
+  let value = req.query[name];
+  return value ? ` AND ${name} ='${value}' ` : "";
+};
+
+const keyListFacetFromReq = (req, name) => {
+  let value = req.query[name];
+  if (!value) {
+    return "";
+  }
+  value = as.array(value.split(","));
+  return ` AND ${name} && '${value}' `;
+};
+
+const facetsFromReq = req => {
+  if (typeFromReq(req) !== "case") {
+    return "";
+  }
+  const keys = [
+    "country",
+    "scope_of_influence",
+    "public_spectrum",
+    "open_limited",
+    "recruitment_method"
+  ];
+  const keyLists = [
+    "tags",
+    "general_issues",
+    "purposes",
+    "approaches",
+    "method_types",
+    "tools_techniques_types",
+    "organizer_types",
+    "funder_types",
+    "change_types"
+  ];
+  let keyFacets = keys.map(key => keyFacetFromReq(req, key));
+  let keyListFacets = keys.map(key => keyListFacetFromReq(req, key));
+  return keyFacets.join("") + keyListFacets.join("");
 };
 
 /**
@@ -166,7 +209,9 @@ router.get("/", async function(req, res) {
       offset: offsetFromReq(req),
       language: lang,
       userId: req.user ? req.user.id : null,
-      sortby: sortbyFromReq(req)
+      sortby: sortbyFromReq(req),
+      type: type + "s",
+      facets: facetsFromReq(req)
     });
     const total = Number(
       results.length ? results[0].total || results.length : 0
