@@ -6,6 +6,7 @@ swagger/api_project.js
 swagger/api_data.js
 swagger/api_data.json
 migrations/users.json
+cypress/screenshots
 
 .DS_Store
 # Logs

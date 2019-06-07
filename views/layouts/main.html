@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{req.cookies.locale}}" class="js-document">
+<html lang="{{getLocale}}" class="no-focus-outline">
 
 <head>
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -15,11 +15,9 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="stylesheet" href="/css/style.css">
 
-  {{#if (isReaderPage params)}}
-    {{{socialTagsTemplate article req}}}
-  {{/if}}
+  {{{socialTagsTemplate article req}}}
 
-  <title>Participedia</title>
+  <title>{{getPageTitle req article}}</title>
 </head>
 
 {{!--
@@ -76,6 +74,8 @@
   (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/80049ef3-8aba-45c2-9a72-88b56bb1b342.js';
   var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
   </script>
+
+  <script type="text/javascript" src="/js/vendor/aria.modal.min.js"></script>
 </body>
 
 </html>

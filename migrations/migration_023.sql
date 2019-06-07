@@ -1,5 +1,5 @@
-update case_view_localized set "true" = 'True' WHERE language = 'en';
-update case_view_localized set "false" = 'False' WHERE language = 'en';
+-- update case_view_localized set "true" = 'True' WHERE language = 'en';
+-- update case_view_localized set "false" = 'False' WHERE language = 'en';
 
 update cases set if_voting = array_replace(if_voting, 'if_voting_value_preferential', 'preferential');
 

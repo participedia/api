@@ -1,5 +1,7 @@
 "use strict";
 
+// deploy on heroku-18 stack
+
 const path = require("path");
 const process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
@@ -30,9 +32,20 @@ const search = require("./api/controllers/search");
 const list = require("./api/controllers/list");
 const user = require("./api/controllers/user");
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
+const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
 
 const port = process.env.PORT || 3001;
 
+// canonicalize url
+app.use((req, res, next) => {
+  if (
+    process.env.NODE_ENV === "production" &&
+    req.hostname !== "participedia.net"
+  ) {
+    res.redirect("https://participedia.net" + req.originalUrl);
+  }
+  next();
+});
 // CONFIGS
 app.use(compression());
 app.set("port", port);
@@ -40,17 +53,25 @@ app.use(express.static("public", { index: false }));
 app.use(morgan("dev")); // request logging
 app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());
-app.use(bodyParser.json({ limit: "5mb" }));
-app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 app.use(errorhandler());
 
 i18n.configure({
-  locales: ["en"],
+  locales: ["en", "fr"],
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
-  updateFiles: false,
+  updateFiles: false
+});
+
+app.use((req, res, next) => {
+  // set english as the default locale, if it's not already set
+  if (!req.cookies.locale) {
+    res.cookie("locale", "en");
+  }
+  next();
 });
 
 app.use(i18n.init);
@@ -68,6 +89,7 @@ if (app.get("env") === "production") {
 }
 
 app.use(session(sess));
+app.set("trust proxy", 1);
 
 // Configure Passport to use Auth0
 const strategy = new Auth0Strategy(
@@ -75,7 +97,7 @@ const strategy = new Auth0Strategy(
     domain: process.env.AUTH0_DOMAIN,
     clientID: process.env.AUTH0_CLIENT_ID,
     clientSecret: process.env.AUTH0_CLIENT_SECRET,
-    callbackURL: "/redirect"
+    callbackURL: process.env.CALLBACK_URL || "/redirect"
   },
   function(accessToken, refreshToken, extraParams, profile, done) {
     // accessToken is the token to call Auth0 API (not needed in the most cases)
@@ -105,9 +127,14 @@ passport.deserializeUser(async function(user, done) {
 app.get("/login", function(req, res, next) {
   // set returnTo session var to referer so user is redirected to current page after login
   req.session.returnTo = req.headers.referer;
-  passport.authenticate("auth0", {
-    scope: "openid email profile"
-  }, () => {})(req, res, next);
+  req.session.refreshAndClose = req.query.refreshAndClose;
+  passport.authenticate(
+    "auth0",
+    {
+      scope: "offline openid email profile"
+    },
+    () => {}
+  )(req, res, next);
 });
 
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
@@ -117,15 +144,21 @@ app.get("/redirect", function(req, res, next) {
       return next(err);
     }
     if (!user) {
-      return res.redirect("/login");
+      // return res.redirect("/login");
+      return res.redirect("/");
     }
     req.logIn(user, function(err) {
       if (err) {
         return next(err);
       }
-      const returnTo = req.session.returnTo;
+      let returnToUrl = req.session.returnTo;
+      const refreshAndClose = req.session.refreshAndClose
       delete req.session.returnTo;
-      res.redirect(returnTo || "/");
+      delete req.session.refreshAndClose;
+      if (refreshAndClose === "true") {
+        returnToUrl = returnToUrl + "?refreshAndClose=true"
+      }
+      res.redirect(returnToUrl || "/");
     });
   })(req, res, next);
 });
@@ -208,6 +241,28 @@ app.get("/teaching", function(req, res) {
 });
 app.get("/content-chooser", function(req, res) {
   res.status(200).render("content-chooser");
+});
+
+// redirect old user profile for tanyapuravankara to new url
+// we are only doing it for this user account, since it gets hits on google
+app.get("/en/people/tanyapuravankara", function(req, res) {
+  return res.redirect("/user/8198");
+});
+
+// redirect old .net urls to their new urls
+app.use((req, res, next) => {
+  const path = req.originalUrl;
+  if (oldDotNetUrlHandler.hasMatch(path)) {
+    // redirect old .net urls to new urls
+    return res.redirect(oldDotNetUrlHandler.getNewUrl(path));
+  }
+  next();
+});
+
+// 404 error handling
+// this should always be after all routes to catch all invalid urls
+app.use((req, res, next) => {
+  res.status(404).render("404");
 });
 
 module.exports = app;

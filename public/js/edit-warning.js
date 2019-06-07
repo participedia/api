@@ -9,14 +9,23 @@ const editWarning = {
     const initialFormData = serialize(formEl);
 
     window.addEventListener("beforeunload", (e) => {
-      const isSubmitBtn = document.activeElement.getAttribute("type") === "submit";
-      // if the trigger element is a submit button, we don't need to check for changed data
-      if (!isSubmitBtn) {
+      // when the form is submitted we set a flag, if it's a submit click, we don't want to show the warning
+      const isSubmitClick = sessionStorage.getItem("submitButtonClick") === "true";
+
+      if (!isSubmitClick) {
         const currentFormData = serialize(formEl);
         // check if form data changed and if it was show default confirmation dialog
         if (initialFormData !== currentFormData) {
-          e.returnValue = '';     // Gecko and Trident
-          return '';              // Gecko and WebKit
+          e.preventDefault();
+          e.returnValue = "";     // Gecko and Trident
+          return "";              // Gecko and WebKit
+        }
+      } else {
+        // it was a submit click, so we can reset the flag before the request continues
+        try {
+          window.sessionStorage.setItem("submitButtonClick", "false");
+        } catch (err) {
+          console.warn(err);
         }
       }
     });

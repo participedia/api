@@ -27,14 +27,14 @@
       {{/if}}
       {{{ article.body }}}
     </div>
+
+    <a
+      href="/{{article.type}}/{{article.id}}/edit"
+      class="button button-red floating-action-button floating-action-button-reader-view"
+      title="{{t 'Edit'}} {{t article.type}}"
+    >
+      <span class="sr-only">{{t "Edit"}} {{t article.type}}</span>
+      {{> icon-edit }}
+    </a>
   </article>
 </div>
-
-<a
-  href="/{{article.type}}/{{article.id}}/edit"
-  class="button button-red floating-action-button"
-  title="{{t 'Edit'}} {{t article.type}}"
->
-  <span class="sr-only">{{t "Edit"}} {{t article.type}}</span>
-  {{> icon-edit }}
-</a>

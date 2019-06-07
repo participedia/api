@@ -8,7 +8,8 @@ const options = {
 };
 const fs = require("fs");
 //if (process.env.LOG_QUERY === "true") {
-options.query = evt => (process.env.LAST_QUERY = evt.query);
+// options.query = evt => (process.env.LAST_QUERY = evt.query);
+// options.query = evt => console.log("QUERY: %s", evt.query);
 //}
 const pgp = require("pg-promise")(options);
 const path = require("path");
@@ -31,12 +32,41 @@ try {
 let db = pgp(config);
 
 const dbtagkeys = JSON.parse(fs.readFileSync("api/helpers/data/tagkeys.json"));
+const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
 
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {
     minify: true
   });
 }
+
+const CASE_BY_ID = sql("../sql/case_by_id.sql");
+const METHOD_BY_ID = sql("../sql/method_by_id.sql");
+const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
+const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
+const UPDATE_NOUN = sql("../sql/update_noun.sql");
+const INSERT_AUTHOR = sql("../sql/insert_author.sql");
+const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
+const USER_BY_ID = sql("../sql/user_by_id.sql");
+const CREATE_USER_ID = sql("../sql/create_user_id.sql");
+const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
+const CREATE_CASE = sql("../sql/create_case.sql");
+const CREATE_METHOD = sql("../sql/create_method.sql");
+const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
+const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
+const SEARCH = sql("../sql/search.sql");
+const FEATURED_MAP = sql("../sql/featuredmap.sql");
+const FEATURED = sql("../sql/featured.sql");
+const SEARCH_MAP = sql("../sql/searchmap.sql");
+const LIST_ARTICLES = sql("../sql/list_articles.sql");
+const LIST_MAP_CASES = sql("../sql/list_map_cases.sql");
+const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
+const LIST_TITLES = sql("../sql/list_titles.sql");
+const LIST_SHORT = sql("../sql/list_short.sql");
+const UPDATE_USER = sql("../sql/update_user.sql");
+const UPDATE_CASE = sql("../sql/update_case.sql");
+const UPDATE_METHOD = sql("../sql/update_method.sql");
+const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -55,31 +85,89 @@ function ErrorReporter() {
   };
 }
 
-async function listUsers() {
-  return (await db.one(
+function randomDelay() {
+  // return a number of milliseconds between 3 and 8 minutes
+  // used to refresh caached objects as needed
+  // 3 minutes = 1000 * 60 * 3 = 180,000
+  // 5 minutes = 1000 * 60 * 5 = 300,000
+  return 180000 + Math.random() * 300000;
+}
+
+let _users;
+let _cases;
+let _methods;
+let _organizations;
+let _searchDirty = true;
+
+async function _listUsers() {
+  _users = (await db.one(
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   )).authors;
+  setTimeout(_listUsers, randomDelay());
+  // console.log("user cache refreshed");
 }
 
-async function listCases(lang) {
-  return (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(cases.id), ${lang})) as cases from cases;",
-    { lang }
-  )).cases;
+async function _listCases() {
+  try {
+    _cases = await db.many(LIST_ARTICLES, { type: "cases", lang: "en" });
+  } catch (e) {
+    console.error("Error in _listCases: %s", e.message);
+  }
+  setTimeout(_listCases, randomDelay());
 }
 
-async function listMethods(lang) {
-  return (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(methods.id), ${lang})) as methods from methods;",
-    { lang }
-  )).methods;
+async function _listMethods() {
+  _methods = await db.many(LIST_ARTICLES, { type: "methods", lang: "en" });
+  setTimeout(_listMethods, randomDelay());
 }
 
-async function listOrganizations(lang) {
-  return (await db.one(
-    "SELECT to_json(get_object_title_list(array_agg(organizations.id), ${lang})) as organizations from organizations;",
-    { lang }
-  )).organizations;
+async function _listOrganizations() {
+  _organizations = await db.many(LIST_ARTICLES, {
+    type: "organizations",
+    lang: "en"
+  });
+  setTimeout(_listOrganizations, randomDelay());
+}
+
+async function _refreshSearch() {
+  if (_searchDirty) {
+    _searchDirty = false;
+    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+  }
+  setTimeout(_refreshSearch, randomDelay());
+}
+
+if (!process.env.MIGRATIONS) {
+  _listUsers();
+  _listCases().then(() => console.log("cases cached"));
+  _listMethods().then(() => console.log("methods cached"));
+  _listOrganizations().then(() => console.log("organizations cached"));
+  _refreshSearch().then(() => console.log("search refreshed"));
+  db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
+    keys: i18n_en
+  })
+    .then(() => console.log("i18n updated"))
+    .catch(error => console.error(error));
+}
+
+function refreshSearch() {
+  _searchDirty = true;
+}
+
+function listUsers() {
+  return _users;
+}
+
+function listCases() {
+  return _cases;
+}
+
+function listMethods() {
+  return _methods;
+}
+
+function listOrganizations() {
+  return _organizations;
 }
 
 // as.number, enhances existing as.number to cope with numbers as strings
@@ -159,7 +247,7 @@ function asUrl(value) {
   }
   try {
     if (!value.startsWith("http")) {
-      value = process.env.AWS_UPLOADS_URL + value;
+      value = "https://" + value;
     }
     // return new URL(value).href;
     return escapedText(new URL(value).href);
@@ -184,7 +272,11 @@ function id(string, field) {
 // as.ids, strip [{text,value}] down to [value], then format as array of numbers
 function ids(idList) {
   if (!idList) return [];
-  return idList.map(item => parseInt(item.key, 10));
+  if (idList.length && isObject(idList[0])) {
+    return idList.map(item => parseInt(item.id, 10));
+  }
+  // filter out empty values and map to integers
+  return idList.filter(item => item !== "").map(item => parseInt(item, 10));
 }
 
 // as.strings
@@ -202,6 +294,9 @@ function casekey(obj, group) {
   }
   if (obj === null || obj === "") {
     return null;
+  }
+  if (isString(obj)) {
+    return obj; // FIXME: test to see if it is a valid key
   }
   if (obj.key === undefined) {
     throw new Error("Key cannot be undefined for group " + group);
@@ -251,6 +346,14 @@ function tagkey(obj) {
   if (obj === undefined) {
     throw new Error("Object cannot be undefined for tag");
   }
+  if (isString(obj)) {
+    if (dbtagkeys.includes(obj)) {
+      return obj;
+    } else {
+      console.warn("failed tag: %s", obj);
+      return null;
+    }
+  }
   if (obj.key === undefined) {
     throw new Error("Key cannot be undefined for tag");
   }
@@ -266,22 +369,27 @@ function tagkeys(objList) {
   return uniq((objList || []).map(tagkey).filter(x => !!x));
 }
 
+function FullFile(obj) {
+  this.rawType = true;
+  this.toPostgres = () =>
+    pgp.as.format(
+      "(${url}, ${source_url}, ${attribution}, ${title})::full_file",
+      obj
+    );
+}
+
+function FullLink(obj) {
+  this.rawType = true;
+  this.toPostgres = () =>
+    pgp.as.format("(${url}, ${attribution}, ${title})::full_link", obj);
+}
+
 function aMedium(obj) {
   if (isString(obj)) {
     obj = { url: obj, attribution: "", title: "" };
   }
   if (!obj.url) return null;
-  return [
-    '"(',
-    asUrl(obj.url),
-    ",",
-    // attribution: obj.attribution,
-    text(obj.attribution),
-    ",",
-    // title: obj.title
-    text(obj.title),
-    ')"'
-  ].join("");
+  return new FullLink(obj);
 }
 
 function aSourcedMedia(obj) {
@@ -293,35 +401,18 @@ function aSourcedMedia(obj) {
   // if url is not already an amazon url, upload the file
   let url = obj.url;
   // some types of sourced media are links, anything already a link does not need to be uploaded
-  if (!url.startsWith("http")) {
-    url = uploadToAWS(obj.url, obj.title);
+  if (!obj.url.startsWith("http")) {
+    obj.url = uploadToAWS(obj.url, obj.title);
   }
-
-  return [
-    '"(',
-    asUrl(url),
-    ",",
-    asUrl(obj.source_url),
-    ",",
-    // attribution: obj.attribution,
-    text(obj.attribution),
-    ",",
-    // title: obj.title
-    text(obj.title),
-    ')"'
-  ].join("");
-}
-
-function simpleArray(values) {
-  return "{" + values.join(",") + "}";
+  return new FullFile(obj);
 }
 
 function media(mediaList) {
-  return simpleArray((mediaList || []).map(aMedium).filter(x => !!x)); // remove nulls
+  return (mediaList || []).map(aMedium).filter(x => !!x); // remove nulls
 }
 
 function sourcedMedia(mediaList) {
-  return simpleArray((mediaList || []).map(aSourcedMedia).filter(x => !!x)); // remove nulls
+  return (mediaList || []).map(aSourcedMedia).filter(x => !!x); // remove nulls
 }
 
 function boolean(value) {
@@ -391,6 +482,7 @@ const as = Object.assign({}, pgp.as, {
   methodkey,
   methodkeys,
   organizationkey,
+  organizationkeyflat,
   organizationkeys,
   richtext,
   tagkeys,
@@ -402,36 +494,6 @@ const as = Object.assign({}, pgp.as, {
 
 const helpers = pgp.helpers;
 
-const CASE_EDIT_BY_ID = sql("../sql/case_edit_by_id.sql");
-const CASE_VIEW_BY_ID = sql("../sql/case_view_by_id.sql");
-const METHOD_EDIT_BY_ID = sql("../sql/method_edit_by_id.sql");
-const METHOD_VIEW_BY_ID = sql("../sql/method_view_by_id.sql");
-const ORGANIZATION_EDIT_BY_ID = sql("../sql/organization_edit_by_id.sql");
-const ORGANIZATION_VIEW_BY_ID = sql("../sql/organization_view_by_id.sql");
-const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
-const UPDATE_NOUN = sql("../sql/update_noun.sql");
-const INSERT_AUTHOR = sql("../sql/insert_author.sql");
-const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
-const USER_BY_ID = sql("../sql/user_by_id.sql");
-const CREATE_USER_ID = sql("../sql/create_user_id.sql");
-const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
-const CREATE_CASE = sql("../sql/create_case.sql");
-const CREATE_METHOD = sql("../sql/create_method.sql");
-const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
-const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
-const SEARCH = sql("../sql/search.sql");
-const FEATURED_MAP = sql("../sql/featuredmap.sql");
-const FEATURED = sql("../sql/featured.sql");
-const SEARCH_MAP = sql("../sql/searchmap.sql");
-const LIST_MAP_CASES = sql("../sql/list_map_cases.sql");
-const LIST_MAP_ORGANIZATIONS = sql("../sql/list_map_orgs.sql");
-const LIST_TITLES = sql("../sql/list_titles.sql");
-const LIST_SHORT = sql("../sql/list_short.sql");
-const UPDATE_USER = sql("../sql/update_user.sql");
-const UPDATE_CASE = sql("../sql/update_case.sql");
-const UPDATE_METHOD = sql("../sql/update_method.sql");
-const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
-
 module.exports = {
   db,
   as,
@@ -441,6 +503,7 @@ module.exports = {
   listCases,
   listMethods,
   listOrganizations,
+  refreshSearch,
   INSERT_LOCALIZED_TEXT,
   UPDATE_NOUN,
   INSERT_AUTHOR,
@@ -456,6 +519,7 @@ module.exports = {
   FEATURED_MAP,
   FEATURED,
   SEARCH_MAP,
+  LIST_ARTICLES,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
   LIST_TITLES,
@@ -464,11 +528,8 @@ module.exports = {
   UPDATE_CASE,
   UPDATE_METHOD,
   UPDATE_ORGANIZATION,
-  CASE_EDIT_BY_ID,
-  CASE_VIEW_BY_ID,
-  METHOD_EDIT_BY_ID,
-  METHOD_VIEW_BY_ID,
-  ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_VIEW_BY_ID,
+  CASE_BY_ID,
+  METHOD_BY_ID,
+  ORGANIZATION_BY_ID,
   ErrorReporter
 };

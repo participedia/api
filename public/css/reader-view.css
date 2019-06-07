@@ -2,11 +2,13 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 120px;
+  word-break: break-word;
 }
 
 .reader-view aside {
   width: 27%;
   margin: 0 90px 0 30px;
+  word-break: break-word;
 }
 
 .reader-view article {
@@ -38,7 +40,7 @@
   order: -1;
   width: 30px;
   position: absolute;
-  margin-left: 46%;
+  margin-left: 42%;
   text-align: center;
 }
 
@@ -50,13 +52,20 @@
   word-break: break-word;
 }
 
-.reader-view .body-content h3 {
-  /* style h3 tags as h2 tags within body content only */
+.reader-view .body-content h2 {
   font-size: 1.75rem;
   line-height: 1.875rem;
   font-weight: 600;
   margin-top: 1em;
   margin-bottom: 0;
+}
+
+.reader-view .body-content img {
+  width: 100%;
+}
+.reader-view .body-content blockquote {
+  border-left: 4px solid #ccc;
+  padding-left: 10px;
 }
 
 /* bookmark link */

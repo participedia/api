@@ -25,12 +25,14 @@ WITH all_featured  AS (
     to_json(COALESCE(photos, '{}')) AS photos,
     to_json(COALESCE(videos, '{}')) as videos,
     updated_date,
+    post_date,
     bookmarked(type, id, ${userId})
   FROM
-    things,
-    get_localized_texts(things.id, ${language}) AS texts
-  WHERE things.hidden = false
-        ${filter:raw}
+    ${type:name},
+    get_localized_texts(${type:name}.id, ${language}) AS texts
+  WHERE
+   ${type:name}.hidden = false
+   ${facets:raw}
   ORDER BY featured DESC, updated_date DESC
 ),
 total_featured AS (
@@ -39,7 +41,7 @@ total_featured AS (
 )
 SELECT all_featured.*, total_featured.total
 FROM all_featured, total_featured
-ORDER BY featured DESC, updated_date DESC
+ORDER BY featured DESC, ${sortby:name} DESC
 OFFSET ${offset}
 LIMIT ${limit}
 ;

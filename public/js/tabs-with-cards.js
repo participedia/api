@@ -1,4 +1,4 @@
-import { updateUrlParams, removeUrlParams } from "./utils/utils.js";
+import { getValueForParam, updateUrlParams, removeUrlParams } from "./utils/utils.js";
 import searchFiltersList from "../../api/helpers/search-filters-list.js";
 
 const SEARCH_FILTER_KEYS = [];
@@ -23,14 +23,24 @@ const tabsWithCards = {
     // cards ui
     this.initCardLayout();
     this.initPagination();
-    this.initSortBy();
+  },
+
+  navigateToTab(category) {
+    const query = getValueForParam("query");
+    let url = `${window.location.origin + window.location.pathname}?selectedCategory=${category}`;
+
+    if (query) {
+      url = `${url}&query=${query}`;
+    }
+
+    window.location.href = url;
   },
 
   initDesktopTabNav() {
     // update url param to indicate current tab
     this.tabInputEls.forEach(el => {
       el.addEventListener("click", event => {
-        this.updateParamAndGo("selectedCategory", event.target.id);
+        this.navigateToTab(event.target.id);
       });
     });
   },
@@ -51,29 +61,8 @@ const tabsWithCards = {
       const newTabId = event.target.value;
       // toggle checked attr on inputs
       this.tabInputEls.forEach(el => el.checked = el.id === newTabId);
-      // update url
-      this.updateParamAndGo("selectedCategory", newTabId);
-    });
-  },
-
-  updateParamAndGo(key, value) {
-    // remove search filter params when changing tabs
-    removeUrlParams(SEARCH_FILTER_KEYS);
-
-    // update new param
-    updateUrlParams(key, value);
-    window.location.href = window.location.href;
-  },
-
-  initSortBy() {
-    const sortByMenuEl = this.viewEl.querySelector(".js-sort-by-items");
-    sortByMenuEl.addEventListener("click", event => {
-      const link = event.target.closest("a");
-      if (link) {
-        event.preventDefault();
-        const sortBy = link.getAttribute("data-sortby");
-        this.updateParamAndGo("sortby", sortBy);
-      }
+      // go to new tab
+      this.navigateToTab(newTabId);
     });
   },
 

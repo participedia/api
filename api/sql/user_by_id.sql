@@ -1,9 +1,4 @@
-WITH
-texts AS (
-  SELECT * FROM localized_texts
-  WHERE localized_texts.language = ${language}
-),
-user_bookmarks AS (
+WITH user_bookmarks AS (
   SELECT * FROM (
     SELECT
       bookmarks.thingid as id,
@@ -11,31 +6,33 @@ user_bookmarks AS (
       texts.title,
       things.photos,
       things.post_date,
-      things.updated_date
+      things.updated_date,
+      true as bookmarked
     FROM
       bookmarks,
-      texts,
-      things
+      things,
+      get_localized_texts(things.id, ${language}) AS texts
     WHERE
+      things.hidden = false AND
       bookmarks.userid = ${userId} AND
       bookmarks.thingid = things.id AND
-      bookmarks.thingid = texts.thingid AND
       bookmarks.bookmarktype = things.type
   ) t ORDER BY updated_date
 ),
 authored_things AS (
   SELECT DISTINCT
     authors.user_id author,
-    (authors.thingid, texts.title, things.type, things.photos, things.post_date, things.updated_date)::object_short thing,
+    (authors.thingid, texts.title, things.type, things.photos, things.post_date, things.updated_date, bookmarked(things.type, things.id, ${userId}))::object_short thing,
     authors.thingid,
     things.updated_date
   FROM
-    texts,
     authors,
-    things
+    things,
+    get_localized_texts(things.id, ${language}) AS texts
   WHERE
     texts.thingid = authors.thingid AND
     texts.thingid = things.id AND
+    things.hidden = false AND
     authors.user_id = ${userId}
   ORDER BY authors.thingid, things.updated_date
 ),
@@ -72,7 +69,7 @@ SELECT
 	COALESCE(authored_cases.cases, '{}') cases,
 	COALESCE(authored_methods.methods, '{}') methods,
 	COALESCE(authored_organizations.organizations, '{}') organizations,
-  COALESCE(ARRAY(SELECT ROW(id, title, type, photos, post_date, updated_date)::object_short FROM user_bookmarks), '{}') bookmarks
+  COALESCE(ARRAY(SELECT ROW(id, title, type, photos, post_date, updated_date, bookmarked)::object_short FROM user_bookmarks), '{}') bookmarks
 FROM
   users
   LEFT JOIN authored_cases ON users.id = authored_cases.author

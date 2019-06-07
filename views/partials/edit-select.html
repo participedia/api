@@ -3,10 +3,10 @@
     <option value="">{{placeholder_txt}}</option>
     {{#each options}}
       <option
-        value="{{this.key}}"
-        {{#if (isEqual ../selectedValue this.key)}}selected{{/if}}
+        value="{{this}}"
+        {{#if (isEqual ../selectedValue this)}}selected{{/if}}
       >
-        {{this.value}}
+        {{i18nEditFieldValue ../name this}}
       </option>
     {{/each}}
   </select>

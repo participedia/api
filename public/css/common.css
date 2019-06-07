@@ -1,25 +1,25 @@
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Medium.ttf");
+  src: url("/fonts/FaktWeb-Medium.woff2") format("woff2"),
+       url("/fonts/FaktWeb-Medium.woff") format("woff");
   font-weight: 800;
   font-style: bold;
-  font-display: swap;
 }
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Normal.ttf");
+  src: url("/fonts/FaktWeb-Normal.woff2") format("woff2"),
+       url("/fonts/FaktWeb-Normal.woff") format("woff");
   font-weight: 600;
   font-style: normal;
-  font-display: swap;
 }
 
 @font-face {
   font-family: "Fakt";
-  src: url("/fonts/FaktPro-Blond.ttf");
+  src: url("/fonts/FaktWeb-Blond.woff2") format("woff2"),
+       url("/fonts/FaktWeb-Blond.woff") format("woff");
   font-weight: 300;
   font-style: normal;
-  font-display: swap;
 }
 
 html {
@@ -30,6 +30,11 @@ html {
   color: #000;
   -webkit-overflow-scrolling: touch;
   visibility: hidden;
+}
+
+.no-focus-outline *:focus,
+.no-focus-outline *:focus {
+  outline: none;
 }
 
 /* Typography */
@@ -234,4 +239,79 @@ pre {
 }
 [data-bookmarked=false] .is-not-bookmarked {
   display: block;
+}
+
+.loading-modal-content {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items: center;
+  height: 200px;
+}
+
+.error-404-container {
+  /* viewport height minus header/footer */
+  height: calc(100VH - 316px);
+}
+.error-404-content {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.floating-action-button {
+  margin: 0;
+  border-radius: 2em;
+  position: fixed;
+  bottom: 60px;
+  right: 30px;
+  box-shadow: 0px 0px 20px 1px #B3B3B3;
+  height: 60px;
+  width: 60px;
+  min-width: 60px;
+  padding: 0;
+}
+
+.reader-view .floating-action-button,
+.edit-form .floating-action-button  {
+  right: -75px;
+  margin-right: 27%;
+}
+
+.floating-action-button svg {
+  padding: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.home-search-body .floating-action-button {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .edit-form .floating-action-button {
+    right: -75px;
+    margin-right: 17.8%;
+  }
+}
+
+@media (max-width: 850px) {
+  .reader-view .floating-action-button {
+    right: 30px;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 950px) {
+  .home-search-body .floating-action-button {
+    display: flex;
+  }
+}
+
+@media (max-width: 700px) {
+  .edit-form .floating-action-button {
+    right: 34px;
+    margin-right: 0;
+  }
 }

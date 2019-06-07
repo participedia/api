@@ -1,6 +1,6 @@
 <div class="user-container">
   <div class="user-profile-image user-profile-image-edit">
-    <a href="https://gravatar.com/" target="_blank" class="user-profile-image-edit-mask">
+    <a href="https://gravatar.com/" target="_blank" rel="noopener" class="user-profile-image-edit-mask">
       <div class="user-profile-image-initial">{{getInitials profile.name}}</div>
       {{#if (getGravatarUrl profile.email)}}
         <img src="{{getGravatarUrl profile.email}}?s=160&d=blank" alt='{{t "profile_picture"}}' width="160" height="160" />
@@ -22,8 +22,31 @@
 
       <fieldset>
         <h2>{{t "public_profile"}}</h2>
-        {{> edit-text name="name" value=profile.name placeholderText=(t "name_placeholder")}}
-        {{> edit-richtext name="bio" value=profile.bio}}
+        {{!-- name field --}}
+        <div class="form-group form-group-name">
+          <label for="name">{{t "user_edit_name_label"}}</label>
+          <p>{{t "user_edit_name_instructional"}}</p>
+          <input
+            type="text"
+            placeholder="{{t "user_edit_name_placeholder"}}"
+            name="name"
+            value="{{profile.name}}"
+          />
+        </div>
+
+        {{!-- bio field --}}
+        <div class="form-group form-group-bio">
+          <label for="bio">{{t "user_edit_bio_label"}}</label>
+          <p>{{t "user_edit_bio_instructional"}}</p>
+          <div
+            class="rich-text-editor-container js-rich-text-editor-container"
+            style="display: none;"
+            data-name="richtext-bio"
+          >
+            {{{profile.bio}}}
+          </div>
+          <input type="hidden" name="bio" data-field-type="richtext" />
+        </div>
       </fieldset>
 
       <button type="submit" class="button button-light-grey">

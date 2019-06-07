@@ -9,12 +9,12 @@ const {
   db,
   as,
   CREATE_ORGANIZATION,
-  ORGANIZATION_EDIT_BY_ID,
-  ORGANIZATION_VIEW_BY_ID,
+  ORGANIZATION_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_ORGANIZATION,
   listUsers,
+  refreshSearch,
   listMethods,
   ErrorReporter
 } = require("../helpers/db");
@@ -38,8 +38,8 @@ async function getEditStaticText(params) {
   let staticText = {};
   const lang = params.lang;
 
-  staticText.authors = await listUsers();
-  staticText.methods = await listMethods(lang);
+  staticText.authors = listUsers();
+  staticText.methods = listMethods(lang).filter(article => !article.hidden);
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
@@ -81,7 +81,7 @@ async function postOrganizationNewHttp(req, res) {
     if (!title) {
       return res.status(400).json({
         OK: false,
-        message: "Cannot create Organization without at least a title"
+        errors: ["Cannot create Organization without at least a title"],
       });
     }
     const user_id = req.user.id;
@@ -97,12 +97,6 @@ async function postOrganizationNewHttp(req, res) {
     log.error("Exception in POST /organization/new => %s", error);
     return res.status(400).json({ OK: false, error: error });
   }
-  // Refresh search index
-  // try {
-  //   db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
-  // } catch (error) {
-  //   log.error("Exception in POST /organization/new => %s", error);
-  // }
 }
 
 /**
@@ -131,16 +125,16 @@ async function postOrganizationNewHttp(req, res) {
  *
  */
 
-async function getOrganization(params) {
-  const article = (await db.one(ORGANIZATION_VIEW_BY_ID, params)).results;
-  fixUpURLs(article);
-  keyFieldsToObjects(article);
-  return article;
-}
-
-function keyFieldsToObjects(article) {
-  // probably not needed, eliminate after
-  // merging localization branch
+async function getOrganization(params, res) {
+  try {
+    const articleRow = await db.one(ORGANIZATION_BY_ID, params);
+    const article = articleRow.results;
+    fixUpURLs(article);
+    return article;
+  } catch (error) {
+    // if no entry is found, render the 404 page
+    return res.sendStatus("404");
+  }
 }
 
 async function postOrganizationUpdateHttp(req, res) {
@@ -149,11 +143,17 @@ async function postOrganizationUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
+
+  // if this is a new organization, we don't have a post_date yet, so we set it here
+  if (!newOrganization.post_date) {
+    newOrganization.post_date = Date.now();
+  }
+
   const {
     updatedText,
     author,
     oldArticle: oldOrganization
-  } = await maybeUpdateUserText(req, res, "organization", keyFieldsToObjects);
+  } = await maybeUpdateUserText(req, res, "organization");
   const [updatedOrganization, er] = getUpdatedOrganization(
     user,
     params,
@@ -167,7 +167,6 @@ async function postOrganizationUpdateHttp(req, res) {
           t.none(INSERT_AUTHOR, author),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
           t.none(UPDATE_ORGANIZATION, updatedOrganization)
-          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     } else {
@@ -175,15 +174,15 @@ async function postOrganizationUpdateHttp(req, res) {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
           t.none(UPDATE_ORGANIZATION, updatedOrganization)
-          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     }
-    const freshArticle = await getOrganization(params);
+    const freshArticle = await getOrganization(params, res);
     res.status(200).json({
       OK: true,
       article: freshArticle
     });
+    refreshSearch();
   } else {
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({
@@ -228,7 +227,7 @@ function getUpdatedOrganization(
   ].map(key => cond(key, as.text));
   ["latitude", "longitude"].map(key => cond(key, as.float));
   // key
-  ["sector"].map(key => cond(key, as.organizationkey));
+  ["sector"].map(key => cond(key, as.organizationkeyflat));
   // list of keys
   [
     "scope_of_influence",
@@ -246,21 +245,18 @@ function getUpdatedOrganization(
 async function getOrganizationHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "organization");
-  const articleRow = await db.one(ORGANIZATION_VIEW_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+
+  const article = await getOrganization(params, res);
   const staticText = {};
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
-  const articleRow = await db.one(ORGANIZATION_EDIT_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+  const article = await getOrganization(params, res);
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getOrganizationNewHttp(req, res) {
@@ -272,6 +268,7 @@ async function getOrganizationNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
+router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 router.post("/new", requireAuthenticatedUser(), postOrganizationNewHttp);
 router.post(
   "/:thingid",
@@ -284,7 +281,6 @@ router.get(
   requireAuthenticatedUser(),
   getOrganizationEditHttp
 );
-router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 
 module.exports = {
   organization: router,

@@ -9,10 +9,17 @@
   "title": "First Title",
   "description": "First Description",
   "body": "First Body",
-  "files": [],
+  "files": [
+    {
+      "url": "https://example.com/fileuno.txt",
+      "title": "Evan tempted by the apple",
+      "source_url": "http://example.com/mouser",
+      "attribution": "Bonnie and Clyde"
+    }
+  ],
   "links": [
     {
-      "url": "https://killsixbilliondemons.com",
+      "url": "https://killsixbilliondemons.com/",
       "title": "",
       "attribution": ""
     }
@@ -26,20 +33,26 @@
       "attribution": "anonymous"
     }
   ],
-  "audio": [],
-  "location_name": "",
-  "address1": "",
+  "audio": [
+    {
+      "url": "http://livingcode.org/soundgarden",
+      "title": "That song you almost know the words to",
+      "attribution": "Chairman Mao"
+    }
+  ],
+  "location_name": "Hooter's",
+  "address1": "1234 Court Hill Rd.",
   "address2": "",
-  "city": "",
-  "province": "",
-  "postal_code": "",
-  "latitude": 0,
-  "longitude": 0,
-  "sector": "",
-  "scope_of_influence": [],
-  "type_method": [],
-  "type_tool": [],
-  "specific_topics": [],
-  "general_issues": [],
-  "specific_methods_tools_techniques": []
+  "city": "Columbus",
+  "province": "OH",
+  "postal_code": "45710",
+  "latitude": 42.6,
+  "longitude": 85.2,
+  "sector": "higher_ed",
+  "scope_of_influence": ["city/town"],
+  "type_method": ["collaborative", "direct"],
+  "type_tool": ["manage", "facilitate"],
+  "specific_topics": ["addiction", "affordable"],
+  "general_issues": ["energy", "human"],
+  "specific_methods_tools_techniques": [190, 191]
 }

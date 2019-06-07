@@ -9,12 +9,12 @@ const {
   db,
   as,
   CREATE_METHOD,
-  METHOD_EDIT_BY_ID,
-  METHOD_VIEW_BY_ID,
+  METHOD_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
   listUsers,
+  refreshSearch,
   ErrorReporter
 } = require("../helpers/db");
 
@@ -36,7 +36,11 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 async function getEditStaticText(params) {
   let staticText = {};
-  staticText.authors = await listUsers();
+  try {
+    staticText.authors = listUsers();
+  } catch (e) {
+    console.error("Error reading users");
+  }
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
 
@@ -94,13 +98,6 @@ async function postMethodNewHttp(req, res) {
     log.error("Exception in POST /method/new => %s", error);
     res.status(400).json({ OK: false, error: error });
   }
-  // Refresh search index
-  // FIXME: This will never get called as we have already returned ff
-  // try {
-  //   db.none("REFRESH MATERIALIZED VIEW CONCURRENTLY search_index_en;");
-  // } catch (error) {
-  //   log.error("Exception in POST /method/new => %s", error);
-  // }
 }
 
 /**
@@ -129,16 +126,16 @@ async function postMethodNewHttp(req, res) {
  *
  */
 
-async function getMethod(params) {
-  const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
-  keyFieldsToObjects(article);
-  return article;
-}
-
-function keyFieldsToObjects(article) {
-  // nothing yet, but want to be compatible with cases
+async function getMethod(params, res) {
+  try {
+    const articleRow = await db.one(METHOD_BY_ID, params);
+    const article = articleRow.results;
+    fixUpURLs(article);
+    return article;
+  } catch (error) {
+    // if no entry is found, render the 404 page
+    return res.sendStatus("404");
+  }
 }
 
 async function postMethodUpdateHttp(req, res) {
@@ -147,6 +144,11 @@ async function postMethodUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = req.body;
+
+  // if this is a new method, we don't have a post_date yet, so we set it here
+  if (!newMethod.post_date) {
+    newMethod.post_date = Date.now();
+  }
 
   // console.log(
   //   "Received tools_techniques_types from client: >>> \n%s\n",
@@ -157,7 +159,7 @@ async function postMethodUpdateHttp(req, res) {
     updatedText,
     author,
     oldArticle: oldMethod
-  } = await maybeUpdateUserText(req, res, "method", keyFieldsToObjects);
+  } = await maybeUpdateUserText(req, res, "method");
   // console.log("updatedText: %s", JSON.stringify(updatedText));
   // console.log("author: %s", JSON.stringify(author));
   const [updatedMethod, er] = getUpdatedMethod(
@@ -176,7 +178,6 @@ async function postMethodUpdateHttp(req, res) {
           t.none(INSERT_AUTHOR, author),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
           t.none(UPDATE_METHOD, updatedMethod)
-          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     } else {
@@ -184,19 +185,19 @@ async function postMethodUpdateHttp(req, res) {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
           t.none(UPDATE_METHOD, updatedMethod)
-          // t.none("REFRESH MATERIALIZED VIEW search_index_en;")
         ]);
       });
     }
     // the client expects this request to respond with json
     // save successful response
     // console.log("Params for returning method: %s", JSON.stringify(params));
-    const freshArticle = await getMethod(params);
+    const freshArticle = await getMethod(params, res);
     // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
       article: freshArticle
     });
+    refreshSearch();
   } else {
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({
@@ -223,24 +224,26 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
   ["links", "videos", "audio"].map(key => cond(key, as.media));
   // photos and files are slightly different from other media as they have a source url too
   ["photos", "files"].map(key => cond(key, as.sourcedMedia));
-  // boolean (would include "published" but we don't really support it)
-  ["facilitators"].map(key => cond(key, as.yesno));
   // key
   [
+    "facilitators",
     "facetoface_online_or_both",
     "public_spectrum",
     "open_limited",
     "recruitment_method",
-    "level_polarization"
+    "level_polarization",
+    "level_complexity"
   ].map(key => cond(key, as.methodkey));
   // list of keys
   [
     "method_types",
-    "number_of_participants",
     "scope_of_influence",
     "participants_interactions",
+    "number_of_participants",
     "decision_methods",
-    "if_voting"
+    "if_voting",
+    "number_of_participants",
+    "purpose_method"
   ].map(key => cond(key, as.methodkeys));
   // TODO save bookmarked on user
   return [updatedMethod, er];
@@ -249,21 +252,17 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
 async function getMethodHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "method");
-  const articleRow = await db.one(METHOD_VIEW_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+  const article = await getMethod(params, res);
   const staticText = {};
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
-  const articleRow = await db.one(METHOD_EDIT_BY_ID, params);
-  const article = articleRow.results;
-  fixUpURLs(article);
+  const article = await getMethod(params, res);
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText);
+  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getMethodNewHttp(req, res) {
@@ -275,10 +274,11 @@ async function getMethodNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
-router.get("/:thingid/", getMethodHttp);
 router.get("/:thingid/edit", requireAuthenticatedUser(), getMethodEditHttp);
 router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
 router.post("/new", requireAuthenticatedUser(), postMethodNewHttp);
+// these have to come *after* /new or BAD THINGS HAPPEN
+router.get("/:thingid/", getMethodHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
 
 module.exports = {

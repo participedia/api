@@ -20,7 +20,7 @@
       </span>
       </br>
     {{/if}}
-    {{#if profile.bio}}<p>{{{profile.bio}}}</p>{{/if}}
+    {{#if profile.bio}}<div class="user-view-bio">{{{profile.bio}}}</div>{{/if}}
   </div>
 </div>
 <div class="user-view-body">
@@ -33,12 +33,15 @@
       {{/if}}
     </div>
 
-    <div role="tabpanel" class="tab-bookmarks">
-      {{#if (isSelectedUserTab req "bookmarks")}}
-        {{> cards-container
-          cards=profile.bookmarks
-        }}
-      {{/if}}
-    </div>
+    {{#if (isProfileOwner req.user profile)}}
+      <div role="tabpanel" class="tab-bookmarks">
+        {{#if (isSelectedUserTab req "bookmarks")}}
+          {{> cards-container
+            cards=profile.bookmarks
+          }}
+        {{/if}}
+      </div>
+    {{/if}}
+
   {{/tabs-with-cards}}
 </div>

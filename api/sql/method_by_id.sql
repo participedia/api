@@ -22,31 +22,27 @@ WITH full_thing AS (
     videos,
     links,
     audio,
-    -- text values
-    location_name,
-    address1,
-    address2,
-    city,
-    province,
-    postal_code,
-    -- floats
-    latitude,
-    longitude,
     -- key values
-    sector,
+    facilitators,
+    facetoface_online_or_both,
+    public_spectrum,
+    open_limited,
+    recruitment_method,
+    level_polarization,
+    level_complexity,
     -- key lists
+    method_types,
+    number_of_participants,
     scope_of_influence,
-    type_method,
-    type_tool,
-    specific_topics,
-    general_issues,
-    -- ids
-    get_object_title_list(specific_methods_tools_techniques, ${lang}) as specific_methods_tools_techniques
+    participants_interactions,
+    decision_methods,
+    if_voting,
+    purpose_method
 FROM
-    organizations,
+    methods,
     get_localized_texts(${articleid}, ${lang}) AS texts
 WHERE
-    organizations.id = ${articleid}
+    methods.id = ${articleid}
 )
 SELECT to_json(full_thing.*) results FROM full_thing
 ;

@@ -1,6 +1,6 @@
-<li {{#if ranked}}draggable="true"{{/if}}>
+<li>
   <div class="striped-bg reorder-handle">{{> icon-reorder }}</div>
   <span>{{value}}</span>
-  <button class="icon-only js-edit-multi-select-remove-item">{{> icon-close }}</button>
+  <button class="icon-only js-edit-multi-select-remove-item" data-name="{{name}}">{{> icon-close }}</button>
   <input type="hidden" name="{{name}}[{{index}}][key]" value="{{key}}" />
 </li>

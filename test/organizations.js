@@ -76,7 +76,14 @@ describe("Organizations", () => {
         "http://example.com/picture.jpg"
       );
       const body2 = await updateOrganization(organization1.id, {
-        photos: [{ url: "http://garfield.com/jon.png" }]
+        photos: [
+          {
+            url: "http://garfield.com/jon.png",
+            source_url: "https://example.com/obligatory_plug",
+            title: "In Ned Flanders Field",
+            attribution: "Birt Sampson"
+          }
+        ]
       });
       body2.OK.should.be.true;
       const organization2 = body2.article;

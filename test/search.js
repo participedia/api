@@ -234,30 +234,6 @@ describe("Search", () => {
     });
   });
 
-  describe.skip("Test cacheing", () => {
-    it("Will only be correct if cache is cleared", async () => {
-      const res1 = await chai.getJSON("/search").send({});
-      res1.should.have.status(200);
-      res1.body.results.should.have.lengthOf(20);
-      const res2 = await addBasicCase();
-      const theCase = res2.body.object;
-      await chai
-        .putJSON("/case/" + theCase.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ featured: true });
-      const res3 = await chai.getJSON("/search").send({});
-      // If the cache was cleared by adding and editing an object, the new object should
-      // now be in the featured search results (the default search)
-      const searchResultIds = res3.body.results.map(x => x.id);
-      theCase.id.should.be.oneOf(searchResultIds);
-      // reset so we don't throw off later tests
-      await chai
-        .putJSON("/case/" + theCase.id)
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({ featured: false });
-    });
-  });
-
   describe.skip("Test hidden results", () => {
     it("Hiding an element removes it from featured (default) search", async () => {
       const res1 = await chai.getJSON("/search").send({});

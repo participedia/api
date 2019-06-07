@@ -6,7 +6,7 @@
         <li><a href="/about">{{t "About"}}</a></li>
         <li><a href="/teaching">{{t "Teaching"}}</a></li>
         <li><a href="/research">{{t "Research"}}</a></li>
-        <li><a href="https://medium.com/@participediaproject" target="_blank">{{t "News"}}</a></li>
+        <li><a href="https://medium.com/@participediaproject" target="_blank" rel="noopener">{{t "News"}}</a></li>
         <li><a href="/help">{{t "Help & Contact"}}</a></li>
         <li><a href="/legal">{{t "Terms of Use"}}</a></li>
       </ul>
@@ -27,7 +27,7 @@
           {{/if}}
         </li>
         <li>
-          <a href="https://mailchi.mp/participedia/subscribe" target="_blank" class="button button-light-grey">
+          <a href="https://mailchi.mp/participedia/subscribe" target="_blank" rel="noopener" class="button button-light-grey">
             {{t "Newsletter Sign Up"}}
           </a>
         </li>
@@ -36,13 +36,13 @@
   </nav>
   <nav class="horizontal-menu">
     <ul class="nav-list">
-      <li class="menu-icon-container">
-        <a href="#sidebar-menu" class="sidebar-menu-closed">
-          <span class="sr-only">{{t "open menu"}}</span>
+      <li class="menu-icon-container js-menu-icon-container">
+        <a href="#sidebar-menu" class="sidebar-menu-close" data-menu-is-open>
+          <span class="sr-only">{{t "close menu"}}</span>
           {{> icon-hamburger }}
         </a>
-        <a href="#" class="sidebar-menu-open">
-          <span class="sr-only">{{t "close menu"}}</span>
+        <a href="#" class="sidebar-menu-open" data-menu-is-closed>
+          <span class="sr-only">{{t "open menu"}}</span>
           {{> icon-hamburger }}
         </a>
       </li>

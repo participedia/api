@@ -27,11 +27,8 @@ describe("Users", () => {
   });
   describe("modify user", () => {
     it("change department, website, organization", async () => {
-      const res1 = await chai
-        .getJSON("/user/")
-        .set("Authorization", "Bearer " + tokens.user_token)
-        .send({});
-      const origUser = res1.body.data;
+      const res1 = await chai.getJSON("/user/100?returns=json").send({});
+      const origUser = res1.body.profile;
       const picture_url =
         origUser.picture_url === "http://livingcode.org/images/stone_spiral.jpg"
           ? "http://livingcode.org/images/creek.jpg"
@@ -48,7 +45,7 @@ describe("Users", () => {
         .getJSON("/user/")
         .set("Authorization", "Bearer " + tokens.user_token)
         .send({});
-      const newUser = res2.body.data;
+      const newUser = res2.body.profile;
     });
   });
 });

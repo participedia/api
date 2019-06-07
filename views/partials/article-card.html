@@ -1,25 +1,36 @@
 <li
   class="article-card"
-  data-featured="{{featured}}"
-  {{#if latitude}}
-    data-lat-lng="{{latitude}}, {{longitude}}"
-  {{/if}}
+  data-type="{{type}}"
+  data-i18n-featured-case="{{req.__ "Featured [type]" "Case"}}"
+  data-i18n-featured-organization="{{req.__ "Featured [type]" "Organization"}}"
+  data-i18n-case="{{t "Case"}}"
+  data-i18n-organization="{{t "Organization"}}"
 >
-  <a href="/{{type}}/{{id}}">
+  <a href="/{{type}}/{{id}}" class="js-article-link">
     <div
-      class="article-card-img"
+      class="article-card-img js-article-card-img"
       style="background-image: url('{{getFirstImageForArticle this}}')"
     ></div>
 
     <div class="article-card-content">
-      <div class="article-card-meta">
-        <h5>{{toUpperCase (t type)}}</h5>
-        <h3 class="article-card-title">{{title}}</h3>
+      <div class="article-card-meta js-article-card-meta">
+        {{#if featured}}
+          <h5>
+            {{req.__ "Featured [type]" (t type)}}
+         </h5>
+        {{else}}
+          <h5>{{t type}}</h5>
+        {{/if}}
+
+        <h3 class="article-card-title js-article-card-title">{{title}}</h3>
 
         {{#if description}}
           <p class="article-card-description">{{description}}</p>
         {{/if}}
-        <p class="small">{{t "Submitted"}} {{formatDate this "updated_date" "MMMM M, YYYY"}}</p>
+        <p class="small">
+          {{t "Submitted"}}
+          <span class="js-article-date">{{formatDate this "post_date" "MMMM D, YYYY"}}</span>
+        </p>
       </div>
       <a
         href="#"

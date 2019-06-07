@@ -42,7 +42,6 @@ describe("Cases", () => {
       body.OK.should.be.true;
       let returnedCase = body.article;
       returnedCase.id.should.be.a("number");
-      returnedCase.videos.length.should.equal(2);
       returnedCase.creator.user_id.should.equal(
         returnedCase.last_updated_by.user_id
       );
@@ -58,7 +57,33 @@ describe("Cases", () => {
         "recruitment_method",
         "time_limited"
       ].forEach(key => {
-        returnedCase[key].key.should.equal(example_case[key]);
+        returnedCase[key].should.equal(example_case[key]);
+      });
+      // test key list fields
+      [
+        "general_issues",
+        "specific_topics",
+        "purposes",
+        "approaches",
+        "targeted_participants",
+        "method_types",
+        "participants_interactions",
+        "learning_resources",
+        "decision_methods",
+        "if_voting",
+        "insights_outcomes",
+        "organizer_types",
+        "funder_types",
+        "change_types",
+        "implementers_of_change",
+        "tools_techniques_types"
+      ].forEach(key => {
+        let ret = returnedCase[key];
+        let exp = example_case[key];
+        ret.length.should.equal(exp.length);
+        for (var i = 0; i < ret.length; i++) {
+          ret[i].should.equal(exp[i]);
+        }
       });
       // test media fields
       [
@@ -72,13 +97,14 @@ describe("Cases", () => {
       ].forEach(key => {
         returnedCase[key].length.should.equal(example_case[key].length);
         for (let i = 0; i < returnedCase[key].length; i++) {
-          // returnedCase[key][i].url.should.equal(example_case[key][i].url);
-          expect(returnedCase[key][i].attribution).to.equal(
-            example_case[key][i].attribution
-          );
-          expect(returnedCase[key][i].title).to.equal(
-            example_case[key][i].title
-          );
+          let ret = returnedCase[key][i];
+          let exp = example_case[key][i];
+          expect(ret.attribution).to.equal(exp.attribution);
+          expect(ret.title).to.equal(exp.title);
+          expect(ret.url).to.equal(exp.url);
+          if (exp.source_url) {
+            expect(ret.source_url).to.equal(exp.source_url);
+          }
         }
       });
     });
@@ -125,29 +151,36 @@ describe("Cases", () => {
       body1.article.id.should.be.a("number");
       const origCase = body1.article;
       origCase.general_issues.length.should.equal(4);
-      origCase.general_issues[0].key.should.equal("arts");
-      origCase.general_issues[1].key.should.equal("education");
-      origCase.general_issues[2].key.should.equal("environment");
-      origCase.general_issues[3].key.should.equal("planning");
+      origCase.general_issues[0].should.equal("arts");
+      origCase.general_issues[1].should.equal("education");
+      origCase.general_issues[2].should.equal("environment");
+      origCase.general_issues[3].should.equal("planning");
       const updatedCase = (await updateCase(origCase.id, {
         general_issues: [{ key: "arts", value: "Arts, Culture, & Recreation" }]
       })).article;
       updatedCase.general_issues.length.should.equal(1);
-      updatedCase.general_issues[0].key.should.equal("arts");
+      updatedCase.general_issues[0].should.equal("arts");
     });
 
     it("Add case, then modify lead image", async () => {
       const body1 = await addBasicCase();
       body1.OK.should.be.true;
       const case1 = body1.article;
-      case1.photos.length.should.equal(4);
+      case1.photos.length.should.equal(3);
       case1.photos[0].url.should.equal(
         "https://s3.amazonaws.com/uploads.participedia.xyz/index.php__21.jpg"
       );
       const { req, res, ret } = getMocksAuth({
         params: { thingid: case1.id },
         body: {
-          photos: [{ url: "http://foobar.com/test.jpg" }]
+          photos: [
+            {
+              url: "http://foobar.com/test.jpg",
+              source_url: "https://example.com/foobar",
+              title: "Right ho!",
+              attribution: "Marie Osmond"
+            }
+          ]
         }
       });
       await postCaseUpdateHttp(req, res);

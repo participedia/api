@@ -29,7 +29,7 @@ function mapIdTitleToKeyValue(options) {
   return options.map(item => {
     return {
       key: item.id,
-      value: item.title,
+      value: item.title
     };
   });
 }
@@ -46,30 +46,82 @@ function getFirstPhotoUrl(article) {
   return article.photos[0].url;
 }
 
-const i18n = (key, context) => context && context.data && context.data.root.__(key);
+function getPageTitle(req, article, context) {
+  const path = req.route && req.route.path;
+  const titleByPath = {
+    "/": "Participedia",
+    "/about": i18n("About", context) + " – Participedia",
+    "/teaching": i18n("Teaching", context) + " – Participedia",
+    "/research": i18n("Research", context) + " – Participedia",
+  };
+  if (article && article.title) {
+    return article.title + " – Participedia";
+  } else if (titleByPath[path]) {
+    return titleByPath[path];
+  } else {
+    return titleByPath["/"];
+  }
+};
+
+const i18n = (key, context) =>
+  context && context.data && context.data.root.__(key);
 
 module.exports = {
   // transalation helpers
-  label: (name, context) => i18n(`${name}_label`, context),
+  label: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_label`, context);
+  },
 
-  info: (name, context) => i18n(`${name}_info`, context),
+  hasInfo: (article, name, context) => {
+    const view = context.data.root.params.view;
+    const key = `${article.type}_${view}_${name}_info`;
+    const i18nValue = i18n(key, context);
+    return i18nValue !== key;
+  },
 
-  instructional: (name, context) => i18n(`${name}_instructional`, context),
+  info: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_info`, context);
+  },
 
-  placeholder: (name, context) => i18n(`${name}_placeholder`, context),
+  hasInstructional: (article, name, context) => {
+    const view = context.data.root.params.view;
+    const key = `${article.type}_${view}_${name}_instructional`;
+    const i18nValue = i18n(key, context);
+    return i18nValue !== key;
+  },
+
+  instructional: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_instructional`, context);
+  },
+
+  placeholder: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_placeholder`, context);
+  },
 
   t: (key, context) => i18n(key, context),
 
-  isSelectedLanguage: (lang, context) => {
-    if (context && context.data && context.data.root) {
-      return lang === context.data.root.req.cookies.locale;
+  getLocale(context) {
+    const req = context.data.root.req;
+    if (req.cookies.locale) {
+      return req.cookies.locale;
+    } else {
+      return "en";
     }
+  },
+
+  isSelectedLanguage: (lang, context) => {
+    const req = context.data.root.req;
+    return lang === req.cookies.locale;
   },
 
   getArticleOptions: (staticText, name) => {
     // has_components and is_component_of fields use the cases options
     // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
-    if (name === "has_components" || name === "is_component_of") {
+    if (name === "is_component_of") {
       return mapIdTitleToKeyValue(staticText["cases"]);
     } else if (name === "specific_methods_tools_techniques") {
       return mapIdTitleToKeyValue(staticText["methods"]);
@@ -80,20 +132,54 @@ module.exports = {
     }
   },
 
-  linkSetPlaceholder: (name, attr, context) => {
-    return i18n(`${name}_${attr}_placeholder`, context);
+  linkSetPlaceholder: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_${attr}_placeholder`, context);
   },
 
-  linkSetLabel: (name, attr, context) => {
-    return i18n(`${name}_${attr}_label`, context);
+  linkSetLabel: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_${attr}_label`, context);
   },
 
-  linkSetInstructional: (name, attr, context) => {
-    return i18n(`${name}_${attr}_instructional`, context);
+  linkSetInstructional: (article, name, attr, context) => {
+    const view = context.data.root.params.view;
+    return i18n(
+      `${article.type}_${view}_${name}_${attr}_instructional`,
+      context
+    );
+  },
+
+  i18nEditFieldValue: (name, option, context) => {
+    const defaultKey = `name:${name}-key:${option}`;
+    const longKey = `${defaultKey}-longValue`;
+    const i18nValue = i18n(defaultKey, context);
+    const i18nLongValue = i18n(longKey, context);
+
+    const fieldNamesMappedToListOfArticles = {
+      is_component_of: "cases",
+      specific_methods_tools_techniques: "methods",
+      primary_organizer: "organizations"
+    };
+
+    // if the name is one that maps to list of articles return that value
+    if (Object.keys(fieldNamesMappedToListOfArticles).includes(name)) {
+      const articleType = fieldNamesMappedToListOfArticles[name];
+      const options = context.data.root.static[articleType];
+      return option.value;
+    }
+
+    // if there is a longValue, return that
+    // otherwise return the default value
+    else if (i18nLongValue !== longKey) {
+      return i18nLongValue;
+    } else {
+      return i18nValue;
+    }
   },
 
   // article helpers
-  getFirstImageForArticle: (article) => {
+  getFirstImageForArticle: article => {
     if (article.photos && article.photos.length > 0) {
       // search pages return photos for articles in this format
       return article.photos[0].url;
@@ -115,7 +201,7 @@ module.exports = {
     return value && value.constructor === Array;
   },
 
-  getArticleSelectValue: (article, name) => {
+  getArticleSelectValue: (article, name, context) => {
     if (!article[name]) return null;
 
     // some article select fields have values like  { key: "value"},
@@ -123,18 +209,13 @@ module.exports = {
     // string like "value" which represents the key
 
     let key;
-    if(article[name].key) {
-      key = article[name].key
+    if (article[name].key) {
+      key = article[name].key;
     } else {
       key = article[name];
     }
 
-    const selectedItemInArray = sharedFieldOptions[name].filter(options => options.key === key);
-    if (selectedItemInArray.length > 0) {
-      if (selectedItemInArray[0].value !== "") {
-        return selectedItemInArray[0].value;
-      }
-    }
+    return i18n(`name:${name}-key:${key}`, context);
   },
 
   getArticleSelectKey: (article, name) => {
@@ -146,6 +227,46 @@ module.exports = {
     } else {
       return article[name];
     }
+  },
+
+  getArrayOfValues: (article, name, context) => {
+    const arrayOfItems = article[name];
+    if (!arrayOfItems || arrayOfItems.length === 0) return;
+
+    return arrayOfItems.map(item => {
+      if (typeof item === "string") {
+        return i18n(`name:${name}-key:${item}`, context);
+      } else {
+        return i18n(`name:${name}-key:${item.key}`, context);
+      }
+    });
+  },
+
+  editAutocompleteGetSelectedItems: (article, name) => {
+    const selectedItems = article[name];
+    if (!selectedItems) return;
+
+    if (Array.isArray(selectedItems) && selectedItems.length === 0) {
+      return null;
+    } else if (Array.isArray(selectedItems) && selectedItems.length > 0) {
+      return selectedItems;
+    } else {
+      return [selectedItems];
+    }
+  },
+
+  editAutocompleteGetSelectedLabel: (article, name) => {
+    if (!article) return;
+    const selected = article[name];
+    if (!selected) return;
+    return selected.title;
+  },
+
+  editAutocompleteGetSelectedId: (article, name) => {
+    if (!article) return;
+    const selected = article[name];
+    if (!selected) return;
+    return selected.id;
   },
 
   getvalue: (article, name) => {
@@ -165,8 +286,8 @@ module.exports = {
   },
 
   hasValue: (article, name) => {
-    if (!article){
-      return 'undefined ' + name;
+    if (!article) {
+      return "undefined " + name;
     }
     const item = article[name];
 
@@ -194,11 +315,16 @@ module.exports = {
     return article[name] && article[name][key];
   },
 
-  isSelectedInArray: (article, name, optionKey) => {
+  isSelectedInArray: (article, name, option) => {
     const options = article[name];
     if (options && options.length > 0) {
       return options.find(item => {
-        return item && item.key === optionKey;
+        if (!item) return;
+        if (typeof item === "string") {
+          return item === option;
+        } else {
+          return item.key === option.key;
+        }
       });
     }
   },
@@ -248,7 +374,7 @@ module.exports = {
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       twitter: `https://twitter.com/home?status=${title} - ${url}`,
-      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
+      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`
     };
     return shareUrls[type];
   },
@@ -265,14 +391,16 @@ module.exports = {
     return params && params.view && params.view === "view";
   },
 
-  socialTagsTemplate(article, req) {
-    if (!article) return;
+  getPageTitle(req, article, context) {
+    return getPageTitle(req, article, context);
+  },
 
+  socialTagsTemplate(article, req, context) {
+    const defaultPhotoUrl = `https://${req.headers.host}/images/participedia-social-img.jpg`;
     const url = currentUrl(req);
-    const title = article.title;
-    const description = article.description;
-    const imageUrl = getFirstPhotoUrl(article);
-
+    const title = getPageTitle(req, article, context);
+    const description = (article && article.description) || i18n("main_tagline", context);
+    const imageUrl = (article && getFirstPhotoUrl(article)) || defaultPhotoUrl;
     return socialTagsTemplate(title, description, url, imageUrl);
   },
 
@@ -315,7 +443,7 @@ module.exports = {
   },
 
   getNextPageNum(req, totalPages) {
-    const currentPageNum = req.query && parseInt(req.query.page) || 1;
+    const currentPageNum = (req.query && parseInt(req.query.page)) || 1;
     if (currentPageNum !== parseInt(totalPages)) {
       return currentPageNum + 1;
     } else {
@@ -330,9 +458,12 @@ module.exports = {
     // have a default tab with the same name as a non-default tab on another page.
     // tab-contributions is default tab on /user/{id} (user-view)
     // tab-all is default tab on / (home-search)
-    const defaultTabs = ['contributions', 'all'];
+    const defaultTabs = ["contributions", "all"];
     // if there is no param, make default tab active
-    if ((!tabParam && defaultTabs.indexOf(tabName) > -1) || tabParam === tabName) {
+    if (
+      (!tabParam && defaultTabs.indexOf(tabName) > -1) ||
+      tabParam === tabName
+    ) {
       return "checked";
     }
   },
@@ -342,15 +473,27 @@ module.exports = {
       { title: i18n("All", context), key: "all" },
       { title: i18n("Cases", context), key: "case" },
       { title: i18n("Methods", context), key: "method" },
-      { title: i18n("Organizations", context), key: "organizations" },
+      { title: i18n("Organizations", context), key: "organizations" }
     ];
   },
 
   getUserTabs(context) {
-    return [
-      { title: i18n("Contributions", context), key: "contributions" },
-      { title: i18n("Bookmarks", context), key: "bookmarks" },
-    ];
+    // if it's the profile owner making the request, return contributions and bookmarks.
+    // otherwise return contributions only
+    const profile = context.data.root.profile;
+    const user = context.data.root.req.user;
+
+    if ((user && user.id) === (profile && profile.id)) {
+      return [
+        { title: i18n("Contributions", context), key: "contributions" },
+        { title: i18n("Bookmarks", context), key: "bookmarks" }
+      ];
+    } else {
+      return [
+        { title: i18n("Contributions", context), key: "contributions" }
+      ];
+    }
+
   },
 
   isSelectedUserTab(req, category) {
@@ -374,7 +517,7 @@ module.exports = {
   // location helpers
   hasLocationData(article) {
     let hasLocationData = false;
-    LOCATION_FIELD_NAMES.forEach((fieldName) => {
+    LOCATION_FIELD_NAMES.forEach(fieldName => {
       if (article[fieldName]) {
         hasLocationData = true;
       }
@@ -437,6 +580,15 @@ module.exports = {
     return allContributions;
   },
 
+  isNotLoggedIn(req) {
+    const user = req.user;
+    if (!user) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
   // utilities
   currentUrl(req) {
     return currentUrl(req);
@@ -444,8 +596,7 @@ module.exports = {
 
   isNewView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
-    return baseUrls.includes(req.baseUrl) &&
-      req.path.indexOf("new") === 1;
+    return baseUrls.includes(req.baseUrl) && req.path.indexOf("new") === 1;
   },
 
   isEditView(req) {
@@ -455,9 +606,11 @@ module.exports = {
 
   isReaderView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
-    return baseUrls.includes(req.baseUrl) &&
+    return (
+      baseUrls.includes(req.baseUrl) &&
       req.path.indexOf("edit") === -1 &&
-      req.path.indexOf("new") !== 1;
+      req.path.indexOf("new") !== 1
+    );
   },
 
   isHomeSearchView(req) {
@@ -478,6 +631,10 @@ module.exports = {
 
   isEqual(arg1, arg2) {
     return arg1 === arg2;
+  },
+
+  isString(x) {
+    return typeof x === "string";
   },
 
   sanitizeName(name) {

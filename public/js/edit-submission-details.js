@@ -48,6 +48,7 @@ const editSubmissionDetails = {
 
   initAutocompleteField(autocompleteEl, hiddenEl, authors) {
     autocomplete({
+      minLength: 1,
       input: autocompleteEl,
       fetch: function(text, update) {
         const suggestions = authors.filter(n => n.label.toLowerCase().startsWith(text.toLowerCase()))

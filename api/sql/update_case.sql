@@ -8,7 +8,7 @@ SET
 -- automatic
   updated_date = 'now',
 -- media lists
-  files = ${files},
+  files = ${files}::full_file[],
   links = ${links},
   videos = ${videos},
   audio = ${audio},
@@ -73,7 +73,7 @@ SET
 -- list of tag keys
   tags = ${tags}
 --  not in use, still in db
-  -- process_methods = ${process_methods:raw},
+  -- process_methods = ${process_methods},
 WHERE
   id = ${id}
 ;

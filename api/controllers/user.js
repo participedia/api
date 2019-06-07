@@ -4,6 +4,7 @@ let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
+let { fixUpURLs } = require("../helpers/things");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
@@ -20,10 +21,14 @@ async function getUserById(userId, req, res, view = "view") {
         .status(404)
         .json({ OK: false, error: `User not found for user_id ${userId}` });
     }
+    result.user.bookmarks.forEach(fixUpURLs);
+    result.user.cases.forEach(fixUpURLs);
+    result.user.methods.forEach(fixUpURLs);
+    result.user.organizations.forEach(fixUpURLs);
 
-    if (result.user.bookmarks) {
-      result.user.bookmarks.forEach(b => (b.bookmarked = true));
-    }
+    // if (result.user.bookmarks) {
+    //   result.user.bookmarks.forEach(b => (b.bookmarked = true));
+    // }
 
     // if name contains @, assume it's an email address, and strip the domain
     // so we are not sharing email address' publicly
@@ -51,11 +56,11 @@ async function getUserById(userId, req, res, view = "view") {
       userEditKeys.forEach(key => (userEditJSON[key] = result.user[key]));
 
       return {
-        profile: userEditJSON,
+        profile: userEditJSON
       };
     } else {
       return {
-        profile: result.user,
+        profile: result.user
       };
     }
   } catch (error) {

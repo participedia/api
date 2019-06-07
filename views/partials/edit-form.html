@@ -1,6 +1,11 @@
 <article
   class="edit-form"
   data-submit-type="{{getCaseEditSubmitType req}}"
+  {{#if (isEditView req)}}
+    data-view-edit
+  {{else}}
+    data-view-new
+  {{/if}}
 >
   <form
     {{#if (isEditView req)}}
@@ -16,14 +21,15 @@
 
     <!-- hidden fields for features that have not yet been implemented on the frontend. -->
     <input type="hidden" name="original_language" value="{{article.original_language}}" />
-    <input type="hidden" name="featured" value="{{article.featured}}" />
-    <input type="hidden" name="hidden" value="{{article.hidden}}" />
 
-    {{#if (isEditView req)}}
-      <!-- only show contributor info on edit page -->
-      <div class="edit-form-author-info">
-        {{> edit-submission-details }}
-      </div>
+    {{> edit-submission-details }}
+
+    {{#if req.user.isadmin}}
+      <fieldset class="admin-only">
+        <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
+        {{> edit-boolean name="featured" quick-submit=true}}
+        {{> edit-boolean name="hidden" quick-submit=true}}
+      </fieldset>
     {{/if}}
 
     {{> @partial-block }}
@@ -33,12 +39,12 @@
         {{> icon-submit }} {{t "Publish"}}
       </button>
 
-      <a href="?full=1" class="button button-dark-grey quickonly">{{t "Do Full Version"}}</a>
+      <a href="?full=1" class="button button-dark-grey quickonly js-do-full-version">{{t "Do Full Version"}}</a>
     </div>
 
     <div class="something-missing-prompt">
       <h3>{{t "Something Missing?"}}</h3>
-      <p>{{t "Suggest edits..."}} <a target="_blank" href="mailto:info@participedia.net?subject=Suggested form edits - {{article.type}}">info@participedia.net</a></p>
+      <p>{{t "Suggest edits..."}} <a target="_blank" rel="noopener" href="mailto:info@participedia.net?subject=Suggested form edits - {{article.type}}">info@participedia.net</a></p>
     </div>
 
     <button type="submit" class="button button-red floating-action-button" title="Publish">

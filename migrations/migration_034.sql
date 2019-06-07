@@ -1,8 +1,9 @@
 -- Move methods to new model
 
+DROP MATERIALIZED VIEW search_index_en; -- will be forced by below anyway
 -- can't delete tags or location fields becaue they are part of parent model
 ALTER TABLE methods DROP COLUMN completeness;
-ALTER TABLE methods DROP COLUMN communication_modes CASCADE;
+ALTER TABLE methods DROP COLUMN communication_modes;
 ALTER TABLE methods DROP COLUMN public_interaction_methods;
 ALTER TABLE methods DROP COLUMN issue_technical_complexity;
 ALTER TABLE methods DROP COLUMN issue_interdependency;
@@ -23,14 +24,15 @@ UPDATE methods SET decision_methods = ARRAY[decision_method] where decision_meth
 ALTER TABLE methods DROP COLUMN decision_method;
 
 ALTER TABLE methods RENAME COLUMN issue_polarization TO level_polarization;
+UPDATE methods SET  level_polarization = 'not_polarized' WHERE level_polarization = 'not';
 UPDATE methods SET  level_polarization = 'not_polarized' WHERE level_polarization = '1_not_polarized';
 UPDATE methods SET  level_polarization = 'not_polarized' WHERE level_polarization = '1 - Not Polarized';
 UPDATE methods SET  level_polarization = 'low_polarization' WHERE level_polarization = '2_not_very_polarized';
 UPDATE methods SET  level_polarization = 'low_polarization' WHERE level_polarization = '2 - Not Very Polarized';
-UPDATE methods SET  level_polarization = 'moderate_polarization' WHERE level_polarization = '3_somewhate_polarized';
+UPDATE methods SET  level_polarization = 'moderate_polarization' WHERE level_polarization = '3_somewhat_polarized';
 UPDATE methods SET  level_polarization = 'moderate_polarization' WHERE level_polarization = '3 - Somewhat Polarized';
 UPDATE methods SET  level_polarization = 'polarized' WHERE level_polarization = '4_polarized';
-UPDATE methods SET  level_polarization = 'polarized' WHERE level_polarization = '4 Polarized';
+UPDATE methods SET  level_polarization = 'polarized' WHERE level_polarization = '4 - Polarized';
 UPDATE methods SET  level_polarization = 'high_polarization' WHERE level_polarization = '5 - Very Polarized';
 
 ALTER TABLE methods DROP COLUMN if_voting;
