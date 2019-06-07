@@ -15,5 +15,8 @@
     {{> pagination }}
   {{/if}}
 {{else}}
+  {{#if includeSearchFilters}}
+    {{> search-filters type=type }}
+  {{/if}}
   <p>{{t "no_items"}}</p>
 {{/if}}

@@ -197,7 +197,7 @@ const map = {
       const { latitude, longitude } = article;
 
       // if article doesn't have lat,lng coords, don't render markers
-      if (!latitude || !longitude) return;
+      if (!latitude || !longitude || !articleCardsContainer) return;
 
       return {
         id: article.id,
