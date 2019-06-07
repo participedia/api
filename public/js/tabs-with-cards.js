@@ -1,4 +1,10 @@
-import { getValueForParam, updateUrlParams } from "./utils/utils.js";
+import { getValueForParam, updateUrlParams, removeUrlParams } from "./utils/utils.js";
+import searchFiltersList from "../../api/helpers/search-filters-list.js";
+
+const SEARCH_FILTER_KEYS = [];
+searchFiltersList.case.forEach(item => {
+  item.fieldNameKeys.forEach(key => SEARCH_FILTER_KEYS.push(key));
+});
 
 const tabsWithCards = {
   init() {

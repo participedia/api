@@ -2,6 +2,9 @@ const moment = require("moment");
 const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
 const socialTagsTemplate = require("./social-tags-template.js");
+const sharedFieldOptions = require("./shared-field-options.js");
+const searchFiltersList = require("./search-filters-list.js");
+const countries = require("./countries.js");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -65,6 +68,11 @@ const i18n = (key, context) =>
 
 module.exports = {
   // transalation helpers
+  searchFilterLabel: (type, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${type}_${view}_${name}_label`, context);
+  },
+
   label: (article, name, context) => {
     const view = context.data.root.params.view;
     return i18n(`${article.type}_${view}_${name}_label`, context);
@@ -661,5 +669,23 @@ module.exports = {
 
   getYearFromDate(date, format) {
     return moment(date).year();
+  },
+
+  // search filters
+  searchFiltersSections(type) {
+    return searchFiltersList[type];
+  },
+
+  getOptionsForFilterKey(name, context) {
+    if (name === "country") {
+      return countries;
+    } else {
+      return sharedFieldOptions[name].map(key => {
+        return {
+          key: key,
+          value: i18n(`name:${name}-key:${key}`, context),
+        };
+      });
+    }
   }
 };

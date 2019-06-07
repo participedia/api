@@ -11,8 +11,8 @@ WITH all_selections AS (SELECT
   substring(body for 500) AS body,
   ts_rank_cd(search_index_${language:raw}.document, to_tsquery('english', ${query})) as rank
 FROM search_index_${language:raw}
-WHERE document @@ to_tsquery('english', ${query})
-  ${filter:raw}
+WHERE
+  document @@ to_tsquery('english', ${query})
 ORDER BY rank DESC
 ),
 total_selections AS (
@@ -21,32 +21,38 @@ total_selections AS (
 )
 
 SELECT
-  things.id,
-  things.type,
-  things.featured,
-  things.location_name,
-  things.address1,
-  things.address2,
-  things.city,
-  things.province,
-  things.postal_code,
-  things.country,
-  things.latitude,
-  things.longitude,
-  all_selections.title,
-  all_selections.description,
-  all_selections.body,
-  -- to_json(get_location(things.id)) AS location,
-  to_json(COALESCE(things.photos, '{}')) AS photos,
-  to_json(COALESCE(things.videos, '{}')) AS videos,
-  things.updated_date,
-  things.post_date,
-  bookmarked(things.type, things.id, ${userId}),
+  ${type:name}.id,
+  ${type:name}.type,
+  ${type:name}.featured,
+  ${type:name}.location_name,
+  ${type:name}.address1,
+  ${type:name}.address2,
+  ${type:name}.city,
+  ${type:name}.province,
+  ${type:name}.postal_code,
+  ${type:name}.country,
+  ${type:name}.latitude,
+  ${type:name}.longitude,
+  texts.title,
+  texts.description,
+  texts.body,
+  -- to_json(get_location(${type:name}.id)) AS location,
+  to_json(COALESCE(${type:name}.photos, '{}')) AS photos,
+  to_json(COALESCE(${type:name}.videos, '{}')) AS videos,
+  ${type:name}.updated_date,
+  ${type:name}.post_date,
+  bookmarked(${type:name}.type, ${type:name}.id, ${userId}),
   total_selections.total,
   all_selections.rank
-FROM all_selections, total_selections, things
-WHERE all_selections.id = things.id AND
-      things.hidden = false
+FROM
+  all_selections,
+  total_selections,
+  ${type:name},
+  get_localized_texts(${type:name}.id, ${language}) AS texts
+WHERE
+  all_selections.id = ${type:name}.id AND
+  ${type:name}.hidden = false
+    ${facets:raw}
 ORDER BY all_selections.rank DESC
 OFFSET ${offset}
 LIMIT ${limit}

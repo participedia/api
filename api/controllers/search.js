@@ -82,10 +82,11 @@ router.get("/getAllForType", async function getAllForType(req, res) {
 // strip off final character (assumed to be "s")
 const singularLowerCase = name =>
   (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
-// like it says on the tin
-const filterFromReq = req => {
-  const cat = singularLowerCase(req.query.selectedCategory || "Alls");
-  return cat === "all" ? "" : `AND type = '${cat}'`;
+
+// just get the type, if specified
+const typeFromReq = req => {
+  let cat = singularLowerCase(req.query.selectedCategory || "Alls");
+  return cat === "all" ? "thing" : cat;
 };
 
 const queryFileFromReq = req => {
@@ -124,6 +125,47 @@ const sortbyFromReq = req => {
   return "updated_date";
 };
 
+const keyFacetFromReq = (req, name) => {
+  let value = req.query[name];
+  return value ? ` AND ${name} ='${value}' ` : "";
+};
+
+const keyListFacetFromReq = (req, name) => {
+  let value = req.query[name];
+  if (!value) {
+    return "";
+  }
+  value = as.array(value.split(","));
+  return ` AND ${name} && ${value} `;
+};
+
+const facetsFromReq = req => {
+  if (typeFromReq(req) !== "case") {
+    return "";
+  }
+  const keys = [
+    "country",
+    "scope_of_influence",
+    "public_spectrum",
+    "open_limited",
+    "recruitment_method"
+  ];
+  const keyLists = [
+    "tags",
+    "general_issues",
+    "purposes",
+    "approaches",
+    "method_types",
+    "tools_techniques_types",
+    "organizer_types",
+    "funder_types",
+    "change_types"
+  ];
+  let keyFacets = keys.map(key => keyFacetFromReq(req, key));
+  let keyListFacets = keyLists.map(key => keyListFacetFromReq(req, key));
+  return keyFacets.join("") + keyListFacets.join("");
+};
+
 /**
  * @api {get} /search Search through the cases
  * @apiGroup Search
@@ -160,16 +202,18 @@ router.get("/", async function(req, res) {
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
   const lang = as.value(getLanguage(req));
-  const params = parseGetParams(req, filterFromReq(req));
+  const type = typeFromReq(req);
+  const params = parseGetParams(req, type);
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
-      filter: filterFromReq(req),
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
       language: lang,
       userId: req.user ? req.user.id : null,
-      sortby: sortbyFromReq(req)
+      sortby: sortbyFromReq(req),
+      type: type + "s",
+      facets: facetsFromReq(req)
     });
     const total = Number(
       results.length ? results[0].total || results.length : 0

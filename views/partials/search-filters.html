@@ -1,0 +1,44 @@
+<form class="search-filters js-search-filters">
+  <ul class="search-filters-chip-list unstyled-list js-search-filters-chip-list">
+    {{#each (searchFiltersSections type)}}
+      <li class="js-search-filters-chip-list-item">
+        <button
+          class="search-filters-chip js-search-filters-chip js-search-filters-chip-{{sectionKey}}"
+          data-field-keys="{{fieldNameKeys}}"
+        >
+          {{sectionLabel}}
+        </button>
+        <div class="filter-list-pop-over js-filter-list-pop-over">
+          <div class="filter-list-pop-over-inner">
+            {{#each fieldNameKeys}}
+              <div class="filter-list-header">
+                <h4>{{searchFilterLabel ../../type this}}</h4>
+                <a href="#" class="clear-section-link js-clear-section-link" data-field-name="{{this}}">{{t "Clear Category"}}</a>
+              </div>
+              <ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
+                {{#each (getOptionsForFilterKey this)}}
+                  <li>
+                    <input
+                      type="checkbox"
+                      data-field-name="{{../this}}"
+                      data-section-key="{{../sectionKey}}"
+                      name="{{key}}"
+                      id="{{../this}}[{{key}}]"
+                      >
+                    <label for="{{../this}}[{{key}}]">{{value}}</label>
+                  </li>
+                {{/each}}
+              </ul>
+            {{/each}}
+          </div>
+        </div>
+      </li>
+    {{/each}}
+    <li>
+      <button class="button button-red button-condensed" type="submit">
+        {{> icon-filter }} {{t "Filter"}}
+      </button>
+      <a href="#" class="clear-all-link js-clear-all-link">{{t "Clear All"}}</a>
+    </li>
+  </ul>
+</form>

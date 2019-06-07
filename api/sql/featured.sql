@@ -28,10 +28,11 @@ WITH all_featured  AS (
     post_date,
     bookmarked(type, id, ${userId})
   FROM
-    things,
-    get_localized_texts(things.id, ${language}) AS texts
-  WHERE things.hidden = false
-        ${filter:raw}
+    ${type:name},
+    get_localized_texts(${type:name}.id, ${language}) AS texts
+  WHERE
+   ${type:name}.hidden = false
+   ${facets:raw}
   ORDER BY featured DESC, updated_date DESC
 ),
 total_featured AS (

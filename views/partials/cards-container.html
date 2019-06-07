@@ -1,4 +1,8 @@
 {{#if cards}}
+  {{#if includeSearchFilters}}
+    {{> search-filters type=type }}
+  {{/if}}
+
   {{#if totalResults}}
     {{> pagination }}
   {{/if}}

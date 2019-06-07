@@ -8,11 +8,11 @@
   display: none;
 }
 
-.tab-container input {
+.tab-container-input {
   display: none;
 }
 
-.tab-container label {
+.tab-container-label {
   padding: .5rem;
   display: inline-block;
   text-decoration: none;
@@ -21,8 +21,8 @@
   font-weight: 600;
 }
 
-.tab-container label:hover,
-.tab-container input:checked + label {
+.tab-container-label:hover,
+.tab-container-input:checked + .tab-container-label {
   border-bottom: 4px solid #ec2024;
 }
 
@@ -274,7 +274,7 @@
     display: block;
   }
 
-  .tab-container label {
+  .tab-container-label {
     display: none;
   }
 

@@ -146,6 +146,11 @@ button {
   display: flex;
 }
 
+.button-condensed {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
 .button-white {
   background-color: #fff;
   color: #222;
