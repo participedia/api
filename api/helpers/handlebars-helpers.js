@@ -68,6 +68,11 @@ const i18n = (key, context) =>
 
 module.exports = {
   // transalation helpers
+  searchFilterLabel: (type, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${type}_${view}_${name}_label`, context);
+  },
+
   label: (article, name, context) => {
     const view = context.data.root.params.view;
     return i18n(`${article.type}_${view}_${name}_label`, context);
@@ -671,11 +676,16 @@ module.exports = {
     return searchFiltersList[type];
   },
 
-  getOptionsForFilterKey(key) {
-    if (key === "country") {
+  getOptionsForFilterKey(name, context) {
+    if (name === "country") {
       return countries;
     } else {
-      return sharedFieldOptions[key];
+      return sharedFieldOptions[name].map(key => {
+        return {
+          key: key,
+          value: i18n(`name:${name}-key:${key}`, context),
+        };
+      });
     }
   }
 };

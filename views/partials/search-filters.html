@@ -12,7 +12,7 @@
           <div class="filter-list-pop-over-inner">
             {{#each fieldNameKeys}}
               <div class="filter-list-header">
-                <h4>{{label this}}</h4>
+                <h4>{{searchFilterLabel ../../type this}}</h4>
                 <a href="#" class="clear-section-link js-clear-section-link" data-field-name="{{this}}">{{t "Clear Category"}}</a>
               </div>
               <ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
