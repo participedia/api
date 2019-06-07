@@ -23,6 +23,15 @@ function randomTexture() {
   return `/images/texture_${index}.svg`;
 }
 
+function getLanguage(req) {
+  // once we have translations for user generated content in all supported languages,
+  // we can use the locale cookie to query by language.
+  // currently if the locale is set to something other than "en", no results are returned,
+  // so hardcoding "en" here
+  // return req.cookies.locale || "en";
+  return "en";
+}
+
 /**
  *  Deprecated, use /list/* methods instead
  *
@@ -50,7 +59,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
       });
     }
     const titlelist = await db.any(TITLES_FOR_THINGS, {
-      language: as.value(req.cookies.locale || "en"),
+      language: as.value(getLanguage(req)),
       limit: response_limit,
       offset: offset,
       type: objType
@@ -192,9 +201,14 @@ router.get("/", async function(req, res) {
   const user_query = req.query.query || "";
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
+<<<<<<< HEAD
   const lang = as.value(req.cookies.locale || "en");
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
+=======
+  const lang = as.value(getLanguage(req));
+  const params = parseGetParams(req, filterFromReq(req));
+>>>>>>> 87f36392dc59727dfdca22ae67a0d086b00fbd5a
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
@@ -280,12 +294,12 @@ router.get("/map", async function(req, res) {
     const RESPONSE_LIMIT = 1000;
     const offset = 0;
     const cases = await db.any(LIST_MAP_CASES, {
-      language: as.value(req.cookies.locale || "en"),
+      language: as.value(getLanguage(req)),
       limit: RESPONSE_LIMIT,
       offset: offset
     });
     const orgs = await db.any(LIST_MAP_ORGANIZATIONS, {
-      language: as.value(req.cookies.locale || "en"),
+      language: as.value(getLanguage(req)),
       limit: RESPONSE_LIMIT,
       offset: offset
     });
