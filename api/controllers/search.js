@@ -80,12 +80,6 @@ const typeFromReq = req => {
   return cat === "all" ? "thing" : cat;
 };
 
-// like it says on the tin
-const filterFromReq = req => {
-  const cat = typeFromReq(req);
-  return cat === "thing" ? "" : `AND type = '${cat}'`;
-};
-
 const queryFileFromReq = req => {
   const featuredOnly =
     !req.query.query || (req.query.query || "").toLowerCase() === "featured";
@@ -124,13 +118,11 @@ const sortbyFromReq = req => {
 
 const keyFacetFromReq = (req, name) => {
   let value = req.query[name];
-  console.log("### key %s facet value: %s", name, value);
   return value ? ` AND ${name} ='${value}' ` : "";
 };
 
 const keyListFacetFromReq = (req, name) => {
   let value = req.query[name];
-  console.log("### key %s facet list value: %s", name, value);
   if (!value) {
     return "";
   }
@@ -142,7 +134,6 @@ const facetsFromReq = req => {
   if (typeFromReq(req) !== "case") {
     return "";
   }
-  console.log(">>> query: %s", JSON.stringify(req.query));
   const keys = [
     "country",
     "scope_of_influence",
@@ -207,7 +198,6 @@ router.get("/", async function(req, res) {
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
-      filter: filterFromReq(req),
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
       language: lang,

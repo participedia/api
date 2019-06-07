@@ -8,9 +8,7 @@ SELECT
   id,
   type,
   featured,
-  CASE WHEN featured = TRUE ${filter:raw} THEN TRUE
-	    ELSE FALSE
-	END searchmatched,
+  featured as searchmatched,
   texts.title,
   texts.description,
   substring(texts.body for 500) AS body,
@@ -28,8 +26,10 @@ SELECT
   updated_date,
   post_date
 FROM
-  things,
-  get_localized_texts(things.id, ${language}) AS texts
-WHERE things.hidden = false
-ORDER BY things.featured DESC, updated_date DESC
+  ${type:name},
+  get_localized_texts(${type:name}.id, ${language}) AS texts
+WHERE
+  ${type:name}.hidden = false
+  ${facets:raw}
+ORDER BY ${type:name}.featured DESC, updated_date DESC
 ;

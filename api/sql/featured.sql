@@ -30,10 +30,9 @@ WITH all_featured  AS (
   FROM
     ${type:name},
     get_localized_texts(${type:name}.id, ${language}) AS texts
-  WHERE ${type:name}.hidden = false
-  -- facets begin
+  WHERE
+   ${type:name}.hidden = false
    ${facets:raw}
-   -- facets end
   ORDER BY featured DESC, updated_date DESC
 ),
 total_featured AS (
