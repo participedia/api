@@ -73,9 +73,14 @@ router.get("/getAllForType", async function getAllForType(req, res) {
 // strip off final character (assumed to be "s")
 const singularLowerCase = name =>
   (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
+
+// just get the type, if specified
+const typeFromReq = req =>
+  singularLowerCase(req.query.selectedCategory || "Alls");
+
 // like it says on the tin
 const filterFromReq = req => {
-  const cat = singularLowerCase(req.query.selectedCategory || "Alls");
+  const cat = typeFromReq(req);
   return cat === "all" ? "" : `AND type = '${cat}'`;
 };
 
@@ -151,7 +156,8 @@ router.get("/", async function(req, res) {
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
   const lang = as.value(req.cookies.locale || "en");
-  const params = parseGetParams(req, filterFromReq(req));
+  const type = typeFromReq(req);
+  const params = parseGetParams(req, type);
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
