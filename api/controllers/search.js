@@ -201,14 +201,9 @@ router.get("/", async function(req, res) {
   const user_query = req.query.query || "";
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
-<<<<<<< HEAD
-  const lang = as.value(req.cookies.locale || "en");
+  const lang = as.value(getLanguage(req));
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
-=======
-  const lang = as.value(getLanguage(req));
-  const params = parseGetParams(req, filterFromReq(req));
->>>>>>> 87f36392dc59727dfdca22ae67a0d086b00fbd5a
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
