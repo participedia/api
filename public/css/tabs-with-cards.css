@@ -44,6 +44,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 30px;
+  grid-column-gap: 30px;
 }
 
 .article-card {
