@@ -1181,7 +1181,7 @@
   "name:recruitment_method-key:stratified": "Stratified Random Sample",
   "name:recruitment_method-key:appointment": "Appointment",
   "name:recruitment_method-key:election": "Election",
-  "name:recruitment_method-key:not": "Not Applicables",
+  "name:recruitment_method-key:not": "Not Applicable",
   "name:targeted_participants-key:appointed": "Appointed Public Servants",
   "name:targeted_participants-key:appointed-longValue": "Appointed Public Servants (e.g. bureaucrats)",
   "name:targeted_participants-key:lgbt": "Lesbian/Gay/Bisexual/Transgender",
