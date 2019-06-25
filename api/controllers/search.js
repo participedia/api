@@ -15,6 +15,7 @@ let {
 let { preparse_query } = require("../helpers/search");
 let log = require("winston");
 const { supportedTypes, parseGetParams } = require("../helpers/things");
+const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 
 const RESPONSE_LIMIT = 20;
 
@@ -257,7 +258,24 @@ router.get("/", async function(req, res) {
           user: req.user || null
         });
       case "csv":
-        return res.status(500, "CSV not implemented yet").render();
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f90081e... handle case when on all tab
+        if (type === "thing") {
+          return res.status(200).json({
+            msg: "You can only get a csv file from cases, methods or organizations tabs."
+          });
+        } else {
+<<<<<<< HEAD
+=======
+        if (type !== "thing") {
+>>>>>>> edadbf0... make it work for all article types
+=======
+>>>>>>> f90081e... handle case when on all tab
+          const file = await createCSVDataDump(type);
+          return res.download(file);
+        }
       case "xml":
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through
