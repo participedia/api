@@ -39,9 +39,13 @@ function composeAddressString(article) {
 }
 
 async function getAllArticlesForType(type) {
+  // select articles that are not hidden and do not have latitude and longitude set
   const sql = `
     SELECT type, latitude, longitude, id, address1, city, province, postal_code, country
-    FROM ${MAP_TYPE_TO_DB_TABLE[type]};
+    FROM ${MAP_TYPE_TO_DB_TABLE[type]}
+    WHERE hidden IS NOT TRUE
+    AND latitude IS NULL
+    AND longitude IS NULL;
   `;
   return db.any(sql).then(result => result).catch((err) => console.log("getAllArticlesForType err", err));
 }
@@ -66,10 +70,14 @@ async function processArticles(type) {
         .asPromise()
         .then((response) => {
           // set new lat lng on article object and save
-          const { lat, lng } = response.json.results[0].geometry.location;
-          saveArticle(article.type, article.id, lat, lng).then(() => {
-            console.log(`UPDATED - ${article.type} #${article.id} saved with lat: ${lat}, lng: ${lng}`);
-          });
+          if (response.json.results && response.json.results[0]) {
+            const { lat, lng } = response.json.results[0].geometry.location;
+            if (lat && lng) {
+              saveArticle(article.type, article.id, lat, lng).then(() => {
+                console.log(`UPDATED - ${article.type} #${article.id} saved with lat: ${lat}, lng: ${lng}`);
+              });
+            }
+          }
         })
         .catch((err) => {
           if (err) console.log("error:", err);
