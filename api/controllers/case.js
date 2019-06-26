@@ -121,6 +121,18 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   const updatedCase = Object.assign({}, oldCase);
   const er = new ErrorReporter();
   const cond = (key, fn) => setConditional(updatedCase, newCase, er, fn, key);
+
+  // if this is a new case, we don't have a post_date yet, so we set it here
+  if (!newCase.post_date) {
+    newCase.post_date = Date.now();
+  }
+
+  // set updated_date to now if not passed up by client
+  if (!newCase.updated_date) {
+    newCase.updated_date = Date.now();
+  }
+  cond("updated_date", as.date);
+
   // admin-only
   if (user.isadmin) {
     cond("featured", as.boolean);
@@ -215,11 +227,6 @@ async function postCaseUpdateHttp(req, res) {
       return { user_id: newCase.user, thingid: articleid };
     }
   };
-
-  // if this is a new case, we don't have a post_date yet, so we set it here
-  if (!newCase.post_date) {
-    newCase.post_date = Date.now();
-  }
 
   // console.log(
   //   "Received tools_techniques_types from client: >>> \n%s\n",
