@@ -1,6 +1,7 @@
 const promise = require("bluebird");
 const url = require("url");
 const { isArray, isObject, isDate, isString, uniq } = require("lodash");
+const moment = require("moment");
 const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -440,13 +441,12 @@ function yesno(value) {
 }
 
 function date(value) {
+  if (!value) return null;
+
   if (isDate(value)) {
     return text(value);
   } else {
-    if (!value) {
-      return null;
-    }
-    return new Date(value);
+    return new Date(moment(value).format());
   }
 }
 
