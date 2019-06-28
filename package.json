@@ -11,6 +11,7 @@
     "node": "11.2.0"
   },
   "dependencies": {
+    "@google/maps": "0.5.5",
     "apicache": "^1.1.1",
     "async": "^2.3.0",
     "autocompleter": "^4.0.2",
@@ -57,7 +58,6 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
-    "@google/maps": "0.5.5",
     "auth0": "^2.14.0",
     "auth0-js": "^9.9.0",
     "auth0-lock": "^11.13.0",
