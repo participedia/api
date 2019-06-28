@@ -112,7 +112,7 @@
   "Explore": "Explore",
   "Funders": "Funders",
   "Get Involved": "Get Involved",
-  "Join now": "Join now",
+  "Join Now": "Join Now",
   "Members": "Members",
   "Methods": "Methods",
   "Organizations": "Organizations",
@@ -1649,5 +1649,7 @@
   "purpose_and_approach": "Purpose & Approach",
   "process": "Process",
   "organizers_supporters": "Organizers & Supporters",
-  "evidence_of_impact": "Evidence of Impact"
+  "evidence_of_impact": "Evidence of Impact",
+  "Chinese": "Chinese",
+  "Spanish": "Spanish"
 }

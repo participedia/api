@@ -1,5 +1,8 @@
 <select name="locale" class="footer-language-select js-footer-language-select">
   <option value="">{{t "Select Language"}}</option>
+  {{> language-select-option key="zh" value=(t "Chinese")}}
   {{> language-select-option key="en" value=(t "English")}}
   {{> language-select-option key="fr" value=(t "French")}}
+  {{> language-select-option key="de" value=(t "German")}}
+  {{> language-select-option key="es" value=(t "Spanish")}}
 </select>
