@@ -39,12 +39,11 @@ function composeAddressString(article) {
 }
 
 async function getAllArticlesForType(type) {
-  // select articles that are not hidden and do not have latitude and longitude set
+  // select articles that do not have latitude and longitude set yet
   const sql = `
     SELECT type, latitude, longitude, id, address1, city, province, postal_code, country
     FROM ${MAP_TYPE_TO_DB_TABLE[type]}
-    WHERE hidden IS NOT TRUE
-    AND latitude IS NULL
+    WHERE latitude IS NULL
     AND longitude IS NULL;
   `;
   return db.any(sql).then(result => result).catch((err) => console.log("getAllArticlesForType err", err));
