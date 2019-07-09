@@ -118,6 +118,11 @@ module.exports = {
     }
   },
 
+  getOriginalLanguage: (article, context) => {
+    const req = context.data.root.req;
+    return article.original_language || req.cookies.locale || "en";
+  },
+
   isSelectedLanguage: (lang, context) => {
     const req = context.data.root.req;
     return lang === req.cookies.locale;
