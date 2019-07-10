@@ -388,6 +388,10 @@ module.exports = {
     return article.photos && article.photos.length > 0;
   },
 
+  hasCaptionText(article) {
+    return article.title || article.source_url || article.attribution;
+  },
+
   getFirstPhotoUrl(article) {
     return getFirstPhotoUrl(article);
   },
