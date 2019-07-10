@@ -1,3 +1,5 @@
+const toArray = nodelist => Array.prototype.slice.call(nodelist);
+
 const editLinkSet = {
   init() {
     const addAnotherLinkSetEls = document.querySelectorAll(".js-add-link-set");
@@ -13,7 +15,18 @@ const editLinkSet = {
     if (buttonEl) {
       e.preventDefault();
       const containerEl = buttonEl.closest(".js-edit-link-set-container");
-      containerEl.parentNode.removeChild(containerEl);
+      const numLinkSets = containerEl
+        .parentNode
+        .querySelectorAll(".js-edit-link-set-container")
+        .length;
+      // if there is only 1 linkset, just clear the contents of the field
+      // otherwise, remove the link set container altogether
+      if (numLinkSets === 1) {
+        const inputs = toArray(containerEl.querySelectorAll("input"));
+        inputs.forEach(el => el.value = "");
+      } else {
+        containerEl.parentNode.removeChild(containerEl);
+      }
     }
   },
 
