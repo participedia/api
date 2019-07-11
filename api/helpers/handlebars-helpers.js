@@ -1,3 +1,4 @@
+const fs = require("fs");
 const moment = require("moment");
 const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
@@ -652,6 +653,12 @@ module.exports = {
     } else {
       return name;
     }
+  },
+
+  jsCacheVersion(filepath) {
+    // return last modified datetime in ms for filepath
+    const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
+    return stats.mtimeMs;
   },
 
   // data
