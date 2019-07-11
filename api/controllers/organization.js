@@ -77,7 +77,7 @@ async function postOrganizationNewHttp(req, res) {
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
-    let language = req.params.language || "en";
+    let language = req.body.original_language || "en";
     if (!title) {
       return res.status(400).json({
         OK: false,

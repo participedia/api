@@ -20,7 +20,7 @@
     <input type="hidden" name="user" value="{{req.user.id}}" />
 
     <!-- hidden fields for features that have not yet been implemented on the frontend. -->
-    <input type="hidden" name="original_language" value="{{article.original_language}}" />
+    <input type="hidden" name="original_language" value="{{getOriginalLanguage article}}" />
 
     {{> edit-submission-details }}
 
