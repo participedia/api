@@ -1651,5 +1651,6 @@
   "organizers_supporters": "Organizers & Supporters",
   "evidence_of_impact": "Evidence of Impact",
   "Chinese": "Chinese",
-  "Spanish": "Spanish"
+  "Spanish": "Spanish",
+  "Credit": "Credit"
 }
