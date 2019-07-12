@@ -259,6 +259,14 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/robots.txt", function(req, res, next) {
+  // send different robots.txt files for different environments
+  if (process.env.NODE_ENV === "staging" || process.env.NODE_ENV === "production") {
+    return res.status(200).sendFile(`${process.env.PWD}/public/robots-${process.env.NODE_ENV}.txt`);
+  }
+  next();
+});
+
 // 404 error handling
 // this should always be after all routes to catch all invalid urls
 app.use((req, res, next) => {
