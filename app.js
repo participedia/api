@@ -20,7 +20,6 @@ const errorhandler = require("errorhandler");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
-const cors = require("cors");
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
@@ -52,11 +51,10 @@ app.set("port", port);
 app.use(express.static("public", { index: false }));
 app.use(morgan("dev")); // request logging
 app.use(methodOverride()); // Do we actually use/need this?
-app.use(cors());
+app.use(errorhandler());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
-app.use(errorhandler());
 
 i18n.configure({
   locales: ["en", "fr", "de", "es", "zh"],
@@ -152,11 +150,11 @@ app.get("/redirect", function(req, res, next) {
         return next(err);
       }
       let returnToUrl = req.session.returnTo;
-      const refreshAndClose = req.session.refreshAndClose
+      const refreshAndClose = req.session.refreshAndClose;
       delete req.session.returnTo;
       delete req.session.refreshAndClose;
       if (refreshAndClose === "true") {
-        returnToUrl = returnToUrl + "?refreshAndClose=true"
+        returnToUrl = returnToUrl + "?refreshAndClose=true";
       }
       res.redirect(returnToUrl || "/");
     });
