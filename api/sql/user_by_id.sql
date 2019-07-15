@@ -11,7 +11,7 @@ WITH user_bookmarks AS (
     FROM
       bookmarks,
       things,
-      get_localized_texts(things.id, ${language}) AS texts
+      get_localized_texts_fallback(things.id, ${language}, things.original_language) AS texts
     WHERE
       things.hidden = false AND
       bookmarks.userid = ${userId} AND
@@ -28,7 +28,7 @@ authored_things AS (
   FROM
     authors,
     things,
-    get_localized_texts(things.id, ${language}) AS texts
+    get_localized_texts_fallback(things.id, ${language}, things.original_language) AS texts
   WHERE
     texts.thingid = authors.thingid AND
     texts.thingid = things.id AND
