@@ -44,7 +44,7 @@ WITH full_thing AS (
     get_object_title_list(specific_methods_tools_techniques, ${lang}) as specific_methods_tools_techniques
 FROM
     organizations,
-    get_localized_texts(${articleid}, ${lang}) AS texts
+    get_localized_texts_fallback(${articleid}, ${lang}, organizations.original_language) AS texts
 WHERE
     organizations.id = ${articleid}
 )

@@ -40,7 +40,7 @@ WITH full_thing AS (
     purpose_method
 FROM
     methods,
-    get_localized_texts(${articleid}, ${lang}) AS texts
+    get_localized_texts_fallback(${articleid}, ${lang}, methods.original_language) AS texts
 WHERE
     methods.id = ${articleid}
 )

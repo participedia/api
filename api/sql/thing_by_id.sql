@@ -14,7 +14,7 @@ WITH full_thing AS (
     bookmarked(${table:name}.type, ${thingid}, ${userId})
 FROM
     ${table:name},
-    get_localized_texts(${thingid}, ${lang}) AS texts
+    get_localized_texts_fallback(${thingid}, ${lang}, ${table:name}.original_language) AS texts
 WHERE
     ${table:name}.id = ${thingid}
 )

@@ -27,7 +27,7 @@ SELECT
   post_date
 FROM
   ${type:name},
-  get_localized_texts(${type:name}.id, ${language}) AS texts
+  get_localized_texts_fallback(${type:name}.id, ${language}, ${type:name}.original_language) AS texts
 WHERE
   ${type:name}.hidden = false
   ${facets:raw}
