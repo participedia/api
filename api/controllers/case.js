@@ -315,12 +315,14 @@ function print(name, obj) {
 }
 
 async function getEditStaticText(params) {
-  const lang = params.lang;
+  const lang = params.lang || "en";
   let staticText = Object.assign({}, sharedFieldOptions);
   staticText.authors = listUsers();
   staticText.cases = listCases(lang).filter(article => !article.hidden);
   staticText.methods = listMethods(lang).filter(article => !article.hidden);
-  staticText.organizations = listOrganizations(lang).filter(article => !article.hidden);
+  staticText.organizations = listOrganizations(lang).filter(
+    article => !article.hidden
+  );
   return staticText;
 }
 

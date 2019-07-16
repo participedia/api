@@ -35,23 +35,25 @@ const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
 
 const port = process.env.PORT || 3001;
 
+app.use(errorhandler());
 // canonicalize url
 app.use((req, res, next) => {
   if (
     process.env.NODE_ENV === "production" &&
-    req.hostname !== "participedia.net"
+    req.hostname !== "participedia.net" &&
+    !res.headersSent
   ) {
     res.redirect("https://participedia.net" + req.originalUrl);
+  } else {
+    next();
   }
-  next();
 });
 // CONFIGS
 app.use(compression());
 app.set("port", port);
-app.use(express.static("public", { index: false }));
 app.use(morgan("dev")); // request logging
+app.use(express.static("public", { index: false }));
 app.use(methodOverride()); // Do we actually use/need this?
-app.use(errorhandler());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
@@ -253,6 +255,19 @@ app.use((req, res, next) => {
   if (oldDotNetUrlHandler.hasMatch(path)) {
     // redirect old .net urls to new urls
     return res.redirect(oldDotNetUrlHandler.getNewUrl(path));
+  }
+  next();
+});
+
+app.get("/robots.txt", function(req, res, next) {
+  // send different robots.txt files for different environments
+  if (
+    process.env.NODE_ENV === "staging" ||
+    process.env.NODE_ENV === "production"
+  ) {
+    return res
+      .status(200)
+      .sendFile(`${process.env.PWD}/public/robots-${process.env.NODE_ENV}.txt`);
   }
   next();
 });

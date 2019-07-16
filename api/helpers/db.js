@@ -94,9 +94,9 @@ function randomDelay() {
 }
 
 let _users;
-let _cases;
-let _methods;
-let _organizations;
+let _cases = {};
+let _methods = {};
+let _organizations = {};
 let _searchDirty = true;
 
 async function _listUsers() {
@@ -107,26 +107,29 @@ async function _listUsers() {
   // console.log("user cache refreshed");
 }
 
-async function _listCases() {
+async function _listCases(lang) {
   try {
-    _cases = await db.many(LIST_ARTICLES, { type: "cases", lang: "en" });
+    _cases[lang] = await db.many(LIST_ARTICLES, { type: "cases", lang: lang });
   } catch (e) {
     console.error("Error in _listCases: %s", e.message);
   }
-  setTimeout(_listCases, randomDelay());
+  setTimeout(_listCases, randomDelay(), lang);
 }
 
-async function _listMethods() {
-  _methods = await db.many(LIST_ARTICLES, { type: "methods", lang: "en" });
-  setTimeout(_listMethods, randomDelay());
+async function _listMethods(lang) {
+  _methods[lang] = await db.many(LIST_ARTICLES, {
+    type: "methods",
+    lang: lang
+  });
+  setTimeout(_listMethods, randomDelay(), lang);
 }
 
-async function _listOrganizations() {
-  _organizations = await db.many(LIST_ARTICLES, {
+async function _listOrganizations(lang) {
+  _organizations[lang] = await db.many(LIST_ARTICLES, {
     type: "organizations",
     lang: "en"
   });
-  setTimeout(_listOrganizations, randomDelay());
+  setTimeout(_listOrganizations, randomDelay(), lang);
 }
 
 async function _refreshSearch() {
@@ -139,9 +142,13 @@ async function _refreshSearch() {
 
 if (!process.env.MIGRATIONS) {
   _listUsers();
-  _listCases().then(() => console.log("cases cached"));
-  _listMethods().then(() => console.log("methods cached"));
-  _listOrganizations().then(() => console.log("organizations cached"));
+  ["en", "de", "fr", "zh", "es"].forEach(lang => {
+    _listCases(lang).then(() => console.log("%s cases cached", lang));
+    _listMethods(lang).then(() => console.log("%s methods cached", lang));
+    _listOrganizations(lang).then(() =>
+      console.log("%s organizations cached", lang)
+    );
+  });
   _refreshSearch().then(() => console.log("search refreshed"));
   db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
     keys: i18n_en
@@ -158,16 +165,16 @@ function listUsers() {
   return _users;
 }
 
-function listCases() {
-  return _cases;
+function listCases(lang) {
+  return _cases[lang];
 }
 
-function listMethods() {
-  return _methods;
+function listMethods(lang) {
+  return _methods[lang];
 }
 
-function listOrganizations() {
-  return _organizations;
+function listOrganizations(lang) {
+  return _organizations[lang];
 }
 
 // as.number, enhances existing as.number to cope with numbers as strings
