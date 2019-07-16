@@ -180,14 +180,10 @@ async function maybeUpdateUserText(req, res, type) {
     }
     updatedText[key] = value;
   });
-  const author = {
-    user_id: params.userid,
-    thingid: params.articleid
-  };
   if (textModified) {
-    return { updatedText, author, oldArticle };
+    return { updatedText, oldArticle };
   } else {
-    return { updatedText: null, author, oldArticle };
+    return { updatedText: null, oldArticle };
   }
 }
 

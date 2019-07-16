@@ -121,6 +121,18 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   const updatedCase = Object.assign({}, oldCase);
   const er = new ErrorReporter();
   const cond = (key, fn) => setConditional(updatedCase, newCase, er, fn, key);
+
+  // if this is a new case, we don't have a post_date yet, so we set it here
+  if (!newCase.post_date) {
+    newCase.post_date = Date.now();
+  }
+
+  // set updated_date to now if not passed up by client
+  if (!newCase.updated_date) {
+    newCase.updated_date = Date.now();
+  }
+  cond("updated_date", as.date);
+
   // admin-only
   if (user.isadmin) {
     cond("featured", as.boolean);
@@ -208,10 +220,13 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
 
-  // if this is a new case, we don't have a post_date yet, so we set it here
-  if (!newCase.post_date) {
-    newCase.post_date = Date.now();
-  }
+  const authorObj = () => {
+    if (newCase.last_updated_by) {
+      return { user_id: newCase.last_updated_by, thingid: articleid };
+    } else {
+      return { user_id: newCase.user, thingid: articleid };
+    }
+  };
 
   // console.log(
   //   "Received tools_techniques_types from client: >>> \n%s\n",
@@ -220,19 +235,18 @@ async function postCaseUpdateHttp(req, res) {
   // save any changes to the user-submitted text
   const {
     updatedText,
-    author,
     oldArticle: oldCase
   } = await maybeUpdateUserText(req, res, "case");
   // console.log("oldCase: %s", JSON.stringify(oldCase, null, 2));
   // console.log("updatedText: %s", JSON.stringify(updatedText));
-  // console.log("author: %s", JSON.stringify(author));
+  // console.log("author: %s", JSON.stringify(authorData()));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
   //console.log("updated case: %s", JSON.stringify(updatedCase, null, 2));
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
         return t.batch([
-          t.none(INSERT_AUTHOR, author),
+          t.none(INSERT_AUTHOR, authorObj()),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
           t.none(UPDATE_CASE, updatedCase)
         ]);
@@ -240,7 +254,7 @@ async function postCaseUpdateHttp(req, res) {
     } else {
       await db.tx("update-case", t => {
         return t.batch([
-          t.none(INSERT_AUTHOR, author),
+          t.none(INSERT_AUTHOR, authorObj()),
           t.none(UPDATE_CASE, updatedCase)
         ]);
       });
