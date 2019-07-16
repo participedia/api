@@ -68,7 +68,7 @@ async function postCaseNewHttp(req, res) {
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
-    let language = req.body.original_language || "en";
+    let language = req.params.language || "en";
     if (!title) {
       return res.status(400).json({
         OK: false,
@@ -315,7 +315,7 @@ function print(name, obj) {
 }
 
 async function getEditStaticText(params) {
-  const lang = params.lang || "en";
+  const lang = params.lang;
   let staticText = Object.assign({}, sharedFieldOptions);
   staticText.authors = listUsers();
   staticText.cases = listCases(lang).filter(article => !article.hidden);

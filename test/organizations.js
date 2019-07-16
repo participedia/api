@@ -17,6 +17,17 @@ const {
   postOrganizationUpdateHttp
 } = require("../api/controllers/organization");
 
+const { listCases, cacheTitlesRefreshSearch } = require("../api/helpers/db");
+
+before(function(done) {
+  this.timeout(0);
+  if (!listCases["en"]) {
+    cacheTitlesRefreshSearch(done);
+  } else {
+    done();
+  }
+});
+
 describe("Organizations", () => {
   describe("Lookup", () => {
     it("finds organization 307", async () => {
