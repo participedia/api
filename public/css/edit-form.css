@@ -213,19 +213,10 @@ input[type=number]::-webkit-inner-spin-button {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-right: -30px;
 }
 
 .edit-link-set-container .icon-fill {
   fill: #808080;
-}
-
-.edit-link-set-container:first-of-type {
-  margin-right: 0px;
-}
-
-.edit-link-set-container:first-of-type button {
-  display: none;
 }
 
 .edit-link-set {

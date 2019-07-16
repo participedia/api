@@ -1,3 +1,4 @@
+const fs = require("fs");
 const moment = require("moment");
 const md5 = require("js-md5");
 const aboutData = require("./data/about-data.js");
@@ -116,6 +117,11 @@ module.exports = {
     } else {
       return "en";
     }
+  },
+
+  getOriginalLanguage: (article, context) => {
+    const req = context.data.root.req;
+    return article.original_language || req.cookies.locale || "en";
   },
 
   isSelectedLanguage: (lang, context) => {
@@ -388,6 +394,10 @@ module.exports = {
     return article.photos && article.photos.length > 0;
   },
 
+  hasCaptionText(article) {
+    return article.title || article.source_url || article.attribution;
+  },
+
   getFirstPhotoUrl(article) {
     return getFirstPhotoUrl(article);
   },
@@ -652,6 +662,12 @@ module.exports = {
     } else {
       return name;
     }
+  },
+
+  jsCacheVersion(filepath) {
+    // return last modified datetime in ms for filepath
+    const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
+    return stats.mtimeMs;
   },
 
   // data

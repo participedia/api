@@ -10,15 +10,21 @@
           data-flickity-lazyload="{{url}}"
           alt="{{title}}"
         />
-        {{#if title}}
+        {{#if (hasCaptionText ../article)}}
           <div class="carousel-cell-image-title">
             <span>
               {{#if source_url}}
-                <a href="{{source_url}}" target="_blank" rel="noopener">{{title}}</a>
+                <a href="{{source_url}}" target="_blank" rel="noopener">
+                  {{#if title}}
+                    {{title}}
+                  {{else}}
+                    {{source_url}}
+                  {{/if}}
+                </a>
               {{else}}
                 {{title}}
               {{/if}}
-              {{#if attribution}} - {{attribution}} {{/if}}
+              {{#if attribution}} – <small>{{t "Credit"}}: {{attribution}}</small>{{/if}}
             </span>
           </div>
         {{/if}}

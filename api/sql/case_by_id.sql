@@ -72,7 +72,7 @@ SELECT
   hidden
 FROM
   cases,
-  get_localized_texts(${articleid}, ${lang}) as localized_texts
+  get_localized_texts_fallback(${articleid}, ${lang}, cases.original_language) as localized_texts
 WHERE
   cases.id = ${articleid}
 
