@@ -289,6 +289,21 @@ pre {
   display: none;
 }
 
+footer .language-select {
+  margin-top: 30px;
+  width: 200px;
+}
+
+.reader-view .language-select {
+  margin-top: 0px;
+  margin-bottom: 30px;
+  width: 200px;
+}
+
+.reader-view article .language-select {
+  display: none;
+}
+
 @media (max-width: 1000px) {
   .edit-form .floating-action-button {
     right: -75px;
@@ -300,6 +315,10 @@ pre {
   .reader-view .floating-action-button {
     right: 30px;
     margin-right: 0;
+  }
+
+  .reader-view article .language-select {
+    display: block;
   }
 }
 
