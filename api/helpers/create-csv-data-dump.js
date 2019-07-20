@@ -61,9 +61,7 @@ async function createCSVDataDump(type) {
     if (editedEntry.creator) {
       editedEntry.creator_id = editedEntry.creator.user_id;
       editedEntry.creator_name = sanitizeUserName(editedEntry.creator.name);
-      editedEntry.creator_profile_url = `https://participedia.net/user/${
-        editedEntry.creator.user_id
-      }`;
+      editedEntry.creator_profile_url = `https://participedia.net/user/${editedEntry.creator.user_id}`;
     }
 
     if (editedEntry.last_updated_by) {
@@ -71,9 +69,7 @@ async function createCSVDataDump(type) {
       editedEntry.last_updated_by_name = sanitizeUserName(
         editedEntry.last_updated_by.name
       );
-      editedEntry.last_updated_by_profile_url = `https://participedia.net/user/${
-        editedEntry.last_updated_by.user_id
-      }`;
+      editedEntry.last_updated_by_profile_url = `https://participedia.net/user/${editedEntry.last_updated_by.user_id}`;
     }
 
     // make sure all date fields are in the same format, ISO 8601
