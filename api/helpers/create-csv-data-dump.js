@@ -57,6 +57,14 @@ async function createCSVDataDump(type) {
     // strip html from body
     editedEntry.body = editedEntry.body.replace(/<\/?[^>]+(>|$)/g, " ");
 
+    // max characters for an excel cell is 32766 so trimming
+    // the body length so excel doesn't throw errors
+    // https://support.office.com/en-us/article/excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3
+    const MAX_CHAR_LENGTH = 32766;
+    if (editedEntry.body && editedEntry.body.length > MAX_CHAR_LENGTH) {
+      editedEntry.body = editedEntry.body.substring(0, MAX_CHAR_LENGTH);
+    }
+
     // add creator and last_updated_by name and profile url
     if (editedEntry.creator) {
       editedEntry.creator_id = editedEntry.creator.user_id;
