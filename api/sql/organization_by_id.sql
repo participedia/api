@@ -29,6 +29,7 @@ WITH full_thing AS (
     city,
     province,
     postal_code,
+    country,
     -- floats
     latitude,
     longitude,
