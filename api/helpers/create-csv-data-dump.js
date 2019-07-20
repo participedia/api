@@ -1,14 +1,6 @@
 const fs = require("fs");
 const { parse } = require("json2csv");
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 862784f... exclude some keys from csv file
-=======
 const moment = require("moment");
->>>>>>> 7353754... make data format changes and reorder fields
 const {
   db,
   LIST_ARTICLES,
@@ -16,7 +8,6 @@ const {
   METHOD_BY_ID,
   ORGANIZATION_BY_ID
 } = require("./db.js");
-<<<<<<< HEAD
 
 function sanitizeUserName(name) {
   let editedName = name;
@@ -33,20 +24,6 @@ async function createCSVDataDump(type) {
     type: type + "s",
     lang: "en"
   });
-=======
-const { db, LIST_ARTICLES, CASE_BY_ID, METHOD_BY_ID, ORGANIZATION_BY_ID } = require("./db.js");
-
-async function createCSVDataDump(type) {
-  const entries = await db.many(LIST_ARTICLES, { type: type+"s", lang: "en" });
->>>>>>> edadbf0... make it work for all article types
-=======
-
-async function createCSVDataDump(type) {
-  const entries = await db.many(LIST_ARTICLES, {
-    type: type + "s",
-    lang: "en"
-  });
->>>>>>> 862784f... exclude some keys from csv file
 
   const sqlForType = {
     case: CASE_BY_ID,
@@ -54,28 +31,6 @@ async function createCSVDataDump(type) {
     organization: ORGANIZATION_BY_ID
   };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 862784f... exclude some keys from csv file
-  const keysToExclude = [
-    "creator",
-    "bookmarked",
-    "last_updated_by",
-    "published",
-    "featured",
-    "authors",
-    "hidden"
-  ];
-
-<<<<<<< HEAD
-=======
->>>>>>> edadbf0... make it work for all article types
-=======
->>>>>>> 862784f... exclude some keys from csv file
-=======
->>>>>>> 7353754... make data format changes and reorder fields
   const fullEntries = [];
   await Promise.all(
     entries.map(async article => {
@@ -84,70 +39,14 @@ async function createCSVDataDump(type) {
         view: "view",
         articleid: article.id,
         lang: "en",
-<<<<<<< HEAD
-<<<<<<< HEAD
         userid: null
       };
       const articleRow = await db.one(sqlForType[type], params);
-      keysToExclude.forEach(key => {
-        delete articleRow.results[key];
-      });
-=======
-        userid: null,
-      };
-<<<<<<< HEAD
-      const articleRow = await db.one(sqlForType[type], params);
->>>>>>> edadbf0... make it work for all article types
+
       fullEntries.push(articleRow.results);
-=======
-      const articleRow = await db.one(sqlForType[type], params).results;
-      fullEntries.push(articleRow);
->>>>>>> 2a4ea82... don't include hidden articles
     })
-=======
-        userid: null
-      };
-      const articleRow = await db.one(sqlForType[type], params);
-      fullEntries.push(articleRow.results);
-<<<<<<< HEAD
-    });
->>>>>>> 862784f... exclude some keys from csv file
-=======
-    })
->>>>>>> f401a2c... delete semi-colon typo
   );
 
-<<<<<<< HEAD
-  const fields = Object.keys(fullEntries[0]);
-<<<<<<< HEAD
-=======
-const { db, LIST_ARTICLES, CASE_BY_ID } = require("./db.js");
-
-// TODO:
-// - add methods and organizations data as well
-
-async function createCSVDataDump() {
-  const cases = await db.many(LIST_ARTICLES, { type: "cases", lang: "en" });
-
-  const fullCases = [];
-  await Promise.all(cases.map(async (article) => {
-    const params = {
-      type: 'case',
-      view: 'view',
-      articleid: article.id,
-      lang: 'en',
-      userid: null,
-      returns: 'json'
-    };
-    const articleRow = await db.one(CASE_BY_ID, params);
-    fullCases.push(articleRow.results);
-  }));
-
-  const fields = Object.keys(fullCases[0]);
->>>>>>> 9416005... use list_articles to get all entries
-=======
->>>>>>> edadbf0... make it work for all article types
-=======
   const editedEntries = fullEntries.map(entry => {
     const editedEntry = Object.assign({}, entry);
     // add article url
@@ -340,7 +239,6 @@ async function createCSVDataDump() {
 
   const fields = Object.keys(editedEntries[0]);
 
->>>>>>> 7353754... make data format changes and reorder fields
   const opts = { fields };
 
   const csv = parse(editedEntries, opts);
