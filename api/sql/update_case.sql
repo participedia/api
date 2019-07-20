@@ -3,9 +3,10 @@ SET
 -- admin-only
   original_language = ${original_language},
   post_date = ${post_date},
-  updated_date = ${updated_date},
   featured = ${featured},
   hidden = ${hidden},
+-- automatic
+  updated_date = 'now',
 -- media lists
   files = ${files}::full_file[],
   links = ${links},
