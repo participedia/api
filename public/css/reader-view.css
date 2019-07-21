@@ -20,6 +20,10 @@
   text-indent: -1em;
 }
 
+article .reader-view-social-links {
+  display: none;
+}
+
 .reader-view-social-links {
   text-align: center;
   width: 24px;
@@ -65,19 +69,24 @@
 .reader-view .bookmark-link[data-bookmarked='true'] .icon-fill:first-of-type {
   fill: #808080;
 }
-
-@media (max-width: 850px) {
+@media (max-width: 1000px) {
   .reader-view-social-links {
+    display: none;
+  }
+  article .reader-view-social-links {
+    display: flex;
     margin-bottom: 30px;
   }
   .reader-view-social-links li {
     margin-right: 8px;
   }
 
-  .reader-view-social-links svg {
-    display: flex;
+  .reader-view .middle-col {
+    width: 50%;
   }
+}
 
+@media (max-width: 850px) {
   .reader-view article .article-data-accordion {
     display: block;
     margin-bottom: 30px;
@@ -85,5 +94,10 @@
 
   .reader-view .data-column {
     display: none;
+  }
+
+  .reader-view .middle-col {
+    width: 100%;
+    margin-left: 0px;
   }
 }

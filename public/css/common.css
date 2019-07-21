@@ -42,7 +42,6 @@ body {
   font-size: 1rem; /* 16px */
   font-weight: 300;
   line-height: 1.5; /* 24px */
-  /*background: url("/images/grid-temp.png") no-repeat fixed;*/
 }
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
@@ -317,14 +316,39 @@ footer .language-select {
   display: none;
 }
 
+@media (max-width: 1400px) {
+  .quick-submit-button {
+    display: none;
+  }
+  .home-search-body .floating-action-button {
+    display: flex;
+    right: 30px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .full-width-container .left-col {
+    width: calc(33% - 20px);
+  }
+  .full-width-container .middle-col {
+    width: calc(33% - 15px);
+  }
+  .full-width-container .right-col {
+    width: calc(33% - 20px);
+  }
+}
+
 @media (max-width: 850px) {
   .reader-view .language-select {
     display: block;
   }
-}
-
-@media (max-width: 950px) {
-  .home-search-body .floating-action-button {
-    display: flex;
+  .full-width-container .left-col {
+    width: calc(50% - 15px);
+  }
+  .full-width-container .middle-col {
+    width: calc(50% - 15px);
+  }
+  .full-width-container .right-col {
+    display: none;
   }
 }

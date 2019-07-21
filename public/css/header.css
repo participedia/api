@@ -217,7 +217,7 @@ header a {
 }
 
 header .full-width-container {
-  padding: 9px 0;
+  padding: 10px 0;
 }
 
 header .right-col {
@@ -282,34 +282,30 @@ header .right-col {
   border-radius: 40px;
 }
 
-@media (max-width: 950px) {
-  .horizontal-menu .nav-list {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 1px;
+@media (max-width: 500px) {
+  header .full-width-container {
+    height: 95px;
   }
-
-  .quick-submit-button {
-    display: none;
-  }
-
-  .header-search-container {
-    order: 1;
-  }
-
   .header-search-container:after {
-    width: 100%;
-    content: '';
-    display: block;
-    position: absolute;
-    top: 64px;
-    left: 0;
-    height: 64px;
-    background-color: #3A3A3A;
-    z-index: -1;
+      width: 100%;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 51px;
+      left: 0;
+      height: 64px;
+      background-color: #3A3A3A;
+      z-index: -1;
   }
-
   .main-content {
-    margin-top: 128px;
+    margin-top: 115px;
+  }
+  header .full-width-container .left-col {
+    width: 100%;
+  }
+  header .full-width-container .middle-col {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 15px;
   }
 }
