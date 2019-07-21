@@ -102,16 +102,22 @@ a {
 
 .full-width-container {
   margin: 0 30px;
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  column-gap: 30px;
-  grid-column-gap: 30px;
+  width: calc(100% - 60px);
+  overflow: auto;
 }
+
 .full-width-container .left-col {
-  min-width: 200px;
+  width: calc(25% - 22.5px);
+  float: left;
+}
+.full-width-container .middle-col {
+  width: calc(50% - 15px);
+  float: left;
+  margin-left: 30px;
 }
 .full-width-container .right-col {
-  min-width: 350px;
+  width: calc(25% - 22.5px);
+  float: right;
 }
 
 /*

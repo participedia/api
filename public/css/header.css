@@ -41,7 +41,7 @@ header a {
 }
 
 .header-search-container input {
-  width: 100%;
+  width: calc(100% - 40px);
   border: 0px;
   border-radius: 0px;
   background-color: #4D4D4D;
@@ -129,6 +129,7 @@ header a {
   display: flex;
   align-items: center;
   width: 200px;
+  padding-top: 5px;
 }
 
 .menu-icon-container a {
@@ -216,8 +217,7 @@ header a {
 }
 
 header .full-width-container {
-  height: 61px;
-  align-items: center;
+  padding: 9px 0;
 }
 
 header .right-col {
@@ -282,12 +282,6 @@ header .right-col {
   border-radius: 40px;
 }
 
-@media (max-width: 1150px) {
-  .header-search-container {
-    flex-basis: 40%;
-  }
-}
-
 @media (max-width: 950px) {
   .horizontal-menu .nav-list {
     flex-wrap: wrap;
@@ -301,8 +295,6 @@ header .right-col {
 
   .header-search-container {
     order: 1;
-    flex-basis: 100%;
-    margin: 25px 0px 0px 0px;
   }
 
   .header-search-container:after {
