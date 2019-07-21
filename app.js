@@ -70,7 +70,7 @@ i18n.configure({
 app.use((req, res, next) => {
   // set english as the default locale, if it's not already set
   if (!req.cookies.locale) {
-    res.cookie("locale", "en");
+    res.cookie("locale", "en", { path: "/" });
   }
   next();
 });
@@ -227,6 +227,16 @@ app.use("/method", method);
 app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
+
+// endpoint to set new locale
+app.get("/set-locale", function(req, res) {
+  const locale = req.query && req.query.locale;
+  const redirectTo = req.query && req.query.redirectTo;
+  if (locale) {
+    res.cookie("locale", locale, { path: "/" });
+  }
+  return res.redirect(redirectTo || "/");
+});
 
 app.get("/about", function(req, res) {
   res.status(200).render("about-view");
