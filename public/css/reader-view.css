@@ -73,16 +73,27 @@ article .reader-view-social-links {
   .reader-view-social-links {
     display: none;
   }
+
   article .reader-view-social-links {
     display: flex;
     margin-bottom: 30px;
   }
+
   .reader-view-social-links li {
     margin-right: 8px;
   }
 
   .reader-view .middle-col {
     width: 50%;
+  }
+
+  .floating-action-button-reader-view {
+    right: 30px;
+  }
+
+  .reader-view.full-width-container .right-col {
+    float: right;
+    display: unset;
   }
 }
 
