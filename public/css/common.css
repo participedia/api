@@ -101,23 +101,17 @@ a {
 }
 
 .full-width-container {
-  width: calc(100% - 60px);
   margin: 0 30px;
-  display: flex;
-  flex-direction: row;
-  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  column-gap: 30px;
+  grid-column-gap: 30px;
 }
 .full-width-container .left-col {
-  margin-right: 60px;
-  flex: 1;
   min-width: 200px;
 }
-.full-width-container .middle-col {
-  flex: 5;
-}
 .full-width-container .right-col {
-  flex: 1;
-  min-width: 300px;
+  min-width: 350px;
 }
 
 /*
