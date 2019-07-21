@@ -151,7 +151,6 @@ const facetsFromReq = req => {
     "recruitment_method"
   ];
   const keyLists = [
-    "tags",
     "general_issues",
     "purposes",
     "approaches",

@@ -688,11 +688,6 @@ module.exports = {
   },
 
   // search filters
-  searchFiltersShouldShowSection(key, req) {
-    // only show tags section to admins
-    return key !== "tags" || (req.user && req.user.isadmin);
-  },
-
   searchFiltersSections(type) {
     return searchFiltersList[type];
   },

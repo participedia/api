@@ -198,36 +198,6 @@ $_$;
 
 
 --
--- Name: get_localized_tags(text, text[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION get_localized_tags(language text, tags text[]) RETURNS localized_value[]
-    LANGUAGE sql STABLE
-    AS $$
-SELECT COALESCE(get_localized_tags_or_null(language, tags), '{}');
-$$;
-
-
---
--- Name: get_localized_tags_or_null(text, text[]); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION get_localized_tags_or_null(language text, tags text[]) RETURNS localized_value[]
-    LANGUAGE sql STABLE
-    AS $$
-WITH localized AS (
-    SELECT to_json(tags_localized.*) as lookup FROM tags_localized WHERE language = language
-  )
-  SELECT array_agg((tag, tag, local_tag(tag, lookup))::localized_value) as values from (
-    SELECT
-       unnest(tags) as tag
-  ) as a,
-  localized
-  group by language
-$$;
-
-
---
 -- Name: get_localized_texts(integer, text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -390,18 +360,5 @@ CREATE FUNCTION rotate_layout_localized(language text) RETURNS TABLE(key text, v
     AS $$
 WITH localized as
   (SELECT to_json(layout_localized.*) as lookup FROM layout_localized WHERE language = language)
-select key,value from (select (json_each_text(lookup)).* from localized) as a;
-$$;
-
-
---
--- Name: rotate_tags_localized(text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION rotate_tags_localized(language text) RETURNS TABLE(key text, value text)
-    LANGUAGE sql STABLE
-    AS $$
-WITH localized as
-  (SELECT to_json(tags_localized.*) as lookup FROM tags_localized WHERE language = language)
 select key,value from (select (json_each_text(lookup)).* from localized) as a;
 $$;

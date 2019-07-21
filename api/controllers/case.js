@@ -193,8 +193,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "implementers_of_change",
     "tools_techniques_types"
   ].map(key => cond(key, as.casekeys));
-  // special list of keys
-  ["tags"].map(key => cond(key, as.tagkeys));
   // TODO save bookmarked on user
   return [updatedCase, er];
 }

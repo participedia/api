@@ -31,7 +31,6 @@ try {
 }
 let db = pgp(config);
 
-const dbtagkeys = JSON.parse(fs.readFileSync("api/helpers/data/tagkeys.json"));
 const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
 
 function sql(filename) {
@@ -342,33 +341,6 @@ const organizationkey = casekey;
 const organizationkeyflat = casekeyflat;
 const organizationkeys = casekeys;
 
-function tagkey(obj) {
-  if (obj === undefined) {
-    throw new Error("Object cannot be undefined for tag");
-  }
-  if (isString(obj)) {
-    if (dbtagkeys.includes(obj)) {
-      return obj;
-    } else {
-      console.warn("failed tag: %s", obj);
-      return null;
-    }
-  }
-  if (obj.key === undefined) {
-    throw new Error("Key cannot be undefined for tag");
-  }
-  if (dbtagkeys.includes(obj.key)) {
-    return obj.key;
-  } else {
-    console.warn("failed tag: %s", obj.key);
-  }
-  return null;
-}
-
-function tagkeys(objList) {
-  return uniq((objList || []).map(tagkey).filter(x => !!x));
-}
-
 function FullFile(obj) {
   this.rawType = true;
   this.toPostgres = () =>
@@ -485,7 +457,6 @@ const as = Object.assign({}, pgp.as, {
   organizationkeyflat,
   organizationkeys,
   richtext,
-  tagkeys,
   text,
   url: asUrl,
   urls,
