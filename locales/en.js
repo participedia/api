@@ -1652,5 +1652,7 @@
   "evidence_of_impact": "Evidence of Impact",
   "Chinese": "Chinese",
   "Spanish": "Spanish",
-  "Credit": "Credit"
+  "Credit": "Credit",
+  "Italian": "Italian",
+  "Portuguese": "Portuguese"
 }
