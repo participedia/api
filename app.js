@@ -33,6 +33,7 @@ const list = require("./api/controllers/list");
 const user = require("./api/controllers/user");
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
 const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
+const { SUPPORTED_LANGUAGES } = require("./constants.js");
 
 const port = process.env.PORT || 3001;
 
@@ -59,7 +60,7 @@ app.use(cookieParser());
 app.use(errorhandler());
 
 i18n.configure({
-  locales: ["en", "fr", "de", "es", "zh"],
+  locales: SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode),
   cookie: "locale",
   extension: ".js",
   directory: "./locales",

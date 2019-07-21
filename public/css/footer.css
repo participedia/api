@@ -78,11 +78,6 @@ footer section {
   margin-block-end: 0px;
 }
 
-.footer-language-select {
-  margin-top: 30px;
-  width: 200px;
-}
-
 @media (max-width: 1020px) {
   footer section:first-child {
     flex-direction: column;

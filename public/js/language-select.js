@@ -1,10 +1,14 @@
+const toArray = nodelist => Array.prototype.slice.call(nodelist);
+
 const languageSelect = {
   init() {
-    const selectEl = document.querySelector(".js-footer-language-select");
+    const selectEls = document.querySelectorAll(".js-language-select");
 
-    if (!selectEl) return;
+    if (!selectEls) return;
 
-    selectEl.addEventListener("change", e => this.handleSelectChange(e));
+    toArray(selectEls).forEach(select => {
+      select.addEventListener("change", e => this.handleSelectChange(e));
+    });
   },
 
   handleSelectChange(e) {
@@ -20,6 +24,6 @@ const languageSelect = {
     // reload page
     location.href = url;
   }
-}
+};
 
 export default languageSelect;
