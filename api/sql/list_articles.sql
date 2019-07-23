@@ -4,4 +4,5 @@ WITH all_titles AS
  ORDER BY title)
 SELECT *
 FROM all_titles
-WHERE title IS NOT NULL;
+WHERE title IS NOT NULL
+AND hidden IS NOT TRUE;
