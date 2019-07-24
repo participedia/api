@@ -316,7 +316,7 @@ footer .language-select {
   width: 200px;
 }
 
-.reader-view .language-select {
+.reader-view article .language-select {
   display: none;
 }
 
