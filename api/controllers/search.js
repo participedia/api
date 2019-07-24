@@ -1,4 +1,5 @@
 "use strict";
+let { randomTexture } = require('../helpers/things');
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let {
@@ -18,11 +19,6 @@ const { supportedTypes, parseGetParams } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 
 const RESPONSE_LIMIT = 20;
-
-function randomTexture() {
-  let index = Math.floor(Math.random() * 6) + 1;
-  return `/images/texture_${index}.svg`;
-}
 
 function getLanguage(req) {
   // once we have translations for user generated content in all supported languages,

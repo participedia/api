@@ -49,12 +49,22 @@ function encodeURL(url) {
   }
 }
 
+function randomTexture() {
+  let index = Math.floor(Math.random() * 6) + 1;
+  return `/images/texture_${index}.svg`;
+}
+
 const fixUpURLs = function(article) {
   // FIXME: need to handle all media objects and source_urls for sourced media
-  if (article.photos && article.photos.length) {
+  if (article.photos) {
+    if (article.photos.length) {
     article.photos.forEach(obj => {
       obj.url = encodeURL(obj.url);
     });
+    }
+    else { // article photo is empty array
+      article.photos = [{ url: randomTexture() }];      
+    }
   }
   if (article.files && article.files.length) {
     article.files.forEach(obj => {
@@ -220,5 +230,6 @@ module.exports = {
   parseGetParams,
   returnByType,
   setConditional,
-  maybeUpdateUserText
+  maybeUpdateUserText,
+  randomTexture
 };
