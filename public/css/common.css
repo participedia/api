@@ -333,6 +333,10 @@ footer .language-select {
   .full-width-container .middle-col {
     width: 35%;
   }
+
+  .reader-view article .language-select {
+    display: block;
+  }
 }
 
 @media (max-width: 1000px) {

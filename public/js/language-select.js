@@ -1,25 +1,20 @@
+const toArray = nodelist => Array.prototype.slice.call(nodelist);
+
 const languageSelect = {
   init() {
-    const selectEl = document.querySelector(".js-footer-language-select");
+    const selectEls = document.querySelectorAll(".js-language-select");
 
-    if (!selectEl) return;
+    if (!selectEls) return;
 
-    selectEl.addEventListener("change", e => this.handleSelectChange(e));
+    toArray(selectEls).forEach(select => {
+      select.addEventListener("change", e => this.handleSelectChange(e));
+    });
   },
 
   handleSelectChange(e) {
-    // set locale cookie
-    document.cookie = `locale=${e.target.value}`;
-
-    // if location.href has a `#` at the end, remove it, b/c otherwise the page won't be reloaded
-    let url = location.href;
-    if (url.indexOf("#") === url.length - 1) {
-      url = url.substring(0, url.length - 1);
-    }
-
-    // reload page
-    location.href = url;
+    location.href = `/set-locale?locale=${e.target.value}` +
+      `&redirectTo=${window.location.pathname}`;
   }
-}
+};
 
 export default languageSelect;
