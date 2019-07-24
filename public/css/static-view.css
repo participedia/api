@@ -35,18 +35,6 @@
 
 @media (max-width: 1000px) {
   .static-view.full-width-container .left-col {
-    width: calc(33% - 20px);
-  }
-  .static-view.full-width-container .middle-col {
-    width: 50%;
-  }
-  .static-view.full-width-container .right-col {
-    display: none;
-  }
-}
-
-@media (max-width: 850px) {
-  .static-view.full-width-container .left-col {
     display: none;
   }
   .static-view.full-width-container .middle-col {

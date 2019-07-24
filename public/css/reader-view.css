@@ -69,6 +69,7 @@ article .reader-view-social-links {
 .reader-view .bookmark-link[data-bookmarked='true'] .icon-fill:first-of-type {
   fill: #808080;
 }
+
 @media (max-width: 1000px) {
   .reader-view-social-links {
     display: none;
@@ -95,9 +96,12 @@ article .reader-view-social-links {
     float: right;
     display: unset;
   }
-}
 
-@media (max-width: 850px) {
+  .reader-view .middle-col {
+    width: 100%;
+    margin-left: 0px;
+  }
+
   .reader-view article .article-data-accordion {
     display: block;
     margin-bottom: 30px;
@@ -105,10 +109,5 @@ article .reader-view-social-links {
 
   .reader-view .data-column {
     display: none;
-  }
-
-  .reader-view .middle-col {
-    width: 100%;
-    margin-left: 0px;
   }
 }
