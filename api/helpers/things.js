@@ -54,7 +54,11 @@ function randomTexture() {
   return `/images/texture_${index}.svg`;
 }
 
-const fixUpURLs = function(article) {
+const fixUpURLsWithRandomTexture = function(article) {
+  fixUpURLs(article, true);
+}
+
+const fixUpURLs = function(article, useRandomTexture) {
   // FIXME: need to handle all media objects and source_urls for sourced media
   if (article.photos) {
     if (article.photos.length) {
@@ -62,7 +66,7 @@ const fixUpURLs = function(article) {
       obj.url = encodeURL(obj.url);
     });
     }
-    else { // article photo is empty array
+    else if (useRandomTexture) { // article photo is empty array
       article.photos = [{ url: randomTexture() }];      
     }
   }
@@ -181,11 +185,11 @@ async function maybeUpdateUserText(req, res, type) {
   ["body", "title", "description"].forEach(key => {
     let value;
     if (key === "body") {
-      value = as.richtext(newArticle[key] || oldArticle[key]);
+      value = as.richtext(newArticle[key] || '');
     } else {
-      value = as.text(newArticle[key] || oldArticle[key]);
+      value = as.text(newArticle[key] || '');
     }
-    if (newArticle[key] && oldArticle[key] !== newArticle[key]) {
+    if (newArticle[key] !== oldArticle[key]) {
       textModified = true;
     }
     updatedText[key] = value;
@@ -231,5 +235,6 @@ module.exports = {
   returnByType,
   setConditional,
   maybeUpdateUserText,
-  randomTexture
+  randomTexture,
+  fixUpURLsWithRandomTexture
 };
