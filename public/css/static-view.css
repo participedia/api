@@ -1,9 +1,8 @@
-.static-view-container {
-  margin: 0 auto 120px auto;
-  width: 50%;
+.static-view {
+  margin-bottom: 120px;
 }
 
-.static-view-container section {
+.static-view section {
   margin-bottom: 30px;
 }
 
@@ -35,21 +34,14 @@
 }
 
 @media (max-width: 1000px) {
-  .static-view-container {
-    width: 60%;
+  .static-view.full-width-container .left-col {
+    display: none;
   }
-}
-
-@media (max-width: 850px) {
-  .static-view-container {
-    width: 70%;
+  .static-view.full-width-container .middle-col {
+    width: 100%;
+    margin-left: 0;
   }
-}
-
-@media (max-width: 650px) {
-  .static-view-container {
-    width: calc(100% - 60px);
-    margin-left: 30px;
-    margin-right: 30px;
+  .static-view.full-width-container .right-col {
+    display: none;
   }
 }
