@@ -310,16 +310,6 @@ footer .language-select {
   width: 200px;
 }
 
-.reader-view .language-select {
-  margin-top: 0px;
-  margin-bottom: 30px;
-  width: 200px;
-}
-
-.reader-view article .language-select {
-  display: none;
-}
-
 @media (max-width: 1200px) {
   .full-width-container .middle-col {
     width: 40%;
@@ -332,10 +322,6 @@ footer .language-select {
 @media (max-width: 1100px) {
   .full-width-container .middle-col {
     width: 35%;
-  }
-
-  .reader-view article .language-select {
-    display: block;
   }
 }
 
@@ -360,9 +346,6 @@ footer .language-select {
 }
 
 @media (max-width: 850px) {
-  .reader-view .language-select {
-    display: block;
-  }
   .full-width-container .left-col {
     width: calc(50% - 15px);
   }
