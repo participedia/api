@@ -11,26 +11,24 @@
         <div class="filter-list-pop-over js-filter-list-pop-over">
           <div class="filter-list-pop-over-inner">
             {{#each fieldNameKeys}}
-              {{#if (searchFiltersShouldShowSection this ../../req)}}
-                <div class="filter-list-header">
-                  <h4>{{searchFilterLabel ../../type this}}</h4>
-                  <a href="#" class="clear-section-link js-clear-section-link" data-field-name="{{this}}">{{t "Clear Category"}}</a>
-                </div>
-                <ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
-                  {{#each (getOptionsForFilterKey this)}}
-                    <li>
-                      <input
-                        type="checkbox"
-                        data-field-name="{{../this}}"
-                        data-section-key="{{../sectionKey}}"
-                        name="{{key}}"
-                        id="{{../this}}[{{key}}]"
-                        >
-                      <label for="{{../this}}[{{key}}]">{{value}}</label>
-                    </li>
-                  {{/each}}
-                </ul>
-              {{/if}}
+              <div class="filter-list-header">
+                <h4>{{searchFilterLabel ../../type this}}</h4>
+                <a href="#" class="clear-section-link js-clear-section-link" data-field-name="{{this}}">{{t "Clear Category"}}</a>
+              </div>
+              <ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
+                {{#each (getOptionsForFilterKey this)}}
+                  <li>
+                    <input
+                      type="checkbox"
+                      data-field-name="{{../this}}"
+                      data-section-key="{{../sectionKey}}"
+                      name="{{key}}"
+                      id="{{../this}}[{{key}}]"
+                      >
+                    <label for="{{../this}}[{{key}}]">{{value}}</label>
+                  </li>
+                {{/each}}
+              </ul>
             {{/each}}
           </div>
         </div>
