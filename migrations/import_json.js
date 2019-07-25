@@ -1,4 +1,5 @@
-const { db, helpers } = require("../api/helpers/db");
+process.env.MIGRATIONS = true;
+const { db, helpers, pgp } = require("../api/helpers/db");
 const fs = require("fs");
 
 const tables = [
@@ -61,8 +62,8 @@ async function load_all_tables() {
   await load_table("cases");
   await load_table("authors");
   // db.none("REFRESH MATERIALIZED VIEW search_index_en;");
-  db.one("select setval('things_id_seq', (select max(id) from cases) +1 );");
-  db.one("select setval('users_id_seq', (select max(id) from users) + 1);");
+  await db.one("select setval('things_id_seq', (select max(id) from cases) +1 );");
+  await db.one("select setval('users_id_seq', (select max(id) from users) + 1);");
 }
 
 load_all_tables();
