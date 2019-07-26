@@ -1,11 +1,13 @@
 <div class="full-width-container reader-view">
   <div class="left-col data-column">
-    {{> language-select }}
+    <div class="data-column-inner">
+      {{> language-select }}
 
-    <!-- Data and Metadata -->
-    <h2>{{t "Data"}}</h2>
+      <!-- Data and Metadata -->
+      <h2>{{t "Data"}}</h2>
 
-    {{> @partial-block }}
+      {{> @partial-block }}
+    </div>
   </div>
   <div class="middle-col">
     <article>
