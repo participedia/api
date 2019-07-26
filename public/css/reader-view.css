@@ -80,6 +80,10 @@ article .reader-view-social-links {
   display: none;
 }
 
+.reader-view .data-column-inner {
+  max-width: 270px;
+}
+
 @media (max-width: 850px) {
   .reader-view .language-select {
     display: block;
