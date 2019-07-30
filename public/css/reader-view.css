@@ -33,7 +33,8 @@ article .reader-view-social-links {
   align-self: center;
 }
 
-.reader-view .body-content {
+.reader-view .body-content,
+.reader-view .data-column-inner {
   word-break: break-word;
 }
 
