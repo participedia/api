@@ -24,6 +24,13 @@ const partners = [
         ]
       },
       {
+        "name": "Eileen Alma",
+        "descriptors": [
+          "Coady International Institute",
+          "St. Francis Xavier University"
+        ]
+      },
+      {
         "name": "Julia Abelson",
         "descriptors": [
           "Centre for Health Economics and Policy Analysis",
