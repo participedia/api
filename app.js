@@ -21,10 +21,6 @@ const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const cors = require("cors");
 
-if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
-  require("newrelic");
-}
-
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const { case_ } = require("./api/controllers/case");
