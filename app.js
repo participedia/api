@@ -1,7 +1,6 @@
 "use strict";
 
 // deploy on heroku-18 stack
-
 const path = require("path");
 const process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
@@ -21,6 +20,10 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const cors = require("cors");
+
+if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
+  require("newrelic");
+}
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
