@@ -228,13 +228,6 @@ const partners = [
         ]
       },
       {
-        "name": "Dietlind Stolle",
-        "descriptors": [
-          "Centre for the Study of Democratic Citizenship",
-          "McGill University"
-        ]
-      },
-      {
         "name": "Bettina von Lieres",
         "descriptors": [
           "Centre for Critical Development Studies",
