@@ -1,7 +1,6 @@
 "use strict";
 const express = require("express");
 const router = express.Router(); // eslint-disable-line new-cap
-const log = require("winston");
 
 const { db, as, LIST_TITLES, LIST_SHORT } = require("../helpers/db");
 const { supportedTypes } = require("../helpers/things");

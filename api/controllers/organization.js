@@ -2,7 +2,7 @@
 
 const express = require("express");
 const cache = require("apicache");
-const log = require("winston");
+const newrelic = require("newrelic");
 const fs = require("fs");
 
 const {
@@ -94,7 +94,7 @@ async function postOrganizationNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postOrganizationUpdateHttp(req, res);
   } catch (error) {
-    log.error("Exception in POST /organization/new => %s", error);
+    newrelic.noticeError(error, { req: req, errorMessage: "Exception in postOrganizationNewHttp" });
     return res.status(400).json({ OK: false, error: error });
   }
 }
@@ -133,7 +133,8 @@ async function getOrganization(params, res) {
     return article;
   } catch (error) {
     // if no entry is found, render the 404 page
-    return res.sendStatus("404");
+    newrelic.noticeError(error, { errorMessage: "No entry found" });
+    return res.status(404).render("404");
   }
 }
 
@@ -185,6 +186,7 @@ async function postOrganizationUpdateHttp(req, res) {
     refreshSearch();
   } else {
     console.error("Reporting errors: %s", er.errors);
+    newrelic.noticeError(er, { req: req, errorMessage: er.errors });
     res.status(400).json({
       OK: false,
       errors: er.errors

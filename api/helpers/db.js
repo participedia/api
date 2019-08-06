@@ -13,7 +13,6 @@ const fs = require("fs");
 //}
 const pgp = require("pg-promise")(options);
 const path = require("path");
-const log = require("winston");
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 let config;

@@ -20,6 +20,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const cors = require("cors");
+const newrelic = require("newrelic");
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
@@ -280,6 +281,7 @@ app.get("/robots.txt", function(req, res, next) {
 // 404 error handling
 // this should always be after all routes to catch all invalid urls
 app.use((req, res, next) => {
+  newrelic.noticeError("Throw 404 from app.js catch-all", { req: req });
   res.status(404).render("404");
 });
 

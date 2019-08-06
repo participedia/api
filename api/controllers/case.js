@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const cache = require("apicache");
-const log = require("winston");
+const newrelic = require("newrelic");
 const equals = require("deep-equal");
 const fs = require("fs");
 
@@ -86,7 +86,7 @@ async function postCaseNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
   } catch (error) {
-    log.error("Exception in POST /case/new => %s", error);
+    newrelic.noticeError(error, { req, errorMessage: "Exception in postCaseNewHttp" });
     res.status(400).json({ OK: false, error: error });
   }
 }
@@ -254,6 +254,7 @@ async function postCaseUpdateHttp(req, res) {
     });
     refreshSearch();
   } else {
+
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({
       OK: false,
@@ -295,8 +296,9 @@ async function getCase(params, res) {
     fixUpURLs(article);
     return article;
   } catch (error) {
+    newrelic.noticeError(error, { errorMessage: "Exception in getCase" });
     // if no entry is found, render the 404 page
-    return res.sendStatus("404");
+    return res.status(404).render("404");
   }
 }
 

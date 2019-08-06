@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
-let log = require("winston");
+const newrelic = require("newrelic");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
 let { fixUpURLs } = require("../helpers/things");
 
@@ -64,8 +64,7 @@ async function getUserById(userId, req, res, view = "view") {
       };
     }
   } catch (error) {
-    log.error("Exception in GET /user/%s => %s", userId, error);
-    console.trace(error);
+    newrelic.noticeError(error, { req: req, errorMessage: `Exception in getUserById` });
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
@@ -191,7 +190,7 @@ router.post("/", async function(req, res) {
     });
     res.status(200).json({ OK: true, user: { id: user.id } });
   } catch (error) {
-    log.error("Exception in POST /user => %s", error);
+    newrelic.noticeError(error, { req: req, errorMessage: `Exception in POST /user` });
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
