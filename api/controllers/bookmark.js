@@ -44,7 +44,7 @@ async function lookupBookmarksById(req, res, userId) {
       message: "Retrieved ALL bookmarks for specified user"
     });
   } catch (error) {
-    newrelic.noticeError(error, { req: req, errorMessage: "Exception in lookupBookmarksById" });
+    newrelic.noticeError(error, { req, errorMessage: "Exception in lookupBookmarksById" });
     res.json({ success: false, error: error.message || error });
   }
 }
@@ -58,7 +58,7 @@ async function queryBookmarks(req, res) {
     }
     lookupBookmarksById(req, res, userid);
   } catch (error) {
-    newrelic.noticeError(error, { req: req, errorMessage: "Exception in queryBookmarks" });
+    newrelic.noticeError(error, { req, errorMessage: "Exception in queryBookmarks" });
     res.json({ success: false, error: error.message || error });
   }
 }
@@ -95,7 +95,7 @@ router.post("/add", async function addBookmark(req, res) {
   try {
     if (!req.body.bookmarkType) {
       newrelic.noticeError(error, {
-        req: req,
+        req,
         errorMessage: "Required parameter (bookmarkType) wasn't specified"
       });
       res.status(400).json({
@@ -105,7 +105,7 @@ router.post("/add", async function addBookmark(req, res) {
     }
     if (!req.body.thingid) {
       newrelic.noticeError(error, {
-        req: req,
+        req,
         errorMessage: "Required parameter (thingid) wasn't specified"
       });
       res
@@ -143,7 +143,7 @@ router.post("/add", async function addBookmark(req, res) {
       message: "Inserted bookmark, returning ID"
     });
   } catch (error) {
-    newrelic.noticeError(error, { req: req, errorMessage: "Exception in /user/add" });
+    newrelic.noticeError(error, { req, errorMessage: "Exception in /user/add" });
     res.status(500).json({
       success: false,
       error: error.message || error
@@ -194,7 +194,7 @@ router.delete("/delete", async function updateUser(req, res) {
     );
     res.status(200).json({ status: "success", message: `Removed a bookmark` });
   } catch (error) {
-    newrelic.noticeError(error, { req: req, errorMessage: "Exception in /user/delete" });
+    newrelic.noticeError(error, { req, errorMessage: "Exception in /user/delete" });
     res.json({
       success: false,
       error: error.message || error

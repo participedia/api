@@ -296,7 +296,7 @@ async function getCase(params, res) {
     fixUpURLs(article);
     return article;
   } catch (error) {
-    newrelic.noticeError(error, { errorMessage: "Exception in getCase" });
+    newrelic.noticeError(error, { errorMessage: "No entry found", params: params });
     // if no entry is found, render the 404 page
     return res.status(404).render("404");
   }

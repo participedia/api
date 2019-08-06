@@ -281,7 +281,7 @@ app.get("/robots.txt", function(req, res, next) {
 // 404 error handling
 // this should always be after all routes to catch all invalid urls
 app.use((req, res, next) => {
-  newrelic.noticeError("Throw 404 from app.js catch-all", { req: req });
+  newrelic.noticeError("404 from app.js catch-all", { req });
   res.status(404).render("404");
 });
 

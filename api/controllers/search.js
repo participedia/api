@@ -76,7 +76,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     res.status(200).json(jtitlelist);
   } catch (error) {
     newrelic.noticeError(error, {
-      req: req,
+      req,
       errorMessage: "Exception in GET /search/getAllForType"
     });
     res.status(500).json({ error: error });
@@ -285,7 +285,7 @@ router.get("/", async function(req, res) {
   } catch (error) {
     console.error("Error in search: ", error);
     console.trace(error);
-    newrelic.noticeError(error, { req: req });
+    newrelic.noticeError(error, { req, });
     let OK = false;
     res.status(500).json({ OK, error });
   }
@@ -313,7 +313,7 @@ router.get("/map", async function(req, res) {
     res.status(200).json({ data: { cases, orgs } });
   } catch (error) {
     newrelic.noticeError(error, {
-      req: req,
+      req,
       errorMessage: "Exception in GET /search/map"
     });
     res.status(500).json({ error: error });

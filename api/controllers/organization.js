@@ -94,7 +94,7 @@ async function postOrganizationNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postOrganizationUpdateHttp(req, res);
   } catch (error) {
-    newrelic.noticeError(error, { req: req, errorMessage: "Exception in postOrganizationNewHttp" });
+    newrelic.noticeError(error, { req, errorMessage: "Exception in postOrganizationNewHttp" });
     return res.status(400).json({ OK: false, error: error });
   }
 }
@@ -133,7 +133,7 @@ async function getOrganization(params, res) {
     return article;
   } catch (error) {
     // if no entry is found, render the 404 page
-    newrelic.noticeError(error, { errorMessage: "No entry found" });
+    newrelic.noticeError(error, { errorMessage: "No entry found", params: params });
     return res.status(404).render("404");
   }
 }
@@ -186,7 +186,6 @@ async function postOrganizationUpdateHttp(req, res) {
     refreshSearch();
   } else {
     console.error("Reporting errors: %s", er.errors);
-    newrelic.noticeError(er, { req: req, errorMessage: er.errors });
     res.status(400).json({
       OK: false,
       errors: er.errors

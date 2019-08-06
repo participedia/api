@@ -64,7 +64,7 @@ async function getUserById(userId, req, res, view = "view") {
       };
     }
   } catch (error) {
-    newrelic.noticeError(error, { req: req, errorMessage: `Exception in getUserById` });
+    newrelic.noticeError(error, { req, errorMessage: "Exception in getUserById" });
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
@@ -108,6 +108,7 @@ router.get("/:userId", async function(req, res) {
   } catch (error) {
     console.error("Problem in /user/:userId");
     console.trace(error);
+    newrelic.noticeError(error, { req, errorMessage: "Exception in /user/:userId" });
   }
 });
 
@@ -127,6 +128,7 @@ router.get("/:userId/edit", requireAuthenticatedUser(), async function(
   } catch (error) {
     console.error("Problem in /user/:userId/edit");
     console.trace(error);
+    newrelic.noticeError(error, { req, errorMessage: "Problem in /user/:userId/edit" });
   }
 });
 
@@ -141,6 +143,7 @@ router.get("/", async function(req, res) {
   } catch (error) {
     console.error("Problem in /user/");
     console.trace(error);
+    newrelic.noticeError(error, { req, errorMessage: "Problem in /user/" });
   }
 });
 
@@ -190,7 +193,7 @@ router.post("/", async function(req, res) {
     });
     res.status(200).json({ OK: true, user: { id: user.id } });
   } catch (error) {
-    newrelic.noticeError(error, { req: req, errorMessage: `Exception in POST /user` });
+    newrelic.noticeError(error, { req, errorMessage: `Exception in POST /user` });
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
