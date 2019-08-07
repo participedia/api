@@ -2,7 +2,6 @@
 
 const express = require("express");
 const cache = require("apicache");
-const log = require("winston");
 const fs = require("fs");
 
 const {
@@ -25,6 +24,8 @@ const {
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
+
+const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
@@ -95,7 +96,7 @@ async function postMethodNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postMethodUpdateHttp(req, res);
   } catch (error) {
-    log.error("Exception in POST /method/new => %s", error);
+    logError(error, { errorMessage: "Exception in postMethodNewHttp" });
     res.status(400).json({ OK: false, error: error });
   }
 }
@@ -133,8 +134,9 @@ async function getMethod(params, res) {
     fixUpURLs(article);
     return article;
   } catch (error) {
+    logError(error, { errorMessage: "No entry found", params: params });
     // if no entry is found, render the 404 page
-    return res.sendStatus("404");
+    return res.status(404).render("404");
   }
 }
 
@@ -199,7 +201,10 @@ async function postMethodUpdateHttp(req, res) {
     });
     refreshSearch();
   } else {
-    console.error("Reporting errors: %s", er.errors);
+    logError(er, {
+      req,
+      errorMessage: er.errors
+    });
     res.status(400).json({
       OK: false,
       errors: er.errors

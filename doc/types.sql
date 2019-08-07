@@ -107,7 +107,6 @@ CREATE TYPE full_case AS (
 	specific_topics localized_value[],
 	brief_description text,
 	body text,
-	tags localized_value[],
 	location_name text,
 	address1 text,
 	address2 text,

@@ -6,6 +6,8 @@ const hamburgerMenu = {
     // if the menu is already open on load, toggle body class
     if (location.hash === "#sidebar-menu") {
       document.querySelector("body").classList.add("sidebar-menu-is-open");
+    } else {
+      document.querySelector("body").classList.add("sidebar-menu-is-closed");
     }
   },
 
@@ -31,10 +33,13 @@ const hamburgerMenu = {
     const menuTriggerEl = e.target.closest("a");
 
     // when menu is open, disable scrolling on body via a class
+    const bodyEl = document.querySelector("body");
     if (menuTriggerEl.hasAttribute("data-menu-is-open")) {
-      document.querySelector("body").classList.add("sidebar-menu-is-open");
+      bodyEl.classList.add("sidebar-menu-is-open");
+      bodyEl.classList.remove("sidebar-menu-is-closed");
     } else {
-      document.querySelector("body").classList.remove("sidebar-menu-is-open");
+      bodyEl.classList.remove("sidebar-menu-is-open");
+      bodyEl.classList.add("sidebar-menu-is-closed");
     }
   }
 };

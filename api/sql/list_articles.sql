@@ -9,5 +9,6 @@ WITH all_titles AS
  FROM ${type:name}
  ORDER BY title)
 SELECT *
-FROM all_titles;
---WHERE title IS NOT NULL;
+FROM all_titles
+WHERE title IS NOT NULL
+AND hidden IS NOT TRUE;

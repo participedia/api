@@ -1,7 +1,6 @@
 "use strict";
 
 // deploy on heroku-18 stack
-
 const path = require("path");
 const process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
@@ -32,6 +31,8 @@ const list = require("./api/controllers/list");
 const user = require("./api/controllers/user");
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
 const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
+const { SUPPORTED_LANGUAGES } = require("./constants.js");
+const logError = require("./api/helpers/log-error.js");
 
 const port = process.env.PORT || 3001;
 
@@ -59,7 +60,7 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 
 i18n.configure({
-  locales: ["en", "fr", "de", "es", "zh"],
+  locales: SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode),
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
@@ -69,7 +70,7 @@ i18n.configure({
 app.use((req, res, next) => {
   // set english as the default locale, if it's not already set
   if (!req.cookies.locale) {
-    res.cookie("locale", "en");
+    res.cookie("locale", "en", { path: "/" });
   }
   next();
 });
@@ -227,6 +228,16 @@ app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
 
+// endpoint to set new locale
+app.get("/set-locale", function(req, res) {
+  const locale = req.query && req.query.locale;
+  const redirectTo = req.query && req.query.redirectTo;
+  if (locale) {
+    res.cookie("locale", locale, { path: "/" });
+  }
+  return res.redirect(redirectTo || "/");
+});
+
 app.get("/about", function(req, res) {
   res.status(200).render("about-view");
 });
@@ -275,6 +286,7 @@ app.get("/robots.txt", function(req, res, next) {
 // 404 error handling
 // this should always be after all routes to catch all invalid urls
 app.use((req, res, next) => {
+  logError("HttpError 404");
   res.status(404).render("404");
 });
 

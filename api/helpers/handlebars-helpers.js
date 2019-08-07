@@ -6,6 +6,7 @@ const socialTagsTemplate = require("./social-tags-template.js");
 const sharedFieldOptions = require("./shared-field-options.js");
 const searchFiltersList = require("./search-filters-list.js");
 const countries = require("./countries.js");
+const { SUPPORTED_LANGUAGES } = require("../../constants.js");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -117,6 +118,10 @@ module.exports = {
     } else {
       return "en";
     }
+  },
+
+  getLanguageOptions: () => {
+    return SUPPORTED_LANGUAGES;
   },
 
   getOriginalLanguage: (article, context) => {
@@ -688,11 +693,6 @@ module.exports = {
   },
 
   // search filters
-  searchFiltersShouldShowSection(key, req) {
-    // only show tags section to admins
-    return key !== "tags" || (req.user && req.user.isadmin);
-  },
-
   searchFiltersSections(type) {
     return searchFiltersList[type];
   },

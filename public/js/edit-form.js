@@ -63,7 +63,7 @@ const editForm = {
 
   sendFormData(event) {
     event.preventDefault();
-    const formEl = event.target.closest("form");
+    const formEl = document.querySelector(".js-edit-form");
 
     if (!formEl) return;
 

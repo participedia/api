@@ -1,7 +1,6 @@
 "use strict";
 const express = require("express");
 const cache = require("apicache");
-const log = require("winston");
 const equals = require("deep-equal");
 const fs = require("fs");
 
@@ -29,6 +28,8 @@ const {
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
+
+const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 const CASE_STRUCTURE = JSON.parse(
@@ -86,7 +87,7 @@ async function postCaseNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
   } catch (error) {
-    log.error("Exception in POST /case/new => %s", error);
+    logError(error, { errorMessage: "Exception in postCaseNewHttp" });
     res.status(400).json({ OK: false, error: error });
   }
 }
@@ -193,8 +194,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "implementers_of_change",
     "tools_techniques_types"
   ].map(key => cond(key, as.casekeys));
-  // special list of keys
-  ["tags"].map(key => cond(key, as.tagkeys));
   // TODO save bookmarked on user
   return [updatedCase, er];
 }
@@ -256,6 +255,7 @@ async function postCaseUpdateHttp(req, res) {
     });
     refreshSearch();
   } else {
+
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({
       OK: false,
@@ -297,8 +297,9 @@ async function getCase(params, res) {
     fixUpURLs(article);
     return article;
   } catch (error) {
+    logError(error, { errorMessage: "No entry found", params: params });
     // if no entry is found, render the 404 page
-    return res.sendStatus("404");
+    return res.status(404).render("404");
   }
 }
 

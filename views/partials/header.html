@@ -34,9 +34,9 @@
       </ul>
     </div>
   </nav>
-  <nav class="horizontal-menu">
-    <ul class="nav-list">
-      <li class="menu-icon-container js-menu-icon-container">
+  <div class="full-width-container">
+    <div class="left-col">
+      <div class="menu-icon-container js-menu-icon-container">
         <a href="#sidebar-menu" class="sidebar-menu-close" data-menu-is-open>
           <span class="sr-only">{{t "close menu"}}</span>
           {{> icon-hamburger }}
@@ -45,22 +45,24 @@
           <span class="sr-only">{{t "open menu"}}</span>
           {{> icon-hamburger }}
         </a>
-      </li>
-      <li class="header-logo-container"><a href="/">Participedia</a></li>
-      <li class="header-search-container">
+        <a href="/" class="header-logo">Participedia</a>
+      </div>
+    </div>
+    <div class="middle-col">
+      <div class="header-search-container">
         <form action="/">
           <input name="query" type="text" placeholder={{t "Search"}} value="{{req.query.query}}" />
           <div class="icon-container">
             {{> icon-search }}
           </div>
         </form>
-      </li>
-      <li class="quick-submit-container">
-        <a href="/content-chooser" class="button button-white">
+      </div>
+    </div>
+    <div class="right-col">
+      <div class="header-buttons">
+        <a href="/content-chooser" class="button button-white quick-submit-button">
           {{> icon-add }} {{t "Quick Submit"}}
         </a>
-      </li>
-      <li>
         {{#if req.user}}
           <div class="profile-dropdown-button-container js-profile-dropdown-button-container">
             <button class="button button-with-icon profile-dropdown-button-trigger js-profile-dropdown-button-trigger">
@@ -84,7 +86,7 @@
         {{else}}
           <a href="/login" class="button button-dark-grey">{{t "Login"}}</a>
         {{/if}}
-      </li>
-    </ul>
-  </nav>
+      </div>
+    </div>
+  </div>
 </header>
