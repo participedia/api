@@ -1,5 +1,4 @@
 let { isString } = require("lodash");
-let log = require("winston");
 const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");

@@ -4,7 +4,7 @@ let router = express.Router(); // eslint-disable-line new-cap
 let groups = require("../helpers/groups");
 let { db, as } = require("../helpers/db");
 let { userByEmail } = require("../helpers/user");
-let log = require("winston");
+const newrelic = require("newrelic");
 
 /**
  * @api {get} /bookmark/list/:userId List bookmarks for a given user
@@ -44,7 +44,7 @@ async function lookupBookmarksById(req, res, userId) {
       message: "Retrieved ALL bookmarks for specified user"
     });
   } catch (error) {
-    log.error(error);
+    newrelic.noticeError(error, { req, errorMessage: "Exception in lookupBookmarksById" });
     res.json({ success: false, error: error.message || error });
   }
 }
@@ -58,7 +58,7 @@ async function queryBookmarks(req, res) {
     }
     lookupBookmarksById(req, res, userid);
   } catch (error) {
-    log.error(error);
+    newrelic.noticeError(error, { req, errorMessage: "Exception in queryBookmarks" });
     res.json({ success: false, error: error.message || error });
   }
 }
@@ -94,21 +94,26 @@ router.get("/list/:userid", queryBookmarks);
 router.post("/add", async function addBookmark(req, res) {
   try {
     if (!req.body.bookmarkType) {
-      log.error("Required parameter (bookmarkType) wasn't specified");
+      newrelic.noticeError(error, {
+        req,
+        errorMessage: "Required parameter (bookmarkType) wasn't specified"
+      });
       res.status(400).json({
         message: "Required parameter (bookmarkType) wasn't specified"
       });
       return;
     }
     if (!req.body.thingid) {
-      log.error("Required parameter (thingid) wasn't specified");
+      newrelic.noticeError(error, {
+        req,
+        errorMessage: "Required parameter (thingid) wasn't specified"
+      });
       res
         .status(400)
         .json({ error: "Required parameter (thingid) wasn't specified" });
       return;
     }
     if (!req.user) {
-      log.error("No user");
       res.status(401).json({ error: "You must be logged in to perform this action." });
       return;
     }
@@ -138,7 +143,7 @@ router.post("/add", async function addBookmark(req, res) {
       message: "Inserted bookmark, returning ID"
     });
   } catch (error) {
-    log.error("Exception in INSERT", error);
+    newrelic.noticeError(error, { req, errorMessage: "Exception in /user/add" });
     res.status(500).json({
       success: false,
       error: error.message || error
@@ -189,7 +194,7 @@ router.delete("/delete", async function updateUser(req, res) {
     );
     res.status(200).json({ status: "success", message: `Removed a bookmark` });
   } catch (error) {
-    log.error("Error deleting bookmark", error);
+    newrelic.noticeError(error, { req, errorMessage: "Exception in /user/delete" });
     res.json({
       success: false,
       error: error.message || error
