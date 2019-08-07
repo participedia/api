@@ -13,9 +13,9 @@ let {
   LIST_MAP_ORGANIZATIONS
 } = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
-const newrelic = require("newrelic");
 const { supportedTypes, parseGetParams } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
+const logError = require("../helpers/log-error.js");
 
 const RESPONSE_LIMIT = 20;
 
@@ -75,7 +75,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     });
     res.status(200).json(jtitlelist);
   } catch (error) {
-    newrelic.noticeError(error, {
+    logError(error, {
       req,
       errorMessage: "Exception in GET /search/getAllForType"
     });
@@ -285,7 +285,7 @@ router.get("/", async function(req, res) {
   } catch (error) {
     console.error("Error in search: ", error);
     console.trace(error);
-    newrelic.noticeError(error, { req, });
+    logError(error);
     let OK = false;
     res.status(500).json({ OK, error });
   }
@@ -312,10 +312,7 @@ router.get("/map", async function(req, res) {
 
     res.status(200).json({ data: { cases, orgs } });
   } catch (error) {
-    newrelic.noticeError(error, {
-      req,
-      errorMessage: "Exception in GET /search/map"
-    });
+    logError(error);
     res.status(500).json({ error: error });
   }
 });

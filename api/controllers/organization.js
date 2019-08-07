@@ -2,7 +2,6 @@
 
 const express = require("express");
 const cache = require("apicache");
-const newrelic = require("newrelic");
 const fs = require("fs");
 
 const {
@@ -26,6 +25,8 @@ const {
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
+
+const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
@@ -94,7 +95,7 @@ async function postOrganizationNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postOrganizationUpdateHttp(req, res);
   } catch (error) {
-    newrelic.noticeError(error, { req, errorMessage: "Exception in postOrganizationNewHttp" });
+    logError(error, { errorMessage: "Exception in postOrganizationNewHttp" });
     return res.status(400).json({ OK: false, error: error });
   }
 }
@@ -133,7 +134,7 @@ async function getOrganization(params, res) {
     return article;
   } catch (error) {
     // if no entry is found, render the 404 page
-    newrelic.noticeError(error, { errorMessage: "No entry found", params: params });
+    logError(error, { errorMessage: "No entry found", params: params });
     return res.status(404).render("404");
   }
 }

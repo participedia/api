@@ -1,7 +1,6 @@
 "use strict";
 const express = require("express");
 const cache = require("apicache");
-const newrelic = require("newrelic");
 const equals = require("deep-equal");
 const fs = require("fs");
 
@@ -29,6 +28,8 @@ const {
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
+
+const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 const CASE_STRUCTURE = JSON.parse(
@@ -86,7 +87,7 @@ async function postCaseNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
   } catch (error) {
-    newrelic.noticeError(error, { req, errorMessage: "Exception in postCaseNewHttp" });
+    logError(error, { errorMessage: "Exception in postCaseNewHttp" });
     res.status(400).json({ OK: false, error: error });
   }
 }
@@ -296,7 +297,7 @@ async function getCase(params, res) {
     fixUpURLs(article);
     return article;
   } catch (error) {
-    newrelic.noticeError(error, { errorMessage: "No entry found", params: params });
+    logError(error, { errorMessage: "No entry found", params: params });
     // if no entry is found, render the 404 page
     return res.status(404).render("404");
   }

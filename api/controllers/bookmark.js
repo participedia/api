@@ -4,7 +4,7 @@ let router = express.Router(); // eslint-disable-line new-cap
 let groups = require("../helpers/groups");
 let { db, as } = require("../helpers/db");
 let { userByEmail } = require("../helpers/user");
-const newrelic = require("newrelic");
+const logError = require("../helpers/log-error.js");
 
 /**
  * @api {get} /bookmark/list/:userId List bookmarks for a given user
@@ -44,7 +44,7 @@ async function lookupBookmarksById(req, res, userId) {
       message: "Retrieved ALL bookmarks for specified user"
     });
   } catch (error) {
-    newrelic.noticeError(error, { req, errorMessage: "Exception in lookupBookmarksById" });
+    logError(error, { errorMessage: "Exception in lookupBookmarksById" });
     res.json({ success: false, error: error.message || error });
   }
 }
@@ -58,7 +58,7 @@ async function queryBookmarks(req, res) {
     }
     lookupBookmarksById(req, res, userid);
   } catch (error) {
-    newrelic.noticeError(error, { req, errorMessage: "Exception in queryBookmarks" });
+    logError(error, { errorMessage: "Exception in queryBookmarks" });
     res.json({ success: false, error: error.message || error });
   }
 }
@@ -94,7 +94,7 @@ router.get("/list/:userid", queryBookmarks);
 router.post("/add", async function addBookmark(req, res) {
   try {
     if (!req.body.bookmarkType) {
-      newrelic.noticeError(error, {
+      logError(error, {
         req,
         errorMessage: "Required parameter (bookmarkType) wasn't specified"
       });
@@ -104,7 +104,7 @@ router.post("/add", async function addBookmark(req, res) {
       return;
     }
     if (!req.body.thingid) {
-      newrelic.noticeError(error, {
+      logError(error, {
         req,
         errorMessage: "Required parameter (thingid) wasn't specified"
       });
@@ -143,7 +143,7 @@ router.post("/add", async function addBookmark(req, res) {
       message: "Inserted bookmark, returning ID"
     });
   } catch (error) {
-    newrelic.noticeError(error, { req, errorMessage: "Exception in /user/add" });
+    logError(error);
     res.status(500).json({
       success: false,
       error: error.message || error
@@ -194,7 +194,7 @@ router.delete("/delete", async function updateUser(req, res) {
     );
     res.status(200).json({ status: "success", message: `Removed a bookmark` });
   } catch (error) {
-    newrelic.noticeError(error, { req, errorMessage: "Exception in /user/delete" });
+    logError(error);
     res.json({
       success: false,
       error: error.message || error

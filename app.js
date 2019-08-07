@@ -20,7 +20,6 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const cors = require("cors");
-const newrelic = require("newrelic");
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
@@ -34,6 +33,7 @@ const user = require("./api/controllers/user");
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
 const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
 const { SUPPORTED_LANGUAGES } = require("./constants.js");
+const logError = require("./api/helpers/log-error.js");
 
 const port = process.env.PORT || 3001;
 
@@ -281,7 +281,7 @@ app.get("/robots.txt", function(req, res, next) {
 // 404 error handling
 // this should always be after all routes to catch all invalid urls
 app.use((req, res, next) => {
-  newrelic.noticeError("404 from app.js catch-all", { req });
+  logError("HttpError 404");
   res.status(404).render("404");
 });
 
