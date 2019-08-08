@@ -273,13 +273,14 @@ app.get("/robots.txt", function(req, res, next) {
   next();
 });
 
+// 404 error handling
+// this should always be after all routes to catch all invalid urls
+app.use((req, res, next) => {
+  res.status(404).render("404");
+});
 
-// The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler({
-  shouldHandleError(error) {
-    Sentry.captureException(error);
-  }
-}));
+// The error handler must be before any other logging middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler());
 
 // other logging middlewear
 app.use(morgan("dev")); // request logging
@@ -298,12 +299,6 @@ process.on("unhandledRejection", function(reason, p) {
     reason
   );
   // application specific logging here
-});
-
-// 404 error handling
-// this should always be after all routes to catch all invalid urls
-app.use((req, res, next) => {
-  res.status(404).render("404");
 });
 
 module.exports = app;
