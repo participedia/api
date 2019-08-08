@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@google/maps": "0.5.5",
-    "@sentry/node": "5.5.0",
     "apicache": "^1.1.1",
     "async": "^2.3.0",
     "autocompleter": "^4.0.2",

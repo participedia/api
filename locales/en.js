@@ -1669,6 +1669,5 @@
   "teaching.Please use this form": "Please use %sthis form%s or send an email to %sinfo@participedia.net%s if you have resources to share.",
   "teaching.in_the_classroom.p1": "Writing or editing Participedia entries can be a great assignment for courses that deal with political participation, democratic innovation, or deliberation.",
   "teaching.in_the_classroom.p2": "In the course of selecting, researching, and writing up a case, method, or organization, students will learn about the substance of participation in varied contexts. Students may also find it rewarding to have their work showcased on Participedia.",
-  "teaching.in_the_classroom.p3": "The following resources offer ideas on how to enhance course offerings about public participation:",
-  "Sorry, this page cannot be found": "Sorry, this page cannot be found"
+  "teaching.in_the_classroom.p3": "The following resources offer ideas on how to enhance course offerings about public participation:"
 }

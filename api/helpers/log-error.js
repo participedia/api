@@ -1,5 +1,3 @@
-const Sentry = require("@sentry/node");
-
 const isProdOrStaging = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
 
 let newrelic;
@@ -9,13 +7,8 @@ if (isProdOrStaging) {
 }
 
 function logError(error, params = {}) {
-  if (isProdOrStaging) {
-    if (typeof error === "string") {
-      Sentry.captureMessage(error);
-    } else {
-      newrelic.noticeError(error, params);
-      Sentry.captureException(error);
-    }
+  if (isProdOrStaging && newrelic) {
+    newrelic.noticeError(error, params);
   }
 }
 

@@ -50,21 +50,16 @@ function getFirstPhotoUrl(article) {
 
 function getPageTitle(req, article, context) {
   const path = req.route && req.route.path;
-  const is404 = context.data.exphbs.view === "404";
-
   const titleByPath = {
     "/": "Participedia",
     "/about": i18n("About", context) + " – Participedia",
     "/teaching": i18n("Teaching", context) + " – Participedia",
     "/research": i18n("Research", context) + " – Participedia",
-    "/404": i18n("Sorry, this page cannot be found", context) + " – Participedia",
   };
   if (article && article.title) {
     return article.title + " – Participedia";
   } else if (titleByPath[path]) {
     return titleByPath[path];
-  } else if (is404) {
-    return titleByPath["/404"];
   } else {
     return titleByPath["/"];
   }
