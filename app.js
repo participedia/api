@@ -20,6 +20,14 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const cors = require("cors");
+const Sentry = require("@sentry/node");
+
+// only instantiate sentry logging if we are on staging or prod
+if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
+  Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.NODE_ENV });
+  // The request handler must be the first middleware on the app
+  app.use(Sentry.Handlers.requestHandler());
+}
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
@@ -51,13 +59,11 @@ app.use((req, res, next) => {
 app.use(compression());
 app.set("port", port);
 app.use(express.static("public", { index: false }));
-app.use(morgan("dev")); // request logging
 app.use(methodOverride()); // Do we actually use/need this?
 app.use(cors());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
-app.use(errorhandler());
 
 i18n.configure({
   locales: SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode),
@@ -207,17 +213,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Better logging of "unhandled" promise exceptions
-process.on("unhandledRejection", function(reason, p) {
-  console.warn(
-    "Possibly Unhandled Rejection at: Promise ",
-    p,
-    " reason: ",
-    reason
-  );
-  // application specific logging here
-});
-
 // ROUTES
 app.use("/", cache("5 minutes"), search);
 
@@ -276,6 +271,33 @@ app.get("/robots.txt", function(req, res, next) {
     return res.status(200).sendFile(`${process.env.PWD}/public/robots-${process.env.NODE_ENV}.txt`);
   }
   next();
+});
+
+
+// The error handler must be before any other error middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler({
+  shouldHandleError(error) {
+    Sentry.captureException(error);
+  }
+}));
+
+// other logging middlewear
+app.use(morgan("dev")); // request logging
+
+if (process.env.NODE_ENV === "development") {
+  // only use in development
+  app.use(errorhandler())
+}
+
+// Better logging of "unhandled" promise exceptions
+process.on("unhandledRejection", function(reason, p) {
+  console.warn(
+    "Possibly Unhandled Rejection at: Promise ",
+    p,
+    " reason: ",
+    reason
+  );
+  // application specific logging here
 });
 
 // 404 error handling
