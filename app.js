@@ -281,7 +281,6 @@ app.get("/robots.txt", function(req, res, next) {
 // 404 error handling
 // this should always be after all routes to catch all invalid urls
 app.use((req, res, next) => {
-  logError("HttpError 404");
   res.status(404).render("404");
 });
 
