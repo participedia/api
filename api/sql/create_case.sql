@@ -4,7 +4,7 @@ WITH insert_case as (
   )
   VALUES
     (
-      'case', ${language}, 'now', true, 'now'
+      'case', ${original_language}, 'now', true, 'now'
     ) RETURNING id as thingid
 )
 
@@ -14,7 +14,7 @@ VALUES
     ${body},
     ${title},
     ${description},
-    ${language},
+    ${original_language},
     (select thingid from insert_case)
   ) RETURNING thingid
 ;

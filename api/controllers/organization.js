@@ -78,11 +78,11 @@ async function postOrganizationNewHttp(req, res) {
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
-    let language = req.body.original_language || "en";
+    let original_language = req.body.original_language || "en";
     if (!title) {
       return res.status(400).json({
         OK: false,
-        errors: ["Cannot create Organization without at least a title"],
+        errors: ["Cannot create Organization without at least a title"]
       });
     }
     const user_id = req.user.id;
@@ -90,7 +90,7 @@ async function postOrganizationNewHttp(req, res) {
       title,
       body,
       description,
-      language
+      original_language
     });
     req.params.thingid = thing.thingid;
     await postOrganizationUpdateHttp(req, res);
