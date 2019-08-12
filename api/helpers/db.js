@@ -1,6 +1,9 @@
 const promise = require("bluebird");
 const url = require("url");
 const { isArray, isObject, isDate, isString, uniq } = require("lodash");
+const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES.map(
+  locale => locale.twoLetterCode
+);
 const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -137,8 +140,6 @@ async function _refreshSearch() {
   }
   setTimeout(_refreshSearch, randomDelay());
 }
-
-const SUPPORTED_LANGUAGES = ["en", "de", "fr", "zh", "es"];
 
 async function cacheTitlesRefreshSearch(done) {
   if (!process.env.MIGRATIONS) {
