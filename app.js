@@ -19,7 +19,6 @@ const errorhandler = require("errorhandler");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
-const cors = require("cors");
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
@@ -37,27 +36,28 @@ const logError = require("./api/helpers/log-error.js");
 
 const port = process.env.PORT || 3001;
 
+app.use(errorhandler());
 // canonicalize url
 app.use((req, res, next) => {
   if (
     process.env.NODE_ENV === "production" &&
-    req.hostname !== "participedia.net"
+    req.hostname !== "participedia.net" &&
+    !res.headersSent
   ) {
     res.redirect("https://participedia.net" + req.originalUrl);
+  } else {
+    next();
   }
-  next();
 });
 // CONFIGS
 app.use(compression());
 app.set("port", port);
-app.use(express.static("public", { index: false }));
 app.use(morgan("dev")); // request logging
+app.use(express.static("public", { index: false }));
 app.use(methodOverride()); // Do we actually use/need this?
-app.use(cors());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
-app.use(errorhandler());
 
 i18n.configure({
   locales: SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode),
@@ -153,11 +153,11 @@ app.get("/redirect", function(req, res, next) {
         return next(err);
       }
       let returnToUrl = req.session.returnTo;
-      const refreshAndClose = req.session.refreshAndClose
+      const refreshAndClose = req.session.refreshAndClose;
       delete req.session.returnTo;
       delete req.session.refreshAndClose;
       if (refreshAndClose === "true") {
-        returnToUrl = returnToUrl + "?refreshAndClose=true"
+        returnToUrl = returnToUrl + "?refreshAndClose=true";
       }
       res.redirect(returnToUrl || "/");
     });
@@ -272,8 +272,13 @@ app.use((req, res, next) => {
 
 app.get("/robots.txt", function(req, res, next) {
   // send different robots.txt files for different environments
-  if (process.env.NODE_ENV === "staging" || process.env.NODE_ENV === "production") {
-    return res.status(200).sendFile(`${process.env.PWD}/public/robots-${process.env.NODE_ENV}.txt`);
+  if (
+    process.env.NODE_ENV === "staging" ||
+    process.env.NODE_ENV === "production"
+  ) {
+    return res
+      .status(200)
+      .sendFile(`${process.env.PWD}/public/robots-${process.env.NODE_ENV}.txt`);
   }
   next();
 });

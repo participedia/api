@@ -69,7 +69,7 @@ async function postCaseNewHttp(req, res) {
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
-    let language = req.body.original_language || "en";
+    let original_language = req.body.original_language || "en";
     if (!title) {
       return res.status(400).json({
         OK: false,
@@ -81,7 +81,7 @@ async function postCaseNewHttp(req, res) {
       title,
       body,
       description,
-      language
+      original_language
     });
     //    req.thingid = thing.thingid;
     req.params.thingid = thing.thingid;
@@ -255,7 +255,6 @@ async function postCaseUpdateHttp(req, res) {
     });
     refreshSearch();
   } else {
-
     console.error("Reporting errors: %s", er.errors);
     res.status(400).json({
       OK: false,
@@ -321,7 +320,9 @@ async function getEditStaticText(params) {
   staticText.authors = listUsers();
   staticText.cases = listCases(lang).filter(article => !article.hidden);
   staticText.methods = listMethods(lang).filter(article => !article.hidden);
-  staticText.organizations = listOrganizations(lang).filter(article => !article.hidden);
+  staticText.organizations = listOrganizations(lang).filter(
+    article => !article.hidden
+  );
   return staticText;
 }
 
