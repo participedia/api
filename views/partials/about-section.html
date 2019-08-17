@@ -1,6 +1,20 @@
 {{#> accordion title=(t titleKey) small=true}}
   {{#if descriptionKey}}
-    <p>{{t descriptionKey}}</p>
+    {{#if (isDandTSection descriptionKey)}}
+      <p>
+        {{{__
+          descriptionKey
+          "<a href='https://github.com/participedia/api'>"
+          "</a>"
+          "<a href='https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology'>"
+          "</a>"
+          "<a href='https://www.ecuad.ca/'>"
+          "</a>"
+        }}}
+      </p>
+    {{else}}
+      <p>{{t descriptionKey}}</p>
+    {{/if}}
   {{/if}}
   {{#each members}}
     <dl class="people">
