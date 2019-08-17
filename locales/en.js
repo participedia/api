@@ -1671,5 +1671,6 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoom Map In",
-  "Zoom Map Out": "Zoom Map Out"
+  "Zoom Map Out": "Zoom Map Out",
+  "Browse our Data Repository": "Browse our Data Repository"
 }
