@@ -75,6 +75,11 @@ const i18n = (key, context) =>
 
 module.exports = {
   // transalation helpers
+  getLocalizedTermsOfUsePartial: (context) => {
+    const locale = context.data.root.locale || "en";
+    return `terms-of-use-${locale}`;
+  },
+
   searchFilterLabel: (type, name, context) => {
     const view = context.data.root.params.view;
     return i18n(`${type}_${view}_${name}_label`, context);
