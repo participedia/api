@@ -80,6 +80,7 @@
   "Bouvet Island": "Bouvet Island",
   "Brazil": "Brazil",
   "British Indian Ocean Territory": "British Indian Ocean Territory",
+  "Browse our Data Repository": "Browse our Data Repository",
   "Brunei": "Brunei",
   "Bulgaria": "Bulgaria",
   "Burkina Faso": "Burkina Faso",
@@ -444,6 +445,7 @@
   "faq_a10_p6": "NOT: %sbicycle not rally%s will match items which contain bicycle, but only if they do not also contain rally",
   "faq_a10_p7": "QUOTES: %s\"womens rights\"%s will return items that have womens followed by rights",
   "faq_a10_p8": "PARENTHESES: %s(bicycle or rally)%s and %s(womens rights and UK)%s will will group logical operations inside the parentheses as a group before applying the operators joining groups",
+  "faq_a11": "To access an account from an older version of Participedia (prior to 2019), you will need to reset your password using the same email address that you used to login on the old website. Click “Login,” and enter your email address. Then, click “Forgot your password?” and follow the prompts to access your original account and content. Please %scontact us%s if you need assistance.",
   "faq_a12": "When logged in, click your profile avatar in the top right-hand corner of the screen to visit your profile page. From there you can access your bookmarked content under the “Bookmarks” tab. Only you can see your bookmarked content. ",
   "faq_a2": "Entries about methods provide information on the overarching processes used to guide public participation, such as citizens’ juries, deliberative polling, and participatory budgeting. Please read our %sguidelines%s on how to write a method entry or %scontact%s our managing editor for more information. ",
   "faq_a3": "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance. Please read our %sguidelines%s on how to write an organization entry or %scontact%s our managing editor for more information. ",
@@ -455,6 +457,7 @@
   "faq_a9": "If you create an entry in a language other than English, first refer to the language drop-down menu at the bottom of the website to see if the language you plan to enter is supported by our translation service. Select your language from the drop-down menu before clicking “Quick Submit” to start your entry. If the language you wish to enter is not yet supported on our site, please %scontact us%s to request it. In the meantime, you can use the English version of the site to submit your entry. Finally, please indicate the language in square brackets in the title of the entry, for example, “Orcamento Participativo [Portuguese]”.",
   "faq_q1": "What is a case?",
   "faq_q10": "How do I search for content?",
+  "faq_q11": "How do I access an old user account?",
   "faq_q12": "How do I access my bookmarked content?",
   "faq_q2": "What is a method?",
   "faq_q3": "What is an organization?",
@@ -464,8 +467,6 @@
   "faq_q7": "What is Quick Submit?",
   "faq_q8": "How do I edit content?",
   "faq_q9": "How do I create content in another language?",
-  "faq_q11": "How do I access an old user account?",
-  "faq_a11": "To access an account from an older version of Participedia (prior to 2019), you will need to reset your password using the same email address that you used to login on the old website. Click “Login,” and enter your email address. Then, click “Forgot your password?” and follow the prompts to access your original account and content. Please %scontact us%s if you need assistance.",
   "Faroe Islands": "Faroe Islands",
   "Featured Entries": "Featured Entries",
   "Featured [type]": "Featured %s",
@@ -1671,6 +1672,5 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoom Map In",
-  "Zoom Map Out": "Zoom Map Out",
-  "Browse our Data Repository": "Browse our Data Repository"
+  "Zoom Map Out": "Zoom Map Out"
 }
