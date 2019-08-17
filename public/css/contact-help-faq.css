@@ -85,6 +85,12 @@
   padding: 20px;
 }
 
+.contact-help-faq-container .faq-answer-content pre {
+  color: #EC2024;
+  display: inline;
+  padding: 0 5px;
+}
+
 .contact-help-faq-container[data-view=list] .back-btn {
   display: none;
 }

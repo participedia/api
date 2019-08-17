@@ -3,9 +3,23 @@
   <h2>{{t "research.tagline"}}</h2>
 
   {{#> accordion title=(t "Methodology")}}
-    <p>{{t "research.methodology.p1"}}</p>
+    <p>
+      {{{__
+        "research.methodology.p1"
+        "<a href='https://creativecommons.org/licenses/by-nc-sa/3.0/'>"
+        "</a>"
+      }}}
+    </p>
 
-    <p>{{{__ "research.methodology.p2" "<a href='http://archonfung.net/docs/articles/2011/FungParticipedia201112.pdf'>" "</a>"}}}</p>
+    <p>
+      {{{__
+        "research.methodology.p2"
+        "<a href='http://archonfung.net/docs/articles/2011/FungParticipedia201112.pdf'>"
+        "</a>"
+        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit?usp=sharing'>"
+        "</a>"
+      }}}
+    </p>
   {{/accordion}}
 
   {{#> accordion title=(t "Data Repository")}}
@@ -35,8 +49,13 @@
     <p>
       {{{__
         "research.data_repository.questions"
-        "<a href='mailto:data@participedia.net'>data@participedia.net</a>"
+        "<a href='mailto:data@participedia.net'>"
+        "</a>"
       }}}
+    </p>
+
+    <p>
+      <a href="https://dataverse.harvard.edu/dataverse/Participedia" class="button button-red button-block">{{t "Browse our Data Repository"}}</a>
     </p>
   {{/accordion}}
 

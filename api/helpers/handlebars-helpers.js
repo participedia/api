@@ -680,6 +680,10 @@ module.exports = {
     return stats.mtimeMs;
   },
 
+  isDandTSection(sectionKey) {
+    return sectionKey === "about.committees.design_tech.p1";
+  },
+
   // data
   getPartnersData() {
     return aboutData.partners;
