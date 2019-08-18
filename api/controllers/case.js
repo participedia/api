@@ -201,7 +201,14 @@ function getUpdatedCase(user, params, newCase, oldCase) {
 // Only changes to title, description, and/or body trigger a new author and version
 
 async function postCaseUpdateHttp(req, res) {
-  // cache.clear();
+  res.setTimeout(10000, () => {
+    // make the request timeout after 10 seconds and send 408 error to client
+    // this is to avoid the situation of the user having to wait a really long time
+    // (longer than 10s) with no feedback if the server is taking a long time to respond
+    return res.send(408);
+  });
+
+  cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;

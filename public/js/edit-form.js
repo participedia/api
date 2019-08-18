@@ -27,7 +27,7 @@ const editForm = {
         this.openInfoModal(event);
       });
     }
-    
+
     // if this page was loaded with the refreshAndClose param, we can close it programmatically
     // this is part of the flow to refresh auth state
     if (window.location.search.indexOf("refreshAndClose") > 0) {
@@ -74,10 +74,6 @@ const editForm = {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     xhr.onreadystatechange = () => {
-      if (xhr.readyState === 2) {
-        this.openPublishingFeedbackModal();
-      }
-
       // wait for request to be done
       if (xhr.readyState !== xhr.DONE) return;
 
@@ -89,6 +85,11 @@ const editForm = {
         this.handleErrors([
           "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total)."
         ]);
+      } else if (xhr.status === 408 || xhr.status === 503) {
+        // handle server unavailable/request timeout errors
+        // show default, sorry something went wrong, please try again msg
+        // so the user can try again and doesn't lose their input
+        this.handleErrors(null);
       } else {
         const response = JSON.parse(xhr.response);
 
@@ -101,6 +102,8 @@ const editForm = {
     }
 
     xhr.send(formData);
+    // open publishing feedback modal as soon as we send the request
+    this.openPublishingFeedbackModal();
   },
 
   openAuthWarning() {
