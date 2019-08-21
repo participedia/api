@@ -205,6 +205,23 @@ module.exports = {
   },
 
   // article helpers
+  isLinkableTerm: (article, name) => {
+    const supportedArticleTypes = ["case"];
+
+    if (!supportedArticleTypes.includes(article.type)) return;
+
+    // get all the keys that we are currently filtering on from the search filters list
+    const supportedFilters = [].concat.apply([], searchFiltersList[article.type].map(section => {
+      return section.fieldNameKeys.map(key => key);
+    }));
+
+    return supportedFilters.includes(name);
+  },
+
+  getSearchLinkForTerm: (article, name, key) => {
+    return `/?selectedCategory=${article.type}&${name}=${key}`;
+  },
+
   getFirstImageForArticle: article => {
     if (article.photos && article.photos.length > 0) {
       // search pages return photos for articles in this format
@@ -255,15 +272,21 @@ module.exports = {
     }
   },
 
-  getArrayOfValues: (article, name, context) => {
+  getLocalizedValuesForKeys: (article, name, context) => {
     const arrayOfItems = article[name];
     if (!arrayOfItems || arrayOfItems.length === 0) return;
 
     return arrayOfItems.map(item => {
       if (typeof item === "string") {
-        return i18n(`name:${name}-key:${item}`, context);
+        return {
+          key: item,
+          localizedValue: i18n(`name:${name}-key:${item}`, context)
+        }
       } else {
-        return i18n(`name:${name}-key:${item.key}`, context);
+        return {
+          key: item.key,
+          localizedValue: i18n(`name:${name}-key:${item.key}`, context)
+        }
       }
     });
   },
