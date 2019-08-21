@@ -35,8 +35,9 @@ const editForm = {
     }
 
     // do full version click
-    document.querySelector(".js-do-full-version")
-      .addEventListener("click", e => {
+    const fullVersionButtonEl = document.querySelector(".js-do-full-version");
+    if (fullVersionButtonEl) {
+      fullVersionButtonEl.addEventListener("click", e => {
         e.preventDefault();
         const articleEl = document.querySelector("[data-submit-type]");
         // change submit type attribute
