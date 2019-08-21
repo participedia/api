@@ -9,6 +9,11 @@ const editForm = {
 
     if (!submitButtonEls) return;
 
+    // this is a counter to keep track of publishing attempts
+    // if the server returns with a 408 or a 503 (timeout errors)
+    // we want to automatically retry a max of MAX_PUBLISH_ATTEMPTS
+    // this is a stopgap to improve ux until we fix the underlying server issues.
+    this.MAX_PUBLISH_ATTEMPTS = 10;
     this.publishAttempts = 0;
 
     for (let i = 0; i < submitButtonEls.length; i++) {
@@ -91,7 +96,7 @@ const editForm = {
       } else if (xhr.status === 408 || xhr.status === 503) {
         // handle server unavailable/request timeout errors
         // rather than showing
-        if (this.publishAttempts < 10) {
+        if (this.publishAttempts < this.MAX_PUBLISH_ATTEMPTS) {
           this.sendFormData();
           this.publishAttempts++;
         } else {
