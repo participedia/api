@@ -46,6 +46,8 @@ const map = {
     });
 
     mapOverlayTriggerEl.addEventListener("click", e => {
+      // track activate map click
+      window.ga("send", "event", "home.map", "activate_map_button_click");
       this.showMapOverlay();
     });
 
@@ -56,6 +58,21 @@ const map = {
     } else {
       this.showMapOverlay();
     }
+
+    this.initTracking();
+  },
+
+  initTracking() {
+    // track join now button click in map overlay
+    document.querySelector(".js-join-now-button")
+      .addEventListener("click", event => {
+        event.preventDefault();
+        window.ga("send", "event", "home.map", "join_now_button_click", {
+          hitCallback: () => {
+            window.location.href = event.target.href;
+          }
+        });
+      });
   },
 
   showMapOverlay() {
