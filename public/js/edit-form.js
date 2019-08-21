@@ -46,6 +46,9 @@ const editForm = {
         // scroll to top
         window.scrollTo(0, 0);
       });
+    }
+
+    this.formEl = document.querySelector(".js-edit-form");
   },
 
   openInfoModal(event) {
@@ -63,14 +66,11 @@ const editForm = {
 
   sendFormData(event) {
     event.preventDefault();
-    const formEl = document.querySelector(".js-edit-form");
 
-    if (!formEl) return;
-
-    const formData = serialize(formEl);
+    const formData = serialize(this.formEl);
 
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', formEl.getAttribute("action"), true);
+    xhr.open('POST', this.formEl.getAttribute("action"), true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     xhr.onreadystatechange = () => {
@@ -134,11 +134,25 @@ const editForm = {
 
   handleSuccess(response) {
     if (response.user) {
-      // redirect to user profile page
-      location.href = `/user/${response.user.id}`;
+      // track user profile update and redirect to user profile
+      window.ga("send", "event", "user", "update_user_profile", {
+        hitCallback: () => {
+          // redirect to user profile page
+          location.href = `/user/${response.user.id}`;
+        }
+      });
     } else if (response.article) {
-      // redirect to article reader page
-      location.href = `/${response.article.type}/${response.article.id}`;
+      const isNew = this.formEl.getAttribute("action").indexOf("new") > 0;
+      const eventAction = isNew ? "create_new_article" : "update_article";
+      const eventLabel = response.article.type;
+
+      // track publish action then redirect to reader page
+      window.ga("send", "event", "articles", eventAction, eventLabel, {
+        hitCallback: () => {
+          // redirect to article reader page
+          location.href = `/${response.article.type}/${response.article.id}`;
+        }
+      });
     }
   },
 
