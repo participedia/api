@@ -9,15 +9,19 @@ const editForm = {
 
     if (!submitButtonEls) return;
 
+    this.publishAttempts = 0;
+
     for (let i = 0; i < submitButtonEls.length; i++) {
       submitButtonEls[i].addEventListener("click", event => {
+        event.preventDefault();
         // set flag so we can check in the unload event if the user is actually trying to submit the form
         try {
           window.sessionStorage.setItem("submitButtonClick", "true");
         } catch (err) {
           console.warn(err);
         }
-        this.sendFormData(event);
+
+        this.sendFormData();
       });
     }
 
@@ -61,8 +65,7 @@ const editForm = {
     modal.openModal("aria-modal");
   },
 
-  sendFormData(event) {
-    event.preventDefault();
+  sendFormData() {
     const formEl = document.querySelector(".js-edit-form");
 
     if (!formEl) return;
@@ -87,12 +90,15 @@ const editForm = {
         ]);
       } else if (xhr.status === 408 || xhr.status === 503) {
         // handle server unavailable/request timeout errors
-        // show default, sorry something went wrong, please try again msg
-        // so the user can try again and doesn't lose their input
-        this.handleErrors(null);
+        // rather than showing
+        if (this.publishAttempts < 10) {
+          this.sendFormData();
+          this.publishAttempts++;
+        } else {
+          this.handleErrors(null);
+        }
       } else {
         const response = JSON.parse(xhr.response);
-
         if (response.OK) {
           this.handleSuccess(response);
         } else {
