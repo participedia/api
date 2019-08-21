@@ -1,5 +1,26 @@
-const headerProfileDropdownMenu = {
+import tracking from "./utils/tracking.js";
+
+const header = {
   init() {
+    this.trackLoginButtonClick();
+    this.initProfileDropdownMenu();
+  },
+
+  trackLoginButtonClick() {
+    const loginButtonEl = document.querySelector(".js-header-login-button");
+
+    if (!loginButtonEl) return;
+
+    loginButtonEl.addEventListener("click", (event) => {
+      event.preventDefault();
+      tracking.sendWithCallback("header", "login_button_click", "", () => {
+        location.href = event.target.href;
+      });
+    });
+
+  },
+
+  initProfileDropdownMenu() {
     const containerEl = document.querySelector(".js-profile-dropdown-button-container");
 
     if (!containerEl) return;
@@ -20,7 +41,7 @@ const headerProfileDropdownMenu = {
         }
       }
     });
-  },
-};
+  }
+}
 
-export default headerProfileDropdownMenu;
+export default header;
