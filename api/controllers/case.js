@@ -201,7 +201,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
 // Only changes to title, description, and/or body trigger a new author and version
 
 async function postCaseUpdateHttp(req, res) {
-  cache.clear();
+  // cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
