@@ -200,17 +200,14 @@ app.set("view engine", ".html");
 
 // make data available as local vars in templates
 app.use((req, res, next) => {
-  const getGATrackingId = () => {
-    if (app.get("env") === "production") {
-      return "UA-132033152-1";
-    } else {
-      // development or staging
-      return "UA-132033152-2";
-    }
+  const gaTrackingIdByEnv = {
+    production: process.env.GOOGLE_TRACKING_ID_PROD,
+    staging: process.env.GOOGLE_TRACKING_ID_STAGE,
+    development: process.env.GOOGLE_TRACKING_ID_DEV
   };
 
   res.locals.req = req;
-  res.locals.GA_TRACKING_ID = getGATrackingId();
+  res.locals.GA_TRACKING_ID = gaTrackingIdByEnv[process.env.NODE_ENV];
   next();
 });
 

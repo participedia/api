@@ -2,6 +2,7 @@ import moment from "moment";
 import mapStyle from "./map-style.js";
 import PopOver from "./GoogleMapsPopOver.js";
 import { xhrReq } from "./utils/utils.js";
+import tracking from "./utils/tracking.js";
 
 const defaultMarkerIcon = "/images/default-marker.svg";
 const featuredMarkerIcon = "/images/featured-marker.svg";
@@ -46,6 +47,8 @@ const map = {
     });
 
     mapOverlayTriggerEl.addEventListener("click", e => {
+      // track activate map click
+      tracking.send("home.map", "activate_map_button_click");
       this.showMapOverlay();
     });
 
@@ -55,6 +58,21 @@ const map = {
       this.hideMapOverlay();
     } else {
       this.showMapOverlay();
+    }
+
+    this.initTracking();
+  },
+
+  initTracking() {
+    // track join now button click in map overlay
+    const joinNowButtonEl = document.querySelector(".js-join-now-button");
+    if (joinNowButtonEl) {
+      joinNowButtonEl.addEventListener("click", event => {
+        event.preventDefault();
+        tracking.sendWithCallback("home.map", "join_now_button_click", "", () => {
+          window.location.href = event.target.href;
+        });
+      });
     }
   },
 
