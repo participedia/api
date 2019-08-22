@@ -106,7 +106,7 @@ a {
 }
 
 .main-content .full-width-container {
-  overflow: auto;
+  overflow: hidden;
 }
 
 .full-width-container .left-col {
