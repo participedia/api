@@ -58,3 +58,5 @@
 \include 'migrations/migration_039.sql'
 -- Add fallback for languages that don't have local localization
 \include `migrations/migration_040.sql`
+-- Add table for storing login sessions
+\include `migrations/migration_041.sql`
