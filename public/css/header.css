@@ -276,6 +276,7 @@ header .right-col {
   height: 40px;
   display: block;
   background-color: transparent;
+  overflow: hidden;
 }
 .profile-dropdown-button-trigger img {
   top: -40px;
