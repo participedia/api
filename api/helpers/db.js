@@ -142,16 +142,25 @@ async function _refreshSearch() {
 }
 
 async function cacheTitlesRefreshSearch(done) {
-  if (!process.env.MIGRATIONS) {
+  // if (!process.env.MIGRATIONS) {
+  if (process.env.NODE_ENV === "test") {
     await _listUsers();
     for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
       let lang = SUPPORTED_LANGUAGES[i];
-      await _listCases(lang);
-      console.log("%s cases cached", lang);
-      await _listMethods(lang);
-      console.log("%s methods cached", lang);
-      await _listOrganizations(lang);
-      console.log("%s organizations cached", lang);
+      if (lang === "en") {
+        await _listCases(lang);
+        console.log("%s cases cached", lang);
+        await _listMethods(lang);
+        console.log("%s methods cached", lang);
+        await _listOrganizations(lang);
+        console.log("%s organizations cached", lang);
+      } else {
+        _listCases(lang).then(() => console.log("%s cases cached", lang));
+        _listMethods(lang).then(() => console.log("%s methods cached", lang));
+        _listOrganizations(lang).then(() =>
+          console.log("%s organizations cached", lang)
+        );
+      }
     }
     // keep running these, but we can start the server now
     _refreshSearch();
