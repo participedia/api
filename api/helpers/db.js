@@ -147,32 +147,30 @@ async function cacheTitlesRefreshSearch(done) {
     await _listUsers();
     for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
       let lang = SUPPORTED_LANGUAGES[i];
-      if (lang === "en") {
-        await _listCases(lang);
-        console.log("%s cases cached", lang);
-        await _listMethods(lang);
-        console.log("%s methods cached", lang);
-        await _listOrganizations(lang);
-        console.log("%s organizations cached", lang);
-      } else {
-        _listCases(lang).then(() => console.log("%s cases cached", lang));
-        _listMethods(lang).then(() => console.log("%s methods cached", lang));
-        _listOrganizations(lang).then(() =>
-          console.log("%s organizations cached", lang)
-        );
-      }
+      await _listCases(lang).then(() => console.log("%s cases cached", lang));
+      await _listMethods(lang).then(() =>
+        console.log("%s methods cached", lang)
+      );
+      await _listOrganizations(lang).then(() =>
+        console.log("%s organizations cached", lang)
+      );
     }
-    // keep running these, but we can start the server now
-    _refreshSearch();
-    console.log("search refreshed");
-    db.none(
-      "UPDATE localizations SET keyvalues = ${keys} WHERE language='en'",
-      {
-        keys: i18n_en
-      }
-    );
-    console.log("i18n updated");
+  } else {
+    _listUsers();
+    for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+      let lang = SUPPORTED_LANGUAGES[i];
+      _listCases(lang).then(() => console.log("%s cases cached", lang));
+      _listMethods(lang).then(() => console.log("%s methods cached", lang));
+      _listOrganizations(lang).then(() =>
+        console.log("%s organizations cached", lang)
+      );
+    }
   }
+  // keep running these, but we can start the server now
+  _refreshSearch().then(() => console.log("search refreshed"));
+  db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
+    keys: i18n_en
+  }).then(() => console.log("i18n updated"));
   if (done) {
     done();
   }
