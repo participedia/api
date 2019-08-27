@@ -8,7 +8,7 @@ Documentation formerly in the README has been updated and moved to the
 [Wiki](https://github.com/participedia/api/wiki) for ease of maintenance and
 organization.
 
-Read our [Code of Conduct](https://github.com/participedia/api/CODE_OF_CONDUCT.md)
+Read our [Code of Conduct](https://github.com/participedia/api/blob/master/CODE_OF_CONDUCT.md)
 
 <hr />
 
