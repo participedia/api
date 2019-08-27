@@ -422,7 +422,7 @@ module.exports = {
     const title = article.title;
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      twitter: `https://twitter.com/home?status=${title} - ${url}`,
+      twitter: `https://twitter.com/intent/tweet?text=Participedia: ${title} - ${url}`,
       linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`
     };
     return shareUrls[type];
