@@ -260,6 +260,23 @@ input[type=number]::-webkit-inner-spin-button {
   margin-bottom: 0px;
 }
 
+.ss-main .placeholder,
+.ss-main .placeholder .ss-disabled {
+  color: #000!important;
+  line-height: 1.3em;
+}
+
+.edit-multi-select .ss-option-selected {
+  cursor: pointer!important;
+  color: #000!important;
+  background-color: #fff!important;
+}
+
+.edit-multi-select .ss-option-selected:hover {
+  background-color: #5897fb!important;
+  color: #fff!important;
+}
+
 .edit-multi-select-list,
 .edit-media-file-list {
   margin-top: 15px;
