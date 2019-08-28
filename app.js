@@ -22,8 +22,14 @@ const methodOverride = require("method-override");
 const Sentry = require("@sentry/node");
 
 // only instantiate sentry logging if we are on staging or prod
-if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
-  Sentry.init({ dsn: process.env.SENTRY_DSN, environment: process.env.NODE_ENV });
+if (
+  process.env.NODE_ENV === "production" ||
+  process.env.NODE_ENV === "staging"
+) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV
+  });
   // The request handler must be the first middleware on the app
   app.use(Sentry.Handlers.requestHandler());
 }
@@ -86,8 +92,9 @@ app.use(i18n.init);
 
 // config express-session
 const sess = {
-  secret: "THIS IS A RANDOM KEY",
-  cookie: {},
+  store: new (require("connect-pg-simple")(session))(),
+  secret: process.env.COOKIE_SECRET,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
   resave: false,
   saveUninitialized: true
 };
@@ -290,7 +297,7 @@ app.use(morgan("dev")); // request logging
 
 if (process.env.NODE_ENV === "development") {
   // only use in development
-  app.use(errorhandler())
+  app.use(errorhandler());
 }
 
 // Better logging of "unhandled" promise exceptions
