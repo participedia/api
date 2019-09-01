@@ -79,7 +79,7 @@ function ErrorReporter() {
         return fn(...args);
       } catch (e) {
         self.errors.push(e.message);
-        console.trace("Capturing error to report to client: " + e.message);
+        console.error("Capturing error to report to client: " + e.message);
         return e.message;
       }
     };

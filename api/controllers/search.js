@@ -262,7 +262,8 @@ router.get("/", async function(req, res) {
       case "csv":
         if (type === "thing") {
           return res.status(200).json({
-            msg: "You can only get a csv file from cases, methods or organizations tabs."
+            msg:
+              "You can only get a csv file from cases, methods or organizations tabs."
           });
         } else {
           const file = await createCSVDataDump(type);
@@ -283,8 +284,7 @@ router.get("/", async function(req, res) {
         });
     }
   } catch (error) {
-    console.error("Error in search: ", error);
-    console.trace(error);
+    console.error("Error in /search: %s", error.message);
     logError(error);
     let OK = false;
     res.status(500).json({ OK, error });

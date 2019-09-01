@@ -107,8 +107,11 @@ router.get("/:userId", async function(req, res) {
       res.status(200).json(data);
     }
   } catch (error) {
-    console.error("Problem in /user/:userId");
-    console.trace(error);
+    console.error(
+      "Exception in /user/%s => %s",
+      req.params.userId,
+      error.message
+    );
     logError(error);
   }
 });
@@ -127,8 +130,11 @@ router.get("/:userId/edit", requireAuthenticatedUser(), async function(
     // return html template
     res.status(200).render(`user-edit`, data);
   } catch (error) {
-    console.error("Problem in /user/:userId/edit");
-    console.trace(error);
+    console.error(
+      "Exception in in /user/%s/edit => %s",
+      req.params.userId,
+      error.message
+    );
     logError(error);
   }
 });
@@ -142,8 +148,7 @@ router.get("/", async function(req, res) {
     }
     return getUserById(req.user.user_id, req, res);
   } catch (error) {
-    console.error("Problem in /user/");
-    console.trace(error);
+    console.error("Exception in /user/ => %s", error.message);
     logError(error);
   }
 });
@@ -199,7 +204,7 @@ router.post("/", async function(req, res) {
       res.status(404).json({ OK: false });
     } else {
       res.status(500).json({ OK: false, error: error });
-      console.trace(error);
+      console.error("Exception in POST /user => %s", error.message);
     }
   }
 });
