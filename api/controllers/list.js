@@ -38,7 +38,7 @@ router.get("/titles", async (req, res) => {
     });
     res.status(200).json({ OK: true, data: retVal });
   } catch (error) {
-    console.trace("Exception in POST /list/titles => %s", error);
+    console.error("Exception in POST /list/titles => %s", error.message);
     return res.status(500).json({ OK: false, error: error });
   }
 });
@@ -53,7 +53,7 @@ router.get("/short", async (req, res) => {
     });
     res.status(200).json({ OK: true, data: retVal });
   } catch (error) {
-    console.trace("Exception in POST /list/short => %s", error);
+    console.error("Exception in POST /list/short => %s", error.message);
     return res.status(500).json({ OK: false, error: error });
   }
 });
@@ -69,7 +69,11 @@ router.get("/:type", async (req, res) => {
     const query = await db.one(LIST_REFERENCES, { language });
     res.status(200).json({ OK: true, data: query.results });
   } catch (error) {
-    console.trace("Exception in POST /list/%s => %s", req.params.type, error);
+    console.error(
+      "Exception in POST /list/%s => %s",
+      req.params.type,
+      error.message
+    );
     return res.status(500).json({ OK: false, error: error });
   }
 });
