@@ -2,9 +2,10 @@
   <select
     name="{{name}}"
     class="edit-multi-select js-edit-multi-select"
+    id="js-edit-multi-select-{{name}}"
     {{#if ranked}}data-ranked="true"{{/if}}
   >
-    <option value="">{{placeholder article name}}</option>
+    <option data-placeholder="true" value="">{{placeholder article name}}</option>
     {{#each (getArticleOptions static name)}}
       <option
         value="{{this}}"
