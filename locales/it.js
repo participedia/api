@@ -121,7 +121,7 @@
   "case_edit_end_date_placeholder": "Selezionare una data di fine, se applicabile",
   "case_edit_evaluation_links_attribution_instructional": "Chi è il proprietario o il creatore originale di questo contenuto collegato?",
   "case_edit_evaluation_links_attribution_placeholder": "Proprietario o creatore",
-  "case_edit_evaluation_links_link_instructional": "Se c'è un sito web principale per questo caso, inseriscilo qui. Aggiungere collegamenti a fonti aggiuntive in modo che i lettori e gli editor possano trovare ulteriori informazioni su questo caso online. ",
+  "case_edit_evaluation_links_link_instructional": "Aggiungere un collegamento al report di valutazione.",
   "case_edit_evaluation_links_link_label": "Collegamenti al rapporto di valutazione",
   "case_edit_evaluation_links_title_instructional": "Fornisci un titolo o una descrizione di questo contenuto collegato in 10 parole o meno.",
   "case_edit_evaluation_links_title_placeholder": "Titolo o descrizione",
