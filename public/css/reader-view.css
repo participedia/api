@@ -109,8 +109,8 @@ article .reader-view-social-links {
     width: 50%;
   }
 
-  .floating-action-button-reader-view {
-    right: 30px;
+  .floating-action-button {
+    right: 32px;
   }
 
   .reader-view.full-width-container .right-col {
