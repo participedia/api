@@ -48,6 +48,7 @@ const editLinkSet = {
       let name = inputEl.getAttribute("name");
       name = name.replace(/0/g, `${newIndex}`);
       inputEl.setAttribute("name", name);
+      inputEl.value = "";
     });
 
     // insert new set into dom
