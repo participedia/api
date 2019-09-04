@@ -275,6 +275,7 @@ module.exports = {
   legality: ["yes", "no"],
   staff: ["yes", "no"],
   volunteers: ["yes", "no"],
+  ongoing: ["yes", "no"],
   impact_evidence: ["yes", "no"],
   formal_evaluation: ["yes", "no"],
   facilitators: ["yes", "no", "not_applicable"],

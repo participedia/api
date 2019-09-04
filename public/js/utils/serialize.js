@@ -33,10 +33,9 @@ function serialize(form) {
             encodeURIComponent(field.options[n].value)
         );
       }
-    } else if (field.type === "checkbox") {
-      serialized.push(
-        encodeURIComponent(field.name) + "=" + encodeURIComponent(field.checked)
-      );
+    } else if (["ongoing", "staff", "volunteer"].includes(field.name)) {
+      console.log("field.name", field.name)
+      console.log("field.value", field.value)
     } else if (field.getAttribute("data-field-type") === "richtext") {
       // convert rich text fields
       const richtextValue = form.querySelector(
