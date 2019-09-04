@@ -128,6 +128,9 @@ async function postOrganizationNewHttp(req, res) {
 
 async function getOrganization(params, res) {
   try {
+    if (Number.isNaN(params.articleid)) {
+      return res.status(404).render("404");
+    }
     const articleRow = await db.one(ORGANIZATION_BY_ID, params);
     const article = articleRow.results;
     fixUpURLs(article);
