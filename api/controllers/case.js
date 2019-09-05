@@ -291,6 +291,9 @@ async function postCaseUpdateHttp(req, res) {
 
 async function getCase(params, res) {
   try {
+    if (Number.isNaN(params.articleid)) {
+      return res.status(404).render("404");
+    }
     const articleRow = await db.one(CASE_BY_ID, params);
     const article = articleRow.results;
     fixUpURLs(article);
