@@ -136,8 +136,11 @@ async function getOrganization(params, res) {
     fixUpURLs(article);
     return article;
   } catch (error) {
+    // only log actual excaptional results, not just data not found
+    if (error.message !== "No data returned from the query.") {
+      logError(error, { errorMessage: "No entry found", params: params });
+    }
     // if no entry is found, render the 404 page
-    logError(error, { errorMessage: "No entry found", params: params });
     return res.status(404).render("404");
   }
 }
