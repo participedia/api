@@ -286,7 +286,7 @@ app.get("/robots.txt", function(req, res, next) {
 // 404 error handling
 // this should always be after all routes to catch all invalid urls
 app.use((req, res, next) => {
-  console.log("failed request from %s", req.headers["user-agent"]);
+  logError(`404 failed request from ${req.headers["user-agent"]}`);
   res.status(404).render("404");
 });
 
@@ -303,13 +303,7 @@ if (process.env.NODE_ENV === "development") {
 
 // Better logging of "unhandled" promise exceptions
 process.on("unhandledRejection", function(reason, p) {
-  console.warn(
-    "Possibly Unhandled Rejection at: Promise ",
-    p,
-    " reason: ",
-    reason
-  );
-  // application specific logging here
+  logError(`Possibly Unhandled Rejection at: Promise for reason ${reason}`)
 });
 
 module.exports = app;

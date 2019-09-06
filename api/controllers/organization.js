@@ -192,7 +192,7 @@ async function postOrganizationUpdateHttp(req, res) {
     });
     refreshSearch();
   } else {
-    console.error("Reporting errors: %s", er.errors);
+    logError(`400 with errors: ${er.errors.join(", ")}`);
     res.status(400).json({
       OK: false,
       errors: er.errors
