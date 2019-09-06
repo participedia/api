@@ -292,7 +292,7 @@ async function postCaseUpdateHttp(req, res) {
 async function getCase(params, res) {
   try {
     if (Number.isNaN(params.articleid)) {
-      return res.status(404).render("404");
+      return null;
     }
     const articleRow = await db.one(CASE_BY_ID, params);
     const article = articleRow.results;
@@ -304,7 +304,7 @@ async function getCase(params, res) {
       logError(error, { errorMessage: "No entry found", params: params });
     }
     // if no entry is found, render the 404 page
-    return res.status(404).render("404");
+    return null;
   }
 }
 
@@ -312,6 +312,10 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
@@ -337,6 +341,10 @@ async function getCaseEditHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = await getCase(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }

@@ -201,6 +201,10 @@ function number(value) {
   if (value === "") {
     return null;
   }
+  let numValue = Number(value);
+  if (Number.isNaN(numValue)) {
+    return numValue;
+  }
   return pgp.as.number(Number(value));
 }
 
@@ -208,14 +212,11 @@ function integer(value) {
   if (value === "") {
     return null;
   }
-  if (value === "NaN") {
-    throw new Error('Expected integer, got "NaN" as a string');
+  let intValue = parseInt(value, 10);
+  if (Number.isNaN(intValue)) {
+    return intValue;
   }
-  let retVal = pgp.as.number(parseInt(value, 10));
-  if (Number.isNaN(retVal)) {
-    throw new Error("Expected integer value, got " + value);
-  }
-  return retVal;
+  return pgp.as.number(intValue);
 }
 
 function asFloat(value) {

@@ -130,7 +130,7 @@ async function postMethodNewHttp(req, res) {
 async function getMethod(params, res) {
   try {
     if (Number.isNaN(params.articleid)) {
-      return res.status(404).render("404");
+      return null;
     }
     const articleRow = await db.one(METHOD_BY_ID, params);
     const article = articleRow.results;
@@ -142,7 +142,7 @@ async function getMethod(params, res) {
       logError(error, { errorMessage: "No entry found", params: params });
     }
     // if no entry is found, render the 404 page
-    return res.status(404).render("404");
+    return null;
   }
 }
 
@@ -264,6 +264,10 @@ async function getMethodHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "method");
   const article = await getMethod(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = {};
   returnByType(res, params, article, staticText, req.user);
 }
@@ -272,6 +276,10 @@ async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
   const article = await getMethod(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }

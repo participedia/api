@@ -98,9 +98,9 @@ const parseGetParams = function(req, type) {
   return Object.assign({}, req.query, {
     type,
     view: as.value(req.params.view || "view"),
-    articleid: as.number(req.params.thingid || req.params.articleid),
+    articleid: as.integer(req.params.thingid || req.params.articleid),
     lang: as.value(getLanguage(req)),
-    userid: req.user ? as.number(req.user.id) : null,
+    userid: req.user ? as.integer(req.user.id) : null,
     returns: as.value(req.query.returns || "html")
   });
 };
