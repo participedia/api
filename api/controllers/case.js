@@ -312,6 +312,10 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
@@ -349,10 +353,6 @@ async function getCaseNewHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = CASE_STRUCTURE;
-  if (!article) {
-    res.status(404).render("404");
-    return null;
-  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
