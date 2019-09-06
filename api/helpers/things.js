@@ -95,7 +95,7 @@ const returnByType = (res, params, article, static, user) => {
 };
 
 const parseGetParams = function(req, type) {
-  let parms = Object.assign({}, req.query, {
+  return Object.assign({}, req.query, {
     type,
     view: as.value(req.params.view || "view"),
     articleid: as.integer(req.params.thingid || req.params.articleid),
@@ -103,7 +103,6 @@ const parseGetParams = function(req, type) {
     userid: req.user ? as.integer(req.user.id) : null,
     returns: as.value(req.query.returns || "html")
   });
-  return parms;
 };
 
 /* I can't believe basic set operations are not part of ES5 Sets */
