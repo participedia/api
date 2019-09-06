@@ -2,8 +2,8 @@ import FontFaceObserver from "fontfaceobserver";
 import hamburgerMenu from "./hamburger-menu.js";
 import elementClosestPolyfill from "./polyfills/element.closest.polyfill.js";
 import contactHelpFaqWidget from "./contact-help-faq-widget.js";
-import headerProfileDropdownMenu from "./header-profile-dropdown-menu.js";
 import languageSelect from "./language-select.js";
+import header from "./header.js";
 
 function loadFonts() {
   const faktFont = new FontFaceObserver("Fakt", {
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadFonts();
   hamburgerMenu.init();
   contactHelpFaqWidget.init();
-  headerProfileDropdownMenu.init();
+  header.init();
   languageSelect.init();
 
   // Listen to tab events to enable outlines (accessibility improvement)

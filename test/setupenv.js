@@ -3,7 +3,6 @@ let jwt = require("jsonwebtoken");
 let pem2jwk = require("pem-jwk").pem2jwk;
 let keypair = require("keypair");
 let nock = require("nock");
-let log = require("winston");
 
 // We expect to not have an AUTH0_SECRET
 let process = require("process");
@@ -57,7 +56,6 @@ try {
   jwt.verify(bearer_token, pair.public, { algorithms: ["RS256"] });
 } catch (e) {
   // useful for early detection that something went wrong with signing.
-  log.error(JSON.stringify(e));
   throw e;
 }
 

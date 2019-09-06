@@ -1,4 +1,4 @@
-<div class="static-view-container">
+{{#> static-view-container }}
   <h1>{{t "Welcome to Participedia"}}</h1>
   <h2>{{t "main_tagline"}}</h2>
 
@@ -8,16 +8,38 @@
 
   <section>
     <h2>{{t "Get Involved"}}</h2>
-    <p>{{{t "about.get_involved.p1"}}}</p>
+    <p>
+      {{{__
+        "about.get_involved.p1"
+        "<a href='https://creativecommons.org/licenses/by-nc-sa/3.0/'>"
+        "</a>"
+        "<a href='https://docs.google.com/document/d/1lzhV6aoslzqaj9XhOtVUOHbSJYOPK0tiXg0ALzIkN-w/edit?usp=sharing'>"
+        "</a>"
+      }}}
+    </p>
 
     <h3>{{t "Explore"}}</h3>
-    <p>{{{t "about.explore.p1"}}}</p>
+    <p>{{t "about.explore.p1"}}</p>
 
     <h3>{{t "Contribute"}}</h3>
-    <p>{{t "about.contribute.p1"}}</p>
+    <p>
+      {{{__
+        "about.contribute.p1"
+        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit?usp=sharing'>"
+        "</a>"
+        "<a href='mailto:scottowenfletcher@gmail.com'>"
+        "</a>"
+      }}}
+    </p>
 
     <h3>{{t "Teach"}}</h3>
-    <p>{{t "about.teach.p1"}}</p>
+    <p>
+      {{{__
+        "about.teach.p1"
+        "<a href='/teaching'>"
+        "</a>"
+      }}}
+    </p>
   </section>
 
   <section>
@@ -35,7 +57,7 @@
       <p>{{t "about.partners.p1"}}</p>
 
       {{#each (getPartnersData)}}
-        {{> about-section static=../static}}
+        {{> about-section }}
       {{/each}}
     {{/accordion}}
 
@@ -43,7 +65,7 @@
       <p>{{t "about.committees.p1"}}</p>
 
       {{#each (getCommitteesData)}}
-        {{> about-section static=../static}}
+        {{> about-section __=../__}}
       {{/each}}
     {{/accordion}}
 
@@ -102,7 +124,15 @@
 
   <section>
     <h2>{{t "Content"}}</h2>
-    <p>{{t "about.content.p1"}}</p>
+    <p>
+      {{{__
+        "about.content.p1"
+        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit?usp=sharing'>"
+        "</a>"
+        "<a href='mailto:scottowenfletcher@gmail.com'>"
+        "</a>"
+      }}}
+    </p>
 
     {{#> accordion title=(t "Cases")}}
       <p>{{t "about.cases.p1"}}</p>
@@ -151,10 +181,24 @@
     {{/accordion}}
 
     {{#> accordion title=(t "Teaching Resources")}}
-      <p>{{t "about.teaching_resources.p1"}}</p>
+      <p>
+        {{{__
+          "about.teaching_resources.p1"
+          "<a href='/teaching'>"
+          "</a>"
+          "<a href='https://docs.google.com/forms/d/e/1FAIpQLSfw_F7g-99hUuBQ6k4Iak6kyVgyRVQJZgh_7aee77yIYVzbpQ/viewform?usp=sf_link'>"
+          "</a>"
+        }}}
+      </p>
       <ul>
-        <li>{{{t "about.teaching_resources.example"}}}</li>
+        <li>
+          {{{__
+            "about.teaching_resources.example"
+            "<a href='https://docs.google.com/document/d/1qnDZmIukizEIU6SH9KWdkh1DnI-o17KoRMsi9Vz-QDo/edit?usp=sharing'>"
+            "</a>"
+          }}}
+        </li>
       </ul>
     {{/accordion}}
   </section>
-</div>
+{{/static-view-container}}

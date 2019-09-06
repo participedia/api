@@ -1,21 +1,5 @@
 .reader-view {
-  display: flex;
-  flex-direction: row;
   margin-bottom: 120px;
-  word-break: break-word;
-}
-
-.reader-view aside {
-  width: 27%;
-  margin: 0 90px 0 30px;
-  word-break: break-word;
-}
-
-.reader-view article {
-  width: 46%;
-  margin-right: 27%;
-  display: flex;
-  flex-direction: column;
 }
 
 .reader-view article .article-data-accordion {
@@ -36,19 +20,21 @@
   text-indent: -1em;
 }
 
-.reader-view .social-links {
-  order: -1;
-  width: 30px;
-  position: absolute;
-  margin-left: 42%;
-  text-align: center;
+article .reader-view-social-links {
+  display: none;
 }
 
-.reader-view .social-links li {
+.reader-view-social-links {
+  text-align: center;
+  width: 24px;
+}
+
+.reader-view-social-links li {
   align-self: center;
 }
 
-.reader-view .body-content {
+.reader-view .body-content,
+.reader-view .data-column-inner {
   word-break: break-word;
 }
 
@@ -85,27 +71,56 @@
   fill: #808080;
 }
 
+.reader-view .language-select {
+  margin-top: 0px;
+  margin-bottom: 30px;
+  width: 200px;
+}
+
+.reader-view article .language-select {
+  display: none;
+}
+
+.reader-view .data-column-inner {
+  max-width: 270px;
+}
+
 @media (max-width: 850px) {
-  .reader-view .social-links {
+  .reader-view .language-select {
+    display: block;
+  }
+}
+
+@media (max-width: 1000px) {
+  .reader-view-social-links {
+    display: none;
+  }
+
+  article .reader-view-social-links {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    position: relative;
-    margin-left: 0;
-    order: 0;
     margin-bottom: 30px;
   }
-  .reader-view .social-links li {
+
+  .reader-view-social-links li {
     margin-right: 8px;
   }
 
-  .reader-view .social-links svg {
-    display: flex;
+  .reader-view .middle-col {
+    width: 50%;
   }
 
-  .reader-view article {
+  .floating-action-button {
+    right: 32px;
+  }
+
+  .reader-view.full-width-container .right-col {
+    float: right;
+    display: unset;
+  }
+
+  .reader-view .middle-col {
     width: 100%;
-    margin: 0 30px;
+    margin-left: 0px;
   }
 
   .reader-view article .article-data-accordion {
@@ -113,7 +128,10 @@
     margin-bottom: 30px;
   }
 
-  .reader-view aside {
+  .reader-view .data-column {
     display: none;
+  }
+  .reader-view article .language-select {
+    display: block;
   }
 }

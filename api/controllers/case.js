@@ -1,7 +1,6 @@
 "use strict";
 const express = require("express");
 const cache = require("apicache");
-const log = require("winston");
 const equals = require("deep-equal");
 const fs = require("fs");
 
@@ -29,6 +28,8 @@ const {
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
+
+const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 const CASE_STRUCTURE = JSON.parse(
@@ -68,7 +69,7 @@ async function postCaseNewHttp(req, res) {
     let title = req.body.title;
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
-    let language = req.body.original_language || "en";
+    let original_language = req.body.original_language || "en";
     if (!title) {
       return res.status(400).json({
         OK: false,
@@ -80,13 +81,13 @@ async function postCaseNewHttp(req, res) {
       title,
       body,
       description,
-      language
+      original_language
     });
     //    req.thingid = thing.thingid;
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
   } catch (error) {
-    log.error("Exception in POST /case/new => %s", error);
+    logError(error, { errorMessage: "Exception in postCaseNewHttp" });
     res.status(400).json({ OK: false, error: error });
   }
 }
@@ -193,8 +194,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "implementers_of_change",
     "tools_techniques_types"
   ].map(key => cond(key, as.casekeys));
-  // special list of keys
-  ["tags"].map(key => cond(key, as.tagkeys));
   // TODO save bookmarked on user
   return [updatedCase, er];
 }
@@ -213,21 +212,13 @@ async function postCaseUpdateHttp(req, res) {
     newCase.post_date = Date.now();
   }
 
-  // console.log(
-  //   "Received tools_techniques_types from client: >>> \n%s\n",
-  //   JSON.stringify(newCase.tools_techniques_types, null, 2)
-  // );
   // save any changes to the user-submitted text
   const {
     updatedText,
     author,
     oldArticle: oldCase
   } = await maybeUpdateUserText(req, res, "case");
-  // console.log("oldCase: %s", JSON.stringify(oldCase, null, 2));
-  // console.log("updatedText: %s", JSON.stringify(updatedText));
-  // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
-  //console.log("updated case: %s", JSON.stringify(updatedCase, null, 2));
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
@@ -247,16 +238,14 @@ async function postCaseUpdateHttp(req, res) {
     }
     // the client expects this request to respond with json
     // save successful response
-    // console.log("Params for returning case: %s", JSON.stringify(params));
     const freshArticle = await getCase(params, res);
-    // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
       article: freshArticle
     });
     refreshSearch();
   } else {
-    console.error("Reporting errors: %s", er.errors);
+    logError(`400 with errors: ${er.errors.join(", ")}`);
     res.status(400).json({
       OK: false,
       errors: er.errors
@@ -292,13 +281,20 @@ async function postCaseUpdateHttp(req, res) {
 
 async function getCase(params, res) {
   try {
+    if (Number.isNaN(params.articleid)) {
+      return null;
+    }
     const articleRow = await db.one(CASE_BY_ID, params);
     const article = articleRow.results;
     fixUpURLs(article);
     return article;
   } catch (error) {
+    // only log actual excaptional results, not just data not found
+    if (error.message !== "No data returned from the query.") {
+      logError(error, { errorMessage: "No entry found", params: params });
+    }
     // if no entry is found, render the 404 page
-    return res.sendStatus("404");
+    return null;
   }
 }
 
@@ -306,12 +302,12 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
-}
-
-function print(name, obj) {
-  console.log("%s: %s", name, JSON.stringify(obj, null, 2));
 }
 
 async function getEditStaticText(params) {
@@ -320,7 +316,9 @@ async function getEditStaticText(params) {
   staticText.authors = listUsers();
   staticText.cases = listCases(lang).filter(article => !article.hidden);
   staticText.methods = listMethods(lang).filter(article => !article.hidden);
-  staticText.organizations = listOrganizations(lang).filter(article => !article.hidden);
+  staticText.organizations = listOrganizations(lang).filter(
+    article => !article.hidden
+  );
   return staticText;
 }
 
@@ -329,6 +327,10 @@ async function getCaseEditHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = await getCase(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }

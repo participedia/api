@@ -2,24 +2,25 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
-let log = require("winston");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
 let { fixUpURLsWithRandomTexture } = require("../helpers/things");
+
+const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
 async function getUserById(userId, req, res, view = "view") {
   try {
     const language = req.params.language || "en";
-
+    if (Number.isNaN(userId)) {
+      return res.status(404).render("404");
+    }
     const result = await db.oneOrNone(USER_BY_ID, {
       userId: userId,
       language: language
     });
     if (!result) {
-      return res
-        .status(404)
-        .json({ OK: false, error: `User not found for user_id ${userId}` });
+      return null;
     }
     result.user.bookmarks.forEach(fixUpURLsWithRandomTexture);
     result.user.cases.forEach(fixUpURLsWithRandomTexture);
@@ -64,12 +65,11 @@ async function getUserById(userId, req, res, view = "view") {
       };
     }
   } catch (error) {
-    log.error("Exception in GET /user/%s => %s", userId, error);
-    console.trace(error);
     if (error.message && error.message == "No data returned from the query.") {
-      res.status(404).json({ OK: false });
+      return res.status(404).render("404");
     } else {
-      res.status(500).json({ OK: false, error: error });
+      logError(error);
+      return res.status(500).json({ OK: false, error: error });
     }
   }
 }
@@ -97,18 +97,31 @@ async function getUserById(userId, req, res, view = "view") {
  */
 router.get("/:userId", async function(req, res) {
   try {
-    const data = await getUserById(req.params.userId, req, res, "view");
+    const userId = parseInt(req.params.userId, 10)
+    if (Number.isNaN(userId)) {
+      return res.status(404).render("404");
+    }
+
+    const data = await getUserById(userId, req, res, "view");
+
+    if (!data) {
+      return res.status(404).render("404");
+    }
 
     // return html template
     const returnType = req.query.returns || "html";
     if (returnType === "html") {
-      res.status(200).render(`user-view`, data);
+      return res.status(200).render(`user-view`, data);
     } else if (returnType === "json") {
-      res.status(200).json(data);
+      return res.status(200).json(data);
     }
   } catch (error) {
-    console.error("Problem in /user/:userId");
-    console.trace(error);
+    console.error(
+      "Exception in /user/%s => %s",
+      userId,
+      error.message
+    );
+    logError(error);
   }
 });
 
@@ -126,8 +139,12 @@ router.get("/:userId/edit", requireAuthenticatedUser(), async function(
     // return html template
     res.status(200).render(`user-edit`, data);
   } catch (error) {
-    console.error("Problem in /user/:userId/edit");
-    console.trace(error);
+    console.error(
+      "Exception in in /user/%s/edit => %s",
+      req.params.userId,
+      error.message
+    );
+    logError(error);
   }
 });
 
@@ -140,8 +157,8 @@ router.get("/", async function(req, res) {
     }
     return getUserById(req.user.user_id, req, res);
   } catch (error) {
-    console.error("Problem in /user/");
-    console.trace(error);
+    console.error("Exception in /user/ => %s", error.message);
+    logError(error);
   }
 });
 
@@ -191,12 +208,12 @@ router.post("/", async function(req, res) {
     });
     res.status(200).json({ OK: true, user: { id: user.id } });
   } catch (error) {
-    log.error("Exception in POST /user => %s", error);
+    logError(error);
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
       res.status(500).json({ OK: false, error: error });
-      console.trace(error);
+      console.error("Exception in POST /user => %s", error.message);
     }
   }
 });

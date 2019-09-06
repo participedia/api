@@ -50,16 +50,21 @@ function getFirstPhotoUrl(article) {
 
 function getPageTitle(req, article, context) {
   const path = req.route && req.route.path;
+  const is404 = context.data.exphbs.view === "404";
+
   const titleByPath = {
     "/": "Participedia",
     "/about": i18n("About", context) + " – Participedia",
     "/teaching": i18n("Teaching", context) + " – Participedia",
     "/research": i18n("Research", context) + " – Participedia",
+    "/404": i18n("Sorry, this page cannot be found", context) + " – Participedia",
   };
   if (article && article.title) {
     return article.title + " – Participedia";
   } else if (titleByPath[path]) {
     return titleByPath[path];
+  } else if (is404) {
+    return titleByPath["/404"];
   } else {
     return titleByPath["/"];
   }
@@ -70,6 +75,11 @@ const i18n = (key, context) =>
 
 module.exports = {
   // transalation helpers
+  getLocalizedTermsOfUsePartial: (context) => {
+    const locale = context.data.root.locale || "en";
+    return `terms-of-use-${locale}`;
+  },
+
   searchFilterLabel: (type, name, context) => {
     const view = context.data.root.params.view;
     return i18n(`${type}_${view}_${name}_label`, context);
@@ -195,6 +205,23 @@ module.exports = {
   },
 
   // article helpers
+  isLinkableTerm: (article, name) => {
+    const supportedArticleTypes = ["case"];
+
+    if (!supportedArticleTypes.includes(article.type)) return;
+
+    // get all the keys that we are currently filtering on from the search filters list
+    const supportedFilters = [].concat.apply([], searchFiltersList[article.type].map(section => {
+      return section.fieldNameKeys.map(key => key);
+    }));
+
+    return supportedFilters.includes(name);
+  },
+
+  getSearchLinkForTerm: (article, name, key) => {
+    return `/?selectedCategory=${article.type}&${name}=${key}`;
+  },
+
   getFirstImageForArticle: article => {
     if (article.photos && article.photos.length > 0) {
       // search pages return photos for articles in this format
@@ -245,15 +272,21 @@ module.exports = {
     }
   },
 
-  getArrayOfValues: (article, name, context) => {
+  getLocalizedValuesForKeys: (article, name, context) => {
     const arrayOfItems = article[name];
     if (!arrayOfItems || arrayOfItems.length === 0) return;
 
     return arrayOfItems.map(item => {
       if (typeof item === "string") {
-        return i18n(`name:${name}-key:${item}`, context);
+        return {
+          key: item,
+          localizedValue: i18n(`name:${name}-key:${item}`, context)
+        }
       } else {
-        return i18n(`name:${name}-key:${item.key}`, context);
+        return {
+          key: item.key,
+          localizedValue: i18n(`name:${name}-key:${item.key}`, context)
+        }
       }
     });
   },
@@ -389,7 +422,7 @@ module.exports = {
     const title = article.title;
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      twitter: `https://twitter.com/home?status=${title} - ${url}`,
+      twitter: `https://twitter.com/intent/tweet?text=Participedia: ${title} - ${url}`,
       linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`
     };
     return shareUrls[type];
@@ -675,6 +708,10 @@ module.exports = {
     return stats.mtimeMs;
   },
 
+  isDandTSection(sectionKey) {
+    return sectionKey === "about.committees.design_tech.p1";
+  },
+
   // data
   getPartnersData() {
     return aboutData.partners;
@@ -693,11 +730,6 @@ module.exports = {
   },
 
   // search filters
-  searchFiltersShouldShowSection(key, req) {
-    // only show tags section to admins
-    return key !== "tags" || (req.user && req.user.isadmin);
-  },
-
   searchFiltersSections(type) {
     return searchFiltersList[type];
   },

@@ -11,9 +11,6 @@
       value=(getvalue article "body")
       placeholderText=(placeholder article "body")
     }}
-    {{#if req.user.isadmin}}
-      {{> edit-multi-select name="tags" }}
-    {{/if}}
   </fieldset>
   <fieldset class="location">
     <h2 class="fieldset-header">{{t "location_sectionlabel"}}</h2>

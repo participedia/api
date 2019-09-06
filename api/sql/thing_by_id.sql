@@ -4,7 +4,6 @@ WITH full_thing AS (
     COALESCE(photos, '{}') AS photos,
     COALESCE(${table:name}.files, '{}') files,
     COALESCE(${table:name}.videos, '{}') videos,
-    COALESCE(${table:name}.tags, '{}') tags,
     COALESCE(${table:name}.links, '{}') links,
     texts.body,
     texts.title,

@@ -1,43 +1,47 @@
-<div class="reader-view">
-  <aside>
-    {{> language-select }}
+<div class="full-width-container reader-view">
+  <div class="left-col data-column">
+    <div class="data-column-inner">
+      {{> language-select }}
 
-    <!-- Data and Metadata -->
-    <h2>{{t "Data"}}</h2>
+      <!-- Data and Metadata -->
+      <h2>{{t "Data"}}</h2>
 
-    {{> @partial-block }}
-  </aside>
+      {{> @partial-block }}
+    </div>
+  </div>
+  <div class="middle-col">
+    <article>
+      {{> language-select }}
+      <hgroup>
+        <h2>{{toUpperCase (t article.type)}}</h2>
+        <h1>{{article.title}}</h1>
+      </hgroup>
+      {{> view-slideshow }}
+      {{> view-authors }}
 
-  <article>
-    {{> language-select }}
-    <hgroup>
-      <h2>{{toUpperCase article.type}}</h2>
-      <h1>{{article.title}}</h1>
-    </hgroup>
+      <div class="article-data-accordion">
+        {{#> accordion title=(articleDataTitle article)}}
+          {{> @partial-block }}
+        {{/accordion}}
+      </div>
+
+      <div class="body-content">
+        {{# if article.description}}
+          <p>{{ article.description }}</p>
+        {{/if}}
+        {{{ article.body }}}
+      </div>
+    </article>
+  </div>
+  <div class="right-col">
     {{> view-socialmedia }}
-    {{> view-slideshow }}
-    {{> view-authors }}
-
-    <div class="article-data-accordion">
-      {{#> accordion title=(articleDataTitle article)}}
-        {{> @partial-block }}
-      {{/accordion}}
-    </div>
-
-    <div class="body-content">
-      {{# if article.description}}
-        <p>{{ article.description }}</p>
-      {{/if}}
-      {{{ article.body }}}
-    </div>
-
     <a
       href="/{{article.type}}/{{article.id}}/edit"
-      class="button button-red floating-action-button floating-action-button-reader-view"
+      class="button button-red floating-action-button"
       title="{{t 'Edit'}} {{t article.type}}"
     >
       <span class="sr-only">{{t "Edit"}} {{t article.type}}</span>
       {{> icon-edit }}
     </a>
-  </article>
+  </div>
 </div>

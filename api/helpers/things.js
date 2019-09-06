@@ -1,5 +1,4 @@
 let { isString } = require("lodash");
-let log = require("winston");
 const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
@@ -35,10 +34,7 @@ function fixedEncodeURIComponent(str) {
 function getLanguage(req) {
   // once we have translations for user generated content in all supported languages,
   // we can use the locale cookie to query by language.
-  // currently if the locale is set to something other than "en", no results are returned,
-  // so hardcoding "en" here
-  // return req.cookies.locale || "en";
-  return "en";
+  return req.cookies.locale || "en";
 }
 
 function encodeURL(url) {
@@ -80,6 +76,8 @@ const fixUpURLs = function(article, useRandomTexture) {
 const returnByType = (res, params, article, static, user) => {
   const { returns, type, view } = params;
 
+  if (!article) return;
+
   // if article is hidden and user is not admin, return 404
   if (article.hidden && (!user || (user && !user.isadmin))) {
     return res.status(404).render("404");
@@ -114,9 +112,9 @@ const parseGetParams = function(req, type) {
   return Object.assign({}, req.query, {
     type,
     view: as.value(req.params.view || "view"),
-    articleid: as.number(req.params.thingid || req.params.articleid),
+    articleid: as.integer(req.params.thingid || req.params.articleid),
     lang: as.value(getLanguage(req)),
-    userid: req.user ? as.number(req.user.id) : null,
+    userid: req.user ? as.integer(req.user.id) : null,
     returns: as.value(req.query.returns || "html")
   });
 };
@@ -129,19 +127,6 @@ Set.prototype.difference = function(setB) {
   }
   return difference;
 };
-
-function compareItems(a, b) {
-  const aKeys = new Set(Object.keys(a));
-  const bKeys = new Set(Object.keys(b));
-  const keysNotInA = bKeys.difference(aKeys);
-  if (keysNotInA.size) {
-    console.error("Keys in update not found in original: %o", keysNotInA);
-  }
-  const keysNotInB = aKeys.difference(bKeys);
-  if (keysNotInB.size) {
-    console.error("Keys in original not found in update: %o", keysNotInB);
-  }
-}
 
 const supportedTypes = ["case", "method", "organization"];
 

@@ -138,12 +138,6 @@ input[type=number]::-webkit-inner-spin-button {
   font-size: 1.75rem;
 }
 
-.edit-form {
-  width: 46%;
-  margin: 0 auto 120px auto;
-  background-color: #fff;
-}
-
 .edit-form[data-view-new] .edit-form-author-info {
   display: none;
 }
@@ -264,6 +258,17 @@ input[type=number]::-webkit-inner-spin-button {
 
 .edit-media-file-attribution-inputs li:last-child {
   margin-bottom: 0px;
+}
+
+.edit-multi-select .ss-option-selected {
+  cursor: pointer!important;
+  color: #000!important;
+  background-color: #fff!important;
+}
+
+.edit-multi-select .ss-option-selected:hover {
+  background-color: #5897fb!important;
+  color: #fff!important;
 }
 
 .edit-multi-select-list,
@@ -418,9 +423,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 @media (max-width: 1000px) {
-  .edit-form {
-    width: 65%;
-  }
+
 }
 
 @media (max-width: 800px) {
@@ -431,9 +434,6 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 @media (max-width: 700px) {
-  .edit-form {
-    width: calc(100% - 4rem);
-  }
 }
 
 @media (max-width: 375px) {

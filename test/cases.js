@@ -17,12 +17,23 @@ const {
   postCaseUpdateHttp
 } = require("../api/controllers/case");
 
+const { listCases, cacheTitlesRefreshSearch } = require("../api/helpers/db");
+
+before(function(done) {
+  this.timeout(0);
+  if (!listCases["en"]) {
+    cacheTitlesRefreshSearch(done);
+  } else {
+    done();
+  }
+});
+
 describe("Cases", () => {
-  describe("Lookup", () => {
+  describe("Lookup", async () => {
     it("finds case 100", async () => {
       const body = await getCase(100);
-      const article = body.article;
       body.OK.should.be.true;
+      const article = body.article;
       article.id.should.equal(100);
     });
   });
