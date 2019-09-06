@@ -212,21 +212,13 @@ async function postCaseUpdateHttp(req, res) {
     newCase.post_date = Date.now();
   }
 
-  // console.log(
-  //   "Received tools_techniques_types from client: >>> \n%s\n",
-  //   JSON.stringify(newCase.tools_techniques_types, null, 2)
-  // );
   // save any changes to the user-submitted text
   const {
     updatedText,
     author,
     oldArticle: oldCase
   } = await maybeUpdateUserText(req, res, "case");
-  // console.log("oldCase: %s", JSON.stringify(oldCase, null, 2));
-  // console.log("updatedText: %s", JSON.stringify(updatedText));
-  // console.log("author: %s", JSON.stringify(author));
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
-  //console.log("updated case: %s", JSON.stringify(updatedCase, null, 2));
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
@@ -246,16 +238,14 @@ async function postCaseUpdateHttp(req, res) {
     }
     // the client expects this request to respond with json
     // save successful response
-    // console.log("Params for returning case: %s", JSON.stringify(params));
     const freshArticle = await getCase(params, res);
-    // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
       article: freshArticle
     });
     refreshSearch();
   } else {
-    console.error("Reporting errors: %s", er.errors);
+    logError(`400 with errors: ${er.errors.join(", ")}`);
     res.status(400).json({
       OK: false,
       errors: er.errors
@@ -318,10 +308,6 @@ async function getCaseHttp(req, res) {
   }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
-}
-
-function print(name, obj) {
-  console.log("%s: %s", name, JSON.stringify(obj, null, 2));
 }
 
 async function getEditStaticText(params) {

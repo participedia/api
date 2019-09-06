@@ -114,19 +114,6 @@ Set.prototype.difference = function(setB) {
   return difference;
 };
 
-function compareItems(a, b) {
-  const aKeys = new Set(Object.keys(a));
-  const bKeys = new Set(Object.keys(b));
-  const keysNotInA = bKeys.difference(aKeys);
-  if (keysNotInA.size) {
-    console.error("Keys in update not found in original: %o", keysNotInA);
-  }
-  const keysNotInB = aKeys.difference(bKeys);
-  if (keysNotInB.size) {
-    console.error("Keys in original not found in update: %o", keysNotInB);
-  }
-}
-
 const supportedTypes = ["case", "method", "organization"];
 
 /** uniq ::: return a list with no repeated items. Items will be in the order they first appear in the list. **/

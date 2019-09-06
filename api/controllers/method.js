@@ -40,7 +40,7 @@ async function getEditStaticText(params) {
   try {
     staticText.authors = listUsers();
   } catch (e) {
-    console.error("Error reading users");
+    logError("Error reading users in controllers/method.js getEditStaticText");
   }
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
@@ -139,7 +139,7 @@ async function getMethod(params, res) {
   } catch (error) {
     // only log actual excaptional results, not just data not found
     if (error.message !== "No data returned from the query.") {
-      logError(error, { errorMessage: "No entry found", params: params });
+      logError(error);
     }
     // if no entry is found, render the 404 page
     return null;
@@ -158,27 +158,20 @@ async function postMethodUpdateHttp(req, res) {
     newMethod.post_date = Date.now();
   }
 
-  // console.log(
-  //   "Received tools_techniques_types from client: >>> \n%s\n",
-  //   JSON.stringify(newMethod.tools_techniques_types, null, 2)
-  // );
   // save any changes to the user-submitted text
   const {
     updatedText,
     author,
     oldArticle: oldMethod
   } = await maybeUpdateUserText(req, res, "method");
-  // console.log("updatedText: %s", JSON.stringify(updatedText));
-  // console.log("author: %s", JSON.stringify(author));
+
   const [updatedMethod, er] = getUpdatedMethod(
     user,
     params,
     newMethod,
     oldMethod
   );
-  // console.log("new method: \n%s", JSON.stringify(newMethod, null, 2));
-  // console.log("old method: \n%s", JSON.stringify(oldMethod, null, 2));
-  // console.log("updated method : \n%s", JSON.stringify(updatedMethod, null, 2));
+
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-method", t => {
@@ -198,19 +191,14 @@ async function postMethodUpdateHttp(req, res) {
     }
     // the client expects this request to respond with json
     // save successful response
-    // console.log("Params for returning method: %s", JSON.stringify(params));
     const freshArticle = await getMethod(params, res);
-    // console.log("fresh article: %s", JSON.stringify(freshArticle, null, 2));
     res.status(200).json({
       OK: true,
       article: freshArticle
     });
     refreshSearch();
   } else {
-    logError(er, {
-      req,
-      errorMessage: er.errors
-    });
+    logError(er);
     res.status(400).json({
       OK: false,
       errors: er.errors
