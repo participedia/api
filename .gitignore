@@ -62,3 +62,6 @@ public/build/js/*
 public/participedia-data-cases.csv
 public/participedia-data-methods.csv
 public/participedia-data-organizations.csv
+
+.idea/
+
