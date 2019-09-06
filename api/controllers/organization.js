@@ -129,7 +129,7 @@ async function postOrganizationNewHttp(req, res) {
 async function getOrganization(params, res) {
   try {
     if (Number.isNaN(params.articleid)) {
-      return res.status(404).render("404");
+      return null;
     }
     const articleRow = await db.one(ORGANIZATION_BY_ID, params);
     const article = articleRow.results;
@@ -141,7 +141,7 @@ async function getOrganization(params, res) {
       logError(error, { errorMessage: "No entry found", params: params });
     }
     // if no entry is found, render the 404 page
-    return res.status(404).render("404");
+    return null;
   }
 }
 
@@ -255,6 +255,10 @@ async function getOrganizationHttp(req, res) {
   const params = parseGetParams(req, "organization");
 
   const article = await getOrganization(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = {};
   returnByType(res, params, article, staticText, req.user);
 }
@@ -263,6 +267,10 @@ async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
   const article = await getOrganization(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
