@@ -157,7 +157,6 @@ router.get("/", async function(req, res) {
     }
     return getUserById(req.user.user_id, req, res);
   } catch (error) {
-    console.error("Exception in /user/ => %s", error.message);
     logError(error);
   }
 });
@@ -208,12 +207,11 @@ router.post("/", async function(req, res) {
     });
     res.status(200).json({ OK: true, user: { id: user.id } });
   } catch (error) {
-    logError(error);
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
+      logError(error);
       res.status(500).json({ OK: false, error: error });
-      console.error("Exception in POST /user => %s", error.message);
     }
   }
 });

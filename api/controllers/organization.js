@@ -95,7 +95,7 @@ async function postOrganizationNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postOrganizationUpdateHttp(req, res);
   } catch (error) {
-    logError(error, { errorMessage: "Exception in postOrganizationNewHttp" });
+    logError(error);
     return res.status(400).json({ OK: false, error: error });
   }
 }
@@ -138,7 +138,7 @@ async function getOrganization(params, res) {
   } catch (error) {
     // only log actual excaptional results, not just data not found
     if (error.message !== "No data returned from the query.") {
-      logError(error, { errorMessage: "No entry found", params: params });
+      logError(error);
     }
     // if no entry is found, render the 404 page
     return null;

@@ -96,7 +96,7 @@ async function postMethodNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postMethodUpdateHttp(req, res);
   } catch (error) {
-    logError(error, { errorMessage: "Exception in postMethodNewHttp" });
+    logError(error);
     res.status(400).json({ OK: false, error: error });
   }
 }
