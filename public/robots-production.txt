@@ -1,3 +1,11 @@
 User-agent: *
-Disallow:
+
+Disallow: /*.xml
+Disallow: /en/*
+Disallow: /de/*
+Disallow: /methods/21st-century-town-meeting
+Disallow: /sites/*
+Disallow: /wiki/*
+Disallow: /content/*
+
 Sitemap: https://participedia.net/sitemap.xml
