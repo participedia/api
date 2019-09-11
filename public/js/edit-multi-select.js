@@ -60,7 +60,7 @@ const editMultiSelect = {
 
     // update the input field names to reflect new order
     toArray(parentList.querySelectorAll("input")).forEach((el, i) => {
-      el.name =`${name}[${i}]`;
+      el.name =`${name}[${i}][key]`;
     });
   },
 
@@ -122,6 +122,15 @@ const editMultiSelect = {
     const template = document.querySelector("#js-edit-multi-select-list-item");
     const newList = document.createElement("ol");
     newList.innerHTML = template.innerHTML;
+
+    // if we have an empty item for this key, remove it since we are now adding a new item
+    // we only need the empty item when we are not adding/saving any other items
+    const existingInputForIndex = document.querySelector(`[name="${name}[${index}][key]"]`);
+    if (existingInputForIndex) {
+      const existingItemLi = existingInputForIndex.closest("li");
+      existingItemLi.parentNode.removeChild(existingItemLi);
+    }
+
     // set new data in template
     const newItem = newList.querySelector("li");
     const newItemInput = newItem.querySelector("input[type=hidden]");
@@ -139,7 +148,7 @@ const editMultiSelect = {
     const currentList = document.querySelector(`.js-edit-multi-select-list[data-name=${name}]`);
     const numItems = this.getNumItems(currentList);
 
-    // if it's the last item, don't remove it, set the value to null/"" and hide it
+    // if it's the last item, don't remove it, set the value to "" and hide it
     // so currently saved values will be deleted.
     if (numItems === 1) {
       listItem.querySelector("input").value = "";
