@@ -251,7 +251,7 @@
     .ss-main .ss-content .ss-addable {
       padding-top: 0px; }
     .ss-main .ss-content .ss-list {
-      max-height: 200px;
+      max-height: 360px;
       overflow-x: hidden;
       overflow-y: auto;
       text-align: left; }
