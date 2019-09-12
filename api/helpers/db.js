@@ -10,10 +10,7 @@ const options = {
   capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
 };
 const fs = require("fs");
-//if (process.env.LOG_QUERY === "true") {
-// options.query = evt => (process.env.LAST_QUERY = evt.query);
-// options.query = evt => console.log("QUERY: %s", evt.query);
-//}
+
 const pgp = require("pg-promise")(options);
 const path = require("path");
 const connectionString = process.env.DATABASE_URL;
@@ -79,7 +76,7 @@ function ErrorReporter() {
         return fn(...args);
       } catch (e) {
         self.errors.push(e.message);
-        console.error("Capturing error to report to client: " + e.message);
+        logError(`ErrorReporter: ${e.message}`);
         return e.message;
       }
     };
@@ -105,14 +102,13 @@ async function _listUsers() {
     "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
   )).authors;
   setTimeout(_listUsers, randomDelay());
-  // console.log("user cache refreshed");
 }
 
 async function _listCases(lang) {
   try {
     _cases[lang] = await db.many(LIST_ARTICLES, { type: "cases", lang: lang });
   } catch (e) {
-    console.error("Error in _listCases: %s", e.message);
+    logError(`Error in _listCases: ${e.message}`);
   }
   setTimeout(_listCases, randomDelay(), lang);
 }
@@ -201,6 +197,10 @@ function number(value) {
   if (value === "") {
     return null;
   }
+  let numValue = Number(value);
+  if (Number.isNaN(numValue)) {
+    return numValue;
+  }
   return pgp.as.number(Number(value));
 }
 
@@ -208,14 +208,11 @@ function integer(value) {
   if (value === "") {
     return null;
   }
-  if (value === "NaN") {
-    throw new Error('Expected integer, got "NaN" as a string');
+  let intValue = parseInt(value, 10);
+  if (Number.isNaN(intValue)) {
+    return intValue;
   }
-  let retVal = pgp.as.number(parseInt(value, 10));
-  if (Number.isNaN(retVal)) {
-    throw new Error("Expected integer value, got " + value);
-  }
-  return retVal;
+  return pgp.as.number(intValue);
 }
 
 function asFloat(value) {
@@ -267,7 +264,7 @@ function asUrl(value) {
     return escapedText("");
   }
   if (isObject(value)) {
-    console.error("Expecting URL, received: %s", value);
+    logError(`Expecting URL, received: ${value}`);
     throw new Error("Not a URL: " + value);
     return escapedText("");
   }
@@ -278,7 +275,7 @@ function asUrl(value) {
     // return new URL(value).href;
     return escapedText(new URL(value).href);
   } catch (e) {
-    console.error("Expected URL, received: %s", JSON.stringify(value));
+    logError(`Expecting URL, received: ${value}`);
     throw e;
   }
 }
@@ -352,11 +349,7 @@ function casekeys(objList, group) {
       uniq((objList || []).map(k => casekey(k, group)).filter(x => !!x)) || "{}"
     );
   } catch (e) {
-    console.error(
-      "Attempting to convert and filter a list of keys for %s, but got %s for the list",
-      group,
-      JSON.stringify(objList)
-    );
+    logError(`Error attempting to convert and filter a list of keys for ${group}`);
     throw e;
   }
 }

@@ -121,7 +121,7 @@
   "case_edit_end_date_placeholder": "Select an end date if applicable",
   "case_edit_evaluation_links_attribution_instructional": "Who is the original owner or creator of this linked content?",
   "case_edit_evaluation_links_attribution_placeholder": "Owner or creator",
-  "case_edit_evaluation_links_link_instructional": "If there is a main website for this case, enter it here. Add links to additional sources so that readers and editors can find more information about this case online. ",
+  "case_edit_evaluation_links_link_instructional": "Add a link to the evaluation report.",
   "case_edit_evaluation_links_link_label": "Evaluation Report Links",
   "case_edit_evaluation_links_title_instructional": "Provide a title or description of this linked content in 10 words or less.",
   "case_edit_evaluation_links_title_placeholder": "Title or description",

@@ -75,10 +75,7 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     });
     res.status(200).json(jtitlelist);
   } catch (error) {
-    logError(error, {
-      req,
-      errorMessage: "Exception in GET /search/getAllForType"
-    });
+    logError(error);
     res.status(500).json({ error: error });
   }
 });

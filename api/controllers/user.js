@@ -12,15 +12,15 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 async function getUserById(userId, req, res, view = "view") {
   try {
     const language = req.params.language || "en";
-
+    if (Number.isNaN(userId)) {
+      return res.status(404).render("404");
+    }
     const result = await db.oneOrNone(USER_BY_ID, {
       userId: userId,
       language: language
     });
     if (!result) {
-      return res
-        .status(404)
-        .json({ OK: false, error: `User not found for user_id ${userId}` });
+      return null;
     }
     result.user.bookmarks.forEach(fixUpURLs);
     result.user.cases.forEach(fixUpURLs);
@@ -65,11 +65,11 @@ async function getUserById(userId, req, res, view = "view") {
       };
     }
   } catch (error) {
-    logError(error, { errorMessage: "Exception in getUserById" });
     if (error.message && error.message == "No data returned from the query.") {
-      res.status(404).json({ OK: false });
+      return res.status(404).render("404");
     } else {
-      res.status(500).json({ OK: false, error: error });
+      logError(error);
+      return res.status(500).json({ OK: false, error: error });
     }
   }
 }
@@ -97,19 +97,28 @@ async function getUserById(userId, req, res, view = "view") {
  */
 router.get("/:userId", async function(req, res) {
   try {
-    const data = await getUserById(req.params.userId, req, res, "view");
+    const userId = parseInt(req.params.userId, 10)
+    if (Number.isNaN(userId)) {
+      return res.status(404).render("404");
+    }
+
+    const data = await getUserById(userId, req, res, "view");
+
+    if (!data) {
+      return res.status(404).render("404");
+    }
 
     // return html template
     const returnType = req.query.returns || "html";
     if (returnType === "html") {
-      res.status(200).render(`user-view`, data);
+      return res.status(200).render(`user-view`, data);
     } else if (returnType === "json") {
-      res.status(200).json(data);
+      return res.status(200).json(data);
     }
   } catch (error) {
     console.error(
       "Exception in /user/%s => %s",
-      req.params.userId,
+      userId,
       error.message
     );
     logError(error);
@@ -148,7 +157,6 @@ router.get("/", async function(req, res) {
     }
     return getUserById(req.user.user_id, req, res);
   } catch (error) {
-    console.error("Exception in /user/ => %s", error.message);
     logError(error);
   }
 });
@@ -199,12 +207,11 @@ router.post("/", async function(req, res) {
     });
     res.status(200).json({ OK: true, user: { id: user.id } });
   } catch (error) {
-    logError(error);
     if (error.message && error.message == "No data returned from the query.") {
       res.status(404).json({ OK: false });
     } else {
+      logError(error);
       res.status(500).json({ OK: false, error: error });
-      console.error("Exception in POST /user => %s", error.message);
     }
   }
 });

@@ -1,6 +1,7 @@
 const Sentry = require("@sentry/node");
 
-const isProdOrStaging = process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
+const isProdOrStaging =
+  process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging";
 
 function logError(error, params = {}) {
   if (isProdOrStaging) {
@@ -9,6 +10,8 @@ function logError(error, params = {}) {
     } else {
       Sentry.captureException(error);
     }
+  } else {
+    console.error(error, params);
   }
 }
 

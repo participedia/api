@@ -44,7 +44,7 @@ async function lookupBookmarksById(req, res, userId) {
       message: "Retrieved ALL bookmarks for specified user"
     });
   } catch (error) {
-    logError(error, { errorMessage: "Exception in lookupBookmarksById" });
+    logError(error);
     res.json({ success: false, error: error.message || error });
   }
 }
@@ -58,7 +58,7 @@ async function queryBookmarks(req, res) {
     }
     lookupBookmarksById(req, res, userid);
   } catch (error) {
-    logError(error, { errorMessage: "Exception in queryBookmarks" });
+    logError(error);
     res.json({ success: false, error: error.message || error });
   }
 }
@@ -94,20 +94,14 @@ router.get("/list/:userid", queryBookmarks);
 router.post("/add", async function addBookmark(req, res) {
   try {
     if (!req.body.bookmarkType) {
-      logError(error, {
-        req,
-        errorMessage: "Required parameter (bookmarkType) wasn't specified"
-      });
+      logError("/bookmark/add - Required parameter (bookmarkType) wasn't specified");
       res.status(400).json({
         message: "Required parameter (bookmarkType) wasn't specified"
       });
       return;
     }
     if (!req.body.thingid) {
-      logError(error, {
-        req,
-        errorMessage: "Required parameter (thingid) wasn't specified"
-      });
+      logError("/bookmark/add - Required parameter (thingid) wasn't specified");
       res
         .status(400)
         .json({ error: "Required parameter (thingid) wasn't specified" });

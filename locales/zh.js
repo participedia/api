@@ -121,7 +121,7 @@
   "case_edit_end_date_placeholder": "选择结束日期(如果适用)",
   "case_edit_evaluation_links_attribution_instructional": "谁是此链接内容的原始所有者或创建者?",
   "case_edit_evaluation_links_attribution_placeholder": "所有者或创建者",
-  "case_edit_evaluation_links_link_instructional": "如果此案例有主网站,请在此处输入。添加指向其他源的链接,以便读者和编辑人员可以在线找到有关此案例的详细信息。",
+  "case_edit_evaluation_links_link_instructional": "添加指向评估报告的链接。",
   "case_edit_evaluation_links_link_label": "评估报告链接",
   "case_edit_evaluation_links_title_instructional": "以 10 个字或更少的字提供此链接内容的标题或说明。",
   "case_edit_evaluation_links_title_placeholder": "标题或描述",

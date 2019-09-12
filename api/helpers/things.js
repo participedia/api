@@ -98,9 +98,9 @@ const parseGetParams = function(req, type) {
   return Object.assign({}, req.query, {
     type,
     view: as.value(req.params.view || "view"),
-    articleid: as.number(req.params.thingid || req.params.articleid),
+    articleid: as.integer(req.params.thingid || req.params.articleid),
     lang: as.value(getLanguage(req)),
-    userid: req.user ? as.number(req.user.id) : null,
+    userid: req.user ? as.integer(req.user.id) : null,
     returns: as.value(req.query.returns || "html")
   });
 };
@@ -113,19 +113,6 @@ Set.prototype.difference = function(setB) {
   }
   return difference;
 };
-
-function compareItems(a, b) {
-  const aKeys = new Set(Object.keys(a));
-  const bKeys = new Set(Object.keys(b));
-  const keysNotInA = bKeys.difference(aKeys);
-  if (keysNotInA.size) {
-    console.error("Keys in update not found in original: %o", keysNotInA);
-  }
-  const keysNotInB = aKeys.difference(bKeys);
-  if (keysNotInB.size) {
-    console.error("Keys in original not found in update: %o", keysNotInB);
-  }
-}
 
 const supportedTypes = ["case", "method", "organization"];
 

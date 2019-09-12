@@ -95,7 +95,7 @@ async function postOrganizationNewHttp(req, res) {
     req.params.thingid = thing.thingid;
     await postOrganizationUpdateHttp(req, res);
   } catch (error) {
-    logError(error, { errorMessage: "Exception in postOrganizationNewHttp" });
+    logError(error);
     return res.status(400).json({ OK: false, error: error });
   }
 }
@@ -128,14 +128,20 @@ async function postOrganizationNewHttp(req, res) {
 
 async function getOrganization(params, res) {
   try {
+    if (Number.isNaN(params.articleid)) {
+      return null;
+    }
     const articleRow = await db.one(ORGANIZATION_BY_ID, params);
     const article = articleRow.results;
     fixUpURLs(article);
     return article;
   } catch (error) {
+    // only log actual excaptional results, not just data not found
+    if (error.message !== "No data returned from the query.") {
+      logError(error);
+    }
     // if no entry is found, render the 404 page
-    logError(error, { errorMessage: "No entry found", params: params });
-    return res.status(404).render("404");
+    return null;
   }
 }
 
@@ -186,7 +192,7 @@ async function postOrganizationUpdateHttp(req, res) {
     });
     refreshSearch();
   } else {
-    console.error("Reporting errors: %s", er.errors);
+    logError(`400 with errors: ${er.errors.join(", ")}`);
     res.status(400).json({
       OK: false,
       errors: er.errors
@@ -249,6 +255,10 @@ async function getOrganizationHttp(req, res) {
   const params = parseGetParams(req, "organization");
 
   const article = await getOrganization(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = {};
   returnByType(res, params, article, staticText, req.user);
 }
@@ -257,6 +267,10 @@ async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
   const article = await getOrganization(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
