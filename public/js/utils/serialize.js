@@ -33,6 +33,10 @@ function serialize(form) {
             encodeURIComponent(field.options[n].value)
         );
       }
+    } else if (field.type === "checkbox") {
+      serialized.push(
+        encodeURIComponent(field.name) + "=" + encodeURIComponent(field.checked)
+      );
     } else if (["ongoing", "staff", "volunteers"].includes(field.name)) {
       if (field.value === "yes") {
         serialized.push(encodeURIComponent(field.name) + "=true");

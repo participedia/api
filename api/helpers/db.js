@@ -410,6 +410,19 @@ function sourcedMedia(mediaList) {
 function boolean(value) {
   if (value === "true") {
     return true;
+  }
+  if (value === "false") {
+    return false;
+  }
+  if (value === true || value === false) {
+    return value;
+  }
+  return false;
+}
+
+function selectBoolean(value) {
+  if (value === "true") {
+    return true;
   } else if (value === "false") {
     return false;
   } else {
@@ -452,6 +465,7 @@ function richtext(value) {
 
 const as = Object.assign({}, pgp.as, {
   boolean,
+  selectBoolean,
   author,
   // attachment,
   // attachments,

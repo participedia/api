@@ -139,7 +139,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     cond(key, as.sourcedMedia)
   );
   // boolean (would include "published" but we don't really support it)
-  ["ongoing", "staff", "volunteers"].map(key => cond(key, as.boolean));
+  ["ongoing", "staff", "volunteers"].map(key => cond(key, as.selectBoolean));
   // yes/no (convert to boolean)
   ["impact_evidence", "formal_evaluation"].map(key => cond(key, as.yesno));
   // integer
