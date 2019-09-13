@@ -930,8 +930,6 @@
   "name:open_limited-key:open": "Open to All",
   "name:open_limited-key:open_to": "Open to All With Special Effort to Recruit Some Groups",
   "name:open_limited-key:open_to-longValue": "Open to All With Special Effort to Recruit Some Groups (e.g. community organizing to recruit low-income earners)",
-  "name:ongoing-key:yes": "Yes",
-  "name:ongoing-key:no": "No",
   "name:organizer_types-key:academic": "Academic Institution",
   "name:organizer_types-key:activist": "Activist Network",
   "name:organizer_types-key:community": "Community Based Organization",
