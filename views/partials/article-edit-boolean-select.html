@@ -1,0 +1,7 @@
+{{> edit-select
+  name=name
+  options=(getArticleOptions static name)
+  selectedValue=(getSelectedBooleanKey article name)
+  placeholder_txt=(placeholder article name)
+  hideSearch="true"
+}}
