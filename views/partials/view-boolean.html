@@ -1,4 +1,6 @@
-<dl>
-  <dt>{{label article name}}</dt>
-  <dd>{{#if (getvalue article name) }}{{t "yes" }}{{else}}{{t "no" }}{{/if}}</dd>
-</dl>
+{{#if (shouldShowBooleanValue article name)}}
+  <dl>
+    <dt>{{label article name}}</dt>
+    <dd>{{getBooleanStringValue article name}}</dd>
+  </dl>
+{{/if}}

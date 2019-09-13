@@ -318,6 +318,32 @@ module.exports = {
     return selected.id;
   },
 
+  shouldShowBooleanValue: (article, name) => {
+    if (article[name] === false || article[name] === true) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
+  getBooleanStringValue: (article, name, context) => {
+    if (article[name] === false) {
+      return i18n("no", context);
+    } else if (article[name] === true) {
+      return i18n("yes", context);
+    }
+  },
+
+  getSelectedBooleanKey: (article, name) => {
+    if (article[name] === false) {
+      return "no";
+    } else if (article[name] === true) {
+      return "yes";
+    } else {
+      return null;
+    }
+  },
+
   getvalue: (article, name) => {
     const item = article[name];
     if (!item) return;

@@ -33,7 +33,7 @@
     <h2 class="fieldset-header">{{t "date_sectionlabel"}}</h2>
     {{> edit-date name="start_date" quick-submit=true}}
     {{> edit-date name="end_date" quick-submit=true}}
-    {{> article-edit-select name="ongoing" quick-submit=true}}
+    {{> article-edit-boolean-select name="ongoing" quick-submit=true}}
     {{> article-edit-select name="time_limited" }}
   </fieldset>
   <fieldset class="purpose_and_approach fullonly">
@@ -73,8 +73,8 @@
     <h2 class="fieldset-header">{{t "resources_sectionlabel"}}</h2>
     {{> article-edit-text name="funder" }}
     {{> edit-multi-select name="funder_types" max=3 }}
-    {{> article-edit-select name="staff" }}
-    {{> article-edit-select name="volunteers" }}
+    {{> article-edit-boolean-select name="staff" }}
+    {{> article-edit-boolean-select name="volunteers" }}
   </fieldset>
   <fieldset class="evidence_of_impact fullonly">
     <h2 class="fieldset-header">{{t "evidence_sectionlabel"}}</h2>

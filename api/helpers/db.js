@@ -410,14 +410,11 @@ function sourcedMedia(mediaList) {
 function boolean(value) {
   if (value === "true") {
     return true;
-  }
-  if (value === "false") {
+  } else if (value === "false") {
     return false;
+  } else {
+    return null;
   }
-  if (value === true || value === false) {
-    return value;
-  }
-  return false;
 }
 
 // Yes, these should be converted to booleans
