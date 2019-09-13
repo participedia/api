@@ -56,12 +56,13 @@ footer section {
   fill: #fff;
 }
 
-.footer-copyright-area {
-  margin-top: 45px;
+.footer-creativecommons-logo {
+  margin-top: 30px;
 }
 
-.footer-copyright-area span {
-  font-size: .875rem;
+.footer-creativecommons-logo svg {
+  width: 100px;
+  height: unset;
 }
 
 .footer-description {
