@@ -1199,6 +1199,8 @@
   "name:specific_topics-key:youth_issues": "Youth Issues",
   "name:staff-key:no": "No",
   "name:staff-key:yes": "Yes",
+  "name:ongoing-key:no": "No",
+  "name:ongoing-key:yes": "Yes",
   "name:tags-key:accessibility": "Accessibility",
   "name:tags-key:activism": "Activism",
   "name:tags-key:agenda": "Agenda Formation",

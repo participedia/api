@@ -19,11 +19,20 @@ const editMultiSelect = {
     const selectEls = toArray(document.querySelectorAll(".js-edit-multi-select"));
     selectEls.forEach(selectEl => {
       const placeholderText = selectEl.querySelector("option[data-placeholder]").innerText;
-      const slim = new SlimSelect({
+      // numOptions is 1 less than all options to account for the placeholder option
+      const numOptions = selectEl.querySelectorAll("option").length - 1;
+      const options = {
         select: `#${selectEl.id}`,
         placeholder: placeholderText,
         allowDeselectOption: true,
-      });
+      };
+
+      // don't show search input if there are 5 or fewer options
+      if (numOptions <= 5) {
+        options.showSearch = false;
+      }
+
+      const slim = new SlimSelect(options);
 
       slim.onChange = (info) => {
         this.onSelectChange({
