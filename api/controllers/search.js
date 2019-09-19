@@ -41,6 +41,9 @@ router.get("/getAllForType", async function getAllForType(req, res) {
   try {
     let objType = req.query.objType.toLowerCase();
     let page = Math.max(parseInt(req.query.page || 1), 1);
+    if (Number.isNaN(page)) {
+      page = 1;
+    }
     let offset = 0;
     let response_limit = Number.MAX_SAFE_INTEGER;
     if (!req.query.response_limit) {
