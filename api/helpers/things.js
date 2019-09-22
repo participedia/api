@@ -156,9 +156,9 @@ async function maybeUpdateUserText(req, res, type) {
   ["body", "title", "description"].forEach(key => {
     let value;
     if (key === "body") {
-      value = as.richtext(newArticle[key] || null);
+      value = newArticle[key] !== undefined ? as.richtext(newArticle[key] || null) : oldArticle[key];
     } else {
-      value = as.text(newArticle[key] || null);
+      value = newArticle[key] !== undefined ? as.text(newArticle[key] || null) : oldArticle[key];
     }
 
     if (newArticle[key] || oldArticle[key] !== newArticle[key]) {
