@@ -1675,5 +1675,17 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoom Map In",
-  "Zoom Map Out": "Zoom Map Out"
+  "Zoom Map Out": "Zoom Map Out",
+  "case_edit_stub_label": "Stub",
+  "case_view_stub_label": "Stub",
+  "organization_edit_stub_label": "Stub",
+  "organization_view_stub_label": "Stub",
+  "method_edit_stub_label": "Stub",
+  "method_view_stub_label": "Stub",
+  "case_edit_stub_instructional": "Check this box to mark this article as a stub",
+  "case_view_stub_instructional": "Check this box to mark this article as a stub",
+  "organization_edit_stub_instructional": "Check this box to mark this article as a stub",
+  "organization_view_stub_instructional": "Check this box to mark this article as a stub",
+  "method_edit_stub_instructional": "Check this box to mark this article as a stub",
+  "method_view_stub_instructional": "Check this box to mark this article as a stub"
 }

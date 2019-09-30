@@ -1,4 +1,12 @@
 {{#> view-container }}
+
+  <!-- Admin Only Stub Field -->
+  {{#if req.user.isadmin}}
+  <section>
+    {{> view-boolean name="stub" }}
+  </section>
+  {{/if}}
+
   <!-- Overview -->
   <section>
     {{> view-list name="general_issues" }}
