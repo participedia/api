@@ -152,7 +152,8 @@ const facetsFromReq = req => {
     "scope_of_influence",
     "public_spectrum",
     "open_limited",
-    "recruitment_method"
+    "recruitment_method",
+    "facetoface_online_or_both"
   ];
   const keyLists = [
     "general_issues",
