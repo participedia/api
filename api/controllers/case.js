@@ -13,6 +13,7 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
+  UPDATE_AUTHOR_FIRST,
   listUsers,
   listCases,
   listMethods,
@@ -212,6 +213,14 @@ async function postCaseUpdateHttp(req, res) {
     newCase.post_date = Date.now();
   }
 
+  //if this is a new case, set creator id to useric
+  const creator = {
+    user_id: newCase.creator ? newCase.creator : params.userid,
+    thingid: params.articleid
+  };
+
+  console.log(creator);
+
   // save any changes to the user-submitted text
   const {
     updatedText,
@@ -224,11 +233,13 @@ async function postCaseUpdateHttp(req, res) {
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
+          t.none(UPDATE_AUTHOR_FIRST, creator),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
           t.none(UPDATE_CASE, updatedCase)
         ]);
       });
     } else {
+      console.log('hahah')
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
@@ -302,6 +313,7 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params, res);
+  console.log(article," =======jangajn")
   if (!article) {
     res.status(404).render("404");
     return null;
