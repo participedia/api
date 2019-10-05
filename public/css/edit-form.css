@@ -146,6 +146,16 @@ input[type=number]::-webkit-inner-spin-button {
   margin-bottom: 30px;
 }
 
+.edit-form-admin-only-section {
+  padding: 20px;
+  background-color: #F8F8F8;
+  margin-bottom: 60px;
+}
+
+.edit-form-admin-only-section .form-group:last-of-type {
+  margin-bottom: 10px;
+}
+
 [data-submit-type=quick] .fullonly {
   display: none;
 }

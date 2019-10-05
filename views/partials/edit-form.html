@@ -29,10 +29,12 @@
 
         {{#if req.user.isadmin}}
           <fieldset class="admin-only">
-            <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
-            {{> edit-boolean name="featured" quick-submit=true}}
-            {{> edit-boolean name="hidden" quick-submit=true}}
-            {{> edit-boolean name="stub" quick-submit=true}}
+            <div class="edit-form-admin-only-section">
+              <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
+              {{> edit-boolean name="featured" quick-submit=true}}
+              {{> edit-boolean name="hidden" quick-submit=true}}
+              {{> article-edit-select name="completeness" quick-submit=true}}
+            </div>
           </fieldset>
         {{/if}}
 
