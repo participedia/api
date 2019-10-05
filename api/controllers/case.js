@@ -219,8 +219,6 @@ async function postCaseUpdateHttp(req, res) {
     thingid: params.articleid
   };
 
-  console.log(creator);
-
   // save any changes to the user-submitted text
   const {
     updatedText,
@@ -239,7 +237,6 @@ async function postCaseUpdateHttp(req, res) {
         ]);
       });
     } else {
-      console.log('hahah')
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
@@ -313,7 +310,6 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params, res);
-  console.log(article," =======jangajn")
   if (!article) {
     res.status(404).render("404");
     return null;
