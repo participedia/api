@@ -26,6 +26,13 @@
       </div>
 
       <div class="body-content">
+
+        {{!-- Notice of completeness status --}}
+        <div class="alert alert-info" style="padding: 10px; background-color: #FFFDEC; color: #333; border-radius: 2px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; border: 1px solid #F8E71C; font-size: 20px; margin: 60px 0;">
+          <span><strong>The following entry is missing citations.</strong> Please help us <a href="#">verify its content</a>.</span> {{> icon-info }}
+          {{!-- <span><strong>The following entry is a stub.</strong> Please help us <a href="#">complete it</a>.</span> {{> icon-info }} --}}
+        </div>
+
         {{# if article.description}}
           <p>{{ article.description }}</p>
         {{/if}}
