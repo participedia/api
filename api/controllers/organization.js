@@ -12,6 +12,7 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_ORGANIZATION,
+  UPDATE_AUTHOR_FIRST,
   listUsers,
   refreshSearch,
   listMethods,
@@ -157,6 +158,12 @@ async function postOrganizationUpdateHttp(req, res) {
     newOrganization.post_date = Date.now();
   }
 
+  //if this is a new case, set creator id to useric
+  const creator = {
+    user_id: newOrganization.creator ? newOrganization.creator : params.userid,
+    thingid: params.articleid
+  };
+
   const {
     updatedText,
     author,
@@ -173,6 +180,7 @@ async function postOrganizationUpdateHttp(req, res) {
       await db.tx("update-organization", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
+          t.none(UPDATE_AUTHOR_FIRST, creator),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
           t.none(UPDATE_ORGANIZATION, updatedOrganization)
         ]);

@@ -9,7 +9,7 @@ WITH full_thing AS (
     updated_date,
     featured,
     hidden,
-    first_author(${articleid}) AS creator,
+    first_author_row(${articleid}) AS creator,
     last_author(${articleid}) AS last_updated_by,
     bookmarked('organization', ${articleid}, ${userid}),
     -- user-contributed content
