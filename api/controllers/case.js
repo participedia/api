@@ -219,8 +219,6 @@ async function postCaseUpdateHttp(req, res) {
     thingid: params.articleid
   };
 
-  console.log(creator)
-
   // save any changes to the user-submitted text
   const {
     updatedText,
