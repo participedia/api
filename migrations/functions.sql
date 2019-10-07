@@ -186,24 +186,6 @@ CREATE OR REPLACE FUNCTION first_author(thingid integer) RETURNS author
 $_$;
 
 ---
---- Name: first_author_row(thingid); Type: FUNCTION: Schema: public; Owner: -
----
-
-CREATE OR REPLACE FUNCTION first_author_row(thingid integer) RETURNS author
-  LANGUAGE sql STABLE
-  AS $_$
-  SELECT 
-		authors.user_id,
-		authors.timestamp,
-		users.name
-	FROM
-		authors, users
-	WHERE
-		thingid = $1
-	LIMIT  1
-$_$;
-
----
 --- Name: last_author(thingid); Type: FUNCTION: Schema: public; Owner: -
 ---
 

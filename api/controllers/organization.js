@@ -158,7 +158,7 @@ async function postOrganizationUpdateHttp(req, res) {
     newOrganization.post_date = Date.now();
   }
 
-  //if this is a new case, set creator id to useric
+  //if this is a new case, set creator id to userid
   const creator = {
     user_id: newOrganization.creator ? newOrganization.creator : params.userid,
     thingid: params.articleid

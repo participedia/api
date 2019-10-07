@@ -213,11 +213,13 @@ async function postCaseUpdateHttp(req, res) {
     newCase.post_date = Date.now();
   }
 
-  //if this is a new case, set creator id to useric
+  //if this is a new case, set creator id to userid
   const creator = {
     user_id: newCase.creator ? newCase.creator : params.userid,
     thingid: params.articleid
   };
+
+  console.log(creator)
 
   // save any changes to the user-submitted text
   const {
@@ -240,6 +242,7 @@ async function postCaseUpdateHttp(req, res) {
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
+          t.none(UPDATE_AUTHOR_FIRST, creator),
           t.none(UPDATE_CASE, updatedCase)
         ]);
       });

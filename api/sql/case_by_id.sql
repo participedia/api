@@ -60,7 +60,7 @@ SELECT
   evaluation_reports,
   evaluation_links,
   bookmarked('case', ${articleid}, ${userid}),
-  first_author_row(${articleid}) AS creator,
+  first_author(${articleid}) AS creator,
   last_author(${articleid}) AS last_updated_by,
   original_language,
   post_date,
