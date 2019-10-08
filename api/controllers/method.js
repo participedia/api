@@ -12,6 +12,7 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
+  UPDATE_AUTHOR_FIRST,
   listUsers,
   refreshSearch,
   ErrorReporter
@@ -158,6 +159,12 @@ async function postMethodUpdateHttp(req, res) {
     newMethod.post_date = Date.now();
   }
 
+  //if this is a new case, set creator id to userid
+  const creator = {
+    user_id: newMethod.creator ? newMethod.creator : params.userid,
+    thingid: params.articleid
+  };
+
   // save any changes to the user-submitted text
   const {
     updatedText,
@@ -177,6 +184,7 @@ async function postMethodUpdateHttp(req, res) {
       await db.tx("update-method", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
+          t.none(UPDATE_AUTHOR_FIRST, creator),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
           t.none(UPDATE_METHOD, updatedMethod)
         ]);
