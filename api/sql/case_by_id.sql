@@ -68,7 +68,8 @@ SELECT
   updated_date,
   featured,
   get_user_names(${userid})  as authors,
-  hidden
+  hidden,
+  completeness
 FROM
   cases,
   get_localized_texts_fallback(${articleid}, ${lang}, cases.original_language) as localized_texts
