@@ -18,3 +18,9 @@ alter table organizations
 	add column completeness VARCHAR;
 alter table organizations
  	alter column completeness type completeness_enum using completeness::text::completeness_enum;
+
+  -- alter table for things
+alter table things
+	add column completeness VARCHAR;
+alter table things
+ 	alter column completeness type completeness_enum using completeness::text::completeness_enum;
