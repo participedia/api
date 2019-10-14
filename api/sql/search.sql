@@ -23,6 +23,12 @@ total_selections AS (
 SELECT
   ${type:name}.id,
   ${type:name}.type,
+  CASE 
+		WHEN ${type:name}.type='case' THEN get_completeness_case(${type:name}.id)
+		WHEN ${type:name}.type='method' THEN get_completeness_methods(${type:name}.id)
+		WHEN ${type:name}.type='organization' THEN get_completeness_organizations(${type:name}.id)
+		ELSE ''
+     END as completeness,
   ${type:name}.featured,
   ${type:name}.location_name,
   ${type:name}.address1,
