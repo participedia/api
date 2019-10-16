@@ -170,6 +170,14 @@ async function postOrganizationUpdateHttp(req, res) {
   );
   if (!er.hasErrors()) {
     if (updatedText) {
+      //if this is a new organization, set creator id to userid and isAdmin
+      if (user.isadmin){
+        const creator = {
+          user_id: newOrganization.creator ? newOrganization.creator : params.userid,
+          thingid: params.articleid
+        };
+        await db.tx("update-case", t => t.none(UPDATE_AUTHOR_FIRST, creator));
+      }
       await db.tx("update-organization", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),

@@ -83,7 +83,6 @@ async function postCaseNewHttp(req, res) {
       description,
       original_language
     });
-    //    req.thingid = thing.thingid;
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
   } catch (error) {
@@ -221,6 +220,14 @@ async function postCaseUpdateHttp(req, res) {
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
   if (!er.hasErrors()) {
     if (updatedText) {
+      //if this is a new case, set creator id to userid and isAdmin
+      if (user.isadmin){
+        const creator = {
+          user_id: newCase.creator ? newCase.creator : params.userid,
+          thingid: params.articleid
+        };
+        await db.tx("update-case", t => t.none(UPDATE_AUTHOR_FIRST, creator));
+      }
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
