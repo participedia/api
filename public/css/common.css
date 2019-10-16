@@ -310,6 +310,20 @@ footer .language-select {
   width: 200px;
 }
 
+/* Alerts / User prompts */
+.alert {
+  padding: 4px 0 4px 8px;
+  font-size: 14px;
+  margin: 60px 0;
+  border-left: 5px solid #ec2024;
+}
+.alert svg {
+  padding-left: 4px;
+  width: 14px;
+  height: 14px;
+  margin-bottom: -2px;
+}
+
 @media (max-width: 1200px) {
   .full-width-container .middle-col {
     width: 40%;

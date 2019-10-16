@@ -205,6 +205,85 @@ module.exports = {
   },
 
   // article helpers
+  shouldShowCompletenessPrompt: (article) => {
+    if (article.completeness && article.completeness !== 'complete') {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
+  getCompletenessPrompt: (article) => {
+    if (!article.completeness || article.completeness === 'complete') return;
+
+    const promptsByStatus = {
+      stub: '<strong>The following entry is a stub.</strong> Please help us <a href="#">complete it</a>.',
+      partial_content: '<strong>The following entry is incomplete.</strong> You can help Participedia by <a href="#">adding to it</a>.',
+      partial_citations: '<strong>The following entry is missing citations.</strong> Please help us <a href="#">verify its content</a>.',
+      partial_editing: '<strong>The following entry needs assistance with content and editing.</strong> Please help us <a href="#">complete it</a>.',
+    };
+
+    return promptsByStatus[article.completeness];
+  },
+
+  getCompletenessModalHeader: (article) => {
+    if (!article.completeness || article.completeness === 'complete') return;
+
+    const headerByStatus = {
+      stub: 'Stub',
+      partial_content: 'Partial',
+      partial_citations: 'Citations/Footnotes Needed',
+      partial_editing: 'Grammar/Spelling Edits Needed',
+    };
+
+    return headerByStatus[article.completeness];
+  },
+
+  getCompletenessModalText: (article) => {
+    if (!article.completeness || article.completeness === 'complete') return;
+
+    const stubText = `
+      <p>Stub entries contain little information beyond a title, providing ideal starting places for students and anyone interested in contributing to Participedia. More stub entries can be found using the “entry completeness” <a href="#">search filter</a> on the homepage.</p>
+
+      <p>An entry’s level of completeness is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, include at least three sections of the written narrative using citations (footnotes), and require no significant corrections to their grammar or spelling. If you complete an entry, please email <a href="mailto:communications@participedia.net">communications@participedia.net</a> to request a review so it can be correctly labelled.</p>
+
+      <p>Please read our <a href='#'>guidelines</a> on how to write an entry or contact us for more information.</p>
+    `;
+
+    const partialContentText = `
+      <p>Partial entries are about half complete, and make good starting places for students and anyone interested in contributing to Participedia. More partial entries can be found using the “entry completeness” <a href="#">search filter</a> on the homepage.</p>
+
+      <p>An entry’s level of completeness is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, include at least three sections of the written narrative using citations (footnotes), and require no significant corrections to their grammar or spelling. If you complete an entry, please email <a href="mailto:communications@participedia.net">communications@participedia.net</a> to request a review so it can be correctly labelled.</p>
+
+      <p>Please read our <a href='#'>guidelines</a> on how to write an entry or contact us for more information.</p>
+    `;
+
+    const partialCitationsText = `
+      <p>This type of entry is missing citations (footnotes), but is otherwise complete. Entries needing citations can be identified using the “entry completeness” <a href="#">search filter</a> on the homepage.</p>
+
+      <p>An entry’s level of completeness is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, include at least three sections of the written narrative using citations (footnotes), and require no significant corrections to their grammar or spelling. If you complete an entry, please email <a href="mailto:communications@participedia.net">communications@participedia.net</a> to request a review so it can be correctly labelled.</p>
+
+      <p>Please read our <a href='#'>guidelines</a> on how to write an entry or contact us for more information.</p>
+    `;
+
+    const partialEditingText = `
+      <p>This type of entry needs significant improvements to its grammar or spelling, and can be any level of completeness (stub, partial, or complete). Entries needing grammar or spelling edits can be identified using the “entry completeness” <a href="#">search filter</a> on the homepage.</p>
+
+      <p>Completeness status is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, including at least three sections of the written narrative with citations (footnotes), and require no significant grammar or spelling edits. If you complete an entry, please email <a href="mailto:communications@participedia.net">communications@participedia.net</a> to request a review so it can be correctly labelled.</p>
+
+      <p>Please read our <a href='#'>guidelines</a> on how to write an entry or contact us for more information.</p>
+    `;
+
+    const textByStatus = {
+      stub: stubText,
+      partial_content: partialContentText,
+      partial_citations: partialCitationsText,
+      partial_editing: partialEditingText,
+    };
+
+    return textByStatus[article.completeness];
+  },
+
   isLinkableTerm: (article, name) => {
     const supportedArticleTypes = ["case"];
 
