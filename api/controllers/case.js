@@ -13,7 +13,6 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
-  UPDATE_AUTHOR_FIRST,
   listUsers,
   listCases,
   listMethods,
@@ -213,12 +212,6 @@ async function postCaseUpdateHttp(req, res) {
     newCase.post_date = Date.now();
   }
 
-  //if this is a new case, set creator id to userid
-  const creator = {
-    user_id: newCase.creator ? newCase.creator : params.userid,
-    thingid: params.articleid
-  };
-
   // save any changes to the user-submitted text
   const {
     updatedText,
@@ -231,7 +224,6 @@ async function postCaseUpdateHttp(req, res) {
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
-          t.none(UPDATE_AUTHOR_FIRST, creator),
           t.none(INSERT_LOCALIZED_TEXT, updatedText),
           t.none(UPDATE_CASE, updatedCase)
         ]);
@@ -240,7 +232,6 @@ async function postCaseUpdateHttp(req, res) {
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
-          t.none(UPDATE_AUTHOR_FIRST, creator),
           t.none(UPDATE_CASE, updatedCase)
         ]);
       });
