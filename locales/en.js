@@ -1472,6 +1472,7 @@
   "organizers_sectionlabel": "Organizers",
   "organizers_supporters": "Organizers & Supporters",
   "overview": "Overview",
+  "issues": "Issues",
   "overview_sectionlabel": "Overview",
   "page": "page",
   "Pakistan": "Pakistan",
