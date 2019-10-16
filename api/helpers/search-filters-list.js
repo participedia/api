@@ -1,8 +1,8 @@
 const searchFiltersList = {
   case: [
     {
-      sectionKey: "overview",
-      sectionLabel: "Overview",
+      sectionKey: "issues",
+      sectionLabel: "Issues",
       fieldNameKeys: ["general_issues"]
     },
     {

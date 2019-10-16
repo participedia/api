@@ -1472,6 +1472,7 @@
   "organizers_sectionlabel": "Organizers",
   "organizers_supporters": "Organizers & Supporters",
   "overview": "Overview",
+  "issues": "Issues",
   "overview_sectionlabel": "Overview",
   "page": "page",
   "Pakistan": "Pakistan",
@@ -1675,5 +1676,6 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoom Map In",
-  "Zoom Map Out": "Zoom Map Out"
+  "Zoom Map Out": "Zoom Map Out",
+  "Updated": "Updated"
 }
