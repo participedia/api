@@ -1,4 +1,48 @@
 const searchFiltersList = {
+  method: [
+    {
+      sectionKey: "Type & Purpose",
+      sectionLabel: "Type & Purpose",
+      fieldNameKeys: ["method_types", "purpose_method", "public_spectrum"]
+    },
+    {
+      sectionKey: "Participants",
+      sectionLabel: "Participants",
+      fieldNameKeys: ["open_limited", "recruitment_method", "number_of_participants"]
+    },
+    {
+      sectionKey: "Process",
+      sectionLabel: "Process",
+      fieldNameKeys: ["facetoface_online_or_both", "facilitators", "participants_interactions", "decision_methods"]
+    },
+    {
+      sectionKey: "Suitable For",
+      sectionLabel: "Suitable For",
+      fieldNameKeys: ["scope_of_influence", "level_polarization", "level_complexity"]
+    },
+  ],
+  organizations: [
+    {
+      sectionKey: "Country",
+      sectionLabel: "Country",
+      fieldNameKeys: ["country"]
+    },
+    {
+      sectionKey: "Scope of Operations",
+      sectionLabel: "Scope of Operations",
+      fieldNameKeys: ["scope_of_influence"]
+    },
+    {
+      sectionKey: "Focus Area",
+      sectionLabel: "Focus Area",
+      fieldNameKeys: ["sector", "general_issues"]
+    },
+    {
+      sectionKey: "Process",
+      sectionLabel: "Process",
+      fieldNameKeys: ["type_method", "type_tool"]
+    },
+  ],
   case: [
     {
       sectionKey: "issues",

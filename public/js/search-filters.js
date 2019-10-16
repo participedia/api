@@ -1,10 +1,5 @@
-import { updateUrlParams, removeUrlParams } from "./utils/utils.js";
+import { updateUrlParams, removeUrlParams, getValueForParam } from "./utils/utils.js";
 import searchFiltersList from "../../api/helpers/search-filters-list.js";
-
-const CASE_SEARCH_FILTER_KEYS = [];
-searchFiltersList.case.forEach(item => {
-  item.fieldNameKeys.forEach(key => CASE_SEARCH_FILTER_KEYS.push(key));
-});
 
 const toArray = (nodeList) => Array.prototype.slice.call(nodeList);
 
@@ -13,6 +8,12 @@ const searchFilters = {
     this.searchFiltersFormEl = document.querySelector(".js-search-filters");
 
     if (!this.searchFiltersFormEl) return;
+
+    const type = getValueForParam("selectedCategory");
+    this.SEARCH_FILTER_KEYS = [];
+    searchFiltersList[type].forEach(item => {
+      item.fieldNameKeys.forEach(key => this.SEARCH_FILTER_KEYS.push(key));
+    });
 
     this.searchFiltersListEl = document.querySelector(".js-search-filters-chip-list");
     this.checkboxEls = toArray(this.searchFiltersFormEl.querySelectorAll("input[type=checkbox]"));
@@ -93,7 +94,7 @@ const searchFilters = {
     );
     allCheckboxes.forEach(el => el.checked = false);
     this.updateChipButtonsState();
-    removeUrlParams(CASE_SEARCH_FILTER_KEYS);
+    removeUrlParams(this.SEARCH_FILTER_KEYS);
     // load new url without filter
     location.href = location.href;
   },
@@ -105,13 +106,13 @@ const searchFilters = {
       this.searchFiltersFormEl.querySelector(`.js-keys-list[data-field-name=${category}`).querySelectorAll("input")
     );
     allCheckboxesForSection.forEach(el => el.checked = false);
-    removeUrlParams(CASE_SEARCH_FILTER_KEYS);
+    removeUrlParams(this.SEARCH_FILTER_KEYS);
   },
 
   handleFormSubmit(e) {
     e.preventDefault();
     // remove old filters
-    removeUrlParams(CASE_SEARCH_FILTER_KEYS);
+    removeUrlParams(this.SEARCH_FILTER_KEYS);
     const selectedFilters = this.getState();
     // add new filters as params
     Object.keys(selectedFilters).forEach(key => {
