@@ -66,7 +66,6 @@ const UPDATE_USER = sql("../sql/update_user.sql");
 const UPDATE_CASE = sql("../sql/update_case.sql");
 const UPDATE_METHOD = sql("../sql/update_method.sql");
 const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
-const UPDATE_AUTHOR_FIRST = sql("../sql/update_author_first.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -536,6 +535,5 @@ module.exports = {
   CASE_BY_ID,
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,
-  UPDATE_AUTHOR_FIRST,
   ErrorReporter
 };
