@@ -13,6 +13,7 @@ const {
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
   UPDATE_AUTHOR_FIRST,
+  UPDATE_AUTHOR_LAST,
   listUsers,
   refreshSearch,
   ErrorReporter
@@ -159,6 +160,11 @@ async function postMethodUpdateHttp(req, res) {
     newMethod.post_date = Date.now();
   }
 
+  // if this is a new method, we don't have a updated_date yet, so we set it here
+  if (!newMethod.updated_date) {
+    newMethod.updated_date = Date.now();
+  }
+
   // save any changes to the user-submitted text
   const {
     updatedText,
@@ -173,16 +179,11 @@ async function postMethodUpdateHttp(req, res) {
     oldMethod
   );
 
+  //get current date when user.isAdmin is false;
+  updatedMethod.updated_date = !user.isadmin ? 'now' : updatedMethod.updated_date;
+
   if (!er.hasErrors()) {
     if (updatedText) {
-      //if this is a new method, set creator id to userid and isAdmin
-      if (user.isadmin){
-        const creator = {
-          user_id: newMethod.creator ? newMethod.creator : params.userid,
-          thingid: params.articleid
-        };
-        await db.tx("update-case", t => t.none(UPDATE_AUTHOR_FIRST, creator));
-      }
       await db.tx("update-method", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
@@ -190,6 +191,24 @@ async function postMethodUpdateHttp(req, res) {
           t.none(UPDATE_METHOD, updatedMethod)
         ]);
       });
+       //if this is a new method, set creator id to userid and isAdmin
+       if (user.isadmin){
+        const creator = {
+          user_id: newMethod.creator ? newMethod.creator : params.userid,
+          thingid: params.articleid
+        };
+        const updatedBy = {
+          user_id : newMethod.last_updated_by ? newMethod.last_updated_by : params.userid,
+          thingid: params.articleid,
+          updated_date: newMethod.updated_date || 'now'
+        };
+        await db.tx("update-method", t => {
+          return t.batch([
+            t.none(UPDATE_AUTHOR_FIRST, creator),
+            t.none(UPDATE_AUTHOR_LAST, updatedBy)
+          ]);
+        });
+      }
     } else {
       await db.tx("update-method", t => {
         return t.batch([
@@ -226,6 +245,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     cond("hidden", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
+    cond("updated_date", as.date);
   }
 
   // media lists

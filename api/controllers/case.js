@@ -14,6 +14,7 @@ const {
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
   UPDATE_AUTHOR_FIRST,
+  UPDATE_AUTHOR_LAST,
   listUsers,
   listCases,
   listMethods,
@@ -128,6 +129,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     cond("hidden", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
+    cond("updated_date", as.date);
   }
 
   // media lists
@@ -212,6 +214,11 @@ async function postCaseUpdateHttp(req, res) {
     newCase.post_date = Date.now();
   }
 
+  // if this is a new case, we don't have a updated_date yet, so we set it here
+  if (!newCase.updated_date) {
+    newCase.updated_date = Date.now();
+  }
+
   // save any changes to the user-submitted text
   const {
     updatedText,
@@ -219,16 +226,12 @@ async function postCaseUpdateHttp(req, res) {
     oldArticle: oldCase
   } = await maybeUpdateUserText(req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+
+  //get current date when user.isAdmin is false;
+  updatedCase.updated_date = !user.isadmin ? 'now' : updatedCase.updated_date;
+  
   if (!er.hasErrors()) {
     if (updatedText) {
-      //if this is a new case, set creator id to userid and isAdmin
-      if (user.isadmin){
-        const creator = {
-          user_id: newCase.creator ? newCase.creator : params.userid,
-          thingid: params.articleid
-        };
-        await db.tx("update-case", t => t.none(UPDATE_AUTHOR_FIRST, creator));
-      }
       await db.tx("update-case", t => {
         return t.batch([
           t.none(INSERT_AUTHOR, author),
@@ -236,6 +239,24 @@ async function postCaseUpdateHttp(req, res) {
           t.none(UPDATE_CASE, updatedCase)
         ]);
       });
+      //if this is a new case, set creator id to userid and isAdmin
+      if (user.isadmin){
+        const creator = {
+          user_id: newCase.creator ? newCase.creator : params.userid,
+          thingid: params.articleid
+        };
+        const updatedBy = {
+          user_id : newCase.last_updated_by ? newCase.last_updated_by : params.userid,
+          thingid: params.articleid,
+          updated_date: newCase.updated_date || 'now' 
+        };
+        await db.tx("update-case", t => {
+          return t.batch([
+            t.none(UPDATE_AUTHOR_FIRST, creator),
+            t.none(UPDATE_AUTHOR_LAST, updatedBy)
+          ]);
+        });
+      }
     } else {
       await db.tx("update-case", t => {
         return t.batch([
