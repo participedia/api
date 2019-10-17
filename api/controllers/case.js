@@ -13,6 +13,7 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
+  UPDATE_AUTHOR_FIRST,
   listUsers,
   listCases,
   listMethods,

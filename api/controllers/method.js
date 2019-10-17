@@ -12,6 +12,7 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
+  UPDATE_AUTHOR_FIRST,
   listUsers,
   refreshSearch,
   ErrorReporter

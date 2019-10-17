@@ -12,6 +12,7 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_ORGANIZATION,
+  UPDATE_AUTHOR_FIRST,
   listUsers,
   refreshSearch,
   listMethods,
