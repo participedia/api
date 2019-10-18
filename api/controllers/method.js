@@ -184,12 +184,10 @@ async function postMethodUpdateHttp(req, res) {
 
   if (!er.hasErrors()) {
     if (updatedText) {
-      await db.tx("update-method", t => {
-        return t.batch([
-          t.none(INSERT_AUTHOR, author),
-          t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_METHOD, updatedMethod)
-        ]);
+      await db.tx("update-method", async t => {
+          await t.none(INSERT_AUTHOR, author);
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+          await t.none(UPDATE_METHOD, updatedMethod);
       });
        //if this is a new method, set creator id to userid and isAdmin
        if (user.isadmin){
@@ -202,19 +200,15 @@ async function postMethodUpdateHttp(req, res) {
           thingid: params.articleid,
           updated_date: newMethod.updated_date || 'now'
         };
-        await db.tx("update-method", t => {
-          return t.batch([
-            t.none(UPDATE_AUTHOR_FIRST, creator),
-            t.none(UPDATE_AUTHOR_LAST, updatedBy)
-          ]);
+        await db.tx("update-method", async t => {
+            await t.none(UPDATE_AUTHOR_FIRST, creator);
+            await t.none(UPDATE_AUTHOR_LAST, updatedBy);
         });
       }
     } else {
-      await db.tx("update-method", t => {
-        return t.batch([
-          t.none(INSERT_AUTHOR, author),
-          t.none(UPDATE_METHOD, updatedMethod)
-        ]);
+      await db.tx("update-method", async t => {
+          await t.none(INSERT_AUTHOR, author);
+          await t.none(UPDATE_METHOD, updatedMethod);
       });
     }
     // the client expects this request to respond with json
