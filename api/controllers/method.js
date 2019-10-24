@@ -217,6 +217,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     cond("hidden", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
+    cond("completeness", as.text);
   }
 
   // media lists

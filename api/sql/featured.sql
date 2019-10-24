@@ -9,6 +9,12 @@ WITH all_featured  AS (
   SELECT
     id,
     type,
+    CASE 
+		WHEN type='case' THEN get_completeness_case(id)
+		WHEN type='method' THEN get_completeness_methods(id)
+		WHEN type='organization' THEN get_completeness_organizations(id)
+		ELSE ''
+     END as completeness,
     featured,
     texts.title,
     texts.description,

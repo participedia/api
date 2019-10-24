@@ -126,6 +126,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   if (user.isadmin) {
     cond("featured", as.boolean);
     cond("hidden", as.boolean);
+    cond("completeness", as.text);
     cond("original_language", as.text);
     cond("post_date", as.date);
   }
