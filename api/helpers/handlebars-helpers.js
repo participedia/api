@@ -435,6 +435,10 @@ module.exports = {
     }
   },
 
+  formatCurrentDate(format) {
+    return moment(Date.now()).format(format);
+  },
+
   getCaseEditSubmitType(req) {
     if (req.query.full === "1") {
       return "full";
