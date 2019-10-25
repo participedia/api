@@ -60,3 +60,8 @@
 \include 'migrations/migration_040.sql'
 -- Add table for storing login sessions
 \include 'migrations/migration_041.sql'
+-- Add columns to add completeness_enum, and set enums
+-- for `case` , `organization`, and `methods`
+\include 'migrations/migration_042.sql'
+-- Get enums by id
+\include 'migrations/migration_043.sql'
