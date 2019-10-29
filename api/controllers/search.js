@@ -13,7 +13,7 @@ let {
   LIST_MAP_ORGANIZATIONS
 } = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
-const { supportedTypes, parseGetParams } = require("../helpers/things");
+const { supportedTypes, parseGetParams, facetKeys, facetKeyLists } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
 
@@ -144,27 +144,8 @@ const keyListFacetFromReq = (req, name) => {
 };
 
 const facetsFromReq = req => {
-  if (typeFromReq(req) !== "case") {
-    return "";
-  }
-  const keys = [
-    "country",
-    "scope_of_influence",
-    "public_spectrum",
-    "open_limited",
-    "recruitment_method",
-    "facetoface_online_or_both"
-  ];
-  const keyLists = [
-    "general_issues",
-    "purposes",
-    "approaches",
-    "method_types",
-    "tools_techniques_types",
-    "organizer_types",
-    "funder_types",
-    "change_types"
-  ];
+  const keys = facetKeys(typeFromReq(req));
+  const keyLists = facetKeyLists(typeFromReq(req)); 
   let keyFacets = keys.map(key => keyFacetFromReq(req, key));
   let keyListFacets = keyLists.map(key => keyListFacetFromReq(req, key));
   return keyFacets.join("") + keyListFacets.join("");
@@ -208,6 +189,16 @@ router.get("/", async function(req, res) {
   const lang = as.value(getLanguage(req));
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
+  console.log({
+    query: parsed_query,
+      limit: limit ? limit : null, // null is no limit in SQL
+      offset: offsetFromReq(req),
+      language: lang,
+      userId: req.user ? req.user.id : null,
+      sortby: sortbyFromReq(req),
+      type: type + "s",
+      facets: facetsFromReq(req)
+  })
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
