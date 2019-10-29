@@ -1472,6 +1472,7 @@
   "organizers_sectionlabel": "Organizers",
   "organizers_supporters": "Organizers & Supporters",
   "overview": "Overview",
+  "issues": "Issues",
   "overview_sectionlabel": "Overview",
   "page": "page",
   "Pakistan": "Pakistan",
@@ -1688,5 +1689,6 @@
   "name:completeness-key:partial_content": "Partial (about half complete)",
   "name:completeness-key:partial_citations": "Citations/Footnotes Needed",
   "name:completeness-key:partial_editing": "Grammar/Spelling Edits Needed",
-  "name:completeness-key:complete": "Complete"
+  "name:completeness-key:complete": "Complete",
+  "Updated": "Updated"
 }

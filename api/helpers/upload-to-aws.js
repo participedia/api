@@ -1,10 +1,11 @@
 const AWS = require("aws-sdk");
 const uuidv4 = require("uuid/v4");
+const logError = require("./log-error.js");
 
 AWS.config.update({ region: process.env.AWS_REGION });
 
-function uploadToAWS(base64String, fileName) {
-  const newFileName = uuidv4() + "-" + fileName;
+function uploadToAWS(base64String) {
+  const newFileName = uuidv4();
   const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
   const base64Data = Buffer.from(
     base64String.split(";")[1].split(",")[1],
@@ -23,8 +24,9 @@ function uploadToAWS(base64String, fileName) {
   };
 
   s3.upload(uploadParams, (err, data) => {
-    if (err) console.log("Error", err);
-    // if (data) console.log("success");
+    if (err) {
+      logError(err);
+    }
   });
 
   return `${process.env.AWS_UPLOADS_URL}${newFileName}`;

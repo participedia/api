@@ -34,6 +34,9 @@ if (
   app.use(Sentry.Handlers.requestHandler());
 }
 
+// other logging middlewear
+app.use(morgan("dev")); // request logging
+
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
 const { case_ } = require("./api/controllers/case");
@@ -291,9 +294,6 @@ app.use((req, res, next) => {
 
 // The error handler must be before any other logging middleware and after all controllers
 app.use(Sentry.Handlers.errorHandler());
-
-// other logging middlewear
-app.use(morgan("dev")); // request logging
 
 if (process.env.NODE_ENV === "development") {
   // only use in development

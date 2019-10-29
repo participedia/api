@@ -40,21 +40,21 @@
         <input
           type="text"
           id="js-last-updated-by-name"
-          value="{{article.last_updated_by.name}}"
+          value="{{user.name}}"
           autocomplete="false"
           autocomplete="off"
         />
         <input
           type="hidden"
           name="last_updated_by"
-          value="{{article.last_updated_by.user_id}}"
+          value="{{user.id}}"
         />
       </p>
       <p>
         <strong>{{t "Most Recent Change"}}</strong>
         <input
           type="date"
-          value="{{formatDate article "updated_date" "YYYY-MM-DD"}}"
+          value="{{formatCurrentDate "YYYY-MM-DD"}}"
           name="updated_date"
         />
       </p>

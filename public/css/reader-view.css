@@ -91,7 +91,7 @@ article .reader-view-social-links {
   }
 }
 
-@media (max-width: 1000px) {
+@media screen and (max-width: 1000px) {
   .reader-view-social-links {
     display: none;
   }

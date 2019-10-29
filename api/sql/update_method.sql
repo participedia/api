@@ -7,7 +7,7 @@ SET
   hidden = ${hidden},
   completeness = ${completeness},
 -- automatic
-  updated_date = 'now',
+  updated_date = ${updated_date},
 -- media lists
   files = ${files},
   links = ${links},

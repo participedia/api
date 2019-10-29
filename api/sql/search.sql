@@ -17,7 +17,8 @@ ORDER BY rank DESC
 ),
 total_selections AS (
   SELECT count(all_selections.id) AS total
-  FROM all_selections
+  FROM all_selections, ${type:name}
+  WHERE all_selections.id = ${type:name}.id AND ${type:name}.hidden = false ${facets:raw}
 )
 
 SELECT
@@ -58,7 +59,7 @@ FROM
 WHERE
   all_selections.id = ${type:name}.id AND
   ${type:name}.hidden = false
-    ${facets:raw}
+  ${facets:raw}
 ORDER BY all_selections.rank DESC
 OFFSET ${offset}
 LIMIT ${limit}
