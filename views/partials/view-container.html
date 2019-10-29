@@ -26,6 +26,17 @@
       </div>
 
       <div class="body-content">
+
+        {{#if (shouldShowCompletenessPrompt article) }}
+          <div class="alert">
+            <span>
+              {{{getCompletenessPrompt article}}}
+              {{> tooltip-trigger-and-modal modalHeader=(getCompletenessModalHeader article) modalText=(getCompletenessModalText article) }}
+            </span>
+          </div>
+        {{/if}}
+
+
         {{# if article.description}}
           <p>{{ article.description }}</p>
         {{/if}}

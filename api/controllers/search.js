@@ -139,8 +139,12 @@ const keyListFacetFromReq = (req, name) => {
   if (!value) {
     return "";
   }
-  value = as.array(value.split(","));
-  return ` AND ${name} && ${value} `;
+  if (name === 'completeness'){
+    return ` AND ${name} = ANY ('{${value}}') `;
+  } else {
+    value = as.array(value.split(","));
+    return ` AND ${name} && ${value} `;
+  }
 };
 
 const facetsFromReq = req => {
@@ -163,7 +167,8 @@ const facetsFromReq = req => {
     "tools_techniques_types",
     "organizer_types",
     "funder_types",
-    "change_types"
+    "change_types",
+    "completeness"
   ];
   let keyFacets = keys.map(key => keyFacetFromReq(req, key));
   let keyListFacets = keyLists.map(key => keyListFacetFromReq(req, key));

@@ -1677,5 +1677,18 @@
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoom Map In",
   "Zoom Map Out": "Zoom Map Out",
+  "completeness": "Completeness",
+  "case_edit_completeness_label": "Completeness",
+  "case_view_completeness_label": "Completeness",
+  "case_edit_completeness_placeholder": "Select the completeness level for this entry",
+  "organization_edit_completeness_label": "Completeness",
+  "organization_edit_completeness_placeholder": "Select the completeness level for this entry",
+  "method_edit_completeness_label": "Completeness",
+  "method_edit_completeness_placeholder": "Select the completeness level for this entry",
+  "name:completeness-key:stub": "Stub (less than half complete)",
+  "name:completeness-key:partial_content": "Partial (about half complete)",
+  "name:completeness-key:partial_citations": "Citations/Footnotes Needed",
+  "name:completeness-key:partial_editing": "Grammar/Spelling Edits Needed",
+  "name:completeness-key:complete": "Complete",
   "Updated": "Updated"
 }

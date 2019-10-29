@@ -5,6 +5,7 @@ SET
   post_date = ${post_date},
   featured = ${featured},
   hidden = ${hidden},
+  completeness = ${completeness},
 -- automatic
   updated_date = ${updated_date},
 -- media lists
