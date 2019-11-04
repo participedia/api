@@ -60,3 +60,5 @@
 \include 'migrations/migration_040.sql'
 -- Add table for storing login sessions
 \include 'migrations/migration_041.sql'
+-- Add level_polarization on organizations table
+\include 'migrations/migration_044.sql'
