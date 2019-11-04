@@ -65,3 +65,6 @@
 \include 'migrations/migration_042.sql'
 -- Get enums by id
 \include 'migrations/migration_043.sql'
+-- Add level_polarization on organizations table
+\include 'migrations/migration_044.sql'
+

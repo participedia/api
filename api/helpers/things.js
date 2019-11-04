@@ -196,6 +196,75 @@ function setConditional(
   }
 }
 
+//get searchFilterKeyList and searchFilterKeys by methods,cases, orgs
+
+const searchFilterKeys = (type) => {
+  if (type === 'case') {
+    return [
+      "country",
+      "scope_of_influence",
+      "public_spectrum",
+      "open_limited",
+      "recruitment_method",
+      "facetoface_online_or_both"
+    ];
+  } else if (type === 'method'){
+    return [
+      "open_limited",
+      "recruitment_method",
+      "facetoface_online_or_both",
+      "public_spectrum",
+      "level_polarization",
+      "level_complexity",
+      "facilitators"
+    ];
+  } else if (type === 'organization'){
+    return [
+      "country",
+      "sector"
+    ];
+  } else {
+    return [];
+  }
+};
+
+const searchFilterKeyLists = (type) => {
+  if (type === 'case') {
+    return [
+      "general_issues",
+      "purposes",
+      "approaches",
+      "method_types",
+      "tools_techniques_types",
+      "organizer_types",
+      "funder_types",
+      "change_types",
+      "completeness"
+    ];
+  } else if (type === 'method'){
+    return [
+      "method_types",
+      "number_of_participants",
+      "participants_interactions",
+      "decision_methods",
+      "scope_of_influence",
+      "purpose_method",
+      "completeness"
+    ];
+  } else if (type === 'organization'){
+    return [
+      "general_issues",
+      "type_method",
+      "level_polarization",
+      "scope_of_influence",
+      "type_tool",
+      "completeness"
+    ];
+  } else {
+    return [];
+  }
+}
+
 module.exports = {
   supportedTypes,
   titleKeys,
@@ -206,5 +275,7 @@ module.exports = {
   parseGetParams,
   returnByType,
   setConditional,
-  maybeUpdateUserText
+  maybeUpdateUserText,
+  searchFilterKeys,
+  searchFilterKeyLists
 };

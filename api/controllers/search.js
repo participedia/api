@@ -13,7 +13,7 @@ let {
   LIST_MAP_ORGANIZATIONS
 } = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
-const { supportedTypes, parseGetParams } = require("../helpers/things");
+const { supportedTypes, parseGetParams, searchFilterKeys, searchFilterKeyLists } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
 
@@ -129,12 +129,12 @@ const sortbyFromReq = req => {
   return "updated_date";
 };
 
-const keyFacetFromReq = (req, name) => {
+const searchFilterKeyFromReq = (req, name) => {
   let value = req.query[name];
   return value ? ` AND ${name} ='${value}' ` : "";
 };
 
-const keyListFacetFromReq = (req, name) => {
+const searchFilterKeyListFromReq = (req, name) => {
   let value = req.query[name];
   if (!value) {
     return "";
@@ -147,32 +147,13 @@ const keyListFacetFromReq = (req, name) => {
   }
 };
 
-const facetsFromReq = req => {
-  if (typeFromReq(req) !== "case") {
-    return "";
-  }
-  const keys = [
-    "country",
-    "scope_of_influence",
-    "public_spectrum",
-    "open_limited",
-    "recruitment_method",
-    "facetoface_online_or_both"
-  ];
-  const keyLists = [
-    "general_issues",
-    "purposes",
-    "approaches",
-    "method_types",
-    "tools_techniques_types",
-    "organizer_types",
-    "funder_types",
-    "change_types",
-    "completeness"
-  ];
-  let keyFacets = keys.map(key => keyFacetFromReq(req, key));
-  let keyListFacets = keyLists.map(key => keyListFacetFromReq(req, key));
-  return keyFacets.join("") + keyListFacets.join("");
+const searchFiltersFromReq = req => {
+  const keys = searchFilterKeys(typeFromReq(req));
+  const keyLists = searchFilterKeyLists(typeFromReq(req));
+
+  let searchFilterKeysMapped = keys.map(key => searchFilterKeyFromReq(req, key));
+  let searchFilterKeyListMapped = keyLists.map(key => searchFilterKeyListFromReq(req, key));
+  return searchFilterKeysMapped.join("") + searchFilterKeyListMapped.join("");
 };
 
 /**
@@ -222,7 +203,7 @@ router.get("/", async function(req, res) {
       userId: req.user ? req.user.id : null,
       sortby: sortbyFromReq(req),
       type: type + "s",
-      facets: facetsFromReq(req)
+      facets: searchFiltersFromReq(req)
     });
     const total = Number(
       results.length ? results[0].total || results.length : 0
