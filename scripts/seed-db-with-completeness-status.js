@@ -1,18 +1,20 @@
 // csv source: https://docs.google.com/spreadsheets/d/1uiSNHVzTWByC9ZgawKLcE7WTVyiKELQFxn_lthQDgFI/edit#gid=0
-// to run: node scripts/seed-db-with-completeness-status.js [filepath] [articleType]
-// to update cases, run: node scripts/seed-db-with-completeness-status.js "./csv/CASES-COMPLETENESS-TRACKING.csv" "cases"
-// to update methods, run: node scripts/seed-db-with-completeness-status.js "./csv/METHODS-COMPLETENESS-TRACKING.csv" "methods"
-// to update organizations, run with: node scripts/seed-db-with-completeness-status.js "./csv/ORGS-COMPLETENESS-TRACKING.csv" "organizations"
+// to run: node scripts/seed-db-with-completeness-status.js [table]
+// ie: node scripts/seed-db-with-completeness-status.js "cases"
 
 const fs = require("fs");
 const parse = require("csv-parse");
 const { db } = require("../api/helpers/db.js");
 
 const args = process.argv.slice(2);
-const filepath = args[0];
-const table = args[1];
+const table = args[0];
+const filepaths = {
+  cases: './csv/completeness-status-for-cases.csv',
+  methods: './csv/completeness-status-for-methods.csv',
+  organizations: './csv/completeness-status-for-organizations.csv',
+};
 
-readCSV(args[0]);
+readCSV(filepaths[table]);
 
 async function updateCase(id, completeness) {
   try {
@@ -40,7 +42,7 @@ async function handleRow(row) {
     5: "complete"
   }
   const id = row[0];
-  const completenessNumber = row[9];
+  const completenessNumber = row[2];
   const status = completenessStatusByNumber[completenessNumber];
   if (id && status) {
     await updateCase(id, status);
