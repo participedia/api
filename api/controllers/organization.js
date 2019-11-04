@@ -12,6 +12,8 @@ const {
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_ORGANIZATION,
+  UPDATE_AUTHOR_FIRST,
+  UPDATE_AUTHOR_LAST,
   listUsers,
   refreshSearch,
   listMethods,
@@ -157,6 +159,11 @@ async function postOrganizationUpdateHttp(req, res) {
     newOrganization.post_date = Date.now();
   }
 
+  // if this is a new method, we don't have a updated_date yet, so we set it here
+  if (!newOrganization.updated_date) {
+    newOrganization.updated_date = Date.now();
+  }
+
   const {
     updatedText,
     author,
@@ -168,6 +175,8 @@ async function postOrganizationUpdateHttp(req, res) {
     newOrganization,
     oldOrganization
   );
+  //get current date when user.isAdmin is false;
+  updatedOrganization.updated_date = !user.isadmin ? 'now' : updatedOrganization.updated_date;
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-organization", t => {
@@ -177,6 +186,24 @@ async function postOrganizationUpdateHttp(req, res) {
           t.none(UPDATE_ORGANIZATION, updatedOrganization)
         ]);
       });
+      //if this is a new organization, set creator id to userid and isAdmin
+      if (user.isadmin){
+        const creator = {
+          user_id: newOrganization.creator ? newOrganization.creator : params.userid,
+          thingid: params.articleid
+        };
+        const updatedBy = {
+          user_id : newOrganization.last_updated_by ? newOrganization.last_updated_by : params.userid,
+          thingid: params.articleid,
+          updated_date: newOrganization.updated_date || 'now'
+        };
+        await db.tx("update-organization", t => {
+          return t.batch([
+            t.none(UPDATE_AUTHOR_FIRST, creator),
+            t.none(UPDATE_AUTHOR_LAST, updatedBy)
+          ]);
+        });
+      }
     } else {
       await db.tx("update-organization", t => {
         return t.batch([
@@ -216,6 +243,8 @@ function getUpdatedOrganization(
     cond("hidden", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
+    cond("completeness", as.text);
+    cond("updated_date", as.date);
   }
   // media lists
   ["links", "videos", "audio"].map(key => cond(key, as.media));

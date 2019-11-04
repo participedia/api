@@ -454,5 +454,12 @@ module.exports = {
     "medium",
     "large",
     "no_limit"
-  ]
+  ],
+  completeness: [
+    "stub",
+    "partial_content",
+    "partial_citations",
+    "partial_editing",
+    "complete",
+  ],
 };

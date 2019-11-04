@@ -13,7 +13,7 @@ let {
   LIST_MAP_ORGANIZATIONS
 } = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
-const { supportedTypes, parseGetParams, facetKeys, facetKeyLists } = require("../helpers/things");
+const { supportedTypes, parseGetParams, searchFilterKeys, searchFilterKeyLists } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
 
@@ -139,13 +139,18 @@ const keyListFacetFromReq = (req, name) => {
   if (!value) {
     return "";
   }
-  value = as.array(value.split(","));
-  return ` AND ${name} && ${value} `;
+  if (name === 'completeness'){
+    return ` AND ${name} = ANY ('{${value}}') `;
+  } else {
+    value = as.array(value.split(","));
+    return ` AND ${name} && ${value} `;
+  }
 };
 
 const facetsFromReq = req => {
-  const keys = facetKeys(typeFromReq(req));
-  const keyLists = facetKeyLists(typeFromReq(req)); 
+  const keys = searchFilterKeys(typeFromReq(req));
+  const keyLists = searchFilterKeyLists(typeFromReq(req));
+
   let keyFacets = keys.map(key => keyFacetFromReq(req, key));
   let keyListFacets = keyLists.map(key => keyListFacetFromReq(req, key));
   return keyFacets.join("") + keyListFacets.join("");

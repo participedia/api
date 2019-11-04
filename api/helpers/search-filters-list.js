@@ -79,6 +79,11 @@ const searchFiltersList = {
       sectionLabel: "Evidence of Impact",
       fieldNameKeys: ["change_types"]
     },
+    {
+      sectionKey: "completeness",
+      sectionLabel: "Completeness",
+      fieldNameKeys: ["completeness"]
+    },
   ]
 }
 
