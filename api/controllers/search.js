@@ -151,9 +151,9 @@ const searchFiltersFromReq = req => {
   const keys = searchFilterKeys(typeFromReq(req));
   const keyLists = searchFilterKeyLists(typeFromReq(req));
 
-  let searchFilterKeys = keys.map(key => searchFilterKeyFromReq(req, key));
-  let searchFilterKeyList = keyLists.map(key => searchFilterKeyListFromReq(req, key));
-  return searchFilterKeys.join("") + searchFilterKeyList.join("");
+  let searchFilterKeysMapped = keys.map(key => searchFilterKeyFromReq(req, key));
+  let searchFilterKeyListMapped = keyLists.map(key => searchFilterKeyListFromReq(req, key));
+  return searchFilterKeysMapped.join("") + searchFilterKeyListMapped.join("");
 };
 
 /**

@@ -20,6 +20,11 @@ const searchFiltersList = {
       sectionLabel: "Suitable For",
       fieldNameKeys: ["scope_of_influence", "level_polarization", "level_complexity"]
     },
+    {
+      sectionKey: "completeness",
+      sectionLabel: "Completeness",
+      fieldNameKeys: ["completeness"]
+    },
   ],
   organizations: [
     {
@@ -41,6 +46,11 @@ const searchFiltersList = {
       sectionKey: "Process",
       sectionLabel: "Process",
       fieldNameKeys: ["type_method", "type_tool"]
+    },
+    {
+      sectionKey: "completeness",
+      sectionLabel: "Completeness",
+      fieldNameKeys: ["completeness"]
     },
   ],
   case: [
