@@ -238,7 +238,8 @@ const searchFilterKeyLists = (type) => {
       "tools_techniques_types",
       "organizer_types",
       "funder_types",
-      "change_types"
+      "change_types",
+      "completeness"
     ];
   } else if (type === 'method'){
     return [
@@ -247,7 +248,8 @@ const searchFilterKeyLists = (type) => {
       "participants_interactions",
       "decision_methods",
       "scope_of_influence",
-      "purpose_method"
+      "purpose_method",
+      "completeness"
     ];
   } else if (type === 'organization'){
     return [
@@ -255,7 +257,8 @@ const searchFilterKeyLists = (type) => {
       "type_method",
       "level_polarization",
       "scope_of_influence",
-      "type_tool"
+      "type_tool",
+      "completeness"
     ];
   } else {
     return [];

@@ -21,8 +21,8 @@ const searchFiltersList = {
       fieldNameKeys: ["scope_of_influence", "level_polarization", "level_complexity"]
     },
     {
-      sectionKey: "completeness",
-      sectionLabel: "Completeness",
+      sectionKey: "Entry Completeness",
+      sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"]
     },
   ],
@@ -48,8 +48,8 @@ const searchFiltersList = {
       fieldNameKeys: ["type_method", "type_tool"]
     },
     {
-      sectionKey: "completeness",
-      sectionLabel: "Completeness",
+      sectionKey: "Entry Completeness",
+      sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"]
     },
   ],
@@ -90,8 +90,8 @@ const searchFiltersList = {
       fieldNameKeys: ["change_types"]
     },
     {
-      sectionKey: "completeness",
-      sectionLabel: "Completeness",
+      sectionKey: "Entry Completeness",
+      sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"]
     },
   ]
