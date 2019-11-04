@@ -196,9 +196,9 @@ function setConditional(
   }
 }
 
-//get keylist and keys by methods,cases, orgs
+//get searchFilterKeyList and searchFilterKeys by methods,cases, orgs
 
-const facetKeys = (type) => {
+const searchFilterKeys = (type) => {
   if (type === 'case') {
     return [
       "country",
@@ -228,7 +228,7 @@ const facetKeys = (type) => {
   }
 };
 
-const facetKeyLists = (type) => {
+const searchFilterKeyLists = (type) => {
   if (type === 'case') {
     return [
       "general_issues",
@@ -273,6 +273,6 @@ module.exports = {
   returnByType,
   setConditional,
   maybeUpdateUserText,
-  facetKeys,
-  facetKeyLists
+  searchFilterKeys,
+  searchFilterKeyLists
 };
