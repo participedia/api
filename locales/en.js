@@ -1677,5 +1677,11 @@
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoom Map In",
   "Zoom Map Out": "Zoom Map Out",
-  "Updated": "Updated"
+  "Updated": "Updated",
+  "organizations_view_scope_of_influence_label": "Scope of Operations",
+  "organizations_view_country_label": "Country",
+  "organizations_view_sector_label": "Sector",
+  "organizations_view_general_issues_label": "General Issues",
+  "organizations_view_type_method_label": "General Types of Methods",
+  "organizations_view_type_tool_label": "General Types of Tools/Techniques"
 }
