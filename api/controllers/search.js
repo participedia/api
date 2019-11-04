@@ -129,12 +129,12 @@ const sortbyFromReq = req => {
   return "updated_date";
 };
 
-const keyFacetFromReq = (req, name) => {
+const searchFilterKeyFromReq = (req, name) => {
   let value = req.query[name];
   return value ? ` AND ${name} ='${value}' ` : "";
 };
 
-const keyListFacetFromReq = (req, name) => {
+const searchFilterKeyListFromReq = (req, name) => {
   let value = req.query[name];
   if (!value) {
     return "";
@@ -147,13 +147,13 @@ const keyListFacetFromReq = (req, name) => {
   }
 };
 
-const facetsFromReq = req => {
+const searchFiltersFromReq = req => {
   const keys = searchFilterKeys(typeFromReq(req));
   const keyLists = searchFilterKeyLists(typeFromReq(req));
 
-  let keyFacets = keys.map(key => keyFacetFromReq(req, key));
-  let keyListFacets = keyLists.map(key => keyListFacetFromReq(req, key));
-  return keyFacets.join("") + keyListFacets.join("");
+  let searchFilterKeys = keys.map(key => searchFilterKeyFromReq(req, key));
+  let searchFilterKeyList = keyLists.map(key => searchFilterKeyListFromReq(req, key));
+  return searchFilterKeys.join("") + searchFilterKeyList.join("");
 };
 
 /**
@@ -203,7 +203,7 @@ router.get("/", async function(req, res) {
       userId: req.user ? req.user.id : null,
       sortby: sortbyFromReq(req),
       type: type + "s",
-      facets: facetsFromReq(req)
+      facets: searchFiltersFromReq(req)
     });
     const total = Number(
       results.length ? results[0].total || results.length : 0
