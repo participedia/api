@@ -216,11 +216,13 @@ module.exports = {
   getCompletenessPrompt: (article) => {
     if (!article.completeness || article.completeness === 'complete') return;
 
+    const articleEditLink = `/${article.type}/${article.id}/edit`;
+
     const promptsByStatus = {
-      stub: '<strong>The following entry is a stub.</strong> Please help us <a href="#">complete it</a>.',
-      partial_content: '<strong>The following entry is incomplete.</strong> You can help Participedia by <a href="#">adding to it</a>.',
-      partial_citations: '<strong>The following entry is missing citations.</strong> Please help us <a href="#">verify its content</a>.',
-      partial_editing: '<strong>The following entry needs assistance with content and editing.</strong> Please help us <a href="#">complete it</a>.',
+      stub: `<strong>The following entry is a stub.</strong> Please help us <a href="${articleEditLink}">complete it</a>.`,
+      partial_content: `<strong>The following entry is incomplete.</strong> You can help Participedia by <a href="${articleEditLink}">adding to it</a>.`,
+      partial_citations: `<strong>The following entry is missing citations.</strong> Please help us <a href="${articleEditLink}">verify its content</a>.`,
+      partial_editing: `<strong>The following entry needs assistance with content and editing.</strong> Please help us <a href="${articleEditLink}">complete it</a>.`,
     };
 
     return promptsByStatus[article.completeness];
