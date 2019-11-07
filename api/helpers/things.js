@@ -239,7 +239,8 @@ const searchFilterKeyLists = (type) => {
       "organizer_types",
       "funder_types",
       "change_types",
-      "completeness"
+      "completeness",
+      "collections"
     ];
   } else if (type === 'method'){
     return [
