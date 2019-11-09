@@ -59,6 +59,15 @@ const fixUpURLs = function(article) {
   }
 };
 
+const placeHolderPhotos = (article) => {
+    if (article.photos || article.photos.length <= 0) {
+      article.photos.push({
+        "url" : "/images/texture_1.svg"
+      });
+      return article.photos;
+    }
+};
+
 const returnByType = (res, params, article, static, user) => {
   const { returns, type, view } = params;
 
@@ -277,5 +286,6 @@ module.exports = {
   setConditional,
   maybeUpdateUserText,
   searchFilterKeys,
-  searchFilterKeyLists
+  searchFilterKeyLists,
+  placeHolderPhotos
 };

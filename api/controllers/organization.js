@@ -25,7 +25,8 @@ const {
   maybeUpdateUserText,
   parseGetParams,
   returnByType,
-  fixUpURLs
+  fixUpURLs,
+  placeHolderPhotos
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -288,6 +289,7 @@ async function getOrganizationHttp(req, res) {
     res.status(404).render("404");
     return null;
   }
+  article.photos = article.photos.length <= 0 ? placeHolderPhotos(article) : article.photos;
   const staticText = {};
   returnByType(res, params, article, staticText, req.user);
 }
