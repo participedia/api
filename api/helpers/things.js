@@ -52,6 +52,7 @@ const fixUpURLs = function(article) {
       obj.url = encodeURL(obj.url);
     });
   }
+  
   if (article.files && article.files.length) {
     article.files.forEach(obj => {
       obj.url = encodeURL(obj.url);

@@ -3,7 +3,7 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
-let { fixUpURLs } = require("../helpers/things");
+let { fixUpURLs, placeHolderPhotos } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
 
@@ -26,6 +26,11 @@ async function getUserById(userId, req, res, view = "view") {
     result.user.cases.forEach(fixUpURLs);
     result.user.methods.forEach(fixUpURLs);
     result.user.organizations.forEach(fixUpURLs);
+
+    //if i added the placeholder on the fixUpURLs function it will have placeholder image also on the view case, methods, and organization
+    result.user.cases.forEach(placeHolderPhotos);
+    result.user.methods.forEach(placeHolderPhotos);
+    result.user.organizations.forEach(placeHolderPhotos);
 
     // if (result.user.bookmarks) {
     //   result.user.bookmarks.forEach(b => (b.bookmarked = true));
