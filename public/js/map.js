@@ -101,22 +101,12 @@ const map = {
     );
   },
 
-  getQueryParam() {
-    if (!window.location.search) return;
-
-    const paramObj = {};
-    window.location.search.split("?")[1].split("&").forEach(param => {
-     paramObj[param.split("=")[0]] = param.split("=")[1];
-    });
-
-    return paramObj.query;
-  },
-
   fetchMapResults() {
-    let url = `/?resultType=map&returns=json`;
-    const query = this.getQueryParam();
-    if (query) {
-      url = `${url}&query=${query}`;
+    let url = '';
+    if (window.location.search) {
+      url = `/${window.location.search}&resultType=map&returns=json`;
+    } else {
+      url = `/?resultType=map&returns=json`;
     }
 
     const successCB = (response) => {
