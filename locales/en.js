@@ -1699,5 +1699,16 @@
   "name:completeness-key:partial_citations": "Citations/Footnotes Needed",
   "name:completeness-key:partial_editing": "Grammar/Spelling Edits Needed",
   "name:completeness-key:complete": "Complete",
-  "Updated": "Updated"
+  "Updated": "Updated",
+  "collections": "Collections",
+  "case_view_collections_label": "Collections",
+  "case_edit_collections_label": "Collections",
+  "case_edit_collections_placeholder": "Select a collection",
+  "case_edit_collections_instructional": "If you are a representative of a project or organization that has been identified as having a Collection on Participedia, please select it here. If your entry is not part of a Collection, please leave this field blank.",
+  "name:collections-key:participedia_team": "Participedia Team",
+  "name:collections-key:gov_of_canada": "Government of Canada",
+  "name:collections-key:sciencewise": "Sciencewise",
+  "name:collections-key:coady_students": "Coady Students",
+  "name:collections-key:usoton_students": "USoton Students",
+  "name:collections-key:uarkansas_students": "U Arkansas Students"
 }

@@ -90,6 +90,11 @@ const searchFiltersList = {
       fieldNameKeys: ["change_types"]
     },
     {
+      sectionKey: "collections",
+      sectionLabel: "Collections",
+      fieldNameKeys: ["collections"]
+    },
+    {
       sectionKey: "Entry Completeness",
       sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"]
