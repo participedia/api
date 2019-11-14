@@ -182,6 +182,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   [
     "general_issues",
     "specific_topics",
+    "collections",
     "purposes",
     "approaches",
     "targeted_participants",
