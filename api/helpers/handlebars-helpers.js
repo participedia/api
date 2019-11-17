@@ -216,7 +216,7 @@ module.exports = {
   getCompletenessPrompt: (article) => {
     if (!article.completeness || article.completeness === 'complete') return;
 
-    const articleEditLink = `/${article.type}/${article.id}/edit`;
+    const articleEditLink = `/${article.type}/${article.id}/edit?full=1`;
 
     const promptsByStatus = {
       stub: `<strong>The following entry is a stub.</strong> Please help us <a href="${articleEditLink}">complete it</a>.`,
