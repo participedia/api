@@ -25,7 +25,7 @@ const contactHelpFaqWidget = {
       }
 
       // question link click
-      if (e.target.closest("a") && !e.target.closest("a").classList.contains("js-mail-link")) {
+      if (e.target.closest(".js-faq-question")) {
         e.preventDefault();
         this.insertAnswer(e);
       }
