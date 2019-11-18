@@ -67,4 +67,6 @@
 \include 'migrations/migration_043.sql'
 -- Add level_polarization on organizations table
 \include 'migrations/migration_044.sql'
+-- Add column on case table
+\include 'migrations/migration_045.sql'
 

@@ -53,6 +53,7 @@ SET
 -- list of keys
   general_issues = ${general_issues},
   specific_topics = ${specific_topics},
+  collections = ${collections},
   time_limited = ${time_limited},
   purposes = ${purposes},
   approaches = ${approaches},

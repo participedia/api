@@ -5,6 +5,7 @@ SELECT
   title,
   COALESCE(general_issues, '{}') as general_issues,
   COALESCE(specific_topics, '{}') as specific_topics,
+  COALESCE(collections, '{}') as collections,
   COALESCE(description, '') as description,
   body,
   location_name,

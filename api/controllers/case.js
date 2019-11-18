@@ -182,6 +182,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   [
     "general_issues",
     "specific_topics",
+    "collections",
     "purposes",
     "approaches",
     "targeted_participants",
@@ -230,7 +231,7 @@ async function postCaseUpdateHttp(req, res) {
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? 'now' : updatedCase.updated_date;
-  
+
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {

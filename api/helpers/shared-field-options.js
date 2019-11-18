@@ -1,4 +1,12 @@
 module.exports = {
+  collections: [
+    "participedia_team",
+    "gov_of_canada",
+    "sciencewise",
+    "coady_students",
+    "usoton_students",
+    "uarkansas_students"
+  ],
   general_issues: [
     "agriculture",
     "arts",
