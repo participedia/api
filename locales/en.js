@@ -1708,7 +1708,7 @@
   "name:collections-key:participedia_team": "Participedia Team",
   "name:collections-key:gov_of_canada": "Government of Canada",
   "name:collections-key:sciencewise": "Sciencewise",
-  "name:collections-key:coady_students": "Coady Students",
-  "name:collections-key:usoton_students": "USoton Students",
-  "name:collections-key:uarkansas_students": "U Arkansas Students"
+  "name:collections-key:coady_students": "Coady Institute Graduates",
+  "name:collections-key:usoton_students": "University of Southampton Students",
+  "name:collections-key:uarkansas_students": "University of Arkansas Clinton School of Public Service"
 }
