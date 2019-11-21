@@ -1705,10 +1705,11 @@
   "case_edit_collections_label": "Collections",
   "case_edit_collections_placeholder": "Select a collection",
   "case_edit_collections_instructional": "If you are a representative of a project or organization that has been identified as having a Collection on Participedia, please select it here. If your entry is not part of a Collection, please leave this field blank.",
+  "case_edit_collections_info": "We kindly ask that only representatives of projects or organizations identified as having Collections use this field. The 'Collections' search filter on the homepage provides a way to compile and display cases that share common traits, such as association with a large-scale initiative, an institution, or geographic location. These collections of connected entries may be viewed as a single set of results, with a custom URL that can serve as a landing page on Participedia. If you have an idea for a new Collection, or if you require further information, please contact us.",
   "name:collections-key:participedia_team": "Participedia Team",
   "name:collections-key:gov_of_canada": "Government of Canada",
   "name:collections-key:sciencewise": "Sciencewise",
-  "name:collections-key:coady_students": "Coady Students",
-  "name:collections-key:usoton_students": "USoton Students",
-  "name:collections-key:uarkansas_students": "U Arkansas Students"
+  "name:collections-key:coady_students": "Coady Institute Graduates",
+  "name:collections-key:usoton_students": "University of Southampton Students",
+  "name:collections-key:uarkansas_students": "UA Clinton School of Public Service Students"
 }
