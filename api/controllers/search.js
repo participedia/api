@@ -109,7 +109,8 @@ const queryFileFromReq = req => {
 };
 
 const offsetFromReq = req => {
-  const page = Math.max(as.number(req.query.page || 1), 1);
+  let query = req.query.page ? req.query.page.replace(/[^0-9]/g, "") : '';
+  const page = Math.max(as.number(query || 1), 1);
   return (page - 1) * limitFromReq(req);
 };
 
