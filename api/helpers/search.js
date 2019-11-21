@@ -57,6 +57,7 @@ const tokenize = function*(query, inside_quotes = false) {
 };
 
 const preparse_query = function(userQuery) {
+  userQuery = userQuery.replace(/[{()}]/g, '');
   return [...tokenize(userQuery.toLowerCase())].join("");
 };
 
