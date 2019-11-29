@@ -5,14 +5,10 @@
     </a>
   {{/if}}
 
-  <div class="js-view-submission-details">
-    {{> view-authors }}
-  </div>
-
   {{#if req.user.isadmin}}
     <div class="js-admin-edit-submission-details" style="display: none;">
-      <p>
-        <strong>{{t "First Submitted By"}}</strong>
+      <div class="form-group">
+        <label for="creator">{{t "First Submitted By"}}</label>
         <input
           type="text"
           id="js-creator-name"
@@ -25,18 +21,18 @@
           name="creator"
           value="{{article.creator.user_id}}"
         />
-      </p>
-      <p>
-        <strong>{{t "First Submitted Date"}}</strong>
+      </div>
+      <div class="form-group">
+        <label for="post_date">{{t "First Submitted Date"}}</label>
         <input
           type="date"
-          value="{{formatDate article "post_date" "YYYY-MM-DD"}}"
+          value="{{formatArticleDate article "post_date" "YYYY-MM-DD"}}"
           name="post_date"
         />
-      </p>
+      </div>
 
-      <p>
-        <strong>{{t "Most Recent Changes By"}}</strong>
+      <div class="form-group">
+        <label for="last_updated_by">{{t "Most Recent Changes By"}}</label>
         <input
           type="text"
           id="js-last-updated-by-name"
@@ -49,15 +45,15 @@
           name="last_updated_by"
           value="{{user.id}}"
         />
-      </p>
-      <p>
-        <strong>{{t "Most Recent Change"}}</strong>
+      </div>
+      <div class="form-group">
+        <label for="updated_date">{{t "Most Recent Change"}}</label>
         <input
           type="date"
           value="{{formatCurrentDate "YYYY-MM-DD"}}"
           name="updated_date"
         />
-      </p>
+      </div>
     </div>
     <ul class="js-author-list" style="display: none;">
       {{#each static.authors}}

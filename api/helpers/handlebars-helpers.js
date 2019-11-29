@@ -510,7 +510,11 @@ module.exports = {
     return moment(date).format(format);
   },
 
-  formatDate(article, name, format) {
+  formatDate(date, format) {
+    return moment(date).format(format);
+  },
+
+  formatArticleDate(article, name, format) {
     if (article[name] && article[name] !== "") {
       return moment(article[name]).format(format);
     }
@@ -570,6 +574,12 @@ module.exports = {
 
   articleDataTitle(article) {
     return toTitleCase(article.type + " Data");
+  },
+
+  sortedEditHistory(editHistory) {
+    return editHistory.sort((a,b) => {
+      return new Date(b.timestamp) - new Date(a.timestamp);
+    });
   },
 
   // search layout helpers
