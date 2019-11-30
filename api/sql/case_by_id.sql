@@ -69,7 +69,7 @@ SELECT
   updated_date,
   featured,
   get_user_names(${userid}) as authors,
-  get_authors(${articleid}) as edit_history,
+  get_edit_authors(${articleid}) as edit_history,
   hidden,
   completeness
 FROM

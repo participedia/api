@@ -135,6 +135,7 @@ async function getOrganization(params, res) {
     }
     const articleRow = await db.one(ORGANIZATION_BY_ID, params);
     const article = articleRow.results;
+    console.log(article)
     fixUpURLs(article);
     return article;
   } catch (error) {
