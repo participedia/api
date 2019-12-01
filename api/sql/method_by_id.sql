@@ -12,6 +12,7 @@ WITH full_thing AS (
     completeness,
     first_author(${articleid}) AS creator,
     last_author(${articleid}) AS last_updated_by,
+    get_edit_authors(${articleid}) as edit_history,
     bookmarked('method', ${articleid}, ${userid}),
     -- user-contributed content
     texts.title,

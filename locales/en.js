@@ -1711,5 +1711,6 @@
   "name:collections-key:sciencewise": "Sciencewise",
   "name:collections-key:coady_students": "Coady Institute Graduates",
   "name:collections-key:usoton_students": "University of Southampton Students",
-  "name:collections-key:uarkansas_students": "UA Clinton School of Public Service Students"
+  "name:collections-key:uarkansas_students": "UA Clinton School of Public Service Students",
+  "Wiki Contributor History": "Wiki Contributor History"
 }

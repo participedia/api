@@ -27,8 +27,6 @@ const editSubmissionDetails = {
       e.preventDefault();
       // show edit ui
       document.querySelector(".js-admin-edit-submission-details").style = "display: block";
-      // hide static ui
-      document.querySelector(".js-view-submission-details").style = "display: none";
 
       // hide edit button
       e.target.style = "display: none";

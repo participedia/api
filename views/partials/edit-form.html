@@ -1,4 +1,4 @@
-<div class="full-width-container reader-view">
+<div class="full-width-container">
   <div class="left-col">&nbsp;</div>
   <div class="middle-col">
     <article
@@ -25,8 +25,6 @@
         <!-- hidden fields for features that have not yet been implemented on the frontend. -->
         <input type="hidden" name="original_language" value="{{getOriginalLanguage article}}" />
 
-        {{> edit-submission-details }}
-
         {{#if req.user.isadmin}}
           <fieldset class="admin-only">
             <div class="edit-form-admin-only-section">
@@ -34,6 +32,7 @@
               {{> edit-boolean name="featured" quick-submit=true}}
               {{> edit-boolean name="hidden" quick-submit=true}}
               {{> article-edit-select name="completeness" quick-submit=true}}
+              {{> edit-submission-details }}
             </div>
           </fieldset>
         {{/if}}

@@ -187,7 +187,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 /* if it's quick submit, show quick submit form groups only */
-.form-group[data-quick-submit=true] {
+.form-group[data-quick-submit=true], .edit-form-admin-only-section .form-group {
   display: block;
 }
 
@@ -409,10 +409,6 @@ input[type=number]::-webkit-inner-spin-button {
 
 .edit-media-drag-drop-area input:focus + label {
   outline: 1px dotted #000;
-}
-
-.edit-submission-details-btn {
-  float: right;
 }
 
 .textarea-counter {

@@ -85,6 +85,17 @@ article .reader-view-social-links {
   max-width: 270px;
 }
 
+.edit-history-accordion {
+  margin-bottom: 20px;
+}
+.edit-history-accordion__table {
+  margin: 20px 0;
+}
+.edit-history-accordion__table td {
+  padding-bottom: 5px;
+  padding-right: 20px;
+}
+
 @media (max-width: 850px) {
   .reader-view .language-select {
     display: block;

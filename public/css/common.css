@@ -236,22 +236,6 @@ pre {
   white-space: pre-wrap;
 }
 
-.author-info {
-  margin-bottom: 30px;
-}
-
-.author-info h4 {
-  font-weight: 300;
-}
-
-.author-info h4:first-child {
-  margin-bottom: 15px;
-}
-
-.author-info time {
-  display: block;
-}
-
 [data-bookmarked=true] .is-bookmarked {
   display: block;
 }
