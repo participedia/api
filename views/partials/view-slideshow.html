@@ -31,15 +31,4 @@
       </div>
     {{/each}}
   </div>
-
-  <div
-    class="carousel carousel-nav"
-    data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false, "wrapAround": true }'
-  >
-    {{#each article.photos}}
-      <div class="carousel-cell">
-        <img class="carousel-cell-image" src="{{url}}" alt="{{title}}" />
-      </div>
-    {{/each}}
-  </div>
 {{/if}}

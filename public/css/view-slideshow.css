@@ -198,6 +198,7 @@ html.is-flickity-fullscreen {
 /* CUSTOM FLICKITY STYLES */
 .carousel {
   background: #fff;
+  margin-bottom: 40px;
 }
 
 .carousel-cell {
@@ -208,6 +209,7 @@ html.is-flickity-fullscreen {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #ececec;
 }
 
 .carousel.is-fullscreen .carousel-cell {
