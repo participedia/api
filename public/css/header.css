@@ -336,3 +336,9 @@ header .right-col {
     top: 0;
   }
 }
+
+@media (max-width: 400px) {
+  .header-buttons .language-select {
+    display: none;
+  }
+}
