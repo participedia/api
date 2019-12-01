@@ -291,6 +291,14 @@ header .right-col {
   justify-content: flex-end;
 }
 
+.header-buttons .language-select {
+  background-color: #242424;
+  border: 0px;
+  color: #fff;
+  width: 60px;
+  margin-right: 20px;
+}
+
 @media (max-width: 1000px) {
   header .full-width-container {
     height: 95px;
