@@ -3,7 +3,8 @@
     <table cellpadding="0" cellspacing="0" class="edit-history-accordion__table">
       {{#each (sortedEditHistory article.edit_history)}}
         <tr>
-          <td class="edit-history-accordion__timestamp" >{{formatDate timestamp "MMMM Do YYYY, h:mm a"}}</td>
+          <td><strong>{{formatDate timestamp "LL"}}</strong></td>
+          <td>{{formatDate timestamp "kk:hh"}} &nbsp;&nbsp;<small>{{formatDate timestamp "(UTC Z)"}}</small></td>
           <td><a href="/user/{{user_id}}">{{sanitizeName name}}</a></td>
         </tr>
       {{/each}}
