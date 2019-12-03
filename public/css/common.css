@@ -114,12 +114,12 @@ a {
   float: left;
 }
 .full-width-container .middle-col {
-  width: calc(50% - 15px);
+  width: calc(45% - 15px);
   float: left;
   margin-left: 30px;
 }
 .full-width-container .right-col {
-  width: calc(25% - 22.5px);
+  width: calc(30% - 22.5px);
   float: right;
 }
 

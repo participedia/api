@@ -19,6 +19,14 @@ const LOCATION_FIELD_NAMES = [
   "longitude"
 ];
 
+function setMomentLocale(context) {
+  const req = context.data.root.req;
+  const locale = req.cookies.locale;
+  if (locale) {
+    moment.locale(locale);
+  }
+}
+
 function toTitleCase(str) {
   return str.replace(
     /\w\S*/g,
@@ -510,17 +518,20 @@ module.exports = {
     return moment(date).format(format);
   },
 
-  formatDate(date, format) {
+  formatDate(date, format, context) {
+    setMomentLocale(context);
     return moment(date).format(format);
   },
 
-  formatArticleDate(article, name, format) {
+  formatArticleDate(article, name, format, context) {
+    setMomentLocale(context);
     if (article[name] && article[name] !== "") {
       return moment(article[name]).format(format);
     }
   },
 
-  formatCurrentDate(format) {
+  formatCurrentDate(format, context) {
+    setMomentLocale(context);
     return moment(Date.now()).format(format);
   },
 
