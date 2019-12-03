@@ -4,9 +4,9 @@
     data-flickity='{ "wrapAround": true, "contain": true, "pageDots": false, "fullscreen": true, "lazyLoad": 1 }'
   >
     {{#each article.photos}}
-      <div class="carousel-cell">
-        <div class="carousel-cell-image-container" style="background-image: url({{url}})"></div>
-        {{#if (hasCaptionText ../article)}}
+      <div class="carousel-cell {{#if (hasCaptionText this)}}carousel-cell-has-image-title{{/if}}">
+        <div class="carousel-cell-image-container " style="background-image: url({{url}})"></div>
+        {{#if (hasCaptionText this)}}
           <div class="carousel-cell-image-title">
             <span>
               {{#if source_url}}
