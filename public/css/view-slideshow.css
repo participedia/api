@@ -203,52 +203,35 @@ html.is-flickity-fullscreen {
 
 .carousel-cell {
   width: 100%;
-  height: 300px;
+  height: 350px;
   margin-right: 10px;
   /* center images in cells with flexbox */
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ececec;
+  background-color: rgba(0,0,0,.2);
 }
 
 .carousel.is-fullscreen .carousel-cell {
   height: 100%;
 }
 
-.carousel-cell-image {
-  display: block;
-  max-height: 100%;
+.carousel-cell-image-container {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.carousel-nav {
-  background-color: #fff;
-  margin-top: 20px;
-  margin-bottom: 40px;
-  padding: 4px 0;
-}
-.carousel-nav .carousel-cell {
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #fff;
-}
-.carousel-nav .carousel-cell-image {
-  width: 100px;
-}
-
-.carousel.is-fullscreen .carousel-cell-image {
-  max-width: 100%;
+.carousel.is-fullscreen .carousel-cell-image-container {
+  max-height: 75%;
+  max-width: 75%;
+  background-size: unset;
 }
 
 .flickity-enabled.is-fullscreen {
   z-index: 2;
-}
-
-.carousel-nav .carousel-cell.is-nav-selected {
-  border: 1px solid red;
 }
 
 .flickity-button, .flickity-button:hover {

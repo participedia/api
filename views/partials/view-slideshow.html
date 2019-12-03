@@ -5,11 +5,7 @@
   >
     {{#each article.photos}}
       <div class="carousel-cell">
-        <img
-          class="carousel-cell-image"
-          data-flickity-lazyload="{{url}}"
-          alt="{{title}}"
-        />
+        <div class="carousel-cell-image-container" style="background-image: url({{url}})"></div>
         {{#if (hasCaptionText ../article)}}
           <div class="carousel-cell-image-title">
             <span>
