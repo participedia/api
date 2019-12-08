@@ -4,13 +4,9 @@
     data-flickity='{ "wrapAround": true, "contain": true, "pageDots": false, "fullscreen": true, "lazyLoad": 1 }'
   >
     {{#each article.photos}}
-      <div class="carousel-cell">
-        <img
-          class="carousel-cell-image"
-          data-flickity-lazyload="{{url}}"
-          alt="{{title}}"
-        />
-        {{#if (hasCaptionText ../article)}}
+      <div class="carousel-cell {{#if (hasCaptionText this)}}carousel-cell-has-image-title{{/if}}">
+        <div class="carousel-cell-image-container " style="background-image: url({{url}})"></div>
+        {{#if (hasCaptionText this)}}
           <div class="carousel-cell-image-title">
             <span>
               {{#if source_url}}
@@ -28,17 +24,6 @@
             </span>
           </div>
         {{/if}}
-      </div>
-    {{/each}}
-  </div>
-
-  <div
-    class="carousel carousel-nav"
-    data-flickity='{ "asNavFor": ".carousel-main", "contain": true, "pageDots": false, "wrapAround": true }'
-  >
-    {{#each article.photos}}
-      <div class="carousel-cell">
-        <img class="carousel-cell-image" src="{{url}}" alt="{{title}}" />
       </div>
     {{/each}}
   </div>
