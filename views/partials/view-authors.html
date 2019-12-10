@@ -4,7 +4,6 @@
       {{#each (sortedEditHistory article.edit_history)}}
         <tr>
           <td><strong>{{formatDate timestamp "LL"}}</strong></td>
-          <td>{{formatDate timestamp "kk:hh"}} &nbsp;&nbsp;<small>{{formatDate timestamp "(UTC Z)"}}</small></td>
           <td><a href="/user/{{user_id}}">{{sanitizeName name}}</a></td>
         </tr>
       {{/each}}

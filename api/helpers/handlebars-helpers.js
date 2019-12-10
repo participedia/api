@@ -588,7 +588,25 @@ module.exports = {
   },
 
   sortedEditHistory(editHistory) {
-    return editHistory.sort((a,b) => {
+    // Filter and sort edit history to show one edit per user, per day
+    // in the order of most recent edits first.
+    // (do not show multiple edits by the same author on the same day)
+
+    let editsByUser = {};
+    editHistory.forEach(edit => {
+      if (editsByUser[edit.user_id] && !editsByUser[edit.user_id].find(entry => moment(entry.timestamp).isSame(edit.timestamp, "day"))) {
+        // only add this edit if we don't already have an edit entry for this user on this day
+        editsByUser[edit.user_id] = editsByUser[edit.user_id].concat([edit]);
+      } else {
+        editsByUser[edit.user_id] = [edit];
+      }
+    });
+
+    let editsToBeSorted = [];
+    Object.keys(editsByUser).forEach(userId => {
+      editsByUser[userId].forEach(entry => editsToBeSorted = editsToBeSorted.concat([entry]));
+    });
+    return editsToBeSorted.sort((a,b) => {
       return new Date(b.timestamp) - new Date(a.timestamp);
     });
   },
