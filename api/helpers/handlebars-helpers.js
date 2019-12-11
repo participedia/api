@@ -631,7 +631,7 @@ module.exports = {
         end = totalResults;
       }
     }
-    
+
     if (pageNum > 1) {
       return `${start} - ${end}`;
     } else {
@@ -865,7 +865,7 @@ module.exports = {
 
   jsCacheVersion(filepath) {
     // return last modified datetime in ms for filepath
-    const stats = fs.statSync(`public${filepath}`);
+    const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
     return stats.mtimeMs;
   },
 
