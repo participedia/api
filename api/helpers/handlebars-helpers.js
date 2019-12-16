@@ -619,10 +619,21 @@ module.exports = {
   },
 
   // pagination helpers
-  paginationNumResults(cards, req) {
+  paginationNumResults(cards, totalResults, req) {
     const pageNum = parseInt(req.query.page);
+
+    let start = (pageNum - 1) * 20 + 1
+    let end = totalResults
+
+    if (20 < totalResults) {
+      end = 20 * pageNum
+      if (end > totalResults) {
+        end = totalResults;
+      }
+    }
+
     if (pageNum > 1) {
-      return `${cards.length * (pageNum - 1) + 1} - ${cards.length * pageNum}`;
+      return `${start} - ${end}`;
     } else {
       return "1 - " + cards.length;
     }
