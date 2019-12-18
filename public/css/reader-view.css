@@ -87,6 +87,14 @@ article .reader-view-social-links {
 }
 
 @media screen and (max-width: 1000px) {
+  .edit-history-accordion {
+    margin-bottom: 0;
+  }
+
+  .edit-history-accordion .accordion {
+    border-bottom: 0;
+  }
+
   .reader-view-social-links {
     display: none;
   }
