@@ -296,9 +296,10 @@ footer .language-select {
 
 /* Alerts / User prompts */
 .alert {
-  padding: 4px 0 4px 8px;
+  padding: 14px 0 12px 16px;
   font-size: 14px;
-  margin: 60px 0;
+  margin: 30px 0;
+  border: 1px solid #e6e6e6;
   border-left: 5px solid #ec2024;
 }
 .alert svg {
