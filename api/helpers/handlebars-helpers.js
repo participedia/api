@@ -7,6 +7,7 @@ const sharedFieldOptions = require("./shared-field-options.js");
 const searchFiltersList = require("./search-filters-list.js");
 const countries = require("./countries.js");
 const { SUPPORTED_LANGUAGES } = require("../../constants.js");
+const { searchFilterKeyLists } = require("./things");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -56,9 +57,24 @@ function getFirstPhotoUrl(article) {
   return article.photos[0].url;
 }
 
-function filterCollections(name,context) {
-  return name ? `${i18n(name,context)}` : "";
+function filterCollections(req, name, context) {
+  let query = req.query[name];
+  if (query){
+    let arr = query.split(',');
+    let value = arr.map((item) => i18n(item,context));
+    return value;
+  }
+  //let 
+  //return value ? `${value}` : "";
 }
+
+function typeFromReq(req) {
+  let cat = singularLowerCase(req.query.selectedCategory || "Alls");
+  return cat === "all" ? "thing" : cat;
+};
+
+const singularLowerCase = name =>
+  (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
 
 function getPageTitle(req, article, context) {
   const path = req.route && req.route.path;
@@ -643,10 +659,19 @@ module.exports = {
     }
   },
 
-  paginationCollections(name, context){
-    let arr = name.split(',');
-    let collections = arr.map(key => filterCollections(key,context));
-    return collections.toString();
+  paginationCollections(req, context){
+    const keyLists = searchFilterKeyLists(typeFromReq(req));
+    const searchFilterKeyListMapped = keyLists.map(key => filterCollections(req, key, context));
+    if (searchFilterKeyListMapped){
+      const filtered = searchFilterKeyListMapped.filter((el) => {
+        if (el){
+          return el;
+        }
+      });
+      if(filtered.length > 0){
+        return filtered[0].toString();
+      }
+    }
   },
 
   getCurrentPage(req) {
@@ -875,8 +900,7 @@ module.exports = {
 
   jsCacheVersion(filepath) {
     // return last modified datetime in ms for filepath
-    //const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
-    const stats = fs.statSync(`public${filepath}`);
+    const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
     return stats.mtimeMs;
   },
 
