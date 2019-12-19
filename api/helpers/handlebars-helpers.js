@@ -64,8 +64,6 @@ function filterCollections(req, name, context) {
     let value = arr.map((item) => i18n(item,context));
     return value;
   }
-  //let 
-  //return value ? `${value}` : "";
 }
 
 function typeFromReq(req) {
@@ -667,9 +665,11 @@ module.exports = {
         if (el){
           return el;
         }
-      });
+      });      
       if(filtered.length > 0){
-        return filtered[0].toString();
+        let identifier = req.query.query ? 'with' : 'for';
+        let filtersWord = filtered.length > 1 ? 'filters' : 'filter';
+        return `${identifier} ${filtersWord}: ${filtered[0].toString()}`;
       }
     }
   },
@@ -901,6 +901,7 @@ module.exports = {
   jsCacheVersion(filepath) {
     // return last modified datetime in ms for filepath
     const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
+    // const stats = fs.statSync(`public${filepath}`);
     return stats.mtimeMs;
   },
 
