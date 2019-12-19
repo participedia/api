@@ -1,3 +1,4 @@
+import "lazysizes";
 import map from "./map.js";
 import tabsWithCards from "./tabs-with-cards.js";
 import bookmarkButtons from "./bookmark-buttons.js";
@@ -10,4 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   bookmarkButtons.init();
   dropdownButton.init();
   searchFilters.init();
+
+  document.addEventListener("lazybeforeunveil", (e) => {
+    const bgUrl = e.target.getAttribute("data-bg");
+    if (bgUrl) {
+      e.target.style.backgroundImage = `url(${bgUrl})`;
+    }
+  });
 });
