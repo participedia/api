@@ -53,8 +53,9 @@ PopOver.prototype.draw = function() {
   if (display === "block") {
     // show marker in center of map
     const popOverWidth = this.anchor.getClientRects()[0].width;
+    const popOverHeight = this.anchor.getClientRects()[0].height;
     this.anchor.style.left = `-${popOverWidth/2}px`;
-    this.anchor.style.top = "-147px";
+    this.anchor.style.top = `-${popOverHeight/2}px`;
   }
   if (this.anchor.style.display !== display) {
     this.anchor.style.display = display;
