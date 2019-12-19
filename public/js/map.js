@@ -16,7 +16,7 @@ const map = {
 
     this.map = new google.maps.Map(mapEl, {
       center: { lat: 24.6207595, lng: -40.2706411 },
-      zoom: 1.75,
+      zoom: 2.5,
       disableDefaultUI: true,
       zoomControl: false,
       styles: mapStyle,
