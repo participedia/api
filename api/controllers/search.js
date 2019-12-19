@@ -132,7 +132,11 @@ const sortbyFromReq = req => {
 
 const searchFilterKeyFromReq = (req, name) => {
   let value = req.query[name];
-  return value ? ` AND ${name} ='${value}' ` : "";
+  if (name === 'country'){
+    return ` AND ${name} = ANY ('{${value}}') `;
+  } else {
+    return value ? ` AND ${name} ='${value}' ` : "";
+  }
 };
 
 const searchFilterKeyListFromReq = (req, name) => {
