@@ -56,6 +56,10 @@ function getFirstPhotoUrl(article) {
   return article.photos[0].url;
 }
 
+function filterCollections(name,context) {
+  return name ? `${i18n(name,context)}` : "";
+}
+
 function getPageTitle(req, article, context) {
   const path = req.route && req.route.path;
   const is404 = context.data.exphbs.view === "404";
@@ -639,6 +643,12 @@ module.exports = {
     }
   },
 
+  paginationCollections(name, context){
+    let arr = name.split(',');
+    let collections = arr.map(key => filterCollections(key,context));
+    return collections.toString();
+  },
+
   getCurrentPage(req) {
     if (req.query && req.query.page) {
       return req.query.page;
@@ -865,7 +875,8 @@ module.exports = {
 
   jsCacheVersion(filepath) {
     // return last modified datetime in ms for filepath
-    const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
+    //const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
+    const stats = fs.statSync(`public${filepath}`);
     return stats.mtimeMs;
   },
 
