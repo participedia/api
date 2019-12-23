@@ -7,7 +7,7 @@ const sharedFieldOptions = require("./shared-field-options.js");
 const searchFiltersList = require("./search-filters-list.js");
 const countries = require("./countries.js");
 const { SUPPORTED_LANGUAGES } = require("../../constants.js");
-const { searchFilterKeyLists } = require("./things");
+const { searchFilterKeyLists, searchFilterKeys } = require("./things");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -94,6 +94,17 @@ function getPageTitle(req, article, context) {
   } else {
     return titleByPath["/"];
   }
+};
+
+function concactArr(arr){
+  let tempArr = [];
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < arr[i].length; j++) {
+      let str = arr[i][j];
+    	tempArr.push(str.charAt(0).toUpperCase() + str.substring(1));
+    }
+  }
+  return tempArr;
 };
 
 const i18n = (key, context) =>
@@ -659,18 +670,19 @@ module.exports = {
 
   paginationCollections(req, context){
     const keyLists = searchFilterKeyLists(typeFromReq(req));
-    const searchFilterKeyListMapped = keyLists.map(key => filterCollections(req, key, context));
-    if (searchFilterKeyListMapped){
-      const filtered = searchFilterKeyListMapped.filter((el) => {
-        if (el){
-          return el;
-        }
-      });      
-      if(filtered.length > 0){
-        let identifier = req.query.query ? 'with' : 'for';
-        let filtersWord = filtered.length > 1 ? 'filters' : 'filter';
-        return `${identifier} ${filtersWord}: ${filtered[0].toString()}`;
-      }
+    const filterKeys = searchFilterKeys(typeFromReq(req));
+    const filterArr = keyLists.concat(filterKeys);
+
+    const searchFilterKeyListMapped = filterArr
+          .map(key => filterCollections(req, key, context))
+          .filter(el => el);
+
+    const arr = concactArr(searchFilterKeyListMapped);
+
+    if (arr){
+      let identifier = req.query.query ? 'with' : 'for';
+      let filtersWord = arr.length > 1 ? 'filters' : 'filter';
+      return `${identifier} ${filtersWord}: ${arr.toString()}`;
     }
   },
 
@@ -901,7 +913,6 @@ module.exports = {
   jsCacheVersion(filepath) {
     // return last modified datetime in ms for filepath
     const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
-    // const stats = fs.statSync(`public${filepath}`);
     return stats.mtimeMs;
   },
 
