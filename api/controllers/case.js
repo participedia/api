@@ -27,6 +27,7 @@ const {
   setConditional,
   maybeUpdateUserText,
   parseGetParams,
+  validateUrl,
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
@@ -72,12 +73,23 @@ async function postCaseNewHttp(req, res) {
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
     let original_language = req.body.original_language || "en";
+    let links = req.body.links;
+
     if (!title) {
       return res.status(400).json({
         OK: false,
         errors: ["Cannot create a case without at least a title."]
       });
     }
+
+    const isUrlValid = validateUrl(req);
+    if (!isUrlValid){
+      return res.status(400).json({
+        OK: false,
+        errors: ["Invalid link url."]
+      });
+    }
+
     const user_id = req.user.id;
     const thing = await db.one(CREATE_CASE, {
       title,
