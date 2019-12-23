@@ -1712,5 +1712,11 @@
   "Zambia": "Zambie",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoomer sur la carte",
-  "Zoom Map Out": "Dézoomer sur la carte"
+  "Zoom Map Out": "Dézoomer sur la carte",
+  "coady_students": "Diplômés de l'Institut Coady",
+  "gov_of_canada": "Gouvernement du Canada",
+  "participedia_team": "Équipe Participedia",
+  "sciencewise": "Sur le plan scientifique",
+  "uarkansas_students": "UA Clinton School of Public Service Students",
+  "usoton_students": "Étudiants de l'Université de Southampton"
 }

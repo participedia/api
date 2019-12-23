@@ -1712,5 +1712,11 @@
   "Zambia": "赞比亚",
   "Zimbabwe": "津巴布韦",
   "Zoom Map In": "放大缩小字体功能 放大缩小字体功能",
-  "Zoom Map Out": "放大缩小字体功能 放大缩小字体功能"
+  "Zoom Map Out": "放大缩小字体功能 放大缩小字体功能",
+  "coady_students": "科迪学院毕业生",
+  "gov_of_canada": "加拿大政府",
+  "participedia_team": "参与小组",
+  "sciencewise": "科学",
+  "uarkansas_students": "UA克林顿公共服务学院学生",
+  "usoton_students": "南安普敦大学学生"
 }
