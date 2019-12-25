@@ -680,9 +680,11 @@ module.exports = {
     const arr = concactArr(searchFilterKeyListMapped);
 
     if (arr){
-      let identifier = req.query.query ? 'with' : 'for';
-      let filtersWord = arr.length > 1 ? 'filters' : 'filter';
-      return `${identifier} ${filtersWord}: ${arr.toString()}`;
+      if (arr.length !== 0){
+        let identifier = req.query.query ? 'with' : 'for';
+        let filtersWord = arr.length > 1 ? 'filters' : 'filter';
+        return `${identifier} ${filtersWord}: ${arr.toString()}`;
+      }
     }
   },
 
