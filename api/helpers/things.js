@@ -276,6 +276,26 @@ const searchFilterKeyLists = (type) => {
   }
 }
 
+const validateUrl = (req) => {
+  let links = req.body.links;
+  if (links){
+    for (let key in links){
+      let url = links[key].url;
+      if (url.length > 0){
+        return isValidURL(url);
+        break;
+      } else {
+        return true;
+      }
+    }
+  }
+};
+
+const isValidURL = (string) => {
+  let res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+  return (res !== null)
+};
+
 module.exports = {
   supportedTypes,
   titleKeys,
@@ -283,6 +303,7 @@ module.exports = {
   mediumKeys,
   uniq,
   fixUpURLs,
+  validateUrl,
   parseGetParams,
   returnByType,
   setConditional,
