@@ -191,11 +191,9 @@ async function postOrganizationUpdateHttp(req, res) {
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-organization", t => {
-        return t.batch([
-          t.none(INSERT_AUTHOR, author),
-          t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_ORGANIZATION, updatedOrganization)
-        ]);
+        t.none(INSERT_AUTHOR, author),
+        t.none(INSERT_LOCALIZED_TEXT, updatedText),
+        t.none(UPDATE_ORGANIZATION, updatedOrganization)
       });
       //if this is a new organization, set creator id to userid and isAdmin
       if (user.isadmin){
@@ -209,18 +207,14 @@ async function postOrganizationUpdateHttp(req, res) {
           updated_date: newOrganization.updated_date || 'now'
         };
         await db.tx("update-organization", t => {
-          return t.batch([
-            t.none(UPDATE_AUTHOR_FIRST, creator),
-            t.none(UPDATE_AUTHOR_LAST, updatedBy)
-          ]);
+          t.none(UPDATE_AUTHOR_FIRST, creator),
+          t.none(UPDATE_AUTHOR_LAST, updatedBy)
         });
       }
     } else {
       await db.tx("update-organization", t => {
-        return t.batch([
-          t.none(INSERT_AUTHOR, author),
-          t.none(UPDATE_ORGANIZATION, updatedOrganization)
-        ]);
+        t.none(INSERT_AUTHOR, author),
+        t.none(UPDATE_ORGANIZATION, updatedOrganization)
       });
     }
     const freshArticle = await getOrganization(params, res);

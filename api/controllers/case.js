@@ -249,11 +249,9 @@ async function postCaseUpdateHttp(req, res) {
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", t => {
-        return t.batch([
-          t.none(INSERT_AUTHOR, author),
-          t.none(INSERT_LOCALIZED_TEXT, updatedText),
-          t.none(UPDATE_CASE, updatedCase)
-        ]);
+        t.none(INSERT_AUTHOR, author),
+        t.none(INSERT_LOCALIZED_TEXT, updatedText),
+        t.none(UPDATE_CASE, updatedCase)
       });
       //if this is a new case, set creator id to userid and isAdmin
       if (user.isadmin){
@@ -267,18 +265,14 @@ async function postCaseUpdateHttp(req, res) {
           updated_date: newCase.updated_date || 'now' 
         };
         await db.tx("update-case", t => {
-          return t.batch([
-            t.none(UPDATE_AUTHOR_FIRST, creator),
-            t.none(UPDATE_AUTHOR_LAST, updatedBy)
-          ]);
+          t.none(UPDATE_AUTHOR_FIRST, creator),
+          t.none(UPDATE_AUTHOR_LAST, updatedBy)
         });
       }
     } else {
       await db.tx("update-case", t => {
-        return t.batch([
-          t.none(INSERT_AUTHOR, author),
-          t.none(UPDATE_CASE, updatedCase)
-        ]);
+        t.none(INSERT_AUTHOR, author),
+        t.none(UPDATE_CASE, updatedCase)
       });
     }
     // the client expects this request to respond with json
