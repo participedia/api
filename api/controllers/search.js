@@ -132,10 +132,12 @@ const sortbyFromReq = req => {
 
 const searchFilterKeyFromReq = (req, name) => {
   let value = req.query[name];
-  if (name === 'country'){
-    return ` AND ${name} = ANY ('{${value}}') `;
-  } else {
-    return value ? ` AND ${name} ='${value}' ` : "";
+  if (value){
+    if (name === 'country'){
+      return ` AND ${name} = ANY ('{${value}}') `;
+    } else {
+      return value ? ` AND ${name} ='${value}' ` : "";
+    }
   }
 };
 
@@ -200,6 +202,16 @@ router.get("/", async function(req, res) {
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
   try {
+    console.log({
+      query: parsed_query,
+      limit: limit ? limit : null, // null is no limit in SQL
+      offset: offsetFromReq(req),
+      language: lang,
+      userId: req.user ? req.user.id : null,
+      sortby: sortbyFromReq(req),
+      type: type + "s",
+      facets: searchFiltersFromReq(req)
+    })
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
       limit: limit ? limit : null, // null is no limit in SQL
