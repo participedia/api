@@ -88,14 +88,6 @@ async function postOrganizationNewHttp(req, res) {
         errors: ["Cannot create Organization without at least a title"]
       });
     }
-
-    const isUrlValid = validateUrl(req);
-    if (!isUrlValid){
-      return res.status(400).json({
-        OK: false,
-        errors: ["Invalid link url."]
-      });
-    }
     
     const user_id = req.user.id;
     const thing = await db.one(CREATE_ORGANIZATION, {
@@ -163,6 +155,15 @@ async function postOrganizationUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
+
+  //validate Url
+  const isUrlValid = validateUrl(req);
+  if (!isUrlValid){
+    return res.status(400).json({
+      OK: false,
+      errors: ["Invalid link url."]
+    });
+  }
 
   // if this is a new organization, we don't have a post_date yet, so we set it here
   if (!newOrganization.post_date) {

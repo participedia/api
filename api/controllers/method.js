@@ -89,14 +89,6 @@ async function postMethodNewHttp(req, res) {
         errors: ["Cannot create a method without at least a title."]
       });
     }
-
-    const isUrlValid = validateUrl(req);
-    if (!isUrlValid){
-      return res.status(400).json({
-        OK: false,
-        errors: ["Invalid link url."]
-      });
-    }
     
     const user_id = req.user.id;
     const thing = await db.one(CREATE_METHOD, {
@@ -164,6 +156,15 @@ async function postMethodUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = req.body;
+
+  //validate url params
+  const isUrlValid = validateUrl(req);
+  if (!isUrlValid){
+    return res.status(400).json({
+      OK: false,
+      errors: ["Invalid link url."]
+    });
+  }
 
   // if this is a new method, we don't have a post_date yet, so we set it here
   if (!newMethod.post_date) {

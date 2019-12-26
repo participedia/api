@@ -82,14 +82,6 @@ async function postCaseNewHttp(req, res) {
       });
     }
 
-    const isUrlValid = validateUrl(req);
-    if (!isUrlValid){
-      return res.status(400).json({
-        OK: false,
-        errors: ["Invalid link url."]
-      });
-    }
-
     const user_id = req.user.id;
     const thing = await db.one(CREATE_CASE, {
       title,
@@ -222,6 +214,16 @@ async function postCaseUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
+
+  //validate url
+  
+  const isUrlValid = validateUrl(req);
+  if (!isUrlValid){
+    return res.status(400).json({
+      OK: false,
+      errors: ["Invalid link url."]
+    });
+  }
 
   // if this is a new case, we don't have a post_date yet, so we set it here
   if (!newCase.post_date) {
