@@ -215,9 +215,17 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
 
+
+  //check if url is valid, if http or https is not detected append http
+  newCase.links = newCase.links.map((link) => {
+    if (link.url.indexOf("http://") == -1 || link.url.indexOf("https://") == -1) {
+       link.url = `http://${link.url}`;
+    }
+    return link;
+  });
+
   //validate url
-  
-  const isUrlValid = validateUrl(req);
+  const isUrlValid = validateUrl(newCase);
   if (!isUrlValid){
     return res.status(400).json({
       OK: false,

@@ -276,8 +276,8 @@ const searchFilterKeyLists = (type) => {
   }
 }
 
-const validateUrl = (req) => {
-  let links = req.body.links;
+const validateUrl = (article) => {
+  let links = article.links;
   if (links){
     let arr = links.map((item) => item.url.length > 0 ? isValidURL(item.url) : true);
     return !arr.includes(false);

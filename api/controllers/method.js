@@ -157,8 +157,16 @@ async function postMethodUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = req.body;
 
+  //check if url is valid, if http or https is not detected append http
+  newMethod.links = newMethod.links.map((link) => {
+    if (link.url.indexOf("http://") == -1 || link.url.indexOf("https://") == -1) {
+        link.url = `http://${link.url}`;
+    }
+    return link;
+  });
+
   //validate url params
-  const isUrlValid = validateUrl(req);
+  const isUrlValid = validateUrl(newMethod);
   if (!isUrlValid){
     return res.status(400).json({
       OK: false,

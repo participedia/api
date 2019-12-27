@@ -156,8 +156,16 @@ async function postOrganizationUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
 
+  //check if url is valid, if http or https is not detected append http
+  newOrganization.links = newOrganization.links.map((link) => {
+    if (link.url.indexOf("http://") == -1 || link.url.indexOf("https://") == -1) {
+        link.url = `http://${link.url}`;
+    }
+    return link;
+  });
+
   //validate Url
-  const isUrlValid = validateUrl(req);
+  const isUrlValid = validateUrl(newOrganization);
   if (!isUrlValid){
     return res.status(400).json({
       OK: false,
