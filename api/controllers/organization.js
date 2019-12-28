@@ -158,8 +158,8 @@ async function postOrganizationUpdateHttp(req, res) {
 
   //check if url is valid, if http or https is not detected append http
   newOrganization.links = newOrganization.links.map((link) => {
-    if (link.url.indexOf("http://") == -1 || link.url.indexOf("https://") == -1) {
-        link.url = `http://${link.url}`;
+    if (!/\b(http|https)/.test(link.url)){
+      link.url = `http://${link.url}`;
     }
     return link;
   });
