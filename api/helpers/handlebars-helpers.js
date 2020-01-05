@@ -66,11 +66,17 @@ function filterCollections(req, name, context) {
     let value = [];
     for (let i in keys){
       for (let x in arr){
-        if ( sharedFieldOptions[keys[i]].includes(arr[x]) ) {
-          let str = `name:${keys[i]}-key:${arr[x]}`;
-          let category = i18n(`${req.query.selectedCategory}_view_${keys[i]}_label`,context);
-          value.push(`${category}`);
-          value.push(i18n(str,context));
+        if (keys[i] === 'country'){
+          let category = i18n(`country_label`,context);
+          value.push(`${category} includes`);
+          value.push(req.query.country.replace(/,/g, ', '));
+        } else {
+          if ( sharedFieldOptions[keys[i]].includes(arr[x]) ) {
+            let str = `name:${keys[i]}-key:${arr[x]}`;
+            let category = i18n(`${req.query.selectedCategory}_view_${keys[i]}_label`,context);
+            value.push(`${category} includes`);
+            value.push(i18n(str,context));
+          }
         }
       }
     }
@@ -109,15 +115,17 @@ function getPageTitle(req, article, context) {
 };
 
 function concactArr(arr){
-  let tempArr = [];
-  let lastIndex = arr.length - 1;
+  console.log(arr,"====")
+  let str = "where";
   for (let i = 0; i < arr.length; i++) {
+    if (i === arr[i].length - 1){
+        str += " and";
+    }
     for (let j = 0; j < arr[i].length; j++) {
-      let str = `${arr[i][j]}`
-    	tempArr.push(str);
+      str += ` ${arr[i][j]}`;
     }
   }
-  return tempArr;
+  return str;
 };
 
 const i18n = (key, context) =>
@@ -692,9 +700,8 @@ module.exports = {
     const arr = concactArr(searchFilterKeyListMapped);
 
    if (arr.length !== 0){
-        console.log(arr,"===")
-        return `where ${arr.join(', ')}`;
-      }
+      return ` ${arr}`;
+    }
   },
 
   getCurrentPage(req) {
