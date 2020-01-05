@@ -60,9 +60,21 @@ function getFirstPhotoUrl(article) {
 function filterCollections(req, name, context) {
   let query = req.query[name];
   if (query){
+    let keyList = Object.keys(req.query);
+    let keys = keyList.filter((item) => item !== 'selectedCategory');
     let arr = query.split(',');
-    let value = arr.map((item) => i18n(item,context));
-    return value;
+    let value = [];
+    for (let i in keys){
+      for (let x in arr){
+        if ( sharedFieldOptions[keys[i]].includes(arr[x]) ) {
+          let str = `name:${keys[i]}-key:${arr[x]}`;
+          let category = i18n(`${req.query.selectedCategory}_view_${keys[i]}_label`,context);
+          value.push(`${category}`);
+          value.push(i18n(str,context));
+        }
+      }
+    }
+    return [...new Set(value)];
   }
 }
 
@@ -98,10 +110,11 @@ function getPageTitle(req, article, context) {
 
 function concactArr(arr){
   let tempArr = [];
+  let lastIndex = arr.length - 1;
   for (let i = 0; i < arr.length; i++) {
     for (let j = 0; j < arr[i].length; j++) {
-      let str = arr[i][j];
-    	tempArr.push(str.charAt(0).toUpperCase() + str.substring(1));
+      let str = `${arr[i][j]}`
+    	tempArr.push(str);
     }
   }
   return tempArr;
@@ -676,16 +689,12 @@ module.exports = {
     const searchFilterKeyListMapped = filterArr
           .map(key => filterCollections(req, key, context))
           .filter(el => el);
-
     const arr = concactArr(searchFilterKeyListMapped);
 
-    if (arr){
-      if (arr.length !== 0){
-        let identifier = req.query.query ? 'with' : 'for';
-        let filtersWord = arr.length > 1 ? 'filters' : 'filter';
-        return `${identifier} ${filtersWord}: ${arr.toString()}`;
+   if (arr.length !== 0){
+        console.log(arr,"===")
+        return `where ${arr.join(', ')}`;
       }
-    }
   },
 
   getCurrentPage(req) {
