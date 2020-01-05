@@ -28,6 +28,7 @@ const {
   maybeUpdateUserText,
   parseGetParams,
   validateUrl,
+  verifyOrUpdateUrl,
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
@@ -214,23 +215,24 @@ async function postCaseUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
-
-
-  //check if url is valid, if http or https is not detected append http
-  newCase.links = newCase.links.map((link) => {
-    if (!/\b(http|https)/.test(link.url)){
-      link.url = `http://${link.url}`;
-    }
-    return link;
-  });
+  const links = req.body.links;
 
   //validate url
-  const isUrlValid = validateUrl(newCase);
-  if (!isUrlValid){
-    return res.status(400).json({
-      OK: false,
-      errors: ["Invalid link url."]
-    });
+
+  if (links) {
+    for (let key in links) {
+      let url = links[key].url;
+      if (url.length > 0 ){
+        newCase.links = verifyOrUpdateUrl(newCase.links);
+        const isUrlValid = validateUrl(newCase);
+        if (!isUrlValid){
+          return res.status(400).json({
+            OK: false,
+            errors: ["Invalid link url."]
+          });
+        }
+      }
+    } 
   }
 
   // if this is a new case, we don't have a post_date yet, so we set it here
