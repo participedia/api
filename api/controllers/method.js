@@ -24,6 +24,7 @@ const {
   maybeUpdateUserText,
   parseGetParams,
   validateUrl,
+  verifyOrUpdateUrl,
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
@@ -156,22 +157,24 @@ async function postMethodUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = req.body;
+  const links = req.body.links;
 
-  //check if url is valid, if http or https is not detected append http
-  newMethod.links = newMethod.links.map((link) => {
-    if (!/\b(http|https)/.test(link.url)){
-      link.url = `http://${link.url}`;
-    }
-    return link;
-  });
+  //validate url
 
-  //validate url params
-  const isUrlValid = validateUrl(newMethod);
-  if (!isUrlValid){
-    return res.status(400).json({
-      OK: false,
-      errors: ["Invalid link url."]
-    });
+  if (links) {
+    for (let key in links) {
+      let url = links[key].url;
+      if (url.length > 0 ){
+        newMethod.links = verifyOrUpdateUrl(newMethod.links);
+        const isUrlValid = validateUrl(newMethod);
+        if (!isUrlValid){
+          return res.status(400).json({
+            OK: false,
+            errors: ["Invalid link url."]
+          });
+        }
+      }
+    } 
   }
 
   // if this is a new method, we don't have a post_date yet, so we set it here

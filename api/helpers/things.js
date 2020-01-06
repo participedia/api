@@ -276,6 +276,18 @@ const searchFilterKeyLists = (type) => {
   }
 }
 
+//check if url is valid, if http or https is not detected append http
+
+const verifyOrUpdateUrl = (links) => {
+  let arr = links.map((link) => {
+    if (!/\b(http|https)/.test(link.url)){
+      link.url = `http://${link.url}`;
+    }
+    return link;
+  });
+  return arr;
+}
+
 const validateUrl = (article) => {
   let links = article.links;
   if (links){
@@ -297,6 +309,7 @@ module.exports = {
   uniq,
   fixUpURLs,
   validateUrl,
+  verifyOrUpdateUrl,
   parseGetParams,
   returnByType,
   setConditional,

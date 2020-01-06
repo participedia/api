@@ -25,6 +25,7 @@ const {
   maybeUpdateUserText,
   parseGetParams,
   validateUrl,
+  verifyOrUpdateUrl,
   returnByType,
   fixUpURLs
 } = require("../helpers/things");
@@ -155,22 +156,24 @@ async function postOrganizationUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
+  const links = req.body.links;
 
-  //check if url is valid, if http or https is not detected append http
-  newOrganization.links = newOrganization.links.map((link) => {
-    if (!/\b(http|https)/.test(link.url)){
-      link.url = `http://${link.url}`;
-    }
-    return link;
-  });
+  //validate url
 
-  //validate Url
-  const isUrlValid = validateUrl(newOrganization);
-  if (!isUrlValid){
-    return res.status(400).json({
-      OK: false,
-      errors: ["Invalid link url."]
-    });
+  if (links) {
+    for (let key in links) {
+      let url = links[key].url;
+      if (url.length > 0 ){
+        newOrganization.links = verifyOrUpdateUrl(newOrganization.links);
+        const isUrlValid = validateUrl(newOrganization);
+        if (!isUrlValid){
+          return res.status(400).json({
+            OK: false,
+            errors: ["Invalid link url."]
+          });
+        }
+      }
+    } 
   }
 
   // if this is a new organization, we don't have a post_date yet, so we set it here
