@@ -45,6 +45,19 @@
 -- add columns level_complexity and purpose_method
 \include 'migrations/migration_039.sql'
 -- Add fallback for languages that don't have local localization
-\include `migrations/migration_040.sql`
+\include 'migrations/migration_040.sql'
 -- Add table for storing login sessions
-\include `migrations/migration_041.sql`
+\include 'migrations/migration_041.sql'
+-- Add columns to add completeness_enum, and set enums
+-- for `case` , `organization`, and `methods`
+\include 'migrations/migration_042.sql'
+-- Get enums by id
+\include 'migrations/migration_043.sql'
+-- Add level_polarization on organizations table
+\include 'migrations/migration_044.sql'
+-- Add column on case table
+\include 'migrations/migration_045.sql'
+-- Update get_edit_authors function
+\include 'migrations/migration_046.sql'
+-- Create index for things
+\include 'migrations/migration_047.sql'
