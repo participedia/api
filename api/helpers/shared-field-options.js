@@ -470,4 +470,5 @@ module.exports = {
     "partial_editing",
     "complete",
   ],
+  query: []
 };
