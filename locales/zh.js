@@ -772,6 +772,7 @@
   "name:change_types-key:conflict": "冲突转换",
   "name:collections-key:coady_students": "科迪学院毕业生",
   "name:collections-key:gov_of_canada": "加拿大政府",
+  "name:collections-key:latinno": "LATINNO",
   "name:collections-key:participedia_team": "参与小组",
   "name:collections-key:sciencewise": "科学",
   "name:collections-key:uarkansas_students": "UA克林顿公共服务学院学生",
