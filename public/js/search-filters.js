@@ -40,7 +40,66 @@ const searchFilters = {
       el.addEventListener("click", e => this.handleClearAllForSection(e));
     });
 
+
+    this.initiateRemoveSelectedFilterController();
     this.updateUIFromUrlParams();
+  },
+
+  initiateRemoveSelectedFilterController() {
+    this.selectedFilterEl = document.querySelector(".js-filter-list-display");
+
+    this.selectedFilterBtnEl = toArray(
+      this.selectedFilterEl.querySelectorAll(".js-remove-selected-filter-btn")
+    );
+
+    this.selectedFilterBtnEl.forEach(el => {
+      el.addEventListener("click", e => this.handleRemoveSelectedFilter(e));
+    });
+  },
+
+  handleRemoveSelectedFilter(e) {
+    e.preventDefault();
+
+    // const allPopOvers = toArray(document.querySelectorAll(".js-filter-list-pop-over"));
+    // const currentPopOverEl = e.target.closest("li").querySelector(".js-filter-list-pop-over");
+    const currentButton = e.path[2];
+    currentButton.remove();
+    console.log(e.path);
+
+    // // close all other open pop overs before opening the current clicked one
+    // allPopOvers.forEach(el => {
+    //   if (el !== currentPopOverEl) {
+    //     el.classList.remove("show-filter-list-popover");
+    //   }
+    // });
+
+    // // remove open class from chip button before opening a new one
+    // this.chipButtonEls.forEach(el => el.classList.remove("search-filters-chip-open"));
+
+    // this.updateChipButtonsState();
+
+    // const xPosOfCurrentButton =
+    //   currentButton.getBoundingClientRect().x + currentButton.getBoundingClientRect().width;
+    // const shouldRenderOnRight = window.innerWidth - xPosOfCurrentButton < 300;
+    // const isMobile = window.innerWidth < 801;
+
+    // // toggle current popover if you click the same chip button again
+    // if (currentPopOverEl.classList.contains("show-filter-list-popover")) {
+    //   // hide popover
+    //   currentButton.classList.remove("search-filters-chip-open")
+    //   currentPopOverEl.classList.remove("show-filter-list-popover");
+    //   currentPopOverEl.style.marginLeft = 0;
+    //   this.updateChipButtonsState();
+    //   document.activeElement.blur();
+    // } else {
+    //   // show popover
+    //   currentButton.classList.add("search-filters-chip-open")
+    //   currentPopOverEl.classList.add("show-filter-list-popover");
+    //   if (shouldRenderOnRight && !isMobile) {
+    //     const popOverOffset = currentPopOverEl.clientWidth - currentButton.clientWidth;
+    //     currentPopOverEl.style.marginLeft = `-${popOverOffset}px`;
+    //   }
+    // }
   },
 
   getState() {

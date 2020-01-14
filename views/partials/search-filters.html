@@ -41,4 +41,24 @@
       <a href="#" class="clear-all-link js-clear-all-link">{{t "Clear All"}}</a>
     </li>
   </ul>
+  <div class="selected-filers">
+      <ul class="unstyled-list js-filter-list-display">
+        {{#each (searchFiltersDisplay req)}}
+          <li class="case-item">
+            <strong>{{this.labelMetaData.sectionLabel}}:</strong>
+            {{#each (searchFiltersDisplayItems this.valueMetaData.queryValue this.valueMetaData.queryLabel)}}
+            <div class="box item-{{key}}">
+              <span class="label">{{value}}</span>
+              <button
+                class="icon js-remove-selected-filter-btn"
+                data-field-name="{{section}}"
+                data-section-key="{{key}}"
+                id="selected_{{section}}[{{key}}]"
+                type="button">{{> icon-close }}</button>
+            </div>
+            {{/each}}
+          </li>
+        {{/each}}
+      </ul>
+  </div>
 </form>

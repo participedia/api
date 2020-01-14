@@ -1,17 +1,3 @@
-<div class="selected-filers">
-    <ul class="unstyled-list filter-list-display">
-      {{#each (searchFiltersDisplay req)}}
-        <li class="case-item">
-          <strong>{{this.labelMetaData.sectionLabel}}:</strong>
-          {{#each (searchFiltersDisplayItems this.valueMetaData.queryValue this.valueMetaData.queryLabel)}}
-          <button>
-            <span class="label">{{value}}</span><span class="icon">{{> icon-close }}</span>
-          </button>
-          {{/each}}
-        </li>
-      {{/each}}
-    </ul>
-</div>
 <div class="pagination">
   <div class="pagination-string">
     {{paginationNumResults cards totalResults req}} {{t "results of"}} {{totalResults}}

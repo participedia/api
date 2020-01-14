@@ -976,20 +976,6 @@ module.exports = {
     var filterCategoryItems = searchFiltersList[selectedCategory];
     var query = req.query;
 
-    // switch(selectedCategory) {
-    //   case 'method':
-    //     // code block
-    //     break;
-    //   case 'organizations':
-    //     filters = [];
-    //     break;
-    //   case 'case':
-    //     filters = [];
-    //     break;
-    //   default:
-    //     // code block
-    // }
-
     for (const property in query) {
       if (property !== 'selectedCategory') {
         // Get category name
@@ -1022,13 +1008,18 @@ module.exports = {
     metaData.forEach(data => {
       var newValue;
       if (name === "country") {
-        newValue = {key: data, value: data};
+        newValue = {
+          key: data,
+          value: data,
+          section: name
+        };
       } else {
         // name:general_issues-key:arts
         var key = data;
         newValue = {
           key: key,
-          value: i18n(`name:${name}-key:${key}`, context)
+          value: i18n(`name:${name}-key:${key}`, context),
+          section: name
         };
       }
       newData.push(newValue);
