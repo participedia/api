@@ -2,9 +2,12 @@
     <ul class="unstyled-list filter-list-display">
       {{#each (searchFiltersDisplay req)}}
         <li class="case-item">
-          <strong>{{this.label}}:</strong>
-          <button><span class="label">Item 1 </span><span class="icon">{{> icon-close }}</span></button>
-          <button><span class="label">Item 2</span> <span class="icon">{{> icon-close }}</span></button>
+          <strong>{{this.labelMetaData.sectionLabel}}:</strong>
+          {{#each (searchFiltersDisplayItems this.valueMetaData.queryValue this.valueMetaData.queryLabel)}}
+          <button>
+            <span class="label">{{value}}</span><span class="icon">{{> icon-close }}</span>
+          </button>
+          {{/each}}
         </li>
       {{/each}}
     </ul>

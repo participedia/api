@@ -34,7 +34,8 @@
   margin-bottom: 5px;
 }
 .filter-list-display .case-item .label {
-  padding-right: 10px;
+  padding-right: 14px;
+  margin-right: 3px;
 }
 .filter-list-display .case-item .icon {
   position: absolute;
@@ -44,7 +45,7 @@
 .filter-list-display .case-item button {
   border: 2px solid #e6e6e6;
   border-radius: 5px;
-  padding: 3px 12px;
+  padding: 3px 5px;
   font-size: 14px;
   position: relative;
 }

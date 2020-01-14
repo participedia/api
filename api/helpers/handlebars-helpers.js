@@ -993,29 +993,47 @@ module.exports = {
     for (const property in query) {
       if (property !== 'selectedCategory') {
         // Get category name
-        var filterObject = {'label': null};
-        for (i = 0; filterCategoryItems.length < 10; i++) {
+        var filterObject = {};
+        for (i = 0; i < filterCategoryItems.length; i++) {
           if (filterCategoryItems[i]['fieldNameKeys'].includes(property)) {
-            filterObject['label'] = filterCategoryItems[i]['sectionLabel'];
+            // filterObject['label'] = filterCategoryItems[i]['sectionLabel'];
+            filterObject['labelMetaData'] = filterCategoryItems[i];
+
+            var queryValue = query[property];
+            var value = queryValue.split(",");
+            filterObject['valueMetaData'] = {
+              'queryValue': value,
+              'queryLabel': property
+            };
+
             filters.push(filterObject);
             break;
           }
         }
-
-
-        // let propertyValue = query[property];
-        // console.log(`${property}: ${propertyValue}`);
       }
     }
 
     return filters;
-    // if (req.query.query) {
-    //   return req.query.query;
-    // }
+  },
 
-    // if (req.query) {
-    //   return 'hello world';
-    // }
+  searchFiltersDisplayItems(metaData, name, context) {
+    var newData = [];
+
+    metaData.forEach(data => {
+      var newValue;
+      if (name === "country") {
+        newValue = {key: data, value: data};
+      } else {
+        // name:general_issues-key:arts
+        var key = data;
+        newValue = {
+          key: key,
+          value: i18n(`name:${name}-key:${key}`, context)
+        };
+      }
+      newData.push(newValue);
+    });
+    return newData;
   },
 
   getOptionsForFilterKey(name, context) {
