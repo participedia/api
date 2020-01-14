@@ -71,11 +71,13 @@ function filterCollections(req, name, context) {
           value.push(`${category} includes`);
           value.push(req.query.country.replace(/,/g, ', '));
         } else {
-          if ( sharedFieldOptions[keys[i]].includes(arr[x]) ) {
-            let str = `name:${keys[i]}-key:${arr[x]}`;
-            let category = i18n(`${req.query.selectedCategory}_view_${keys[i]}_label`,context);
-            value.push(`${category} includes`);
-            value.push(i18n(str,context));
+          if(keys[i] !== 'query') {
+            if ( sharedFieldOptions[keys[i]].includes(arr[x]) ) {
+              let str = `name:${keys[i]}-key:${arr[x]}`;
+              let category = i18n(`${req.query.selectedCategory}_view_${keys[i]}_label`,context);
+              value.push(`${category} includes`);
+              value.push(i18n(str,context));
+            }
           }
         }
       }
