@@ -48,6 +48,7 @@
   padding: 3px 5px;
   font-size: 14px;
   position: relative;
+  margin-bottom: 5px;
 }
 .filter-list-display .case-item strong {
   margin-left: 1em;
