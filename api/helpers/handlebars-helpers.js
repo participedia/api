@@ -961,7 +961,54 @@ module.exports = {
   },
 
   searchFiltersDisplay(req) {
-    return 'hello world';
+    // Check if selected category params exist
+    if (!req.query.hasOwnProperty('selectedCategory')) {
+      return [];
+    }
+
+    // Check if selected category value exist in record
+    var selectedCategory = req.query['selectedCategory'];
+    if (!searchFiltersList.hasOwnProperty(selectedCategory)) {
+      return [];
+    }
+    
+    var filters = [];
+    var filterCategoryItems = searchFiltersList[selectedCategory];
+    var query = req.query;
+
+    // switch(selectedCategory) {
+    //   case 'method':
+    //     // code block
+    //     break;
+    //   case 'organizations':
+    //     filters = [];
+    //     break;
+    //   case 'case':
+    //     filters = [];
+    //     break;
+    //   default:
+    //     // code block
+    // }
+
+    for (const property in query) {
+      if (property !== 'selectedCategory') {
+        // Get category name
+        var filterObject = {'label': null};
+        for (i = 0; filterCategoryItems.length < 10; i++) {
+          if (filterCategoryItems[i]['fieldNameKeys'].includes(property)) {
+            filterObject['label'] = filterCategoryItems[i]['sectionLabel'];
+            filters.push(filterObject);
+            break;
+          }
+        }
+
+
+        // let propertyValue = query[property];
+        // console.log(`${property}: ${propertyValue}`);
+      }
+    }
+
+    return filters;
     // if (req.query.query) {
     //   return req.query.query;
     // }

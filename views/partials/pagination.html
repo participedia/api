@@ -1,19 +1,12 @@
 <div class="selected-filers">
-    {{searchFiltersDisplay req}}
-
     <ul class="unstyled-list filter-list-display">
-      <li class="case-item"><strong>Case 1:</strong>
-        <button>Item 1</button>
-        <button>Item 2</button>
-      </li>
-      <li class="case-item"><strong>Case 2:</strong>
-        <button>Item 1</button>
-        <button>Item 2</button>
-      </li>
-      <li class="case-item"><strong>Case 2:</strong>
-        <button>Item 1</button>
-        <button>Item 2</button>
-      </li>
+      {{#each (searchFiltersDisplay req)}}
+        <li class="case-item">
+          <strong>{{this.label}}:</strong>
+          <button><span class="label">Item 1 </span><span class="icon">{{> icon-close }}</span></button>
+          <button><span class="label">Item 2</span> <span class="icon">{{> icon-close }}</span></button>
+        </li>
+      {{/each}}
     </ul>
 </div>
 <div class="pagination">

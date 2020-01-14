@@ -33,11 +33,20 @@
 .filter-list-display .case-item {
   margin-bottom: 5px;
 }
+.filter-list-display .case-item .label {
+  padding-right: 10px;
+}
+.filter-list-display .case-item .icon {
+  position: absolute;
+  right: 5px;
+  top: 4px;
+}
 .filter-list-display .case-item button {
   border: 2px solid #e6e6e6;
   border-radius: 5px;
   padding: 3px 12px;
   font-size: 14px;
+  position: relative;
 }
 .filter-list-display .case-item strong {
   margin-left: 1em;
@@ -79,6 +88,7 @@
 }
 .show-filter-list-popover {
   display: block;
+  z-index: 1;
 }
 .clear-all-link, .clear-section-link {
   color: #aaa;
