@@ -960,6 +960,17 @@ module.exports = {
     return searchFiltersList[type];
   },
 
+  searchFiltersDisplay(req) {
+    return 'hello world';
+    // if (req.query.query) {
+    //   return req.query.query;
+    // }
+
+    // if (req.query) {
+    //   return 'hello world';
+    // }
+  },
+
   getOptionsForFilterKey(name, context) {
     if (name === "country") {
       return countries.map(item => {

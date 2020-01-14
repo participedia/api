@@ -24,6 +24,28 @@
   background-color: #e6e6e6;
   outline: 0;
 }
+.filter-list-display {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.filter-list-display .case-item {
+  margin-bottom: 5px;
+}
+.filter-list-display .case-item button {
+  border: 2px solid #e6e6e6;
+  border-radius: 5px;
+  padding: 3px 12px;
+  font-size: 14px;
+}
+.filter-list-display .case-item strong {
+  margin-left: 1em;
+  margin-right: 5px;
+}
+.filter-list-display .case-item:first-child strong {
+  margin-left: 0 !important;
+}
 .filter-list-pop-over {
   display: none;
   position: absolute;
