@@ -40,21 +40,16 @@ const searchFilters = {
       el.addEventListener("click", e => this.handleClearAllForSection(e));
     });
 
-
-    this.initiateRemoveSelectedFilterController();
-    this.updateUIFromUrlParams();
-  },
-
-  initiateRemoveSelectedFilterController() {
+    // Selected Filter Box
     this.selectedFilterEl = document.querySelector(".js-filter-list-display");
-
     this.selectedFilterBtnEl = toArray(
       this.selectedFilterEl.querySelectorAll(".js-remove-selected-filter-btn")
     );
-
     this.selectedFilterBtnEl.forEach(el => {
       el.addEventListener("click", e => this.handleRemoveSelectedFilter(e));
     });
+
+    this.updateUIFromUrlParams();
   },
 
   handleRemoveSelectedFilter(e) {

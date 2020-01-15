@@ -43,6 +43,9 @@
   top: 4px;
   border: none;
 }
+.js-filter-list-display .case-item .icon svg {
+  pointer-events: none;
+}
 .js-filter-list-display .case-item .box {
   border: 2px solid #e6e6e6;
   border-radius: 5px;
