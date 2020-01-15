@@ -42,9 +42,13 @@
   right: 5px;
   top: 4px;
   border: none;
+  background: none;
 }
 .js-filter-list-display .case-item .icon svg {
   pointer-events: none;
+}
+.js-filter-list-display .case-item .icon svg path {
+  fill: #d5d0d0;
 }
 .js-filter-list-display .case-item .box {
   border: 2px solid #e6e6e6;
