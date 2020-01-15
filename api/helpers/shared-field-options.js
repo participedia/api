@@ -5,7 +5,8 @@ module.exports = {
     "sciencewise",
     "coady_students",
     "usoton_students",
-    "uarkansas_students"
+    "uarkansas_students",
+    "latinno"
   ],
   general_issues: [
     "agriculture",

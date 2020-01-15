@@ -772,6 +772,7 @@
   "name:change_types-key:conflict": "Transformação de conflitos",
   "name:collections-key:coady_students": "Graduados do Instituto Coady",
   "name:collections-key:gov_of_canada": "Governo do Canadá",
+  "name:collections-key:latinno": "LATINNO",
   "name:collections-key:participedia_team": "Equipe participedia",
   "name:collections-key:sciencewise": "Sciencewise Sciencewise",
   "name:collections-key:uarkansas_students": "UA Clinton School of Public Service Students",
