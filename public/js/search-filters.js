@@ -59,47 +59,23 @@ const searchFilters = {
 
   handleRemoveSelectedFilter(e) {
     e.preventDefault();
+    // Get DOM of clicked item
+    const filterEl = document.querySelector(`.item-${e.target.dataset.sectionKey}`);
 
-    // const allPopOvers = toArray(document.querySelectorAll(".js-filter-list-pop-over"));
-    // const currentPopOverEl = e.target.closest("li").querySelector(".js-filter-list-pop-over");
-    const currentButton = e.path[2];
-    currentButton.remove();
-    console.log(e.path);
+    // Remove DOM
+    filterEl.remove();
 
-    // // close all other open pop overs before opening the current clicked one
-    // allPopOvers.forEach(el => {
-    //   if (el !== currentPopOverEl) {
-    //     el.classList.remove("show-filter-list-popover");
-    //   }
-    // });
+    // Get the remaining selected filters
+    removeUrlParams(this.SEARCH_FILTER_KEYS);
+    const selectedFilters = this.getSelectedFilterState();
 
-    // // remove open class from chip button before opening a new one
-    // this.chipButtonEls.forEach(el => el.classList.remove("search-filters-chip-open"));
+    // add new filters as params
+    Object.keys(selectedFilters).forEach(key => {
+      updateUrlParams(key, selectedFilters[key]);
+    });
 
-    // this.updateChipButtonsState();
-
-    // const xPosOfCurrentButton =
-    //   currentButton.getBoundingClientRect().x + currentButton.getBoundingClientRect().width;
-    // const shouldRenderOnRight = window.innerWidth - xPosOfCurrentButton < 300;
-    // const isMobile = window.innerWidth < 801;
-
-    // // toggle current popover if you click the same chip button again
-    // if (currentPopOverEl.classList.contains("show-filter-list-popover")) {
-    //   // hide popover
-    //   currentButton.classList.remove("search-filters-chip-open")
-    //   currentPopOverEl.classList.remove("show-filter-list-popover");
-    //   currentPopOverEl.style.marginLeft = 0;
-    //   this.updateChipButtonsState();
-    //   document.activeElement.blur();
-    // } else {
-    //   // show popover
-    //   currentButton.classList.add("search-filters-chip-open")
-    //   currentPopOverEl.classList.add("show-filter-list-popover");
-    //   if (shouldRenderOnRight && !isMobile) {
-    //     const popOverOffset = currentPopOverEl.clientWidth - currentButton.clientWidth;
-    //     currentPopOverEl.style.marginLeft = `-${popOverOffset}px`;
-    //   }
-    // }
+    // load new url
+    location.href = location.href;
   },
 
   getState() {
@@ -113,6 +89,24 @@ const searchFilters = {
         } else {
           selectedFilters[fieldName] = [filterName];
         }
+      }
+    });
+    return selectedFilters;
+  },
+
+  getSelectedFilterState() {
+    this.selectedFilterBtnEl = toArray(
+      this.selectedFilterEl.querySelectorAll(".js-remove-selected-filter-btn")
+    );
+
+    const selectedFilters = {};
+    this.selectedFilterBtnEl.forEach(el => {
+      const fieldName = el.getAttribute("data-field-name");
+      const filterName = el.getAttribute("data-section-key");
+      if (Array.isArray(selectedFilters[fieldName])) {
+        selectedFilters[fieldName].push(filterName);
+      } else {
+        selectedFilters[fieldName] = [filterName];
       }
     });
     return selectedFilters;
