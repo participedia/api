@@ -125,9 +125,9 @@
     "resetstagefunctions": "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/functions.sql",
     "resetprodfunctions": "psql -d \"${DATABASE_PROD_URL}\" -f migrations/functions.sql",
     "textdump": "pg_dump --format=p --file=one_schema.sql --clean --create --no-owner --if-exists --dbname=participedia",
-    "migrateprod": "f(){ psql -d \"${DATABASE_PROD_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
-    "migratestage": "f(){ psql -d \"${DATABASE_STAGE_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
-    "migratelocal": "f(){ psql -d \"${DATABASE_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
+    "migrateprodlatest": "f(){ psql -d \"${DATABASE_PROD_URL}\" -f \"migrations/migration_047.sql\"; };f",
+    "migratestagelatest": "f(){ psql -d \"${DATABASE_STAGE_URL}\" -f \"migrations/migration_047.sql\"; };f",
+    "migratelocallatest": "f(){ psql -d \"${DATABASE_URL}\" -f \"migrations/migration_047.sql\"; };f",
     "migratetest": "f(){ psql -d \"${DATABASE_TEST_URL}\" -f \"migrations/migration_${item}.sql\"; };f"
   }
 }
