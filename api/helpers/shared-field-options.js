@@ -470,5 +470,5 @@ module.exports = {
     "partial_citations",
     "partial_editing",
     "complete",
-  ],
+  ]
 };
