@@ -40,7 +40,37 @@ const searchFilters = {
       el.addEventListener("click", e => this.handleClearAllForSection(e));
     });
 
+    // Selected Filter Box
+    this.selectedFilterEl = document.querySelector(".js-filter-list-display");
+    this.selectedFilterBtnEl = toArray(
+      this.selectedFilterEl.querySelectorAll(".js-remove-selected-filter-btn")
+    );
+    this.selectedFilterBtnEl.forEach(el => {
+      el.addEventListener("click", e => this.handleRemoveSelectedFilter(e));
+    });
+
     this.updateUIFromUrlParams();
+  },
+
+  handleRemoveSelectedFilter(e) {
+    e.preventDefault();
+    // Get DOM of clicked item
+    const filterEl = document.querySelector(`.item-${e.target.dataset.sectionKey}`);
+
+    // Remove DOM
+    filterEl.remove();
+
+    // Get the remaining selected filters
+    removeUrlParams(this.SEARCH_FILTER_KEYS);
+    const selectedFilters = this.getSelectedFilterState();
+
+    // add new filters as params
+    Object.keys(selectedFilters).forEach(key => {
+      updateUrlParams(key, selectedFilters[key]);
+    });
+
+    // load new url
+    location.href = location.href;
   },
 
   getState() {
@@ -54,6 +84,24 @@ const searchFilters = {
         } else {
           selectedFilters[fieldName] = [filterName];
         }
+      }
+    });
+    return selectedFilters;
+  },
+
+  getSelectedFilterState() {
+    this.selectedFilterBtnEl = toArray(
+      this.selectedFilterEl.querySelectorAll(".js-remove-selected-filter-btn")
+    );
+
+    const selectedFilters = {};
+    this.selectedFilterBtnEl.forEach(el => {
+      const fieldName = el.getAttribute("data-field-name");
+      const filterName = el.getAttribute("data-section-key");
+      if (Array.isArray(selectedFilters[fieldName])) {
+        selectedFilters[fieldName].push(filterName);
+      } else {
+        selectedFilters[fieldName] = [filterName];
       }
     });
     return selectedFilters;

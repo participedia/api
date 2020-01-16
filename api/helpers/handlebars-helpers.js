@@ -962,6 +962,73 @@ module.exports = {
     return searchFiltersList[type];
   },
 
+  searchFiltersDisplay(req) {
+    // Check if selected category params exist
+    if (!req.query.hasOwnProperty('selectedCategory')) {
+      return [];
+    }
+
+    // Check if selected category value exist in record
+    var selectedCategory = req.query['selectedCategory'];
+    if (!searchFiltersList.hasOwnProperty(selectedCategory)) {
+      return [];
+    }
+    
+    var filters = [];
+    var filterCategoryItems = searchFiltersList[selectedCategory];
+    var query = req.query;
+
+    for (const property in query) {
+      if (property !== 'selectedCategory') {
+        // Get category name
+        var filterObject = {};
+        for (i = 0; i < filterCategoryItems.length; i++) {
+          if (filterCategoryItems[i]['fieldNameKeys'].includes(property)) {
+            // filterObject['label'] = filterCategoryItems[i]['sectionLabel'];
+            filterObject['labelMetaData'] = filterCategoryItems[i];
+
+            var queryValue = query[property];
+            var value = queryValue.split(",");
+            filterObject['valueMetaData'] = {
+              'queryValue': value,
+              'queryLabel': property
+            };
+
+            filters.push(filterObject);
+            break;
+          }
+        }
+      }
+    }
+
+    return filters;
+  },
+
+  searchFiltersDisplayItems(metaData, name, context) {
+    var newData = [];
+
+    metaData.forEach(data => {
+      var newValue;
+      if (name === "country") {
+        newValue = {
+          key: data,
+          value: data,
+          section: name
+        };
+      } else {
+        // name:general_issues-key:arts
+        var key = data;
+        newValue = {
+          key: key,
+          value: i18n(`name:${name}-key:${key}`, context),
+          section: name
+        };
+      }
+      newData.push(newValue);
+    });
+    return newData;
+  },
+
   getOptionsForFilterKey(name, context) {
     if (name === "country") {
       return countries.map(item => {
