@@ -24,33 +24,33 @@
   background-color: #e6e6e6;
   outline: 0;
 }
-.js-filter-list-display {
+.filter-list-display {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
-.js-filter-list-display .case-item {
+.filter-list-display .case-item {
   margin-bottom: 5px;
 }
-.js-filter-list-display .case-item .label {
+.filter-list-display .case-item .label {
   padding-right: 14px;
   margin-right: 12px;
 }
-.js-filter-list-display .case-item .icon {
+.filter-list-display .case-item .icon {
   position: absolute;
   right: 5px;
   top: 4px;
   border: none;
   background: none;
 }
-.js-filter-list-display .case-item .icon svg {
+.filter-list-display .case-item .icon svg {
   pointer-events: none;
 }
-.js-filter-list-display .case-item .icon svg path {
+.filter-list-display .case-item .icon svg path {
   fill: #d5d0d0;
 }
-.js-filter-list-display .case-item .box {
+.filter-list-display .case-item .box {
   border: 2px solid #e6e6e6;
   border-radius: 5px;
   padding: 3px 5px;
@@ -59,15 +59,15 @@
   margin-bottom: 5px;
   margin-right: 5px;
 }
-.js-filter-list-display .case-item strong {
+.filter-list-display .case-item strong {
   margin-left: 1em;
   margin-right: 5px;
 }
-.js-filter-list-display .case-item strong,
-.js-filter-list-display .case-item .box {
+.filter-list-display .case-item strong,
+.filter-list-display .case-item .box {
   display: inline;
 }
-.js-filter-list-display .case-item:first-child strong {
+.filter-list-display .case-item:first-child strong {
   margin-left: 0 !important;
 }
 .filter-list-pop-over {
