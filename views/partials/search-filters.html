@@ -42,23 +42,23 @@
     </li>
   </ul>
   <div class="selected-filers">
-      <ul class="unstyled-list filter-list-display js-filter-list-display">
+    <div class="unstyled-list filter-list-display js-filter-list-display">
+      <div class="case-item">
         {{#each (searchFiltersDisplay req)}}
-          <li class="case-item">
-            <strong>{{this.labelMetaData.sectionLabel}}:</strong>
-            {{#each (searchFiltersDisplayItems this.valueMetaData.queryValue this.valueMetaData.queryLabel)}}
-            <div class="box item-{{key}}">
-              <span class="label">{{value}}</span>
-              <button
-                class="icon js-remove-selected-filter-btn"
-                data-field-name="{{section}}"
-                data-section-key="{{key}}"
-                id="selected_{{section}}[{{key}}]"
-                type="button">{{> icon-close }}</button>
-            </div>
-            {{/each}}
-          </li>
+          <strong>{{this.labelMetaData.sectionLabel}}:</strong>
+          {{#each (searchFiltersDisplayItems this.valueMetaData.queryValue this.valueMetaData.queryLabel)}}
+          <div class="box item-{{key}}">
+            <span class="label">{{value}}</span>
+            <button
+              class="icon js-remove-selected-filter-btn"
+              data-field-name="{{section}}"
+              data-section-key="{{key}}"
+              id="selected_{{section}}[{{key}}]"
+              type="button">{{> icon-close }}</button>
+          </div>
+          {{/each}}
         {{/each}}
-      </ul>
+      </div>
+    </div>
   </div>
 </form>
