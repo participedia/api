@@ -34,13 +34,13 @@
   margin-bottom: 5px;
 }
 .filter-list-display .case-item .label {
-  padding-right: 14px;
+  padding-right: 10px;
   margin-right: 12px;
 }
 .filter-list-display .case-item .icon {
   position: absolute;
-  right: 5px;
-  top: 4px;
+  right: 1px;
+  top: 3px;
   border: none;
   background: none;
 }
