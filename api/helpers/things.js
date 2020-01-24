@@ -11,7 +11,7 @@ const {
   INSERT_AUTHOR,
   CASE_BY_ID,
   METHOD_BY_ID,
-  ORGANIZATION_BY_ID
+  ORGANIZATION_BY_ID,
 } = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
@@ -21,7 +21,7 @@ const shortKeys = titleKeys.concat([
   "photos",
   "post_date",
   "updated_date",
-  "bookmarked"
+  "bookmarked",
 ]);
 const mediumKeys = shortKeys.concat(["body", "location"]);
 
@@ -52,7 +52,7 @@ const fixUpURLs = function(article) {
       obj.url = encodeURL(obj.url);
     });
   }
-  
+
   if (article.files && article.files.length) {
     article.files.forEach(obj => {
       obj.url = encodeURL(obj.url);
@@ -60,13 +60,13 @@ const fixUpURLs = function(article) {
   }
 };
 
-const placeHolderPhotos = (article) => {
-    if (article.photos || article.photos.length <= 0) {
-      article.photos.push({
-        "url" : "/images/texture_1.svg"
-      });
-      return article.photos;
-    }
+const placeHolderPhotos = article => {
+  if (article.photos || article.photos.length <= 0) {
+    article.photos.push({
+      url: "/images/texture_1.svg",
+    });
+    return article.photos;
+  }
 };
 
 const returnByType = (res, params, article, static, user) => {
@@ -86,7 +86,7 @@ const returnByType = (res, params, article, static, user) => {
         static,
         user,
         params,
-        layout: false
+        layout: false,
       });
     case "json":
       return res.status(200).json({ OK: true, article });
@@ -111,7 +111,7 @@ const parseGetParams = function(req, type) {
     articleid: as.integer(req.params.thingid || req.params.articleid),
     lang: as.value(getLanguage(req)),
     userid: req.user ? as.integer(req.user.id) : null,
-    returns: as.value(req.query.returns || "html")
+    returns: as.value(req.query.returns || "html"),
   });
 };
 
@@ -140,7 +140,7 @@ const uniq = list => {
 let queries = {
   case: CASE_BY_ID,
   method: METHOD_BY_ID,
-  organization: ORGANIZATION_BY_ID
+  organization: ORGANIZATION_BY_ID,
 };
 
 async function maybeUpdateUserText(req, res, type) {
@@ -161,14 +161,20 @@ async function maybeUpdateUserText(req, res, type) {
     description: oldArticle.description,
     language: params.lang,
     type: type,
-    id: params.articleid
+    id: params.articleid,
   };
   ["body", "title", "description"].forEach(key => {
     let value;
     if (key === "body") {
-      value = newArticle[key] !== undefined ? as.richtext(newArticle[key] || null) : oldArticle[key];
+      value =
+        newArticle[key] !== undefined
+          ? as.richtext(newArticle[key] || null)
+          : oldArticle[key];
     } else {
-      value = newArticle[key] !== undefined ? as.text(newArticle[key] || null) : oldArticle[key];
+      value =
+        newArticle[key] !== undefined
+          ? as.text(newArticle[key] || null)
+          : oldArticle[key];
     }
 
     if (newArticle[key] || oldArticle[key] !== newArticle[key]) {
@@ -178,7 +184,7 @@ async function maybeUpdateUserText(req, res, type) {
   });
   const author = {
     user_id: params.userid,
-    thingid: params.articleid
+    thingid: params.articleid,
   };
   if (textModified) {
     return { updatedText, author, oldArticle };
@@ -208,17 +214,17 @@ function setConditional(
 
 //get searchFilterKeyList and searchFilterKeys by methods,cases, orgs
 
-const searchFilterKeys = (type) => {
-  if (type === 'case') {
+const searchFilterKeys = type => {
+  if (type === "case") {
     return [
       "country",
       "scope_of_influence",
       "public_spectrum",
       "open_limited",
       "recruitment_method",
-      "facetoface_online_or_both"
+      "facetoface_online_or_both",
     ];
-  } else if (type === 'method'){
+  } else if (type === "method") {
     return [
       "open_limited",
       "recruitment_method",
@@ -226,20 +232,17 @@ const searchFilterKeys = (type) => {
       "public_spectrum",
       "level_polarization",
       "level_complexity",
-      "facilitators"
+      "facilitators",
     ];
-  } else if (type === 'organization'){
-    return [
-      "country",
-      "sector"
-    ];
+  } else if (type === "organization") {
+    return ["country", "sector"];
   } else {
     return [];
   }
 };
 
-const searchFilterKeyLists = (type) => {
-  if (type === 'case') {
+const searchFilterKeyLists = type => {
+  if (type === "case") {
     return [
       "general_issues",
       "purposes",
@@ -250,9 +253,9 @@ const searchFilterKeyLists = (type) => {
       "funder_types",
       "change_types",
       "completeness",
-      "collections"
+      "collections",
     ];
-  } else if (type === 'method'){
+  } else if (type === "method") {
     return [
       "method_types",
       "number_of_participants",
@@ -260,45 +263,49 @@ const searchFilterKeyLists = (type) => {
       "decision_methods",
       "scope_of_influence",
       "purpose_method",
-      "completeness"
+      "completeness",
     ];
-  } else if (type === 'organization'){
+  } else if (type === "organization") {
     return [
       "general_issues",
       "type_method",
       "level_polarization",
       "scope_of_influence",
       "type_tool",
-      "completeness"
+      "completeness",
     ];
   } else {
     return [];
   }
-}
+};
 
 //check if url is valid, if http or https is not detected append http
 
-const verifyOrUpdateUrl = (links) => {
-  let arr = links.map((link) => {
-    if (!/\b(http|https)/.test(link.url)){
+const verifyOrUpdateUrl = links => {
+  let arr = links.map(link => {
+    if (!/\b(http|https)/.test(link.url)) {
       link.url = `http://${link.url}`;
     }
     return link;
   });
   return arr;
-}
+};
 
-const validateUrl = (article) => {
+const validateUrl = article => {
   let links = article.links;
-  if (links){
-    let arr = links.map((item) => item.url.length > 0 ? isValidURL(item.url) : true);
+  if (links) {
+    let arr = links.map(item =>
+      item.url.length > 0 ? isValidURL(item.url) : true
+    );
     return !arr.includes(false);
   }
 };
 
-const isValidURL = (string) => {
-  let res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-  return (res !== null)
+const isValidURL = string => {
+  let res = string.match(
+    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+  );
+  return res !== null;
 };
 
 module.exports = {
@@ -316,5 +323,5 @@ module.exports = {
   maybeUpdateUserText,
   searchFilterKeys,
   searchFilterKeyLists,
-  placeHolderPhotos
+  placeHolderPhotos,
 };

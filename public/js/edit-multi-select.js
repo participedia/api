@@ -2,11 +2,13 @@ import SlimSelect from "slim-select";
 import Sortable from "sortablejs";
 import modal from "./modal.js";
 
-const toArray = (nodeList) => Array.prototype.slice.call(nodeList);
+const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
 const editMultiSelect = {
   init() {
-    this.selectLists = toArray(document.querySelectorAll(".js-edit-multi-select-list"));
+    this.selectLists = toArray(
+      document.querySelectorAll(".js-edit-multi-select-list")
+    );
 
     if (this.selectLists.length < 1) return;
 
@@ -16,9 +18,12 @@ const editMultiSelect = {
   },
 
   initSelects() {
-    const selectEls = toArray(document.querySelectorAll(".js-edit-multi-select"));
+    const selectEls = toArray(
+      document.querySelectorAll(".js-edit-multi-select")
+    );
     selectEls.forEach(selectEl => {
-      const placeholderText = selectEl.querySelector("option[data-placeholder]").innerText;
+      const placeholderText = selectEl.querySelector("option[data-placeholder]")
+        .innerText;
       // numOptions is 1 less than all options to account for the placeholder option
       const numOptions = selectEl.querySelectorAll("option").length - 1;
       const options = {
@@ -34,18 +39,20 @@ const editMultiSelect = {
 
       const slim = new SlimSelect(options);
 
-      slim.onChange = (info) => {
+      slim.onChange = info => {
         this.onSelectChange({
           name: selectEl.getAttribute("name"),
           selectedKey: info.value,
           selectedText: info.text,
         });
-      }
+      };
 
-      slim.afterClose = (info) => {
+      slim.afterClose = info => {
         // always show the placeholder text
-        slim.slim.container.querySelector(".placeholder").innerHTML = placeholderText;
-      }
+        slim.slim.container.querySelector(
+          ".placeholder"
+        ).innerHTML = placeholderText;
+      };
     });
   },
 
@@ -65,19 +72,24 @@ const editMultiSelect = {
   updateIndexes(e) {
     e.preventDefault();
     const name = e.target.getAttribute("data-name");
-    const parentList = document.querySelector(`.js-edit-multi-select-list[data-name=${name}]`);
+    const parentList = document.querySelector(
+      `.js-edit-multi-select-list[data-name=${name}]`
+    );
 
     // update the input field names to reflect new order
     toArray(parentList.querySelectorAll("input")).forEach((el, i) => {
-      el.name =`${name}[${i}][key]`;
+      el.name = `${name}[${i}][key]`;
     });
   },
 
   bindRemoveItemClicks() {
     this.selectLists.forEach(el => {
-      el.addEventListener("click", (e) => {
+      el.addEventListener("click", e => {
         const removeEl = e.target.closest("button");
-        if (removeEl && removeEl.classList.contains("js-edit-multi-select-remove-item")) {
+        if (
+          removeEl &&
+          removeEl.classList.contains("js-edit-multi-select-remove-item")
+        ) {
           this.removeItem(e);
         }
       });
@@ -87,15 +99,25 @@ const editMultiSelect = {
   getNumItems(currentList) {
     const items = toArray(currentList.querySelectorAll("li"));
     // filter out items where input value is empty
-    return items.filter(item => item.querySelector("input").value !== "").length;
+    return items.filter(item => item.querySelector("input").value !== "")
+      .length;
   },
 
   onSelectChange({ name, selectedKey, selectedText }) {
-    const currentList = document.querySelector(`.js-edit-multi-select-list[data-name=${name}]`);
-    const currentSelect = document.querySelector(`.js-edit-multi-select[name=${name}]`);
+    const currentList = document.querySelector(
+      `.js-edit-multi-select-list[data-name=${name}]`
+    );
+    const currentSelect = document.querySelector(
+      `.js-edit-multi-select[name=${name}]`
+    );
     const maxItems = currentList.getAttribute("data-max");
     const numItems = this.getNumItems(currentList);
-    const newItemHTML = this.listItemTemplate(name, selectedKey, selectedText, numItems);
+    const newItemHTML = this.listItemTemplate(
+      name,
+      selectedKey,
+      selectedText,
+      numItems
+    );
 
     const isInList = () => {
       // converts a NodeList into an Array so we can use the find method
@@ -110,7 +132,7 @@ const editMultiSelect = {
 
     if (
       hasNotReachedMax() && // if there is a max number, only allow adding items up to that limit
-      selectedKey &&  // if it's the placeholder/top most item, don't append to ui
+      selectedKey && // if it's the placeholder/top most item, don't append to ui
       !isInList() // if it's already in the list, don't append to ui
     ) {
       currentList.append(newItemHTML);
@@ -134,7 +156,9 @@ const editMultiSelect = {
 
     // if we have an empty item for this key, remove it since we are now adding a new item
     // we only need the empty item when we are not adding/saving any other items
-    const existingInputForIndex = document.querySelector(`[name="${name}[${index}][key]"]`);
+    const existingInputForIndex = document.querySelector(
+      `[name="${name}[${index}][key]"]`
+    );
     if (existingInputForIndex) {
       const existingItemLi = existingInputForIndex.closest("li");
       existingItemLi.parentNode.removeChild(existingItemLi);
@@ -154,7 +178,9 @@ const editMultiSelect = {
     const listItem = e.target.closest("li");
     const listContainer = listItem.closest("ol");
     const name = listContainer.getAttribute("data-name");
-    const currentList = document.querySelector(`.js-edit-multi-select-list[data-name=${name}]`);
+    const currentList = document.querySelector(
+      `.js-edit-multi-select-list[data-name=${name}]`
+    );
     const numItems = this.getNumItems(currentList);
 
     // if it's the last item, don't remove it, set the value to "" and hide it
@@ -169,6 +195,6 @@ const editMultiSelect = {
       this.updateIndexes(e);
     }
   },
-}
+};
 
 export default editMultiSelect;

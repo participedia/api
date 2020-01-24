@@ -10,10 +10,15 @@ let {
   FEATURED,
   SEARCH_MAP,
   LIST_MAP_CASES,
-  LIST_MAP_ORGANIZATIONS
+  LIST_MAP_ORGANIZATIONS,
 } = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
-const { supportedTypes, parseGetParams, searchFilterKeys, searchFilterKeyLists } = require("../helpers/things");
+const {
+  supportedTypes,
+  parseGetParams,
+  searchFilterKeys,
+  searchFilterKeyLists,
+} = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
 
@@ -59,14 +64,14 @@ router.get("/getAllForType", async function getAllForType(req, res) {
     }
     if (!supportedTypes.includes(objType)) {
       res.status(401).json({
-        message: "Unsupported objType for getAllForType: " + objType
+        message: "Unsupported objType for getAllForType: " + objType,
       });
     }
     const titlelist = await db.any(TITLES_FOR_THINGS, {
       language: as.value(getLanguage(req)),
       limit: response_limit,
       offset: offset,
-      type: objType
+      type: objType,
     });
     let jtitlelist = {};
     // FIXME: this is a dumb format but it is what front-end expects.
@@ -109,7 +114,7 @@ const queryFileFromReq = req => {
 };
 
 const offsetFromReq = req => {
-  let query = req.query.page ? req.query.page.replace(/[^0-9]/g, "") : '';
+  let query = req.query.page ? req.query.page.replace(/[^0-9]/g, "") : "";
   const page = Math.max(as.number(query || 1), 1);
   return (page - 1) * limitFromReq(req);
 };
@@ -132,8 +137,8 @@ const sortbyFromReq = req => {
 
 const searchFilterKeyFromReq = (req, name) => {
   let value = req.query[name];
-  if (value){
-    if (name === 'country'){
+  if (value) {
+    if (name === "country") {
       return ` AND ${name} = ANY ('{${value}}') `;
     } else {
       return value ? ` AND ${name} ='${value}' ` : "";
@@ -146,7 +151,7 @@ const searchFilterKeyListFromReq = (req, name) => {
   if (!value) {
     return "";
   }
-  if (name === 'completeness'){
+  if (name === "completeness") {
     return ` AND ${name} = ANY ('{${value}}') `;
   } else {
     value = as.array(value.split(","));
@@ -158,8 +163,12 @@ const searchFiltersFromReq = req => {
   const keys = searchFilterKeys(typeFromReq(req));
   const keyLists = searchFilterKeyLists(typeFromReq(req));
 
-  let searchFilterKeysMapped = keys.map(key => searchFilterKeyFromReq(req, key));
-  let searchFilterKeyListMapped = keyLists.map(key => searchFilterKeyListFromReq(req, key));
+  let searchFilterKeysMapped = keys.map(key =>
+    searchFilterKeyFromReq(req, key)
+  );
+  let searchFilterKeyListMapped = keyLists.map(key =>
+    searchFilterKeyListFromReq(req, key)
+  );
   return searchFilterKeysMapped.join("") + searchFilterKeyListMapped.join("");
 };
 
@@ -210,7 +219,7 @@ router.get("/", async function(req, res) {
       userId: req.user ? req.user.id : null,
       sortby: sortbyFromReq(req),
       type: type + "s",
-      facets: searchFiltersFromReq(req)
+      facets: searchFiltersFromReq(req),
     });
     const total = Number(
       results.length ? results[0].total || results.length : 0
@@ -242,7 +251,7 @@ router.get("/", async function(req, res) {
           user_query,
           parsed_query,
           params,
-          user: req.user || null
+          user: req.user || null,
         });
       case "htmlfrag":
         return res.status(200).render("home-search", {
@@ -251,13 +260,13 @@ router.get("/", async function(req, res) {
           searchhits,
           results,
           params,
-          user: req.user || null
+          user: req.user || null,
         });
       case "csv":
         if (type === "thing") {
           return res.status(200).json({
             msg:
-              "You can only get a csv file from cases, methods or organizations tabs."
+              "You can only get a csv file from cases, methods or organizations tabs.",
           });
         } else {
           const file = await createCSVDataDump(type);
@@ -274,7 +283,7 @@ router.get("/", async function(req, res) {
           searchhits,
           results,
           params,
-          user: req.user || null
+          user: req.user || null,
         });
     }
   } catch (error) {
@@ -296,12 +305,12 @@ router.get("/map", async function(req, res) {
     const cases = await db.any(LIST_MAP_CASES, {
       language: as.value(getLanguage(req)),
       limit: RESPONSE_LIMIT,
-      offset: offset
+      offset: offset,
     });
     const orgs = await db.any(LIST_MAP_ORGANIZATIONS, {
       language: as.value(getLanguage(req)),
       limit: RESPONSE_LIMIT,
-      offset: offset
+      offset: offset,
     });
 
     res.status(200).json({ data: { cases, orgs } });

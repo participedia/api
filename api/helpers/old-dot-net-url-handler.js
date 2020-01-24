@@ -10,7 +10,8 @@ const oldDotNetUrlHandler = {
   getNewUrl(path) {
     const isCase = path.indexOf("cases") === ARTICLE_TYPE_INDEX_IN_OLD_URL;
     const isMethod = path.indexOf("methods") === ARTICLE_TYPE_INDEX_IN_OLD_URL;
-    const isOrganization = path.indexOf("organizations") === ARTICLE_TYPE_INDEX_IN_OLD_URL;
+    const isOrganization =
+      path.indexOf("organizations") === ARTICLE_TYPE_INDEX_IN_OLD_URL;
 
     const id = OLD_DOT_NET_URLS_MAP[path];
     let newUrl = "";
@@ -22,7 +23,7 @@ const oldDotNetUrlHandler = {
       newUrl = "/organization/" + id;
     }
     return newUrl;
-  }
+  },
 };
 
 module.exports = oldDotNetUrlHandler;

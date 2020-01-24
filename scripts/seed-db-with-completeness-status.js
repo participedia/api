@@ -9,9 +9,9 @@ const { db } = require("../api/helpers/db.js");
 const args = process.argv.slice(2);
 const table = args[0];
 const filepaths = {
-  cases: './csv/completeness-status-for-cases.csv',
-  methods: './csv/completeness-status-for-methods.csv',
-  organizations: './csv/completeness-status-for-organizations.csv',
+  cases: "./csv/completeness-status-for-cases.csv",
+  methods: "./csv/completeness-status-for-methods.csv",
+  organizations: "./csv/completeness-status-for-organizations.csv",
 };
 
 readCSV(filepaths[table]);
@@ -23,13 +23,15 @@ async function updateCase(id, completeness) {
     // if we have an entry for this id, then save completeness to db
     try {
       // save to db
-      await db.none(`UPDATE ${table} SET completeness = '${completeness}' WHERE id = ${id}`);
-      console.log(`Entry id: ${id}, updated with ${completeness}`)
+      await db.none(
+        `UPDATE ${table} SET completeness = '${completeness}' WHERE id = ${id}`
+      );
+      console.log(`Entry id: ${id}, updated with ${completeness}`);
     } catch (err) {
-      console.log("UPDATE error - ", err)
+      console.log("UPDATE error - ", err);
     }
   } catch (err) {
-    console.log(`${table}/${id}/ - NOT FOUND`)
+    console.log(`${table}/${id}/ - NOT FOUND`);
   }
 }
 
@@ -39,8 +41,8 @@ async function handleRow(row) {
     2: "partial_content",
     3: "partial_citations",
     4: "partial_editing",
-    5: "complete"
-  }
+    5: "complete",
+  };
   const id = row[0];
   const completenessNumber = row[2];
   const status = completenessStatusByNumber[completenessNumber];
@@ -51,8 +53,8 @@ async function handleRow(row) {
 
 function readCSV(filepath) {
   fs.createReadStream(filepath)
-    .pipe(parse({delimiter: ","}))
-    .on("data", (row) => {
+    .pipe(parse({ delimiter: "," }))
+    .on("data", row => {
       handleRow(row);
     });
 }

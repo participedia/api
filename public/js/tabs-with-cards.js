@@ -1,4 +1,8 @@
-import { getValueForParam, updateUrlParams, removeUrlParams } from "./utils/utils.js";
+import {
+  getValueForParam,
+  updateUrlParams,
+  removeUrlParams,
+} from "./utils/utils.js";
 
 const tabsWithCards = {
   init() {
@@ -21,7 +25,8 @@ const tabsWithCards = {
 
   navigateToTab(category) {
     const query = getValueForParam("query");
-    let url = `${window.location.origin + window.location.pathname}?selectedCategory=${category}`;
+    let url = `${window.location.origin +
+      window.location.pathname}?selectedCategory=${category}`;
 
     if (query) {
       url = `${url}&query=${query}`;
@@ -45,16 +50,18 @@ const tabsWithCards = {
     if (!selectEl) return;
 
     // select current tab
-    const optionEls = Array.prototype.slice.call(selectEl.querySelectorAll("option"));
+    const optionEls = Array.prototype.slice.call(
+      selectEl.querySelectorAll("option")
+    );
     const currentTab = this.tabInputEls.find(el => el.checked);
-    optionEls.forEach(el => el.selected = el.value === currentTab.id);
+    optionEls.forEach(el => (el.selected = el.value === currentTab.id));
 
     // event listener for select change
     selectEl.addEventListener("change", event => {
       // change tab to selected type
       const newTabId = event.target.value;
       // toggle checked attr on inputs
-      this.tabInputEls.forEach(el => el.checked = el.id === newTabId);
+      this.tabInputEls.forEach(el => (el.checked = el.id === newTabId));
       // go to new tab
       this.navigateToTab(newTabId);
     });
@@ -78,7 +85,9 @@ const tabsWithCards = {
   },
 
   initCardLayout() {
-    const toggleLayoutBtnsEl = this.viewEl.querySelector(".js-card-layout-btns");
+    const toggleLayoutBtnsEl = this.viewEl.querySelector(
+      ".js-card-layout-btns"
+    );
 
     // event listeners for grid/list toggle buttons
     toggleLayoutBtnsEl.addEventListener("click", event => {

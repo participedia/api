@@ -5,21 +5,21 @@ const {
   getCaseNewHttp,
   postCaseNewHttp,
   getCaseHttp,
-  postCaseUpdateHttp
+  postCaseUpdateHttp,
 } = require("../../api/controllers/case");
 const {
   getMethodHttp,
   getMethodEditHttp,
   getMethodNewHttp,
   postMethodNewHttp,
-  postMethodUpdateHttp
+  postMethodUpdateHttp,
 } = require("../../api/controllers/method");
 const {
   getOrganizationEditHttp,
   getOrganizationNewHttp,
   postOrganizationNewHttp,
   getOrganizationHttp,
-  postOrganizationUpdateHttp
+  postOrganizationUpdateHttp,
 } = require("../../api/controllers/organization");
 
 let example_case = JSON.parse(fs.readFileSync("test/data/case.json", "utf8"));
@@ -42,7 +42,7 @@ async function addBasicCase() {
   const { req, res, ret } = getMocks({
     user: mock_user,
     body: example_case,
-    params: {}
+    params: {},
   });
   await postCaseNewHttp(req, res);
   return ret.body;
@@ -51,7 +51,7 @@ async function addBasicCase() {
 async function updateCase(id, blob) {
   const { req, res, ret } = getMocksAuth({
     params: { thingid: id },
-    body: blob
+    body: blob,
   });
   await postCaseUpdateHttp(req, res);
   return ret.body;
@@ -60,7 +60,7 @@ async function updateCase(id, blob) {
 async function addBasicMethod() {
   const { req, res, ret } = getMocksAuth({
     body: example_method,
-    params: {}
+    params: {},
   });
   await postMethodNewHttp(req, res);
   return ret.body;
@@ -69,7 +69,7 @@ async function addBasicMethod() {
 async function updateMethod(id, blob) {
   const { req, res, ret } = getMocksAuth({
     params: { thingid: id },
-    body: blob
+    body: blob,
   });
   await postMethodUpdateHttp(req, res);
   return ret.body;
@@ -77,7 +77,7 @@ async function updateMethod(id, blob) {
 
 async function getMethod(id) {
   const { req, res, ret } = getMocks({
-    params: { thingid: id }
+    params: { thingid: id },
   });
   await getMethodHttp(req, res);
   return ret.body;
@@ -86,7 +86,7 @@ async function getMethod(id) {
 async function addBasicOrganization() {
   const { req, res, ret } = getMocksAuth({
     body: example_organization,
-    params: {}
+    params: {},
   });
   await postOrganizationNewHttp(req, res);
   return ret.body;
@@ -95,7 +95,7 @@ async function addBasicOrganization() {
 async function updateOrganization(id, blob) {
   const { req, res, ret } = getMocksAuth({
     params: { thingid: id },
-    body: blob
+    body: blob,
   });
   await postOrganizationUpdateHttp(req, res);
   return ret.body;
@@ -103,7 +103,7 @@ async function updateOrganization(id, blob) {
 
 async function getOrganization(id) {
   const { req, res, ret } = getMocks({
-    params: { thingid: id }
+    params: { thingid: id },
   });
   await getOrganizationHttp(req, res);
   return ret.body;
@@ -122,7 +122,7 @@ function getMocks(args) {
     status: stat => {
       console.log("status(%s)", stat);
       ret.status = stat;
-    }
+    },
   });
   return { req, res, ret };
 }
@@ -145,5 +145,5 @@ module.exports = {
   example_organization,
   getOrganization,
   addBasicOrganization,
-  updateOrganization
+  updateOrganization,
 };

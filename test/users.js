@@ -38,7 +38,7 @@ describe("Users", () => {
         .set("Authorization", "Bearer " + tokens.user_token)
         .send(
           Object.assign({}, origUser, {
-            picture_url
+            picture_url,
           })
         );
       const res2 = await chai

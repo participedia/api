@@ -54,8 +54,8 @@ PopOver.prototype.draw = function() {
     // show marker in center of map
     const popOverWidth = this.anchor.getClientRects()[0].width;
     const popOverHeight = this.anchor.getClientRects()[0].height;
-    this.anchor.style.left = `-${popOverWidth/2}px`;
-    this.anchor.style.top = `-${popOverHeight/2}px`;
+    this.anchor.style.left = `-${popOverWidth / 2}px`;
+    this.anchor.style.top = `-${popOverHeight / 2}px`;
   }
   if (this.anchor.style.display !== display) {
     this.anchor.style.display = display;
@@ -67,13 +67,14 @@ PopOver.prototype.stopEventPropagation = function() {
   const anchor = this.anchor;
   anchor.style.cursor = "auto";
 
-  ["click",
-   "dblclick",
-   "contextmenu",
-   "wheel",
-   "mousedown",
-   "touchstart",
-   "pointerdown",
+  [
+    "click",
+    "dblclick",
+    "contextmenu",
+    "wheel",
+    "mousedown",
+    "touchstart",
+    "pointerdown",
   ].forEach(function(event) {
     anchor.addEventListener(event, function(e) {
       e.stopPropagation();

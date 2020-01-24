@@ -25,11 +25,11 @@ const tracking = {
     if (!window.ga) {
       callback();
       return;
-    };
+    }
     window.ga("send", "event", eventCategory, eventAction, eventLabel, {
-      hitCallback: createFunctionWithTimeout(callback)
+      hitCallback: createFunctionWithTimeout(callback),
     });
-  }
-}
+  },
+};
 
 export default tracking;

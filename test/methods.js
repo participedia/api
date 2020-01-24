@@ -7,14 +7,14 @@ const {
   example_method,
   getMethod,
   addBasicMethod,
-  updateMethod
+  updateMethod,
 } = require("./data/helpers.js");
 const {
   getMethodHttp,
   getMethodEditHttp,
   getMethodNewHttp,
   postMethodNewHttp,
-  postMethodUpdateHttp
+  postMethodUpdateHttp,
 } = require("../api/controllers/method");
 
 describe("Methods", () => {
@@ -54,7 +54,7 @@ describe("Methods", () => {
         "open_limited",
         "recruitment_method",
         "level_polarization",
-        "level_complexity"
+        "level_complexity",
       ].forEach(key => {
         expect(
           article[key],
@@ -72,7 +72,7 @@ describe("Methods", () => {
         "decision_methods",
         "if_voting",
         "number_of_participants",
-        "purpose_method"
+        "purpose_method",
       ].forEach(key => {
         let ret = article[key];
         let exp = example_method[key];
@@ -110,7 +110,7 @@ describe("Methods", () => {
       const origMethod = body1.article;
       origMethod.id.should.be.a("number");
       const body2 = await updateMethod(origMethod.id, {
-        title: "Second Title"
+        title: "Second Title",
       });
       const updatedMethod1 = body2.article;
       updatedMethod1.title.should.equal("Second Title");
@@ -121,7 +121,7 @@ describe("Methods", () => {
       updatedMethod2.body.should.equal("Second Body");
       const body4 = await updateMethod(origMethod.id, {
         title: "Third Title",
-        body: "Third Body"
+        body: "Third Body",
       });
       const updatedMethod3 = body4.article;
       updatedMethod3.title.should.equal("Third Title");
@@ -138,9 +138,9 @@ describe("Methods", () => {
             url: "http://garfield.com/jon.png",
             source_url: "https://example.com/garfields_tomb",
             title: "Jon lays a wreath",
-            attribution: "Cleveland Plain Dealer"
-          }
-        ]
+            attribution: "Cleveland Plain Dealer",
+          },
+        ],
       });
       body2.OK.should.be.true;
       should.exist(body2.article);
@@ -153,7 +153,7 @@ describe("Methods", () => {
         url: "https://wonderwall.com/howzaboutthemjpegs.png",
         source_url: "https://example.com/ugh",
         attribution: "The Red Menace",
-        title: "Whatever"
+        title: "Whatever",
       });
       const body3 = await updateMethod(method1.id, { photos: photos });
       body3.OK.should.be.true;
@@ -168,19 +168,19 @@ describe("Methods", () => {
         {
           url: "https://xkcd.com/",
           title: "xkcd",
-          attribution: "Randall Monroe"
+          attribution: "Randall Monroe",
         },
         {
           url: "http://girlgeniusonline.com/",
           title: "Girl Genius",
-          attribution: "Professors Foglio"
-        }
+          attribution: "Professors Foglio",
+        },
       ];
       const method2 = (await updateMethod(method1.id, {
         title: "Second Title",
         body: "Second Body",
         description: "Second Description",
-        links: links
+        links: links,
       })).article;
       method2.links[0].url.should.equal(links[0].url);
       method2.links[1].url.should.equal(links[1].url);

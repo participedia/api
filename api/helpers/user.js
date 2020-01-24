@@ -3,13 +3,13 @@ const {
   as,
   USER_BY_EMAIL,
   USER_BY_ID,
-  CREATE_USER_ID
+  CREATE_USER_ID,
 } = require("../helpers/db");
 
 async function getUserOrCreateUser(auth0User) {
   // check if we have a user in our db
   const userByEmail = await db.oneOrNone(USER_BY_EMAIL, {
-    userEmail: auth0User.email
+    userEmail: auth0User.email,
   });
 
   // if we don't have a user yet, create one
@@ -24,7 +24,7 @@ async function getUserOrCreateUser(auth0User) {
       joinDate: auth0User.created_at,
       auth0UserId: auth0User.id,
       bio: "",
-      language: "en"
+      language: "en",
     });
   }
 
@@ -35,7 +35,7 @@ async function getUserOrCreateUser(auth0User) {
   // get full user object by id
   result = await db.oneOrNone(USER_BY_ID, {
     userId: userId,
-    language: "en"
+    language: "en",
   });
 
   return result.user;
@@ -63,5 +63,5 @@ function okToEdit(user) {
 
 module.exports = exports = {
   okToEdit,
-  getUserOrCreateUser
+  getUserOrCreateUser,
 };

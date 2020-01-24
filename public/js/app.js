@@ -9,12 +9,15 @@ function loadFonts() {
   const faktFont = new FontFaceObserver("Fakt", {
     weight: 600,
   });
-  faktFont.load().then(() => {
-    document.documentElement.style.visibility = "visible";
-  }, () => {
-    // even if loading fails, show html and it will use the fallback font
-    document.documentElement.style.visibility = "visible";
-  });
+  faktFont.load().then(
+    () => {
+      document.documentElement.style.visibility = "visible";
+    },
+    () => {
+      // even if loading fails, show html and it will use the fallback font
+      document.documentElement.style.visibility = "visible";
+    }
+  );
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,7 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Listen to tab events to enable outlines (accessibility improvement)
   document.body.addEventListener("keyup", function(e) {
-    if (e.which === 9) { /* tab key */
+    if (e.which === 9) {
+      /* tab key */
       document.documentElement.classList.remove("no-focus-outline");
     }
   });

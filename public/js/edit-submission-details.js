@@ -2,10 +2,18 @@ import autocomplete from "autocompleter";
 
 const editSubmissionDetails = {
   init() {
-    const firstSubmittedAutoCompleteEl = document.querySelector("#js-creator-name");
-    const firstSubmittedHiddenEl = document.querySelector("input[name=creator]");
-    const mostRecentChangeAutoCompleteEl = document.querySelector("#js-last-updated-by-name");
-    const mostRecentChangeHiddenEl = document.querySelector("input[name=last_updated_by]");
+    const firstSubmittedAutoCompleteEl = document.querySelector(
+      "#js-creator-name"
+    );
+    const firstSubmittedHiddenEl = document.querySelector(
+      "input[name=creator]"
+    );
+    const mostRecentChangeAutoCompleteEl = document.querySelector(
+      "#js-last-updated-by-name"
+    );
+    const mostRecentChangeHiddenEl = document.querySelector(
+      "input[name=last_updated_by]"
+    );
 
     if (!firstSubmittedAutoCompleteEl) return; // if submission field not present, don't continue
 
@@ -13,20 +21,29 @@ const editSubmissionDetails = {
     const authors = this.getAuthorData();
 
     // first submitted
-    this.initAutocompleteField(firstSubmittedAutoCompleteEl, firstSubmittedHiddenEl, authors);
+    this.initAutocompleteField(
+      firstSubmittedAutoCompleteEl,
+      firstSubmittedHiddenEl,
+      authors
+    );
 
     // most recent
-    this.initAutocompleteField(mostRecentChangeAutoCompleteEl, mostRecentChangeHiddenEl, authors);
+    this.initAutocompleteField(
+      mostRecentChangeAutoCompleteEl,
+      mostRecentChangeHiddenEl,
+      authors
+    );
 
     this.bindEditBtn();
   },
 
   bindEditBtn() {
     const editBtn = document.querySelector(".js-edit-submission-details-btn");
-    editBtn.addEventListener("click", (e) => {
+    editBtn.addEventListener("click", e => {
       e.preventDefault();
       // show edit ui
-      document.querySelector(".js-admin-edit-submission-details").style = "display: block";
+      document.querySelector(".js-admin-edit-submission-details").style =
+        "display: block";
 
       // hide edit button
       e.target.style = "display: none";
@@ -49,7 +66,9 @@ const editSubmissionDetails = {
       minLength: 1,
       input: autocompleteEl,
       fetch: function(text, update) {
-        const suggestions = authors.filter(n => n.label.toLowerCase().startsWith(text.toLowerCase()))
+        const suggestions = authors.filter(n =>
+          n.label.toLowerCase().startsWith(text.toLowerCase())
+        );
         update(suggestions);
       },
       onSelect: function(item) {
@@ -57,9 +76,9 @@ const editSubmissionDetails = {
         autocompleteEl.value = item.label;
         // set value on hidden el
         hiddenEl.value = item.value;
-      }
+      },
     });
-  }
-}
+  },
+};
 
 export default editSubmissionDetails;

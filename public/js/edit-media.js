@@ -1,6 +1,8 @@
 const editMedia = {
   init() {
-    const dropAreaEls = document.querySelectorAll(".js-edit-media-drag-drop-area");
+    const dropAreaEls = document.querySelectorAll(
+      ".js-edit-media-drag-drop-area"
+    );
 
     dropAreaEls.forEach(el => {
       el.addEventListener("drop", ev => this.handleDrop(ev));
@@ -9,11 +11,15 @@ const editMedia = {
       el.addEventListener("dragleave", ev => this.toggleDropAreaClass(ev));
 
       // on input change event
-      el.querySelector("input[name^='temporary-']")
-        .addEventListener("change", (ev) => this.handleInputChange(ev));
+      el.querySelector("input[name^='temporary-']").addEventListener(
+        "change",
+        ev => this.handleInputChange(ev)
+      );
 
       // event delegation for deleting files
-      el.closest('.form-group').addEventListener("click", ev => this.deleteFile(ev));
+      el.closest(".form-group").addEventListener("click", ev =>
+        this.deleteFile(ev)
+      );
     });
   },
 
@@ -22,7 +28,7 @@ const editMedia = {
   },
 
   toggleDropAreaClass(ev) {
-    ev.target.classList.toggle('drop-area-drag-over');
+    ev.target.classList.toggle("drop-area-drag-over");
   },
 
   handleDrop(ev) {
@@ -36,17 +42,22 @@ const editMedia = {
   },
 
   setImageSrcAndFileValue(file, type, listEl, itemIndex) {
-    const reader = new FileReader();
+    const reader = new FileReader();
     const fileItemEl = listEl.querySelector(`[data-index="${itemIndex}"]`);
 
-    reader.addEventListener("load", () => {
-      // set img src if type === 'image'
-      // set value of file input to file value
-      if (type === 'image') {
-        fileItemEl.querySelector("img").src = reader.result;
-      }
-      fileItemEl.querySelector("input[data-attr='url']").value = reader.result;
-    }, false);
+    reader.addEventListener(
+      "load",
+      () => {
+        // set img src if type === 'image'
+        // set value of file input to file value
+        if (type === "image") {
+          fileItemEl.querySelector("img").src = reader.result;
+        }
+        fileItemEl.querySelector("input[data-attr='url']").value =
+          reader.result;
+      },
+      false
+    );
 
     reader.readAsDataURL(file);
   },
@@ -60,7 +71,7 @@ const editMedia = {
 
     // clear all inputs
     fileItemEl.querySelectorAll("input").forEach(el => {
-      el.name = `${name}[0][${el.getAttribute('data-attr')}]`;
+      el.name = `${name}[0][${el.getAttribute("data-attr")}]`;
       el.value = "";
     });
 
@@ -69,16 +80,21 @@ const editMedia = {
   },
 
   renderUploadedFiles(fileInputEl) {
-    const listEl = fileInputEl.closest(".form-group").querySelector(".js-edit-media-file-list");
+    const listEl = fileInputEl
+      .closest(".form-group")
+      .querySelector(".js-edit-media-file-list");
     const type = listEl.closest("ol").getAttribute("data-type");
     const name = listEl.getAttribute("data-name");
-    const template = document.querySelector(`.js-edit-media-file-inputs-template-${name}`);
+    const template = document.querySelector(
+      `.js-edit-media-file-inputs-template-${name}`
+    );
     const files = fileInputEl.files;
 
     // for each uploaded file, show the set of inputs as defined in the script/template element
     for (let i = 0; i < files.length; i++) {
       const fileItemEl = document.createElement("div");
-      const itemIndex = listEl.querySelectorAll(".js-edit-media-file-list-item").length;
+      const itemIndex = listEl.querySelectorAll(".js-edit-media-file-list-item")
+        .length;
 
       fileItemEl.innerHTML = template.innerHTML;
 
@@ -89,7 +105,7 @@ const editMedia = {
       // on all inputs set name to reflect index of item
       fileItemEl.querySelectorAll("input").forEach(el => {
         // ie: files[0]url
-        el.name = `${name}[${itemIndex}][${el.getAttribute('data-attr')}]`;
+        el.name = `${name}[${itemIndex}][${el.getAttribute("data-attr")}]`;
       });
 
       fileItemEl.querySelector("li").setAttribute("data-index", itemIndex);
@@ -108,7 +124,8 @@ const editMedia = {
 
   deleteFile(ev) {
     const buttonEl = ev.target.closest("button");
-    const isRemoveClick = buttonEl &&
+    const isRemoveClick =
+      buttonEl &&
       buttonEl.classList.contains("js-edit-media-file-list-remove-item");
     if (isRemoveClick) {
       ev.preventDefault();
@@ -117,7 +134,9 @@ const editMedia = {
 
       // if it's the last item, don't remove it, just clear the field values and hide it
       // we need to send up empty fieldset data in order to delete it
-      if (listEl.querySelectorAll(".js-edit-media-file-list-item").length === 1) {
+      if (
+        listEl.querySelectorAll(".js-edit-media-file-list-item").length === 1
+      ) {
         this.clearAndHideLastItem(liEl);
       } else {
         liEl.parentNode.removeChild(liEl);
@@ -128,13 +147,13 @@ const editMedia = {
 
   updateNameAttrOnFileUploadInputs(listEl) {
     const liEls = listEl.querySelectorAll(".js-edit-media-file-list-item");
-    const name = listEl.getAttribute('data-name');
+    const name = listEl.getAttribute("data-name");
     liEls.forEach((el, index) => {
       const inputEls = el.querySelectorAll("input");
       // on all inputs set name to reflect index of item
       inputEls.forEach(el => {
         // ie: files[0][url]
-        el.name = `${name}[${index}][${el.getAttribute('data-attr')}]`;
+        el.name = `${name}[${index}][${el.getAttribute("data-attr")}]`;
       });
     });
   },

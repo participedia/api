@@ -45,7 +45,7 @@ function readCSV(filename) {
   const tuples = parse(original, {
     from: 2,
     cast: true,
-    skip_lines_with_empty_values: true
+    skip_lines_with_empty_values: true,
   });
   // console.log("Headers: %s", tuples[0]);
   let headers = tuples.shift();

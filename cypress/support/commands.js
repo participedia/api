@@ -31,7 +31,7 @@ Cypress.Commands.add(
   (
     overrides = {
       username: "alanna.scott+cypress_test@gmail.com",
-      password: "cypress"
+      password: "cypress",
     }
   ) => {
     cy.wait(2000);
@@ -39,7 +39,7 @@ Cypress.Commands.add(
     cy.get("input[name=username]").type(overrides.username);
     cy.get("input[name=password]").type(overrides.password);
     cy.get(".auth0-lock-submit").click();
-    cy.url().should("include", "participedia.auth0.com")
+    cy.url().should("include", "participedia.auth0.com");
 
     // wait for redirect
     cy.wait(2000);

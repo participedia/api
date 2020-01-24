@@ -3,8 +3,11 @@ function getValueForParam(paramName) {
   const newParams = {};
 
   if (params) {
-    params.split("?")[1].split("&").map(p => p.split("="))
-      .forEach(param => newParams[param[0]] = param[1]);
+    params
+      .split("?")[1]
+      .split("&")
+      .map(p => p.split("="))
+      .forEach(param => (newParams[param[0]] = param[1]));
   }
 
   return newParams[paramName];
@@ -15,8 +18,11 @@ function updateUrlParams(key, value) {
   const newParams = {};
 
   if (params) {
-    const paramsArr = params.split("?")[1].split("&").map(p => p.split("="));
-    paramsArr.forEach(param => newParams[param[0]] = param[1]);
+    const paramsArr = params
+      .split("?")[1]
+      .split("&")
+      .map(p => p.split("="));
+    paramsArr.forEach(param => (newParams[param[0]] = param[1]));
   }
 
   // add/update param
@@ -36,7 +42,9 @@ function removeUrlParams(keysToRemove) {
   if (!window.location.search) return;
   const paramsToKeep = {};
   window.location.search
-    .split("?")[1].split("&").map(p => p.split("="))
+    .split("?")[1]
+    .split("&")
+    .map(p => p.split("="))
     .forEach(param => {
       if (!keysToRemove.includes(param[0])) {
         paramsToKeep[param[0]] = param[1];
@@ -64,13 +72,8 @@ function xhrReq(action, url, data = {}, successCB = null, errorCB = null) {
       if (successCB) successCB(request);
     }
   };
-  request.setRequestHeader('Content-Type', 'application/json')
+  request.setRequestHeader("Content-Type", "application/json");
   request.send(data);
 }
 
-export {
-  removeUrlParams,
-  getValueForParam,
-  updateUrlParams,
-  xhrReq,
-}
+export { removeUrlParams, getValueForParam, updateUrlParams, xhrReq };

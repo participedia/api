@@ -12,9 +12,10 @@ const languageSelect = {
   },
 
   handleSelectChange(e) {
-    location.href = `/set-locale?locale=${e.target.value}` +
+    location.href =
+      `/set-locale?locale=${e.target.value}` +
       `&redirectTo=${window.location.pathname}`;
-  }
+  },
 };
 
 export default languageSelect;

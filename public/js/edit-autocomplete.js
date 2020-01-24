@@ -47,7 +47,7 @@ const editAutocomplete = {
     const options = toArray(optionsListEls).map(el => {
       return {
         value: el.getAttribute("data-key"),
-        label: el.innerText
+        label: el.innerText,
       };
     });
     return options;
@@ -105,13 +105,18 @@ const editAutocomplete = {
       input: autocompleteEl,
       fetch: (text, update) => {
         const match = text.toLowerCase();
-        const matches = options.filter(n => n.label.toLowerCase().indexOf(match) !== -1);
+        const matches = options.filter(
+          n => n.label.toLowerCase().indexOf(match) !== -1
+        );
         update(matches);
       },
       render: (item, value) => {
         const itemElement = document.createElement("div");
         const regex = new RegExp(value, "gi");
-        const inner = item.label.replace(regex, match => `<strong>${match}</strong>`);
+        const inner = item.label.replace(
+          regex,
+          match => `<strong>${match}</strong>`
+        );
         itemElement.innerHTML = inner;
         return itemElement;
       },
@@ -120,9 +125,9 @@ const editAutocomplete = {
         this.addSelectedItem(name, item);
         // clear autocomplete field
         autocompleteEl.value = "";
-      }
+      },
     });
-  }
+  },
 };
 
 export default editAutocomplete;

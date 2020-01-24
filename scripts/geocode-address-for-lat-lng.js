@@ -46,7 +46,10 @@ async function getAllArticlesForType(type) {
     WHERE latitude IS NULL
     AND longitude IS NULL;
   `;
-  return db.any(sql).then(result => result).catch((err) => console.log("getAllArticlesForType err", err));
+  return db
+    .any(sql)
+    .then(result => result)
+    .catch(err => console.log("getAllArticlesForType err", err));
 }
 
 function saveArticle(type, id, lat, lng) {
@@ -55,7 +58,10 @@ function saveArticle(type, id, lat, lng) {
     SET latitude = ${lat}, longitude = ${lng}
     WHERE id = ${id};
   `;
-  return db.any(sql).then(result => result).catch((err) => console.log("saveArticle err", err));;
+  return db
+    .any(sql)
+    .then(result => result)
+    .catch(err => console.log("saveArticle err", err));
 }
 
 async function processArticles(type) {
@@ -67,24 +73,32 @@ async function processArticles(type) {
       googleMapsClient
         .geocode({ address: addressString })
         .asPromise()
-        .then((response) => {
+        .then(response => {
           // set new lat lng on article object and save
           if (response.json.results && response.json.results[0]) {
             const { lat, lng } = response.json.results[0].geometry.location;
             if (lat && lng) {
               saveArticle(article.type, article.id, lat, lng).then(() => {
-                console.log(`UPDATED - ${article.type} #${article.id} saved with lat: ${lat}, lng: ${lng}`);
+                console.log(
+                  `UPDATED - ${article.type} #${
+                    article.id
+                  } saved with lat: ${lat}, lng: ${lng}`
+                );
               });
             }
           }
         })
-        .catch((err) => {
+        .catch(err => {
           if (err) console.log("error:", err);
         });
     } else {
       // if there is no address data, set lat/lng to NULL
       saveArticle(article.type, article.id, null, null).then(() => {
-        console.log(`NULL - ${article.type} #${article.id} - There is no address data, setting lat/lng as null`);
+        console.log(
+          `NULL - ${article.type} #${
+            article.id
+          } - There is no address data, setting lat/lng as null`
+        );
       });
     }
   });
@@ -92,8 +106,12 @@ async function processArticles(type) {
 
 function start() {
   if (!process.env.GOOGLE_MAPS_GEOCODE_API_KEY) {
-    console.log("*** Missing Google Maps Geocode API key. Add GOOGLE_MAPS_GEOCODE_API_KEY to your .env file ***")
-    console.log("https://developers.google.com/maps/documentation/geocoding/get-api-key")
+    console.log(
+      "*** Missing Google Maps Geocode API key. Add GOOGLE_MAPS_GEOCODE_API_KEY to your .env file ***"
+    );
+    console.log(
+      "https://developers.google.com/maps/documentation/geocoding/get-api-key"
+    );
     return;
   }
 

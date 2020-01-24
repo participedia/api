@@ -9,26 +9,34 @@ const LOCATION_KEYS = [
   "postal_code",
   "country",
   "latitude",
-  "longitude"
+  "longitude",
 ];
 
 const editLocation = {
   init() {
     this.inputEl = document.querySelector("[name=location]");
 
-    if(!this.inputEl) return;
+    if (!this.inputEl) return;
 
     this.autocomplete = new google.maps.places.Autocomplete(this.inputEl);
-    this.autocomplete.setFields(["address_components", "geometry", "formatted_address"]);
-    this.autocomplete.addListener("place_changed", () => this.handlePlaceChange());
-    this.inputEl.addEventListener("change", (ev) => this.handleInputElChange(ev))
+    this.autocomplete.setFields([
+      "address_components",
+      "geometry",
+      "formatted_address",
+    ]);
+    this.autocomplete.addListener("place_changed", () =>
+      this.handlePlaceChange()
+    );
+    this.inputEl.addEventListener("change", ev => this.handleInputElChange(ev));
   },
 
   handleInputElChange(ev) {
     if (ev.target.value === "") {
       // set hidden fields values to "" when main field value is cleared
-      const inputs = ev.target.closest('fieldset').querySelectorAll("input[type='hidden']");
-      inputs.forEach(el => el.value = "");
+      const inputs = ev.target
+        .closest("fieldset")
+        .querySelectorAll("input[type='hidden']");
+      inputs.forEach(el => (el.value = ""));
     }
   },
 
@@ -40,7 +48,9 @@ const editLocation = {
     LOCATION_KEYS.forEach(key => {
       const hiddenInputEl = document.querySelector(`input[name=${key}]`);
       if (!hiddenInputEl) return;
-      hiddenInputEl.value = addressComponents[key] ? addressComponents[key] : "";
+      hiddenInputEl.value = addressComponents[key]
+        ? addressComponents[key]
+        : "";
     });
   },
 
@@ -48,12 +58,14 @@ const editLocation = {
     const addressComponents = {};
     place.address_components.forEach(component => {
       if (component.types.includes("street_number")) {
-       addressComponents.address1 = component.long_name;
+        addressComponents.address1 = component.long_name;
       }
 
       if (component.types.includes("route")) {
         if (addressComponents.address1) {
-          addressComponents.address1 = `${addressComponents.address1} ${component.long_name}`;
+          addressComponents.address1 = `${addressComponents.address1} ${
+            component.long_name
+          }`;
         } else {
           addressComponents.address1 = component.long_name;
         }
@@ -78,7 +90,7 @@ const editLocation = {
     addressComponents.latitude = place.geometry.location.lat();
     addressComponents.longitude = place.geometry.location.lng();
     return addressComponents;
-  }
+  },
 };
 
 export default editLocation;

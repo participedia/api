@@ -7,14 +7,14 @@ const {
   example_case,
   getCase,
   addBasicCase,
-  updateCase
+  updateCase,
 } = require("./data/helpers.js");
 const {
   getCaseEditHttp,
   getCaseNewHttp,
   postCaseNewHttp,
   getCaseHttp,
-  postCaseUpdateHttp
+  postCaseUpdateHttp,
 } = require("../api/controllers/case");
 
 const { listCases, cacheTitlesRefreshSearch } = require("../api/helpers/db");
@@ -66,7 +66,7 @@ describe("Cases", () => {
         "facetoface_online_or_both",
         "open_limited",
         "recruitment_method",
-        "time_limited"
+        "time_limited",
       ].forEach(key => {
         returnedCase[key].should.equal(example_case[key]);
       });
@@ -87,7 +87,7 @@ describe("Cases", () => {
         "funder_types",
         "change_types",
         "implementers_of_change",
-        "tools_techniques_types"
+        "tools_techniques_types",
       ].forEach(key => {
         let ret = returnedCase[key];
         let exp = example_case[key];
@@ -104,7 +104,7 @@ describe("Cases", () => {
         "audio",
         "photos",
         "evaluation_reports",
-        "evaluation_links"
+        "evaluation_links",
       ].forEach(key => {
         returnedCase[key].length.should.equal(example_case[key].length);
         for (let i = 0; i < returnedCase[key].length; i++) {
@@ -145,7 +145,7 @@ describe("Cases", () => {
       const body2 = await updateCase(origCase.id, {
         title: "Second Title",
         body: "Second Body",
-        description: "Second Description"
+        description: "Second Description",
       });
       const updatedCase = body2.article;
       updatedCase.title.should.equal("Second Title");
@@ -167,7 +167,7 @@ describe("Cases", () => {
       origCase.general_issues[2].should.equal("environment");
       origCase.general_issues[3].should.equal("planning");
       const updatedCase = (await updateCase(origCase.id, {
-        general_issues: [{ key: "arts", value: "Arts, Culture, & Recreation" }]
+        general_issues: [{ key: "arts", value: "Arts, Culture, & Recreation" }],
       })).article;
       updatedCase.general_issues.length.should.equal(1);
       updatedCase.general_issues[0].should.equal("arts");
@@ -189,10 +189,10 @@ describe("Cases", () => {
               url: "http://foobar.com/test.jpg",
               source_url: "https://example.com/foobar",
               title: "Right ho!",
-              attribution: "Marie Osmond"
-            }
-          ]
-        }
+              attribution: "Marie Osmond",
+            },
+          ],
+        },
       });
       await postCaseUpdateHttp(req, res);
       const case2 = ret.body.article;

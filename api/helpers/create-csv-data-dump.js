@@ -6,7 +6,7 @@ const {
   LIST_ARTICLES,
   CASE_BY_ID,
   METHOD_BY_ID,
-  ORGANIZATION_BY_ID
+  ORGANIZATION_BY_ID,
 } = require("./db.js");
 
 function sanitizeUserName(name) {
@@ -92,7 +92,7 @@ const orderedCaseFields = [
   "videos_count",
   "audio_count",
   "evaluation_reports_count",
-  "evaluation_links_count"
+  "evaluation_links_count",
 ];
 
 const orderedMethodFields = [
@@ -130,7 +130,7 @@ const orderedMethodFields = [
   "files_count",
   "videos_count",
   "links_count",
-  "audio_count"
+  "audio_count",
 ];
 
 const orderedOrganizationFields = [
@@ -169,13 +169,13 @@ const orderedOrganizationFields = [
   "files_count",
   "videos_count",
   "links_count",
-  "audio_count"
+  "audio_count",
 ];
 
 const orderedFieldsByType = {
   case: orderedCaseFields,
   method: orderedMethodFields,
-  organization: orderedOrganizationFields
+  organization: orderedOrganizationFields,
 };
 
 function convertToIdTitleUrlFields(entry, field) {
@@ -192,13 +192,13 @@ function convertToIdTitleUrlFields(entry, field) {
 async function createCSVDataDump(type) {
   const entries = await db.many(LIST_ARTICLES, {
     type: type + "s",
-    lang: "en"
+    lang: "en",
   });
 
   const sqlForType = {
     case: CASE_BY_ID,
     method: METHOD_BY_ID,
-    organization: ORGANIZATION_BY_ID
+    organization: ORGANIZATION_BY_ID,
   };
 
   const fullEntries = [];
@@ -209,7 +209,7 @@ async function createCSVDataDump(type) {
         view: "view",
         articleid: article.id,
         lang: "en",
-        userid: null
+        userid: null,
       };
       const articleRow = await db.one(sqlForType[type], params);
 
@@ -268,8 +268,10 @@ async function createCSVDataDump(type) {
 
     // convert specific_methods_tools_techniques into three new fields (id, title, url)
     if (editedEntry.type === "organization") {
-      editedEntry =
-        convertToIdTitleUrlFields(editedEntry, "specific_methods_tools_techniques");
+      editedEntry = convertToIdTitleUrlFields(
+        editedEntry,
+        "specific_methods_tools_techniques"
+      );
     }
 
     // add counts for media, links and other detailed list fields
@@ -280,7 +282,7 @@ async function createCSVDataDump(type) {
       "videos",
       "audio",
       "evaluation_reports",
-      "evaluation_links"
+      "evaluation_links",
     ];
     countFields.forEach(field => {
       if (editedEntry[field]) {
@@ -293,7 +295,7 @@ async function createCSVDataDump(type) {
     // convert specific_methods_tools_techniques, has_components to list of titles
     const articlesToListOfTitles = [
       "has_components",
-      "specific_methods_tools_techniques"
+      "specific_methods_tools_techniques",
     ];
     articlesToListOfTitles.forEach(field => {
       if (editedEntry[field]) {
@@ -325,7 +327,7 @@ async function createCSVDataDump(type) {
       "scope_of_influence",
       "purpose_method",
       "type_method",
-      "type_tool"
+      "type_tool",
     ];
     simpleArrayFields.forEach(field => {
       if (editedEntry[field]) {

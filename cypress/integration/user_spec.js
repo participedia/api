@@ -21,9 +21,11 @@ describe("user controller", () => {
 
   it("visits their own profile page and edit page", () => {
     cy.get(".js-profile-dropdown-button-trigger").click();
-    cy.get(".js-profile-dropdown-button-items").contains("Profile").click();
+    cy.get(".js-profile-dropdown-button-items")
+      .contains("Profile")
+      .click();
 
-   // click edit button and goto /user/id/edit
+    // click edit button and goto /user/id/edit
     cy.get(".user-view-edit-profile-button").click();
 
     // /user/id/edit has a submit button
@@ -39,7 +41,9 @@ describe("user controller", () => {
     cy.get("button[type='submit']").click();
 
     // the name field is updated with new name
-    cy.get(".user-view-name").should('exist').and('contain', newName);
+    cy.get(".user-view-name")
+      .should("exist")
+      .and("contain", newName);
   });
 
   it("visits someone else's profile page", () => {
@@ -48,5 +52,4 @@ describe("user controller", () => {
     cy.visit("/user/1/edit");
     cy.url().should("include", "/user/1");
   });
-
 });

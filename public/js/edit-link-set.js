@@ -3,11 +3,17 @@ const toArray = nodelist => Array.prototype.slice.call(nodelist);
 const editLinkSet = {
   init() {
     const addAnotherLinkSetEls = document.querySelectorAll(".js-add-link-set");
-    addAnotherLinkSetEls.forEach(el => el.addEventListener("click", this.addLinkSet));
+    addAnotherLinkSetEls.forEach(el =>
+      el.addEventListener("click", this.addLinkSet)
+    );
 
     // delete button event delegation
-    const linkFormGroupEls = document.querySelectorAll(".js-edit-link-set-form-group");
-    linkFormGroupEls.forEach(el => el.addEventListener("click", this.deleteLinkSet));
+    const linkFormGroupEls = document.querySelectorAll(
+      ".js-edit-link-set-form-group"
+    );
+    linkFormGroupEls.forEach(el =>
+      el.addEventListener("click", this.deleteLinkSet)
+    );
   },
 
   deleteLinkSet(e) {
@@ -15,15 +21,14 @@ const editLinkSet = {
     if (buttonEl) {
       e.preventDefault();
       const containerEl = buttonEl.closest(".js-edit-link-set-container");
-      const numLinkSets = containerEl
-        .parentNode
-        .querySelectorAll(".js-edit-link-set-container")
-        .length;
+      const numLinkSets = containerEl.parentNode.querySelectorAll(
+        ".js-edit-link-set-container"
+      ).length;
       // if there is only 1 linkset, just clear the contents of the field
       // otherwise, remove the link set container altogether
       if (numLinkSets === 1) {
         const inputs = toArray(containerEl.querySelectorAll("input"));
-        inputs.forEach(el => el.value = "");
+        inputs.forEach(el => (el.value = ""));
       } else {
         containerEl.parentNode.removeChild(containerEl);
       }
@@ -52,9 +57,11 @@ const editLinkSet = {
     });
 
     // insert new set into dom
-    const containerEl = newlinkSetSetEl.querySelector(".js-edit-link-set-container");
+    const containerEl = newlinkSetSetEl.querySelector(
+      ".js-edit-link-set-container"
+    );
     e.target.insertAdjacentElement("beforebegin", containerEl);
-  }
+  },
 };
 
 export default editLinkSet;
