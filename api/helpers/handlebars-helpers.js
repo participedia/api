@@ -17,7 +17,7 @@ const LOCATION_FIELD_NAMES = [
   "postal_code",
   "country",
   "latitude",
-  "longitude"
+  "longitude",
 ];
 
 function setMomentLocale(context) {
@@ -40,7 +40,7 @@ function mapIdTitleToKeyValue(options) {
   return options.map(item => {
     return {
       key: item.id,
-      value: item.title
+      value: item.title,
     };
   });
 }
@@ -59,24 +59,27 @@ function getFirstPhotoUrl(article) {
 
 function filterCollections(req, name, context) {
   let query = req.query[name];
-  if (query){
+  if (query) {
     let keyList = Object.keys(req.query);
-    let keys = keyList.filter((item) => item !== 'selectedCategory');
-    let arr = query.split(',');
+    let keys = keyList.filter(item => item !== "selectedCategory");
+    let arr = query.split(",");
     let value = [];
-    for (let i in keys){
-      for (let x in arr){
-        if (keys[i] === 'country'){
-          let category = i18n(`country_label`,context);
+    for (let i in keys) {
+      for (let x in arr) {
+        if (keys[i] === "country") {
+          let category = i18n(`country_label`, context);
           value.push(`${category} includes`);
-          value.push(req.query.country.replace(/,/g, ', '));
+          value.push(req.query.country.replace(/,/g, ", "));
         } else {
-          if(keys[i] !== 'query') {
-            if ( sharedFieldOptions[keys[i]].includes(arr[x]) ) {
+          if (keys[i] !== "query") {
+            if (sharedFieldOptions[keys[i]].includes(arr[x])) {
               let str = `name:${keys[i]}-key:${arr[x]}`;
-              let category = i18n(`${req.query.selectedCategory}_view_${keys[i]}_label`,context);
+              let category = i18n(
+                `${req.query.selectedCategory}_view_${keys[i]}_label`,
+                context
+              );
               value.push(`${category} includes`);
-              value.push(i18n(str,context));
+              value.push(i18n(str, context));
             }
           }
         }
@@ -89,7 +92,7 @@ function filterCollections(req, name, context) {
 function typeFromReq(req) {
   let cat = singularLowerCase(req.query.selectedCategory || "Alls");
   return cat === "all" ? "thing" : cat;
-};
+}
 
 const singularLowerCase = name =>
   (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
@@ -103,7 +106,8 @@ function getPageTitle(req, article, context) {
     "/about": i18n("About", context) + " – Participedia",
     "/teaching": i18n("Teaching", context) + " – Participedia",
     "/research": i18n("Research", context) + " – Participedia",
-    "/404": i18n("Sorry, this page cannot be found", context) + " – Participedia",
+    "/404":
+      i18n("Sorry, this page cannot be found", context) + " – Participedia",
   };
   if (article && article.title) {
     return article.title + " – Participedia";
@@ -114,28 +118,27 @@ function getPageTitle(req, article, context) {
   } else {
     return titleByPath["/"];
   }
-};
+}
 
-function concactArr(arr){
-  console.log(arr,"====")
+function concactArr(arr) {
   let str = "where";
   for (let i = 0; i < arr.length; i++) {
-    if (i === arr[i].length - 1){
-        str += " and";
+    if (i === arr[i].length - 1) {
+      str += " and";
     }
     for (let j = 0; j < arr[i].length; j++) {
       str += ` ${arr[i][j]}`;
     }
   }
   return str;
-};
+}
 
 const i18n = (key, context) =>
   context && context.data && context.data.root.__(key);
 
 module.exports = {
   // transalation helpers
-  getLocalizedTermsOfUsePartial: (context) => {
+  getLocalizedTermsOfUsePartial: context => {
     const locale = context.data.root.locale || "en";
     return `terms-of-use-${locale}`;
   },
@@ -245,7 +248,7 @@ module.exports = {
     const fieldNamesMappedToListOfArticles = {
       is_component_of: "cases",
       specific_methods_tools_techniques: "methods",
-      primary_organizer: "organizations"
+      primary_organizer: "organizations",
     };
 
     // if the name is one that maps to list of articles return that value
@@ -265,16 +268,16 @@ module.exports = {
   },
 
   // article helpers
-  shouldShowCompletenessPrompt: (article) => {
-    if (article.completeness && article.completeness !== 'complete') {
+  shouldShowCompletenessPrompt: article => {
+    if (article.completeness && article.completeness !== "complete") {
       return true;
     } else {
       return false;
     }
   },
 
-  getCompletenessPrompt: (article) => {
-    if (!article.completeness || article.completeness === 'complete') return;
+  getCompletenessPrompt: article => {
+    if (!article.completeness || article.completeness === "complete") return;
 
     const articleEditLink = `/${article.type}/${article.id}/edit?full=1`;
 
@@ -288,21 +291,21 @@ module.exports = {
     return promptsByStatus[article.completeness];
   },
 
-  getCompletenessModalHeader: (article) => {
-    if (!article.completeness || article.completeness === 'complete') return;
+  getCompletenessModalHeader: article => {
+    if (!article.completeness || article.completeness === "complete") return;
 
     const headerByStatus = {
-      stub: 'Stub',
-      partial_content: 'Partial',
-      partial_citations: 'Citations/Footnotes Needed',
-      partial_editing: 'Grammar/Spelling Edits Needed',
+      stub: "Stub",
+      partial_content: "Partial",
+      partial_citations: "Citations/Footnotes Needed",
+      partial_editing: "Grammar/Spelling Edits Needed",
     };
 
     return headerByStatus[article.completeness];
   },
 
-  getCompletenessModalText: (article) => {
-    if (!article.completeness || article.completeness === 'complete') return;
+  getCompletenessModalText: article => {
+    if (!article.completeness || article.completeness === "complete") return;
 
     const stubText = `
       <p>Stub entries contain little information beyond a title, providing ideal starting places for students and anyone interested in contributing to Participedia. More stub entries can be found using the “entry completeness” search filter on the homepage.</p>
@@ -352,9 +355,12 @@ module.exports = {
     if (!supportedArticleTypes.includes(article.type)) return;
 
     // get all the keys that we are currently filtering on from the search filters list
-    const supportedFilters = [].concat.apply([], searchFiltersList[article.type].map(section => {
-      return section.fieldNameKeys.map(key => key);
-    }));
+    const supportedFilters = [].concat.apply(
+      [],
+      searchFiltersList[article.type].map(section => {
+        return section.fieldNameKeys.map(key => key);
+      })
+    );
 
     return supportedFilters.includes(name);
   },
@@ -421,13 +427,13 @@ module.exports = {
       if (typeof item === "string") {
         return {
           key: item,
-          localizedValue: i18n(`name:${name}-key:${item}`, context)
-        }
+          localizedValue: i18n(`name:${name}-key:${item}`, context),
+        };
       } else {
         return {
           key: item.key,
-          localizedValue: i18n(`name:${name}-key:${item.key}`, context)
-        }
+          localizedValue: i18n(`name:${name}-key:${item.key}`, context),
+        };
       }
     });
   },
@@ -601,7 +607,7 @@ module.exports = {
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       twitter: `https://twitter.com/intent/tweet?text=Participedia: ${title} - ${url}`,
-      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`
+      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
     };
     return shareUrls[type];
   },
@@ -627,10 +633,13 @@ module.exports = {
   },
 
   socialTagsTemplate(article, req, context) {
-    const defaultPhotoUrl = `https://${req.headers.host}/images/participedia-social-img.jpg`;
+    const defaultPhotoUrl = `https://${
+      req.headers.host
+    }/images/participedia-social-img.jpg`;
     const url = currentUrl(req);
     const title = getPageTitle(req, article, context);
-    const description = (article && article.description) || i18n("main_tagline", context);
+    const description =
+      (article && article.description) || i18n("main_tagline", context);
     const imageUrl = (article && getFirstPhotoUrl(article)) || defaultPhotoUrl;
     return socialTagsTemplate(title, description, url, imageUrl);
   },
@@ -646,7 +655,12 @@ module.exports = {
 
     let editsByUser = {};
     editHistory.forEach(edit => {
-      if (editsByUser[edit.user_id] && !editsByUser[edit.user_id].find(entry => moment(entry.timestamp).isSame(edit.timestamp, "day"))) {
+      if (
+        editsByUser[edit.user_id] &&
+        !editsByUser[edit.user_id].find(entry =>
+          moment(entry.timestamp).isSame(edit.timestamp, "day")
+        )
+      ) {
         // only add this edit if we don't already have an edit entry for this user on this day
         editsByUser[edit.user_id] = editsByUser[edit.user_id].concat([edit]);
       } else {
@@ -656,9 +670,11 @@ module.exports = {
 
     let editsToBeSorted = [];
     Object.keys(editsByUser).forEach(userId => {
-      editsByUser[userId].forEach(entry => editsToBeSorted = editsToBeSorted.concat([entry]));
+      editsByUser[userId].forEach(
+        entry => (editsToBeSorted = editsToBeSorted.concat([entry]))
+      );
     });
-    return editsToBeSorted.sort((a,b) => {
+    return editsToBeSorted.sort((a, b) => {
       return new Date(b.timestamp) - new Date(a.timestamp);
     });
   },
@@ -674,11 +690,11 @@ module.exports = {
   paginationNumResults(cards, totalResults, req) {
     const pageNum = parseInt(req.query.page);
 
-    let start = (pageNum - 1) * 20 + 1
-    let end = totalResults
+    let start = (pageNum - 1) * 20 + 1;
+    let end = totalResults;
 
     if (20 < totalResults) {
-      end = 20 * pageNum
+      end = 20 * pageNum;
       if (end > totalResults) {
         end = totalResults;
       }
@@ -691,17 +707,17 @@ module.exports = {
     }
   },
 
-  paginationCollections(req, context){
+  paginationCollections(req, context) {
     const keyLists = searchFilterKeyLists(typeFromReq(req));
     const filterKeys = searchFilterKeys(typeFromReq(req));
     const filterArr = keyLists.concat(filterKeys);
 
     const searchFilterKeyListMapped = filterArr
-          .map(key => filterCollections(req, key, context))
-          .filter(el => el);
+      .map(key => filterCollections(req, key, context))
+      .filter(el => el);
     const arr = concactArr(searchFilterKeyListMapped);
 
-   if (arr.length !== 0){
+    if (arr.length !== 0) {
       return ` ${arr}`;
     }
   },
@@ -754,7 +770,7 @@ module.exports = {
       { title: i18n("All", context), key: "all" },
       { title: i18n("Cases", context), key: "case" },
       { title: i18n("Methods", context), key: "method" },
-      { title: i18n("Organizations", context), key: "organizations" }
+      { title: i18n("Organizations", context), key: "organizations" },
     ];
   },
 
@@ -767,14 +783,11 @@ module.exports = {
     if ((user && user.id) === (profile && profile.id)) {
       return [
         { title: i18n("Contributions", context), key: "contributions" },
-        { title: i18n("Bookmarks", context), key: "bookmarks" }
+        { title: i18n("Bookmarks", context), key: "bookmarks" },
       ];
     } else {
-      return [
-        { title: i18n("Contributions", context), key: "contributions" }
-      ];
+      return [{ title: i18n("Contributions", context), key: "contributions" }];
     }
-
   },
 
   isSelectedUserTab(req, category) {
@@ -964,34 +977,34 @@ module.exports = {
 
   searchFiltersDisplay(req) {
     // Check if selected category params exist
-    if (!req.query.hasOwnProperty('selectedCategory')) {
+    if (!req.query.hasOwnProperty("selectedCategory")) {
       return [];
     }
 
     // Check if selected category value exist in record
-    var selectedCategory = req.query['selectedCategory'];
+    var selectedCategory = req.query["selectedCategory"];
     if (!searchFiltersList.hasOwnProperty(selectedCategory)) {
       return [];
     }
-    
+
     var filters = [];
     var filterCategoryItems = searchFiltersList[selectedCategory];
     var query = req.query;
 
     for (const property in query) {
-      if (property !== 'selectedCategory') {
+      if (property !== "selectedCategory") {
         // Get category name
         var filterObject = {};
         for (i = 0; i < filterCategoryItems.length; i++) {
-          if (filterCategoryItems[i]['fieldNameKeys'].includes(property)) {
+          if (filterCategoryItems[i]["fieldNameKeys"].includes(property)) {
             // filterObject['label'] = filterCategoryItems[i]['sectionLabel'];
-            filterObject['labelMetaData'] = filterCategoryItems[i];
+            filterObject["labelMetaData"] = filterCategoryItems[i];
 
             var queryValue = query[property];
             var value = queryValue.split(",");
-            filterObject['valueMetaData'] = {
-              'queryValue': value,
-              'queryLabel': property
+            filterObject["valueMetaData"] = {
+              queryValue: value,
+              queryLabel: property,
             };
 
             filters.push(filterObject);
@@ -1013,7 +1026,7 @@ module.exports = {
         newValue = {
           key: data,
           value: data,
-          section: name
+          section: name,
         };
       } else {
         // name:general_issues-key:arts
@@ -1021,7 +1034,7 @@ module.exports = {
         newValue = {
           key: key,
           value: i18n(`name:${name}-key:${key}`, context),
-          section: name
+          section: name,
         };
       }
       newData.push(newValue);
@@ -1045,5 +1058,5 @@ module.exports = {
         };
       });
     }
-  }
+  },
 };
