@@ -1719,5 +1719,13 @@
   "participedia_team": "Participedia Team",
   "sciencewise": "Sciencewise",
   "uarkansas_students": "UA Clinton School of Public Service Students",
-  "usoton_students": "University of Southampton Students"
+  "usoton_students": "University of Southampton Students",
+  "completeness.Stub": "Stub",
+  "completeness.Partial": "Partial",
+  "completeness.Citations/Footnotes Needed": "Citations/Footnotes Needed",
+  "completeness.Grammar/Spelling Edits Needed": "Grammar/Spelling Edits Needed",
+  "completeness.stub_alert": "%sThe following entry is a stub.%s Please help us %scomplete it%s.",
+  "completeness.partial_content_alert": "%sThe following entry is incomplete.%s You can help Participedia by %sadding to it%s.",
+  "completeness.partial_citations_alert": "%sThe following entry is missing citations.%s Please help us %sverify its content%s.",
+  "completeness.partial_editing_alert": "%sThe following entry needs assistance with content and editing.%s Please help us %scomplete it%s."
 }

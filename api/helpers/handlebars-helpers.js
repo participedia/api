@@ -276,7 +276,7 @@ module.exports = {
     }
   },
 
-  getCompletenessPrompt: article => {
+  getCompletenessPrompt: (article, context) => {
     if (!article.completeness || article.completeness === "complete") return;
 
     const articleEditLink = `/${article.type}/${article.id}/edit?full=1`;
@@ -291,14 +291,20 @@ module.exports = {
     return promptsByStatus[article.completeness];
   },
 
-  getCompletenessModalHeader: article => {
+  getCompletenessModalHeader: (article, context) => {
     if (!article.completeness || article.completeness === "complete") return;
 
     const headerByStatus = {
-      stub: "Stub",
-      partial_content: "Partial",
-      partial_citations: "Citations/Footnotes Needed",
-      partial_editing: "Grammar/Spelling Edits Needed",
+      stub: i18n("completeness.Stub", context),
+      partial_content: i18n("completeness.Partial", context),
+      partial_citations: i18n(
+        "completeness.Citations/Footnotes Needed",
+        context
+      ),
+      partial_editing: i18n(
+        "completeness.Grammar/Spelling Edits Needed",
+        context
+      ),
     };
 
     return headerByStatus[article.completeness];
