@@ -1727,5 +1727,11 @@
   "completeness.stub_alert": "%sThe following entry is a stub.%s Please help us %scomplete it%s.",
   "completeness.partial_content_alert": "%sThe following entry is incomplete.%s You can help Participedia by %sadding to it%s.",
   "completeness.partial_citations_alert": "%sThe following entry is missing citations.%s Please help us %sverify its content%s.",
-  "completeness.partial_editing_alert": "%sThe following entry needs assistance with content and editing.%s Please help us %scomplete it%s."
+  "completeness.partial_editing_alert": "%sThe following entry needs assistance with content and editing.%s Please help us %scomplete it%s.",
+  "completeness.stub_modal_text_1": "Stub entries contain little information beyond a title, providing ideal starting places for students and anyone interested in contributing to Participedia. More stub entries can be found using the 'entry completeness' search filter on the homepage.",
+  "completeness.general_modal_text_2": "An entry’s level of completeness is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, include at least three sections of the written narrative using citations (footnotes), and require no significant corrections to their grammar or spelling. If you complete an entry, please email %s to request a review so it can be correctly labelled.",
+  "completeness.general_modal_text_3": "Please read our %sguidelines%s on how to write an entry or contact us for more information.",
+  "completeness.partial_content_modal_text_1": "Partial entries are about half complete, and make good starting places for students and anyone interested in contributing to Participedia. More partial entries can be found using the “entry completeness” search filter on the homepage.",
+  "completeness.partial_citation_modal_text_1": "This type of entry is missing citations (footnotes), but is otherwise complete. Entries needing citations can be identified using the “entry completeness” search filter on the homepage.",
+  "completeness.partial_editing_modal_text_1": "This type of entry needs significant improvements to its grammar or spelling, and can be any level of completeness (stub, partial, or complete). Entries needing grammar or spelling edits can be identified using the “entry completeness” search filter on the homepage."
 }

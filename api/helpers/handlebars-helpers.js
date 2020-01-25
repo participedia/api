@@ -279,16 +279,16 @@ module.exports = {
   getCompletenessPrompt: (article, context) => {
     if (!article.completeness || article.completeness === "complete") return;
 
-    const articleEditLink = `/${article.type}/${article.id}/edit?full=1`;
-
-    const promptsByStatus = {
-      stub: `<strong>The following entry is a stub.</strong> Please help us <a href="${articleEditLink}">complete it</a>.`,
-      partial_content: `<strong>The following entry is incomplete.</strong> You can help Participedia by <a href="${articleEditLink}">adding to it</a>.`,
-      partial_citations: `<strong>The following entry is missing citations.</strong> Please help us <a href="${articleEditLink}">verify its content</a>.`,
-      partial_editing: `<strong>The following entry needs assistance with content and editing.</strong> Please help us <a href="${articleEditLink}">complete it</a>.`,
-    };
-
-    return promptsByStatus[article.completeness];
+    if (context && context.data && context.data.root) {
+      const articleEditLink = `/${article.type}/${article.id}/edit?full=1`;
+      return context.data.root.__(
+        `completeness.${article.completeness}_alert`,
+        "<strong>",
+        "</strong>",
+        `<a href='${articleEditLink}'>`,
+        "</a>"
+      );
+    }
   },
 
   getCompletenessModalHeader: (article, context) => {
@@ -310,39 +310,71 @@ module.exports = {
     return headerByStatus[article.completeness];
   },
 
-  getCompletenessModalText: article => {
-    if (!article.completeness || article.completeness === "complete") return;
+  getCompletenessModalText: (article, context) => {
+    const __ =
+      context && context.data && context.data.root && context.data.root.__;
+
+    if (!__ && (!article.completeness || article.completeness === "complete"))
+      return;
 
     const stubText = `
-      <p>Stub entries contain little information beyond a title, providing ideal starting places for students and anyone interested in contributing to Participedia. More stub entries can be found using the “entry completeness” search filter on the homepage.</p>
+      <p>${__("completeness.stub_modal_text_1")}</p>
 
-      <p>An entry’s level of completeness is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, include at least three sections of the written narrative using citations (footnotes), and require no significant corrections to their grammar or spelling. If you complete an entry, please email <a href="mailto:communications@participedia.net">communications@participedia.net</a> to request a review so it can be correctly labelled.</p>
+      <p>${__(
+        "completeness.general_modal_text_2",
+        "<a href='mailto:communications@participedia.net'>communications@participedia.net</a>"
+      )}</p>
 
-      <p>Please read our <a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit' target='_blank'>guidelines</a> on how to write an entry or contact us for more information.</p>
+      <p>${__(
+        "completeness.general_modal_text_3",
+        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit' target='_blank'>",
+        "</a>"
+      )}</p>
     `;
 
     const partialContentText = `
-      <p>Partial entries are about half complete, and make good starting places for students and anyone interested in contributing to Participedia. More partial entries can be found using the “entry completeness” search filter on the homepage.</p>
+      <p>${__("completeness.partial_content_modal_text_1")}</p>
 
-      <p>An entry’s level of completeness is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, include at least three sections of the written narrative using citations (footnotes), and require no significant corrections to their grammar or spelling. If you complete an entry, please email <a href="mailto:communications@participedia.net">communications@participedia.net</a> to request a review so it can be correctly labelled.</p>
+      <p>${__(
+        "completeness.general_modal_text_2",
+        "<a href='mailto:communications@participedia.net'>communications@participedia.net</a>"
+      )}</p>
 
-      <p>Please read our <a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit' target='_blank'>guidelines</a> on how to write an entry or contact us for more information.</p>
+      <p>${__(
+        "completeness.general_modal_text_3",
+        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit' target='_blank'>",
+        "</a>"
+      )}</p>
     `;
 
     const partialCitationsText = `
-      <p>This type of entry is missing citations (footnotes), but is otherwise complete. Entries needing citations can be identified using the “entry completeness” search filter on the homepage.</p>
+      <p>${__("completeness.partial_citation_modal_text_1")}</p>
 
-      <p>An entry’s level of completeness is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, include at least three sections of the written narrative using citations (footnotes), and require no significant corrections to their grammar or spelling. If you complete an entry, please email <a href="mailto:communications@participedia.net">communications@participedia.net</a> to request a review so it can be correctly labelled.</p>
+      <p>${__(
+        "completeness.general_modal_text_2",
+        "<a href='mailto:communications@participedia.net'>communications@participedia.net</a>"
+      )}</p>
 
-      <p>Please read our <a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit' target='_blank'>guidelines</a> on how to write an entry or contact us for more information.</p>
+      <p>${__(
+        "completeness.general_modal_text_3",
+        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit' target='_blank'>",
+        "</a>"
+      )}</p>
     `;
 
     const partialEditingText = `
-      <p>This type of entry needs significant improvements to its grammar or spelling, and can be any level of completeness (stub, partial, or complete). Entries needing grammar or spelling edits can be identified using the “entry completeness” search filter on the homepage.</p>
+      <p>${__("completeness.partial_editing_modal_text_1")}</p>
 
-      <p>Completeness status is manually assigned by our editing team. Complete entries contain most of the data requested in the entry form, including at least three sections of the written narrative with citations (footnotes), and require no significant grammar or spelling edits. If you complete an entry, please email <a href="mailto:communications@participedia.net">communications@participedia.net</a> to request a review so it can be correctly labelled.</p>
+      <p>${__(
+        "completeness.general_modal_text_2",
+        "<a href='mailto:communications@participedia.net'>communications@participedia.net</a>"
+      )}</p>
 
-      <p>Please read our <a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit' target='_blank'>guidelines</a> on how to write an entry or contact us for more information.</p>
+      <p>${__(
+        "completeness.general_modal_text_3",
+        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit' target='_blank'>",
+        "</a>"
+      )}</p>
     `;
 
     const textByStatus = {
