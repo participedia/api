@@ -6,7 +6,7 @@ module.exports = {
     "coady_students",
     "usoton_students",
     "uarkansas_students",
-    "latinno"
+    "latinno",
   ],
   general_issues: [
     "agriculture",
@@ -30,7 +30,7 @@ module.exports = {
     "planning",
     "science",
     "social",
-    "transportation"
+    "transportation",
   ],
   specific_topics: [
     "abilitydisability",
@@ -220,7 +220,7 @@ module.exports = {
     "worker",
     "workforce",
     "youth",
-    "youth_issues"
+    "youth_issues",
   ],
   facetoface_online_or_both: ["facetoface", "online", "both"],
   type_method: [
@@ -240,7 +240,7 @@ module.exports = {
     "protest",
     "public",
     "public_meetings",
-    "research"
+    "research",
   ],
   method_types: [
     "collaborative",
@@ -259,7 +259,7 @@ module.exports = {
     "protest",
     "public",
     "public_meetings",
-    "research"
+    "research",
   ],
   purpose_method: ["make", "make_influence", "deliver", "develop", "academic"],
   purposes: ["make", "make_influence", "deliver", "develop", "academic"],
@@ -269,7 +269,7 @@ module.exports = {
     "involve",
     "collaborate",
     "empower",
-    "not"
+    "not",
   ],
   scope_of_influence: [
     "organization",
@@ -279,7 +279,7 @@ module.exports = {
     "regional",
     "national",
     "multinational",
-    "no_geo"
+    "no_geo",
   ],
   legality: ["yes", "no"],
   staff: ["yes", "no"],
@@ -306,7 +306,7 @@ module.exports = {
     "evaluation",
     "protest",
     "research",
-    "social"
+    "social",
   ],
   open_limited: ["open", "open_to", "limited", "both"],
   recruitment_method: [
@@ -315,7 +315,7 @@ module.exports = {
     "stratified",
     "appointment",
     "election",
-    "not"
+    "not",
   ],
   targeted_participants: [
     "appointed",
@@ -333,7 +333,7 @@ module.exports = {
     "stakeholder",
     "students",
     "women",
-    "youth"
+    "youth",
   ],
   tools_techniques_types: [
     "manage",
@@ -344,7 +344,7 @@ module.exports = {
     "recruit",
     "plan",
     "propose",
-    "inform"
+    "inform",
   ],
   type_tool: [
     "manage",
@@ -355,7 +355,7 @@ module.exports = {
     "recruit",
     "plan",
     "propose",
-    "inform"
+    "inform",
   ],
   facilitator_training: ["professional", "trained", "untrained"],
   participants_interactions: [
@@ -369,7 +369,7 @@ module.exports = {
     "negotiation",
     "storytelling",
     "teachinginstructing",
-    "no_interaction"
+    "no_interaction",
   ],
   learning_resources: [
     "expert",
@@ -379,7 +379,7 @@ module.exports = {
     "video",
     "written",
     "no_info",
-    "not"
+    "not",
   ],
   if_voting: [
     "preferential",
@@ -387,7 +387,7 @@ module.exports = {
     "majoritarian",
     "supermajoritarian",
     "unanimous",
-    "dont"
+    "dont",
   ],
   insights_outcomes: [
     "artistic",
@@ -400,7 +400,7 @@ module.exports = {
     "protestspublic",
     "public_hearingsmeetings",
     "word",
-    "n/a"
+    "n/a",
   ],
   organizer_types: [
     "academic",
@@ -418,7 +418,7 @@ module.exports = {
     "regional",
     "social",
     "labortrade",
-    "n/a"
+    "n/a",
   ],
   funder_types: [
     "academic",
@@ -436,14 +436,14 @@ module.exports = {
     "regional",
     "social",
     "labortrade",
-    "n/a"
+    "n/a",
   ],
   change_types: [
     "changes",
     "changes_civic",
     "changes_public",
     "changes_how",
-    "conflict"
+    "conflict",
   ],
   implementers_of_change: [
     "lay",
@@ -452,7 +452,7 @@ module.exports = {
     "appointed",
     "experts",
     "corporations",
-    "dont"
+    "dont",
   ],
   sector: ["for_profit", "government", "non_profit_non_gov", "higher_ed"],
   level_polarization: ["not", "low", "moderate", "polarized", "high"],
@@ -462,7 +462,7 @@ module.exports = {
     "small",
     "medium",
     "large",
-    "no_limit"
+    "no_limit",
   ],
   completeness: [
     "stub",
@@ -470,5 +470,5 @@ module.exports = {
     "partial_citations",
     "partial_editing",
     "complete",
-  ]
+  ],
 };

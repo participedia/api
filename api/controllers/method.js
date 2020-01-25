@@ -16,7 +16,7 @@ const {
   UPDATE_AUTHOR_LAST,
   listUsers,
   refreshSearch,
-  ErrorReporter
+  ErrorReporter,
 } = require("../helpers/db");
 
 const {
@@ -26,7 +26,7 @@ const {
   validateUrl,
   verifyOrUpdateUrl,
   returnByType,
-  fixUpURLs
+  fixUpURLs,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -87,16 +87,16 @@ async function postMethodNewHttp(req, res) {
     if (!title) {
       return res.status(400).json({
         OK: false,
-        errors: ["Cannot create a method without at least a title."]
+        errors: ["Cannot create a method without at least a title."],
       });
     }
-    
+
     const user_id = req.user.id;
     const thing = await db.one(CREATE_METHOD, {
       title,
       body,
       description,
-      original_language
+      original_language,
     });
     req.params.thingid = thing.thingid;
     await postMethodUpdateHttp(req, res);
@@ -164,17 +164,17 @@ async function postMethodUpdateHttp(req, res) {
   if (links) {
     for (let key in links) {
       let url = links[key].url;
-      if (url.length > 0 ){
+      if (url.length > 0) {
         newMethod.links = verifyOrUpdateUrl(newMethod.links);
         const isUrlValid = validateUrl(newMethod);
-        if (!isUrlValid){
+        if (!isUrlValid) {
           return res.status(400).json({
             OK: false,
-            errors: ["Invalid link url."]
+            errors: ["Invalid link url."],
           });
         }
       }
-    } 
+    }
   }
 
   // if this is a new method, we don't have a post_date yet, so we set it here
@@ -191,7 +191,7 @@ async function postMethodUpdateHttp(req, res) {
   const {
     updatedText,
     author,
-    oldArticle: oldMethod
+    oldArticle: oldMethod,
   } = await maybeUpdateUserText(req, res, "method");
 
   const [updatedMethod, er] = getUpdatedMethod(
@@ -202,35 +202,39 @@ async function postMethodUpdateHttp(req, res) {
   );
 
   //get current date when user.isAdmin is false;
-  updatedMethod.updated_date = !user.isadmin ? 'now' : updatedMethod.updated_date;
+  updatedMethod.updated_date = !user.isadmin
+    ? "now"
+    : updatedMethod.updated_date;
 
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-method", async t => {
-          await t.none(INSERT_AUTHOR, author);
-          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-          await t.none(UPDATE_METHOD, updatedMethod);
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        await t.none(UPDATE_METHOD, updatedMethod);
       });
-       //if this is a new method, set creator id to userid and isAdmin
-       if (user.isadmin){
+      //if this is a new method, set creator id to userid and isAdmin
+      if (user.isadmin) {
         const creator = {
           user_id: newMethod.creator ? newMethod.creator : params.userid,
-          thingid: params.articleid
+          thingid: params.articleid,
         };
         const updatedBy = {
-          user_id : newMethod.last_updated_by ? newMethod.last_updated_by : params.userid,
+          user_id: newMethod.last_updated_by
+            ? newMethod.last_updated_by
+            : params.userid,
           thingid: params.articleid,
-          updated_date: newMethod.updated_date || 'now'
+          updated_date: newMethod.updated_date || "now",
         };
         await db.tx("update-method", async t => {
-            await t.none(UPDATE_AUTHOR_FIRST, creator);
-            await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
         });
       }
     } else {
       await db.tx("update-method", async t => {
-          await t.none(INSERT_AUTHOR, author);
-          await t.none(UPDATE_METHOD, updatedMethod);
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_METHOD, updatedMethod);
       });
     }
     // the client expects this request to respond with json
@@ -238,14 +242,14 @@ async function postMethodUpdateHttp(req, res) {
     const freshArticle = await getMethod(params, res);
     res.status(200).json({
       OK: true,
-      article: freshArticle
+      article: freshArticle,
     });
     refreshSearch();
   } else {
     logError(er);
     res.status(400).json({
       OK: false,
-      errors: er.errors
+      errors: er.errors,
     });
   }
 }
@@ -277,7 +281,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "open_limited",
     "recruitment_method",
     "level_polarization",
-    "level_complexity"
+    "level_complexity",
   ].map(key => cond(key, as.methodkey));
   // list of keys
   [
@@ -288,7 +292,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "decision_methods",
     "if_voting",
     "number_of_participants",
-    "purpose_method"
+    "purpose_method",
   ].map(key => cond(key, as.methodkeys));
   // TODO save bookmarked on user
   return [updatedMethod, er];
@@ -340,5 +344,5 @@ module.exports = {
   getMethodEditHttp,
   getMethodNewHttp,
   postMethodNewHttp,
-  postMethodUpdateHttp
+  postMethodUpdateHttp,
 };

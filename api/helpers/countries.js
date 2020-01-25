@@ -3,964 +3,964 @@
 const countries = [
   {
     value: "Afghanistan",
-    key: "AF"
+    key: "AF",
   },
   {
     value: "Albania",
-    key: "AL"
+    key: "AL",
   },
   {
     value: "Algeria",
-    key: "DZ"
+    key: "DZ",
   },
   {
     value: "American Samoa",
-    key: "AS"
+    key: "AS",
   },
   {
     value: "Andorra",
-    key: "AD"
+    key: "AD",
   },
   {
     value: "Angola",
-    key: "AO"
+    key: "AO",
   },
   {
     value: "Anguilla",
-    key: "AI"
+    key: "AI",
   },
   {
     value: "Antarctica",
-    key: "AQ"
+    key: "AQ",
   },
   {
     value: "Antigua and Barbuda",
-    key: "AG"
+    key: "AG",
   },
   {
     value: "Argentina",
-    key: "AR"
+    key: "AR",
   },
   {
     value: "Armenia",
-    key: "AM"
+    key: "AM",
   },
   {
     value: "Aruba",
-    key: "AW"
+    key: "AW",
   },
   {
     value: "Australia",
-    key: "AU"
+    key: "AU",
   },
   {
     value: "Austria",
-    key: "AT"
+    key: "AT",
   },
   {
     value: "Azerbaijan",
-    key: "AZ"
+    key: "AZ",
   },
   {
     value: "Bahamas",
-    key: "BS"
+    key: "BS",
   },
   {
     value: "Bahrain",
-    key: "BH"
+    key: "BH",
   },
   {
     value: "Bangladesh",
-    key: "BD"
+    key: "BD",
   },
   {
     value: "Barbados",
-    key: "BB"
+    key: "BB",
   },
   {
     value: "Belarus",
-    key: "BY"
+    key: "BY",
   },
   {
     value: "Belgium",
-    key: "BE"
+    key: "BE",
   },
   {
     value: "Belize",
-    key: "BZ"
+    key: "BZ",
   },
   {
     value: "Benin",
-    key: "BJ"
+    key: "BJ",
   },
   {
     value: "Bermuda",
-    key: "BM"
+    key: "BM",
   },
   {
     value: "Bhutan",
-    key: "BT"
+    key: "BT",
   },
   {
     value: "Bolivia",
-    key: "BO"
+    key: "BO",
   },
   {
     value: "Bosnia and Herzegovina",
-    key: "BA"
+    key: "BA",
   },
   {
     value: "Botswana",
-    key: "BW"
+    key: "BW",
   },
   {
     value: "Bouvet Island",
-    key: "BV"
+    key: "BV",
   },
   {
     value: "Brazil",
-    key: "BR"
+    key: "BR",
   },
   {
     value: "British Indian Ocean Territory",
-    key: "IO"
+    key: "IO",
   },
   {
     value: "Brunei",
-    key: "BN"
+    key: "BN",
   },
   {
     value: "Bulgaria",
-    key: "BG"
+    key: "BG",
   },
   {
     value: "Burkina Faso",
-    key: "BF"
+    key: "BF",
   },
   {
     value: "Burundi",
-    key: "BI"
+    key: "BI",
   },
   {
     value: "Cambodia",
-    key: "KH"
+    key: "KH",
   },
   {
     value: "Cameroon",
-    key: "CM"
+    key: "CM",
   },
   {
     value: "Canada",
-    key: "CA"
+    key: "CA",
   },
   {
     value: "Cape Verde",
-    key: "CV"
+    key: "CV",
   },
   {
     value: "Cayman Islands",
-    key: "KY"
+    key: "KY",
   },
   {
     value: "Central African Republic",
-    key: "CF"
+    key: "CF",
   },
   {
     value: "Chad",
-    key: "TD"
+    key: "TD",
   },
   {
     value: "Chile",
-    key: "CL"
+    key: "CL",
   },
   {
     value: "China",
-    key: "CN"
+    key: "CN",
   },
   {
     value: "Christmas Island",
-    key: "CX"
+    key: "CX",
   },
   {
     value: "Cocos (Keeling) Islands",
-    key: "CC"
+    key: "CC",
   },
   {
     value: "Colombia",
-    key: "CO"
+    key: "CO",
   },
   {
     value: "Comoros",
-    key: "KM"
+    key: "KM",
   },
   {
     value: "Congo",
-    key: "CG"
+    key: "CG",
   },
   {
     value: "Cook Islands",
-    key: "CK"
+    key: "CK",
   },
   {
     value: "Costa Rica",
-    key: "CR"
+    key: "CR",
   },
   {
     value: "Croatia",
-    key: "HR"
+    key: "HR",
   },
   {
     value: "Cuba",
-    key: "CU"
+    key: "CU",
   },
   {
     value: "Cyprus",
-    key: "CY"
+    key: "CY",
   },
   {
     value: "Czech Republic",
-    key: "CZ"
+    key: "CZ",
   },
   {
     value: "Denmark",
-    key: "DK"
+    key: "DK",
   },
   {
     value: "Djibouti",
-    key: "DJ"
+    key: "DJ",
   },
   {
     value: "Dominica",
-    key: "DM"
+    key: "DM",
   },
   {
     value: "Dominican Republic",
-    key: "DO"
+    key: "DO",
   },
   {
     value: "East Timor",
-    key: "TP"
+    key: "TP",
   },
   {
     value: "Ecuador",
-    key: "EC"
+    key: "EC",
   },
   {
     value: "Egypt",
-    key: "EG"
+    key: "EG",
   },
   {
     value: "El Salvador",
-    key: "SV"
+    key: "SV",
   },
   {
     value: "Equatorial Guinea",
-    key: "GQ"
+    key: "GQ",
   },
   {
     value: "Eritrea",
-    key: "ER"
+    key: "ER",
   },
   {
     value: "Estonia",
-    key: "EE"
+    key: "EE",
   },
   {
     value: "Ethiopia",
-    key: "ET"
+    key: "ET",
   },
   {
     value: "Falkland Islands",
-    key: "FK"
+    key: "FK",
   },
   {
     value: "Faroe Islands",
-    key: "FO"
+    key: "FO",
   },
   {
     value: "Fiji Islands",
-    key: "FJ"
+    key: "FJ",
   },
   {
     value: "Finland",
-    key: "FI"
+    key: "FI",
   },
   {
     value: "France",
-    key: "FR"
+    key: "FR",
   },
   {
     value: "French Guiana",
-    key: "GF"
+    key: "GF",
   },
   {
     value: "French Polynesia",
-    key: "PF"
+    key: "PF",
   },
   {
     value: "French Southern territories",
-    key: "TF"
+    key: "TF",
   },
   {
     value: "Gabon",
-    key: "GA"
+    key: "GA",
   },
   {
     value: "Gambia",
-    key: "GM"
+    key: "GM",
   },
   {
     value: "Georgia",
-    key: "GE"
+    key: "GE",
   },
   {
     value: "Germany",
-    key: "DE"
+    key: "DE",
   },
   {
     value: "Ghana",
-    key: "GH"
+    key: "GH",
   },
   {
     value: "Gibraltar",
-    key: "GI"
+    key: "GI",
   },
   {
     value: "Greece",
-    key: "GR"
+    key: "GR",
   },
   {
     value: "Greenland",
-    key: "GL"
+    key: "GL",
   },
   {
     value: "Grenada",
-    key: "GD"
+    key: "GD",
   },
   {
     value: "Guadeloupe",
-    key: "GP"
+    key: "GP",
   },
   {
     value: "Guam",
-    key: "GU"
+    key: "GU",
   },
   {
     value: "Guatemala",
-    key: "GT"
+    key: "GT",
   },
   {
     value: "Guinea",
-    key: "GN"
+    key: "GN",
   },
   {
     value: "Guinea-Bissau",
-    key: "GW"
+    key: "GW",
   },
   {
     value: "Guyana",
-    key: "GY"
+    key: "GY",
   },
   {
     value: "Haiti",
-    key: "HT"
+    key: "HT",
   },
   {
     value: "Heard Island and McDonald Islands",
-    key: "HM"
+    key: "HM",
   },
   {
     value: "Holy See (Vatican City State)",
-    key: "VA"
+    key: "VA",
   },
   {
     value: "Honduras",
-    key: "HN"
+    key: "HN",
   },
   {
     value: "Hong Kong",
-    key: "HK"
+    key: "HK",
   },
   {
     value: "Hungary",
-    key: "HU"
+    key: "HU",
   },
   {
     value: "Iceland",
-    key: "IS"
+    key: "IS",
   },
   {
     value: "India",
-    key: "IN"
+    key: "IN",
   },
   {
     value: "Indonesia",
-    key: "ID"
+    key: "ID",
   },
   {
     value: "Iran",
-    key: "IR"
+    key: "IR",
   },
   {
     value: "Iraq",
-    key: "IQ"
+    key: "IQ",
   },
   {
     value: "Ireland",
-    key: "IE"
+    key: "IE",
   },
   {
     value: "Israel",
-    key: "IL"
+    key: "IL",
   },
   {
     value: "Italy",
-    key: "IT"
+    key: "IT",
   },
   {
     value: "Ivory Coast",
-    key: "CI"
+    key: "CI",
   },
   {
     value: "Jamaica",
-    key: "JM"
+    key: "JM",
   },
   {
     value: "Japan",
-    key: "JP"
+    key: "JP",
   },
   {
     value: "Jordan",
-    key: "JO"
+    key: "JO",
   },
   {
     value: "Kazakhstan",
-    key: "KZ"
+    key: "KZ",
   },
   {
     value: "Kenya",
-    key: "KE"
+    key: "KE",
   },
   {
     value: "Kiribati",
-    key: "KI"
+    key: "KI",
   },
   {
     value: "Kuwait",
-    key: "KW"
+    key: "KW",
   },
   {
     value: "Kyrgyzstan",
-    key: "KG"
+    key: "KG",
   },
   {
     value: "Laos",
-    key: "LA"
+    key: "LA",
   },
   {
     value: "Latvia",
-    key: "LV"
+    key: "LV",
   },
   {
     value: "Lebanon",
-    key: "LB"
+    key: "LB",
   },
   {
     value: "Lesotho",
-    key: "LS"
+    key: "LS",
   },
   {
     value: "Liberia",
-    key: "LR"
+    key: "LR",
   },
   {
     value: "Libyan Arab Jamahiriya",
-    key: "LY"
+    key: "LY",
   },
   {
     value: "Liechtenstein",
-    key: "LI"
+    key: "LI",
   },
   {
     value: "Lithuania",
-    key: "LT"
+    key: "LT",
   },
   {
     value: "Luxembourg",
-    key: "LU"
+    key: "LU",
   },
   {
     value: "Macao",
-    key: "MO"
+    key: "MO",
   },
   {
     value: "North Macedonia",
-    key: "MK"
+    key: "MK",
   },
   {
     value: "Madagascar",
-    key: "MG"
+    key: "MG",
   },
   {
     value: "Malawi",
-    key: "MW"
+    key: "MW",
   },
   {
     value: "Malaysia",
-    key: "MY"
+    key: "MY",
   },
   {
     value: "Maldives",
-    key: "MV"
+    key: "MV",
   },
   {
     value: "Mali",
-    key: "ML"
+    key: "ML",
   },
   {
     value: "Malta",
-    key: "MT"
+    key: "MT",
   },
   {
     value: "Marshall Islands",
-    key: "MH"
+    key: "MH",
   },
   {
     value: "Martinique",
-    key: "MQ"
+    key: "MQ",
   },
   {
     value: "Mauritania",
-    key: "MR"
+    key: "MR",
   },
   {
     value: "Mauritius",
-    key: "MU"
+    key: "MU",
   },
   {
     value: "Mayotte",
-    key: "YT"
+    key: "YT",
   },
   {
     value: "Mexico",
-    key: "MX"
+    key: "MX",
   },
   {
     value: "Micronesia, Federated States of",
-    key: "FM"
+    key: "FM",
   },
   {
     value: "Moldova",
-    key: "MD"
+    key: "MD",
   },
   {
     value: "Monaco",
-    key: "MC"
+    key: "MC",
   },
   {
     value: "Mongolia",
-    key: "MN"
+    key: "MN",
   },
   {
     value: "Montserrat",
-    key: "MS"
+    key: "MS",
   },
   {
     value: "Morocco",
-    key: "MA"
+    key: "MA",
   },
   {
     value: "Mozambique",
-    key: "MZ"
+    key: "MZ",
   },
   {
     value: "Myanmar",
-    key: "MM"
+    key: "MM",
   },
   {
     value: "Namibia",
-    key: "NA"
+    key: "NA",
   },
   {
     value: "Nauru",
-    key: "NR"
+    key: "NR",
   },
   {
     value: "Nepal",
-    key: "NP"
+    key: "NP",
   },
   {
     value: "Netherlands",
-    key: "NL"
+    key: "NL",
   },
   {
     value: "Netherlands Antilles",
-    key: "AN"
+    key: "AN",
   },
   {
     value: "New Caledonia",
-    key: "NC"
+    key: "NC",
   },
   {
     value: "New Zealand",
-    key: "NZ"
+    key: "NZ",
   },
   {
     value: "Nicaragua",
-    key: "NI"
+    key: "NI",
   },
   {
     value: "Niger",
-    key: "NE"
+    key: "NE",
   },
   {
     value: "Nigeria",
-    key: "NG"
+    key: "NG",
   },
   {
     value: "Niue",
-    key: "NU"
+    key: "NU",
   },
   {
     value: "Norfolk Island",
-    key: "NF"
+    key: "NF",
   },
   {
     value: "North Korea",
-    key: "KP"
+    key: "KP",
   },
   {
     value: "Northern Ireland",
-    key: "GB"
+    key: "GB",
   },
   {
     value: "Northern Mariana Islands",
-    key: "MP"
+    key: "MP",
   },
   {
     value: "Norway",
-    key: "NO"
+    key: "NO",
   },
   {
     value: "Oman",
-    key: "OM"
+    key: "OM",
   },
   {
     value: "Pakistan",
-    key: "PK"
+    key: "PK",
   },
   {
     value: "Palau",
-    key: "PW"
+    key: "PW",
   },
   {
     value: "Palestine",
-    key: "PS"
+    key: "PS",
   },
   {
     value: "Panama",
-    key: "PA"
+    key: "PA",
   },
   {
     value: "Papua New Guinea",
-    key: "PG"
+    key: "PG",
   },
   {
     value: "Paraguay",
-    key: "PY"
+    key: "PY",
   },
   {
     value: "Peru",
-    key: "PE"
+    key: "PE",
   },
   {
     value: "Philippines",
-    key: "PH"
+    key: "PH",
   },
   {
     value: "Pitcairn",
-    key: "PN"
+    key: "PN",
   },
   {
     value: "Poland",
-    key: "PL"
+    key: "PL",
   },
   {
     value: "Portugal",
-    key: "PT"
+    key: "PT",
   },
   {
     value: "Puerto Rico",
-    key: "PR"
+    key: "PR",
   },
   {
     value: "Qatar",
-    key: "QA"
+    key: "QA",
   },
   {
     value: "Reunion",
-    key: "RE"
+    key: "RE",
   },
   {
     value: "Romania",
-    key: "RO"
+    key: "RO",
   },
   {
     value: "Russian Federation",
-    key: "RU"
+    key: "RU",
   },
   {
     value: "Rwanda",
-    key: "RW"
+    key: "RW",
   },
   {
     value: "Saint Helena",
-    key: "SH"
+    key: "SH",
   },
   {
     value: "Saint Kitts and Nevis",
-    key: "KN"
+    key: "KN",
   },
   {
     value: "Saint Lucia",
-    key: "LC"
+    key: "LC",
   },
   {
     value: "Saint Pierre and Miquelon",
-    key: "PM"
+    key: "PM",
   },
   {
     value: "Saint Vincent and the Grenadines",
-    key: "VC"
+    key: "VC",
   },
   {
     value: "Samoa",
-    key: "WS"
+    key: "WS",
   },
   {
     value: "San Marino",
-    key: "SM"
+    key: "SM",
   },
   {
     value: "Sao Tome and Principe",
-    key: "ST"
+    key: "ST",
   },
   {
     value: "Saudi Arabia",
-    key: "SA"
+    key: "SA",
   },
   {
     value: "Senegal",
-    key: "SN"
+    key: "SN",
   },
   {
     value: "Seychelles",
-    key: "SC"
+    key: "SC",
   },
   {
     value: "Sierra Leone",
-    key: "SL"
+    key: "SL",
   },
   {
     value: "Singapore",
-    key: "SG"
+    key: "SG",
   },
   {
     value: "Slovakia",
-    key: "SK"
+    key: "SK",
   },
   {
     value: "Slovenia",
-    key: "SI"
+    key: "SI",
   },
   {
     value: "Solomon Islands",
-    key: "SB"
+    key: "SB",
   },
   {
     value: "Somalia",
-    key: "SO"
+    key: "SO",
   },
   {
     value: "South Africa",
-    key: "ZA"
+    key: "ZA",
   },
   {
     value: "South Georgia and the South Sandwich Islands",
-    key: "GS"
+    key: "GS",
   },
   {
     value: "South Korea",
-    key: "KR"
+    key: "KR",
   },
   {
     value: "South Sudan",
-    key: "SS"
+    key: "SS",
   },
   {
     value: "Spain",
-    key: "ES"
+    key: "ES",
   },
   {
     value: "Sri Lanka",
-    key: "LK"
+    key: "LK",
   },
   {
     value: "Sudan",
-    key: "SD"
+    key: "SD",
   },
   {
     value: "Surivalue",
-    key: "SR"
+    key: "SR",
   },
   {
     value: "Svalbard and Jan Mayen",
-    key: "SJ"
+    key: "SJ",
   },
   {
     value: "Swaziland",
-    key: "SZ"
+    key: "SZ",
   },
   {
     value: "Sweden",
-    key: "SE"
+    key: "SE",
   },
   {
     value: "Switzerland",
-    key: "CH"
+    key: "CH",
   },
   {
     value: "Syria",
-    key: "SY"
+    key: "SY",
   },
   {
     value: "Tajikistan",
-    key: "TJ"
+    key: "TJ",
   },
   {
     value: "Tanzania",
-    key: "TZ"
+    key: "TZ",
   },
   {
     value: "Thailand",
-    key: "TH"
+    key: "TH",
   },
   {
     value: "The Democratic Republic of Congo",
-    key: "CD"
+    key: "CD",
   },
   {
     value: "Togo",
-    key: "TG"
+    key: "TG",
   },
   {
     value: "Tokelau",
-    key: "TK"
+    key: "TK",
   },
   {
     value: "Tonga",
-    key: "TO"
+    key: "TO",
   },
   {
     value: "Trinidad and Tobago",
-    key: "TT"
+    key: "TT",
   },
   {
     value: "Tunisia",
-    key: "TN"
+    key: "TN",
   },
   {
     value: "Turkey",
-    key: "TR"
+    key: "TR",
   },
   {
     value: "Turkmenistan",
-    key: "TM"
+    key: "TM",
   },
   {
     value: "Turks and Caicos Islands",
-    key: "TC"
+    key: "TC",
   },
   {
     value: "Tuvalu",
-    key: "TV"
+    key: "TV",
   },
   {
     value: "Uganda",
-    key: "UG"
+    key: "UG",
   },
   {
     value: "Ukraine",
-    key: "UA"
+    key: "UA",
   },
   {
     value: "United Arab Emirates",
-    key: "AE"
+    key: "AE",
   },
   {
     value: "United Kingdom",
-    key: "GB"
+    key: "GB",
   },
   {
     value: "United States",
-    key: "US"
+    key: "US",
   },
   {
     value: "United States Minor Outlying Islands",
-    key: "UM"
+    key: "UM",
   },
   {
     value: "Uruguay",
-    key: "UY"
+    key: "UY",
   },
   {
     value: "Uzbekistan",
-    key: "UZ"
+    key: "UZ",
   },
   {
     value: "Vanuatu",
-    key: "VU"
+    key: "VU",
   },
   {
     value: "Venezuela",
-    key: "VE"
+    key: "VE",
   },
   {
     value: "Vietnam",
-    key: "VN"
+    key: "VN",
   },
   {
     value: "Virgin Islands, British",
-    key: "VG"
+    key: "VG",
   },
   {
     value: "Virgin Islands, U.S.",
-    key: "VI"
+    key: "VI",
   },
   {
     value: "Wallis and Futuna",
-    key: "WF"
+    key: "WF",
   },
   {
     value: "Western Sahara",
-    key: "EH"
+    key: "EH",
   },
   {
     value: "Yemen",
-    key: "YE"
+    key: "YE",
   },
   {
     value: "Yugoslavia",
-    key: "YU"
+    key: "YU",
   },
   {
     value: "Zambia",
-    key: "ZM"
+    key: "ZM",
   },
   {
     value: "Zimbabwe",
-    key: "ZW"
-  }
+    key: "ZW",
+  },
 ];
 
 module.exports = countries;

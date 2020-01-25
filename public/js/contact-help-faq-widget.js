@@ -1,16 +1,20 @@
 const contactHelpFaqWidget = {
   init() {
     const helpLinkEls = document.querySelectorAll("a[href='/help']");
-    this.contactHelpFaqWidgetEl = document.querySelector(".js-contact-help-faq-container");
+    this.contactHelpFaqWidgetEl = document.querySelector(
+      ".js-contact-help-faq-container"
+    );
     const faqListEl = this.contactHelpFaqWidgetEl.querySelector(".js-faq-list");
     const faqLinks = faqListEl.querySelectorAll("a");
 
-    this.contentAreaEl = this.contactHelpFaqWidgetEl.querySelector(".js-content-area");
+    this.contentAreaEl = this.contactHelpFaqWidgetEl.querySelector(
+      ".js-content-area"
+    );
 
     this.initialContent = this.contentAreaEl.innerHTML;
 
     // delegate event listeners
-    this.contactHelpFaqWidgetEl.addEventListener("click", (e) => {
+    this.contactHelpFaqWidgetEl.addEventListener("click", e => {
       // close widget
       if (e.target.closest(".js-close")) {
         e.preventDefault();
@@ -33,7 +37,7 @@ const contactHelpFaqWidget = {
 
     // event listener to open widget, attach to all help links
     for (let i = 0; i < helpLinkEls.length; i++) {
-      helpLinkEls[i].addEventListener("click", (e) => {
+      helpLinkEls[i].addEventListener("click", e => {
         e.preventDefault();
         this.contactHelpFaqWidgetEl.style = "display: block;";
       });
@@ -49,7 +53,8 @@ const contactHelpFaqWidget = {
 
   insertAnswer(e) {
     const question = e.target.innerText;
-    const answer = e.target.closest("li").querySelector(".js-faq-answer").innerHTML;
+    const answer = e.target.closest("li").querySelector(".js-faq-answer")
+      .innerHTML;
     const content = `
       <div class="faq-answer-content">
         <h3>${question}</h3>
@@ -59,7 +64,7 @@ const contactHelpFaqWidget = {
     this.contactHelpFaqWidgetEl.setAttribute("data-view", "answer");
     this.contentAreaEl.innerHTML = content;
     this.contentAreaEl.scrollTop = 0;
-  }
-}
+  },
+};
 
 export default contactHelpFaqWidget;

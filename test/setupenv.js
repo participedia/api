@@ -26,7 +26,7 @@ let userPayload = {
   name: "asdasasd Doe",
   email: "joe@example.com",
   user_id: "123",
-  isadmin: true
+  isadmin: true,
 };
 
 // taken from https://github.com/auth0/node-jsonwebtoken/issues/315#issuecomment-283136148
@@ -39,14 +39,14 @@ publicJWK.kid = "this_is_a_constant";
 nock("https://participedia.auth0.com/.well-known/jwks.json")
   .get("")
   .reply(200, {
-    keys: [publicJWK]
+    keys: [publicJWK],
   });
 
 let bearer_token = jwt.sign(userPayload, pair.private, {
   algorithm: "RS256",
   header: { kid: "this_is_a_constant" },
   audience: "https://api.participedia.xyz",
-  issuer: `https://participedia.auth0.com/`
+  issuer: `https://participedia.auth0.com/`,
 });
 
 process.env.BEARER_TOKEN = bearer_token;
@@ -61,5 +61,5 @@ try {
 
 module.exports = {
   user_token: bearer_token,
-  user_payload: userPayload
+  user_payload: userPayload,
 };

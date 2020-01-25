@@ -35,13 +35,13 @@ const logError = require("../helpers/log-error.js");
 async function lookupBookmarksById(req, res, userId) {
   try {
     const data = await db.any("SELECT * FROM bookmarks WHERE userid=$1", [
-      as.number(userId)
+      as.number(userId),
     ]);
     res.json({
       success: true,
       status: "success",
       data: data,
-      message: "Retrieved ALL bookmarks for specified user"
+      message: "Retrieved ALL bookmarks for specified user",
     });
   } catch (error) {
     logError(error);
@@ -94,9 +94,11 @@ router.get("/list/:userid", queryBookmarks);
 router.post("/add", async function addBookmark(req, res) {
   try {
     if (!req.body.bookmarkType) {
-      logError("/bookmark/add - Required parameter (bookmarkType) wasn't specified");
+      logError(
+        "/bookmark/add - Required parameter (bookmarkType) wasn't specified"
+      );
       res.status(400).json({
-        message: "Required parameter (bookmarkType) wasn't specified"
+        message: "Required parameter (bookmarkType) wasn't specified",
       });
       return;
     }
@@ -108,7 +110,9 @@ router.post("/add", async function addBookmark(req, res) {
       return;
     }
     if (!req.user) {
-      res.status(401).json({ error: "You must be logged in to perform this action." });
+      res
+        .status(401)
+        .json({ error: "You must be logged in to perform this action." });
       return;
     }
     let userId = as.number(req.user.id);
@@ -123,7 +127,7 @@ router.post("/add", async function addBookmark(req, res) {
         success: true,
         status: "success",
         data: data1.id,
-        message: "bookmark already exists, no action"
+        message: "bookmark already exists, no action",
       });
     }
     const data2 = await db.one(
@@ -134,13 +138,13 @@ router.post("/add", async function addBookmark(req, res) {
       success: true,
       status: "success",
       data: data2.id,
-      message: "Inserted bookmark, returning ID"
+      message: "Inserted bookmark, returning ID",
     });
   } catch (error) {
     logError(error);
     res.status(500).json({
       success: false,
-      error: error.message || error
+      error: error.message || error,
     });
   }
 });
@@ -173,7 +177,9 @@ router.post("/add", async function addBookmark(req, res) {
 router.delete("/delete", async function updateUser(req, res) {
   try {
     if (!req.user) {
-      return res.status(401).json({ error: "You must be logged in to perform this action." });
+      return res
+        .status(401)
+        .json({ error: "You must be logged in to perform this action." });
     }
     const userId = as.number(req.user.id);
     const bookmarkType = req.body.bookmarkType;
@@ -191,7 +197,7 @@ router.delete("/delete", async function updateUser(req, res) {
     logError(error);
     res.json({
       success: false,
-      error: error.message || error
+      error: error.message || error,
     });
   }
 });

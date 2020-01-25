@@ -79,7 +79,7 @@ const editForm = {
     const formData = serialize(this.formEl);
 
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', this.formEl.getAttribute("action"), true);
+    xhr.open("POST", this.formEl.getAttribute("action"), true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     xhr.onreadystatechange = () => {
@@ -92,7 +92,7 @@ const editForm = {
       } else if (xhr.status === 413) {
         // if file uploads are too large
         this.handleErrors([
-          "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total)."
+          "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total).",
         ]);
       } else if (xhr.status === 408 || xhr.status === 503) {
         // handle server unavailable/request timeout errors
@@ -111,7 +111,7 @@ const editForm = {
           this.handleErrors(response.errors);
         }
       }
-    }
+    };
 
     xhr.send(formData);
     // open publishing feedback modal as soon as we send the request
@@ -132,7 +132,7 @@ const editForm = {
       } catch (err) {
         console.warn(err);
       }
-      modal.closeModal()
+      modal.closeModal();
     });
   },
 
@@ -186,6 +186,6 @@ const editForm = {
     modal.updateModal(content);
     modal.openModal("aria-modal", { showCloseBtn: true });
   },
-}
+};
 
 export default editForm;

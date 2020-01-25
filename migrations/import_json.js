@@ -7,7 +7,7 @@ const tables = [
   "organizations",
   "methods",
   "cases",
-  "authors"
+  "authors",
 ];
 
 const columns = {
@@ -27,7 +27,7 @@ const columns = {
     ","
   ),
   related_things: "type_1,id_1,type_2,id_2".split(","),
-  authors: "user_id,timestamp,thingid".split(",")
+  authors: "user_id,timestamp,thingid".split(","),
 };
 
 const filename = f => `migrations/${f}.json`;

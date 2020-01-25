@@ -7,7 +7,7 @@ const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES.map(
 const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
-  capSQL: true // when building SQL queries dynamically, capitalize SQL keywords
+  capSQL: true, // when building SQL queries dynamically, capitalize SQL keywords
 };
 const fs = require("fs");
 
@@ -35,7 +35,7 @@ const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
 
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {
-    minify: true
+    minify: true,
   });
 }
 
@@ -119,7 +119,7 @@ async function _listCases(lang) {
 async function _listMethods(lang) {
   _methods[lang] = await db.many(LIST_ARTICLES, {
     type: "methods",
-    lang: lang
+    lang: lang,
   });
   setTimeout(_listMethods, randomDelay(), lang);
 }
@@ -127,7 +127,7 @@ async function _listMethods(lang) {
 async function _listOrganizations(lang) {
   _organizations[lang] = await db.many(LIST_ARTICLES, {
     type: "organizations",
-    lang: "en"
+    lang: "en",
   });
   setTimeout(_listOrganizations, randomDelay(), lang);
 }
@@ -168,7 +168,7 @@ async function cacheTitlesRefreshSearch(done) {
   // keep running these, but we can start the server now
   _refreshSearch().then(() => console.log("search refreshed"));
   db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
-    keys: i18n_en
+    keys: i18n_en,
   }).then(() => console.log("i18n updated"));
   if (done) {
     done();
@@ -352,7 +352,9 @@ function casekeys(objList, group) {
       uniq((objList || []).map(k => casekey(k, group)).filter(x => !!x)) || "{}"
     );
   } catch (e) {
-    logError(`Error attempting to convert and filter a list of keys for ${group}`);
+    logError(
+      `Error attempting to convert and filter a list of keys for ${group}`
+    );
     throw e;
   }
 }
@@ -494,7 +496,7 @@ const as = Object.assign({}, pgp.as, {
   text,
   url: asUrl,
   urls,
-  yesno
+  yesno,
 });
 
 const helpers = pgp.helpers;
@@ -539,5 +541,5 @@ module.exports = {
   ORGANIZATION_BY_ID,
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,
-  ErrorReporter
+  ErrorReporter,
 };

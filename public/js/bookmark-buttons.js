@@ -21,17 +21,17 @@ const bookmarkButtons = {
     if (addOrDelete === "delete") {
       action = "DELETE";
     }
-    const successCB = (request) => {
+    const successCB = request => {
       linkEl.setAttribute("data-bookmarked", !isBookmarked);
-    }
-    const errorCB = (request) => {
+    };
+    const errorCB = request => {
       if (request.status === 401) {
         // if unauthorized error, redirect to login
         location.href = `${location.origin}/login`;
       } else {
         alert("Sorry, something went wrong.");
       }
-    }
+    };
     const data = JSON.stringify({ thingid, bookmarkType });
     const url = `/bookmark/${addOrDelete}`;
     xhrReq(action, url, data, successCB, errorCB);
@@ -46,7 +46,13 @@ const bookmarkButtons = {
     const thingid = linkEl.getAttribute("data-thing-id");
 
     if (isBookmarked) {
-      this.toggleBookmark("delete", linkEl, isBookmarked, thingid, bookmarkType);
+      this.toggleBookmark(
+        "delete",
+        linkEl,
+        isBookmarked,
+        thingid,
+        bookmarkType
+      );
     } else {
       this.toggleBookmark("add", linkEl, isBookmarked, thingid, bookmarkType);
     }

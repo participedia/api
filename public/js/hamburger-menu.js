@@ -41,7 +41,7 @@ const hamburgerMenu = {
       bodyEl.classList.remove("sidebar-menu-is-open");
       bodyEl.classList.add("sidebar-menu-is-closed");
     }
-  }
+  },
 };
 
 export default hamburgerMenu;

@@ -20,7 +20,7 @@ const {
   listMethods,
   listOrganizations,
   refreshSearch,
-  ErrorReporter
+  ErrorReporter,
 } = require("../helpers/db");
 
 const {
@@ -30,7 +30,7 @@ const {
   validateUrl,
   verifyOrUpdateUrl,
   returnByType,
-  fixUpURLs
+  fixUpURLs,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -79,7 +79,7 @@ async function postCaseNewHttp(req, res) {
     if (!title) {
       return res.status(400).json({
         OK: false,
-        errors: ["Cannot create a case without at least a title."]
+        errors: ["Cannot create a case without at least a title."],
       });
     }
 
@@ -88,7 +88,7 @@ async function postCaseNewHttp(req, res) {
       title,
       body,
       description,
-      original_language
+      original_language,
     });
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
@@ -163,7 +163,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "province",
     "postal_code",
     "country",
-    "funder"
+    "funder",
   ].map(key => cond(key, as.text));
   // date
   ["start_date", "end_date"].map(key => cond(key, as.date));
@@ -181,7 +181,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "facetoface_online_or_both",
     "open_limited",
     "recruitment_method",
-    "time_limited"
+    "time_limited",
   ].map(key => cond(key, as.casekeyflat));
   // list of keys
   [
@@ -201,7 +201,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "funder_types",
     "change_types",
     "implementers_of_change",
-    "tools_techniques_types"
+    "tools_techniques_types",
   ].map(key => cond(key, as.casekeys));
   // TODO save bookmarked on user
   return [updatedCase, er];
@@ -222,17 +222,17 @@ async function postCaseUpdateHttp(req, res) {
   if (links) {
     for (let key in links) {
       let url = links[key].url;
-      if (url.length > 0 ){
+      if (url.length > 0) {
         newCase.links = verifyOrUpdateUrl(newCase.links);
         const isUrlValid = validateUrl(newCase);
-        if (!isUrlValid){
+        if (!isUrlValid) {
           return res.status(400).json({
             OK: false,
-            errors: ["Invalid link url."]
+            errors: ["Invalid link url."],
           });
         }
       }
-    } 
+    }
   }
 
   // if this is a new case, we don't have a post_date yet, so we set it here
@@ -249,40 +249,42 @@ async function postCaseUpdateHttp(req, res) {
   const {
     updatedText,
     author,
-    oldArticle: oldCase
+    oldArticle: oldCase,
   } = await maybeUpdateUserText(req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
 
   //get current date when user.isAdmin is false;
-  updatedCase.updated_date = !user.isadmin ? 'now' : updatedCase.updated_date;
+  updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
 
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
-          await t.none(INSERT_AUTHOR, author);
-          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-          await t.none(UPDATE_CASE, updatedCase);
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        await t.none(UPDATE_CASE, updatedCase);
       });
       //if this is a new case, set creator id to userid and isAdmin
-      if (user.isadmin){
+      if (user.isadmin) {
         const creator = {
           user_id: newCase.creator ? newCase.creator : params.userid,
-          thingid: params.articleid
+          thingid: params.articleid,
         };
         const updatedBy = {
-          user_id : newCase.last_updated_by ? newCase.last_updated_by : params.userid,
+          user_id: newCase.last_updated_by
+            ? newCase.last_updated_by
+            : params.userid,
           thingid: params.articleid,
-          updated_date: newCase.updated_date || 'now' 
+          updated_date: newCase.updated_date || "now",
         };
         await db.tx("update-case", async t => {
-            await t.none(UPDATE_AUTHOR_FIRST, creator);
-            await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
         });
       }
     } else {
       await db.tx("update-case", async t => {
-          await t.none(INSERT_AUTHOR, author);
-          await t.none(UPDATE_CASE, updatedCase);
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_CASE, updatedCase);
       });
     }
     // the client expects this request to respond with json
@@ -290,14 +292,14 @@ async function postCaseUpdateHttp(req, res) {
     const freshArticle = await getCase(params, res);
     res.status(200).json({
       OK: true,
-      article: freshArticle
+      article: freshArticle,
     });
     refreshSearch();
   } else {
     logError(`400 with errors: ${er.errors.join(", ")}`);
     res.status(400).json({
       OK: false,
-      errors: er.errors
+      errors: er.errors,
     });
   }
 }
@@ -405,5 +407,5 @@ module.exports = {
   getCaseNewHttp,
   postCaseNewHttp,
   getCaseHttp,
-  postCaseUpdateHttp
+  postCaseUpdateHttp,
 };

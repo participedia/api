@@ -1,32 +1,32 @@
 const SUPPORTED_LANGUAGES = [
   {
     twoLetterCode: "en",
-    name: "English"
+    name: "English",
   },
   {
     twoLetterCode: "fr",
-    name: "French"
+    name: "French",
   },
   {
     twoLetterCode: "de",
-    name: "German"
+    name: "German",
   },
   {
     twoLetterCode: "es",
-    name: "Spanish"
+    name: "Spanish",
   },
   {
     twoLetterCode: "zh",
-    name: "Chinese"
+    name: "Chinese",
   },
   {
     twoLetterCode: "it",
-    name: "Italian"
+    name: "Italian",
   },
   {
     twoLetterCode: "pt",
-    name: "Portuguese"
-  }
+    name: "Portuguese",
+  },
 ];
 
 module.exports = { SUPPORTED_LANGUAGES };

@@ -20,7 +20,7 @@ function uploadToAWS(base64String) {
     Body: base64Data,
     ContentEncoding: "base64",
     ContentType: contentType,
-    ACL: "public-read"
+    ACL: "public-read",
   };
 
   s3.upload(uploadParams, (err, data) => {

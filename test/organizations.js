@@ -7,14 +7,14 @@ const {
   example_organization,
   getOrganization,
   addBasicOrganization,
-  updateOrganization
+  updateOrganization,
 } = require("./data/helpers.js");
 const {
   getOrganizationHttp,
   getOrganizationEditHttp,
   postOrganizationNewHttp,
   getOrganizationNewHttp,
-  postOrganizationUpdateHttp
+  postOrganizationUpdateHttp,
 } = require("../api/controllers/organization");
 
 const { listCases, cacheTitlesRefreshSearch } = require("../api/helpers/db");
@@ -67,13 +67,13 @@ describe("Organizations", () => {
       const origOrganization = body1.article;
       origOrganization.id.should.be.a("number");
       const body2 = await updateOrganization(origOrganization.id, {
-        title: "Second Title"
+        title: "Second Title",
       });
       const updatedOrganization1 = body2.article;
       updatedOrganization1.title.should.equal("Second Title");
       updatedOrganization1.body.should.equal("First Body");
       const body3 = await updateOrganization(origOrganization.id, {
-        body: "Second Body"
+        body: "Second Body",
       });
       const updatedOrganization2 = body3.article;
       updatedOrganization2.title.should.equal("Second Title");
@@ -92,9 +92,9 @@ describe("Organizations", () => {
             url: "http://garfield.com/jon.png",
             source_url: "https://example.com/obligatory_plug",
             title: "In Ned Flanders Field",
-            attribution: "Birt Sampson"
-          }
-        ]
+            attribution: "Birt Sampson",
+          },
+        ],
       });
       body2.OK.should.be.true;
       const organization2 = body2.article;

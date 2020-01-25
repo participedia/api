@@ -28,7 +28,7 @@ if (
 ) {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
-    environment: process.env.NODE_ENV
+    environment: process.env.NODE_ENV,
   });
   // The request handler must be the first middleware on the app
   app.use(Sentry.Handlers.requestHandler());
@@ -80,7 +80,7 @@ i18n.configure({
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
-  updateFiles: false
+  updateFiles: false,
 });
 
 app.use((req, res, next) => {
@@ -99,7 +99,7 @@ const sess = {
   secret: process.env.COOKIE_SECRET,
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
 };
 
 if (app.get("env") === "production") {
@@ -115,7 +115,7 @@ const strategy = new Auth0Strategy(
     domain: process.env.AUTH0_DOMAIN,
     clientID: process.env.AUTH0_CLIENT_ID,
     clientSecret: process.env.AUTH0_CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL || "/redirect"
+    callbackURL: process.env.CALLBACK_URL || "/redirect",
   },
   function(accessToken, refreshToken, extraParams, profile, done) {
     // accessToken is the token to call Auth0 API (not needed in the most cases)
@@ -149,7 +149,7 @@ app.get("/login", function(req, res, next) {
   passport.authenticate(
     "auth0",
     {
-      scope: "offline openid email profile"
+      scope: "offline openid email profile",
     },
     () => {}
   )(req, res, next);
@@ -194,7 +194,7 @@ const cache = apicache.middleware;
 apicache.options({
   debug: true,
   enabled: false,
-  successCodes: [200, 201]
+  successCodes: [200, 201],
 });
 // TODO Invalidate apicache on PUT/POST/DELETE using apicache.clear(req.params.collection);
 
@@ -202,7 +202,7 @@ const hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: "main",
   extname: ".html",
-  helpers: handlebarsHelpers
+  helpers: handlebarsHelpers,
 });
 
 app.engine(".html", hbs.engine);
@@ -213,7 +213,7 @@ app.use((req, res, next) => {
   const gaTrackingIdByEnv = {
     production: process.env.GOOGLE_TRACKING_ID_PROD,
     staging: process.env.GOOGLE_TRACKING_ID_STAGE,
-    development: process.env.GOOGLE_TRACKING_ID_DEV
+    development: process.env.GOOGLE_TRACKING_ID_DEV,
   };
 
   res.locals.req = req;
@@ -302,7 +302,7 @@ if (process.env.NODE_ENV === "development") {
 
 // Better logging of "unhandled" promise exceptions
 process.on("unhandledRejection", function(reason, p) {
-  logError(`Possibly Unhandled Rejection at: Promise for reason ${reason}`)
+  logError(`Possibly Unhandled Rejection at: Promise for reason ${reason}`);
 });
 
 module.exports = app;

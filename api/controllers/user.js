@@ -17,7 +17,7 @@ async function getUserById(userId, req, res, view = "view") {
     }
     const result = await db.oneOrNone(USER_BY_ID, {
       userId: userId,
-      language: language
+      language: language,
     });
     if (!result) {
       return null;
@@ -56,17 +56,17 @@ async function getUserById(userId, req, res, view = "view") {
         "picture_url",
         "bio",
         "isadmin",
-        "join_date"
+        "join_date",
       ];
       const userEditJSON = {};
       userEditKeys.forEach(key => (userEditJSON[key] = result.user[key]));
 
       return {
-        profile: userEditJSON
+        profile: userEditJSON,
       };
     } else {
       return {
-        profile: result.user
+        profile: result.user,
       };
     }
   } catch (error) {
@@ -102,7 +102,7 @@ async function getUserById(userId, req, res, view = "view") {
  */
 router.get("/:userId", async function(req, res) {
   try {
-    const userId = parseInt(req.params.userId, 10)
+    const userId = parseInt(req.params.userId, 10);
     if (Number.isNaN(userId)) {
       return res.status(404).render("404");
     }
@@ -121,11 +121,7 @@ router.get("/:userId", async function(req, res) {
       return res.status(200).json(data);
     }
   } catch (error) {
-    console.error(
-      "Exception in /user/%s => %s",
-      userId,
-      error.message
-    );
+    console.error("Exception in /user/%s => %s", userId, error.message);
     logError(error);
   }
 });
@@ -157,7 +153,7 @@ router.get("/", async function(req, res) {
   try {
     if (!req.user) {
       return res.status(404).json({
-        message: "No user found"
+        message: "No user found",
       });
     }
     return getUserById(req.user.user_id, req, res);
@@ -198,7 +194,7 @@ router.post("/", async function(req, res) {
   // make sure profile is logged in user's profile
   if (req.user.id !== parseInt(req.body.id)) {
     return res.status(401).json({
-      error: "The user doesn't have permission to perform this operation."
+      error: "The user doesn't have permission to perform this operation.",
     });
   }
 
@@ -208,7 +204,7 @@ router.post("/", async function(req, res) {
     await db.none(UPDATE_USER, {
       id: parseInt(user.id),
       name: user.name,
-      bio: user.bio || ""
+      bio: user.bio || "",
     });
     res.status(200).json({ OK: true, user: { id: user.id } });
   } catch (error) {

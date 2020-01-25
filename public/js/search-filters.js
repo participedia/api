@@ -1,7 +1,11 @@
-import { updateUrlParams, removeUrlParams, getValueForParam } from "./utils/utils.js";
+import {
+  updateUrlParams,
+  removeUrlParams,
+  getValueForParam,
+} from "./utils/utils.js";
 import searchFiltersList from "../../api/helpers/search-filters-list.js";
 
-const toArray = (nodeList) => Array.prototype.slice.call(nodeList);
+const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
 const searchFilters = {
   init() {
@@ -15,8 +19,12 @@ const searchFilters = {
       item.fieldNameKeys.forEach(key => this.SEARCH_FILTER_KEYS.push(key));
     });
 
-    this.searchFiltersListEl = document.querySelector(".js-search-filters-chip-list");
-    this.checkboxEls = toArray(this.searchFiltersFormEl.querySelectorAll("input[type=checkbox]"));
+    this.searchFiltersListEl = document.querySelector(
+      ".js-search-filters-chip-list"
+    );
+    this.checkboxEls = toArray(
+      this.searchFiltersFormEl.querySelectorAll("input[type=checkbox]")
+    );
 
     this.chipButtonEls = toArray(
       this.searchFiltersListEl.querySelectorAll(".js-search-filters-chip")
@@ -30,7 +38,9 @@ const searchFilters = {
       this.handleFormSubmit(e);
     });
 
-    const clearAllLink = this.searchFiltersFormEl.querySelector(".js-clear-all-link");
+    const clearAllLink = this.searchFiltersFormEl.querySelector(
+      ".js-clear-all-link"
+    );
     clearAllLink.addEventListener("click", e => this.handleClearAllClick(e));
 
     const clearSectionLinks = toArray(
@@ -55,7 +65,9 @@ const searchFilters = {
   handleRemoveSelectedFilter(e) {
     e.preventDefault();
     // Get DOM of clicked item
-    const filterEl = document.querySelector(`.item-${e.target.dataset.sectionKey}`);
+    const filterEl = document.querySelector(
+      `.item-${e.target.dataset.sectionKey}`
+    );
 
     // Remove DOM
     filterEl.remove();
@@ -110,8 +122,10 @@ const searchFilters = {
   updateUIFromUrlParams() {
     const paramsFromUrl = {};
     window.location.search
-      .split("?")[1].split("&").map(p => p.split("="))
-      .forEach(param => paramsFromUrl[param[0]] = param[1]);
+      .split("?")[1]
+      .split("&")
+      .map(p => p.split("="))
+      .forEach(param => (paramsFromUrl[param[0]] = param[1]));
 
     Object.keys(paramsFromUrl).forEach(key => {
       const values = paramsFromUrl[key].split(",");
@@ -125,8 +139,10 @@ const searchFilters = {
 
   updateChipButtonsState() {
     this.chipButtonEls.forEach(el => {
-      const hasCheckedItems = el.closest(".js-search-filters-chip-list-item")
-        .querySelectorAll("input:checked").length > 0;
+      const hasCheckedItems =
+        el
+          .closest(".js-search-filters-chip-list-item")
+          .querySelectorAll("input:checked").length > 0;
       if (hasCheckedItems) {
         el.classList.add("search-filters-chip-selected");
       } else {
@@ -140,7 +156,7 @@ const searchFilters = {
     const allCheckboxes = toArray(
       this.searchFiltersFormEl.querySelectorAll("input:checked")
     );
-    allCheckboxes.forEach(el => el.checked = false);
+    allCheckboxes.forEach(el => (el.checked = false));
     this.updateChipButtonsState();
     removeUrlParams(this.SEARCH_FILTER_KEYS);
     // load new url without filter
@@ -151,9 +167,11 @@ const searchFilters = {
     e.preventDefault();
     const category = e.target.getAttribute("data-field-name");
     const allCheckboxesForSection = toArray(
-      this.searchFiltersFormEl.querySelector(`.js-keys-list[data-field-name=${category}`).querySelectorAll("input")
+      this.searchFiltersFormEl
+        .querySelector(`.js-keys-list[data-field-name=${category}`)
+        .querySelectorAll("input")
     );
-    allCheckboxesForSection.forEach(el => el.checked = false);
+    allCheckboxesForSection.forEach(el => (el.checked = false));
     removeUrlParams(this.SEARCH_FILTER_KEYS);
   },
 
@@ -173,8 +191,12 @@ const searchFilters = {
   handleChipButtonClick(e) {
     e.preventDefault();
 
-    const allPopOvers = toArray(document.querySelectorAll(".js-filter-list-pop-over"));
-    const currentPopOverEl = e.target.closest("li").querySelector(".js-filter-list-pop-over");
+    const allPopOvers = toArray(
+      document.querySelectorAll(".js-filter-list-pop-over")
+    );
+    const currentPopOverEl = e.target
+      .closest("li")
+      .querySelector(".js-filter-list-pop-over");
     const currentButton = e.target;
 
     // close all other open pop overs before opening the current clicked one
@@ -185,33 +207,37 @@ const searchFilters = {
     });
 
     // remove open class from chip button before opening a new one
-    this.chipButtonEls.forEach(el => el.classList.remove("search-filters-chip-open"));
+    this.chipButtonEls.forEach(el =>
+      el.classList.remove("search-filters-chip-open")
+    );
 
     this.updateChipButtonsState();
 
     const xPosOfCurrentButton =
-      currentButton.getBoundingClientRect().x + currentButton.getBoundingClientRect().width;
+      currentButton.getBoundingClientRect().x +
+      currentButton.getBoundingClientRect().width;
     const shouldRenderOnRight = window.innerWidth - xPosOfCurrentButton < 300;
     const isMobile = window.innerWidth < 801;
 
     // toggle current popover if you click the same chip button again
     if (currentPopOverEl.classList.contains("show-filter-list-popover")) {
       // hide popover
-      currentButton.classList.remove("search-filters-chip-open")
+      currentButton.classList.remove("search-filters-chip-open");
       currentPopOverEl.classList.remove("show-filter-list-popover");
       currentPopOverEl.style.marginLeft = 0;
       this.updateChipButtonsState();
       document.activeElement.blur();
     } else {
       // show popover
-      currentButton.classList.add("search-filters-chip-open")
+      currentButton.classList.add("search-filters-chip-open");
       currentPopOverEl.classList.add("show-filter-list-popover");
       if (shouldRenderOnRight && !isMobile) {
-        const popOverOffset = currentPopOverEl.clientWidth - currentButton.clientWidth;
+        const popOverOffset =
+          currentPopOverEl.clientWidth - currentButton.clientWidth;
         currentPopOverEl.style.marginLeft = `-${popOverOffset}px`;
       }
     }
-  }
+  },
 };
 
 export default searchFilters;

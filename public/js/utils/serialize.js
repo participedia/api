@@ -40,7 +40,7 @@ function serialize(form) {
     } else if (["ongoing", "staff", "volunteers"].includes(field.name)) {
       if (field.value === "yes") {
         serialized.push(encodeURIComponent(field.name) + "=true");
-      } else if (field.value === "no"){
+      } else if (field.value === "no") {
         serialized.push(encodeURIComponent(field.name) + "=false");
       }
     } else if (field.getAttribute("data-field-type") === "richtext") {

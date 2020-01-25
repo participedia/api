@@ -21,7 +21,7 @@ function rename_all_users() {
       name: user.name,
       language: "en",
       picture_url: user.picture_url,
-      bio: user.bio || ""
+      bio: user.bio || "",
     });
   });
 }

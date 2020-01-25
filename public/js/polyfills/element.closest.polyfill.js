@@ -4,8 +4,9 @@
 
 export default function() {
   if (!Element.prototype.matches)
-    Element.prototype.matches = Element.prototype.msMatchesSelector ||
-                                Element.prototype.webkitMatchesSelector;
+    Element.prototype.matches =
+      Element.prototype.msMatchesSelector ||
+      Element.prototype.webkitMatchesSelector;
 
   if (!Element.prototype.closest) {
     Element.prototype.closest = function(s) {

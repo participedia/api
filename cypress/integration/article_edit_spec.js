@@ -32,7 +32,7 @@ function editFormTest(type) {
     });
 
     it(`authenticated and visits /${type}/${articleIds[type]}/edit`, () => {
-      cy.visit(`/${type}/${articleIds[type]}/edit`)
+      cy.visit(`/${type}/${articleIds[type]}/edit`);
 
       // it has a submit button
       cy.get("[data-cy='main-form-submit']").should("be.visible");
@@ -53,7 +53,10 @@ function editFormTest(type) {
       cy.get("[data-cy='main-form-submit']").click();
 
       // if form was submitted successfully it will redirect to the view page
-      cy.url().should("eq", `http://localhost:3001/${type}/${articleIds[type]}`);
+      cy.url().should(
+        "eq",
+        `http://localhost:3001/${type}/${articleIds[type]}`
+      );
     });
   });
 }

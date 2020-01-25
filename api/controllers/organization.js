@@ -17,7 +17,7 @@ const {
   listUsers,
   refreshSearch,
   listMethods,
-  ErrorReporter
+  ErrorReporter,
 } = require("../helpers/db");
 
 const {
@@ -27,7 +27,7 @@ const {
   validateUrl,
   verifyOrUpdateUrl,
   returnByType,
-  fixUpURLs
+  fixUpURLs,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -86,16 +86,16 @@ async function postOrganizationNewHttp(req, res) {
     if (!title) {
       return res.status(400).json({
         OK: false,
-        errors: ["Cannot create Organization without at least a title"]
+        errors: ["Cannot create Organization without at least a title"],
       });
     }
-    
+
     const user_id = req.user.id;
     const thing = await db.one(CREATE_ORGANIZATION, {
       title,
       body,
       description,
-      original_language
+      original_language,
     });
     req.params.thingid = thing.thingid;
     await postOrganizationUpdateHttp(req, res);
@@ -163,17 +163,17 @@ async function postOrganizationUpdateHttp(req, res) {
   if (links) {
     for (let key in links) {
       let url = links[key].url;
-      if (url.length > 0 ){
+      if (url.length > 0) {
         newOrganization.links = verifyOrUpdateUrl(newOrganization.links);
         const isUrlValid = validateUrl(newOrganization);
-        if (!isUrlValid){
+        if (!isUrlValid) {
           return res.status(400).json({
             OK: false,
-            errors: ["Invalid link url."]
+            errors: ["Invalid link url."],
           });
         }
       }
-    } 
+    }
   }
 
   // if this is a new organization, we don't have a post_date yet, so we set it here
@@ -189,7 +189,7 @@ async function postOrganizationUpdateHttp(req, res) {
   const {
     updatedText,
     author,
-    oldArticle: oldOrganization
+    oldArticle: oldOrganization,
   } = await maybeUpdateUserText(req, res, "organization");
   const [updatedOrganization, er] = getUpdatedOrganization(
     user,
@@ -198,47 +198,53 @@ async function postOrganizationUpdateHttp(req, res) {
     oldOrganization
   );
   //get current date when user.isAdmin is false;
-  updatedOrganization.updated_date = !user.isadmin ? 'now' : updatedOrganization.updated_date;
+  updatedOrganization.updated_date = !user.isadmin
+    ? "now"
+    : updatedOrganization.updated_date;
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-organization", async t => {
-          await t.none(INSERT_AUTHOR, author);
-          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-          await t.none(UPDATE_ORGANIZATION, updatedOrganization);
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        await t.none(UPDATE_ORGANIZATION, updatedOrganization);
       });
       //if this is a new organization, set creator id to userid and isAdmin
-      if (user.isadmin){
+      if (user.isadmin) {
         const creator = {
-          user_id: newOrganization.creator ? newOrganization.creator : params.userid,
-          thingid: params.articleid
+          user_id: newOrganization.creator
+            ? newOrganization.creator
+            : params.userid,
+          thingid: params.articleid,
         };
         const updatedBy = {
-          user_id : newOrganization.last_updated_by ? newOrganization.last_updated_by : params.userid,
+          user_id: newOrganization.last_updated_by
+            ? newOrganization.last_updated_by
+            : params.userid,
           thingid: params.articleid,
-          updated_date: newOrganization.updated_date || 'now'
+          updated_date: newOrganization.updated_date || "now",
         };
         await db.tx("update-organization", async t => {
-            await t.none(UPDATE_AUTHOR_FIRST, creator);
-            await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
         });
       }
     } else {
       await db.tx("update-organization", async t => {
-          await t.none(INSERT_AUTHOR, author);
-          await t.none(UPDATE_ORGANIZATION, updatedOrganization);
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_ORGANIZATION, updatedOrganization);
       });
     }
     const freshArticle = await getOrganization(params, res);
     res.status(200).json({
       OK: true,
-      article: freshArticle
+      article: freshArticle,
     });
     refreshSearch();
   } else {
     logError(`400 with errors: ${er.errors.join(", ")}`);
     res.status(400).json({
       OK: false,
-      errors: er.errors
+      errors: er.errors,
     });
   }
 }
@@ -276,7 +282,7 @@ function getUpdatedOrganization(
     "city",
     "province",
     "postal_code",
-    "country"
+    "country",
   ].map(key => cond(key, as.text));
   ["latitude", "longitude"].map(key => cond(key, as.float));
   // key
@@ -287,7 +293,7 @@ function getUpdatedOrganization(
     "type_method",
     "type_tool",
     "specific_topics",
-    "general_issues"
+    "general_issues",
   ].map(key => cond(key, as.organizationkeys));
   // list of article ids
   ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));
@@ -349,5 +355,5 @@ module.exports = {
   postOrganizationUpdateHttp,
   getOrganizationHttp,
   getOrganizationEditHttp,
-  getOrganizationNewHttp
+  getOrganizationNewHttp,
 };

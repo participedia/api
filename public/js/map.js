@@ -31,7 +31,9 @@ const map = {
   },
 
   initMapOverlay() {
-    const mapOverlayTriggerEl = document.querySelector(".js-map-overlay-trigger");
+    const mapOverlayTriggerEl = document.querySelector(
+      ".js-map-overlay-trigger"
+    );
 
     this.mapControls = document.querySelector(".js-map-controls");
     this.mapOverlayEl = document.querySelector(".js-map-overlay");
@@ -69,9 +71,14 @@ const map = {
     if (joinNowButtonEl) {
       joinNowButtonEl.addEventListener("click", event => {
         event.preventDefault();
-        tracking.sendWithCallback("home.map", "join_now_button_click", "", () => {
-          window.location.href = event.target.href;
-        });
+        tracking.sendWithCallback(
+          "home.map",
+          "join_now_button_click",
+          "",
+          () => {
+            window.location.href = event.target.href;
+          }
+        );
       });
     }
   },
@@ -90,31 +97,35 @@ const map = {
   },
 
   initZoomControls(map) {
-    document.querySelector('.js-map-zoom-control-in').addEventListener("click", () => {
-      map.setZoom(map.getZoom() + 1);
-    });
-    document.querySelector('.js-map-zoom-control-out').addEventListener("click", () => {
-      map.setZoom(map.getZoom() - 1);
-    });
+    document
+      .querySelector(".js-map-zoom-control-in")
+      .addEventListener("click", () => {
+        map.setZoom(map.getZoom() + 1);
+      });
+    document
+      .querySelector(".js-map-zoom-control-out")
+      .addEventListener("click", () => {
+        map.setZoom(map.getZoom() - 1);
+      });
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
-      document.querySelector('.js-map-controls')
+      document.querySelector(".js-map-controls")
     );
   },
 
   fetchMapResults() {
-    let url = '';
+    let url = "";
     if (window.location.search) {
       url = `/${window.location.search}&resultType=map&returns=json`;
     } else {
       url = `/?resultType=map&returns=json`;
     }
 
-    const successCB = (response) => {
+    const successCB = response => {
       const results = JSON.parse(response.response).results;
       this.cacheResults(response.responseURL, results);
       this.renderMarkers(results);
     };
-    const errorCB = (response) => {
+    const errorCB = response => {
       //console.log("err", response)
     };
 
@@ -145,7 +156,7 @@ const map = {
     const CACHE_TIMEOUT = Date.now() - 300000; // 5mins === 300000ms
     const data = window.sessionStorage.getItem(key);
 
-    if(!data) return null;
+    if (!data) return null;
     const { updatedAt, results } = JSON.parse(data);
     if (updatedAt < CACHE_TIMEOUT) {
       return null;
@@ -155,7 +166,8 @@ const map = {
   },
 
   filterResultsForTab(results) {
-    const currentTab = document.querySelector(".js-tab-container input:checked").id;
+    const currentTab = document.querySelector(".js-tab-container input:checked")
+      .id;
     if (currentTab === "organizations") {
       // NOTE: currentTab for organizations is plural, but article type is singular
       // organizations only
@@ -165,7 +177,9 @@ const map = {
       return results.filter(article => article.type === "case");
     } else if (currentTab === "all") {
       // cases and orgs
-      return results.filter(article => article.type === "case" || article.type === "organization");
+      return results.filter(
+        article => article.type === "case" || article.type === "organization"
+      );
     } else if (currentTab === "method") {
       // none for methods
       return null;
@@ -201,23 +215,25 @@ const map = {
     const articleCardsContainer = document.querySelector(".js-cards-container");
     const filteredResults = this.filterResultsForTab(results);
 
-    const markers = filteredResults.map(article => {
-      const { latitude, longitude } = article;
+    const markers = filteredResults
+      .map(article => {
+        const { latitude, longitude } = article;
 
-      // if article doesn't have lat,lng coords, don't render markers
-      if (!latitude || !longitude || !articleCardsContainer) return;
+        // if article doesn't have lat,lng coords, don't render markers
+        if (!latitude || !longitude || !articleCardsContainer) return;
 
-      return {
-        id: article.id,
-        type: article.type,
-        photo: article.photos && article.photos[0].url,
-        submittedDate: article.post_date,
-        title: article.title,
-        featured: article.featured,
-        position: new google.maps.LatLng(latitude, longitude),
-        content: articleCardsContainer.querySelector("li"),
-      };
-    }).filter(m => m !== undefined);
+        return {
+          id: article.id,
+          type: article.type,
+          photo: article.photos && article.photos[0].url,
+          submittedDate: article.post_date,
+          title: article.title,
+          featured: article.featured,
+          position: new google.maps.LatLng(latitude, longitude),
+          content: articleCardsContainer.querySelector("li"),
+        };
+      })
+      .filter(m => m !== undefined);
 
     // render markers
     this.dropMarkers(markers);
@@ -233,20 +249,30 @@ const map = {
       popOverContentEl.innerHTML = marker.content.innerHTML;
 
       // update type
-      const articleTypeEl = popOverContentEl.querySelector(".js-article-card-meta h5");
+      const articleTypeEl = popOverContentEl.querySelector(
+        ".js-article-card-meta h5"
+      );
 
       if (marker.featured) {
-        articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-featured-${marker.type}`);
+        articleTypeEl.innerHTML = marker.content.getAttribute(
+          `data-i18n-featured-${marker.type}`
+        );
       } else {
-        articleTypeEl.innerHTML = marker.content.getAttribute(`data-i18n-${marker.type}`);
+        articleTypeEl.innerHTML = marker.content.getAttribute(
+          `data-i18n-${marker.type}`
+        );
       }
 
       // update image
-      const articleImageEl = popOverContentEl.querySelector(".js-article-card-img");
+      const articleImageEl = popOverContentEl.querySelector(
+        ".js-article-card-img"
+      );
       articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
 
       // update title & truncate to 45 chars
-      const articleTitleEl = popOverContentEl.querySelector(".js-article-card-title");
+      const articleTitleEl = popOverContentEl.querySelector(
+        ".js-article-card-title"
+      );
       if (marker.title.length < 50) {
         articleTitleEl.innerText = marker.title;
       } else {
@@ -254,8 +280,12 @@ const map = {
       }
 
       // update submitted at
-      const articleSubmittedDate = popOverContentEl.querySelector(".js-article-date");
-      articleSubmittedDate.innerHTML = moment(marker.submittedDate).format("MMMM M, YYYY");
+      const articleSubmittedDate = popOverContentEl.querySelector(
+        ".js-article-date"
+      );
+      articleSubmittedDate.innerHTML = moment(marker.submittedDate).format(
+        "MMMM M, YYYY"
+      );
 
       // update links
       const articleLinks = Array.prototype.slice.call(
@@ -289,7 +319,7 @@ const map = {
         this.mapLegend.style.display = "flex";
       });
     });
-  }
+  },
 };
 
 export default map;

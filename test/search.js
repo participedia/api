@@ -13,7 +13,7 @@ async function setupIndividualFeatured(type, id) {
     .putJSON(`/${type}/${id}`)
     .set("Authorization", "Bearer " + tokens.user_token)
     .send({
-      featured: true
+      featured: true,
     });
 }
 
@@ -35,7 +35,7 @@ describe("Search", () => {
         "first",
         "&",
         "",
-        "second"
+        "second",
       ]);
     });
     it("simple or", () => {
@@ -44,7 +44,7 @@ describe("Search", () => {
         "first",
         "|",
         "",
-        "second"
+        "second",
       ]);
     });
     it("simple not", () => {
@@ -54,7 +54,7 @@ describe("Search", () => {
         "&",
         "!",
         "",
-        "second"
+        "second",
       ]);
     });
     it("parentheses", () => {
@@ -69,7 +69,7 @@ describe("Search", () => {
         "&",
         "",
         "third",
-        ")"
+        ")",
       ]);
     });
     it("quoted string", () => {
@@ -81,7 +81,7 @@ describe("Search", () => {
         "",
         "second",
         "<->",
-        "third"
+        "third",
       ]);
     });
     it("handle whitespace", () => {
@@ -96,12 +96,12 @@ describe("Search", () => {
         "<->",
         "fourth",
         "&",
-        "fifth"
+        "fifth",
       ]);
     });
     it("drop punctuation, etc.", () => {
       [
-        ...tokenize("first 123, inject's some ;drop table *bs")
+        ...tokenize("first 123, inject's some ;drop table *bs"),
       ].should.deep.equal([
         "",
         "first",
@@ -116,12 +116,14 @@ describe("Search", () => {
         "&",
         "table",
         "&",
-        "bs"
+        "bs",
       ]);
     });
     it("complex query", () => {
       [
-        ...tokenize('first and (second or third) and ("fourth fifth" or sixth)')
+        ...tokenize(
+          'first and (second or third) and ("fourth fifth" or sixth)'
+        ),
       ].should.deep.equal([
         "",
         "first",
@@ -145,7 +147,7 @@ describe("Search", () => {
         "|",
         "",
         "sixth",
-        ")"
+        ")",
       ]);
     });
   });

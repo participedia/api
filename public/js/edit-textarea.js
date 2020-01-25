@@ -25,7 +25,7 @@ const editTextarea = {
         }
       });
     });
-  }
-}
+  },
+};
 
 export default editTextarea;

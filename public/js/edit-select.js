@@ -21,6 +21,6 @@ const editSelect = {
       new SlimSelect(options);
     });
   },
-}
+};
 
 export default editSelect;

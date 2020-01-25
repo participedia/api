@@ -1,1105 +1,974 @@
 const partners = [
   {
-    "titleKey": "Principal Investigator",
-    "members": [
+    titleKey: "Principal Investigator",
+    members: [
       {
-        "name": "Mark E. Warren",
-        "titleKey": "Participedia Project Director and Co-founder",
-        "descriptors": [
+        name: "Mark E. Warren",
+        titleKey: "Participedia Project Director and Co-founder",
+        descriptors: [
           "Department of Political Science / Centre for the Study of Democratic Institutions",
-          "University of British Columbia"
-        ]
-      }
-    ]
+          "University of British Columbia",
+        ],
+      },
+    ],
   },
   {
-    "titleKey": "Co-investigators",
-    "members": [
+    titleKey: "Co-investigators",
+    members: [
       {
-        "name": "Archon Fung",
-        "titleKey": "Participedia Co-founder",
-        "descriptors": [
+        name: "Archon Fung",
+        titleKey: "Participedia Co-founder",
+        descriptors: [
           "Ash Center for Democratic Governance and Innovation",
-          "Harvard University"
-        ]
+          "Harvard University",
+        ],
       },
       {
-        "name": "Eileen Alma",
-        "descriptors": [
+        name: "Eileen Alma",
+        descriptors: [
           "Coady International Institute",
-          "St. Francis Xavier University"
-        ]
+          "St. Francis Xavier University",
+        ],
       },
       {
-        "name": "Julia Abelson",
-        "descriptors": [
+        name: "Julia Abelson",
+        descriptors: [
           "Centre for Health Economics and Policy Analysis",
-          "McMaster University"
-        ]
+          "McMaster University",
+        ],
       },
       {
-        "name": "Marco Adria",
-        "descriptors": [
-          "Centre for Public Involvement",
-          "University of Alberta"
-        ]
+        name: "Marco Adria",
+        descriptors: ["Centre for Public Involvement", "University of Alberta"],
       },
       {
-        "name": "Giovanni Allegretti",
-        "descriptors": [
-          "Centro de Estudo Sociais",
-          "Universidade de Coimbra"
-        ]
+        name: "Giovanni Allegretti",
+        descriptors: ["Centro de Estudo Sociais", "Universidade de Coimbra"],
       },
       {
-        "name": "Joanna Ashworth",
-        "descriptors": [
+        name: "Joanna Ashworth",
+        descriptors: [
           "Centre for Sustainable Development",
-          "Simon Fraser University"
-        ]
+          "Simon Fraser University",
+        ],
       },
       {
-        "name": "Leonardo Avritzer",
-        "descriptors": [
+        name: "Leonardo Avritzer",
+        descriptors: [
           "Department of Political Science",
-          "Federal University of Minas Gerais"
-        ]
+          "Federal University of Minas Gerais",
+        ],
       },
       {
-        "name": "Michael Burgess",
-        "descriptors": [
+        name: "Michael Burgess",
+        descriptors: [
           "W. Maurice Young Centre for Applied Ethics",
-          "University of British Columbia"
-        ]
+          "University of British Columbia",
+        ],
       },
       {
-        "name": "Simone Chambers",
-        "descriptors": [
+        name: "Simone Chambers",
+        descriptors: [
           "Department of Political Science",
-          "University of California, Irvine"
-        ]
+          "University of California, Irvine",
+        ],
       },
       {
-        "name": "Nancy C. Doubleday",
-        "descriptors": [
-          "Department of Philosophy",
-          "McMaster University"
-        ]
+        name: "Nancy C. Doubleday",
+        descriptors: ["Department of Philosophy", "McMaster University"],
       },
       {
-        "name": "Luciana Duranti",
-        "descriptors": [
+        name: "Luciana Duranti",
+        descriptors: [
           "InterPARES Trust",
           "School of Library, Archival, and Information Studies",
-          "University of British Columbiat"
-        ]
+          "University of British Columbiat",
+        ],
       },
       {
-        "name": "John Dryzek",
-        "descriptors": [
+        name: "John Dryzek",
+        descriptors: [
           "Institute for Governance and Policy Analysis",
-          "University of Canberra"
-        ]
+          "University of Canberra",
+        ],
       },
       {
-        "name": "Amber Frid-Jimenez",
-        "descriptors": [
+        name: "Amber Frid-Jimenez",
+        descriptors: [
           "Studio for Extensive Aesthetics / Design + Dynamic Media",
-          "Emily Carr University of Art + Design"
-        ]
+          "Emily Carr University of Art + Design",
+        ],
       },
       {
-        "name": "John Gastil",
-        "descriptors": [
+        name: "John Gastil",
+        descriptors: [
           "The McCourtney Institute for Democracy",
-          "Pennsylvania State University"
-        ]
+          "Pennsylvania State University",
+        ],
       },
       {
-        "name": "John Gaventa",
-        "descriptors": [
+        name: "John Gaventa",
+        descriptors: [
           "Institute of Development Studies",
-          "University of Sussex"
-        ]
+          "University of Sussex",
+        ],
       },
       {
-        "name": "Baogang He",
-        "descriptors": [
-          "International Studies",
-          "Deakin University"
-        ]
+        name: "Baogang He",
+        descriptors: ["International Studies", "Deakin University"],
       },
       {
-        "name": "Bonny Ibhawoh",
-        "descriptors": [
-          "Department of History",
-          "McMaster University"
-        ]
+        name: "Bonny Ibhawoh",
+        descriptors: ["Department of History", "McMaster University"],
       },
       {
-        "name": "Jan-Hendrik Kamlage",
-        "descriptors": [
+        name: "Jan-Hendrik Kamlage",
+        descriptors: [
           "Institute for Advanced Study in the Humanities (KWI)",
-          "Research College / University of Duisburg-Essen"
-        ]
+          "Research College / University of Duisburg-Essen",
+        ],
       },
       {
-        "name": "Paul Kingston",
-        "descriptors": [
+        name: "Paul Kingston",
+        descriptors: [
           "Centre for Critical Development Studies",
-          "University of Toronto-Scarborough"
-        ]
+          "University of Toronto-Scarborough",
+        ],
       },
       {
-        "name": "Rodolfo Lewanski",
-        "descriptors": [
+        name: "Rodolfo Lewanski",
+        descriptors: [
           "Department of Political and Social Sciences",
-          "University of Bologna"
-        ]
+          "University of Bologna",
+        ],
       },
       {
-        "name": "Peter Loewen",
-        "descriptors": [
-          "Munk School of Global Affairs",
-          "University of Toronto"
-        ]
+        name: "Peter Loewen",
+        descriptors: ["Munk School of Global Affairs", "University of Toronto"],
       },
       {
-        "name": "Françoise Montambeaul",
-        "descriptors": [
+        name: "Françoise Montambeaul",
+        descriptors: [
           "Centre d'études et de recherches internationals (CÉRIUM)",
           "Centre for International Studies",
-          "Universite de Montreal"
-        ]
+          "Universite de Montreal",
+        ],
       },
       {
-        "name": "Tina Nabatchi",
-        "descriptors": [
+        name: "Tina Nabatchi",
+        descriptors: [
           "Program for the Advancement of Research on Conflict and Collaboration (PARCC)",
-          "Maxwell School, Syracuse University"
-        ]
+          "Maxwell School, Syracuse University",
+        ],
       },
       {
-        "name": "Patrizia Nanz",
-        "descriptors": [
+        name: "Patrizia Nanz",
+        descriptors: [
           "Institute for Advanced Sustainability Studies (IASS)",
-          "University of Potsdam"
-        ]
+          "University of Potsdam",
+        ],
       },
       {
-        "name": "Laurence Piper",
-        "descriptors": [
+        name: "Laurence Piper",
+        descriptors: [
           "Department of Political Science",
-          "University of the Western Cape"
-        ]
+          "University of the Western Cape",
+        ],
       },
       {
-        "name": "Thamy Pogrebinschi",
-        "descriptors": [
+        name: "Thamy Pogrebinschi",
+        descriptors: [
           "Research Unit Democracy and Democratization",
-          "WZB Berlin Social Science Center"
-        ]
+          "WZB Berlin Social Science Center",
+        ],
       },
       {
-        "name": "Robert C. Richards, Jr.",
-        "descriptors": [
+        name: "Robert C. Richards, Jr.",
+        descriptors: [
           "University of Arkansas Clinton School of Public Service",
-        ]
+        ],
       },
       {
-        "name": "Matthew Ryan",
-        "descriptors": [
+        name: "Matthew Ryan",
+        descriptors: [
           "Centre for Citizenship, Governance and Globalization",
           "University of Southampton",
-        ]
+        ],
       },
       {
-        "name": "Graham Smith",
-        "descriptors": [
+        name: "Graham Smith",
+        descriptors: [
           "Centre for the Study of Democracy",
-          "University of Westminster"
-        ]
+          "University of Westminster",
+        ],
       },
       {
-        "name": "Paolo Spada",
-        "descriptors": [
-          "Centro de Estudo Sociais",
-          "Universidade de Coimbra"
-        ]
+        name: "Paolo Spada",
+        descriptors: ["Centro de Estudo Sociais", "Universidade de Coimbra"],
       },
       {
-        "name": "Dietlind Stolle",
-        "descriptors": [
+        name: "Dietlind Stolle",
+        descriptors: [
           "Centre for the Study of Democratic Citizenship",
-          "McGill University"
-        ]
+          "McGill University",
+        ],
       },
       {
-        "name": "Bettina von Lieres",
-        "descriptors": [
+        name: "Bettina von Lieres",
+        descriptors: [
           "Centre for Critical Development Studies",
-          "University of Toronto-Scarborough"
-        ]
+          "University of Toronto-Scarborough",
+        ],
       },
       {
-        "name": "Melissa Williams",
-        "descriptors": [
+        name: "Melissa Williams",
+        descriptors: [
           "Department of Political Science",
-          "University of Toronto"
-        ]
+          "University of Toronto",
+        ],
       },
       {
-        "name": "Jirong Yan",
-        "descriptors": [
+        name: "Jirong Yan",
+        descriptors: [
           "Co-Innovation Center for State Governance",
           "Institute of Political Development and Governance",
-          "Peking University"
-        ]
+          "Peking University",
+        ],
       },
       {
-        "name": "Xiaojin Zhang",
-        "descriptors": [
-          "Department of Political Science",
-          "Tsinghua University"
-        ]
-      }
-    ]
+        name: "Xiaojin Zhang",
+        descriptors: ["Department of Political Science", "Tsinghua University"],
+      },
+    ],
   },
   {
-    "titleKey": "Collaborators",
-    "members": [
+    titleKey: "Collaborators",
+    members: [
       {
-        "name": "André Bächtiger",
-        "descriptors": [
+        name: "André Bächtiger",
+        descriptors: [
           "Department of Political Theory and Empirical Study of Democracy",
-          "Universität Stuttgart"
-        ]
+          "Universität Stuttgart",
+        ],
       },
       {
-        "name": "Kaustuv Bandyopadhyay",
-        "descriptors": [
-          "Society for Participatory Research in Asia (PRIA)"
-        ]
+        name: "Kaustuv Bandyopadhyay",
+        descriptors: ["Society for Participatory Research in Asia (PRIA)"],
       },
       {
-        "name": "Edana Beauvais",
-        "descriptors": [
+        name: "Edana Beauvais",
+        descriptors: [
           "Centre for the Study of Democratic Citizenship",
           "Department of Political Science",
           "McGill University",
-        ]
+        ],
       },
       {
-        "name": "Claudia Feres Faria",
-        "descriptors": [
+        name: "Claudia Feres Faria",
+        descriptors: [
           "Department of Political Science",
-          "Universidade Federal de Minas Gerais"
-        ]
+          "Universidade Federal de Minas Gerais",
+        ],
       },
       {
-        "name": "Dustin Garrick",
-        "descriptors": [
+        name: "Dustin Garrick",
+        descriptors: [
           "Department of Political Science and Booth School of Engineering Practice",
-          "McMaster University"
-        ]
+          "McMaster University",
+        ],
       },
       {
-        "name": "Katherine Gillieson",
-        "descriptors": [
+        name: "Katherine Gillieson",
+        descriptors: [
           "Design + Dynamic Media",
-          "Emily Carr University of Art + Design"
-        ]
+          "Emily Carr University of Art + Design",
+        ],
       },
       {
-        "name": "Jez Hall",
-        "descriptors": [
-          "PB Partners",
-        ]
+        name: "Jez Hall",
+        descriptors: ["PB Partners"],
       },
       {
-        "name": "Sandy Heierbacher",
-        "descriptors": [
-          "National Coalition for Dialogue and Deliberation",
-        ]
+        name: "Sandy Heierbacher",
+        descriptors: ["National Coalition for Dialogue and Deliberation"],
       },
       {
-        "name": "David Hume",
-        "descriptors": [
+        name: "David Hume",
+        descriptors: [
           "Ministry of Citizens' Services and Open Government",
-          "Government of British Columbia"
-        ]
+          "Government of British Columbia",
+        ],
       },
       {
-        "name": "David Kahane",
-        "descriptors": [
+        name: "David Kahane",
+        descriptors: [
           "Department of Political Science",
-          "University of Alberta"
-        ]
+          "University of Alberta",
+        ],
       },
       {
-        "name": "Katie Knobloch",
-        "descriptors": [
-          "Communication Studies",
-          "Colorado State University"
-        ]
+        name: "Katie Knobloch",
+        descriptors: ["Communication Studies", "Colorado State University"],
       },
       {
-        "name": "Julien Landry",
-        "descriptors": [
+        name: "Julien Landry",
+        descriptors: [
           "Coady International Institute",
-          "St Francis Xavier University"
-        ]
+          "St Francis Xavier University",
+        ],
       },
       {
-        "name": "Matt Leighninger",
-        "descriptors": [
+        name: "Matt Leighninger",
+        descriptors: [
           "Yankelovich Center for Public Judgment",
-          "Public Agenda"
-        ]
+          "Public Agenda",
+        ],
       },
       {
-        "name": "Michael MacKenzie",
-        "descriptors": [
+        name: "Michael MacKenzie",
+        descriptors: [
           "Department of Political Science",
-          "University of Pittsburgh"
-        ]
+          "University of Pittsburgh",
+        ],
       },
       {
-        "name": "Marjorie Correa Marona",
-        "descriptors": [
+        name: "Marjorie Correa Marona",
+        descriptors: [
           "Department of Political Science",
-          "Universidade Federal de Minas Gerais"
-        ]
+          "Universidade Federal de Minas Gerais",
+        ],
       },
       {
-        "name": "Ricardo Fabrino Mendonça",
-        "descriptors": [
+        name: "Ricardo Fabrino Mendonça",
+        descriptors: [
           "Department of Political Science",
-          "Universidade Federal de Minas Gerais"
-        ]
+          "Universidade Federal de Minas Gerais",
+        ],
       },
       {
-        "name": "Tiago Peixoto",
-        "descriptors": [
-          "ICT4Gov Program",
-          "World Bank Institute"
-        ]
+        name: "Tiago Peixoto",
+        descriptors: ["ICT4Gov Program", "World Bank Institute"],
       },
       {
-        "name": "Marcus Abílio Gomes Pereira",
-        "descriptors": [
+        name: "Marcus Abílio Gomes Pereira",
+        descriptors: [
           "Department of Political Science",
-          "Universidade Federal de Minas Gerais"
-        ]
+          "Universidade Federal de Minas Gerais",
+        ],
       },
       {
-        "name": "Hollie Russon-Gilman",
-        "descriptors": [
-          "Open Technology Institute",
-          "University of Southampton"
-        ]
+        name: "Hollie Russon-Gilman",
+        descriptors: ["Open Technology Institute", "University of Southampton"],
       },
       {
-        "name": "Alexandra Samuel",
+        name: "Alexandra Samuel",
       },
       {
-        "name": "Eleonora Schettini Cunha",
-        "descriptors": [
+        name: "Eleonora Schettini Cunha",
+        descriptors: [
           "Department of Political Science",
-          "Universidade Federal de Minas Gerais"
-        ]
+          "Universidade Federal de Minas Gerais",
+        ],
       },
       {
-        "name": "Eduardo Moreira da Silva",
-        "descriptors": [
+        name: "Eduardo Moreira da Silva",
+        descriptors: [
           "Department of Political Science",
-          "Universidade Federal de Minas Gerais"
-        ]
+          "Universidade Federal de Minas Gerais",
+        ],
       },
       {
-        "name": "Leonardo Barros Soares",
-        "descriptors": [
+        name: "Leonardo Barros Soares",
+        descriptors: [
           "Department of Political Science",
-          "Universidade Federal de Minas Gerais"
-        ]
+          "Universidade Federal de Minas Gerais",
+        ],
       },
       {
-        "name": "Joanna Wilson",
-        "descriptors": [
-          "Department of Biology",
-          "McMaster University"
-        ]
+        name: "Joanna Wilson",
+        descriptors: ["Department of Biology", "McMaster University"],
       },
-       {
-        "name": "Sule Yaylaci",
-        "descriptors": [
+      {
+        name: "Sule Yaylaci",
+        descriptors: [
           "Department of Sociology",
-          "University of British Columbia"
-        ]
+          "University of British Columbia",
+        ],
       },
       {
-        "name": "Changdong Zhang",
-        "descriptors": [
-          "Department of Political Science",
-          "Peking University"
-        ]
-      }
-    ]
+        name: "Changdong Zhang",
+        descriptors: ["Department of Political Science", "Peking University"],
+      },
+    ],
   },
   {
-    "titleKey": "Organizations",
-    "members": [
+    titleKey: "Organizations",
+    members: [
       {
-        "name": "University of British Columbia",
-        "descriptors": [
+        name: "University of British Columbia",
+        descriptors: [
           "Centre for the Study of Democratic Institutions",
-          "Vancouver, Canada"
-        ]
+          "Vancouver, Canada",
+        ],
       },
       {
-        "name": "Harvard University",
-        "descriptors": [
+        name: "Harvard University",
+        descriptors: [
           "Ash Center for Democratic Governance and Innovation",
-          "Cambridge, United States"
-        ]
+          "Cambridge, United States",
+        ],
       },
       {
-        "name": "Coady International Institute",
-        "descriptors": [
-          "St. Francis Xavier University",
-          "Antigonish, Canada"
-        ]
+        name: "Coady International Institute",
+        descriptors: ["St. Francis Xavier University", "Antigonish, Canada"],
       },
       {
-        "name": "Deliberative Democracy Consortium",
-        "descriptors": [
-          "Washington, United States"
-        ]
-
+        name: "Deliberative Democracy Consortium",
+        descriptors: ["Washington, United States"],
       },
       {
-        "name": "Emily Carr University of Art + Design",
-        "descriptors": [
+        name: "Emily Carr University of Art + Design",
+        descriptors: [
           "Studio for Extensive Aesthetics / Design + Dynamic Media",
           "Vancouver, Canada",
-
-        ]
+        ],
       },
 
       {
-        "name": "International Observatory on Participatory Democracy",
-        "descriptors": [
-          "Barcelona, Spain"
-        ]
+        name: "International Observatory on Participatory Democracy",
+        descriptors: ["Barcelona, Spain"],
       },
       {
-        "name": "Kulturwissenschaftlichen Institut Essen (KWI)",
-        "descriptors": [
-          "Essen, Germany"
-        ]
+        name: "Kulturwissenschaftlichen Institut Essen (KWI)",
+        descriptors: ["Essen, Germany"],
       },
       {
-        "name": "McGill University",
-        "descriptors": [
+        name: "McGill University",
+        descriptors: [
           "Centre for the Study of Democratic Citizenship",
-          "Montréal, Québec"
-        ]
+          "Montréal, Québec",
+        ],
       },
       {
-        "name": "McMaster University",
-        "descriptors": [
+        name: "McMaster University",
+        descriptors: [
           "Office of Research and International Affairs",
-          "Hamilton, Ontario"
-        ]
+          "Hamilton, Ontario",
+        ],
       },
       {
-        "name": "Nanyang Technological University",
-        "descriptors": [
+        name: "Nanyang Technological University",
+        descriptors: [
           "Public Policy and Global Affairs Programme",
-          "Singapore"
-        ]
+          "Singapore",
+        ],
       },
       {
-        "name": "National Coalition for Dialogue and Deliberation",
-        "descriptors": [
-          "Boston, Massachusetts",
-        ]
+        name: "National Coalition for Dialogue and Deliberation",
+        descriptors: ["Boston, Massachusetts"],
       },
       {
-        "name": "Peking University",
-        "descriptors": [
+        name: "Peking University",
+        descriptors: [
           "Co-Innovation Center for State Governance",
           "Institute of Political Development and Governance",
           "Beijing, China",
-        ]
+        ],
       },
       {
-        "name": "Pennsylvania State University",
-        "descriptors": [
+        name: "Pennsylvania State University",
+        descriptors: [
           "The McCourtney Institute for Democracy",
-          "Pennsylvania, United States"
-        ]
+          "Pennsylvania, United States",
+        ],
       },
       {
-        "name": "Regional Authority for the Promotion of Participation (APP)",
-        "descriptors": [
-          "Regional Council of Tuscany",
-          "Firenze, Italia"
-        ]
+        name: "Regional Authority for the Promotion of Participation (APP)",
+        descriptors: ["Regional Council of Tuscany", "Firenze, Italia"],
       },
       {
-        "name": "Syracuse University",
-        "descriptors": [
+        name: "Syracuse University",
+        descriptors: [
           "Program for the Advancement of Research on Conflict and Collaboration (PARCC)",
-          "Syracuse, New York"
-        ]
+          "Syracuse, New York",
+        ],
       },
       {
-        "name": "Simon Fraser University",
-        "descriptors": [
-          "Centre for Sustainable Development",
-          "Burnaby, Canada"
-        ]
+        name: "Simon Fraser University",
+        descriptors: ["Centre for Sustainable Development", "Burnaby, Canada"],
       },
       {
-        "name": "Tsinghua University",
-        "descriptors": [
-          "Department of Political Science",
-          "Beijing, China"
-        ]
+        name: "Tsinghua University",
+        descriptors: ["Department of Political Science", "Beijing, China"],
       },
       {
-        "name": "Universidade de Coimbra",
-        "descriptors": [
-          "Centro de Estudo Sociais",
-          "Coimbra, Portugal"
-        ]
+        name: "Universidade de Coimbra",
+        descriptors: ["Centro de Estudo Sociais", "Coimbra, Portugal"],
       },
       {
-        "name": "Universidade Federal de Minas Gerais",
-        "descriptors": [
+        name: "Universidade Federal de Minas Gerais",
+        descriptors: [
           "Departamento de Ciência Política",
-          "Belo Horizonte, Brazil"
-        ]
+          "Belo Horizonte, Brazil",
+        ],
       },
       {
-        "name": "University of Alberta",
-        "descriptors": [
-          "Centre for Public Involvement",
-          "Edmonton, Canada"
-        ]
+        name: "University of Alberta",
+        descriptors: ["Centre for Public Involvement", "Edmonton, Canada"],
       },
       {
-        "name": "University of Arkansas Clinton School of Public Service",
-        "descriptors": [
-          "Little Rock, United States",
-        ]
+        name: "University of Arkansas Clinton School of Public Service",
+        descriptors: ["Little Rock, United States"],
       },
       {
-        "name": "Università di Bologna",
-        "descriptors": [
+        name: "Università di Bologna",
+        descriptors: [
           "Dipartimento di Scienze Politiche e Sociali",
-          "Bologna, Italy"
-        ]
+          "Bologna, Italy",
+        ],
       },
       {
-        "name": "University of British Columbia",
-        "descriptors": [
-          "InterPARES Trust",
-          "Vancouver, Canada"
-        ]
+        name: "University of British Columbia",
+        descriptors: ["InterPARES Trust", "Vancouver, Canada"],
       },
       {
-        "name": "University of British Columbia",
-        "descriptors": [
+        name: "University of British Columbia",
+        descriptors: [
           "W. Maurice Young Centre for Applied Ethics",
           "Vancouver, Canada",
-        ]
+        ],
       },
       {
-        "name": "University of Canberra",
-        "descriptors": [
+        name: "University of Canberra",
+        descriptors: [
           "Institute for Governance and Policy Analysis",
-          "Canberra, Australia"
-        ]
+          "Canberra, Australia",
+        ],
       },
       {
-        "name": "Université de Montreal",
-        "descriptors": [
+        name: "Université de Montreal",
+        descriptors: [
           "Centre d'études et de recherches internationals (CÉRIUM)",
-          "Montreal, Canada"
-        ]
+          "Montreal, Canada",
+        ],
       },
       {
-        "name": "University of Southampton",
-        "descriptors": [
+        name: "University of Southampton",
+        descriptors: [
           "Centre for Citizenship, Globalisation and Governance (C2G2)",
           "Southampton, United Kingdom",
-        ]
+        ],
       },
       {
-        "name": "University of Toronto",
-        "descriptors": [
-          "Centre for Ethics",
-          "Toronto, Canada"
-        ]
+        name: "University of Toronto",
+        descriptors: ["Centre for Ethics", "Toronto, Canada"],
       },
       {
-        "name": "University of Toronto-Scarborough",
-        "descriptors": [
+        name: "University of Toronto-Scarborough",
+        descriptors: [
           "Centre for Critical Development Studies",
-          "Toronto, Canada"
-        ]
+          "Toronto, Canada",
+        ],
       },
       {
-        "name": "University of the Western Cape",
-        "descriptors": [
+        name: "University of the Western Cape",
+        descriptors: [
           "Department of Political Studies",
-          "Bellville, South Africa"
-        ]
+          "Bellville, South Africa",
+        ],
       },
       {
-        "name": "University of Westminster",
-        "descriptors": [
+        name: "University of Westminster",
+        descriptors: [
           "Centre for the Study of Democracy",
-          "London, United Kingdom"
-        ]
+          "London, United Kingdom",
+        ],
       },
       {
-        "name": "World Bank Institute",
-        "descriptors": [
-          "ICT4Gov Program",
-          "Washington, United States"
-        ]
+        name: "World Bank Institute",
+        descriptors: ["ICT4Gov Program", "Washington, United States"],
       },
       {
-        "name": "WZB Berlin Social Science Center",
-        "descriptors": [
+        name: "WZB Berlin Social Science Center",
+        descriptors: [
           "Research Unit Democracy and Democratization",
-          "Berlin, Germany"
-        ]
-      }
-    ]
-  }
+          "Berlin, Germany",
+        ],
+      },
+    ],
+  },
 ];
 
 const committees = [
   {
-    "titleKey": "Executive Committee",
-    "descriptionKey": "about.committees.executive_committee.p1",
-    "members": [
+    titleKey: "Executive Committee",
+    descriptionKey: "about.committees.executive_committee.p1",
+    members: [
       {
-        "name": "Marco Adria",
-        "titleKey": "Chair, Communication & Knowledge Mobilization Committee",
-        "descriptors": [
-          "Centre for Public Involvement",
-          "University of Alberta"
-        ]
+        name: "Marco Adria",
+        titleKey: "Chair, Communication & Knowledge Mobilization Committee",
+        descriptors: ["Centre for Public Involvement", "University of Alberta"],
       },
       {
-        "name": "Amber Frid-Jimenez",
-        "titleKey": "Participedia Design Lead and Chair, Design & Technology Committee",
-        "descriptors": [
+        name: "Amber Frid-Jimenez",
+        titleKey:
+          "Participedia Design Lead and Chair, Design & Technology Committee",
+        descriptors: [
           "Faculty of Design + Dynamic Media and Director, Studio for Extensive Aesthetics",
-          "Emily Carr University of Art + Design"
-        ]
+          "Emily Carr University of Art + Design",
+        ],
       },
       {
-        "name": "Archon Fung",
-        "titleKey": "Co-Founder",
-        "descriptors": [
+        name: "Archon Fung",
+        titleKey: "Co-Founder",
+        descriptors: [
           "Ash Center for Democratic Governance and Innovation",
-          "Harvard University"
-        ]
+          "Harvard University",
+        ],
       },
       {
-        "name": "Patrick L. Scully",
-        "titleKey": "(member ex officio), Managing Director",
+        name: "Patrick L. Scully",
+        titleKey: "(member ex officio), Managing Director",
       },
       {
-        "name": "Matt Ryan",
-        "titleKey": "Chair, Research Design Committee",
-        "descriptors": [
+        name: "Matt Ryan",
+        titleKey: "Chair, Research Design Committee",
+        descriptors: [
           "Centre for the Study of Democracy",
-          "University of Westminster"
-        ]
+          "University of Westminster",
+        ],
       },
       {
-        "name": "Joanna Ashworth and Bettina Von Lieres",
-        "titleKey": "Co-Chairs, Teaching, Training and Mentoring Committee",
-        "descriptors": [
+        name: "Joanna Ashworth and Bettina Von Lieres",
+        titleKey: "Co-Chairs, Teaching, Training and Mentoring Committee",
+        descriptors: [
           "Centre for Sustainable Development",
           "Simon Fraser University",
           "Centre for Critical Development Studies",
-          "University of Toronto-Scarborough"
-        ]
+          "University of Toronto-Scarborough",
+        ],
       },
       {
-        "name": "Mark E. Warren",
-        "titleKey": "Participedia Project Director and Co-Founder",
-        "descriptors": [
+        name: "Mark E. Warren",
+        titleKey: "Participedia Project Director and Co-Founder",
+        descriptors: [
           "Department of Political Science / Centre for the Study of Democratic Institutions",
-          "University of British Columbia"
-        ]
-      }
-    ]
+          "University of British Columbia",
+        ],
+      },
+    ],
   },
   {
-    "titleKey": "Design & Technology Committee",
-    "descriptionKey": "about.committees.design_tech.p1",
-    "members": [
+    titleKey: "Design & Technology Committee",
+    descriptionKey: "about.committees.design_tech.p1",
+    members: [
       {
-        "name": "Amber Frid-Jimenez",
-        "titleKey": "Design & Technology Team Lead & Art Director",
+        name: "Amber Frid-Jimenez",
+        titleKey: "Design & Technology Team Lead & Art Director",
       },
       {
-        "name": "Jesi Carson",
-        "titleKey": "Lead Designer & Communities Coordinator",
+        name: "Jesi Carson",
+        titleKey: "Lead Designer & Communities Coordinator",
       },
       {
-        "name": "Katherine Gillieson",
-        "titleKey": "Lead Graphic Designer",
+        name: "Katherine Gillieson",
+        titleKey: "Lead Graphic Designer",
       },
       {
-        "name": "Stephan Garneau",
-        "titleKey": "Designer",
+        name: "Stephan Garneau",
+        titleKey: "Designer",
       },
       {
-        "name": "Dethe Elza",
-        "titleKey": "Lead Developer",
+        name: "Dethe Elza",
+        titleKey: "Lead Developer",
       },
       {
-        "name": "Andrea Del Rio",
-        "titleKey": "Designer & Developer",
+        name: "Andrea Del Rio",
+        titleKey: "Designer & Developer",
       },
       {
-        "name": "Alanna Scott",
-        "titleKey": "Developer",
+        name: "Alanna Scott",
+        titleKey: "Developer",
       },
       {
-        "name": "Sam Jiang",
-        "titleKey": "Designer & Developer",
+        name: "Sam Jiang",
+        titleKey: "Designer & Developer",
       },
       {
-        "name": "Kushal Goenka",
-        "titleKey": "Developer",
+        name: "Kushal Goenka",
+        titleKey: "Developer",
       },
       {
-        "name": "Lydia Prince",
-        "titleKey": "Developer",
+        name: "Lydia Prince",
+        titleKey: "Developer",
       },
       {
-        "name": "David Ascher",
-        "titleKey": "Tech Lead",
+        name: "David Ascher",
+        titleKey: "Tech Lead",
       },
       {
-        "name": "Patrick Scully",
-        "titleKey": "Managing Director",
+        name: "Patrick Scully",
+        titleKey: "Managing Director",
       },
       {
-        "name": "Scott Fletcher",
-        "titleKey": "Managing Editor",
+        name: "Scott Fletcher",
+        titleKey: "Managing Editor",
       },
-    ]
+    ],
   },
   {
-    "titleKey": "Communications & Knowledge Mobilization Committee",
-    "descriptionKey": "about.committees.communications_knowledge_mobilization.p1",
-    "members": [
+    titleKey: "Communications & Knowledge Mobilization Committee",
+    descriptionKey: "about.committees.communications_knowledge_mobilization.p1",
+    members: [
       {
-        "name": "Marco Adria",
-        "titleKey": "Co-investigator & Committee Chair",
-        "descriptors": [
-          "Centre for Public Involvement",
-          "University of Alberta"
-        ]
+        name: "Marco Adria",
+        titleKey: "Co-investigator & Committee Chair",
+        descriptors: ["Centre for Public Involvement", "University of Alberta"],
       },
       {
-        "name": "Jesi Carson",
-        "titleKey": "Lead Designer & Communities Coordinator",
-        "descriptors": [
+        name: "Jesi Carson",
+        titleKey: "Lead Designer & Communities Coordinator",
+        descriptors: [
           "Studio for Extensive Aesthetics",
-          "Emily Carr University of Art + Design"
-        ]
+          "Emily Carr University of Art + Design",
+        ],
       },
       {
-        "name": "Sandy Heierbacher",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "National Coalition for Dialogue and Deliberation"
-        ]
+        name: "Sandy Heierbacher",
+        titleKey: "Co-investigator",
+        descriptors: ["National Coalition for Dialogue and Deliberation"],
       },
       {
-        "name": "Matt Leighninger",
-        "titleKey": "Co-investigator",
-        "descriptors": [
+        name: "Matt Leighninger",
+        titleKey: "Co-investigator",
+        descriptors: [
           "Yankelovich Center for Public Judgment",
-          "Public Agenda"
-        ]
+          "Public Agenda",
+        ],
       },
       {
-        "name": "Paolo Spada",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "Centro de Estudo Sociais",
-          "Universidade de Coimbra",
-        ]
+        name: "Paolo Spada",
+        titleKey: "Co-investigator",
+        descriptors: ["Centro de Estudo Sociais", "Universidade de Coimbra"],
       },
       {
-        "name": "Secchi Michelangelo",
-        "titleKey": "Research Assistant",
-        "descriptors": [
-          "Centro de Estudo Sociais",
-          "University of Coimbra"
-        ]
+        name: "Secchi Michelangelo",
+        titleKey: "Research Assistant",
+        descriptors: ["Centro de Estudo Sociais", "University of Coimbra"],
       },
       {
-        "name": "Scott Fletcher",
-        "titleKey": "Managing Editor",
-        "descriptors": [
+        name: "Scott Fletcher",
+        titleKey: "Managing Editor",
+        descriptors: [
           "Department of Political Science / Centre for the Study of Democratic Institutions",
-          "University of British Columbia"
-        ]
-      }
-    ]
+          "University of British Columbia",
+        ],
+      },
+    ],
   },
   {
-    "titleKey": "Teaching Training & Mentoring Committee",
-    "descriptionKey": "about.committees.teaching_training_mentoring.p1",
-    "members": [
+    titleKey: "Teaching Training & Mentoring Committee",
+    descriptionKey: "about.committees.teaching_training_mentoring.p1",
+    members: [
       {
-        "name": "Joanna Ashworth",
-        "titleKey": "Co-investigator",
-        "descriptors": [
+        name: "Joanna Ashworth",
+        titleKey: "Co-investigator",
+        descriptors: [
           "Centre for Sustainable Development",
-          "Simon Fraser University"
-        ]
+          "Simon Fraser University",
+        ],
       },
       {
-        "name": "Ibhawoh Bonny",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "Department of History",
-          "McMaster University"
-        ]
+        name: "Ibhawoh Bonny",
+        titleKey: "Co-investigator",
+        descriptors: ["Department of History", "McMaster University"],
       },
       {
-        "name": "Katie Knobloch",
-        "titleKey": "Collaborator",
-        "descriptors": [
+        name: "Katie Knobloch",
+        titleKey: "Collaborator",
+        descriptors: [
           "Department of Communication",
-          "Colorado State University"
-        ]
+          "Colorado State University",
+        ],
       },
       {
-        "name": "Julien Landry",
-        "titleKey": "Collaborator",
-        "descriptors": [
+        name: "Julien Landry",
+        titleKey: "Collaborator",
+        descriptors: [
           "Coady International Institute",
-          "St Francis Xavier University"
-        ]
+          "St Francis Xavier University",
+        ],
       },
       {
-        "name": "Marjorie Correa Marona",
-        "titleKey": "Collaborator",
-        "descriptors": [
+        name: "Marjorie Correa Marona",
+        titleKey: "Collaborator",
+        descriptors: [
           "Department of Political Science",
-          "Universidade Federal de Minas Gerais"
-        ]
+          "Universidade Federal de Minas Gerais",
+        ],
       },
       {
-        "name": "Françoise Montambeaul",
-        "titleKey": "Co-investigator",
-        "descriptors": [
+        name: "Françoise Montambeaul",
+        titleKey: "Co-investigator",
+        descriptors: [
           "Département de science politique",
-          "Université de Montréal"
-        ]
+          "Université de Montréal",
+        ],
       },
       {
-        "name": "Tina Nabatchi",
-        "titleKey": "Co-investigator",
-        "descriptors": [
+        name: "Tina Nabatchi",
+        titleKey: "Co-investigator",
+        descriptors: [
           "Program for the Advancement of Research on Conflict and Collaboration (PARCC)",
-          "Syracuse University/Maxwell School"
-        ]
+          "Syracuse University/Maxwell School",
+        ],
       },
       {
-        "name": "Laurence Piper",
-        "titleKey": "Co-investigator",
-        "descriptors": [
+        name: "Laurence Piper",
+        titleKey: "Co-investigator",
+        descriptors: [
           "Department of Political Science",
-          "University of the Western Cape"
-        ]
+          "University of the Western Cape",
+        ],
       },
       {
-        "name": "Matthew Ryan",
-        "titleKey": "Co-investigator",
-        "descriptors": [
+        name: "Matthew Ryan",
+        titleKey: "Co-investigator",
+        descriptors: [
           "Centre for Citizenship, Governance and Globalization",
-          "University of Southampton"
-        ]
+          "University of Southampton",
+        ],
       },
       {
-        "name": "Timothy Shaffer",
-        "descriptors": [
+        name: "Timothy Shaffer",
+        descriptors: [
           "Department of Communication Studies",
-          "Kansas State University"
-        ]
+          "Kansas State University",
+        ],
       },
       {
-        "name": "Nancy Thomas",
-        "descriptors": [
-          "Institute for Democracy & Higher Education",
-          "Tufts U"
-        ]
+        name: "Nancy Thomas",
+        descriptors: ["Institute for Democracy & Higher Education", "Tufts U"],
       },
       {
-        "name": "Bettina von Lieres",
-        "titleKey": "Co-investigator",
-        "descriptors": [
+        name: "Bettina von Lieres",
+        titleKey: "Co-investigator",
+        descriptors: [
           "Centre for Critical Development Studies",
-          "University of Toronto-Scarborough"
-        ]
+          "University of Toronto-Scarborough",
+        ],
       },
       {
-        "name": "Ethan Way",
-        "titleKey": "Research Assistant",
-        "descriptors": [
-          "University of Toronto-Scarborough"
-        ]
-      }
-    ]
+        name: "Ethan Way",
+        titleKey: "Research Assistant",
+        descriptors: ["University of Toronto-Scarborough"],
+      },
+    ],
   },
   {
-    "titleKey": "Research Design Committee",
-    "descriptionKey": "about.committees.reasearch_design.p1",
-    "members": [
+    titleKey: "Research Design Committee",
+    descriptionKey: "about.committees.reasearch_design.p1",
+    members: [
       {
-        "name": "Leonardo Avritzer",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "Universidade Federal de Minas Gerais"
-        ]
+        name: "Leonardo Avritzer",
+        titleKey: "Co-investigator",
+        descriptors: ["Universidade Federal de Minas Gerais"],
       },
       {
-        "name": "Selen Ercan",
-        "descriptors": [
-          "University of Canberra"
-        ]
+        name: "Selen Ercan",
+        descriptors: ["University of Canberra"],
       },
       {
-        "name": "Matt Leighninger",
-        "titleKey": "Collaborator",
-        "descriptors": [
-          "Deliberative Democracy Consortium / Public Agenda"
-        ]
+        name: "Matt Leighninger",
+        titleKey: "Collaborator",
+        descriptors: ["Deliberative Democracy Consortium / Public Agenda"],
       },
       {
-        "name": "Peter Loewen",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "University of Toronto"
-        ]
+        name: "Peter Loewen",
+        titleKey: "Co-investigator",
+        descriptors: ["University of Toronto"],
       },
       {
-        "name": "Michael MacKenzie",
-        "titleKey": "Collaborator",
-        "descriptors": [
-          "University of Pittsburgh"
-        ]
+        name: "Michael MacKenzie",
+        titleKey: "Collaborator",
+        descriptors: ["University of Pittsburgh"],
       },
       {
-        "name": "Patrizia Nanz",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "Research College / University of Duisburg-Essen"
-        ]
+        name: "Patrizia Nanz",
+        titleKey: "Co-investigator",
+        descriptors: ["Research College / University of Duisburg-Essen"],
       },
       {
-        "name": "Lucy Parry",
-        "titleKey": "Research Associate",
-        "descriptors": [
-          "University of Canberra"
-        ]
+        name: "Lucy Parry",
+        titleKey: "Research Associate",
+        descriptors: ["University of Canberra"],
       },
       {
-        "name": "Matthew Ryan",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "University of Southampton"
-        ]
+        name: "Matthew Ryan",
+        titleKey: "Co-investigator",
+        descriptors: ["University of Southampton"],
       },
       {
-        "name": "Graham Smith",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "University of Westminster"
-        ]
+        name: "Graham Smith",
+        titleKey: "Co-investigator",
+        descriptors: ["University of Westminster"],
       },
       {
-        "name": "Dietlind Stolle",
-        "titleKey": "Co-investigator",
-        "descriptors": [
-          "McGill University"
-        ]
+        name: "Dietlind Stolle",
+        titleKey: "Co-investigator",
+        descriptors: ["McGill University"],
       },
       {
-        "name": "Mark E. Warren",
+        name: "Mark E. Warren",
         titleKey: "Project Director, Co-Founder and Principal Investigator",
-        "descriptors": [
+        descriptors: [
           "Department of Political Science / Centre for the Study of Democratic Institutions",
-          "University of British Columbia"
-        ]
-      }
-    ]
-  }
+          "University of British Columbia",
+        ],
+      },
+    ],
+  },
 ];
 
 const staff = {
-  "titleKey": "Staff",
-  "members": [
+  titleKey: "Staff",
+  members: [
     {
-      "name": "Jesi Carson",
-      "titleKey": "Lead Designer & Communities Coordinator",
-      "descriptors": [
-        "Emily Carr University of Art + Design",
-      ]
+      name: "Jesi Carson",
+      titleKey: "Lead Designer & Communities Coordinator",
+      descriptors: ["Emily Carr University of Art + Design"],
     },
     {
-      "name": "Dethe Elza",
-      "titleKey": "Lead Developer",
+      name: "Dethe Elza",
+      titleKey: "Lead Developer",
     },
     {
-      "name": "Scott Fletcher",
-      "titleKey": "Managing Editor",
-      "descriptors": [
-        "University of British Columbia",
-      ]
+      name: "Scott Fletcher",
+      titleKey: "Managing Editor",
+      descriptors: ["University of British Columbia"],
     },
     {
-      "name": "Rebecca Monnerat",
-      "titleKey": "Project Manager",
-      "descriptors": [
-        "University of British Columbia",
-      ]
+      name: "Rebecca Monnerat",
+      titleKey: "Project Manager",
+      descriptors: ["University of British Columbia"],
     },
     {
-      "name": "Alanna Scott",
-      "titleKey": "Developer",
+      name: "Alanna Scott",
+      titleKey: "Developer",
     },
     {
-      "name": "Patrick L. Scully",
-      "titleKey": "Managing Director",
+      name: "Patrick L. Scully",
+      titleKey: "Managing Director",
     },
     {
-      "name": "Mark E. Warren",
-      "titleKey": "Project Director, Co-Founder and Principal Investigator",
-      "descriptors": [
+      name: "Mark E. Warren",
+      titleKey: "Project Director, Co-Founder and Principal Investigator",
+      descriptors: [
         "Department of Political Science / Centre for the Study of Democratic Institutions",
         "University of British Columbia",
-      ]
-    }
-  ]
+      ],
+    },
+  ],
 };
 
 module.exports = {
