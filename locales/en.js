@@ -1623,7 +1623,7 @@
   "Suggest edits...": "Suggest edits to this form by email to",
   "suitable_for_sectionlabel": "Suitable For",
   "Supporters": "Supporters",
-  "Surivalue": "Surivalue",
+  "Suriname": "Suriname",
   "Surveys": "Surveys",
   "Svalbard and Jan Mayen": "Svalbard and Jan Mayen",
   "Swaziland": "Swaziland",

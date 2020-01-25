@@ -810,7 +810,7 @@ const countries = [
     key: "SD",
   },
   {
-    value: "Surivalue",
+    value: "Suriname",
     key: "SR",
   },
   {
