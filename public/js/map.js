@@ -15,7 +15,7 @@ const map = {
     if (!mapEl) return;
 
     this.map = new google.maps.Map(mapEl, {
-      center: { lat: 0.5236565, lng: 25.1746129 },
+      center: { lat: 6.1259722, lng: 20.9404108 },
       zoom: 2.5,
       disableDefaultUI: true,
       zoomControl: false,
