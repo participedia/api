@@ -111,6 +111,7 @@
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "deployprod": "heroku git:remote -a participedia-api && git push heroku master",
     "deploystage": "heroku git:remote -a ppedia-stage && git push heroku master",
+    "deploy-i18n-staging": "git checkout participedia-i18n-staging && heroku git:remote -a participedia-i18n-staging && git push -f heroku HEAD:master",
     "coverage": "NODE_ENV=test DATABASE_URL=${DATABASE_TEST_URL} istanbul cover _mocha -- -R spec && open coverage/lcov-report/index.html",
     "test": "NODE_ENV=test DATABASE_URL=${DATABASE_TEST_URL} mocha",
     "backuplocal": "pg_dump -O --clean participedia > ppedia_local.sql",
@@ -124,15 +125,18 @@
     "migrateuplocal": "psql -d \"participedia\" -f migrations/update_migrations.sql",
     "migrateupstage": "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/update_migrations.sql",
     "migrateupprod": "psql -d \"${DATABASE_PROD_URL}\" -f migrations/update_migrations.sql",
+    "migrateup-i18n-staging": "psql -d \"${DATABASE_I18N_STAGING_URL}\" -f migrations/update_migrations.sql",
     "resettestfunctions": "psql -d participedia-test -f migrations/functions.sql",
     "resetlocalfunctions": "psql -d participedia -f migrations/functions.sql",
     "resetstagefunctions": "psql -d \"${DATABASE_STAGE_URL}\" -f migrations/functions.sql",
     "resetprodfunctions": "psql -d \"${DATABASE_PROD_URL}\" -f migrations/functions.sql",
+    "reset-i18n-staging-functions": "psql -d \"${DATABASE_I18N_STAGING_URL}\" -f migrations/functions.sql",
     "textdump": "pg_dump --format=p --file=one_schema.sql --clean --create --no-owner --if-exists --dbname=participedia",
     "migrateprodlatest": "f(){ psql -d \"${DATABASE_PROD_URL}\" -f \"migrations/migration_047.sql\"; };f",
     "migratestagelatest": "f(){ psql -d \"${DATABASE_STAGE_URL}\" -f \"migrations/migration_047.sql\"; };f",
     "migratelocallatest": "f(){ psql -d \"${DATABASE_URL}\" -f \"migrations/migration_047.sql\"; };f",
-    "migratetest": "f(){ psql -d \"${DATABASE_TEST_URL}\" -f \"migrations/migration_${item}.sql\"; };f"
+    "migratetest": "f(){ psql -d \"${DATABASE_TEST_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
+    "migrate-i18n-staging": "f(){ psql -d \"${DATABASE_I18N_STAGING_URL}\" -f \"migrations/migration_${item}.sql\"; };f"
   },
   "husky": {
     "hooks": {
