@@ -15,7 +15,7 @@ function uploadToAWS(base64String) {
   const contentType = base64String.split(":")[1].split(";")[0];
 
   const uploadParams = {
-    Bucket: `${process.env.AWS_S3_BUCKET}`,
+    Bucket: process.env.AWS_S3_BUCKET,
     Key: newFileName,
     Body: base64Data,
     ContentEncoding: "base64",
