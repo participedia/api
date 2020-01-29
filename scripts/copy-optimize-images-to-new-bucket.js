@@ -17,6 +17,7 @@ async.whilst(
   cb => {
     s3.listObjectsV2({
       Bucket: oldBucket,
+      Delimiter: '/',
       StartAfter: lastDownloadedFile
     }, (err, assetsList) => {
       async.eachSeries(assetsList.Contents, (asset, innerCb) => {
