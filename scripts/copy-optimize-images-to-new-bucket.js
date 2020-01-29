@@ -55,11 +55,11 @@ async.whilst(
                           if (err){
                             uploadCb(err);
                           } else {
-                            console.log(imgData);
+                            console.log(imgData.replace(/^data:image\/\w+;base64,/, ""));
                             s3.upload({
                               Bucket: process.env.AWS_S3_BUCKET,
                               Key: `thumbnail/${asset.Key}`,
-                              Body: imgData,
+                              Body: Buffer.from(imgData.replace(/^data:image\/\w+;base64,/, ""), "base64"),
                               ContentEncoding: "base64",
                               ContentType: object.ContentType,
                               ACL: "public-read",
@@ -77,7 +77,7 @@ async.whilst(
                         s3.upload({
                           Bucket: process.env.AWS_S3_BUCKET,
                           Key: `thumbnail/${asset.Key}`,
-                          Body: imgData,
+                          Body: Buffer.from(imgData.replace(/^data:image\/\w+;base64,/, ""), "base64"),
                           ContentEncoding: "base64",
                           ContentType: object.ContentType,
                           ACL: "public-read",
@@ -98,48 +98,53 @@ async.whilst(
             },
             uploadCb => { // Full size image and other file types upload
               if (object.ContentType.includes("image")) { // Optimize full size image
-                if (img.bitmap.width > 1600 || img.bitmap.height > 1600) { // Resize required
-                  let resizeW = 1600;
-                  let resizeH = jimp.AUTO;
-                  if (img.bitmap.width < img.bitmap.height) {
-                    resizeW = jimp.AUTO;
-                    resizeH = 1600;
-                  }
-                  img
-                    .scaleToFit(resizeW, resizeH) // resize
-                    .quality(60) // set image quality
-                    .getBase64(object.ContentType, (err, imgData) => {
-                      if (err){
-                        uploadCb(err);
-                      } else {
-                        console.log(imgData);
+                jimp.read(object.Body, (err, img) => {
+                  if (err) {
+                    uploadCb(err);
+                  } else {
+                    if (img.bitmap.width > 1600 || img.bitmap.height > 1600) { // Resize required
+                      let resizeW = 1600;
+                      let resizeH = jimp.AUTO;
+                      if (img.bitmap.width < img.bitmap.height) {
+                        resizeW = jimp.AUTO;
+                        resizeH = 1600;
+                      }
+                      img
+                        .scaleToFit(resizeW, resizeH) // resize
+                        .quality(60) // set image quality
+                        .getBase64(object.ContentType, (err, imgData) => {
+                          if (err) {
+                            uploadCb(err);
+                          } else {
+                            console.log(imgData.replace(/^data:image\/\w+;base64,/, ""));
+                            s3.upload({
+                              Bucket: process.env.AWS_S3_BUCKET,
+                              Key: asset.Key,
+                              Body: Buffer.from(imgData.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+                              ContentEncoding: "base64",
+                              ContentType: object.ContentType,
+                              ACL: "public-read"
+                            }, uploadCb);
+                          }
+                        });
+                    } else { // the image is too small to be resized, just upload to the new bucket
+                      img.getBase64(object.ContentType, (err, imgData) => {
                         s3.upload({
                           Bucket: process.env.AWS_S3_BUCKET,
                           Key: asset.Key,
-                          Body: imgData,
+                          Body: Buffer.from(imgData.replace(/^data:image\/\w+;base64,/, ""), "base64"),
                           ContentEncoding: "base64",
                           ContentType: object.ContentType,
                           ACL: "public-read"
                         }, uploadCb);
-                      }
-                    });
-                } else { // the image is too small to be resized, just upload to the new bucket
-                  img.getBase64(object.ContentType, (err, imgData) => {
-                    s3.upload({
-                      Bucket: process.env.AWS_S3_BUCKET,
-                      Key: asset.Key,
-                      Body: imgData,
-                      ContentEncoding: "base64",
-                      ContentType: object.ContentType,
-                      ACL: "public-read"
-                    }, uploadCb);
-                  });
-                }
+                      });
+                    }
+                  }
+                });
               } else { // Copy over documents
-                s3.copy({
+                s3.copyObject({
                   Bucket: process.env.AWS_S3_BUCKET,
                   CopySource: encodeURI(`${oldBucket}/${asset.Key}`),
-                  ContentEncoding: "base64",
                   ContentType: object.ContentType,
                   ACL: "public-read",
                   MetadataDirective: "COPY",
