@@ -31,7 +31,6 @@ async.whilst(
           Key: lastDownloadedFile
         }, (err, object) => {
           console.log(object.ContentType);
-          console.log(asset.Key);
 
           async.parallel([
             uploadCb => { // Thumbnail upload
@@ -49,13 +48,12 @@ async.whilst(
                         resizeH = 600;
                       }
                       img
-                        .scaleToFit(resizeW, resizeH) // resize
+                        .resize(resizeW, resizeH) // resize
                         .quality(60) // set image quality
                         .getBase64(object.ContentType, (err, imgData) => {
                           if (err){
                             uploadCb(err);
                           } else {
-                            console.log(imgData.replace(/^data:image\/\w+;base64,/, ""));
                             s3.upload({
                               Bucket: process.env.AWS_S3_BUCKET,
                               Key: `thumbnail/${asset.Key}`,
@@ -74,20 +72,31 @@ async.whilst(
                         });
                     } else { // the image is too small to be resized, just upload to the new bucket
                       img.getBase64(object.ContentType, (err, imgData) => {
-                        s3.upload({
-                          Bucket: process.env.AWS_S3_BUCKET,
-                          Key: `thumbnail/${asset.Key}`,
-                          Body: Buffer.from(imgData.replace(/^data:image\/\w+;base64,/, ""), "base64"),
-                          ContentEncoding: "base64",
-                          ContentType: object.ContentType,
-                          ACL: "public-read",
-                        }, (err, data) => {
-                          if (err) {
-                            uploadCb(err);
-                          } else {
-                            uploadCb();
-                          }
-                        });
+                        if(err){
+                          s3.copyObject({
+                            Bucket: process.env.AWS_S3_BUCKET,
+                            CopySource: encodeURI(`${oldBucket}/${asset.Key}`),
+                            ContentType: object.ContentType,
+                            ACL: "public-read",
+                            MetadataDirective: "COPY",
+                            Key: asset.Key
+                          }, uploadCb);
+                        } else {
+                          s3.upload({
+                            Bucket: process.env.AWS_S3_BUCKET,
+                            Key: `thumbnail/${asset.Key}`,
+                            Body: Buffer.from(imgData.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+                            ContentEncoding: "base64",
+                            ContentType: object.ContentType,
+                            ACL: "public-read",
+                          }, (err, data) => {
+                            if (err) {
+                              uploadCb(err);
+                            } else {
+                              uploadCb();
+                            }
+                          });
+                        }
                       });
                     }
                   }
@@ -110,13 +119,12 @@ async.whilst(
                         resizeH = 1600;
                       }
                       img
-                        .scaleToFit(resizeW, resizeH) // resize
+                        .resize(resizeW, resizeH) // resize
                         .quality(60) // set image quality
                         .getBase64(object.ContentType, (err, imgData) => {
                           if (err) {
                             uploadCb(err);
                           } else {
-                            console.log(imgData.replace(/^data:image\/\w+;base64,/, ""));
                             s3.upload({
                               Bucket: process.env.AWS_S3_BUCKET,
                               Key: asset.Key,
@@ -129,14 +137,25 @@ async.whilst(
                         });
                     } else { // the image is too small to be resized, just upload to the new bucket
                       img.getBase64(object.ContentType, (err, imgData) => {
-                        s3.upload({
-                          Bucket: process.env.AWS_S3_BUCKET,
-                          Key: asset.Key,
-                          Body: Buffer.from(imgData.replace(/^data:image\/\w+;base64,/, ""), "base64"),
-                          ContentEncoding: "base64",
-                          ContentType: object.ContentType,
-                          ACL: "public-read"
-                        }, uploadCb);
+                        if(err){
+                          s3.copyObject({
+                            Bucket: process.env.AWS_S3_BUCKET,
+                            CopySource: encodeURI(`${oldBucket}/${asset.Key}`),
+                            ContentType: object.ContentType,
+                            ACL: "public-read",
+                            MetadataDirective: "COPY",
+                            Key: asset.Key
+                          }, uploadCb);
+                        } else {
+                          s3.upload({
+                            Bucket: process.env.AWS_S3_BUCKET,
+                            Key: asset.Key,
+                            Body: Buffer.from(imgData.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+                            ContentEncoding: "base64",
+                            ContentType: object.ContentType,
+                            ACL: "public-read"
+                          }, uploadCb);
+                        }
                       });
                     }
                   }
@@ -154,15 +173,20 @@ async.whilst(
             }
           ], innerCb);
         });
+      }, err => {
+        if(err) {
+          cb(err);
+        } else {
+          // if(!assetsList.IsTruncated) {
+          //   isMore = false
+          // }
+          countTest++;
+          if (countTest == 2) {
+            isMore = false
+          }
+          cb();
+        }
       });
-      // if(!assetsList.IsTruncated) {
-      //   isMore = false
-      // }
-      countTest++;
-      if(countTest == 2){
-        isMore = false
-      }
-      cb();
     });
   },
   (err) => {
