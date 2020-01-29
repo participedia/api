@@ -10,7 +10,6 @@ const s3 = new AWS.S3({
 });
 
 let downloadedFileCount = 0, lastDownloadedFile, isMore = true;
-let countTest = 0;
 let oldBucket = "uploads.participedia.xyz";
 
 async.whilst(
@@ -18,8 +17,7 @@ async.whilst(
   cb => {
     s3.listObjectsV2({
       Bucket: oldBucket,
-      StartAfter: lastDownloadedFile,
-      MaxKeys: 20
+      StartAfter: lastDownloadedFile
     }, (err, assetsList) => {
       async.eachSeries(assetsList.Contents, (asset, innerCb) => {
         downloadedFileCount++;
@@ -34,7 +32,7 @@ async.whilst(
 
           async.parallel([
             uploadCb => { // Thumbnail upload
-              if (object.ContentType.includes("image")) {
+              if (object.ContentType === "image/png" || object.ContentType === "image/jpg" || object.ContentType === "image/jpeg") {
                 // Resize images
                 jimp.read(object.Body, (err, img) => {
                   if (err) {
@@ -73,14 +71,7 @@ async.whilst(
                     } else { // the image is too small to be resized, just upload to the new bucket
                       img.getBase64(object.ContentType, (err, imgData) => {
                         if(err){
-                          s3.copyObject({
-                            Bucket: process.env.AWS_S3_BUCKET,
-                            CopySource: encodeURI(`${oldBucket}/${asset.Key}`),
-                            ContentType: object.ContentType,
-                            ACL: "public-read",
-                            MetadataDirective: "COPY",
-                            Key: asset.Key
-                          }, uploadCb);
+                          uploadCb(err);
                         } else {
                           s3.upload({
                             Bucket: process.env.AWS_S3_BUCKET,
@@ -106,7 +97,7 @@ async.whilst(
               }
             },
             uploadCb => { // Full size image and other file types upload
-              if (object.ContentType.includes("image")) { // Optimize full size image
+              if (object.ContentType === "image/png" || object.ContentType === "image/jpg" || object.ContentType === "image/jpeg") { // Optimize full size image
                 jimp.read(object.Body, (err, img) => {
                   if (err) {
                     uploadCb(err);
@@ -138,14 +129,7 @@ async.whilst(
                     } else { // the image is too small to be resized, just upload to the new bucket
                       img.getBase64(object.ContentType, (err, imgData) => {
                         if(err){
-                          s3.copyObject({
-                            Bucket: process.env.AWS_S3_BUCKET,
-                            CopySource: encodeURI(`${oldBucket}/${asset.Key}`),
-                            ContentType: object.ContentType,
-                            ACL: "public-read",
-                            MetadataDirective: "COPY",
-                            Key: asset.Key
-                          }, uploadCb);
+                          uploadCb(err);
                         } else {
                           s3.upload({
                             Bucket: process.env.AWS_S3_BUCKET,
@@ -177,11 +161,7 @@ async.whilst(
         if(err) {
           cb(err);
         } else {
-          // if(!assetsList.IsTruncated) {
-          //   isMore = false
-          // }
-          countTest++;
-          if (countTest == 2) {
+          if(!assetsList.IsTruncated) {
             isMore = false
           }
           cb();
