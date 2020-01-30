@@ -9,7 +9,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-let downloadedFileCount = 0, lastDownloadedFile, isMore = true;
+let downloadedFileCount = 0, lastDownloadedFile = '09e76cc9-f667-4383-b0ed-5cf20e0ad572-Presentations at SFU ChangeLab Jam', isMore = true;
 let oldBucket = "uploads.participedia.xyz";
 
 async.whilst(
@@ -37,7 +37,15 @@ async.whilst(
                 // Resize images
                 jimp.read(object.Body, (err, img) => {
                   if (err) {
-                    uploadCb(err);
+                    console.log(err);
+                    s3.copyObject({ // Cannot read, just copy
+                      Bucket: process.env.AWS_S3_BUCKET,
+                      CopySource: encodeURI(`${oldBucket}/${asset.Key}`),
+                      ContentType: object.ContentType,
+                      ACL: "public-read",
+                      MetadataDirective: "COPY",
+                      Key: asset.Key
+                    }, uploadCb);
                   } else {
                     if (img.bitmap.width > 600 || img.bitmap.height > 600) { // Resize required
                       let resizeW = 600;
@@ -101,7 +109,15 @@ async.whilst(
               if (object.ContentType === "image/png" || object.ContentType === "image/jpg" || object.ContentType === "image/jpeg") { // Optimize full size image
                 jimp.read(object.Body, (err, img) => {
                   if (err) {
-                    uploadCb(err);
+                    console.log(err);
+                    s3.copyObject({ // Cannot read, just copy
+                      Bucket: process.env.AWS_S3_BUCKET,
+                      CopySource: encodeURI(`${oldBucket}/${asset.Key}`),
+                      ContentType: object.ContentType,
+                      ACL: "public-read",
+                      MetadataDirective: "COPY",
+                      Key: asset.Key
+                    }, uploadCb);
                   } else {
                     if (img.bitmap.width > 1600 || img.bitmap.height > 1600) { // Resize required
                       let resizeW = 1600;
