@@ -28,15 +28,47 @@ getPhotos('methods');
 getPhotos('organizations');
 
 function getPhotos(table) {
-  db.any(`SELECT id, photos FROM ${table}`)
+  db.any(`SELECT id, photos, files, videos, audio FROM ${table}`)
   .then(function(data) {
     data.forEach(data => {
-      var photo = data.photos;
-      if (photo.search(oldS3Url) >= 0) {
-        var newPhoto = photo.replace(oldS3Url, newS3Url);
-        updatePhoto(data.id, newPhoto, table);
+      // Handle photos
+      var newPhoto = data.photos;
+      var newFiles = data.files;
+      var newVideos = data.videos;
+      var newAudio = data.audio;
+      var metaData = {};
+
+      if (newPhoto.search(oldS3Url) >= 0) {
+        newPhoto = newPhoto.replace(oldS3Url, newS3Url);
+        metaData['photos'] = newPhoto;
       } else {
-        console.log(`Row ${data.id} doesn't have the URL we are looking for.`);
+        // console.log(`Table: ${table}, Column 'photos', ID ${data.id} doesn't have the URL we are looking for.`);
+      }
+
+      if (newFiles.search(oldS3Url) >= 0) {
+        newFiles = newFiles.replace(oldS3Url, newS3Url);
+        metaData['files'] = newFiles;
+      } else {
+        // console.log(`Table: ${table}, Column 'files', ID ${data.id} doesn't have the URL we are looking for.`);
+      }
+
+      if (newVideos.search(oldS3Url) >= 0) {
+        newVideos = newVideos.replace(oldS3Url, newS3Url);
+        metaData['videos'] = newAudio;
+      } else {
+        // console.log(`Table: ${table}, Column 'videos', ID ${data.id} doesn't have the URL we are looking for.`);
+      }
+
+      if (newAudio.search(oldS3Url) >= 0) {
+        newAudio = newAudio.replace(oldS3Url, newS3Url);
+        metaData['audio'] = newAudio;
+      } else {
+        // console.log(`Table: ${table}, Column 'audio', ID ${data.id} doesn't have the URL we are looking for.`);
+      }
+
+
+      if (metaData.hasOwnProperty('photos') || metaData.hasOwnProperty('files') || metaData.hasOwnProperty('videos') || metaData.hasOwnProperty('audio')) {
+        updatePhoto(data.id, metaData, table);
       }
     });
   })
@@ -46,7 +78,7 @@ function getPhotos(table) {
 }
 
 function updatePhoto(id, value, table) {
-  const dataSingle = {photos: value};
+  const dataSingle = value;
   const condition = pgp.as.format(` WHERE id = ${id}`, dataSingle);
   const update = pgp.helpers.update(dataSingle, null, table) + condition;
   
