@@ -9,7 +9,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-let downloadedFileCount = 0, lastDownloadedFile = '09e76cc9-f667-4383-b0ed-5cf20e0ad572-Presentations at SFU ChangeLab Jam', isMore = true;
+let downloadedFileCount = 0, lastDownloadedFile, isMore = true;
 let oldBucket = "uploads.participedia.xyz";
 
 async.whilst(
