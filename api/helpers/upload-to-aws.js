@@ -80,7 +80,7 @@ function uploadToAWS(base64String) {
       });
     });
   } else {
-    uploadObject(buffer, contentType, newFileName, false, (err, data) => {
+    uploadObject(base64Buffer, contentType, newFileName, false, (err, data) => {
       if (err) {
         logError(err);
       }
