@@ -5,7 +5,7 @@
   >
     {{#each article.photos}}
       <div class="carousel-cell {{#if (hasCaptionText this)}}carousel-cell-has-image-title{{/if}}">
-        <div class="carousel-cell-image-container " style="background-image: url({{url}})"></div>
+        <div class="carousel-cell-image-container " style="background-image: url({{encodeURI url}})"></div>
         {{#if (hasCaptionText this)}}
           <div class="carousel-cell-image-title">
             <span>
