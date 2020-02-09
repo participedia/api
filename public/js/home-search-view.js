@@ -1,9 +1,9 @@
-import "lazysizes";
 import map from "./map.js";
 import tabsWithCards from "./tabs-with-cards.js";
 import bookmarkButtons from "./bookmark-buttons.js";
 import dropdownButton from "./dropdown-button.js";
 import searchFilters from "./search-filters.js";
+import lazyLoadImages from "./lazy-load-images.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   map.init();
@@ -11,11 +11,5 @@ document.addEventListener("DOMContentLoaded", () => {
   bookmarkButtons.init();
   dropdownButton.init();
   searchFilters.init();
-
-  document.addEventListener("lazybeforeunveil", e => {
-    const bgUrl = e.target.getAttribute("data-bg");
-    if (bgUrl) {
-      e.target.style.backgroundImage = `url(${bgUrl})`;
-    }
-  });
+  lazyLoadImages.init();
 });

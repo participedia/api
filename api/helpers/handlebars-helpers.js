@@ -415,8 +415,12 @@ module.exports = {
       return thumbnailUrl;
     } else if (article.images && article.images.length > 0) {
       // user profile pages return photos for articles in this format
-      return article.images[0];
+      return encodeURI(article.images[0]);
     }
+  },
+
+  encodeURI: (url) => {
+    return encodeURI(url);
   },
 
   isEmptyArray: (article, name) => {
