@@ -411,7 +411,10 @@ module.exports = {
     if (article.photos && article.photos.length > 0) {
       // search pages return photos for articles in this format
       let fullUrl = article.photos[0].url;
-      let thumbnailUrl = fullUrl.replace(process.env.AWS_UPLOADS_URL, `${process.env.AWS_UPLOADS_URL}thumbnail/`);
+      let thumbnailUrl = fullUrl.replace(
+        process.env.AWS_UPLOADS_URL,
+        `${process.env.AWS_UPLOADS_URL}thumbnail/`
+      );
       return thumbnailUrl;
     } else if (article.images && article.images.length > 0) {
       // user profile pages return photos for articles in this format
@@ -419,7 +422,7 @@ module.exports = {
     }
   },
 
-  encodeURI: (url) => {
+  encodeURI: url => {
     return encodeURI(url);
   },
 
