@@ -189,13 +189,15 @@ const editMedia = {
   updateIndexes(e) {
     e.preventDefault();
     const name = e.target.getAttribute("data-name");
-    const parentList = document.querySelector(
-      `.js-edit-media-file-list[data-name=${name}]`
+    const fileItems = document.querySelectorAll(
+      `.js-edit-media-file-list[data-name=${name}] .js-edit-media-file-list-item`
     );
 
-    // update the input field names to reflect new order
-    toArray(parentList.querySelectorAll("input")).forEach((el, i) => {
-      el.name = `${name}[${i}][key]`;
+    fileItems.forEach((el, i) => {
+      toArray(el.querySelectorAll("input")).forEach(inputEl => {
+        const key = inputEl.getAttribute("data-attr");
+        inputEl.name = `${name}[${i}][${key}]`;
+      });
     });
   },
 };
