@@ -1,3 +1,7 @@
+import Sortable from "sortablejs";
+
+const toArray = nodeList => Array.prototype.slice.call(nodeList);
+
 const editMedia = {
   init() {
     const dropAreaEls = document.querySelectorAll(
@@ -21,6 +25,8 @@ const editMedia = {
         this.deleteFile(ev)
       );
     });
+
+    this.initSortableLists();
   },
 
   handleInputChange(ev) {
@@ -161,6 +167,36 @@ const editMedia = {
   handleDragOver(ev) {
     // prevent default, prevent file from being opened
     ev.preventDefault();
+  },
+
+  initSortableLists() {
+    const fileInputLists = toArray(
+      document.querySelectorAll(".js-edit-media-file-list")
+    );
+
+    fileInputLists.forEach(el => {
+      if (el.getAttribute("data-draggable")) {
+        Sortable.create(el, {
+          swapThreshold: 1,
+          animation: 150,
+          draggable: "li",
+          onEnd: e => this.updateIndexes(e),
+        });
+      }
+    });
+  },
+
+  updateIndexes(e) {
+    e.preventDefault();
+    const name = e.target.getAttribute("data-name");
+    const parentList = document.querySelector(
+      `.js-edit-media-file-list[data-name=${name}]`
+    );
+
+    // update the input field names to reflect new order
+    toArray(parentList.querySelectorAll("input")).forEach((el, i) => {
+      el.name = `${name}[${i}][key]`;
+    });
   },
 };
 
