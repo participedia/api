@@ -25,7 +25,7 @@ function optimizeImage(filename, contentType, size, cb) {
           .getBuffer(contentType, cb);
       } else { // the image is too small to be resized, just return the same buffer
         console.log('SKIP OPTIMIZATION');
-        cb(null, img.getBuffer(contentType, cb));
+        img.getBuffer(contentType, cb);
       }
     }
   });
@@ -52,6 +52,7 @@ function uploadObject(buffer, bucket, contentType, filename, cb) {
 exports.handler = function(event, context, callback) {
   var key = event.Records[0].s3.object.key;
   var bucket = event.Records[0].s3.bucket.name;
+  var rawUrl = `https://s3.amazonaws.com/${event.Records[0].s3.bucket.name}/${key}`;
   console.log(key);
   console.log(bucket);
   s3.headObject({
@@ -67,26 +68,26 @@ exports.handler = function(event, context, callback) {
 
       if (contentType === "image/png" || contentType === "image/jpg" || contentType === "image/jpeg") { // is image
         // large image resize
-        optimizeImage(`https://s3.amazonaws.com/${event.Records[0].s3.bucket.name}/${key}`, contentType, 1600, (err, buffer) => { // Optimize and upload thumbnail
+        optimizeImage(rawUrl, contentType, 1600, (err, lBuffer) => { // Optimize and upload thumbnail
           if(err){
             console.error(err);
             callback(err);
           } else {
             console.log('UPLOADED LARGE IMAGE');
-            uploadObject(buffer, bucket, contentType, key.split('/')[1], (err, data) => {
+            uploadObject(lBuffer, bucket, contentType, key.split('/')[1], (err, data) => {
               if (err) {
                 console.error(err);
                 callback(err);
               } else {
                 console.log('COMPLETE OPTIMIZATION OF THUMBNAIL');
                 //thumbnail resize
-                optimizeImage(`https://s3.amazonaws.com/${event.Records[0].s3.bucket.name}/${key}`, contentType, 600, (err, buffer) => { // Optimize and upload thumbnail
+                optimizeImage(rawUrl, contentType, 600, (err, tBuffer) => { // Optimize and upload thumbnail
                   if(err){
                     console.error(err);
                     callback(err);
                   } else {
                     console.log('COMPLETE OPTIMIZATION OF LARGE IMAGE');
-                    uploadObject(buffer, bucket, contentType, `thumbnail/${key.split('/')[1]}`, (err, data) => {
+                    uploadObject(tBuffer, bucket, contentType, `thumbnail/${key.split('/')[1]}`, (err, data) => {
                       if (err) {
                         console.error(err);
                         callback(err);
