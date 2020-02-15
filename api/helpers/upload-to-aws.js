@@ -19,9 +19,12 @@ function createBufferFromBase64(base64String) {
 
 function uploadObject(buffer, contentType, filename, cb) {
   let key = filename;
+  if (contentType === "image/png" || contentType === "image/jpg" || contentType === "image/jpeg") { // is image
+    key = `raw/${filename}`;
+  }
   const uploadParams = {
     Bucket: process.env.AWS_S3_BUCKET,
-    Key: `raw/${key}`,
+    Key: key,
     Body: buffer,
     ContentEncoding: "base64",
     ContentType: contentType,
