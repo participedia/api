@@ -17,14 +17,11 @@ function createBufferFromBase64(base64String) {
   );
 }
 
-function uploadObject(buffer, contentType, filename, isThumbnail, cb) {
+function uploadObject(buffer, contentType, filename, cb) {
   let key = filename;
-  if (isThumbnail) {
-    key = `thumbnail/${filename}`;
-  }
   const uploadParams = {
     Bucket: process.env.AWS_S3_BUCKET,
-    Key: key,
+    Key: `raw/${key}`,
     Body: buffer,
     ContentEncoding: "base64",
     ContentType: contentType,
@@ -39,7 +36,7 @@ function uploadToAWS(base64String) {
   const base64Buffer = createBufferFromBase64(base64String);
 
   const contentType = base64String.split(":")[1].split(";")[0];
-  uploadObject(base64Buffer, contentType, newFileName, false, (err, data) => {
+  uploadObject(base64Buffer, contentType, newFileName, (err, data) => {
     if (err) {
       logError(err);
     }
