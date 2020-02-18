@@ -1,0 +1,12 @@
+{{#> static-view-container }}
+  <h1>{{t "FAQs"}}</h1>
+  <section>
+    <div class="help-view-faq-link-list">
+      {{> faq-list }}
+    </div>
+
+    <div class="help-view-faq-list">
+      {{> faq-list withAnswer="true"}}
+    </div>
+  </section>
+{{/static-view-container}}
