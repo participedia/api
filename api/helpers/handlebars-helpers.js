@@ -649,7 +649,7 @@ module.exports = {
   },
 
   shareLink(type, article, req) {
-    const twitterCharacterMax = 240 - 17; // minus 17 characters to account for @participedia and elipsis
+    const twitterCharacterMax = 240 - 17; // minus 17 characters to account for @participedia and ellipsis
     const url = currentUrl(req);
     const title = () => {
       const articleTitle = article.title;
