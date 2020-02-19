@@ -86,7 +86,7 @@ article .reader-view-social-links {
   padding-right: 20px;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1200px) {
   .edit-history-accordion {
     margin-bottom: 0;
   }
