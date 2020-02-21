@@ -649,14 +649,24 @@ module.exports = {
   },
 
   shareLink(type, article, req) {
+    const twitterCharacterMax = 240 - 17; // minus 17 characters to account for @participedia and ellipsis
     const url = currentUrl(req);
-    const title = article.title;
+    const title = () => {
+      const articleTitle = article.title;
+      if (articleTitle.length >= twitterCharacterMax) {
+        return articleTitle.substring(0, twitterCharacterMax) + "...";
+      } else {
+        return articleTitle;
+      }
+    };
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      twitter: `https://twitter.com/intent/tweet?text=.@participedia: ${encodeURIComponent(
-        title
-      )}&url=${url}`,
-      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
+      twitter:
+        `https://twitter.com/intent/tweet?` +
+        `text=${encodeURIComponent(title())} @participedia&url=${url}`,
+      linkedIn:
+        `https://www.linkedin.com/shareArticle?mini=true` +
+        `&url=${url}&title=${article.title}`,
     };
     return shareUrls[type];
   },
