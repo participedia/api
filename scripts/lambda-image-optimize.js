@@ -3,6 +3,8 @@ const jimp = require('jimp');
 const {gzip, ungzip} = require('node-gzip');
 const s3 = new AWS.S3();
 
+const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpg", "image/jpeg"];
+
 function optimizeImage(filename, contentType, size, cb) {
   console.log(filename);
   jimp.read(filename, (err, img) => {
@@ -52,7 +54,7 @@ function uploadObject(buffer, bucket, contentType, filename, cb) {
 exports.handler = function(event, context, callback) {
   var key = event.Records[0].s3.object.key;
   var bucket = event.Records[0].s3.bucket.name;
-  var rawUrl = `https://s3.amazonaws.com/${event.Records[0].s3.bucket.name}/${key}`;
+  var rawUrl = `https://s3.amazonaws.com/${bucket}/${key}`;
   console.log(key);
   console.log(bucket);
   s3.headObject({
@@ -66,7 +68,7 @@ exports.handler = function(event, context, callback) {
       let contentType = data.ContentType;
       console.log(contentType);
 
-      if (["image/png", "image/jpg", "image/jpeg", "image/gif", "image/tiff", "image/bmp"].includes(contentType)) { // is image
+      if ([ALLOWED_IMAGE_TYPES].includes(contentType)) { // is image
         // large image resize
         optimizeImage(rawUrl, contentType, 1600, (err, lBuffer) => { // Optimize and upload thumbnail
           if(err){
