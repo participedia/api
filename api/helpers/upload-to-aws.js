@@ -8,7 +8,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-const { ALLOWED_IMAGE_TYPES } = require("../../constants.js")
+const { ALLOWED_IMAGE_TYPES } = require("../../constants.js");
 
 AWS.config.update({ region: process.env.AWS_REGION });
 
@@ -21,7 +21,7 @@ function createBufferFromBase64(base64String) {
 
 function uploadObject(buffer, contentType, filename, cb) {
   let key = filename;
-  if ([ALLOWED_IMAGE_TYPES].includes(contentType)) { // is image
+  if (ALLOWED_IMAGE_TYPES.includes(contentType)) { // is image
     key = `raw/${filename}`;
   }
   const uploadParams = {

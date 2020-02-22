@@ -73,7 +73,7 @@ exports.handler = function(event, context, callback) {
         let contentType = data.ContentType;
         console.log(contentType);
 
-        if ([ALLOWED_IMAGE_TYPES].includes(contentType)) {
+        if (ALLOWED_IMAGE_TYPES.includes(contentType)) {
           // is image
           // large image resize
           optimizeImage(rawUrl, contentType, 1600, (err, lBuffer) => {
@@ -129,28 +129,9 @@ exports.handler = function(event, context, callback) {
           });
         } else {
           console.log("NOT AN IMAGE");
-          // s3.copyObject( // Put object in root folder and thumbnail
-          //   {
-          //     Bucket: bucket,
-          //     CopySource: key,
-          //     ContentType: object.ContentType,
-          //     ACL: "public-read",
-          //     MetadataDirective: "COPY",
-          //     Key: key.split('/')[1],
-          //   }, (err) => {
-          //     if(err){
-          //       console.error(err);
-          //     } else {
-          //       callback(null, {
-          //         statusCode: 200,
-          //         body: event.Records[0].s3.object.key
-          //       });
-          //     }
-          //   }
-          // );
           callback(null, {
             statusCode: 200,
-            body: event.Records[0].s3.object.key,
+            body: event.Records[0].s3.object.key
           });
         }
       }
