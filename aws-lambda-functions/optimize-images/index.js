@@ -1,6 +1,7 @@
 const AWS = require("aws-sdk");
 const jimp = require("jimp");
 const { gzip, ungzip } = require("node-gzip");
+const request = require('request').defaults({ encoding: null });
 const s3 = new AWS.S3();
 
 const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpg", "image/jpeg"];
@@ -45,7 +46,7 @@ function uploadObject(buffer, bucket, contentType, filename, cb) {
         Body: gzBuffer,
         ContentEncoding: "gzip",
         ContentType: contentType,
-        ACL: "public-read",
+        ACL: "public-read"
       };
 
       s3.upload(uploadParams, cb);
@@ -129,9 +130,25 @@ exports.handler = function(event, context, callback) {
           });
         } else {
           console.log("NOT AN IMAGE");
-          callback(null, {
-            statusCode: 200,
-            body: event.Records[0].s3.object.key
+          request.get(rawUrl, function (err, res, body) {
+            uploadObject(body, bucket, contentType, key.split("/")[1], err => {
+              if(err){
+                console.error(err);
+              } else {
+                console.log("UPLOADED TO ROOT");
+                uploadObject(body, bucket, contentType, `thumbnail/${key.split("/")[1]}`, err => {
+                  if(err){
+                    console.error(err);
+                  } else {
+                    console.log("UPLOADED TO THUMBNAIL");
+                    callback(null, {
+                      statusCode: 200,
+                      body: event.Records[0].s3.object.key
+                    });
+                  }
+                });
+              }
+            });
           });
         }
       }
