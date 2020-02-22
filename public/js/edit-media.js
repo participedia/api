@@ -117,7 +117,7 @@ const editMedia = {
       // show modal to give user feedback
       // then, remove file from list, and skip to next file
       if (
-        files[i].type.indexOf("image") >= 0 &&
+        name === "photos" &&
         !ALLOWED_IMAGE_TYPES.includes(files[i].type)
       ) {
         this.openNotSupportedImageTypeErrorModal(files[i].name);
