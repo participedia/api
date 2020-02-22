@@ -1733,5 +1733,6 @@
   "completeness.general_modal_text_3": "Please read our %sguidelines%s on how to write an entry or contact us for more information.",
   "completeness.partial_content_modal_text_1": "Partial entries are about half complete, and make good starting places for students and anyone interested in contributing to Participedia. More partial entries can be found using the “entry completeness” search filter on the homepage.",
   "completeness.partial_citation_modal_text_1": "This type of entry is missing citations (footnotes), but is otherwise complete. Entries needing citations can be identified using the “entry completeness” search filter on the homepage.",
-  "completeness.partial_editing_modal_text_1": "This type of entry needs significant improvements to its grammar or spelling, and can be any level of completeness (stub, partial, or complete). Entries needing grammar or spelling edits can be identified using the “entry completeness” search filter on the homepage."
+  "completeness.partial_editing_modal_text_1": "This type of entry needs significant improvements to its grammar or spelling, and can be any level of completeness (stub, partial, or complete). Entries needing grammar or spelling edits can be identified using the “entry completeness” search filter on the homepage.",
+  "edit_media_not_supported_file_type_error": "Sorry, the file %s cannot be uploaded because it is not a suppported file type. We support .jpg and .png image types."
 }
