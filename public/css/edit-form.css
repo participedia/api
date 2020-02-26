@@ -253,6 +253,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .edit-media-file-attribution-inputs {
+  flex-basis: 100%;
   padding: 1rem 0 1rem 1rem;
 }
 
@@ -314,14 +315,6 @@ input[type=number]::-webkit-inner-spin-button {
   cursor: grab;
 }
 
-.edit-media-file-list > li {
-  align-items: center;
-}
-
-.edit-media-file-list > li section:first-child {
-  flex-basis: 100%;
-}
-
 .edit-multi-select-list  > li:last-child,
 .edit-media-file-list > li:last-child {
   margin-bottom: 0;
@@ -343,7 +336,7 @@ input[type=number]::-webkit-inner-spin-button {
 
 .edit-multi-select-list .reorder-handle,
 .edit-media-file-list .reorder-handle {
-  width: 31px;
+  width: 2rem;
   align-items: center;
   justify-content: center;
   display: flex;

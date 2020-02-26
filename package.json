@@ -63,7 +63,6 @@
   "devDependencies": {
     "auth0": "^2.14.0",
     "auth0-js": "^9.9.0",
-    "auth0-lock": "^11.13.0",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
@@ -144,7 +143,7 @@
     }
   },
   "lint-staged": {
-    "*.js": [
+    "*/*.js": [
       "prettier --write",
       "git add"
     ]

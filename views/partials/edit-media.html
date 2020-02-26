@@ -1,6 +1,7 @@
 {{#> edit-form-group quick-submit=quick-submit name=name is_required=is_required}}
   <ol
     class="unstyled-list edit-media-file-list js-edit-media-file-list"
+    data-draggable="true"
     data-name="{{name}}"
     data-type="{{type}}"
   >
@@ -27,5 +28,11 @@
 
   <script type="text/template" class="js-edit-media-file-inputs-template-{{name}}">
     {{> edit-media-file-inputs }}
+  </script>
+  <script type="text/template" class="js-edit_media_not_supported_file_type_error">
+    {{{__ 
+      "edit_media_not_supported_file_type_error"
+      "<strong class='js-edit_media_not_supported_file_type_error__file-name'></strong>"
+    }}}
   </script>
 {{/ edit-form-group}}

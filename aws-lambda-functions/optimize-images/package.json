@@ -1,0 +1,16 @@
+{
+  "name": "optimize-images",
+  "version": "1.0.0",
+  "description": "AWS Lambda function to resize and optmize images",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Participedia",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.623.0",
+    "jimp": "^0.9.3",
+    "node-gzip": "^1.1.2"
+  }
+}

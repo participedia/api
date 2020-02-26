@@ -1,50 +1,47 @@
 <li class="js-edit-media-file-list-item">
-  <section>
-    <ul class="unstyled-list edit-media-file-attribution-inputs">
-      <li>
-        {{#if (isEqual name "photos")}}
-          <img src="{{getLinkSetValue article name index 'url'}}" />
-        {{/if}}
-        <input
-          data-attr="url"
-          type="hidden"
-          name="{{linkSetFieldName name index 'url'}}"
-          value="{{getLinkSetValue article name index 'url'}}"
-        />
-      </li>
-      <li>
-        <p>{{linkSetInstructional article name 'source_url'}}</p>
-        <input
-          data-attr="source_url"
-          type="text"
-          placeholder="{{linkSetPlaceholder article name 'source_url'}}"
-          name="{{linkSetFieldName name index 'source_url'}}"
-          value="{{getLinkSetValue article name index 'source_url'}}"
-        />
-      </li>
-      <li>
-        <p>{{linkSetInstructional article name 'attribution'}}</p>
-        <input
-          data-attr="attribution"
-          type="text"
-          placeholder="{{linkSetPlaceholder article name 'attribution'}}"
-          name="{{linkSetFieldName name index 'attribution'}}"
-          value="{{getLinkSetValue article name index 'attribution'}}"
-        />
-      </li>
-      <li>
-        <p>{{linkSetInstructional article name 'title'}}</p>
-        <input
-          data-attr="title"
-          type="text"
-          placeholder="{{linkSetPlaceholder article name 'title'}}"
-          name="{{linkSetFieldName name index 'title'}}"
-          value="{{getLinkSetValue article name index 'title'}}"
-        />
-      </li>
-    </ul>
-  </section>
-  <section>
-    <button class="icon-only js-edit-media-file-list-remove-item">{{> icon-close }}</button>
-  </section>
+  <div class="striped-bg reorder-handle">{{> icon-reorder }}</div>
+  <ul class="unstyled-list edit-media-file-attribution-inputs">
+    <li>
+      {{#if (isEqual name "photos")}}
+        <img src="{{getLinkSetValue article name index 'url'}}" />
+      {{/if}}
+      <input
+        data-attr="url"
+        type="hidden"
+        name="{{linkSetFieldName name index 'url'}}"
+        value="{{getLinkSetValue article name index 'url'}}"
+      />
+    </li>
+    <li>
+      <p>{{linkSetInstructional article name 'source_url'}}</p>
+      <input
+        data-attr="source_url"
+        type="text"
+        placeholder="{{linkSetPlaceholder article name 'source_url'}}"
+        name="{{linkSetFieldName name index 'source_url'}}"
+        value="{{getLinkSetValue article name index 'source_url'}}"
+      />
+    </li>
+    <li>
+      <p>{{linkSetInstructional article name 'attribution'}}</p>
+      <input
+        data-attr="attribution"
+        type="text"
+        placeholder="{{linkSetPlaceholder article name 'attribution'}}"
+        name="{{linkSetFieldName name index 'attribution'}}"
+        value="{{getLinkSetValue article name index 'attribution'}}"
+      />
+    </li>
+    <li>
+      <p>{{linkSetInstructional article name 'title'}}</p>
+      <input
+        data-attr="title"
+        type="text"
+        placeholder="{{linkSetPlaceholder article name 'title'}}"
+        name="{{linkSetFieldName name index 'title'}}"
+        value="{{getLinkSetValue article name index 'title'}}"
+      />
+    </li>
+  </ul>
+  <button class="icon-only js-edit-media-file-list-remove-item">{{> icon-close }}</button>
 </li>

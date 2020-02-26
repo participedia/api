@@ -410,11 +410,20 @@ module.exports = {
   getFirstImageForArticle: article => {
     if (article.photos && article.photos.length > 0) {
       // search pages return photos for articles in this format
-      return article.photos[0].url;
+      let fullUrl = article.photos[0].url;
+      let thumbnailUrl = fullUrl.replace(
+        process.env.AWS_UPLOADS_URL,
+        `${process.env.AWS_UPLOADS_URL}thumbnail/`
+      );
+      return thumbnailUrl;
     } else if (article.images && article.images.length > 0) {
       // user profile pages return photos for articles in this format
-      return article.images[0];
+      return encodeURI(article.images[0]);
     }
+  },
+
+  encodeURI: url => {
+    return encodeURI(url);
   },
 
   isEmptyArray: (article, name) => {
@@ -640,12 +649,24 @@ module.exports = {
   },
 
   shareLink(type, article, req) {
+    const twitterCharacterMax = 240 - 17; // minus 17 characters to account for @participedia and ellipsis
     const url = currentUrl(req);
-    const title = article.title;
+    const title = () => {
+      const articleTitle = article.title;
+      if (articleTitle.length >= twitterCharacterMax) {
+        return articleTitle.substring(0, twitterCharacterMax) + "...";
+      } else {
+        return articleTitle;
+      }
+    };
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      twitter: `https://twitter.com/intent/tweet?text=Participedia: ${title} - ${url}`,
-      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
+      twitter:
+        `https://twitter.com/intent/tweet?` +
+        `text=${encodeURIComponent(title())} @participedia&url=${url}`,
+      linkedIn:
+        `https://www.linkedin.com/shareArticle?mini=true` +
+        `&url=${url}&title=${article.title}`,
     };
     return shareUrls[type];
   },

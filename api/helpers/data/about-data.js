@@ -358,7 +358,7 @@ const partners = [
       },
       {
         name: "Hollie Russon-Gilman",
-        descriptors: ["Open Technology Institute", "University of Southampton"],
+        descriptors: ["Open Technology Institute", "New America"],
       },
       {
         name: "Alexandra Samuel",
