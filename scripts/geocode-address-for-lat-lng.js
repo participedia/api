@@ -12,7 +12,7 @@ const GoogleMaps = require("@google/maps");
 const { db } = require("../api/helpers/db.js");
 
 const googleMapsClient = GoogleMaps.createClient({
-  key: process.env.GOOGLE_MAPS_GEOCODE_API_KEY,
+  key: process.env.GOOGLE_API_KEY,
   Promise: Promise,
 });
 
@@ -105,9 +105,9 @@ async function processArticles(type) {
 }
 
 function start() {
-  if (!process.env.GOOGLE_MAPS_GEOCODE_API_KEY) {
+  if (!process.env.GOOGLE_API_KEY) {
     console.log(
-      "*** Missing Google Maps Geocode API key. Add GOOGLE_MAPS_GEOCODE_API_KEY to your .env file ***"
+      "*** Missing Google Maps Geocode API key. Add GOOGLE_API_KEY to your .env file ***"
     );
     console.log(
       "https://developers.google.com/maps/documentation/geocoding/get-api-key"
