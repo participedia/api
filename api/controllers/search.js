@@ -21,7 +21,7 @@ const {
 } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
-
+const selectedCategoryValues = ['all', 'case', 'method', 'organization'];
 const RESPONSE_LIMIT = 20;
 
 function randomTexture() {
@@ -94,7 +94,10 @@ const singularLowerCase = name =>
 
 // just get the type, if specified
 const typeFromReq = req => {
-  let cat = singularLowerCase(req.query.selectedCategory || "Alls");
+  var cat = singularLowerCase(req.query.selectedCategory || "Alls");
+  if (selectedCategoryValues.indexOf(cat) < 0) {
+    cat = 'all';
+  }
   return cat === "all" ? "thing" : cat;
 };
 
@@ -210,6 +213,7 @@ router.get("/", async function(req, res) {
   const lang = as.value(getLanguage(req));
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
+  
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
@@ -221,6 +225,7 @@ router.get("/", async function(req, res) {
       type: type + "s",
       facets: searchFiltersFromReq(req),
     });
+
     const total = Number(
       results.length ? results[0].total || results.length : 0
     );
