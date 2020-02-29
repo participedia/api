@@ -1,33 +1,16 @@
 const promise = require("bluebird");
-const { SUPPORTED_LANGUAGES } = require("./../constants.js");
-const { find } = require("lodash");
 const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
   capSQL: true, // when building SQL queries dynamically, capitalize SQL keywords
 };
 const pgp = require("pg-promise")(options);
-const connectionString = process.env.DATABASE_URL;
-const parse = require("pg-connection-string").parse;
-var db;
-checkConnection();
-getThings();
+const { SUPPORTED_LANGUAGES } = require("./../constants.js");
+const { find } = require("lodash");
+const { db, CASE_BY_ID } = require("../api/helpers/db");
 
-function checkConnection() {
-  let config;
-  try {
-    config = parse(connectionString);
-    if (process.env.NODE_ENV === "test" || config.host === "localhost") {
-      config.ssl = false;
-    } else {
-      config.ssl = true;
-    }
-  } catch (e) {
-    console.error("# Error parsing DATABASE_URL environment variable");
-  }
-
-  db = pgp(config);
-}
+// getThings();
+getLocalizationData(5243);
 
 function getThings() {
   db.any(`SELECT * FROM things WHERE type IN ('case','method','organization')`)
@@ -45,11 +28,29 @@ function getLocalizationData(thingid) {
   db.any(`SELECT * FROM localized_texts WHERE thingid = ${thingid} ORDER BY timestamp DESC LIMIT 1`)
     .then(function(data) {
       data.forEach(data => {
+        var records = [];
         SUPPORTED_LANGUAGES.forEach(language => {
           if (language.twoLetterCode !== 'en') {
-            console.log(`${data.title} Translate to ${language.twoLetterCode}`);
+            // TODO: Implement google translate here
+            records.push({
+              body: 'test',
+              title: 'test',
+              description: 'test',
+              language: language.twoLetterCode,
+              thingid: thingid
+            });
           }
         });
+
+        const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid'], 'localized_texts');
+
+        db.none(insert)
+          .then(function(data) {
+            console.log(data);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
       });
     })
     .catch(function(error) {
