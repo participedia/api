@@ -11,7 +11,7 @@ const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 var db;
 checkConnection();
-getLocalizationData();
+getThings();
 
 function checkConnection() {
   let config;
@@ -29,13 +29,25 @@ function checkConnection() {
   db = pgp(config);
 }
 
-function getLocalizationData() {
-  db.any(`SELECT * FROM localized_texts`)
+function getThings() {
+  db.any(`SELECT * FROM things WHERE type IN ('case','method','organization')`)
+    .then(function(thingData) {
+      thingData.forEach(data => {
+        getLocalizationData(data.id);
+      });
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
+
+function getLocalizationData(thingid) {
+  db.any(`SELECT * FROM localized_texts WHERE thingid = ${thingid} ORDER BY timestamp DESC LIMIT 1`)
     .then(function(data) {
       data.forEach(data => {
         SUPPORTED_LANGUAGES.forEach(language => {
           if (language.twoLetterCode !== 'en') {
-            console.log(`Translate to -> ${language.twoLetterCode} - ${data.title}`);
+            console.log(`${data.title} Translate to ${language.twoLetterCode}`);
           }
         });
       });
