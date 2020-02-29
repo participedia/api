@@ -1,4 +1,6 @@
 const promise = require("bluebird");
+const { SUPPORTED_LANGUAGES } = require("./../constants.js");
+const { find } = require("lodash");
 const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -9,6 +11,7 @@ const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 var db;
 checkConnection();
+getLocalizationData();
 
 function checkConnection() {
   let config;
@@ -19,11 +22,21 @@ function checkConnection() {
     } else {
       config.ssl = true;
     }
-    console.log(config);
-    console.log()
   } catch (e) {
     console.error("# Error parsing DATABASE_URL environment variable");
   }
 
   db = pgp(config);
+}
+
+function getLocalizationData() {
+  db.any(`SELECT * FROM localized_texts`)
+    .then(function(data) {
+      data.forEach(data => {
+        
+      });
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
 }
