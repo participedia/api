@@ -33,7 +33,11 @@ function getLocalizationData() {
   db.any(`SELECT * FROM localized_texts`)
     .then(function(data) {
       data.forEach(data => {
-        
+        SUPPORTED_LANGUAGES.forEach(language => {
+          if (language.twoLetterCode !== 'en') {
+            console.log(`Translate to -> ${language.twoLetterCode} - ${data.title}`);
+          }
+        });
       });
     })
     .catch(function(error) {
