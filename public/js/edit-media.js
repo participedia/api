@@ -15,6 +15,11 @@ const editMedia = {
       el.addEventListener("dragover", ev => this.handleDragOver(ev));
       el.addEventListener("dragenter", ev => this.toggleDropAreaClass(ev));
       el.addEventListener("dragleave", ev => this.toggleDropAreaClass(ev));
+      
+      el.addEventListener("click", ev => {
+        // if user clicks anywhere on drag/drop area, trigger file upload handling
+        el.querySelector("input[type=file]").click();
+      });
 
       // on input change event
       el.querySelector("input[name^='temporary-']").addEventListener(
