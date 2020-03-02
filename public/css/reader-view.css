@@ -8,6 +8,9 @@
 
 .reader-view article a {
   overflow-wrap: break-word;
+
+  /* `!important` is needed here to override inline styles created by the quill editor */
+  color: #000!important; 
 }
 
 .reader-view dt {
