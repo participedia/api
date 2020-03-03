@@ -51,10 +51,18 @@ function currentUrl(req) {
   return `https://${host}${path}`;
 }
 
-function getFirstPhotoUrl(article) {
-  if (!article.photos) return;
-  if (article.photos.length === 0) return;
-  return article.photos[0].url;
+function getFirstLargeImageForArticle(article) {
+  if (article.photos && article.photos.length > 0) {
+   return encodeURI(article.photos[0].url);
+  }
+}
+
+function getFirstThumbnailImageForArticle(article) {
+  const url = getFirstLargeImageForArticle(article);
+  return url.replace(
+    process.env.AWS_UPLOADS_URL,
+    `${process.env.AWS_UPLOADS_URL}thumbnail/`
+  );
 }
 
 function filterCollections(req, name, context) {
@@ -407,19 +415,12 @@ module.exports = {
     return `/?selectedCategory=${article.type}&${name}=${key}`;
   },
 
-  getFirstImageForArticle: article => {
-    if (article.photos && article.photos.length > 0) {
-      // search pages return photos for articles in this format
-      let fullUrl = article.photos[0].url;
-      let thumbnailUrl = fullUrl.replace(
-        process.env.AWS_UPLOADS_URL,
-        `${process.env.AWS_UPLOADS_URL}thumbnail/`
-      );
-      return thumbnailUrl;
-    } else if (article.images && article.images.length > 0) {
-      // user profile pages return photos for articles in this format
-      return encodeURI(article.images[0]);
-    }
+  getFirstLargeImageForArticle: article => {
+    return getFirstLargeImageForArticle(article);
+  },
+
+  getFirstThumbnailImageForArticle: article => {
+    return getFirstThumbnailImageForArticle(article);
   },
 
   encodeURI: url => {
@@ -679,8 +680,8 @@ module.exports = {
     return photo.title || photo.source_url || photo.attribution;
   },
 
-  getFirstPhotoUrl(article) {
-    return getFirstPhotoUrl(article);
+  getFirstLargeImageForArticle(article) {
+    return getFirstLargeImageForArticle(article);
   },
 
   isReaderPage(params) {
@@ -699,7 +700,7 @@ module.exports = {
     const title = getPageTitle(req, article, context);
     const description =
       (article && article.description) || i18n("main_tagline", context);
-    const imageUrl = (article && getFirstPhotoUrl(article)) || defaultPhotoUrl;
+    const imageUrl = (article && getFirstLargeImageForArticle(article)) || defaultPhotoUrl;
     return socialTagsTemplate(title, description, url, imageUrl);
   },
 
