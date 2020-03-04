@@ -368,6 +368,7 @@ input[type=number]::-webkit-inner-spin-button {
   align-items: center;
   padding: 3rem;
   border: 1px solid #000;
+  cursor: pointer;
 }
 
 .edit-media-drag-drop-area svg {

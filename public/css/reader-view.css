@@ -6,8 +6,11 @@
   display: none;
 }
 
-.reader-view article a {
+.reader-view .article-body-content a {
   overflow-wrap: break-word;
+
+  /* `!important` is needed here to override inline styles created by the quill editor */
+  color: #000!important; 
 }
 
 .reader-view dt {
