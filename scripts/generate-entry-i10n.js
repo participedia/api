@@ -5,10 +5,12 @@ const { db, pgp } = require("../api/helpers/db");
 const {Translate} = require('@google-cloud/translate').v2;
 const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
 
-getThings();
+getThings('case');
+getThings('method');
+getThings('organization');
 
-function getThings() {
-  db.any(`SELECT * FROM things WHERE type IN ('case','method','organization')`)
+function getThings(type) {
+  db.any(`SELECT * FROM things WHERE type = '${type}'`)
     .then(function(thingData) {
       thingData.forEach(data => {
         getLocalizationData(data.id);
