@@ -1,13 +1,6 @@
-const promise = require("bluebird");
-const options = {
-  // Initialization Options
-  promiseLib: promise, // use bluebird as promise library
-  capSQL: true, // when building SQL queries dynamically, capitalize SQL keywords
-};
-const pgp = require("pg-promise")(options);
 const { SUPPORTED_LANGUAGES } = require("./../constants.js");
 const { find } = require("lodash");
-const { db, CASE_BY_ID } = require("../api/helpers/db");
+const { db, pgp } = require("../api/helpers/db");
 
 const {Translate} = require('@google-cloud/translate').v2;
 const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
