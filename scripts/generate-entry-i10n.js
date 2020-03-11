@@ -13,6 +13,7 @@ function getThings() {
       thingData.forEach(data => {
         getLocalizationData(data.id);
       });
+      return null;
     })
     .catch(function(error) {
       console.log(error);
@@ -25,6 +26,7 @@ function getLocalizationData(thingid) {
       data.forEach(data => {
         createNewRecord(data, thingid);
       });
+      return null;
     })
     .catch(function(error) {
       console.log(error);
@@ -60,6 +62,7 @@ async function createNewRecord(data, thingid) {
       records.push(item);
     }
   }
+
   const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid'], 'localized_texts');
 
   db.none(insert)
@@ -79,7 +82,5 @@ async function translateText(data, targetLanguage) {
   const target = targetLanguage;
 
   const [translation] = await translate.translate(text, target);
-  // console.log(`Text: ${text}`);
-  // console.log(`Translation: ${translation}`);
   return translation;
 }
