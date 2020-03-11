@@ -31,6 +31,7 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
+  createLocalizedRecord
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -92,6 +93,13 @@ async function postCaseNewHttp(req, res) {
     });
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
+    let localizedData = {
+      body: body,
+      description: description,
+      language: original_language,
+      title: title
+    };
+    await createLocalizedRecord(localizedData, thing.thingid);
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });

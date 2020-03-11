@@ -2,10 +2,14 @@ let { isString } = require("lodash");
 const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
+const { Translate } = require('@google-cloud/translate').v2;
+const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
+const { SUPPORTED_LANGUAGES } = require("./../../constants.js");
 
 const {
   as,
   db,
+  pgp,
   INSERT_LOCALIZED_TEXT,
   UPDATE_NOUN,
   INSERT_AUTHOR,
@@ -308,6 +312,58 @@ const isValidURL = string => {
   return res !== null;
 };
 
+async function createLocalizedRecord(data, thingid) {
+  var records = [];
+  for (var i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+    const language = SUPPORTED_LANGUAGES[i];
+
+    if (language.twoLetterCode !== data.language) {
+      const item = {
+        body: '',
+        title: '',
+        description: '',
+        language: language.twoLetterCode,
+        thingid: thingid
+      };
+
+      if (data.body) {
+        item.body = await translateText(data.body, language.twoLetterCode);
+      }
+
+      if (data.title) {
+        item.title = await translateText(data.title, language.twoLetterCode);
+      }
+
+      if (data.description) {
+        item.description = await translateText(data.description, language.twoLetterCode);
+      }
+      
+      records.push(item);
+    }
+  }
+
+  const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid'], 'localized_texts');
+
+  db.none(insert)
+    .then(function(data) {
+      console.log(data);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
+
+async function translateText(data, targetLanguage) {
+  // The text to translate
+  const text = data;
+
+  // The target language
+  const target = targetLanguage;
+
+  const [translation] = await translate.translate(text, target);
+  return translation;
+}
+
 module.exports = {
   supportedTypes,
   titleKeys,
@@ -324,4 +380,5 @@ module.exports = {
   searchFilterKeys,
   searchFilterKeyLists,
   placeHolderPhotos,
+  createLocalizedRecord
 };
