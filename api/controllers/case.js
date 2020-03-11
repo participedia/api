@@ -99,7 +99,7 @@ async function postCaseNewHttp(req, res) {
       language: original_language,
       title: title
     };
-    await createLocalizedRecord(localizedData, thing.thingid);
+     createLocalizedRecord(localizedData, thing.thingid);
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
