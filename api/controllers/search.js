@@ -219,7 +219,7 @@ router.get("/", async function(req, res) {
       query: parsed_query,
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
-      language: lang,
+      language: params.lang,
       userId: req.user ? req.user.id : null,
       sortby: sortbyFromReq(req),
       type: type + "s",
