@@ -5,12 +5,17 @@ const { db, pgp } = require("../api/helpers/db");
 const {Translate} = require('@google-cloud/translate').v2;
 const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
 
-getThings('case');
-getThings('method');
-getThings('organization');
+// getThings('case');
+// getThings('method');
+// getThings('organization');
 
-function getThings(type) {
-  db.any(`SELECT * FROM things WHERE type = '${type}'`)
+// TEST PURPOSES
+getThings('case', 8);
+getThings('method', 6);
+getThings('organization', 6);
+
+function getThings(type, limit) {
+  db.any(`SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit}`)
     .then(function(thingData) {
       thingData.forEach(data => {
         getLocalizationData(data.id);
@@ -21,6 +26,19 @@ function getThings(type) {
       console.log(error);
     });
 }
+
+// function getThings(type) {
+//   db.any(`SELECT * FROM things WHERE type = '${type}'`)
+//     .then(function(thingData) {
+//       thingData.forEach(data => {
+//         getLocalizationData(data.id);
+//       });
+//       return null;
+//     })
+//     .catch(function(error) {
+//       console.log(error);
+//     });
+// }
 
 function getLocalizationData(thingid) {
   db.any(`SELECT * FROM localized_texts WHERE thingid = ${thingid} ORDER BY timestamp DESC LIMIT 1`)
@@ -65,6 +83,7 @@ async function createNewRecord(data, thingid) {
     }
   }
 
+  console.log(records);
   const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid'], 'localized_texts');
 
   db.none(insert)
