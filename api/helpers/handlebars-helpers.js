@@ -699,9 +699,9 @@ module.exports = {
     const url = currentUrl(req);
     // replace double quotes in title and description with single quotes
     let title = getPageTitle(req, article, context).replace(/"/g, "'");
-    const description =
-      (article && article.description).replace(/"/g, "'") ||
-      i18n("main_tagline", context).replace(/"/g, "'");
+    let description =
+      (article && article.description) || i18n("main_tagline", context);
+    description = description.replace(/"/g, "'");
     const imageUrl =
       (article && getFirstLargeImageForArticle(article)) || defaultPhotoUrl;
     return socialTagsTemplate(title, description, url, imageUrl);
