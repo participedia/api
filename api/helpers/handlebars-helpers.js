@@ -53,7 +53,7 @@ function currentUrl(req) {
 
 function getFirstLargeImageForArticle(article) {
   if (article.photos && article.photos.length > 0) {
-   return encodeURI(article.photos[0].url);
+    return encodeURI(article.photos[0].url);
   }
 }
 
@@ -697,10 +697,13 @@ module.exports = {
       req.headers.host
     }/images/participedia-social-img.jpg`;
     const url = currentUrl(req);
-    const title = getPageTitle(req, article, context);
+    // replace double quotes in title and description with single quotes
+    let title = getPageTitle(req, article, context).replace(/"/g, "'");
     const description =
-      (article && article.description) || i18n("main_tagline", context);
-    const imageUrl = (article && getFirstLargeImageForArticle(article)) || defaultPhotoUrl;
+      (article && article.description).replace(/"/g, "'") ||
+      i18n("main_tagline", context).replace(/"/g, "'");
+    const imageUrl =
+      (article && getFirstLargeImageForArticle(article)) || defaultPhotoUrl;
     return socialTagsTemplate(title, description, url, imageUrl);
   },
 
