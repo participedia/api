@@ -81,7 +81,7 @@ function getPhotos(table) {
           metaData.hasOwnProperty("videos") ||
           metaData.hasOwnProperty("audio")
         ) {
-          // updatePhoto(data.id, metaData, table);
+          updatePhoto(data.id, metaData, table);
         }
       });
     })
@@ -90,16 +90,16 @@ function getPhotos(table) {
     });
 }
 
-// function updatePhoto(id, value, table) {
-//   const dataSingle = value;
-//   const condition = pgp.as.format(` WHERE id = ${id}`, dataSingle);
-//   const update = pgp.helpers.update(dataSingle, null, table) + condition;
+function updatePhoto(id, value, table) {
+  const dataSingle = value;
+  const condition = pgp.as.format(` WHERE id = ${id}`, dataSingle);
+  const update = pgp.helpers.update(dataSingle, null, table) + condition;
 
-//   db.none(update)
-//     .then(function(data) {
-//       console.log(`Table: ${table}; ID: ${id} updated`);
-//     })
-//     .catch(function(error) {
-//       console.log(error);
-//     });
-// }
+  db.none(update)
+    .then(function(data) {
+      console.log(`Table: ${table}; ID: ${id} updated`);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
