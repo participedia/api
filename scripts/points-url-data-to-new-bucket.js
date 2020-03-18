@@ -43,6 +43,7 @@ function getPhotos(table) {
           newPhoto = newPhoto.replace(oldS3Url, newS3Url);
           metaData["photos"] = newPhoto;
           console.log(`Table: ${table}, Column 'photos', ID ${data.id} has the URL we are looking for.`);
+          console.log(metaData["photos"]);
         } else {
           // console.log(`Table: ${table}, Column 'photos', ID ${data.id} doesn't have the URL we are looking for.`);
         }
@@ -60,6 +61,7 @@ function getPhotos(table) {
           newVideos = newVideos.replace(oldS3Url, newS3Url);
           metaData["videos"] = newAudio;
           console.log(`Table: ${table}, Column 'videos', ID ${data.id} has the URL we are looking for.`);
+          console.log(metaData["videos"]);
         } else {
           // console.log(`Table: ${table}, Column 'videos', ID ${data.id} doesn't have the URL we are looking for.`);
         }
@@ -68,6 +70,7 @@ function getPhotos(table) {
           newAudio = newAudio.replace(oldS3Url, newS3Url);
           metaData["audio"] = newAudio;
           console.log(`Table: ${table}, Column 'audio', ID ${data.id} has the URL we are looking for.`);
+          console.log(metaData["audio"]);
         } else {
           // console.log(`Table: ${table}, Column 'audio', ID ${data.id} doesn't have the URL we are looking for.`);
         }
