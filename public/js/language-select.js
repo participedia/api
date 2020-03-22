@@ -1,3 +1,5 @@
+import SlimSelect from "slim-select";
+
 const toArray = nodelist => Array.prototype.slice.call(nodelist);
 
 const languageSelect = {
@@ -9,6 +11,22 @@ const languageSelect = {
     toArray(selectEls).forEach(select => {
       select.addEventListener("change", e => this.handleSelectChange(e));
     });
+
+    this.initiateSelector();
+  },
+
+  initiateSelector() {
+    const options = {
+      select: '.js-language-slim-select',
+      hideSelectedOption: true,
+      onChange: (info) => {
+        location.href =
+          `/set-locale?locale=${info.value}` +
+          `&redirectTo=${window.location.pathname}`;
+      }
+    };
+
+    new SlimSelect(options);
   },
 
   handleSelectChange(e) {
