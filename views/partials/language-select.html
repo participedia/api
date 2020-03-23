@@ -5,9 +5,9 @@
   {{/if}}
   {{#each (getLanguageOptions)}}
     {{#if ../showTwoLetterCode}}
-      {{> language-select-option key=twoLetterCode value=(toUpperCase twoLetterCode)}}
+      {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(toUpperCase twoLetterCode)}}
     {{else}}
-      {{> language-select-option key=twoLetterCode value=(t name)}}
+      {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(t name)}}
     {{/if}}
   {{/each}}
 </select>

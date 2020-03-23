@@ -205,6 +205,11 @@ module.exports = {
     return SUPPORTED_LANGUAGES;
   },
 
+  getSelectedLanguage: (lang, context) => {
+    const req = context.data.root.req;
+    return req.cookies.locale;
+  },
+
   getOriginalLanguage: (article, context) => {
     const req = context.data.root.req;
     return article.original_language || req.cookies.locale || "en";
