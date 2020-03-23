@@ -1,4 +1,4 @@
-<select name="locale" class="language-select js-language-select">
+<select name="locale" class="language-select js-language-select" style="display:none;">
   {{#if showTwoLetterCode}}
   {{else}}
     <option value="">{{t "Select Language"}}</option>
@@ -11,3 +11,11 @@
     {{/if}}
   {{/each}}
 </select>
+
+<select name="locale" class="language-slim-select js-language-slim-select">
+  {{#each (getLanguageOptions)}}
+    {{> language-select-option key=twoLetterCode value=(t name)}}>
+  {{/each}}
+</select>
+
+
