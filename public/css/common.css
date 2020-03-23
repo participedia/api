@@ -290,8 +290,7 @@ pre {
   display: none;
 }
 
-footer .language-select,
-footer .language-slim-select {
+footer .language-select {
   margin-top: 30px;
   width: 200px;
 }
