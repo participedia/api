@@ -20,10 +20,6 @@ footer section {
   flex-wrap: wrap;
 }
 
-footer .language-selector .selected-language {
-  display: none;
-}
-
 .footer-main-nav {
   display: flex;
   flex-grow: 2;
