@@ -10,9 +10,24 @@ const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
 // getThings('organization');
 
 // TEST PURPOSES
-getThings('case', 8);
-getThings('method', 6);
-getThings('organization', 6);
+// getThings('case', 8);
+// getThings('method', 6);
+// getThings('organization', 6);
+
+getThingById('case', '5729')
+
+function getThingById(type, id) {
+  db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
+    .then(function(thingData) {
+      thingData.forEach(data => {
+        getLocalizationData(data.id, data.original_language);
+      });
+      return null;
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
 
 function getThings(type, limit) {
   db.any(`SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit}`)
