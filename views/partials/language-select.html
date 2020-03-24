@@ -1,10 +1,6 @@
 <div class="language-selector">
   <label class="selected-language">{{getLocale}}</label>
   <select name="locale" class="language-select js-language-select">
-    {{#if showTwoLetterCode}}
-    {{else}}
-      <option value="">{{t "Select Language"}}</option>
-    {{/if}}
     {{#each (getLanguageOptions)}}
       {{#if ../showTwoLetterCode}}
         {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(toUpperCase twoLetterCode)}}
