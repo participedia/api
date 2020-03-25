@@ -95,7 +95,7 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   // if the lang query param is present and it's not the same as the locale coookie, 
-  // redirect to set-locale route and redirect to current page
+  // redirect to set-locale route with the redirect param set to the current page
   const lang = req.query && req.query.lang;
   if (lang && lang !== req.cookies.locale) {
     const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${req.path}`;
