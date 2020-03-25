@@ -1,0 +1,9 @@
+{{#if (isLocaleSameAsOriginalLanguage article)}}
+{{else}}
+  <div class="alert">
+    <span>
+      {{getEntryWasOriginallyAddedInText article}} 
+      <a href="/{{article.type}}/{{article.id}}?lang={{article.original_language}}">{{t "View this entry in its original language"}}</a>
+    </span>
+  </div>
+{{/if}}

@@ -81,6 +81,7 @@ i18n.configure({
   extension: ".js",
   directory: "./locales",
   updateFiles: false,
+  defaultLocale: "en"
 });
 
 app.use((req, res, next) => {
@@ -89,6 +90,18 @@ app.use((req, res, next) => {
     res.cookie("locale", "en", { path: "/" });
   }
   next();
+});
+
+app.use((req, res, next) => {
+  // if the lang query param is present and it's not the same as the locale coookie, 
+  // redirect to set-locale route and redirect to current page
+  const lang = req.query && req.query.lang;
+  if (lang && lang !== req.cookies.locale) {
+    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${req.path}`;
+    res.redirect(`/set-locale?locale=${lang}&redirectTo=${currentUrl}`);
+  } else {
+    next();  
+  }
 });
 
 app.use(i18n.init);

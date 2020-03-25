@@ -205,9 +205,14 @@ module.exports = {
     return SUPPORTED_LANGUAGES;
   },
 
-  getOriginalLanguage: (article, context) => {
+  getOriginalLanguageValueForEditForm: (article, context) => {
     const req = context.data.root.req;
     return article.original_language || req.cookies.locale || "en";
+  },
+
+  isLocaleSameAsOriginalLanguage: (article, context) => {
+    const req = context.data.root.req;
+    return article.original_language === req.cookies.locale;
   },
 
   isSelectedLanguage: (lang, context) => {
@@ -276,6 +281,21 @@ module.exports = {
   },
 
   // article helpers
+  getEntryWasOriginallyAddedInText: (article, context) => {
+    const __ =
+      context && context.data && context.data.root && context.data.root.__;
+    const languageItem = SUPPORTED_LANGUAGES.filter(language => {
+      return language.twoLetterCode === article.original_language;
+    });
+
+    if (languageItem.length !== 1) return;
+
+    return __(
+      "This entry was originally added in %s.",
+      `${i18n(languageItem[0].name, context)}`
+    );
+  },
+
   shouldShowCompletenessPrompt: article => {
     if (article.completeness && article.completeness !== "complete") {
       return true;

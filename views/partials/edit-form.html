@@ -23,7 +23,7 @@
         <input type="hidden" name="user" value="{{req.user.id}}" />
 
         <!-- hidden fields for features that have not yet been implemented on the frontend. -->
-        <input type="hidden" name="original_language" value="{{getOriginalLanguage article}}" />
+        <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm article}}" />
 
         {{#if req.user.isadmin}}
           <fieldset class="admin-only">
@@ -36,6 +36,8 @@
             </div>
           </fieldset>
         {{/if}}
+
+        {{> view-entry-in-original-lang-alert}}
 
         {{> @partial-block }}
 
