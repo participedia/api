@@ -210,9 +210,9 @@ module.exports = {
     return article.original_language || req.cookies.locale || "en";
   },
 
-  isLocaleSameAsOriginalLanguage: (article, context) => {
+  shouldShowOriginalLanguageAlert: (article, context) => {
     const req = context.data.root.req;
-    return article.original_language === req.cookies.locale;
+    return article.original_language && article.original_language !== req.cookies.locale;  
   },
 
   isSelectedLanguage: (lang, context) => {
@@ -281,7 +281,7 @@ module.exports = {
   },
 
   // article helpers
-  getEntryWasOriginallyAddedInText: (article, context) => {
+  getOriginalLanguageAlertText: (article, context) => {
     const __ =
       context && context.data && context.data.root && context.data.root.__;
     const languageItem = SUPPORTED_LANGUAGES.filter(language => {
