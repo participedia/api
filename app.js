@@ -80,14 +80,15 @@ i18n.configure({
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
-  updateFiles: false,
-  defaultLocale: "en"
+  updateFiles: false
 });
 
 app.use((req, res, next) => {
   // set english as the default locale, if it's not already set
   if (!req.cookies.locale) {
+    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${req.path}`;
     res.cookie("locale", "en", { path: "/" });
+    return res.redirect(currentUrl);
   }
   next();
 });
