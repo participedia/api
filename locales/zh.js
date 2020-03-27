@@ -787,6 +787,7 @@
   "name:change_types-key:changes_public": "公共政策的变化",
   "name:change_types-key:changes_public-longValue": "公共政策的变化(如新法律或条例)",
   "name:change_types-key:conflict": "冲突转换",
+  "name:collections-key:covid_19_response": "科维德-19 响应",
   "name:collections-key:coady_students": "科迪学院毕业生",
   "name:collections-key:gov_of_canada": "加拿大政府",
   "name:collections-key:latinno": "拉丁语",

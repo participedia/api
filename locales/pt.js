@@ -787,6 +787,7 @@
   "name:change_types-key:changes_public": "Mudanças na política pública",
   "name:change_types-key:changes_public-longValue": "Alterações na política pública (por exemplo, novas leis ou regulamentos)",
   "name:change_types-key:conflict": "Transformação de conflitos",
+  "name:collections-key:covid_19_response": "Resposta do Covid-19",
   "name:collections-key:coady_students": "Graduados no  Instituto Coady",
   "name:collections-key:gov_of_canada": "Governo do Canadá",
   "name:collections-key:latinno": "LATINNO",

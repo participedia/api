@@ -787,6 +787,7 @@
   "name:change_types-key:changes_public": "Änderungen in der öffentlichen Ordnung",
   "name:change_types-key:changes_public-longValue": "Änderungen der öffentlichen Ordnung (z.B. neue Gesetze oder Verordnungen)",
   "name:change_types-key:conflict": "Konflikttransformation",
+  "name:collections-key:covid_19_response": "Covid-19 Antwort",
   "name:collections-key:coady_students": "Absolventen des Coady Institute",
   "name:collections-key:gov_of_canada": "Regierung kanada",
   "name:collections-key:latinno": "LATINNO",
