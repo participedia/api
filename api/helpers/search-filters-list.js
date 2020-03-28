@@ -38,6 +38,11 @@ const searchFiltersList = {
       sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"],
     },
+    {
+      sectionKey: "collections",
+      sectionLabel: "Collections",
+      fieldNameKeys: ["collections"],
+    },
   ],
   organizations: [
     {
@@ -64,6 +69,11 @@ const searchFiltersList = {
       sectionKey: "Entry Completeness",
       sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"],
+    },
+    {
+      sectionKey: "collections",
+      sectionLabel: "Collections",
+      fieldNameKeys: ["collections"],
     },
   ],
   case: [

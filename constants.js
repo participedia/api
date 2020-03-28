@@ -29,4 +29,6 @@ const SUPPORTED_LANGUAGES = [
   },
 ];
 
-module.exports = { SUPPORTED_LANGUAGES };
+const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpg", "image/jpeg"];
+
+module.exports = { SUPPORTED_LANGUAGES, ALLOWED_IMAGE_TYPES };

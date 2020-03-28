@@ -6,8 +6,11 @@
   display: none;
 }
 
-.reader-view article a {
+.reader-view .article-body-content a {
   overflow-wrap: break-word;
+
+  /* `!important` is needed here to override inline styles created by the quill editor */
+  color: #000!important; 
 }
 
 .reader-view dt {
@@ -86,7 +89,7 @@ article .reader-view-social-links {
   padding-right: 20px;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1200px) {
   .edit-history-accordion {
     margin-bottom: 0;
   }

@@ -1,4 +1,6 @@
 import Sortable from "sortablejs";
+import modal from "./modal.js";
+import { ALLOWED_IMAGE_TYPES } from "../../constants.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
@@ -13,6 +15,11 @@ const editMedia = {
       el.addEventListener("dragover", ev => this.handleDragOver(ev));
       el.addEventListener("dragenter", ev => this.toggleDropAreaClass(ev));
       el.addEventListener("dragleave", ev => this.toggleDropAreaClass(ev));
+      
+      el.addEventListener("click", ev => {
+        // if user clicks anywhere on drag/drop area, trigger file upload handling
+        el.querySelector("input[type=file]").click();
+      });
 
       // on input change event
       el.querySelector("input[name^='temporary-']").addEventListener(
@@ -27,6 +34,19 @@ const editMedia = {
     });
 
     this.initSortableLists();
+  },
+
+  openNotSupportedImageTypeErrorModal(filename) {
+    const errorTemplate = document.querySelector(
+      ".js-edit_media_not_supported_file_type_error"
+    ).innerHTML;
+    const errorEl = document.createElement("p");
+    errorEl.innerHTML = errorTemplate;
+    errorEl.querySelector(
+      ".js-edit_media_not_supported_file_type_error__file-name"
+    ).innerHTML = filename;
+    modal.updateModal(errorEl.innerHTML);
+    modal.openModal("aria-modal");
   },
 
   handleInputChange(ev) {
@@ -98,6 +118,18 @@ const editMedia = {
 
     // for each uploaded file, show the set of inputs as defined in the script/template element
     for (let i = 0; i < files.length; i++) {
+      // if file type is an image and is not a supported image type
+      // show modal to give user feedback
+      // then, remove file from list, and skip to next file
+      if (
+        name === "photos" &&
+        !ALLOWED_IMAGE_TYPES.includes(files[i].type)
+      ) {
+        this.openNotSupportedImageTypeErrorModal(files[i].name);
+        delete files[i];
+        continue;
+      }
+
       const fileItemEl = document.createElement("div");
       const itemIndex = listEl.querySelectorAll(".js-edit-media-file-list-item")
         .length;

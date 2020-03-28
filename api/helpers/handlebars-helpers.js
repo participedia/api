@@ -51,10 +51,18 @@ function currentUrl(req) {
   return `https://${host}${path}`;
 }
 
-function getFirstPhotoUrl(article) {
-  if (!article.photos) return;
-  if (article.photos.length === 0) return;
-  return article.photos[0].url;
+function getFirstLargeImageForArticle(article) {
+  if (article.photos && article.photos.length > 0) {
+    return encodeURI(article.photos[0].url);
+  }
+}
+
+function getFirstThumbnailImageForArticle(article) {
+  const url = getFirstLargeImageForArticle(article);
+  return url.replace(
+    process.env.AWS_UPLOADS_URL,
+    `${process.env.AWS_UPLOADS_URL}thumbnail/`
+  );
 }
 
 function filterCollections(req, name, context) {
@@ -407,19 +415,12 @@ module.exports = {
     return `/?selectedCategory=${article.type}&${name}=${key}`;
   },
 
-  getFirstImageForArticle: article => {
-    if (article.photos && article.photos.length > 0) {
-      // search pages return photos for articles in this format
-      let fullUrl = article.photos[0].url;
-      let thumbnailUrl = fullUrl.replace(
-        process.env.AWS_UPLOADS_URL,
-        `${process.env.AWS_UPLOADS_URL}thumbnail/`
-      );
-      return thumbnailUrl;
-    } else if (article.images && article.images.length > 0) {
-      // user profile pages return photos for articles in this format
-      return encodeURI(article.images[0]);
-    }
+  getFirstLargeImageForArticle: article => {
+    return getFirstLargeImageForArticle(article);
+  },
+
+  getFirstThumbnailImageForArticle: article => {
+    return getFirstThumbnailImageForArticle(article);
   },
 
   encodeURI: url => {
@@ -649,14 +650,24 @@ module.exports = {
   },
 
   shareLink(type, article, req) {
+    const twitterCharacterMax = 240 - 17; // minus 17 characters to account for @participedia and ellipsis
     const url = currentUrl(req);
-    const title = article.title;
+    const title = () => {
+      const articleTitle = article.title;
+      if (articleTitle.length >= twitterCharacterMax) {
+        return articleTitle.substring(0, twitterCharacterMax) + "...";
+      } else {
+        return articleTitle;
+      }
+    };
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-      twitter: `https://twitter.com/intent/tweet?text=.@participedia: ${encodeURIComponent(
-        title
-      )}&url=${url}`,
-      linkedIn: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
+      twitter:
+        `https://twitter.com/intent/tweet?` +
+        `text=${encodeURIComponent(title())} @participedia&url=${url}`,
+      linkedIn:
+        `https://www.linkedin.com/shareArticle?mini=true` +
+        `&url=${url}&title=${article.title}`,
     };
     return shareUrls[type];
   },
@@ -669,8 +680,8 @@ module.exports = {
     return photo.title || photo.source_url || photo.attribution;
   },
 
-  getFirstPhotoUrl(article) {
-    return getFirstPhotoUrl(article);
+  getFirstLargeImageForArticle(article) {
+    return getFirstLargeImageForArticle(article);
   },
 
   isReaderPage(params) {
@@ -686,10 +697,13 @@ module.exports = {
       req.headers.host
     }/images/participedia-social-img.jpg`;
     const url = currentUrl(req);
-    const title = getPageTitle(req, article, context);
-    const description =
+    // replace double quotes in title and description with single quotes
+    let title = getPageTitle(req, article, context).replace(/"/g, "'");
+    let description =
       (article && article.description) || i18n("main_tagline", context);
-    const imageUrl = (article && getFirstPhotoUrl(article)) || defaultPhotoUrl;
+    description = description.replace(/"/g, "'");
+    const imageUrl =
+      (article && getFirstLargeImageForArticle(article)) || defaultPhotoUrl;
     return socialTagsTemplate(title, description, url, imageUrl);
   },
 
