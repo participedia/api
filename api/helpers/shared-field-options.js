@@ -7,6 +7,7 @@ module.exports = {
     "usoton_students",
     "uarkansas_students",
     "latinno",
+    "covid_19_response"
   ],
   general_issues: [
     "agriculture",
