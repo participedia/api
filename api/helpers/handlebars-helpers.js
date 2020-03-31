@@ -716,6 +716,10 @@ module.exports = {
     // in the order of most recent edits first.
     // (do not show multiple edits by the same author on the same day)
 
+    if (!Array.isArray(editHistory)) {
+      editHistory = [];
+    }
+
     let editsByUser = {};
     editHistory.forEach(edit => {
       if (

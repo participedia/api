@@ -2,5 +2,10 @@
   value="{{key}}"
   {{#if (isSelectedLanguage key)}}selected{{/if}}
 >
-  {{value}}
+  {{#if showBoth}}
+    {{toUpperCase (t key)}} - {{value}}
+  {{else}}
+    {{value}}
+  {{/if}}
+  
 </option>
