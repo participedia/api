@@ -29,7 +29,8 @@ SET
   participants_interactions = ${participants_interactions},
   decision_methods = ${decision_methods},
   if_voting = ${if_voting},
-  purpose_method = ${purpose_method}
+  purpose_method = ${purpose_method},
+  collections = ${collections}
 WHERE
   id = ${id}
 ;
