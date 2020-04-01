@@ -39,7 +39,8 @@ WITH full_thing AS (
     participants_interactions,
     decision_methods,
     if_voting,
-    purpose_method
+    purpose_method,
+    COALESCE(collections, '{}') as collections
 FROM
     methods,
     get_localized_texts_fallback(${articleid}, ${lang}, methods.original_language) AS texts
