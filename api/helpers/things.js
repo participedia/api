@@ -264,6 +264,7 @@ const searchFilterKeyLists = type => {
       "scope_of_influence",
       "purpose_method",
       "completeness",
+      "collections",
     ];
   } else if (type === "organization") {
     return [
@@ -273,6 +274,7 @@ const searchFilterKeyLists = type => {
       "scope_of_influence",
       "type_tool",
       "completeness",
+      "collections",
     ];
   } else {
     return [];

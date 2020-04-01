@@ -294,6 +294,7 @@ function getUpdatedOrganization(
     "type_tool",
     "specific_topics",
     "general_issues",
+    "collections"
   ].map(key => cond(key, as.organizationkeys));
   // list of article ids
   ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));

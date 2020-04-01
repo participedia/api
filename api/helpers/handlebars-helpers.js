@@ -396,14 +396,16 @@ module.exports = {
   },
 
   isLinkableTerm: (article, name) => {
-    const supportedArticleTypes = ["case"];
-
-    if (!supportedArticleTypes.includes(article.type)) return;
+    const articleToKeyMap = {
+      organization: "organizations",
+      method: "method",
+      case: "case"
+    };
 
     // get all the keys that we are currently filtering on from the search filters list
     const supportedFilters = [].concat.apply(
       [],
-      searchFiltersList[article.type].map(section => {
+      searchFiltersList[articleToKeyMap[article.type]].map(section => {
         return section.fieldNameKeys.map(key => key);
       })
     );
@@ -412,7 +414,11 @@ module.exports = {
   },
 
   getSearchLinkForTerm: (article, name, key) => {
-    return `/?selectedCategory=${article.type}&${name}=${key}`;
+    if (article.type === "organization") {
+      return `/?selectedCategory=${article.type}s&${name}=${key}`;  
+    } else {
+      return `/?selectedCategory=${article.type}&${name}=${key}`;  
+    }
   },
 
   getFirstLargeImageForArticle: article => {
