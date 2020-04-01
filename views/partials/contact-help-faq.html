@@ -1,16 +1,28 @@
-<div class="contact-help-faq-container js-contact-help-faq-container" data-view="list" style="display: none;">
-  <div class="header">
+<div
+  class="contact-help-faq-container js-contact-help-faq-container"
+  data-view="list"
+  style="display: none;"
+>
+  <div class="contact-help-faq-container__header">
     <button class="icon-only back-btn js-back">{{> icon-back-arrow}}</button>
     <h3>{{t "Participedia Help"}}</h3>
-    <button class="icon-only close-btn js-close">
-      <span class="sr-only">{{t "close FAQ pop over"}}</span>
-      {{> icon-close}}
-    </button>
+    <div class="contact-help-faq-container__header-button-group">
+      <a href="/help-faq-contact" class="button icon-only open-in-new-page-btn">
+        <span class="sr-only">{{t "open help in new page"}}</span>
+        {{> icon-open}}
+      </a>
+      <button class="icon-only close-btn js-close">
+        <span class="sr-only">{{t "close FAQ pop over"}}</span>
+        {{> icon-close}}
+      </button>
+    </div>
   </div>
   <div class="content-area js-content-area">
     <div class="contact">
       <h3>{{t "Contact Us"}}</h3>
-      <a href="mailto: info@participedia.net" class="js-mail-link">{{t "Email Support Team"}}</a>
+      <a href="mailto: info@participedia.net" class="js-mail-link"
+        >{{t "Email Support Team"}}</a
+      >
     </div>
     <div class="faq-list js-faq-list">
       <h3>{{t "FAQ"}}</h3>

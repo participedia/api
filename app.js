@@ -256,8 +256,8 @@ app.get("/teaching", function(req, res) {
 app.get("/content-chooser", function(req, res) {
   res.status(200).render("content-chooser");
 });
-app.get("/help", function(req, res) {
-  res.status(200).render("help-view");
+app.get("/help-faq-contact", function(req, res) {
+  res.status(200).render("help-faq-contact-view");
 });
 
 // redirect old user profile for tanyapuravankara to new url
