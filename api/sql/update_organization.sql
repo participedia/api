@@ -33,6 +33,7 @@ SET
   type_tool = ${type_tool},
   specific_topics = ${specific_topics},
   general_issues = ${general_issues},
+  collections = ${collections},
 -- ids
   specific_methods_tools_techniques = ${specific_methods_tools_techniques}
 WHERE
