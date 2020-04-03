@@ -1,6 +1,15 @@
-<li>
-  <a href="#" class="js-faq-question">{{question}}</a>
-  <div class="faq-answer js-faq-answer">
-    {{> @partial-block }}
-  </div>
+<li class="faq-item">
+  {{#if withAnswer}}
+    <a name={{id}}>
+      <h3>{{question}}</h3>
+      <div class="faq-answer js-faq-answer" >
+        {{> @partial-block }}
+      </div>
+    </a>
+  {{else}}
+    <a href="#{{id}}" class="js-faq-question">{{question}}</a>
+    <div class="faq-answer js-faq-answer" >
+      {{> @partial-block }}
+    </div>
+  {{/if}}
 </li>

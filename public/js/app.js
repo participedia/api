@@ -1,7 +1,7 @@
 import FontFaceObserver from "fontfaceobserver";
 import hamburgerMenu from "./hamburger-menu.js";
 import elementClosestPolyfill from "./polyfills/element.closest.polyfill.js";
-import contactHelpFaqWidget from "./contact-help-faq-widget.js";
+import contactHelpFaqPopover from "./contact-help-faq-popover.js";
 import languageSelect from "./language-select.js";
 import header from "./header.js";
 
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // common
   loadFonts();
   hamburgerMenu.init();
-  contactHelpFaqWidget.init();
+  contactHelpFaqPopover.init();
   header.init();
   languageSelect.init();
 

@@ -10,7 +10,7 @@
 
 @import url("/css/edit-form.css");
 
-@import url("/css/contact-help-faq.css");
+@import url("/css/contact-help-faq-popover.css");
 
 @import url("/css/autocomplete.css");
 
@@ -33,3 +33,5 @@
 @import url("/css/user.css");
 
 @import url("/css/header.css");
+
+@import url("/css/help-faq-contact-view.css");

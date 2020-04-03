@@ -310,6 +310,31 @@ footer .language-select {
   margin-bottom: -2px;
 }
 
+.divider {
+  border-style: none;
+  border: 1px solid #ccc;
+}
+
+/* Utilities */
+.u-margin-bottom--small {
+  margin-bottom: 2rem;
+}
+.u-margin-bottom--med {
+  margin-bottom: 4rem;
+}
+.u-margin-bottom--large {
+  margin-bottom: 6rem;
+}
+.u-margin-top--small {
+  margin-top: 2rem;
+}
+.u-margin-top--med {
+  margin-top: 4rem;
+}
+.u-margin-top--large {
+  margin-top: 6rem;
+}
+
 @media (max-width: 1200px) {
   .full-width-container .middle-col {
     width: 40%;

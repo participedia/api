@@ -1,25 +1,25 @@
-const contactHelpFaqWidget = {
+const contactHelpFaqPopover = {
   init() {
     const helpLinkEls = document.querySelectorAll("a[href='/help']");
-    this.contactHelpFaqWidgetEl = document.querySelector(
-      ".js-contact-help-faq-container"
+    this.contactHelpFaqPopoverEl = document.querySelector(
+      ".js-contact-help-faq-popover"
     );
-    const faqListEl = this.contactHelpFaqWidgetEl.querySelector(".js-faq-list");
+    const faqListEl = this.contactHelpFaqPopoverEl.querySelector(".js-faq-list");
     const faqLinks = faqListEl.querySelectorAll("a");
 
-    this.contentAreaEl = this.contactHelpFaqWidgetEl.querySelector(
+    this.contentAreaEl = this.contactHelpFaqPopoverEl.querySelector(
       ".js-content-area"
     );
 
     this.initialContent = this.contentAreaEl.innerHTML;
 
     // delegate event listeners
-    this.contactHelpFaqWidgetEl.addEventListener("click", e => {
+    this.contactHelpFaqPopoverEl.addEventListener("click", e => {
       // close widget
       if (e.target.closest(".js-close")) {
         e.preventDefault();
         this.backToList();
-        this.contactHelpFaqWidgetEl.style = "display: none;";
+        this.contactHelpFaqPopoverEl.style = "display: none;";
       }
 
       // return to list of questions
@@ -39,14 +39,14 @@ const contactHelpFaqWidget = {
     for (let i = 0; i < helpLinkEls.length; i++) {
       helpLinkEls[i].addEventListener("click", e => {
         e.preventDefault();
-        this.contactHelpFaqWidgetEl.style = "display: block;";
+        this.contactHelpFaqPopoverEl.style = "display: block;";
       });
     }
   },
 
   backToList() {
     // insert initial content back into content areas
-    this.contactHelpFaqWidgetEl.setAttribute("data-view", "list");
+    this.contactHelpFaqPopoverEl.setAttribute("data-view", "list");
     this.contentAreaEl.innerHTML = this.initialContent;
     this.contentAreaEl.scrollTop = 0;
   },
@@ -61,10 +61,10 @@ const contactHelpFaqWidget = {
         ${answer}
       </div>
     `;
-    this.contactHelpFaqWidgetEl.setAttribute("data-view", "answer");
+    this.contactHelpFaqPopoverEl.setAttribute("data-view", "answer");
     this.contentAreaEl.innerHTML = content;
     this.contentAreaEl.scrollTop = 0;
   },
 };
 
-export default contactHelpFaqWidget;
+export default contactHelpFaqPopover;
