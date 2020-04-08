@@ -19,11 +19,9 @@ const translate = new Translate(authKeys);
 // getThings('organization');
 
 // TEST PURPOSES
-// getThings('case', 8);
-// getThings('method', 6);
-// getThings('organization', 6);
-
-getThingById('case', '1');
+getThings('case', 8);
+getThings('method', 6);
+getThings('organization', 6);
 
 function getThingById(type, id) {
   db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
