@@ -1,13 +1,6 @@
-// const {Translate} = require('@google-cloud/translate').v2;
-// const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
-const {auth} = require('google-auth-library');
-const keysEnvVar = process.env['CREDS'];
-if (!keysEnvVar) {
-  throw new Error('The $CREDS environment variable was not found!');
-}
-const authKeys = JSON.parse(keysEnvVar);
-const client = auth.fromJSON(authKeys);
-client.scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+const {Translate} = require('@google-cloud/translate').v2;
+const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
+translateText('Hello World. This is a translation test.', 'th');
 
 async function translateText(data, targetLanguage) {
   // The text to translate
@@ -16,9 +9,8 @@ async function translateText(data, targetLanguage) {
   // The target language
   const target = targetLanguage;
 
-  const url = `https://translation.googleapis.com/language/translate/v2?key=${process.env.GOOGLE_MAPS_API_KEY}&target=${target}&q=${text}`;
-  const res = await client.request({url});
-  console.log(res.data.data.translations);
+  const [translation] = await translate.translate(text, target);
+  console.log(`Text: ${text}`);
+  console.log(`Translation: ${translation}`);
+  return translation;
 }
-
-translateText('Hello World. This is a translation test.', 'th').catch(console.error);

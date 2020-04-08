@@ -32,7 +32,6 @@
     "express-unless": "^0.3.0",
     "faucet": "^0.0.1",
     "fontfaceobserver": "^2.1.0",
-    "google-auth-library": "^6.0.0",
     "i18n": "0.8.3",
     "js-md5": "0.7.3",
     "json-pretty": "^0.0.1",
