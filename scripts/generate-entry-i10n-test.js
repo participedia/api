@@ -18,16 +18,7 @@ async function translateText(data, targetLanguage) {
 
   const url = `https://translation.googleapis.com/language/translate/v2?key=${process.env.GOOGLE_MAPS_API_KEY}&target=${target}&q=${text}`;
   const res = await client.request({url});
-
-  if (res.data.data.translations.length > 0) {
-    return res.data.data.translations[0].translatedText;
-  }
-  return null;
+  console.log(res.data.data.translations);
 }
 
-async function testTranslate() {
-  const newtext = await translateText('Hello World. This is a translation test.', 'th');
-  console.log(newtext);
-}
-
-testTranslate();
+translateText('Hello World. This is a translation test.', 'th').catch(console.error);
