@@ -1,7 +1,7 @@
 // Get google translate credentials
-const keysEnvVar = process.env['CREDS'];
+const keysEnvVar = process.env['GOOGLE_TRANSLATE_CREDENTIALS'];
 if (!keysEnvVar) {
-  throw new Error('The $CREDS environment variable was not found!');
+  throw new Error('The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!');
   return;
 }
 

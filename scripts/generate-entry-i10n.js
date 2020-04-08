@@ -1,9 +1,18 @@
+// Get google translate credentials
+const keysEnvVar = process.env['GOOGLE_TRANSLATE_CREDENTIALS'];
+if (!keysEnvVar) {
+  throw new Error('The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!');
+  return;
+}
+
 const { SUPPORTED_LANGUAGES } = require("./../constants.js");
 const { find } = require("lodash");
 const { db, pgp } = require("../api/helpers/db");
 
-const {Translate} = require('@google-cloud/translate').v2;
-const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
+const { Translate } = require('@google-cloud/translate').v2;
+const authKeys = JSON.parse(keysEnvVar);
+authKeys['key'] = process.env.GOOGLE_MAPS_API_KEY;
+const translate = new Translate(authKeys);
 
 // getThings('case');
 // getThings('method');
@@ -14,7 +23,7 @@ const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
 // getThings('method', 6);
 // getThings('organization', 6);
 
-getThingById('case', '5729')
+getThingById('case', '1');
 
 function getThingById(type, id) {
   db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
@@ -80,13 +89,11 @@ async function createNewRecord(data, thingid) {
     console.log(error);
   });
 
-  var records = [];
   for (var i = 0; i < SUPPORTED_LANGUAGES.length; i++) { // Loop in supported languages
     const language = SUPPORTED_LANGUAGES[i];
 
     if (currentLanguages.indexOf(language.twoLetterCode) < 0) { // If language in loop not exist from currentLanguages. Add record
       if (language.twoLetterCode !== data.language) { // Don't create language from original
-        console.log(`ThingID: ${thingid} => creating language for ${language.twoLetterCode} from ${data.language}`);
         const item = {
           body: '',
           title: '',
@@ -107,24 +114,19 @@ async function createNewRecord(data, thingid) {
           item.description = await translateText(data.description, language.twoLetterCode);
         }
 
-        records.push(item);
-        console.log(item.title);
+        console.log(`ThingID: ${thingid} => saving record for ${language.twoLetterCode} from ${data.language}`);
+        await saveRecord([item]);
+        console.log(`ThingID: ${thingid} => record for ${language.twoLetterCode} from ${data.language} DONE!`);
+        console.log(`ThingID: ${item.title}`);
         console.log('=====================================================================');
       }
     }
   }
+}
 
-  if (records.length > 0) { // Save if new records has item.
-    const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid'], 'localized_texts');
-
-    db.none(insert)
-      .then(function(data) {
-        console.log(data);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  }
+async function saveRecord(records) {
+  const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid'], 'localized_texts');
+  db.none(insert);
 }
 
 async function translateText(data, targetLanguage) {
