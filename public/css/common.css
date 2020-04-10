@@ -317,22 +317,22 @@ footer .language-select {
 
 /* Utilities */
 .u-margin-bottom--small {
-  margin-bottom: 2rem;
+  margin-bottom: 2rem!important;
 }
 .u-margin-bottom--med {
-  margin-bottom: 4rem;
+  margin-bottom: 4rem!important;
 }
 .u-margin-bottom--large {
-  margin-bottom: 6rem;
+  margin-bottom: 6rem!important;
 }
 .u-margin-top--small {
-  margin-top: 2rem;
+  margin-top: 2rem!important;
 }
 .u-margin-top--med {
-  margin-top: 4rem;
+  margin-top: 4rem!important;
 }
 .u-margin-top--large {
-  margin-top: 6rem;
+  margin-top: 6rem!important;
 }
 
 @media (max-width: 1200px) {

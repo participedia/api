@@ -1,16 +1,17 @@
 .user-container {
   display: flex;
   flex-direction: row;
-  margin-bottom: 60px;
+  margin: 0 30px 60px 30px;
 }
 
 .user-profile-image {
-  width: 340px;
+  width: calc(25%);
   margin-bottom: 30px;
+  margin-right: .3rem
 }
 
 .user-main-content {
-  width: 45%;
+  width: calc(50%);
 }
 
 .user-profile-image img,
@@ -81,7 +82,7 @@
   float: right;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 1000px) {
   .user-container {
     flex-direction: column;
   }
