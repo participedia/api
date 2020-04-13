@@ -25,6 +25,19 @@
 
       </a>
       <p>{{t "content_types.organization.description"}}</p>
-    </li>
+    </li>  
   </ul>
+
+  {{#if req.user.isadmin}}
+    <div class="edit-form-admin-only-section">
+      <h2>{{t "Admin Only"}}</h2>
+      <a href="/collection/new" class="button button-red button-block">
+        {{> icon-add}}
+        {{t "Collection"}}
+
+      </a>
+      <p>{{t "content_types.collection.description"}}</p>
+    </div> 
+  {{/if}}
+  
 {{/static-view-container}}
