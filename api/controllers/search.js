@@ -21,7 +21,7 @@ const {
 } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
-const selectedCategoryValues = ['all', 'case', 'method', 'organization'];
+const selectedCategoryValues = ['all', 'case', 'method', 'organization', 'collection'];
 const RESPONSE_LIMIT = 20;
 
 function randomTexture() {
@@ -213,9 +213,48 @@ router.get("/", async function(req, res) {
   const lang = as.value(getLanguage(req));
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
+
+  const collectionsMockData  = [
+    {
+      "id": 9000,
+      "type": "collection",
+      "featured": true,
+      "title": "COVID-19 Response",
+      "description": "This is the description for COVID-19 Response",
+      "post_date": "2017-10-26T17:00:00",
+      "updated_date": "2020-03-30T17:00:00",
+      "bookmarked": false,
+      "photos": [
+        {
+        "url": "",
+        "source_url": "",
+        "attribution": "",
+        "title": ""
+        }
+      ]
+    },
+    {
+      "id": 9001,
+      "type": "collection",
+      "featured": false,
+      "title": "Government of Canada",
+      "description": "This is the description for gov of canada collection",
+      "post_date": "2017-10-26T17:00:00",
+      "updated_date": "2020-03-30T17:00:00",
+      "bookmarked": false,
+      "photos": [
+        {
+        "url": "",
+        "source_url": "",
+        "attribution": "",
+        "title": ""
+        }
+      ]
+    }
+  ];
   
   try {
-    const results = await db.any(queryFileFromReq(req), {
+    let results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
@@ -225,6 +264,7 @@ router.get("/", async function(req, res) {
       type: type + "s",
       facets: searchFiltersFromReq(req),
     });
+    results = results.concat(collectionsMockData);
 
     const total = Number(
       results.length ? results[0].total || results.length : 0
