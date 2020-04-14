@@ -1,0 +1,89 @@
+<div class="collection-view">
+  <div 
+    class="collection-view__banner-image" 
+    style="background-image: url('{{getFirstLargeImageForArticle article}}')"
+  ></div>
+
+  <div class="collection-view__banner-overlay-card">
+    <div class="collection-view__banner-overlay-card-header">
+      <h3>
+        {{toUpperCase (t "Collection")}}
+        {{#if req.user.isadmin}}
+          <small>
+            <a
+              href="/{{article.type}}/{{article.id}}/edit"
+              title="{{t 'Edit collection'}}"
+            >
+              {{t "Edit collection"}}
+            </a>   
+          </small> 
+        {{/if}}
+      </h3>
+      <a href="/?selectedCategory=collection">
+        View all collections
+      </a>
+    </div>
+
+    <h1 class="collection-view__banner-overlay-card-title">{{article.title}}</h1>
+    
+    {{#if article.description}}
+      <p class="collection-view__banner-overlay-card-description">{{ article.description }}</p>
+    {{/if}}
+
+    {{#if article.links}} 
+      <a href="{{article.links.0.url}}" class="button button-dark-grey" target="_blank" rel="noopener">
+        {{article.links.0.title}}
+      </a>
+    {{/if}}
+
+    
+  </div>
+  <div class="full-width-container">  
+    <div class="collection-view__tabs">
+      {{#> tabs-with-cards req=req getTabs=(getHomeTabs)}}
+      <div role="tabpanel" class="tab-all">
+        {{#if (isSelectedHomeTab req "all")}}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+          }}
+        {{/if}}
+      </div>
+      <div role="tabpanel" class="tab-cases">
+        {{#if (isSelectedHomeTab req "case")}}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            includeSearchFilters=true
+            type="case"
+          }}
+        {{/if}}
+      </div>
+      <div role="tabpanel" class="tab-methods">
+        {{#if (isSelectedHomeTab req "method")}}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            includeSearchFilters=true
+            type="method"
+          }}
+        {{/if}}
+      </div>
+      <div role="tabpanel" class="tab-organizations">
+        {{#if (isSelectedHomeTab req "organizations")}}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            includeSearchFilters=true
+            type="organizations"
+          }}
+        {{/if}}
+      </div>
+    {{/tabs-with-cards}}
+    </div>
+  </div>
+</div>

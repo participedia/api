@@ -1133,4 +1133,12 @@ module.exports = {
       });
     }
   },
+
+  isNotCollectionEditForm: (article) => {
+    return article.type !== "collection";
+  },
+
+  collectionHasLink: (collection) => {
+    return collection.links & collection.links.length > 0;
+  },
 };

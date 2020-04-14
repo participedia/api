@@ -1,0 +1,30 @@
+  .collection-view {
+    margin-top: -30px;
+  }
+
+  .collection-view__banner-image {
+    height: 400px;
+    background-position: center;
+    background-repeat: repeat-x;
+    background-size: cover;
+    margin-bottom: -370px;
+  }
+
+  .collection-view__banner-overlay-card {
+    background-color: rgba(255,255,255, .8);
+    padding: 2rem;
+    width: 50%;
+    height: 270px;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  .collection-view__tabs {
+    margin-top: 60px;
+  }
+
+  .collection-view__banner-overlay-card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }

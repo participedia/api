@@ -392,7 +392,7 @@
   "Contact Us": "Contact Us",
   "Content": "Content",
   "content_types.case.description": "Cases are specific events and instances of participatory politics and governance of all shapes and sizes. Cases can be contemporary or historical, completed, or ongoing.",
-  "content_types.collection.description": "Collections provide a way to compile and display entries (cases, methods, and organizations) that share common traits, such as association with a large-scale initiative, an institution, or geographic location. These collections of connected entries can be viewed as a single set of results, with a custom URL that can serve as a landing page on Participedia. If you have an idea for a new Collection, or if you require further information, please contact us.",
+  "content_types.collection.description": "Collections provide a way to compile and display entries (cases, methods, and organizations) that share common traits, such as association with a large-scale initiative, an institution, or geographic location.",
   "content_types.header": "Select the type of content you would like to publish.",
   "content_types.method.description": "Methods are the processes and procedures used to guide participatory politics and governance.",
   "content_types.organization.description": "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance.",
@@ -1747,5 +1747,7 @@
   "completeness.partial_editing_modal_text_1": "This type of entry needs significant improvements to its grammar or spelling, and can be any level of completeness (stub, partial, or complete). Entries needing grammar or spelling edits can be identified using the “entry completeness” search filter on the homepage.",
   "edit_media_not_supported_file_type_error": "Sorry, the file %s cannot be uploaded because it is not a suppported file type. We support .jpg and .png image types.",
   "Collection": "Collection",
-  "Collections": "Collections"
+  "Collections": "Collections",
+  "View all collections": "View all collections",
+  "Edit collection": "Edit collection"
 }
