@@ -31,7 +31,8 @@
 .tab-container #method:checked ~ .tab-panels .tab-methods,
 .tab-container #organizations:checked ~ .tab-panels .tab-organizations,
 .tab-container #contributions:checked ~ .tab-panels .tab-contributions,
-.tab-container #bookmarks:checked ~ .tab-panels .tab-bookmarks {
+.tab-container #bookmarks:checked ~ .tab-panels .tab-bookmarks,
+.tab-container #collections:checked ~ .tab-panels .tab-collections {
   display: block;
 }
 

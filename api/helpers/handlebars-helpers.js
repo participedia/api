@@ -848,6 +848,15 @@ module.exports = {
     ];
   },
 
+  getCollectionTabs(context) {
+    return [
+      { title: i18n("All", context), key: "all" },
+      { title: i18n("Cases", context), key: "case" },
+      { title: i18n("Methods", context), key: "method" },
+      { title: i18n("Organizations", context), key: "organizations" }
+    ];
+  },
+
   getUserTabs(context) {
     // if it's the profile owner making the request, return contributions and bookmarks.
     // otherwise return contributions only

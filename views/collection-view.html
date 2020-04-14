@@ -40,7 +40,7 @@
   </div>
   <div class="full-width-container">  
     <div class="collection-view__tabs">
-      {{#> tabs-with-cards req=req getTabs=(getHomeTabs)}}
+      {{#> tabs-with-cards req=req getTabs=(getCollectionTabs)}}
       <div role="tabpanel" class="tab-all">
         {{#if (isSelectedHomeTab req "all")}}
           {{> cards-container
