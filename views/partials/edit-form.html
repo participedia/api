@@ -33,6 +33,7 @@
               {{> edit-boolean name="hidden" quick-submit=true}}
               {{# if (isNotCollectionEditForm article)}}
                 {{> article-edit-select name="completeness" quick-submit=true}}
+                {{> edit-multi-select name="collections" }}
               {{/if}}
               {{> edit-submission-details }}
             </div>
