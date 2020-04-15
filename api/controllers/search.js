@@ -21,7 +21,7 @@ const {
 } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
-const selectedCategoryValues = ['all', 'case', 'method', 'organization'];
+const selectedCategoryValues = ['all', 'case', 'method', 'organization', 'collection'];
 const RESPONSE_LIMIT = 20;
 
 function randomTexture() {
