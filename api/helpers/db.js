@@ -50,6 +50,7 @@ const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
 const USER_BY_ID = sql("../sql/user_by_id.sql");
 const CREATE_USER_ID = sql("../sql/create_user_id.sql");
 const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
+const CREATE_COLLECTION = sql("../sql/create_collection.sql");
 const CREATE_CASE = sql("../sql/create_case.sql");
 const CREATE_METHOD = sql("../sql/create_method.sql");
 const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
@@ -520,6 +521,7 @@ module.exports = {
   USER_BY_ID,
   CREATE_USER_ID,
   CASES_BY_COUNTRY,
+  CREATE_COLLECTION,
   CREATE_CASE,
   CREATE_METHOD,
   CREATE_ORGANIZATION,
