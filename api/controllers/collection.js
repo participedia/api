@@ -337,7 +337,7 @@ async function getCollection(params, res) {
     }
     const articleRow = await db.one(COLLECTION_BY_ID, params);
     const article = articleRow.results;
-    // fixUpURLs(article);
+    fixUpURLs(article);
     return article;
   } catch (error) {
     // only log actual excaptional results, not just data not found
@@ -353,7 +353,6 @@ async function getCollectionHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "collection");
   const article = await getCollection(params, res);
-
   if (!article) {
     res.status(404).render("404");
     return null;
