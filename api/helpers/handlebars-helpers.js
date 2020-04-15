@@ -844,7 +844,7 @@ module.exports = {
       { title: i18n("Cases", context), key: "case" },
       { title: i18n("Methods", context), key: "method" },
       { title: i18n("Organizations", context), key: "organizations" },
-      { title: i18n("Collections", context), key: "collection" },
+      { title: i18n("Collections", context), key: "collections" },
     ];
   },
 

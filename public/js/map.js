@@ -11,7 +11,7 @@ const map = {
   init() {
     const mapEl = document.querySelector(".js-map-inner");
     const isMethodTab = document.getElementById("method").checked;
-    const isCollectionTab = document.getElementById("collection").checked;
+    const isCollectionTab = document.getElementById("collections").checked;
 
     if (!mapEl) return;
 
