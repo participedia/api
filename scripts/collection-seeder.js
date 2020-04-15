@@ -1,25 +1,24 @@
-const { db, pgp } = require("../api/helpers/db");
+const { db, pgp, CREATE_COLLECTION } = require("../api/helpers/db");
 const sharedFieldOptions = require("./../api/helpers/shared-field-options.js");
 
 run();
 
-function run() {
-  sharedFieldOptions['collections'].forEach(data => {
-    db.any(`SELECT * FROM collections WHERE title = '${data}'`)
-      .then(function(collection) {
+async function run() {
+  sharedFieldOptions['collections'].forEach(title => {
+    db.any(`SELECT * FROM collections WHERE title = '${title}'`)
+      .then(async function(collection) {
         if (collection.length < 1) {
-          saveRecord({title: data, type: 'collection', original_language: 'en'});
-          console.log(`${data} saved`);
+          let body = "";
+          let description = "";
+          let original_language = "en";
+
+          const thing = await db.one(CREATE_COLLECTION, {title, body, description, original_language});
+        } else {
+          console.log('dont create');
         }
       }
     ).catch(function(error) {
       console.log(error);
     });
-
   });
-}
-
-function saveRecord(records) {
-  const insert = pgp.helpers.insert(records, ['title','type','original_language'], 'collections');
-  db.none(insert);
 }
