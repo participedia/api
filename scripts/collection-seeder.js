@@ -8,7 +8,7 @@ function run() {
     db.any(`SELECT * FROM collections WHERE title = '${data}'`)
       .then(function(collection) {
         if (collection.length < 1) {
-          saveRecord({title: data, type: 'collections', original_language: 'en'});
+          saveRecord({title: data, type: 'collection', original_language: 'en'});
           console.log(`${data} saved`);
         }
       }
