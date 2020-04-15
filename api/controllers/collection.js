@@ -373,18 +373,18 @@ async function getEditStaticText(params) {
   return staticText;
 }
 
-// async function getCaseEditHttp(req, res) {
-//   let startTime = new Date();
-//   const params = parseGetParams(req, "case");
-//   params.view = "edit";
-//   const article = await getCase(params, res);
-//   if (!article) {
-//     res.status(404).render("404");
-//     return null;
-//   }
-//   const staticText = await getEditStaticText(params);
-//   returnByType(res, params, article, staticText, req.user);
-// }
+async function getCollectionEditHttp(req, res) {
+  let startTime = new Date();
+  const params = parseGetParams(req, "case");
+  params.view = "edit";
+  const article = await getCollection(params, res);
+  if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
+  const staticText = await getEditStaticText(params);
+  returnByType(res, params, article, staticText, req.user);
+}
 
 // async function getCaseNewHttp(req, res) {
 //   const params = parseGetParams(req, "case");
@@ -395,7 +395,7 @@ async function getEditStaticText(params) {
 // }
 
 const router = express.Router(); // eslint-disable-line new-cap
-// router.get("/:thingid/edit", requireAuthenticatedUser(), getCaseEditHttp);
+router.get("/:thingid/edit", requireAuthenticatedUser(), getCollectionEditHttp);
 // router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
 // router.post("/new", requireAuthenticatedUser(), postCaseNewHttp);
 router.get("/:thingid", getCollectionHttp);
@@ -403,7 +403,7 @@ router.get("/:thingid", getCollectionHttp);
 
 module.exports = {
   collection_: router,
-  // getCaseEditHttp,
+  getCollectionEditHttp,
   // getCaseNewHttp,
   // postCaseNewHttp,
   getCollectionHttp,
