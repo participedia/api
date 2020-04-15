@@ -39,6 +39,7 @@ function sql(filename) {
   });
 }
 
+const COLLECTION_BY_ID = sql("../sql/collection_by_id.sql");
 const CASE_BY_ID = sql("../sql/case_by_id.sql");
 const METHOD_BY_ID = sql("../sql/method_by_id.sql");
 const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
@@ -536,6 +537,7 @@ module.exports = {
   UPDATE_CASE,
   UPDATE_METHOD,
   UPDATE_ORGANIZATION,
+  COLLECTION_BY_ID,
   CASE_BY_ID,
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,

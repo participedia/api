@@ -39,6 +39,7 @@ app.use(morgan("dev")); // request logging
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
+const { collection_ } = require("./api/controllers/collection");
 const { case_ } = require("./api/controllers/case");
 const { method } = require("./api/controllers/method");
 const { organization } = require("./api/controllers/organization");
@@ -224,6 +225,7 @@ app.use((req, res, next) => {
 // ROUTES
 app.use("/", cache("5 minutes"), search);
 
+app.use("/collection", collection_);
 app.use("/case", case_);
 app.use("/organization", organization);
 app.use("/method", method);
