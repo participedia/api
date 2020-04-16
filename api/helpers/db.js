@@ -66,6 +66,7 @@ const LIST_TITLES = sql("../sql/list_titles.sql");
 const LIST_SHORT = sql("../sql/list_short.sql");
 const UPDATE_USER = sql("../sql/update_user.sql");
 const UPDATE_CASE = sql("../sql/update_case.sql");
+const UPDATE_COLLECTION= sql("../sql/update_collection.sql");
 const UPDATE_METHOD = sql("../sql/update_method.sql");
 const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
 const UPDATE_AUTHOR_FIRST = sql("../sql/update_author_first.sql");
@@ -537,6 +538,7 @@ module.exports = {
   LIST_SHORT,
   UPDATE_USER,
   UPDATE_CASE,
+  UPDATE_COLLECTION,
   UPDATE_METHOD,
   UPDATE_ORGANIZATION,
   COLLECTION_BY_ID,

@@ -12,7 +12,7 @@ const {
   COLLECTION_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
-  UPDATE_CASE,
+  UPDATE_COLLECTION,
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,
   listUsers,
@@ -91,7 +91,7 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 //       original_language,
 //     });
 //     req.params.thingid = thing.thingid;
-//     await postCaseUpdateHttp(req, res);
+//     await postCollectionUpdateHttp(req, res);
 //   } catch (error) {
 //     logError(error);
 //     res.status(400).json({ OK: false, error: error });
@@ -124,185 +124,127 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 //  *
 //  */
 
-// function getUpdatedCase(user, params, newCase, oldCase) {
-//   const updatedCase = Object.assign({}, oldCase);
-//   const er = new ErrorReporter();
-//   const cond = (key, fn) => setConditional(updatedCase, newCase, er, fn, key);
-//   // admin-only
-//   if (user.isadmin) {
-//     cond("featured", as.boolean);
-//     cond("hidden", as.boolean);
-//     cond("completeness", as.text);
-//     cond("original_language", as.text);
-//     cond("post_date", as.date);
-//     cond("updated_date", as.date);
-//   }
+function getUpdatedCollection(user, params, newCollection, oldCollection) {
+  const updatedCollection = Object.assign({}, oldCollection);
+  const er = new ErrorReporter();
+  const cond = (key, fn) => setConditional(updatedCollection, newCollection, er, fn, key);
+  // admin-only
+  if (user.isadmin) {
+    cond("featured", as.boolean);
+    cond("hidden", as.boolean);
+    cond("original_language", as.text);
+    cond("post_date", as.date);
+    cond("updated_date", as.date);
+  }
 
-//   // media lists
-//   ["links", "videos", "audio", "evaluation_links"].map(key =>
-//     cond(key, as.media)
-//   );
-//   // photos and files are slightly different from other media as they have a source url too
-//   ["photos", "files", "evaluation_reports"].map(key =>
-//     cond(key, as.sourcedMedia)
-//   );
-//   // boolean (would include "published" but we don't really support it)
-//   ["ongoing", "staff", "volunteers"].map(key => cond(key, as.selectBoolean));
-//   // yes/no (convert to boolean)
-//   ["impact_evidence", "formal_evaluation"].map(key => cond(key, as.yesno));
-//   // integer
-//   ["number_of_participants"].map(key => cond(key, as.integer));
-//   // float
-//   ["latitude", "longitude"].map(key => cond(key, as.float));
-//   // plain text
-//   [
-//     "location_name",
-//     "address1",
-//     "address2",
-//     "city",
-//     "province",
-//     "postal_code",
-//     "country",
-//     "funder",
-//   ].map(key => cond(key, as.text));
-//   // date
-//   ["start_date", "end_date"].map(key => cond(key, as.date));
-//   // id
-//   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
-//   // list of ids
-//   ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));
-//   // key
-//   [
-//     "scope_of_influence",
-//     "public_spectrum",
-//     "legality",
-//     "facilitators",
-//     "facilitator_training",
-//     "facetoface_online_or_both",
-//     "open_limited",
-//     "recruitment_method",
-//     "time_limited",
-//   ].map(key => cond(key, as.casekeyflat));
-//   // list of keys
-//   [
-//     "general_issues",
-//     "specific_topics",
-//     "collections",
-//     "purposes",
-//     "approaches",
-//     "targeted_participants",
-//     "method_types",
-//     "participants_interactions",
-//     "learning_resources",
-//     "decision_methods",
-//     "if_voting",
-//     "insights_outcomes",
-//     "organizer_types",
-//     "funder_types",
-//     "change_types",
-//     "implementers_of_change",
-//     "tools_techniques_types",
-//   ].map(key => cond(key, as.casekeys));
-//   // TODO save bookmarked on user
-//   return [updatedCase, er];
-// }
+  // media lists
+  ["links", "videos", "audio", "evaluation_links"].map(key =>
+    cond(key, as.media)
+  );
+  // photos and files are slightly different from other media as they have a source url too
+  ["photos", "files"].map(key =>
+    cond(key, as.sourcedMedia)
+  );
+  // TODO save bookmarked on user
+  return [updatedCollection, er];
+}
 
 // // Only changes to title, description, and/or body trigger a new author and version
 
-// async function postCaseUpdateHttp(req, res) {
-//   // cache.clear();
-//   const params = parseGetParams(req, "case");
-//   const user = req.user;
-//   const { articleid, type, view, userid, lang, returns } = params;
-//   const newCase = req.body;
-//   const links = req.body.links;
+async function postCollectionUpdateHttp(req, res) {
+  cache.clear();
+  const params = parseGetParams(req, "collection");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
+  const newCollection = req.body;
+  const links = req.body.links;
 
-//   //validate url
+  //validate url
 
-//   if (links) {
-//     for (let key in links) {
-//       let url = links[key].url;
-//       if (url.length > 0) {
-//         newCase.links = verifyOrUpdateUrl(newCase.links);
-//         const isUrlValid = validateUrl(newCase);
-//         if (!isUrlValid) {
-//           return res.status(400).json({
-//             OK: false,
-//             errors: ["Invalid link url."],
-//           });
-//         }
-//       }
-//     }
-//   }
+  if (links) {
+    for (let key in links) {
+      let url = links[key].url;
+      if (url.length > 0) {
+        newCollection.links = verifyOrUpdateUrl(newCollection.links);
+        const isUrlValid = validateUrl(newCollection);
+        if (!isUrlValid) {
+          return res.status(400).json({
+            OK: false,
+            errors: ["Invalid link url."],
+          });
+        }
+      }
+    }
+  }
 
-//   // if this is a new case, we don't have a post_date yet, so we set it here
-//   if (!newCase.post_date) {
-//     newCase.post_date = Date.now();
-//   }
+  // if this is a new case, we don't have a post_date yet, so we set it here
+  if (!newCollection.post_date) {
+    newCollection.post_date = Date.now();
+  }
 
-//   // if this is a new case, we don't have a updated_date yet, so we set it here
-//   if (!newCase.updated_date) {
-//     newCase.updated_date = Date.now();
-//   }
+  // if this is a new case, we don't have a updated_date yet, so we set it here
+  if (!newCollection.updated_date) {
+    newCollection.updated_date = Date.now();
+  }
 
-//   // save any changes to the user-submitted text
-//   const {
-//     updatedText,
-//     author,
-//     oldArticle: oldCase,
-//   } = await maybeUpdateUserText(req, res, "case");
-//   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+  // save any changes to the user-submitted text
+  const {
+    updatedText,
+    author,
+    oldArticle: oldCollection,
+  } = await maybeUpdateUserText(req, res, "collection");
+  const [updatedCollection, er] = getUpdatedCollection(user, params, newCollection, oldCollection);
 
-//   //get current date when user.isAdmin is false;
-//   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
+  //get current date when user.isAdmin is false;
+  updatedCollection.updated_date = !user.isadmin ? "now" : updatedCollection.updated_date;
 
-//   if (!er.hasErrors()) {
-//     if (updatedText) {
-//       await db.tx("update-case", async t => {
-//         await t.none(INSERT_AUTHOR, author);
-//         await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-//         await t.none(UPDATE_CASE, updatedCase);
-//       });
-//       //if this is a new case, set creator id to userid and isAdmin
-//       if (user.isadmin) {
-//         const creator = {
-//           user_id: newCase.creator ? newCase.creator : params.userid,
-//           thingid: params.articleid,
-//         };
-//         const updatedBy = {
-//           user_id: newCase.last_updated_by
-//             ? newCase.last_updated_by
-//             : params.userid,
-//           thingid: params.articleid,
-//           updated_date: newCase.updated_date || "now",
-//         };
-//         await db.tx("update-case", async t => {
-//           await t.none(UPDATE_AUTHOR_FIRST, creator);
-//           await t.none(UPDATE_AUTHOR_LAST, updatedBy);
-//         });
-//       }
-//     } else {
-//       await db.tx("update-case", async t => {
-//         await t.none(INSERT_AUTHOR, author);
-//         await t.none(UPDATE_CASE, updatedCase);
-//       });
-//     }
-//     // the client expects this request to respond with json
-//     // save successful response
-//     const freshArticle = await getCase(params, res);
-//     res.status(200).json({
-//       OK: true,
-//       article: freshArticle,
-//     });
-//     refreshSearch();
-//   } else {
-//     logError(`400 with errors: ${er.errors.join(", ")}`);
-//     res.status(400).json({
-//       OK: false,
-//       errors: er.errors,
-//     });
-//   }
-// }
+  if (!er.hasErrors()) {
+    if (updatedText) {
+      await db.tx("update-collection", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        await t.none(UPDATE_COLLECTION, updatedCollection);
+      });
+      //if this is a new case, set creator id to userid and isAdmin
+      if (user.isadmin) {
+        const creator = {
+          user_id: newCollection.creator ? newCollection.creator : params.userid,
+          thingid: params.articleid,
+        };
+        const updatedBy = {
+          user_id: newCollection.last_updated_by
+            ? newCollection.last_updated_by
+            : params.userid,
+          thingid: params.articleid,
+          updated_date: newCollection.updated_date || "now",
+        };
+        await db.tx("update-collection", async t => {
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+        });
+      }
+    } else {
+      await db.tx("update-collection", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_COLLECTION, updatedCollection);
+      });
+    }
+    // the client expects this request to respond with json
+    // save successful response
+    const freshArticle = await getCollection(params, res);
+    res.status(200).json({
+      OK: true,
+      article: freshArticle,
+    });
+    refreshSearch();
+  } else {
+    logError(`400 with errors: ${er.errors.join(", ")}`);
+    res.status(400).json({
+      OK: false,
+      errors: er.errors,
+    });
+  }
+}
 
 // /**
 //  * @api {get} /case/:thingid Get the last version of a case
@@ -399,7 +341,7 @@ router.get("/:thingid/edit", requireAuthenticatedUser(), getCollectionEditHttp);
 // router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
 // router.post("/new", requireAuthenticatedUser(), postCaseNewHttp);
 router.get("/:thingid", getCollectionHttp);
-// router.post("/:thingid", requireAuthenticatedUser(), postCaseUpdateHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
 
 module.exports = {
   collection_: router,
@@ -407,5 +349,5 @@ module.exports = {
   // getCaseNewHttp,
   // postCaseNewHttp,
   getCollectionHttp,
-  // postCaseUpdateHttp,
+  postCollectionUpdateHttp,
 };

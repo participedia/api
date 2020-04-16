@@ -977,7 +977,7 @@ module.exports = {
   },
 
   isEditView(req) {
-    const baseUrls = ["/case", "/method", "/organization", "/user"];
+    const baseUrls = ["/case", "/method", "/organization", "/user", "/collection"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
