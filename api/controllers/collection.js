@@ -36,9 +36,9 @@ const {
 const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
-// const CASE_STRUCTURE = JSON.parse(
-//   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
-// );
+const COLLECTION_STRUCTURE = JSON.parse(
+  fs.readFileSync("api/helpers/data/collection-structure.json", "utf8")
+);
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 // /**
@@ -317,7 +317,7 @@ async function getEditStaticText(params) {
 
 async function getCollectionEditHttp(req, res) {
   let startTime = new Date();
-  const params = parseGetParams(req, "case");
+  const params = parseGetParams(req, "collection");
   params.view = "edit";
   const article = await getCollection(params, res);
   if (!article) {
@@ -328,17 +328,17 @@ async function getCollectionEditHttp(req, res) {
   returnByType(res, params, article, staticText, req.user);
 }
 
-// async function getCaseNewHttp(req, res) {
-//   const params = parseGetParams(req, "case");
-//   params.view = "edit";
-//   const article = CASE_STRUCTURE;
-//   const staticText = await getEditStaticText(params);
-//   returnByType(res, params, article, staticText, req.user);
-// }
+async function getCollectionNewHttp(req, res) {
+  const params = parseGetParams(req, "collection");
+  params.view = "edit";
+  const article = COLLECTION_STRUCTURE;
+  const staticText = await getEditStaticText(params);
+  returnByType(res, params, article, staticText, req.user);
+}
 
 const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getCollectionEditHttp);
-// router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
+router.get("/new", requireAuthenticatedUser(), getCollectionNewHttp);
 // router.post("/new", requireAuthenticatedUser(), postCaseNewHttp);
 router.get("/:thingid", getCollectionHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
@@ -346,7 +346,7 @@ router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
 module.exports = {
   collection_: router,
   getCollectionEditHttp,
-  // getCaseNewHttp,
+  getCollectionNewHttp,
   // postCaseNewHttp,
   getCollectionHttp,
   postCollectionUpdateHttp,
