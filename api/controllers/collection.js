@@ -1,13 +1,11 @@
 "use strict";
 const express = require("express");
 const cache = require("apicache");
-const equals = require("deep-equal");
 const fs = require("fs");
 
 const {
   db,
   as,
-  CASES_BY_COUNTRY,
   CREATE_COLLECTION,
   COLLECTION_BY_ID,
   INSERT_AUTHOR,
@@ -304,14 +302,8 @@ async function getCollectionHttp(req, res) {
 }
 
 async function getEditStaticText(params) {
+  let staticText = {};
   const lang = params.lang;
-  let staticText = Object.assign({}, sharedFieldOptions);
-  staticText.authors = listUsers();
-  staticText.cases = listCases(lang).filter(article => !article.hidden);
-  staticText.methods = listMethods(lang).filter(article => !article.hidden);
-  staticText.organizations = listOrganizations(lang).filter(
-    article => !article.hidden
-  );
   return staticText;
 }
 
