@@ -2,6 +2,7 @@
 CREATE TABLE collections (
   title text DEFAULT ''::text,
   description text,
+  body: text,
   bookmarked boolean
 )
 INHERITS (things);
