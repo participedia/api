@@ -972,7 +972,7 @@ module.exports = {
   },
 
   isNewView(req) {
-    const baseUrls = ["/case", "/method", "/organization"];
+    const baseUrls = ["/case", "/method", "/organization", "/collection"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("new") === 1;
   },
 
