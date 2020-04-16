@@ -8,7 +8,7 @@ const {
   db,
   as,
   CASES_BY_COUNTRY,
-  CREATE_CASE,
+  CREATE_COLLECTION,
   COLLECTION_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
@@ -66,63 +66,63 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 //  *
 //  */
 
-// async function postCaseNewHttp(req, res) {
-//   // create new `case` in db
-//   try {
-//     cache.clear();
-//     let title = req.body.title;
-//     let body = req.body.body || req.body.summary || "";
-//     let description = req.body.description;
-//     let original_language = req.body.original_language || "en";
-//     let links = req.body.links;
+async function postCollectionNewHttp(req, res) {
+  // create new `collection` in db
+  try {
+    cache.clear();
+    let title = req.body.title;
+    let body = req.body.body || req.body.summary || "";
+    let description = req.body.description;
+    let original_language = req.body.original_language || "en";
+    let links = req.body.links;
 
-//     if (!title) {
-//       return res.status(400).json({
-//         OK: false,
-//         errors: ["Cannot create a case without at least a title."],
-//       });
-//     }
+    if (!title) {
+      return res.status(400).json({
+        OK: false,
+        errors: ["Cannot create a collection without at least a title."],
+      });
+    }
 
-//     const user_id = req.user.id;
-//     const thing = await db.one(CREATE_CASE, {
-//       title,
-//       body,
-//       description,
-//       original_language,
-//     });
-//     req.params.thingid = thing.thingid;
-//     await postCollectionUpdateHttp(req, res);
-//   } catch (error) {
-//     logError(error);
-//     res.status(400).json({ OK: false, error: error });
-//   }
-// }
+    const user_id = req.user.id;
+    const thing = await db.one(CREATE_COLLECTION, {
+      title,
+      body,
+      description,
+      original_language,
+    });
+    req.params.thingid = thing.thingid;
+    await postCollectionUpdateHttp(req, res);
+  } catch (error) {
+    logError(error);
+    res.status(400).json({ OK: false, error: error });
+  }
+}
 
-// /**
-//  * @api {put} /case/:caseId  Submit a new version of a case
-//  * @apiGroup Cases
-//  * @apiVersion 0.1.0
-//  * @apiName editCase
-//  * @apiParam {Number} caseId Case ID
-//  *
-//  * @apiSuccess {Boolean} OK true if call was successful
-//  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
-//  * @apiSuccess {Object} data case data
-//  *
-//  * @apiSuccessExample Success-Response:
-//  *     HTTP/1.1 200 OK
-//  *     {
-//  *       "OK": true,
-//  *       "data": {
-//  *         "ID": 3,
-//  *         "Description": 'foo'
-//  *        }
-//  *     }
-//  *
-//  * @apiError NotAuthenticated The user is not authenticated
-//  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
-//  *
-//  */
+/**
+ * @api {put} /case/:caseId  Submit a new version of a case
+ * @apiGroup Cases
+ * @apiVersion 0.1.0
+ * @apiName editCase
+ * @apiParam {Number} caseId Case ID
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data case data
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "ID": 3,
+ *         "Description": 'foo'
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
 
 function getUpdatedCollection(user, params, newCollection, oldCollection) {
   const updatedCollection = Object.assign({}, oldCollection);
@@ -339,7 +339,7 @@ async function getCollectionNewHttp(req, res) {
 const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getCollectionEditHttp);
 router.get("/new", requireAuthenticatedUser(), getCollectionNewHttp);
-// router.post("/new", requireAuthenticatedUser(), postCaseNewHttp);
+router.post("/new", requireAuthenticatedUser(), postCollectionNewHttp);
 router.get("/:thingid", getCollectionHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
 
@@ -347,7 +347,7 @@ module.exports = {
   collection_: router,
   getCollectionEditHttp,
   getCollectionNewHttp,
-  // postCaseNewHttp,
+  postCollectionNewHttp,
   getCollectionHttp,
   postCollectionUpdateHttp,
 };
