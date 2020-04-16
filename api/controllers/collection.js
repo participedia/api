@@ -13,10 +13,6 @@ const {
   UPDATE_COLLECTION,
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,
-  listUsers,
-  listCases,
-  listMethods,
-  listOrganizations,
   refreshSearch,
   ErrorReporter,
 } = require("../helpers/db");
@@ -37,32 +33,31 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 const COLLECTION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/collection-structure.json", "utf8")
 );
-const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
-// /**
-//  * @api {post} /case/new Create new case
-//  * @apiGroup Cases
-//  * @apiVersion 0.1.0
-//  * @apiName newCase
-//  *
-//  * @apiSuccess {Boolean} OK true if call was successful
-//  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
-//  * @apiSuccess {Object} data case data
-//  *
-//  * @apiSuccessExample Success-Response:
-//  *     HTTP/1.1 200 OK
-//  *     {
-//  *       "OK": true,
-//  *       "data": {
-//  *         "ID": 3,
-//  *         "Description": 'foo'
-//  *        }
-//  *     }
-//  *
-//  * @apiError NotAuthenticated The user is not authenticated
-//  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
-//  *
-//  */
+/**
+ * @api {post} /collection/new Create new collection
+ * @apiGroup Collection
+ * @apiVersion 0.1.0
+ * @apiName newCollection
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data collection data
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "ID": 3,
+ *         "Description": 'foo'
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
 
 async function postCollectionNewHttp(req, res) {
   // create new `collection` in db
@@ -97,15 +92,15 @@ async function postCollectionNewHttp(req, res) {
 }
 
 /**
- * @api {put} /case/:caseId  Submit a new version of a case
- * @apiGroup Cases
+ * @api {put} /collection/:collectionId  Submit a new version of a collection
+ * @apiGroup Collection
  * @apiVersion 0.1.0
- * @apiName editCase
- * @apiParam {Number} caseId Case ID
+ * @apiName editCollection
+ * @apiParam {Number} collectionId Collection ID
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data case data
+ * @apiSuccess {Object} data v data
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -175,12 +170,12 @@ async function postCollectionUpdateHttp(req, res) {
     }
   }
 
-  // if this is a new case, we don't have a post_date yet, so we set it here
+  // if this is a new collection, we don't have a post_date yet, so we set it here
   if (!newCollection.post_date) {
     newCollection.post_date = Date.now();
   }
 
-  // if this is a new case, we don't have a updated_date yet, so we set it here
+  // if this is a new collection, we don't have a updated_date yet, so we set it here
   if (!newCollection.updated_date) {
     newCollection.updated_date = Date.now();
   }
@@ -203,7 +198,7 @@ async function postCollectionUpdateHttp(req, res) {
         await t.none(INSERT_LOCALIZED_TEXT, updatedText);
         await t.none(UPDATE_COLLECTION, updatedCollection);
       });
-      //if this is a new case, set creator id to userid and isAdmin
+      //if this is a new collection, set creator id to userid and isAdmin
       if (user.isadmin) {
         const creator = {
           user_id: newCollection.creator ? newCollection.creator : params.userid,
@@ -244,31 +239,31 @@ async function postCollectionUpdateHttp(req, res) {
   }
 }
 
-// /**
-//  * @api {get} /case/:thingid Get the last version of a case
-//  * @apiGroup Cases
-//  * @apiVersion 0.1.0
-//  * @apiName returnCaseById
-//  * @apiParam {Number} thingid Case ID
-//  *
-//  * @apiSuccess {Boolean} OK true if call was successful
-//  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
-//  * @apiSuccess {Object} data case data
-//  *
-//  * @apiSuccessExample Success-Response:
-//  *     HTTP/1.1 200 OK
-//  *     {
-//  *       "OK": true,
-//  *       "data": {
-//  *         "ID": 3,
-//  *         "Description": 'foo'
-//  *        }
-//  *     }
-//  *
-//  * @apiError NotAuthenticated The user is not authenticated
-//  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
-//  *
-//  */
+/**
+ * @api {get} /collection/:thingid Get the last version of a collection
+ * @apiGroup Collection
+ * @apiVersion 0.1.0
+ * @apiName returnCollectionById
+ * @apiParam {Number} thingid Collection ID
+ *
+ * @apiSuccess {Boolean} OK true if call was successful
+ * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
+ * @apiSuccess {Object} data collection data
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "OK": true,
+ *       "data": {
+ *         "ID": 3,
+ *         "Description": 'foo'
+ *        }
+ *     }
+ *
+ * @apiError NotAuthenticated The user is not authenticated
+ * @apiError NotAuthorized The user doesn't have permission to perform this operation.
+ *
+ */
 
 async function getCollection(params, res) {
   try {
@@ -303,12 +298,10 @@ async function getCollectionHttp(req, res) {
 
 async function getEditStaticText(params) {
   let staticText = {};
-  const lang = params.lang;
   return staticText;
 }
 
 async function getCollectionEditHttp(req, res) {
-  let startTime = new Date();
   const params = parseGetParams(req, "collection");
   params.view = "edit";
   const article = await getCollection(params, res);
