@@ -1,10 +1,10 @@
 WITH insert_collection as (
   INSERT into collections (
-    type, original_language, post_date, published, updated_date, title
+    type, original_language, post_date, published, updated_date
   )
   VALUES
     (
-      'collection', ${original_language}, 'now', true, 'now', ${title}
+      'collection', ${original_language}, 'now', true, 'now'
     ) RETURNING id as thingid
 )
 
