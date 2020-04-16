@@ -38,11 +38,6 @@ const searchFiltersList = {
       sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"],
     },
-    {
-      sectionKey: "collections",
-      sectionLabel: "Collections",
-      fieldNameKeys: ["collections"],
-    },
   ],
   organizations: [
     {
@@ -69,12 +64,7 @@ const searchFiltersList = {
       sectionKey: "Entry Completeness",
       sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"],
-    },
-    {
-      sectionKey: "collections",
-      sectionLabel: "Collections",
-      fieldNameKeys: ["collections"],
-    },
+    }
   ],
   case: [
     {
@@ -115,11 +105,6 @@ const searchFiltersList = {
       sectionKey: "evidence_of_impact",
       sectionLabel: "Evidence of Impact",
       fieldNameKeys: ["change_types"],
-    },
-    {
-      sectionKey: "collections",
-      sectionLabel: "Collections",
-      fieldNameKeys: ["collections"],
     },
     {
       sectionKey: "Entry Completeness",
