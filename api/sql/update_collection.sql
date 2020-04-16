@@ -12,7 +12,7 @@ SET
   links = ${links},
   videos = ${videos},
   audio = ${audio},
-  photos = ${photos},
+  photos = ${photos}
 WHERE
   id = ${id}
 ;

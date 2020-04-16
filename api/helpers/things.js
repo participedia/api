@@ -12,6 +12,7 @@ const {
   CASE_BY_ID,
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,
+  COLLECTION_BY_ID
 } = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
@@ -141,6 +142,7 @@ let queries = {
   case: CASE_BY_ID,
   method: METHOD_BY_ID,
   organization: ORGANIZATION_BY_ID,
+  collection: COLLECTION_BY_ID
 };
 
 async function maybeUpdateUserText(req, res, type) {
