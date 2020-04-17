@@ -31,6 +31,7 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
+  getCollections
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -364,6 +365,7 @@ async function getCaseHttp(req, res) {
 async function getEditStaticText(params) {
   const lang = params.lang;
   let staticText = Object.assign({}, sharedFieldOptions);
+  staticText.collections = await getCollections(params.lang);
   staticText.authors = listUsers();
   staticText.cases = listCases(lang).filter(article => !article.hidden);
   staticText.methods = listMethods(lang).filter(article => !article.hidden);

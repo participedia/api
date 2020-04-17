@@ -224,6 +224,8 @@ module.exports = {
       return mapIdTitleToKeyValue(staticText["methods"]);
     } else if (name === "primary_organizer") {
       return mapIdTitleToKeyValue(staticText["organizations"]);
+    } else if (name === "collections") {
+      return staticText["collections"];
     } else {
       return staticText[name];
     }
