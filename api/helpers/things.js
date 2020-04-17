@@ -12,7 +12,8 @@ const {
   CASE_BY_ID,
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,
-  COLLECTION_BY_ID
+  COLLECTION_BY_ID,
+  FEATURED
 } = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
@@ -214,6 +215,20 @@ function setConditional(
   }
 }
 
+async function getCollections(lang) {
+  const results = await db.any(FEATURED, {
+    query: '',
+    limit: null,
+    offset: 0,
+    language: lang,
+    userId: null,
+    sortby: 'post_date',
+    type: 'collections',
+    facets: '',
+  });
+  return results;
+}
+
 //get searchFilterKeyList and searchFilterKeys by methods,cases, orgs
 
 const searchFilterKeys = type => {
@@ -328,4 +343,5 @@ module.exports = {
   searchFilterKeys,
   searchFilterKeyLists,
   placeHolderPhotos,
+  getCollections
 };
