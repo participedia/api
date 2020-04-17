@@ -28,6 +28,7 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
+  getCollections
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -47,6 +48,7 @@ async function getEditStaticText(params) {
   staticText.methods = listMethods(lang).filter(article => !article.hidden);
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
+  staticText.collections = await getCollections(lang);
 
   return staticText;
 }
