@@ -5,7 +5,6 @@ SELECT
   title,
   COALESCE(general_issues, '{}') as general_issues,
   COALESCE(specific_topics, '{}') as specific_topics,
-  COALESCE(collections, '{}') as collections,
   COALESCE(description, '') as description,
   body,
   location_name,
@@ -71,7 +70,8 @@ SELECT
   get_user_names(${userid}) as authors,
   get_edit_authors(${articleid}) as edit_history,
   hidden,
-  completeness
+  completeness,
+  COALESCE(get_object_title_list(collections, ${lang}), '{}') as collections
 FROM
   cases,
   get_localized_texts_fallback(${articleid}, ${lang}, cases.original_language) as localized_texts
