@@ -17,6 +17,9 @@ async function run() {
         await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
         console.log('REFRESH MATERIALIZED VIEW search_index_en');
         await updateEntries();
+        await updateCollectionColumnDataType('methods');
+        await updateCollectionColumnDataType('cases');
+        await updateCollectionColumnDataType('organizations');
       } else {
         console.log('migration already done.');
       }
@@ -42,6 +45,11 @@ async function updateEntries() {
   await updateEntriesCollectionValue('methods');
   await updateEntriesCollectionValue('cases');
   await updateEntriesCollectionValue('organizations');
+}
+
+async function updateCollectionColumnDataType(table) {
+  let query = `ALTER TABLE ${table} ALTER COLUMN collections DROP DEFAULT, ALTER COLUMN collections TYPE integer[] USING (collections::integer[])`;
+  let result = await db.any(query);
 }
 
 async function updateEntriesCollectionValue(table) {
