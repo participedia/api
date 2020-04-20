@@ -225,7 +225,7 @@ module.exports = {
     } else if (name === "primary_organizer") {
       return mapIdTitleToKeyValue(staticText["organizations"]);
     } else if (name === "collections") {
-      return staticText["collections"];
+      return mapIdTitleToKeyValue(staticText["collections"]);
     } else {
       return staticText[name];
     }

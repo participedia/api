@@ -27,12 +27,16 @@
     <h1 class="collection-view__banner-overlay-card-title">{{article.title}}</h1>
     
     {{#if article.description}}
-      <p class="collection-view__banner-overlay-card-description">{{ article.description }}</p>
+      <div class="collection-view__banner-overlay-card-description">{{ article.description }}</div>
     {{/if}}
 
     {{#if article.links}} 
-      <a href="{{article.links.0.url}}" class="button button-dark-grey" target="_blank" rel="noopener">
-        {{article.links.0.title}}
+      <a href="{{article.links.0.url}}" class="button button-dark-grey u-margin-top--small" target="_blank" rel="noopener">
+        {{#if article.links.0.title}}
+          {{article.links.0.title}}
+        {{else}}
+          {{t "Link"}}
+        {{/if}}
       </a>
     {{/if}}
 
