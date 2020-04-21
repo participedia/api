@@ -14,6 +14,7 @@ const {
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,
   FEATURED_MAP,
+  ENTRIES_BY_COLLECTION_ID,
   refreshSearch,
   ErrorReporter,
 } = require("../helpers/db");
@@ -305,7 +306,8 @@ async function getCollectionHttp(req, res) {
   const params = parseGetParams(req, "collection");
   const article = await getCollection(params, res, req);
   const type = typeFromReq(req);
-  const results = await db.any(FEATURED_MAP, {
+  const query = type === 'thing' ? ENTRIES_BY_COLLECTION_ID : FEATURED_MAP;
+  const results = await db.any(query, {
     query: null,
     limit: 0, // null is no limit in SQL
     offset: 0,

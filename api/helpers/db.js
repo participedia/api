@@ -71,6 +71,7 @@ const UPDATE_METHOD = sql("../sql/update_method.sql");
 const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
 const UPDATE_AUTHOR_FIRST = sql("../sql/update_author_first.sql");
 const UPDATE_AUTHOR_LAST = sql("../sql/update_author_last.sql");
+const ENTRIES_BY_COLLECTION_ID = sql("../sql/entries_by_collection_id.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -547,5 +548,6 @@ module.exports = {
   ORGANIZATION_BY_ID,
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,
+  ENTRIES_BY_COLLECTION_ID,
   ErrorReporter,
 };
