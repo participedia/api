@@ -13,6 +13,7 @@ const {
   UPDATE_COLLECTION,
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,
+  FEATURED_MAP,
   refreshSearch,
   ErrorReporter,
 } = require("../helpers/db");
@@ -24,7 +25,7 @@ const {
   validateUrl,
   verifyOrUpdateUrl,
   returnByType,
-  fixUpURLs,
+  fixUpURLs
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -33,6 +34,20 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 const COLLECTION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/collection-structure.json", "utf8")
 );
+
+// strip off final character (assumed to be "s")
+const singularLowerCase = name =>
+  (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
+
+// just get the type, if specified
+const typeFromReq = req => {
+  var cat = singularLowerCase(req.query.selectedCategory || "Alls");
+  let selectedCategoryValues = ['all', 'case', 'method', 'organization'];
+  if (selectedCategoryValues.indexOf(cat) < 0) {
+    cat = 'all';
+  }
+  return cat === "all" ? "thing" : cat;
+};
 
 /**
  * @api {post} /collection/new Create new collection
@@ -273,6 +288,7 @@ async function getCollection(params, res) {
     const articleRow = await db.one(COLLECTION_BY_ID, params);
     const article = articleRow.results;
     fixUpURLs(article);
+
     return article;
   } catch (error) {
     // only log actual excaptional results, not just data not found
@@ -287,13 +303,25 @@ async function getCollection(params, res) {
 async function getCollectionHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "collection");
-  const article = await getCollection(params, res);
+  const article = await getCollection(params, res, req);
+  const type = typeFromReq(req);
+  const results = await db.any(FEATURED_MAP, {
+    query: null,
+    limit: 0, // null is no limit in SQL
+    offset: 0,
+    language: as.value(req.cookies.locale || "en"),
+    sortby: "updated_date",
+    userId: req.user ? req.user.id : null,
+    type: type === 'thing' ? 'cases' : type + "s",
+    facets: `AND collections @> ARRAY[${params.articleid}]`
+  });
+
   if (!article) {
     res.status(404).render("404");
     return null;
   }
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user);
+  returnByType(res, params, article, staticText, req.user, results);
 }
 
 async function getEditStaticText(params) {

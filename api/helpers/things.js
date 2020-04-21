@@ -71,7 +71,7 @@ const placeHolderPhotos = article => {
   }
 };
 
-const returnByType = (res, params, article, static, user) => {
+const returnByType = (res, params, article, static, user, results = {}) => {
   const { returns, type, view } = params;
 
   if (!article) return;
@@ -91,7 +91,7 @@ const returnByType = (res, params, article, static, user) => {
         layout: false,
       });
     case "json":
-      return res.status(200).json({ OK: true, article });
+      return res.status(200).json({ OK: true, article, results });
     case "csv":
       // TODO: implement CSV
       return res.status(500, "CSV not implemented yet").render();
