@@ -170,7 +170,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   ["start_date", "end_date"].map(key => cond(key, as.date));
   // id
   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
-  // list of ids
+  // list of {id, type, title}
   ["specific_methods_tools_techniques", "collections"].map(key => cond(key, as.ids));
   // key
   [
@@ -203,7 +203,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "implementers_of_change",
     "tools_techniques_types",
   ].map(key => cond(key, as.casekeys));
-  // TODO save bookmarked on user
   return [updatedCase, er];
 }
 

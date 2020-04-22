@@ -7,15 +7,11 @@
   >
     <option data-placeholder="true" value="">{{placeholder article name}}</option>
     {{#each (getArticleOptions static name)}}
-      {{#if (isString this)}}
-        <option value="{{this}}">
-          {{i18nEditFieldValue ../name this}}
-        </option>
-      {{else}}
-        <option value="{{id}}">
-          {{title}}
-        </option>
-      {{/if}}
+      <option
+        value="{{this}}"
+      >
+        {{i18nEditFieldValue ../name this}}
+      </option>
     {{/each}}
   </select>
   <ol

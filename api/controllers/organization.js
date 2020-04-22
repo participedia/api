@@ -295,12 +295,10 @@ function getUpdatedOrganization(
     "type_method",
     "type_tool",
     "specific_topics",
-    "general_issues",
-    "collections"
+    "general_issues"
   ].map(key => cond(key, as.organizationkeys));
-  // list of article ids
-  ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));
-  // TODO save bookmarked on user
+  // list of {id, type, title}
+  ["specific_methods_tools_techniques", "collections"].map(key => cond(key, as.ids));
   return [updatedOrganization, er];
 }
 

@@ -1151,7 +1151,7 @@ module.exports = {
     }
   },
 
-  isNotCollectionEditForm: (article) => {
+  isNotCollection: (article) => {
     return article.type !== "collection";
   },
 

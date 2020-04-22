@@ -55,31 +55,6 @@ function randomTexture() {
   return `/images/texture_${index}.svg`;
 }
 
-/**
- * @api {post} /collection/new Create new collection
- * @apiGroup Collection
- * @apiVersion 0.1.0
- * @apiName newCollection
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data collection data
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *         "ID": 3,
- *         "Description": 'foo'
- *        }
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
-
 async function postCollectionNewHttp(req, res) {
   // create new `collection` in db
   try {
@@ -112,32 +87,6 @@ async function postCollectionNewHttp(req, res) {
   }
 }
 
-/**
- * @api {put} /collection/:collectionId  Submit a new version of a collection
- * @apiGroup Collection
- * @apiVersion 0.1.0
- * @apiName editCollection
- * @apiParam {Number} collectionId Collection ID
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data v data
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *         "ID": 3,
- *         "Description": 'foo'
- *        }
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
-
 function getUpdatedCollection(user, params, newCollection, oldCollection) {
   const updatedCollection = Object.assign({}, oldCollection);
   const er = new ErrorReporter();
@@ -159,11 +108,8 @@ function getUpdatedCollection(user, params, newCollection, oldCollection) {
   ["photos", "files"].map(key =>
     cond(key, as.sourcedMedia)
   );
-  // TODO save bookmarked on user
   return [updatedCollection, er];
 }
-
-// // Only changes to title, description, and/or body trigger a new author and version
 
 async function postCollectionUpdateHttp(req, res) {
   cache.clear();
@@ -259,32 +205,6 @@ async function postCollectionUpdateHttp(req, res) {
     });
   }
 }
-
-/**
- * @api {get} /collection/:thingid Get the last version of a collection
- * @apiGroup Collection
- * @apiVersion 0.1.0
- * @apiName returnCollectionById
- * @apiParam {Number} thingid Collection ID
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data collection data
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *         "ID": 3,
- *         "Description": 'foo'
- *        }
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
 
 async function getCollection(params, res) {
   try {
