@@ -50,6 +50,11 @@ const typeFromReq = req => {
   return cat === "all" ? "thing" : cat;
 };
 
+function randomTexture() {
+  let index = Math.floor(Math.random() * 6) + 1;
+  return `/images/texture_${index}.svg`;
+}
+
 /**
  * @api {post} /collection/new Create new collection
  * @apiGroup Collection
@@ -307,7 +312,7 @@ async function getCollectionHttp(req, res) {
   const article = await getCollection(params, res, req);
   const type = typeFromReq(req);
   const query = type === 'thing' ? ENTRIES_BY_COLLECTION_ID : FEATURED_MAP;
-  const results = await db.any(query, {
+  let results = await db.any(query, {
     query: null,
     limit: 0, // null is no limit in SQL
     offset: 0,
@@ -318,12 +323,31 @@ async function getCollectionHttp(req, res) {
     facets: `AND collections @> ARRAY[${params.articleid}]`
   });
 
+  const limit = 20; // number of entries displayed on one page
+  let total, pages;
+  
+  // calculate pages and totals and
+  if (results) {
+    total = Number(
+      results.length ? results[0].total || results.length : 0
+    );
+    pages = total ? Math.max(Math.ceil(total / limit)) : null;
+    
+    // for each entry, use a random texture image if there are no images uploaded
+    results = results.map(obj => {
+      if (obj.photos.length === 0) {
+        obj.photos = [{ url: randomTexture() }];
+      }
+      return obj;
+    });
+  }
+
   if (!article) {
     res.status(404).render("404");
     return null;
   }
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user, results);
+  returnByType(res, params, article, staticText, req.user, results, total, pages);
 }
 
 async function getEditStaticText(params) {

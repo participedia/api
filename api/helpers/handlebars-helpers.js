@@ -59,10 +59,12 @@ function getFirstLargeImageForArticle(article) {
 
 function getFirstThumbnailImageForArticle(article) {
   const url = getFirstLargeImageForArticle(article);
-  return url.replace(
-    process.env.AWS_UPLOADS_URL,
-    `${process.env.AWS_UPLOADS_URL}thumbnail/`
-  );
+  if (url) {
+    return url.replace(
+      process.env.AWS_UPLOADS_URL,
+      `${process.env.AWS_UPLOADS_URL}thumbnail/`
+    );  
+  }
 }
 
 function filterCollections(req, name, context) {

@@ -71,7 +71,7 @@ const placeHolderPhotos = article => {
   }
 };
 
-const returnByType = (res, params, article, static, user, results = {}) => {
+const returnByType = (res, params, article, static, user, results = {}, total = null, pages = null) => {
   const { returns, type, view } = params;
 
   if (!article) return;
@@ -102,7 +102,7 @@ const returnByType = (res, params, article, static, user, results = {}) => {
     default:
       return res
         .status(200)
-        .render(type + "-" + view, { article, static, user, params });
+        .render(type + "-" + view, { article, results, static, user, params, total, pages });
   }
 };
 
