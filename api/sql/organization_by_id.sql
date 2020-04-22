@@ -44,8 +44,8 @@ WITH full_thing AS (
     specific_topics,
     general_issues,
     -- ids
-    get_object_title_list(specific_methods_tools_techniques, ${lang}) as specific_methods_tools_techniques,
-    COALESCE(get_object_title_list(collections, ${lang}), '{}') as collections
+    get_object_title_list(specific_methods_tools_techniques, ${lang}, organizations.original_language) as specific_methods_tools_techniques,
+    COALESCE(get_object_title_list(collections, ${lang}, organizations.original_language), '{}') as collections
 FROM
     organizations,
     get_localized_texts_fallback(${articleid}, ${lang}, organizations.original_language) AS texts

@@ -40,7 +40,7 @@ WITH full_thing AS (
     decision_methods,
     if_voting,
     purpose_method,
-    COALESCE(get_object_title_list(collections, ${lang}), '{}') as collections
+    COALESCE(get_object_title_list(collections, ${lang}, organizations.original_language), '{}') as collections
 FROM
     methods,
     get_localized_texts_fallback(${articleid}, ${lang}, methods.original_language) AS texts

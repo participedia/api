@@ -37,7 +37,7 @@ SELECT
   COALESCE(targeted_participants, '{}') as targeted_participants,
   COALESCE(method_types, '{}') as method_types,
   COALESCE(tools_techniques_types, '{}') as tools_techniques_types,
-  COALESCE(get_object_title_list(specific_methods_tools_techniques, ${lang}), '{}') as specific_methods_tools_techniques,
+  COALESCE(get_object_title_list(specific_methods_tools_techniques, ${lang}, cases.original_language), '{}') as specific_methods_tools_techniques,
   legality,
   facilitators,
   facilitator_training,
@@ -71,7 +71,7 @@ SELECT
   get_edit_authors(${articleid}) as edit_history,
   hidden,
   completeness,
-  COALESCE(get_object_title_list(collections, ${lang}), '{}') as collections
+  COALESCE(get_object_title_list(collections, ${lang}, cases.original_language), '{}') as collections
 FROM
   cases,
   get_localized_texts_fallback(${articleid}, ${lang}, cases.original_language) as localized_texts
