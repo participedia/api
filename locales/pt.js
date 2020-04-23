@@ -460,7 +460,6 @@
   "East Timor": "Timor-Leste",
   "Ecuador": "Equador",
   "Edit": "Editar",
-  "Edit collection": "Coleção editar",
   "Edit Submission Details": "Editar detalhes do envio",
   "edit_media_not_supported_file_type_error": "Desculpe, o arquivo %s não pode ser carregado porque não é um tipo de arquivo suppported. Nós suportamos tipos de imagem .jpg e .png.",
   "edit_profile": "Editar perfil",

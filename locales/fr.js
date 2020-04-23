@@ -460,7 +460,6 @@
   "East Timor": "Timor-Oriental",
   "Ecuador": "Équateur",
   "Edit": "Modifier",
-  "Edit collection": "Collection d’édition",
   "Edit Submission Details": "Modifier les détails de la soumission",
   "edit_media_not_supported_file_type_error": "Désolé, le fichier %s ne peut pas être téléchargé parce qu’il ne s’agit pas d’un type de fichier suppported. Nous soutenons les types d’images .jpg et .png.",
   "edit_profile": "Modifier le profil",

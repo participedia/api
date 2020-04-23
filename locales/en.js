@@ -1749,7 +1749,6 @@
   "Collection": "Collection",
   "Collections": "Collections",
   "View all collections": "View all collections",
-  "Edit collection": "Edit collection",
   "collection_edit_featured_label": "Featured",
   "collection_edit_featured_instructional": "Featured articles are displayed first on the home page",
   "collection_edit_hidden_label": "Hidden",

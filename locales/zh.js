@@ -460,7 +460,6 @@
   "East Timor": "东帝汶",
   "Ecuador": "厄瓜多尔",
   "Edit": "编辑",
-  "Edit collection": "编辑集合",
   "Edit Submission Details": "编辑提交详细信息",
   "edit_media_not_supported_file_type_error": "对不起，文件 %s 无法上载，因为它不是一个预移植的文件类型。我们支持 .jpg 和 .png 图像类型。",
   "edit_profile": "编辑配置文件",
