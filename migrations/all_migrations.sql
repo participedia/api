@@ -73,4 +73,6 @@
 \include 'migrations/migration_046.sql'
 -- Create index for things
 \include 'migrations/migration_047.sql'
+\include 'migrations/migration_048.sql'
+\include 'migrations/migration_049.sql'
 

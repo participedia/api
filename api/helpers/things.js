@@ -12,6 +12,8 @@ const {
   CASE_BY_ID,
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,
+  COLLECTION_BY_ID,
+  FEATURED
 } = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
@@ -69,7 +71,7 @@ const placeHolderPhotos = article => {
   }
 };
 
-const returnByType = (res, params, article, static, user) => {
+const returnByType = (res, params, article, static, user, results = {}, total = null, pages = null) => {
   const { returns, type, view } = params;
 
   if (!article) return;
@@ -89,7 +91,7 @@ const returnByType = (res, params, article, static, user) => {
         layout: false,
       });
     case "json":
-      return res.status(200).json({ OK: true, article });
+      return res.status(200).json({ OK: true, article, results, total, pages });
     case "csv":
       // TODO: implement CSV
       return res.status(500, "CSV not implemented yet").render();
@@ -100,7 +102,7 @@ const returnByType = (res, params, article, static, user) => {
     default:
       return res
         .status(200)
-        .render(type + "-" + view, { article, static, user, params });
+        .render(type + "-" + view, { article, results, static, user, params, total, pages });
   }
 };
 
@@ -141,6 +143,7 @@ let queries = {
   case: CASE_BY_ID,
   method: METHOD_BY_ID,
   organization: ORGANIZATION_BY_ID,
+  collection: COLLECTION_BY_ID
 };
 
 async function maybeUpdateUserText(req, res, type) {
@@ -210,6 +213,20 @@ function setConditional(
   } else {
     updatedObject[key] = errorReporter.try(updateFunction)(newObject[key], key);
   }
+}
+
+async function getCollections(lang) {
+  const results = await db.any(FEATURED, {
+    query: '',
+    limit: null,
+    offset: 0,
+    language: lang,
+    userId: null,
+    sortby: 'post_date',
+    type: 'collections',
+    facets: '',
+  });
+  return results;
 }
 
 //get searchFilterKeyList and searchFilterKeys by methods,cases, orgs
@@ -326,4 +343,5 @@ module.exports = {
   searchFilterKeys,
   searchFilterKeyLists,
   placeHolderPhotos,
+  getCollections
 };

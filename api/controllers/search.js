@@ -21,7 +21,7 @@ const {
 } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
-const selectedCategoryValues = ['all', 'case', 'method', 'organization'];
+const selectedCategoryValues = ['all', 'case', 'method', 'organization', 'collection'];
 const RESPONSE_LIMIT = 20;
 
 function randomTexture() {
@@ -213,7 +213,7 @@ router.get("/", async function(req, res) {
   const lang = as.value(getLanguage(req));
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
-  
+
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,

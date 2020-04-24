@@ -59,10 +59,12 @@ function getFirstLargeImageForArticle(article) {
 
 function getFirstThumbnailImageForArticle(article) {
   const url = getFirstLargeImageForArticle(article);
-  return url.replace(
-    process.env.AWS_UPLOADS_URL,
-    `${process.env.AWS_UPLOADS_URL}thumbnail/`
-  );
+  if (url) {
+    return url.replace(
+      process.env.AWS_UPLOADS_URL,
+      `${process.env.AWS_UPLOADS_URL}thumbnail/`
+    );  
+  }
 }
 
 function filterCollections(req, name, context) {
@@ -224,6 +226,8 @@ module.exports = {
       return mapIdTitleToKeyValue(staticText["methods"]);
     } else if (name === "primary_organizer") {
       return mapIdTitleToKeyValue(staticText["organizations"]);
+    } else if (name === "collections") {
+      return mapIdTitleToKeyValue(staticText["collections"]);
     } else {
       return staticText[name];
     }
@@ -844,6 +848,16 @@ module.exports = {
       { title: i18n("Cases", context), key: "case" },
       { title: i18n("Methods", context), key: "method" },
       { title: i18n("Organizations", context), key: "organizations" },
+      { title: i18n("Collections", context), key: "collections" },
+    ];
+  },
+
+  getCollectionTabs(context) {
+    return [
+      { title: i18n("All", context), key: "all" },
+      { title: i18n("Cases", context), key: "case" },
+      { title: i18n("Methods", context), key: "method" },
+      { title: i18n("Organizations", context), key: "organizations" }
     ];
   },
 
@@ -962,12 +976,12 @@ module.exports = {
   },
 
   isNewView(req) {
-    const baseUrls = ["/case", "/method", "/organization"];
+    const baseUrls = ["/case", "/method", "/organization", "/collection"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("new") === 1;
   },
 
   isEditView(req) {
-    const baseUrls = ["/case", "/method", "/organization", "/user"];
+    const baseUrls = ["/case", "/method", "/organization", "/user", "/collection"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
@@ -982,6 +996,10 @@ module.exports = {
 
   isHomeSearchView(req) {
     return req.path === "/";
+  },
+
+  isCollectionView(req) {
+    return req.baseUrl === "/collection";
   },
 
   isUserView(req) {
@@ -1131,5 +1149,13 @@ module.exports = {
         };
       });
     }
+  },
+
+  isNotCollection: (article) => {
+    return article.type !== "collection";
+  },
+
+  collectionHasLink: (collection) => {
+    return collection.links & collection.links.length > 0;
   },
 };

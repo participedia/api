@@ -31,6 +31,7 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
+  getCollections
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -169,8 +170,8 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   ["start_date", "end_date"].map(key => cond(key, as.date));
   // id
   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
-  // list of ids
-  ["specific_methods_tools_techniques"].map(key => cond(key, as.ids));
+  // list of {id, type, title}
+  ["specific_methods_tools_techniques", "collections"].map(key => cond(key, as.ids));
   // key
   [
     "scope_of_influence",
@@ -187,7 +188,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   [
     "general_issues",
     "specific_topics",
-    "collections",
     "purposes",
     "approaches",
     "targeted_participants",
@@ -203,7 +203,6 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "implementers_of_change",
     "tools_techniques_types",
   ].map(key => cond(key, as.casekeys));
-  // TODO save bookmarked on user
   return [updatedCase, er];
 }
 
@@ -364,6 +363,7 @@ async function getCaseHttp(req, res) {
 async function getEditStaticText(params) {
   const lang = params.lang;
   let staticText = Object.assign({}, sharedFieldOptions);
+  staticText.collections = await getCollections(lang);
   staticText.authors = listUsers();
   staticText.cases = listCases(lang).filter(article => !article.hidden);
   staticText.methods = listMethods(lang).filter(article => !article.hidden);

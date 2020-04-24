@@ -11,6 +11,7 @@ const map = {
   init() {
     const mapEl = document.querySelector(".js-map-inner");
     const isMethodTab = document.getElementById("method").checked;
+    const isCollectionTab = document.getElementById("collections").checked;
 
     if (!mapEl) return;
 
@@ -24,8 +25,8 @@ const map = {
 
     this.initZoomControls(this.map);
 
-    if (!isMethodTab) {
-      // don't fetch results if we are on the methods tab
+    if (!isMethodTab && !isCollectionTab) {
+      // don't fetch map results if we are on the methods or collections tab
       this.fetchMapResults();
     }
   },
