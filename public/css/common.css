@@ -57,7 +57,7 @@ h2 {
   font-weight: 600;
 }
 h3 {
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.2rem; /* 19.2px */
   line-height: 1.4; /* 28px */
   font-weight: 600;
 }
@@ -318,35 +318,27 @@ footer .language-select {
 /* Utilities */
 .u-margin-bottom--xsmall {
   margin-bottom: 15px!important;
-  line-height: 1!important;
 }
 .u-margin-bottom--small {
   margin-bottom: 30px!important;
-  line-height: 1!important;
 }
 .u-margin-bottom--med {
   margin-bottom: 60px!important;
-  line-height: 1!important;
 }
 .u-margin-bottom--large {
   margin-bottom: 90px!important;
-  line-height: 1!important;
 }
 .u-margin-top--xsmall {
   margin-top: 15px!important;
-  line-height: 1!important;
 }
 .u-margin-top--small {
   margin-top: 30px!important;
-  line-height: 1!important;
 }
 .u-margin-top--med {
   margin-top: 60px!important;
-  line-height: 1!important;
 }
 .u-margin-top--large {
   margin-top: 90px!important;
-  line-height: 1!important;
 }
 
 @media (max-width: 1200px) {

@@ -1780,5 +1780,6 @@
   "collection_num_case_plural_or_zero": "%s Cases",
   "collection_num_method_plural_or_zero": "%s Methods",
   "collection_num_organization_plural_or_zero": "%s Organizations",
-  "All Collections": "All Collections"
+  "All Collections": "All Collections",
+  "More about this collection": "More about this collection" 
 }

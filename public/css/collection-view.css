@@ -1,31 +1,49 @@
-  .collection-view {
-    margin-top: -30px;
-  }
+.collection-view {
+  margin-top: -30px;
+}
 
-  .collection-view__banner-image {
-    height: 400px;
-    background-position: center;
-    background-repeat: repeat-x;
-    background-size: cover;
-    margin-bottom: -370px;
-  }
+.collection-view__banner-image {
+  height: 400px;
+  background-position: center;
+  background-repeat: repeat-x;
+  background-size: cover;
+  margin-bottom: -370px;
+}
 
+.collection-view__banner-overlay-card {
+  background-color: rgba(255,255,255, .8);
+  padding: 30px;
+  width: calc(75% - 110px);
+  height: 278px;
+  overflow: hidden;
+  margin: 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.collection-view__tabs {
+  margin-top: 60px;
+}
+
+.collection-view__banner-overlay-label {
+  margin-bottom: 5px;
+}
+.collection-view__banner-overlay-card-title {
+  margin-bottom: 0px; 
+}
+.collection-view__banner-overlay-card-description {
+ margin-top: 20px;  
+}
+
+@media (max-width: 1000px) {
   .collection-view__banner-overlay-card {
-    background-color: rgba(255,255,255, .8);
-    padding: 2rem;
-    width: 50%;
-    height: 270px;
-    overflow: hidden;
-    margin: 0 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    width: calc(100% - 120px);
   }
+}
 
-  .collection-view__tabs {
-    margin-top: 60px;
+@media (max-width: 500px) {
+  .collection-view__banner-overlay-card-description {
+    display: none;
   }
-
-  .collection-view__banner-overlay-card-header {
-
-  }
+}

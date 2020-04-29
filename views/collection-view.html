@@ -6,7 +6,7 @@
 
   <div class="collection-view__banner-overlay-card">
     <div class="collection-view__banner-overlay-card-header">
-      <h3 class="u-margin-bottom--xsmall">
+      <h3 class="collection-view__banner-overlay-label">
         {{toUpperCase (t "Collection")}}
         {{#if req.user.isadmin}}
           <small>
@@ -20,7 +20,7 @@
         {{/if}}
       </h3>
 
-      <h2 class="collection-view__banner-overlay-card-title u-margin-bottom--small">{{article.title}}</h2>
+      <h2 class="collection-view__banner-overlay-card-title">{{article.title}}</h2>
     
       {{#if article.description}}
         <div class="collection-view__banner-overlay-card-description">{{ article.description }}</div>
@@ -33,7 +33,7 @@
         {{#if article.links.0.title}}
           {{article.links.0.title}}
         {{else}}
-          {{t "Link"}}
+          {{t "More about this collection"}}
         {{/if}}
       </a>
     </div>
