@@ -12,7 +12,7 @@
   display: none;
 }
 
-.tab-container-label {
+.tab-container-label, .fake-tab-container-label {
   padding: .5rem;
   display: inline-block;
   text-decoration: none;
@@ -38,6 +38,8 @@
 }
 
 .tab-container-label:hover,
+.fake-tab-container-label:hover,
+.fake-tab-container-label:active,
 .tab-container-input:checked + .tab-container-label {
   border-bottom: 4px solid #ec2024;
 }

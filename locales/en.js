@@ -1779,5 +1779,6 @@
   "collection_num_organization": "%s Organization",
   "collection_num_case_plural_or_zero": "%s Cases",
   "collection_num_method_plural_or_zero": "%s Methods",
-  "collection_num_organization_plural_or_zero": "%s Organizations"
+  "collection_num_organization_plural_or_zero": "%s Organizations",
+  "All Collections": "All Collections"
 }

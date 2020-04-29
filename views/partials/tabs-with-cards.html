@@ -28,6 +28,12 @@
       <input id="{{key}}" type="radio" name="tabs" {{isTabActive ../req key}} class="tab-container-input">
       <label for="{{key}}" class="tab-container-label">{{title}}</label>
     {{/each}}
+
+    {{#if (isCollectionView req)}}
+      <span class="tab-container-item-divider tab-container-item-divider--collections"></span>
+      <a href="/?selectedCategory=collections" class="fake-tab-container-label">{{t "All Collections"}}</a>
+    {{/if}}
+
     <div class="tab-panels">
       {{> @partial-block }}
     </div>

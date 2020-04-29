@@ -16,7 +16,10 @@
     width: 50%;
     height: 270px;
     overflow: hidden;
-    margin: 0 auto;
+    margin: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .collection-view__tabs {
@@ -24,7 +27,5 @@
   }
 
   .collection-view__banner-overlay-card-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+
   }

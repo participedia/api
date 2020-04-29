@@ -265,10 +265,16 @@ async function getCollectionHttp(req, res) {
   // filter results by type if case, method or org is selected category
   if (
     params.selectedCategory &&
-    ["case", "method", "organization"].includes(params.selectedCategory)
+    ["case", "method", "organizations"].includes(params.selectedCategory)
   ) {
     results = results.filter(result => {
-      return result.type === params.selectedCategory;
+      // params.selectedCategory for organizations is plural, while it is singular for cases and methods
+      // but result.type is always singular, so do this check and use singular if params.selectedCategory is organizations
+      if (params.selectedCategory === "organizations") {
+        return result.type === "organization";  
+      } else {
+        return result.type === params.selectedCategory;
+      }
     });
   }
 
