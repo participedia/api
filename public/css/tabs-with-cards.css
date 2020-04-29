@@ -12,7 +12,7 @@
   display: none;
 }
 
-.tab-container-label {
+.tab-container-label, .tab-container-label--collections {
   padding: .5rem;
   display: inline-block;
   text-decoration: none;
@@ -38,6 +38,8 @@
 }
 
 .tab-container-label:hover,
+.tab-container-label--collections:hover,
+.tab-container-label--collections:active,
 .tab-container-input:checked + .tab-container-label {
   border-bottom: 4px solid #ec2024;
 }
@@ -192,7 +194,7 @@
 .card-layout-btns {
   display: flex;
   flex-direction: row;
-  width: 50%;
+  width: 100px;
   float: right;
   flex-flow: row-reverse;
   margin-top: -4px;
@@ -291,8 +293,7 @@
   .tab-select-container {
     display: block;
   }
-
-  .tab-container-label {
+  .tab-container-label, .tab-container-item-divider--collections, .tab-container-label--collections {
     display: none;
   }
 

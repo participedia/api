@@ -848,7 +848,7 @@ module.exports = {
       { title: i18n("Cases", context), key: "case" },
       { title: i18n("Methods", context), key: "method" },
       { title: i18n("Organizations", context), key: "organizations" },
-      { title: i18n("Collections", context), key: "collections" },
+      { title: i18n("All Collections", context), key: "collections" },
     ];
   },
 
@@ -1158,4 +1158,21 @@ module.exports = {
   collectionHasLink: (collection) => {
     return collection.links & collection.links.length > 0;
   },
+
+  getCollectionSummaryString: (collection, numArticlesByType, context) => {
+    const __ = context.data.root.__;
+
+    const numStringForType = (type) => {
+      const numOfThing = numArticlesByType[type];
+       if (numOfThing === 0 || numOfThing > 1) {
+        return __(`collection_num_${type}_plural_or_zero`, `${numOfThing}`);
+       } else {
+        return __(`collection_num_${type}`, `${numOfThing}`);
+       }
+    };
+    const numCasesString = numStringForType("case");
+    const numMethodsString = numStringForType("method");
+    const numOrgsString = numStringForType("organization");
+    return __("collection_summary_string", `${collection.title}`) + " " + numCasesString + ", " + numMethodsString  + ", " + numOrgsString + ".";
+  }
 };

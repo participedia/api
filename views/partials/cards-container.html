@@ -3,6 +3,12 @@
     {{> search-filters type=type }}
   {{/if}}
 
+  {{#if (isCollectionView req)}}        
+    <div class="u-margin-bottom--small">
+      {{getCollectionSummaryString article numArticlesByType}}      
+    </div>
+  {{/if}}
+
   {{#if totalResults}}
     {{> pagination }}
   {{/if}}
@@ -18,5 +24,12 @@
   {{#if includeSearchFilters}}
     {{> search-filters type=type }}
   {{/if}}
-  <p>{{t "no_items"}}</p>
+
+  {{#if (isCollectionView req)}}        
+    <div class="u-margin-bottom--small">
+      {{getCollectionSummaryString article numArticlesByType}}      
+    </div>
+  {{/if}}
+  
+  <div class="u-margin-bottom--large">{{t "no_items"}}</div>
 {{/if}}

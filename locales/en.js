@@ -1772,5 +1772,14 @@
   "collection_edit_photos_attribution_instructional": "Who is the original owner or creator of this image?",
   "collection_edit_photos_attribution_placeholder" : "Owner or creator",
   "collection_edit_photos_title_instructional": "Provide a title or description of this image in 10 words or less.",
-  "collection_edit_photos_title_placeholder": "Title or description"
+  "collection_edit_photos_title_placeholder": "Title or description",
+  "collection_summary_string": "The %s Collection contains:",
+  "collection_num_case": "%s Case",
+  "collection_num_method": "%s Method",
+  "collection_num_organization": "%s Organization",
+  "collection_num_case_plural_or_zero": "%s Cases",
+  "collection_num_method_plural_or_zero": "%s Methods",
+  "collection_num_organization_plural_or_zero": "%s Organizations",
+  "All Collections": "All Collections",
+  "More about this collection": "More about this collection" 
 }

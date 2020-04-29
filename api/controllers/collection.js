@@ -26,7 +26,7 @@ const {
   validateUrl,
   verifyOrUpdateUrl,
   returnByType,
-  fixUpURLs
+  fixUpURLs,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -43,9 +43,9 @@ const singularLowerCase = name =>
 // just get the type, if specified
 const typeFromReq = req => {
   var cat = singularLowerCase(req.query.selectedCategory || "Alls");
-  let selectedCategoryValues = ['all', 'case', 'method', 'organization'];
+  let selectedCategoryValues = ["all", "case", "method", "organization"];
   if (selectedCategoryValues.indexOf(cat) < 0) {
-    cat = 'all';
+    cat = "all";
   }
   return cat === "all" ? "thing" : cat;
 };
@@ -90,7 +90,8 @@ async function postCollectionNewHttp(req, res) {
 function getUpdatedCollection(user, params, newCollection, oldCollection) {
   const updatedCollection = Object.assign({}, oldCollection);
   const er = new ErrorReporter();
-  const cond = (key, fn) => setConditional(updatedCollection, newCollection, er, fn, key);
+  const cond = (key, fn) =>
+    setConditional(updatedCollection, newCollection, er, fn, key);
   // admin-only
   if (user.isadmin) {
     cond("featured", as.boolean);
@@ -105,9 +106,7 @@ function getUpdatedCollection(user, params, newCollection, oldCollection) {
     cond(key, as.media)
   );
   // photos and files are slightly different from other media as they have a source url too
-  ["photos", "files"].map(key =>
-    cond(key, as.sourcedMedia)
-  );
+  ["photos", "files"].map(key => cond(key, as.sourcedMedia));
   return [updatedCollection, er];
 }
 
@@ -153,10 +152,17 @@ async function postCollectionUpdateHttp(req, res) {
     author,
     oldArticle: oldCollection,
   } = await maybeUpdateUserText(req, res, "collection");
-  const [updatedCollection, er] = getUpdatedCollection(user, params, newCollection, oldCollection);
+  const [updatedCollection, er] = getUpdatedCollection(
+    user,
+    params,
+    newCollection,
+    oldCollection
+  );
 
   //get current date when user.isAdmin is false;
-  updatedCollection.updated_date = !user.isadmin ? "now" : updatedCollection.updated_date;
+  updatedCollection.updated_date = !user.isadmin
+    ? "now"
+    : updatedCollection.updated_date;
 
   if (!er.hasErrors()) {
     if (updatedText) {
@@ -168,7 +174,9 @@ async function postCollectionUpdateHttp(req, res) {
       //if this is a new collection, set creator id to userid and isAdmin
       if (user.isadmin) {
         const creator = {
-          user_id: newCollection.creator ? newCollection.creator : params.userid,
+          user_id: newCollection.creator
+            ? newCollection.creator
+            : params.userid,
           thingid: params.articleid,
         };
         const updatedBy = {
@@ -231,28 +239,53 @@ async function getCollectionHttp(req, res) {
   const params = parseGetParams(req, "collection");
   const article = await getCollection(params, res, req);
   const type = typeFromReq(req);
-  const query = type === 'thing' ? ENTRIES_BY_COLLECTION_ID : FEATURED_MAP;
-  let results = await db.any(query, {
+
+  // always fetch all article types so we can calculate totals for a collection
+  let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
     query: null,
     limit: 0, // null is no limit in SQL
     offset: 0,
     language: as.value(req.cookies.locale || "en"),
     sortby: "updated_date",
     userId: req.user ? req.user.id : null,
-    type: type === 'thing' ? 'cases' : type + "s",
-    facets: `AND collections @> ARRAY[${params.articleid}]`
+    type: "cases",
+    facets: `AND collections @> ARRAY[${params.articleid}]`,
   });
+
+  // get summary of article types for the collection
+  let numArticlesByType = {
+    case: 0,
+    method: 0,
+    organization: 0,
+  };
+  results.forEach(article => {
+    numArticlesByType[article.type] = numArticlesByType[article.type] + 1;
+  });
+
+  // filter results by type if case, method or org is selected category
+  if (
+    params.selectedCategory &&
+    ["case", "method", "organizations"].includes(params.selectedCategory)
+  ) {
+    results = results.filter(result => {
+      // params.selectedCategory for organizations is plural, while it is singular for cases and methods
+      // but result.type is always singular, so do this check and use singular if params.selectedCategory is organizations
+      if (params.selectedCategory === "organizations") {
+        return result.type === "organization";  
+      } else {
+        return result.type === params.selectedCategory;
+      }
+    });
+  }
 
   const limit = 20; // number of entries displayed on one page
   let total, pages;
-  
-  // calculate pages and totals and
+
+  // calculate pages and totals and add random texture url if no images are present
   if (results) {
-    total = Number(
-      results.length ? results[0].total || results.length : 0
-    );
+    total = Number(results.length ? results[0].total || results.length : 0);
     pages = total ? Math.max(Math.ceil(total / limit)) : null;
-    
+
     // for each entry, use a random texture image if there are no images uploaded
     results = results.map(obj => {
       if (obj.photos.length === 0) {
@@ -267,7 +300,17 @@ async function getCollectionHttp(req, res) {
     return null;
   }
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user, results, total, pages);
+  returnByType(
+    res,
+    params,
+    article,
+    staticText,
+    req.user,
+    results,
+    total,
+    pages,
+    numArticlesByType
+  );
 }
 
 async function getEditStaticText(params) {

@@ -6,7 +6,7 @@
 
   <div class="collection-view__banner-overlay-card">
     <div class="collection-view__banner-overlay-card-header">
-      <h3>
+      <h3 class="collection-view__banner-overlay-label">
         {{toUpperCase (t "Collection")}}
         {{#if req.user.isadmin}}
           <small>
@@ -19,25 +19,24 @@
           </small> 
         {{/if}}
       </h3>
-      <a href="/?selectedCategory=collections">
-        {{t "View all collections"}} 
-      </a>
+
+      <h2 class="collection-view__banner-overlay-card-title">{{article.title}}</h2>
+    
+      {{#if article.description}}
+        <div class="collection-view__banner-overlay-card-description">{{ article.description }}</div>
+      {{/if}}
     </div>
 
-    <h1 class="collection-view__banner-overlay-card-title">{{article.title}}</h1>
-    
-    {{#if article.description}}
-      <div class="collection-view__banner-overlay-card-description">{{ article.description }}</div>
-    {{/if}}
-
     {{#if article.links}} 
+    <div>
       <a href="{{article.links.0.url}}" class="button button-dark-grey u-margin-top--small" target="_blank" rel="noopener">
         {{#if article.links.0.title}}
           {{article.links.0.title}}
         {{else}}
-          {{t "Link"}}
+          {{t "More about this collection"}}
         {{/if}}
       </a>
+    </div>
     {{/if}}
 
     
@@ -51,6 +50,8 @@
             totalResults=total
             totalPages=pages
             cards=results
+            article=article
+            numArticlesByType=numArticlesByType
           }}
         {{/if}}
       </div>
@@ -61,6 +62,8 @@
             totalPages=pages
             cards=results
             type="case"
+            article=article
+            numArticlesByType=numArticlesByType
           }}
         {{/if}}
       </div>
@@ -71,6 +74,8 @@
             totalPages=pages
             cards=results
             type="method"
+            article=article
+            numArticlesByType=numArticlesByType
           }}
         {{/if}}
       </div>
@@ -81,6 +86,8 @@
             totalPages=pages
             cards=results
             type="organizations"
+            article=article
+            numArticlesByType=numArticlesByType
           }}
         {{/if}}
       </div>
