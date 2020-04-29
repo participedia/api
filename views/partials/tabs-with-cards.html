@@ -21,6 +21,11 @@
         <option value="{{key}}">{{title}}</option>
       {{/each}}
     </select>
+    {{#if (isCollectionView req)}}
+      <div class="u-margin-top--small">
+        <a href="/?selectedCategory=collections">{{t "All Collections"}}</a>
+      </div>
+    {{/if}}
   </div>
   <div class="tab-container js-tab-container">
     {{#each getTabs}}
@@ -31,7 +36,7 @@
 
     {{#if (isCollectionView req)}}
       <span class="tab-container-item-divider tab-container-item-divider--collections"></span>
-      <a href="/?selectedCategory=collections" class="fake-tab-container-label">{{t "All Collections"}}</a>
+      <a href="/?selectedCategory=collections" class="tab-container-label--collections">{{t "All Collections"}}</a>
     {{/if}}
 
     <div class="tab-panels">
