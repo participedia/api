@@ -68,6 +68,8 @@ const map = {
       this.activateMapCTAContainer.style.display = "none";
     } else if (window.sessionStorage.getItem("participedia:mapActivated")) {
       this.hideMapOverlay();
+    } else {
+      this.showMapOverlay();
     }
 
     this.initTracking();
