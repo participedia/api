@@ -3,20 +3,17 @@
 }
 
 .collection-view__banner-image {
-  height: 400px;
   background-position: center;
   background-repeat: repeat-x;
   background-size: cover;
-  margin-bottom: -370px;
+  padding: 30px;
 }
 
 .collection-view__banner-overlay-card {
   background-color: rgba(255,255,255, .8);
   padding: 30px;
-  width: calc(75% - 110px);
-  height: 278px;
+  width: calc(75% - 70px);
   overflow: hidden;
-  margin: 0 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -33,17 +30,17 @@
   margin-bottom: 0px; 
 }
 .collection-view__banner-overlay-card-description {
- margin-top: 20px;  
+  margin-top: 20px;  
+}
+
+@media (min-width: 1400px) {
+  .collection-view__banner-overlay-card {
+    width: calc(50% - 70px);
+  }
 }
 
 @media (max-width: 1000px) {
   .collection-view__banner-overlay-card {
-    width: calc(100% - 120px);
-  }
-}
-
-@media (max-width: 500px) {
-  .collection-view__banner-overlay-card-description {
-    display: none;
+    width: calc(100% - 60px);
   }
 }

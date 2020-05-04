@@ -2,44 +2,42 @@
   <div 
     class="collection-view__banner-image" 
     style="background-image: url('{{getFirstLargeImageForArticle article}}')"
-  ></div>
+  >
+    <div class="collection-view__banner-overlay-card">
+      <div class="collection-view__banner-overlay-card-header">
+        <h3 class="collection-view__banner-overlay-label">
+          {{toUpperCase (t "Collection")}}
+          {{#if req.user.isadmin}}
+            <small>
+              <a
+                href="/{{article.type}}/{{article.id}}/edit"
+                title="{{t 'Edit'}}"
+              >
+                {{t "Edit"}}
+              </a>   
+            </small> 
+          {{/if}}
+        </h3>
 
-  <div class="collection-view__banner-overlay-card">
-    <div class="collection-view__banner-overlay-card-header">
-      <h3 class="collection-view__banner-overlay-label">
-        {{toUpperCase (t "Collection")}}
-        {{#if req.user.isadmin}}
-          <small>
-            <a
-              href="/{{article.type}}/{{article.id}}/edit"
-              title="{{t 'Edit'}}"
-            >
-              {{t "Edit"}}
-            </a>   
-          </small> 
+        <h2 class="collection-view__banner-overlay-card-title">{{article.title}}</h2>
+      
+        {{#if article.description}}
+          <div class="collection-view__banner-overlay-card-description">{{ article.description }}</div>
         {{/if}}
-      </h3>
+      </div>
 
-      <h2 class="collection-view__banner-overlay-card-title">{{article.title}}</h2>
-    
-      {{#if article.description}}
-        <div class="collection-view__banner-overlay-card-description">{{ article.description }}</div>
+      {{#if article.links}} 
+      <div>
+        <a href="{{article.links.0.url}}" class="button button-dark-grey u-margin-top--small" target="_blank" rel="noopener">
+          {{#if article.links.0.title}}
+            {{article.links.0.title}}
+          {{else}}
+            {{t "More about this collection"}}
+          {{/if}}
+        </a>
+      </div>
       {{/if}}
     </div>
-
-    {{#if article.links}} 
-    <div>
-      <a href="{{article.links.0.url}}" class="button button-dark-grey u-margin-top--small" target="_blank" rel="noopener">
-        {{#if article.links.0.title}}
-          {{article.links.0.title}}
-        {{else}}
-          {{t "More about this collection"}}
-        {{/if}}
-      </a>
-    </div>
-    {{/if}}
-
-    
   </div>
   <div class="full-width-container">  
     <div class="collection-view__tabs">
