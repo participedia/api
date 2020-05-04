@@ -271,8 +271,7 @@ app.get("/en/people/tanyapuravankara", function(req, res) {
 // /citizensvoicescovid
 // vanity url for covid related intiative, redirects to a google site page
 app.get("/citizensvoicescovid", function(req, res) {
-  // TODO: replace with correct google site page url
-  return res.redirect("https://participedia.net");
+  return res.redirect("https://sites.google.com/participedia.net/citizensvoicescovid");
 });
 
 // redirect old .net urls to their new urls
