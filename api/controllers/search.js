@@ -178,6 +178,7 @@ const searchFiltersFromReq = req => {
 const redirectToHomePageIfHasCollectionsQueryParameter = (req, res, next) => {
   if (req.query.hasOwnProperty('collections')) {
     res.redirect('?selectedCategory=collections');
+    return;
   }
 
   return next();
