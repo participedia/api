@@ -1,20 +1,18 @@
 <div class="map-container">
-  <div class="map-legend js-map-legend" style="display: none;">
-    <div class="map-legend-inner">
-      <ul class="unstyled-list">
-        <li>{{> icon-map-marker }} {{t "Cases & Organizations"}}</li>
-        <li class="map-legend-featured-icon">{{> icon-map-marker }} {{t "Featured Entries"}}</li>
-        <li>
-          <button class="button icon-only js-map-overlay-trigger">
-            <span class="sr-only">{{t "map information"}}</span>
-            {{> icon-info }}
-          </button>
-        </li>
-      </ul>
-    </div>
-  </div>
-
   <div class="map-inner js-map-inner"></div>
+
+  <div class="map-legend js-map-legend" style="display: none;">    
+    <ul class="unstyled-list map-legend__list">
+      <li>{{> icon-map-marker }} {{t "Cases & Organizations"}}</li>
+      <li class="map-legend-featured-icon">{{> icon-map-marker }} {{t "Featured Entries"}}</li>
+      <li>
+        <button class="button icon-only js-map-overlay-trigger">
+          <span class="sr-only">{{t "map information"}}</span>
+          {{> icon-info }}
+        </button>
+      </li>
+    </ul>
+  </div>
 
   <button class="map-overlay js-map-overlay" style="display: none;">
     <span class="sr-only">{{t "Click anywhere to activate map"}}</span>
