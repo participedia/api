@@ -1,11 +1,12 @@
 <div class="banner-notice js-banner-notice">
   <div class="banner-notice__content">
-    <span>The <strong>"Citizens Voices & Values on Covid-19"</strong> collection is now live!</span>
-    <a href="/collection/6501" class="button button-red banner-notice__cta-button">View Collection</a>
+    <span class="banner-notice__text-with-link">{{{ getBannerText "withLink" }}}</span>
+    <span class="banner-notice__text">{{{ getBannerText "withoutLink" }}}</span>
+    <a href="/collection/6501" class="button button-red banner-notice__cta-button">{{t "View Collection"}}</a>
   </div>
   <div class="banner-notice__close-button js-banner-notice__close-button">
     <a href="#">
-      <span class="sr-only">close banner</span>
+      <span class="sr-only">{{t "close banner"}}</span>
       {{> icon-close }}
     </a>
   </div>

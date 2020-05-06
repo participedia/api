@@ -1783,5 +1783,8 @@
   "collection_num_method_plural_or_zero": "%s Methods",
   "collection_num_organization_plural_or_zero": "%s Organizations",
   "All Collections": "All Collections",
-  "More about this collection": "More about this collection" 
+  "More about this collection": "More about this collection",
+  "close banner": "close banner",
+  "View Collection": "View Collection",
+  "citizens_voices_collection_is_now_live": "The \"%sCitizens Voices & Values on Covid-19%s\" collection is now live!"
 }
