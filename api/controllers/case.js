@@ -37,6 +37,7 @@ const {
 const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
+const setAndValidateLanguage = require("../middleware/setAndValidateLanguage.js");
 const CASE_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
 );
@@ -406,7 +407,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getCaseEditHttp);
 router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
 router.post("/new", requireAuthenticatedUser(), postCaseNewHttp);
-router.get("/:thingid", getCaseHttp);
+router.get("/:thingid/:language?", setAndValidateLanguage(), getCaseHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCaseUpdateHttp);
 
 module.exports = {

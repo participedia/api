@@ -34,7 +34,7 @@ const {
 const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
-
+const setAndValidateLanguage = require("../middleware/setAndValidateLanguage.js");
 const ORGANIZATION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/organization-structure.json", "utf8")
 );
@@ -350,7 +350,7 @@ router.post(
   requireAuthenticatedUser(),
   postOrganizationUpdateHttp
 );
-router.get("/:thingid/", getOrganizationHttp);
+router.get("/:thingid/:language?", setAndValidateLanguage(), getOrganizationHttp);
 router.get(
   "/:thingid/edit",
   requireAuthenticatedUser(),
