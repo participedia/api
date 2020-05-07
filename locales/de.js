@@ -631,7 +631,7 @@
   "Luxembourg": "Luxemburg",
   "Macao": "Macao",
   "Madagascar": "Madagaskar",
-  "main_tagline": "Eine globale Gemeinschaft, die Wissen und Geschichten über Öffentlichkeitsarbeit und demokratische Innovationen austauscht",
+  "main_tagline": "Eine Crowdsourcing-Plattform für Forscher, Aktivisten, Praktiker und alle, die an öffentlicher Beteiligung und demokratischen Innovationen interessiert sind",
   "Malawi": "Malawi",
   "Malaysia": "Malaysien",
   "Maldives": "Malediven",

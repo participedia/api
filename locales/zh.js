@@ -631,7 +631,7 @@
   "Luxembourg": "卢森堡",
   "Macao": "澳门",
   "Madagascar": "马达加斯加",
-  "main_tagline": "分享公众参与和民主创新的知识和故事的全球社区",
+  "main_tagline": "一个面向研究人员，活动家，从业人员以及任何对公众参与和民主创新感兴趣的人的众包平台",
   "Malawi": "马拉维",
   "Malaysia": "马来西亚",
   "Maldives": "马尔代夫",
