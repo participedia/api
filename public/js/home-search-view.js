@@ -4,6 +4,7 @@ import bookmarkButtons from "./bookmark-buttons.js";
 import dropdownButton from "./dropdown-button.js";
 import searchFilters from "./search-filters.js";
 import lazyLoadImages from "./lazy-load-images.js";
+import bannerNotice from "./banner-notice.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   map.init();
@@ -12,4 +13,5 @@ document.addEventListener("DOMContentLoaded", () => {
   dropdownButton.init();
   searchFilters.init();
   lazyLoadImages.init();
+  bannerNotice.init();
 });

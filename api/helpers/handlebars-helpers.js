@@ -1174,5 +1174,15 @@ module.exports = {
     const numMethodsString = numStringForType("method");
     const numOrgsString = numStringForType("organization");
     return __("collection_summary_string", `${collection.title}`) + " " + numCasesString + ", " + numMethodsString  + ", " + numOrgsString + ".";
+  },
+
+  // banner-notice helpers
+  getBannerText(withLink, context) {
+    const __ = context.data.root.__;
+    if (withLink === "withLink") {
+      return __("citizens_voices_collection_is_now_live", "<a href='/collection/6501'>", "</a>");
+    } else {
+      return __("citizens_voices_collection_is_now_live", "<strong>", "</strong>");  
+    }
   }
 };
