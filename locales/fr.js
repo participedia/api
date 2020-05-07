@@ -631,7 +631,7 @@
   "Luxembourg": "Luxembourg",
   "Macao": "Macao",
   "Madagascar": "Madagascar",
-  "main_tagline": "Une communauté mondiale partageant ses connaissances et ses expériences sur la participation publique et les innovations démocratiques",
+  "main_tagline": "Une plateforme de crowdsourcing pour les chercheurs, les militants, les praticiens et toute personne intéressée par la participation du public et les innovations démocratiques",
   "Malawi": "Malawi",
   "Malaysia": "Malaisie",
   "Maldives": "Maldives",
