@@ -227,6 +227,7 @@ header .right-col {
 }
 
 .main-content {
+  padding-top: 30px;
   margin-top: 60px;
   /* make min height the height of the viewport minus height of footer, padding/margin, header, so that footer always looks fixed to bottom */
   min-height: calc(100VH - 227px - 90px - 60px);
