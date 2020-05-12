@@ -53,16 +53,18 @@ function currentUrl(req) {
 
 function getFirstLargeImageForArticle(article) {
   if (article.photos && article.photos.length > 0) {
-   return encodeURI(article.photos[0].url);
+    return encodeURI(article.photos[0].url);
   }
 }
 
 function getFirstThumbnailImageForArticle(article) {
   const url = getFirstLargeImageForArticle(article);
-  return url.replace(
-    process.env.AWS_UPLOADS_URL,
-    `${process.env.AWS_UPLOADS_URL}thumbnail/`
-  );
+  if (url) {
+    return url.replace(
+      process.env.AWS_UPLOADS_URL,
+      `${process.env.AWS_UPLOADS_URL}thumbnail/`
+    );  
+  }
 }
 
 function filterCollections(req, name, context) {
@@ -229,6 +231,8 @@ module.exports = {
       return mapIdTitleToKeyValue(staticText["methods"]);
     } else if (name === "primary_organizer") {
       return mapIdTitleToKeyValue(staticText["organizations"]);
+    } else if (name === "collections") {
+      return mapIdTitleToKeyValue(staticText["collections"]);
     } else {
       return staticText[name];
     }
@@ -416,14 +420,16 @@ module.exports = {
   },
 
   isLinkableTerm: (article, name) => {
-    const supportedArticleTypes = ["case"];
-
-    if (!supportedArticleTypes.includes(article.type)) return;
+    const articleToKeyMap = {
+      organization: "organizations",
+      method: "method",
+      case: "case"
+    };
 
     // get all the keys that we are currently filtering on from the search filters list
     const supportedFilters = [].concat.apply(
       [],
-      searchFiltersList[article.type].map(section => {
+      searchFiltersList[articleToKeyMap[article.type]].map(section => {
         return section.fieldNameKeys.map(key => key);
       })
     );
@@ -432,7 +438,11 @@ module.exports = {
   },
 
   getSearchLinkForTerm: (article, name, key) => {
-    return `/?selectedCategory=${article.type}&${name}=${key}`;
+    if (article.type === "organization") {
+      return `/?selectedCategory=${article.type}s&${name}=${key}`;  
+    } else {
+      return `/?selectedCategory=${article.type}&${name}=${key}`;  
+    }
   },
 
   getFirstLargeImageForArticle: article => {
@@ -717,10 +727,13 @@ module.exports = {
       req.headers.host
     }/images/participedia-social-img.jpg`;
     const url = currentUrl(req);
-    const title = getPageTitle(req, article, context);
-    const description =
+    // replace double quotes in title and description with single quotes
+    let title = getPageTitle(req, article, context).replace(/"/g, "'");
+    let description =
       (article && article.description) || i18n("main_tagline", context);
-    const imageUrl = (article && getFirstLargeImageForArticle(article)) || defaultPhotoUrl;
+    description = description.replace(/"/g, "'");
+    const imageUrl =
+      (article && getFirstLargeImageForArticle(article)) || defaultPhotoUrl;
     return socialTagsTemplate(title, description, url, imageUrl);
   },
 
@@ -732,6 +745,10 @@ module.exports = {
     // Filter and sort edit history to show one edit per user, per day
     // in the order of most recent edits first.
     // (do not show multiple edits by the same author on the same day)
+
+    if (!Array.isArray(editHistory)) {
+      editHistory = [];
+    }
 
     let editsByUser = {};
     editHistory.forEach(edit => {
@@ -851,6 +868,16 @@ module.exports = {
       { title: i18n("Cases", context), key: "case" },
       { title: i18n("Methods", context), key: "method" },
       { title: i18n("Organizations", context), key: "organizations" },
+      { title: i18n("All Collections", context), key: "collections" },
+    ];
+  },
+
+  getCollectionTabs(context) {
+    return [
+      { title: i18n("All", context), key: "all" },
+      { title: i18n("Cases", context), key: "case" },
+      { title: i18n("Methods", context), key: "method" },
+      { title: i18n("Organizations", context), key: "organizations" }
     ];
   },
 
@@ -969,12 +996,12 @@ module.exports = {
   },
 
   isNewView(req) {
-    const baseUrls = ["/case", "/method", "/organization"];
+    const baseUrls = ["/case", "/method", "/organization", "/collection"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("new") === 1;
   },
 
   isEditView(req) {
-    const baseUrls = ["/case", "/method", "/organization", "/user"];
+    const baseUrls = ["/case", "/method", "/organization", "/user", "/collection"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
@@ -989,6 +1016,10 @@ module.exports = {
 
   isHomeSearchView(req) {
     return req.path === "/";
+  },
+
+  isCollectionView(req) {
+    return req.baseUrl === "/collection";
   },
 
   isUserView(req) {
@@ -1139,4 +1170,39 @@ module.exports = {
       });
     }
   },
+
+  isNotCollection: (article) => {
+    return article.type !== "collection";
+  },
+
+  collectionHasLink: (collection) => {
+    return collection.links & collection.links.length > 0;
+  },
+
+  getCollectionSummaryString: (collection, numArticlesByType, context) => {
+    const __ = context.data.root.__;
+
+    const numStringForType = (type) => {
+      const numOfThing = numArticlesByType[type];
+       if (numOfThing === 0 || numOfThing > 1) {
+        return __(`collection_num_${type}_plural_or_zero`, `${numOfThing}`);
+       } else {
+        return __(`collection_num_${type}`, `${numOfThing}`);
+       }
+    };
+    const numCasesString = numStringForType("case");
+    const numMethodsString = numStringForType("method");
+    const numOrgsString = numStringForType("organization");
+    return __("collection_summary_string", `${collection.title}`) + " " + numCasesString + ", " + numMethodsString  + ", " + numOrgsString + ".";
+  },
+
+  // banner-notice helpers
+  getBannerText(withLink, context) {
+    const __ = context.data.root.__;
+    if (withLink === "withLink") {
+      return __("citizens_voices_collection_is_now_live", "<a href='/collection/6501'>", "</a>");
+    } else {
+      return __("citizens_voices_collection_is_now_live", "<strong>", "</strong>");  
+    }
+  }
 };

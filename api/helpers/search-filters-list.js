@@ -64,7 +64,7 @@ const searchFiltersList = {
       sectionKey: "Entry Completeness",
       sectionLabel: "Entry Completeness",
       fieldNameKeys: ["completeness"],
-    },
+    }
   ],
   case: [
     {
@@ -105,11 +105,6 @@ const searchFiltersList = {
       sectionKey: "evidence_of_impact",
       sectionLabel: "Evidence of Impact",
       fieldNameKeys: ["change_types"],
-    },
-    {
-      sectionKey: "collections",
-      sectionLabel: "Collections",
-      fieldNameKeys: ["collections"],
     },
     {
       sectionKey: "Entry Completeness",

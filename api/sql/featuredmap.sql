@@ -13,6 +13,11 @@ SELECT
 		WHEN type='organization' THEN get_completeness_organizations(id)
 		ELSE ''
      END as completeness,
+  CASE 
+    WHEN type='case' THEN bookmarked('case', ${type:name}.id, ${userId})
+    WHEN type='method' THEN bookmarked('method', ${type:name}.id, ${userId})
+    WHEN type='organization' THEN bookmarked('organization', ${type:name}.id, ${userId})
+    END as bookmarked,
   featured,
   featured as searchmatched,
   texts.title,

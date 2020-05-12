@@ -21,7 +21,7 @@ const {
 } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
-const selectedCategoryValues = ['all', 'case', 'method', 'organization'];
+const selectedCategoryValues = ['all', 'case', 'method', 'organization', 'collection'];
 const RESPONSE_LIMIT = 20;
 
 function randomTexture() {
@@ -175,6 +175,15 @@ const searchFiltersFromReq = req => {
   return searchFilterKeysMapped.join("") + searchFilterKeyListMapped.join("");
 };
 
+const redirectToHomePageIfHasCollectionsQueryParameter = (req, res, next) => {
+  if (req.query.hasOwnProperty('collections')) {
+    res.redirect('?selectedCategory=collections');
+    return;
+  }
+
+  return next();
+};
+
 /**
  * @api {get} /search Search through the cases
  * @apiGroup Search
@@ -206,14 +215,14 @@ const searchFiltersFromReq = req => {
 // if there is no query OR the query is "featured" then return all featured items
 // One further item: need an alternative search which returns only map-level items and has no pagination
 
-router.get("/", async function(req, res) {
+router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function(req, res) {
   const user_query = req.query.query || "";
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
   const lang = as.value(getLanguage(req));
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
-  
+
   try {
     const results = await db.any(queryFileFromReq(req), {
       query: parsed_query,

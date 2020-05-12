@@ -39,6 +39,7 @@ app.use(morgan("dev")); // request logging
 
 // Actual Participedia APIS vs. Nodejs gunk
 const handlebarsHelpers = require("./api/helpers/handlebars-helpers.js");
+const { collection_ } = require("./api/controllers/collection");
 const { case_ } = require("./api/controllers/case");
 const { method } = require("./api/controllers/method");
 const { organization } = require("./api/controllers/organization");
@@ -238,6 +239,7 @@ app.use((req, res, next) => {
 // ROUTES
 app.use("/", cache("5 minutes"), search);
 
+app.use("/collection", collection_);
 app.use("/case", case_);
 app.use("/organization", organization);
 app.use("/method", method);
@@ -270,11 +272,20 @@ app.get("/teaching", function(req, res) {
 app.get("/content-chooser", function(req, res) {
   res.status(200).render("content-chooser");
 });
+app.get("/help-faq-contact", function(req, res) {
+  res.status(200).render("help-faq-contact-view");
+});
 
 // redirect old user profile for tanyapuravankara to new url
 // we are only doing it for this user account, since it gets hits on google
 app.get("/en/people/tanyapuravankara", function(req, res) {
   return res.redirect("/user/8198");
+});
+
+// /citizensvoicescovid
+// vanity url for covid related intiative, redirects to a google site page
+app.get("/citizensvoicescovid", function(req, res) {
+  return res.redirect("https://sites.google.com/participedia.net/citizensvoicescovid");
 });
 
 // redirect old .net urls to their new urls

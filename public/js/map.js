@@ -10,7 +10,8 @@ const featuredMarkerIcon = "/images/featured-marker.svg";
 const map = {
   init() {
     const mapEl = document.querySelector(".js-map-inner");
-    const isMethodTab = document.getElementById("method").checked;
+    this.isMethodTab = document.getElementById("method").checked;
+    this.isCollectionTab = document.getElementById("collections").checked;
 
     if (!mapEl) return;
 
@@ -23,11 +24,13 @@ const map = {
     });
 
     this.initZoomControls(this.map);
+    this.initMapOverlay();
 
-    if (!isMethodTab) {
-      // don't fetch results if we are on the methods tab
+    if (!this.isMethodTab && !this.isCollectionTab) {
+      // don't fetch map results if we are on the methods or collections tab
       this.fetchMapResults();
     }
+
   },
 
   initMapOverlay() {
@@ -38,25 +41,32 @@ const map = {
     this.mapControls = document.querySelector(".js-map-controls");
     this.mapOverlayEl = document.querySelector(".js-map-overlay");
     this.mapLegend = document.querySelector(".js-map-legend");
+    this.activateMapCTAContainer = document.querySelector(".js-map-overlay-info");
 
-    this.mapOverlayEl.addEventListener("click", e => {
-      try {
-        window.sessionStorage.setItem("participedia:mapActivated", "true");
-      } catch (err) {
-        console.warn(err);
-      }
-      this.hideMapOverlay();
-    });
+    if (!this.isMethodTab && !this.isCollectionTab) {
+      this.mapOverlayEl.addEventListener("click", e => {
+        try {
+          window.sessionStorage.setItem("participedia:mapActivated", "true");
+        } catch (err) {
+          console.warn(err);
+        }
+        this.hideMapOverlay();
+      });
 
-    mapOverlayTriggerEl.addEventListener("click", e => {
-      // track activate map click
-      tracking.send("home.map", "activate_map_button_click");
-      this.showMapOverlay();
-    });
-
-    // if user has already clicked to activate map in the current browser session,
+      mapOverlayTriggerEl.addEventListener("click", e => {
+        // track activate map click
+        tracking.send("home.map", "activate_map_button_click");
+        this.showMapOverlay();
+      });  
+    }
+    
+    // if user is on method or collection tab, show overlay, but don't show activate map link
+    // on all other tabs, if user has already clicked to activate map in the current browser session,
     // don't show overlay, show legend
-    if (window.sessionStorage.getItem("participedia:mapActivated")) {
+    if (this.isMethodTab || this.isCollectionTab) {
+      this.showMapOverlay();
+      this.activateMapCTAContainer.style.display = "none";
+    } else if (window.sessionStorage.getItem("participedia:mapActivated")) {
       this.hideMapOverlay();
     } else {
       this.showMapOverlay();
@@ -237,7 +247,6 @@ const map = {
 
     // render markers
     this.dropMarkers(markers);
-    this.initMapOverlay();
   },
 
   bindClickEventForMarker(markerEl, marker) {

@@ -38,7 +38,7 @@
   </main>
   {{> footer }}
 
-  {{> contact-help-faq }}
+  {{> contact-help-faq-popover }}
 
   {{> script-tag-with-cache-key filepath="/build/js/app.bundle.js"}}
 
@@ -46,6 +46,10 @@
     {{!-- import google api for the map widget --}}
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYi8w5HOVTr3HyioFkAKUK_PofGow_7uA&libraries=places&language={{static.language}}"></script>
     {{> script-tag-with-cache-key filepath="/build/js/home-search-view.bundle.js"}}
+  {{/if}}
+
+  {{#if (isCollectionView req)}}
+    {{> script-tag-with-cache-key filepath="/build/js/collection-view.bundle.js"}}
   {{/if}}
 
   {{#if (isEditView req)}}

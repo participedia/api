@@ -1,3 +1,5 @@
+{{> banner-notice }}
+
 {{> map }}
 
 <div class="home-search-body">
@@ -41,6 +43,16 @@
           cards=results
           includeSearchFilters=true
           type="organizations"
+        }}
+      {{/if}}
+    </div>
+    <div role="tabpanel" class="tab-collections">
+      {{#if (isSelectedHomeTab req "collections")}}
+        {{> cards-container
+          totalResults=total
+          totalPages=pages
+          cards=results
+          type="collection"
         }}
       {{/if}}
     </div>

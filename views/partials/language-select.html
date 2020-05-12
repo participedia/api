@@ -1,13 +1,21 @@
-<select name="locale" class="language-select js-language-select">
-  {{#if showTwoLetterCode}}
-  {{else}}
-    <option value="">{{t "Select Language"}}</option>
-  {{/if}}
-  {{#each (getLanguageOptions)}}
-    {{#if ../showTwoLetterCode}}
-      {{> language-select-option key=twoLetterCode value=(toUpperCase twoLetterCode)}}
+<div class="language-selector">
+  <label class="selected-language">{{getLocale}}</label>
+  <select name="locale" class="language-select js-language-select">
+    {{#if showTwoLetterCode}}
     {{else}}
-      {{> language-select-option key=twoLetterCode value=(t name)}}
+      <option value="">{{t "Select Language"}}</option>
     {{/if}}
-  {{/each}}
-</select>
+    {{#each (getLanguageOptions)}}
+      {{#if ../showBoth}}
+        {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(t name)}}
+      {{else}}
+        {{#if ../showTwoLetterCode}}
+          {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(toUpperCase twoLetterCode)}}
+        {{else}}
+          {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(t name)}}
+        {{/if}}
+      {{/if}}
+    {{/each}}
+  </select>
+
+</div>

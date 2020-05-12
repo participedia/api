@@ -7,7 +7,8 @@ const options = {
 const pgp = require("pg-promise")(options);
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
-const oldS3Url = "uploads.participedia.xyz";
+// const oldS3Url = "uploads.participedia.xyz";
+const oldS3Url = new RegExp("uploads.participedia.xyz", "g");
 const newS3Url = process.env.AWS_S3_BUCKET;
 
 let config;
@@ -41,6 +42,8 @@ function getPhotos(table) {
         if (newPhoto.search(oldS3Url) >= 0) {
           newPhoto = newPhoto.replace(oldS3Url, newS3Url);
           metaData["photos"] = newPhoto;
+          // console.log(`Table: ${table}, Column 'photos', ID ${data.id} has the URL we are looking for.`);
+          // console.log(metaData["photos"]);
         } else {
           // console.log(`Table: ${table}, Column 'photos', ID ${data.id} doesn't have the URL we are looking for.`);
         }
@@ -48,6 +51,8 @@ function getPhotos(table) {
         if (newFiles.search(oldS3Url) >= 0) {
           newFiles = newFiles.replace(oldS3Url, newS3Url);
           metaData["files"] = newFiles;
+          // console.log(`Table: ${table}, Column 'files', ID ${data.id} has the URL we are looking for.`);
+          // console.log(metaData["files"]);
         } else {
           // console.log(`Table: ${table}, Column 'files', ID ${data.id} doesn't have the URL we are looking for.`);
         }
@@ -55,6 +60,8 @@ function getPhotos(table) {
         if (newVideos.search(oldS3Url) >= 0) {
           newVideos = newVideos.replace(oldS3Url, newS3Url);
           metaData["videos"] = newAudio;
+          // console.log(`Table: ${table}, Column 'videos', ID ${data.id} has the URL we are looking for.`);
+          // console.log(metaData["videos"]);
         } else {
           // console.log(`Table: ${table}, Column 'videos', ID ${data.id} doesn't have the URL we are looking for.`);
         }
@@ -62,6 +69,8 @@ function getPhotos(table) {
         if (newAudio.search(oldS3Url) >= 0) {
           newAudio = newAudio.replace(oldS3Url, newS3Url);
           metaData["audio"] = newAudio;
+          // console.log(`Table: ${table}, Column 'audio', ID ${data.id} has the URL we are looking for.`);
+          // console.log(metaData["audio"]);
         } else {
           // console.log(`Table: ${table}, Column 'audio', ID ${data.id} doesn't have the URL we are looking for.`);
         }

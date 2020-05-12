@@ -1,0 +1,95 @@
+<div class="collection-view">
+  <div 
+    class="collection-view__banner-image" 
+    style="background-image: url('{{getFirstLargeImageForArticle article}}')"
+  >
+    <div class="collection-view__banner-overlay-card">
+      <div class="collection-view__banner-overlay-card-header">
+        <h3 class="collection-view__banner-overlay-label">
+          {{toUpperCase (t "Collection")}}
+          {{#if req.user.isadmin}}
+            <small>
+              <a
+                href="/{{article.type}}/{{article.id}}/edit"
+                title="{{t 'Edit'}}"
+              >
+                {{t "Edit"}}
+              </a>   
+            </small> 
+          {{/if}}
+        </h3>
+
+        <h2 class="collection-view__banner-overlay-card-title">{{article.title}}</h2>
+      
+        {{#if article.description}}
+          <div class="collection-view__banner-overlay-card-description">{{ article.description }}</div>
+        {{/if}}
+      </div>
+
+      {{#if article.links}} 
+      <div>
+        <a href="{{article.links.0.url}}" class="button button-dark-grey u-margin-top--small" target="_blank" rel="noopener">
+          {{#if article.links.0.title}}
+            {{article.links.0.title}}
+          {{else}}
+            {{t "More about this collection"}}
+          {{/if}}
+        </a>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  <div class="full-width-container">  
+    <div class="collection-view__tabs">
+      {{#> tabs-with-cards req=req getTabs=(getCollectionTabs)}}
+      <div role="tabpanel" class="tab-all">
+        {{#if (isSelectedHomeTab req "all")}}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            article=article
+            numArticlesByType=numArticlesByType
+          }}
+        {{/if}}
+      </div>
+      <div role="tabpanel" class="tab-cases">
+        {{#if (isSelectedHomeTab req "case")}}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            type="case"
+            article=article
+            numArticlesByType=numArticlesByType
+          }}
+        {{/if}}
+      </div>
+      <div role="tabpanel" class="tab-methods">
+        {{#if (isSelectedHomeTab req "method")}}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            type="method"
+            article=article
+            numArticlesByType=numArticlesByType
+          }}
+        {{/if}}
+      </div>
+      <div role="tabpanel" class="tab-organizations">
+        {{#if (isSelectedHomeTab req "organizations")}}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            type="organizations"
+            article=article
+            numArticlesByType=numArticlesByType
+          }}
+        {{/if}}
+      </div>
+    {{/tabs-with-cards}}
+    </div>
+  </div>
+</div>

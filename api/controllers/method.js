@@ -27,7 +27,8 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
-  createLocalizedRecord
+  createLocalizedRecord,
+  getCollections
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -49,6 +50,7 @@ async function getEditStaticText(params) {
   }
 
   staticText = Object.assign({}, staticText, sharedFieldOptions);
+  staticText.collections = await getCollections(params.lang);
 
   return staticText;
 }
@@ -300,9 +302,10 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "decision_methods",
     "if_voting",
     "number_of_participants",
-    "purpose_method",
+    "purpose_method"
   ].map(key => cond(key, as.methodkeys));
-  // TODO save bookmarked on user
+  // list of {id, type, title}
+  ["specific_methods_tools_techniques", "collections"].map(key => cond(key, as.ids));
   return [updatedMethod, er];
 }
 

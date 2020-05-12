@@ -1,0 +1,9 @@
+{{#> edit-form}}
+  <fieldset class="overview">
+    <h2 class="fieldset-header">{{t "overview_sectionlabel"}}</h2>
+    {{> article-edit-text name="title" is_required=true quick-submit=true}}
+    {{> edit-textarea name="description" quick-submit=true charLimit=280}}
+    {{> edit-link-set name="links" quick-submit=true}}
+    {{> edit-media name="photos" type="image" quick-submit=true}}
+  </fieldset>
+{{/ edit-form}}

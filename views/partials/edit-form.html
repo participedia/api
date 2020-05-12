@@ -31,7 +31,10 @@
               <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
               {{> edit-boolean name="featured" quick-submit=true}}
               {{> edit-boolean name="hidden" quick-submit=true}}
-              {{> article-edit-select name="completeness" quick-submit=true}}
+              {{# if (isNotCollection article)}}
+                {{> article-edit-select name="completeness" quick-submit=true}}
+                {{> edit-autocomplete name="collections" multi=true }}
+              {{/if}}
               {{> edit-submission-details }}
             </div>
           </fieldset>
@@ -46,7 +49,9 @@
             {{> icon-submit }} {{t "Publish"}}
           </button>
 
-          <a href="?full=1" class="button button-dark-grey quickonly js-do-full-version">{{t "Do Full Version"}}</a>
+          {{# if (isNotCollection article)}}
+            <a href="?full=1" class="button button-dark-grey quickonly js-do-full-version">{{t "Do Full Version"}}</a>
+          {{/if}}
         </div>
 
         <div class="something-missing-prompt">

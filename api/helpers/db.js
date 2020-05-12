@@ -39,6 +39,7 @@ function sql(filename) {
   });
 }
 
+const COLLECTION_BY_ID = sql("../sql/collection_by_id.sql");
 const CASE_BY_ID = sql("../sql/case_by_id.sql");
 const METHOD_BY_ID = sql("../sql/method_by_id.sql");
 const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
@@ -49,6 +50,7 @@ const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
 const USER_BY_ID = sql("../sql/user_by_id.sql");
 const CREATE_USER_ID = sql("../sql/create_user_id.sql");
 const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
+const CREATE_COLLECTION = sql("../sql/create_collection.sql");
 const CREATE_CASE = sql("../sql/create_case.sql");
 const CREATE_METHOD = sql("../sql/create_method.sql");
 const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
@@ -64,10 +66,12 @@ const LIST_TITLES = sql("../sql/list_titles.sql");
 const LIST_SHORT = sql("../sql/list_short.sql");
 const UPDATE_USER = sql("../sql/update_user.sql");
 const UPDATE_CASE = sql("../sql/update_case.sql");
+const UPDATE_COLLECTION= sql("../sql/update_collection.sql");
 const UPDATE_METHOD = sql("../sql/update_method.sql");
 const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
 const UPDATE_AUTHOR_FIRST = sql("../sql/update_author_first.sql");
 const UPDATE_AUTHOR_LAST = sql("../sql/update_author_last.sql");
+const ENTRIES_BY_COLLECTION_ID = sql("../sql/entries_by_collection_id.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -519,6 +523,7 @@ module.exports = {
   USER_BY_ID,
   CREATE_USER_ID,
   CASES_BY_COUNTRY,
+  CREATE_COLLECTION,
   CREATE_CASE,
   CREATE_METHOD,
   CREATE_ORGANIZATION,
@@ -534,12 +539,15 @@ module.exports = {
   LIST_SHORT,
   UPDATE_USER,
   UPDATE_CASE,
+  UPDATE_COLLECTION,
   UPDATE_METHOD,
   UPDATE_ORGANIZATION,
+  COLLECTION_BY_ID,
   CASE_BY_ID,
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,
+  ENTRIES_BY_COLLECTION_ID,
   ErrorReporter,
 };

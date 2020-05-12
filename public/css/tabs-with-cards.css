@@ -12,7 +12,7 @@
   display: none;
 }
 
-.tab-container-label {
+.tab-container-label, .tab-container-label--collections {
   padding: .5rem;
   display: inline-block;
   text-decoration: none;
@@ -21,7 +21,25 @@
   font-weight: 600;
 }
 
+.tab-container-item-divider {
+  display: none;
+}
+
+/* add vertical divider before collections tab on home page */
+.tab-container-item-divider--collections {
+  content: '';
+  width: 1px;
+  display: inline-block;
+  height: 2rem;
+  border-left: 1px solid #E6E6E6;
+  padding-left: 1rem;
+  margin-left: 1rem;
+  margin-bottom: -.5rem;
+}
+
 .tab-container-label:hover,
+.tab-container-label--collections:hover,
+.tab-container-label--collections:active,
 .tab-container-input:checked + .tab-container-label {
   border-bottom: 4px solid #ec2024;
 }
@@ -31,7 +49,8 @@
 .tab-container #method:checked ~ .tab-panels .tab-methods,
 .tab-container #organizations:checked ~ .tab-panels .tab-organizations,
 .tab-container #contributions:checked ~ .tab-panels .tab-contributions,
-.tab-container #bookmarks:checked ~ .tab-panels .tab-bookmarks {
+.tab-container #bookmarks:checked ~ .tab-panels .tab-bookmarks,
+.tab-container #collections:checked ~ .tab-panels .tab-collections {
   display: block;
 }
 
@@ -175,7 +194,7 @@
 .card-layout-btns {
   display: flex;
   flex-direction: row;
-  width: 50%;
+  width: 100px;
   float: right;
   flex-flow: row-reverse;
   margin-top: -4px;
@@ -274,8 +293,7 @@
   .tab-select-container {
     display: block;
   }
-
-  .tab-container-label {
+  .tab-container-label, .tab-container-item-divider--collections, .tab-container-label--collections {
     display: none;
   }
 

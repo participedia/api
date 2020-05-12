@@ -7,5 +7,6 @@ Disallow: /methods/21st-century-town-meeting
 Disallow: /sites/*
 Disallow: /wiki/*
 Disallow: /content/*
+Disallow: /en/cases/race-3-torrent-full-hindi-movie-download-free-hd-720p
 
-Sitemap: https://participedia.net/sitemap.xml
+Sitemap: https://participedia.net/sitemap.txt
