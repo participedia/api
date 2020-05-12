@@ -141,10 +141,8 @@ async function postCollectionUpdateHttp(req, res) {
     newCollection.post_date = Date.now();
   }
 
-  // if this is a new collection, we don't have a updated_date yet, so we set it here
-  if (!newCollection.updated_date) {
-    newCollection.updated_date = Date.now();
-  }
+  // Override updated_date from request because the field in the client is not editable.
+  newCollection.updated_date = Date.now();
 
   // save any changes to the user-submitted text
   const {
