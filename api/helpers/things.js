@@ -6,7 +6,7 @@ if (!keysEnvVar) {
 }
 const { Translate } = require('@google-cloud/translate').v2;
 const authKeys = JSON.parse(keysEnvVar);
-authKeys['key'] = process.env.GOOGLE_MAPS_API_KEY;
+authKeys['key'] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
 
 let { isString } = require("lodash");
