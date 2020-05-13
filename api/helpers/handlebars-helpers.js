@@ -300,6 +300,15 @@ module.exports = {
     );
   },
 
+  originalLanguageModalBody: (context) => {
+    return "<p>" + 
+      `${i18n("how_does_translation_work_modal_body_1", context)}` +
+      "</p>" + 
+      "<p>" + 
+      `${i18n("how_does_translation_work_modal_body_2", context)}`+
+      "</p>";
+  },
+
   shouldShowCompletenessPrompt: article => {
     if (article.completeness && article.completeness !== "complete") {
       return true;

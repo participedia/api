@@ -1788,5 +1788,8 @@
   "More about this collection": "More about this collection",
   "close banner": "close banner",
   "View Collection": "View Collection",
-  "citizens_voices_collection_is_now_live": "The \"%sCitizens Voices & Values on Covid-19%s\" collection is now live!"
+  "citizens_voices_collection_is_now_live": "The \"%sCitizens Voices & Values on Covid-19%s\" collection is now live!",
+  "How does translation work?": "How does translation work?",
+  "how_does_translation_work_modal_body_1": "On an entry page, there are three fields that are filled with user generated free form text, we call these open text fields, and they are the title, brief description and narrative. The rest of the fields are either numbers, dates, or fixed options and we call these fixed data fields. When an entry is created we save it and then machine translate the open text fields into all of the other supported languages. From this point, the open text fields exist as forked versions for each language, while the fixed data fields are in sync between all languages. If you change a fixed data field while viewing the site in any language, that change will be seen on the entry page for all languages. However, if you change the title, brief description or narrative text, those changes will be saved to only that language.",
+  "how_does_translation_work_modal_body_2": "To view and edit an entry in another language, use the drop down language selector found on the top menu bar and footer of the site to change your preferred language."
 }
