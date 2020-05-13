@@ -1,9 +1,18 @@
+// Get google translate credentials
+const keysEnvVar = process.env['GOOGLE_TRANSLATE_CREDENTIALS'];
+if (!keysEnvVar) {
+  throw new Error('The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!');
+  return;
+}
+const { Translate } = require('@google-cloud/translate').v2;
+const authKeys = JSON.parse(keysEnvVar);
+authKeys['key'] = process.env.GOOGLE_MAPS_API_KEY;
+const translate = new Translate(authKeys);
+
 let { isString } = require("lodash");
 const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
-const { Translate } = require('@google-cloud/translate').v2;
-const translate = new Translate({projectId: process.env.GOOGLE_PROJECT_ID});
 const { SUPPORTED_LANGUAGES } = require("./../../constants.js");
 
 const {
