@@ -20,9 +20,9 @@ var dataLengthTotal = 0;
 // getThings('organization');
 
 // TEST PURPOSES
-getThings('case', 6000, 0);
-getThings('method', 6000, 0);
-getThings('organization', 6000, 0);
+// getThings('case', 3000, 0);
+// getThings('method', 3000, 0);
+// getThings('organization', 3000, 0);
 
 function getThingById(type, id) {
   db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
@@ -38,8 +38,8 @@ function getThingById(type, id) {
 }
 
 function getThings(type, limit, skip) {
+  // db.any(`SELECT * FROM things WHERE id IN (4171,4560,5079,5773,386)`)
   db.any(`SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit} OFFSET ${skip}`)
-  // db.any(`SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit} OFFSET ${skip}`)
     .then(function(thingData) {
       thingData.forEach(data => {
         getLocalizationData(data.id, data.original_language);
@@ -114,11 +114,11 @@ async function createNewRecord(data, thingid) {
           item.description = await translateText(data.description, language.twoLetterCode);
         }
 
-        // console.log(`ThingID: ${thingid} => saving record for ${language.twoLetterCode} from ${data.language}`);
+        console.log(`ThingID: ${thingid} => saving record for ${language.twoLetterCode} from ${data.language}`);
         // await saveRecord([item]);
-        // console.log(`ThingID: ${thingid} => record for ${language.twoLetterCode} from ${data.language} DONE!`);
-        // console.log(`ThingID: ${item.title}`);
-        // console.log('=====================================================================');
+        console.log(`ThingID: ${thingid} => record for ${language.twoLetterCode} from ${data.language} DONE!`);
+        console.log(`ThingID: ${item.title}`);
+        console.log('=====================================================================');
       }
     }
   }
