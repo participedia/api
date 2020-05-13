@@ -11,17 +11,18 @@ const { db, pgp } = require("../api/helpers/db");
 
 const { Translate } = require('@google-cloud/translate').v2;
 const authKeys = JSON.parse(keysEnvVar);
-authKeys['key'] = process.env.GOOGLE_MAPS_API_KEY;
+authKeys['key'] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
+var dataLengthTotal = 0;
 
 // getThings('case');
 // getThings('method');
 // getThings('organization');
 
 // TEST PURPOSES
-getThings('case', 8);
-getThings('method', 6);
-getThings('organization', 6);
+getThings('case', 6000, 0);
+getThings('method', 6000, 0);
+getThings('organization', 6000, 0);
 
 function getThingById(type, id) {
   db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
@@ -36,8 +37,9 @@ function getThingById(type, id) {
     });
 }
 
-function getThings(type, limit) {
-  db.any(`SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit}`)
+function getThings(type, limit, skip) {
+  db.any(`SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit} OFFSET ${skip}`)
+  // db.any(`SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit} OFFSET ${skip}`)
     .then(function(thingData) {
       thingData.forEach(data => {
         getLocalizationData(data.id, data.original_language);
@@ -112,14 +114,15 @@ async function createNewRecord(data, thingid) {
           item.description = await translateText(data.description, language.twoLetterCode);
         }
 
-        console.log(`ThingID: ${thingid} => saving record for ${language.twoLetterCode} from ${data.language}`);
-        await saveRecord([item]);
-        console.log(`ThingID: ${thingid} => record for ${language.twoLetterCode} from ${data.language} DONE!`);
-        console.log(`ThingID: ${item.title}`);
-        console.log('=====================================================================');
+        // console.log(`ThingID: ${thingid} => saving record for ${language.twoLetterCode} from ${data.language}`);
+        // await saveRecord([item]);
+        // console.log(`ThingID: ${thingid} => record for ${language.twoLetterCode} from ${data.language} DONE!`);
+        // console.log(`ThingID: ${item.title}`);
+        // console.log('=====================================================================');
       }
     }
   }
+  console.log(`Data length total: ${dataLengthTotal}`);
 }
 
 async function saveRecord(records) {
@@ -128,12 +131,14 @@ async function saveRecord(records) {
 }
 
 async function translateText(data, targetLanguage) {
-  // The text to translate
-  const text = data;
-
-  // The target language
-  const target = targetLanguage;
-
-  const [translation] = await translate.translate(text, target);
-  return translation;
+  // // The text to translate
+  // const text = data;
+  //
+  // // The target language
+  // const target = targetLanguage;
+  //
+  // const [translation] = await translate.translate(text, target);
+  // dataLengthTotal += data.length;
+  // return translation;
+  return dataLengthTotal += data.length;
 }
