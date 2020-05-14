@@ -35,12 +35,12 @@ var dataLengthTotal = 0;
 // https://participedia-i18n-staging.herokuapp.com/case/386
 // https://participedia-i18n-staging.herokuapp.com/collection/5912
 
-getThingById(3193);
-getThingById(4560);
-getThingById(5079);
-getThingById(5773);
-getThingById(386);
-getThingById(5912);
+getThingById("case", 3193);
+getThingById("organization", 4560);
+getThingById("method", 5079);
+getThingById("organization", 5773);
+getThingById("case", 386);
+getThingById("collection", 5912);
 
 function getThingById(type, id) {
   db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
