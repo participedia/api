@@ -30,7 +30,7 @@ const {
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
-
+const RESPONSE_LIMIT = 20;
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 const COLLECTION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/collection-structure.json", "utf8")
@@ -48,6 +48,35 @@ const typeFromReq = req => {
     cat = "all";
   }
   return cat === "all" ? "thing" : cat;
+};
+
+const limitFromReq = req => {
+  let limit = parseInt(req.query.limit || RESPONSE_LIMIT);
+  const resultType = (req.query.resultType || "").toLowerCase();
+  if (resultType === "map") {
+    limit = 0; // return all
+  }
+  return limit;
+};
+
+const offsetFromReq = req => {
+  let query = req.query.page ? req.query.page.replace(/[^0-9]/g, "") : "";
+  const page = Math.max(as.number(query || 1), 1);
+  return (page - 1) * limitFromReq(req);
+};
+
+const getTypes = params => {
+  let types = ["case", "method", "organization"];
+
+  if (["case", "method", "organizations"].includes(params.selectedCategory)) {
+    if (params.selectedCategory === "organizations") {
+      types = ["organization"];
+    } else {
+      types = [params.selectedCategory];
+    }
+  }
+
+  return types;
 };
 
 function randomTexture() {
@@ -237,16 +266,19 @@ async function getCollectionHttp(req, res) {
   const params = parseGetParams(req, "collection");
   const article = await getCollection(params, res, req);
   const type = typeFromReq(req);
+  const limit = limitFromReq(req);
+  const offset = offsetFromReq(req);
+  const types = getTypes(params);
 
   // always fetch all article types so we can calculate totals for a collection
   let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
     query: null,
-    limit: 0, // null is no limit in SQL
-    offset: 0,
+    limit: limit,
+    offset: offset,
     language: as.value(req.cookies.locale || "en"),
     sortby: "updated_date",
     userId: req.user ? req.user.id : null,
-    type: "cases",
+    types: types,
     facets: `AND collections @> ARRAY[${params.articleid}]`,
   });
 
@@ -260,29 +292,13 @@ async function getCollectionHttp(req, res) {
     numArticlesByType[article.type] = numArticlesByType[article.type] + 1;
   });
 
-  // filter results by type if case, method or org is selected category
-  if (
-    params.selectedCategory &&
-    ["case", "method", "organizations"].includes(params.selectedCategory)
-  ) {
-    results = results.filter(result => {
-      // params.selectedCategory for organizations is plural, while it is singular for cases and methods
-      // but result.type is always singular, so do this check and use singular if params.selectedCategory is organizations
-      if (params.selectedCategory === "organizations") {
-        return result.type === "organization";  
-      } else {
-        return result.type === params.selectedCategory;
-      }
-    });
-  }
-
-  const limit = 20; // number of entries displayed on one page
+  // const limit = 20; // number of entries displayed on one page
   let total, pages;
 
   // calculate pages and totals and add random texture url if no images are present
   if (results) {
     total = Number(results.length ? results[0].total || results.length : 0);
-    pages = total ? Math.max(Math.ceil(total / limit)) : null;
+    pages = total ? Math.max(Math.ceil(total / RESPONSE_LIMIT)) : null;
 
     // for each entry, use a random texture image if there are no images uploaded
     results = results.map(obj => {

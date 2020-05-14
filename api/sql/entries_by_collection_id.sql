@@ -3,6 +3,17 @@
 -- language (defaults to 'en')
 -- userid (may be null)
 -- filter (only return results of *type*
+WITH total_selections AS (
+  SELECT count(id) AS total
+  FROM things th
+  WHERE
+    th.type IN (${types:csv}) AND th.hidden = false AND
+    (
+      EXISTS (SELECT 1 FROM cases e WHERE e.id = th.id ${facets:raw})
+      OR EXISTS (SELECT 1 FROM methods m  WHERE m.id = th.id ${facets:raw})
+      OR EXISTS (SELECT 1 FROM organizations o  WHERE o.id = th.id ${facets:raw})
+    )
+  )
 
 SELECT
   id,
@@ -35,14 +46,20 @@ SELECT
   to_json(COALESCE(photos, '{}')) AS photos,
   to_json(COALESCE(videos, '{}')) AS videos,
   updated_date,
-  post_date
+  post_date,
+  total_selections.total
 FROM
   things t,
+  total_selections,
   get_localized_texts_fallback(t.id, ${language}, t.original_language) AS texts
 WHERE
-  t.type <> 'collection' AND t.hidden = false AND
-  EXISTS (SELECT 1 FROM cases e WHERE e.id = t.id ${facets:raw})
-  OR EXISTS (SELECT 1 FROM methods m  WHERE m.id = t.id ${facets:raw})
-  OR EXISTS (SELECT 1 FROM organizations o  WHERE o.id = t.id ${facets:raw})
+  t.type IN (${types:csv}) AND t.hidden = false AND
+  (
+    EXISTS (SELECT 1 FROM cases e WHERE e.id = t.id ${facets:raw})
+    OR EXISTS (SELECT 1 FROM methods m  WHERE m.id = t.id ${facets:raw})
+    OR EXISTS (SELECT 1 FROM organizations o  WHERE o.id = t.id ${facets:raw})
+  )
 ORDER BY t.featured DESC, t.updated_date DESC
+OFFSET ${offset}
+LIMIT ${limit}
 ;
