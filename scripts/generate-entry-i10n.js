@@ -26,8 +26,7 @@ var dataLengthTotal = 0;
 // getThings('method', 3000, 0);
 // getThings('organization', 3000, 0);
 
-// RUN TEST TRANSLATIONS FOR THE FOLLOWING ENTRIES
-
+// -------- RUN TEST TRANSLATIONS FOR THE FOLLOWING ENTRIES ONLY
 // https://participedia-i18n-staging.herokuapp.com/case/3193 (original language === de)
 // https://participedia-i18n-staging.herokuapp.com/organization/4560 (original language === de)
 // https://participedia-i18n-staging.herokuapp.com/method/5079
@@ -35,12 +34,13 @@ var dataLengthTotal = 0;
 // https://participedia-i18n-staging.herokuapp.com/case/386
 // https://participedia-i18n-staging.herokuapp.com/collection/5912
 
-getThingById("case", 3193);
-getThingById("organization", 4560);
-getThingById("method", 5079);
-getThingById("organization", 5773);
-getThingById("case", 386);
-getThingById("collection", 5912);
+// getThingById("case", 3193);
+// getThingById("organization", 4560);
+// getThingById("method", 5079);
+// getThingById("organization", 5773);
+// getThingById("case", 386);
+// getThingById("collection", 5912);
+// -----------------------------------------------------------
 
 function getThingById(type, id) {
   db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
