@@ -174,14 +174,14 @@ async function saveRecord(records) {
 }
 
 async function translateText(data, targetLanguage) {
-  // // The text to translate
-  // const text = data;
-  //
-  // // The target language
-  // const target = targetLanguage;
-  //
-  // const [translation] = await translate.translate(text, target);
-  // dataLengthTotal += data.length;
-  // return translation;
-  return (dataLengthTotal += data.length);
+  // The text to translate
+  const text = data;
+
+  // The target language
+  const target = targetLanguage;
+
+  const [translation] = await translate.translate(text, target);
+  dataLengthTotal += data.length;
+  //return (dataLengthTotal += data.length);
+  return translation;
 }
