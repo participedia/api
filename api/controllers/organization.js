@@ -344,19 +344,11 @@ async function getOrganizationNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
+router.get("/:thingid/edit", getOrganizationEditHttp);
 router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 router.post("/new", requireAuthenticatedUser(), postOrganizationNewHttp);
-router.post(
-  "/:thingid",
-  requireAuthenticatedUser(),
-  postOrganizationUpdateHttp
-);
 router.get("/:thingid/:language?", setAndValidateLanguage(), getOrganizationHttp);
-router.get(
-  "/:thingid/edit",
-  requireAuthenticatedUser(),
-  getOrganizationEditHttp
-);
+router.post("/:thingid", requireAuthenticatedUser(), postOrganizationUpdateHttp);
 
 module.exports = {
   organization: router,
