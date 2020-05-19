@@ -82,6 +82,7 @@ async function postCollectionNewHttp(req, res) {
     });
     req.params.thingid = thing.thingid;
     await postCollectionUpdateHttp(req, res);
+
     let localizedData = {
       body: body,
       description: description,
@@ -89,6 +90,7 @@ async function postCollectionNewHttp(req, res) {
       title: title
     };
     createLocalizedRecord(localizedData, thing.thingid);
+
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
