@@ -43,7 +43,7 @@ var dataLengthTotal = 0;
 // -----------------------------------------------------------
 
 function getThingById(type, id) {
-  db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
+  db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}' AND hidden = false`)
     .then(function(thingData) {
       thingData.forEach(data => {
         getLocalizationData(data.id, data.original_language);
@@ -56,9 +56,8 @@ function getThingById(type, id) {
 }
 
 function getThings(type, limit, skip) {
-  // db.any(`SELECT * FROM things WHERE id IN (4171,4560,5079,5773,386)`)
   db.any(
-    `SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit} OFFSET ${skip}`
+    `SELECT * FROM things WHERE type = '${type}' AND hidden = false ORDER BY id DESC LIMIT ${limit} OFFSET ${skip}`
   )
     .then(function(thingData) {
       thingData.forEach(data => {
@@ -72,7 +71,7 @@ function getThings(type, limit, skip) {
 }
 
 // function getThings(type) {
-//   db.any(`SELECT * FROM things WHERE type = '${type}'`)
+//   db.any(`SELECT * FROM things WHERE type = '${type}' AND hidden = false`)
 //     .then(function(thingData) {
 //       thingData.forEach(data => {
 //         getLocalizationData(data.id, data.original_language);

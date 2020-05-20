@@ -40,7 +40,7 @@ function translateListOfEntries(entries) {
 }
 
 function getThingById(type, id) {
-  db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}'`)
+  db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}' AND hidden = false`)
     .then(function(thingData) {
       thingData.forEach(data => {
         getLocalizationData(data.id, data.original_language);
@@ -54,7 +54,7 @@ function getThingById(type, id) {
 
 function getThings(type, limit, skip) {
   db.any(
-    `SELECT * FROM things WHERE type = '${type}' ORDER BY id DESC LIMIT ${limit} OFFSET ${skip}`
+    `SELECT * FROM things WHERE type = '${type}' AND hidden = false ORDER BY id DESC LIMIT ${limit} OFFSET ${skip}`
   )
     .then(function(thingData) {
       thingData.forEach(data => {
