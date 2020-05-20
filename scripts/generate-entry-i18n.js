@@ -167,7 +167,11 @@ async function translateText(data, targetLanguage) {
   // The target language
   const target = targetLanguage;
 
-  const [translation] = await translate.translate(text, target);
+  const [translation] = await translate
+    .translate(text, target)
+    .catch(function(error) {
+      console.log(error);
+    });
   return translation;
 }
 
