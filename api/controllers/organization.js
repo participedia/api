@@ -28,13 +28,14 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
+  createLocalizedRecord,
   getCollections
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
-
+const setAndValidateLanguage = require("../middleware/setAndValidateLanguage.js");
 const ORGANIZATION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/organization-structure.json", "utf8")
 );
@@ -101,6 +102,13 @@ async function postOrganizationNewHttp(req, res) {
     });
     req.params.thingid = thing.thingid;
     await postOrganizationUpdateHttp(req, res);
+    let localizedData = {
+      body: body,
+      description: description,
+      language: original_language,
+      title: title
+    };
+    createLocalizedRecord(localizedData, thing.thingid);
   } catch (error) {
     logError(error);
     return res.status(400).json({ OK: false, error: error });
@@ -336,19 +344,11 @@ async function getOrganizationNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
+router.get("/:thingid/edit", requireAuthenticatedUser(), getOrganizationEditHttp);
 router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 router.post("/new", requireAuthenticatedUser(), postOrganizationNewHttp);
-router.post(
-  "/:thingid",
-  requireAuthenticatedUser(),
-  postOrganizationUpdateHttp
-);
-router.get("/:thingid/", getOrganizationHttp);
-router.get(
-  "/:thingid/edit",
-  requireAuthenticatedUser(),
-  getOrganizationEditHttp
-);
+router.get("/:thingid/:language?", setAndValidateLanguage(), getOrganizationHttp);
+router.post("/:thingid", requireAuthenticatedUser(), postOrganizationUpdateHttp);
 
 module.exports = {
   organization: router,

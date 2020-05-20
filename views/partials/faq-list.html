@@ -90,13 +90,20 @@
   {{/faq-item}}
 
   {{#> faq-item
+    question=(t "faq_q14")
+  }}
+    {{t "faq_a14_p1"}}
+  {{/faq-item}}
+
+  {{#> faq-item
     question=(t "faq_q9")
   }}
-    {{{__
-      "faq_a9"
-       "<a href='mailto:info@participedia.net'>"
+    <p>{{t "faq_a9_p1"}}<p>
+    <p>{{{__
+      "faq_a9_p2"
+      "<a href='mailto:info@participedia.net'>"
       "</a>"
-    }}}
+    }}}</p>
   {{/faq-item}}
 
   {{#> faq-item

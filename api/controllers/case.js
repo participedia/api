@@ -31,12 +31,14 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
+  createLocalizedRecord,
   getCollections
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
+const setAndValidateLanguage = require("../middleware/setAndValidateLanguage.js");
 const CASE_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
 );
@@ -93,6 +95,13 @@ async function postCaseNewHttp(req, res) {
     });
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
+    let localizedData = {
+      body: body,
+      description: description,
+      language: original_language,
+      title: title
+    };
+     createLocalizedRecord(localizedData, thing.thingid);
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
@@ -398,7 +407,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getCaseEditHttp);
 router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
 router.post("/new", requireAuthenticatedUser(), postCaseNewHttp);
-router.get("/:thingid", getCaseHttp);
+router.get("/:thingid/:language?", setAndValidateLanguage(), getCaseHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCaseUpdateHttp);
 
 module.exports = {

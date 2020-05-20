@@ -475,7 +475,6 @@
   "faq_a6": "Once you are signed in, you can create content by clicking the “quick submit” button from the main menu and choosing the type of article you would like to create. Please review our %sguidelines%s on how to write Participedia entries or %scontact%s our managing editor for more information. ",
   "faq_a7": "Clicking “Quick Submit” allows you to publish a case, method, or organization in minutes. All you need to provide is a title. Adding an external link or source is also helpful.",
   "faq_a8": "While viewing a case, method, or organization entry, click the red pen icon in the bottom right-hand corner to add to or amend the entry’s content.",
-  "faq_a9": "If you create an entry in a language other than English, first refer to the language drop-down menu at the bottom of the website to see if the language you plan to enter is supported by our translation service. Select your language from the drop-down menu before clicking “Quick Submit” to start your entry. If the language you wish to enter is not yet supported on our site, please %scontact us%s to request it. In the meantime, you can use the English version of the site to submit your entry. Finally, please indicate the language in square brackets in the title of the entry, for example, “Orcamento Participativo [Portuguese]”.",
   "faq_q1": "What is a case?",
   "faq_q10": "How do I search for content?",
   "faq_q11": "How do I access an old user account?",
@@ -1748,6 +1747,8 @@
   "completeness.partial_citation_modal_text_1": "This type of entry is missing citations (footnotes), but is otherwise complete. Entries needing citations can be identified using the “entry completeness” search filter on the homepage.",
   "completeness.partial_editing_modal_text_1": "This type of entry needs significant improvements to its grammar or spelling, and can be any level of completeness (stub, partial, or complete). Entries needing grammar or spelling edits can be identified using the “entry completeness” search filter on the homepage.",
   "edit_media_not_supported_file_type_error": "Sorry, the file %s cannot be uploaded because it is not a suppported file type. We support .jpg and .png image types.",
+  "View this entry in its original language": "View this entry in its original language",
+  "This entry was originally added in %s.": "This entry was originally added in %s.",
   "Collection": "Collection",
   "Collections": "Collections",
   "View all collections": "View all collections",
@@ -1786,5 +1787,13 @@
   "More about this collection": "More about this collection",
   "close banner": "close banner",
   "View Collection": "View Collection",
-  "citizens_voices_collection_is_now_live": "The \"%sCitizens Voices & Values on Covid-19%s\" collection is now live!"
+  "citizens_voices_collection_is_now_live": "The \"%sCitizens Voices & Values on Covid-19%s\" collection is now live!",
+  "How does translation work?": "How does translation work?",
+  "how_does_translation_work_modal_body_1": "On an entry page, there are three fields that are filled with user generated free form text, we call these open text fields, and they are the title, brief description and narrative. The rest of the fields are either numbers, dates, or fixed options and we call these fixed data fields. When an entry is created we save it and then machine translate the open text fields into all of the other supported languages. From this point, the open text fields exist as forked versions for each language, while the fixed data fields are in sync between all languages. If you change a fixed data field while viewing the site in any language, that change will be seen on the entry page for all languages. However, if you change the title, brief description or narrative text, those changes will be saved to only that language.",
+  "how_does_translation_work_modal_body_2": "To view and edit an entry in another language, use the drop down language selector found on the top menu bar and footer of the site to change your preferred language.",
+  "faq_q14": "How does translation work?",
+  "faq_a14_p1": "On an entry page, there are three fields that are filled with user generated free form text, we call these open text fields, and they are the title, brief description and narrative. The rest of the fields are either numbers, dates, or fixed options and we call these fixed data fields. When an entry is created we save it and then machine translate the open text fields into all of the other supported languages. From this point, the open text fields exist as forked versions for each language, while the fixed data fields are in sync between all languages. If you change a fixed data field while viewing the site in any language, that change will be seen on the entry page for all languages. However, if you change the title, brief description or narrative text, those changes will be saved to only that language.",
+  "Frequently Asked Questions": "Frequently Asked Questions",
+  "faq_a9_p1": "To publish, view and edit an entry in another language, use the drop down language selector found on the top menu bar and footer of the site to change your preferred language.",
+  "faq_a9_p2": "If the language you wish to enter is not yet supported on our site, please %scontact%s us to request it. In the meantime, you can use the English version of the site to submit your entry. In this case, please indicate the language in square brackets in the title of the entry, for example, “Your entry title [Your language]“."
 }

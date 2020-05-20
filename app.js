@@ -81,15 +81,29 @@ i18n.configure({
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
-  updateFiles: false,
+  updateFiles: false
 });
 
 app.use((req, res, next) => {
   // set english as the default locale, if it's not already set
   if (!req.cookies.locale) {
+    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${req.path}`;
     res.cookie("locale", "en", { path: "/" });
+    return res.redirect(currentUrl);
   }
   next();
+});
+
+app.use((req, res, next) => {
+  // if the lang query param is present and it's not the same as the locale coookie, 
+  // redirect to set-locale route with the redirect param set to the current page
+  const lang = req.query && req.query.lang;
+  if (lang && lang !== req.cookies.locale) {
+    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${req.path}`;
+    res.redirect(`/set-locale?locale=${lang}&redirectTo=${currentUrl}`);
+  } else {
+    next();  
+  }
 });
 
 app.use(i18n.init);

@@ -13,6 +13,7 @@
         <h2>{{toUpperCase (t article.type)}}</h2>
         <h1>{{article.title}}</h1>
       </hgroup>
+
       {{> view-slideshow }}
       {{> view-authors }}
 
@@ -23,6 +24,8 @@
       </div>
 
       <div class="body-content article-body-content">
+
+        {{> original-language-alert}}
 
         {{#if (shouldShowCompletenessPrompt article) }}
           <div class="alert">

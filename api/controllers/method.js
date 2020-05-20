@@ -27,13 +27,14 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
+  createLocalizedRecord,
   getCollections
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
-
+const setAndValidateLanguage = require("../middleware/setAndValidateLanguage.js");
 const METHOD_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/method-structure.json", "utf8")
 );
@@ -102,6 +103,13 @@ async function postMethodNewHttp(req, res) {
     });
     req.params.thingid = thing.thingid;
     await postMethodUpdateHttp(req, res);
+    let localizedData = {
+      body: body,
+      description: description,
+      language: original_language,
+      title: title
+    };
+    createLocalizedRecord(localizedData, thing.thingid);
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
@@ -338,7 +346,7 @@ router.get("/:thingid/edit", requireAuthenticatedUser(), getMethodEditHttp);
 router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
 router.post("/new", requireAuthenticatedUser(), postMethodNewHttp);
 // these have to come *after* /new or BAD THINGS HAPPEN
-router.get("/:thingid/", getMethodHttp);
+router.get("/:thingid/:language?", setAndValidateLanguage(), getMethodHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
 
 module.exports = {

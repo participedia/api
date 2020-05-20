@@ -8,7 +8,7 @@ const pgp = require("pg-promise")(options);
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 // const oldS3Url = "uploads.participedia.xyz";
-const oldS3Url = new RegExp('uploads.participedia.xyz', 'g');
+const oldS3Url = new RegExp("uploads.participedia.xyz", "g");
 const newS3Url = process.env.AWS_S3_BUCKET;
 
 let config;
