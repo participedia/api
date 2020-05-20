@@ -1,13 +1,13 @@
 // cli usage
 
-// on heroku
+// start node console on heroku
 // $ heroku run node  --app participedia-i18n-staging
 
-// locally
-// $ GOOGLE_TRANSLATE_CREDENTIALS=creds node
+// or locally (locally you will have to paste your .env vars exports in the terminal before running so the console can access them)
+// $ node
 
-// > const GenerateEntryI18n = require("./scripts/generate-entry-i18n.js");
-
+// then require the script and run the function you want
+// > var GenerateEntryI18n = require("/app/scripts/generate-entry-i18n.js");
 // > GenerateEntryI18n.translateListOfEntries([{type: "case", id: 2}]);
 
 // Get google translate credentials
@@ -40,7 +40,9 @@ function translateListOfEntries(entries) {
 }
 
 function getThingById(type, id) {
-  db.any(`SELECT * FROM things WHERE type = '${type}' AND id = '${id}' AND hidden = false`)
+  db.any(
+    `SELECT * FROM things WHERE type = '${type}' AND id = '${id}' AND hidden = false`
+  )
     .then(function(thingData) {
       thingData.forEach(data => {
         getLocalizationData(data.id, data.original_language);
@@ -109,7 +111,7 @@ async function createNewRecord(data, thingid) {
           description: "",
           language: language.twoLetterCode,
           thingid: thingid,
-          timestamp: "now"
+          timestamp: "now",
         };
 
         if (data.body) {
