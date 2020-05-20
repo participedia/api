@@ -134,16 +134,18 @@ async function createNewRecord(data, thingid) {
             language.twoLetterCode
           } from ${data.language}`
         );
-        // await saveRecord([item]);
-        console.log(
-          `ThingID: ${thingid} => record for ${language.twoLetterCode} from ${
-            data.language
-          } DONE!`
-        );
-        console.log(`ThingID: ${item.title}`);
-        console.log(
-          "====================================================================="
-        );
+
+        await saveRecord([item]).then(() => {
+          console.log(
+            `ThingID: ${thingid} => record for ${language.twoLetterCode} from ${
+              data.language
+            } DONE!`
+          );
+          console.log(`ThingID: ${item.title}`);
+          console.log(
+            "====================================================================="
+          );
+        });
       }
     }
   }
