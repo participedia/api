@@ -28,9 +28,8 @@ const authKeys = JSON.parse(keysEnvVar);
 authKeys["key"] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
 
-function translateAllEntries() {
-  // translate all non-hidden entries
-  console.log("todo: translate all non-hidden entries");
+function translateAllEntries(type, limit, offset) {
+  getThings(type, limit, offset);
 }
 
 // translate a list of entries where entries is an array of objects [{ type: "case", id: 1 }]
