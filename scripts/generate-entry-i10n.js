@@ -126,6 +126,7 @@ async function createNewRecord(data, thingid) {
           description: "",
           language: language.twoLetterCode,
           thingid: thingid,
+          timestamp: "now"
         };
 
         if (data.body) {
@@ -167,7 +168,7 @@ async function createNewRecord(data, thingid) {
 async function saveRecord(records) {
   const insert = pgp.helpers.insert(
     records,
-    ["body", "title", "description", "language", "thingid"],
+    ["body", "title", "description", "language", "thingid", "timestamp"],
     "localized_texts"
   );
   db.none(insert);
