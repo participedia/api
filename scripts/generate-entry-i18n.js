@@ -27,7 +27,6 @@ const { Translate } = require("@google-cloud/translate").v2;
 const authKeys = JSON.parse(keysEnvVar);
 authKeys["key"] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
-
 function translateAllEntries(type, limit, offset) {
   getThings(type, limit, offset);
 }
@@ -175,4 +174,40 @@ async function translateText(data, targetLanguage) {
   return translation;
 }
 
-module.exports = { translateAllEntries, translateListOfEntries };
+async function getListOfNonTranslatedEntries(type) {
+  await db
+    .any(
+      `SELECT * FROM things WHERE type = '${type}' AND hidden = false ORDER BY id DESC`
+    )
+    .then(function(things) {
+      things.forEach(async thing => {
+        await db
+          .any(`select * from localized_texts where thingid=${thing.id}`)
+          .then(
+            await function(records) {
+              const hasTranslatedRecords =
+                records.filter(record => {
+                  return record.language === "es";
+                }).length > 0;
+              if (!hasTranslatedRecords) {
+                // needs to be translated
+                console.log(`{ type: "${type}", id: ${thing.id} },`);
+              }
+            }
+          )
+          .catch(function(error) {
+            console.log(error);
+          });
+      });
+      return null;
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
+
+module.exports = {
+  translateAllEntries,
+  translateListOfEntries,
+  getListOfNonTranslatedEntries,
+};
