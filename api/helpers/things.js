@@ -388,13 +388,30 @@ async function createLocalizedRecord(data, thingid) {
 
 async function translateText(data, targetLanguage) {
   // The text to translate
-  const text = data;
+  let allTranslation = '';
 
   // The target language
   const target = targetLanguage;
-
-  const [translation] = await translate.translate(text, target);
-  return translation;
+  let length = data.length;
+  if (length > 5000) {
+    // Get text chunks
+    let textParts = data.match(/.{1,5000}/g);
+    for(var text of textParts){
+      let [translation] = await translate
+        .translate(text, target)
+        .catch(function(error) {
+          console.log(error);
+        });
+      allTranslation += translation;
+    }
+  } else {
+    [allTranslation] = await translate
+    .translate(data, target)
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
+  return allTranslation;
 }
 
 module.exports = {
