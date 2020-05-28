@@ -14,6 +14,7 @@ const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
 const { SUPPORTED_LANGUAGES } = require("./../../constants.js");
+const logError = require("./log-error.js");
 
 const {
   as,
@@ -400,7 +401,7 @@ async function translateText(data, targetLanguage) {
       let [translation] = await translate
         .translate(text, target)
         .catch(function(error) {
-          console.log(error);
+          logError(error);
         });
       allTranslation += translation;
     }
@@ -408,7 +409,7 @@ async function translateText(data, targetLanguage) {
     [allTranslation] = await translate
     .translate(data, target)
     .catch(function(error) {
-      console.log(error);
+      logError(error);
     });
   }
   return allTranslation;
