@@ -5,7 +5,7 @@
       <a href="/{{article.type}}/{{article.id}}?lang={{article.original_language}}">{{t "View this entry in its original language"}}</a>.
       {{> tooltip-trigger-and-modal 
         modalHeader=(t "How does translation work?") 
-        modalText=(originalLanguageModalBody)
+        modalText={{{originalLanguageModalBody}}}
       }}
     </span>
   </div>  

@@ -300,12 +300,18 @@ module.exports = {
     );
   },
 
-  originalLanguageModalBody: (context) => {
-    return "<p>" + 
-      `${i18n("how_does_translation_work_modal_body_1", context)}` +
-      "</p>" + 
-      "<p>" + 
-      `${i18n("how_does_translation_work_modal_body_2", context)}`+
+  originalLanguageModalBody: context => {
+    return "<p>" +
+      `${i18n("how_does_translation_work_modal_p1", context)}` +
+      "</p>" +
+      "<p>" +
+      `${i18n("how_does_translation_work_modal_p2", context)}` +
+      "</p>" +
+      "<p>" +
+      `${i18n("how_does_translation_work_modal_p3", context)}` +
+      "</p>" +
+      "<p>" +
+      `${i18n("how_does_translation_work_modal_p4", context)}` +
       "</p>";
   },
 
