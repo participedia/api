@@ -301,18 +301,12 @@ module.exports = {
   },
 
   originalLanguageModalBody: context => {
-    return "<p>" +
-      `${i18n("how_does_translation_work_modal_p1", context)}` +
-      "</p>" +
-      "<p>" +
-      `${i18n("how_does_translation_work_modal_p2", context)}` +
-      "</p>" +
-      "<p>" +
-      `${i18n("how_does_translation_work_modal_p3", context)}` +
-      "</p>" +
-      "<p>" +
-      `${i18n("how_does_translation_work_modal_p4", context)}` +
-      "</p>";
+    return `
+      <p>${i18n("faq_a14_p1", context)}</p>
+      <p>${i18n("faq_a14_p2", context)}</p>
+      <p>${i18n("faq_a14_p3", context)}</p>
+      <p>${i18n("faq_a14_p4", context)}</p>
+    `;
   },
 
   shouldShowCompletenessPrompt: article => {

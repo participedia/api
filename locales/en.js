@@ -1800,5 +1800,6 @@
   "faq_a14_p4": "To view and edit an entry in another language, use the drop-down language selector found on the top menu bar and footer of the site to change your preferred language.",
   "Frequently Asked Questions": "Frequently Asked Questions",
   "faq_a9_p1": "To publish, view and edit an entry in another language, use the drop down language selector found on the top menu bar and footer of the site to change your preferred language.",
-  "faq_a9_p2": "If the language you wish to enter is not yet supported on our site, please %scontact%s us to request it. In the meantime, you can use the English version of the site to submit your entry. In this case, please indicate the language in square brackets in the title of the entry, for example, “Your entry title [Your language]“."
+  "faq_a9_p2": "If the language you wish to enter is not yet supported on our site, please %scontact%s us to request it. In the meantime, you can use the English version of the site to submit your entry. In this case, please indicate the language in square brackets in the title of the entry, for example, “Your entry title [Your language]“.",
+  "click for more info": "click for more info"
 }

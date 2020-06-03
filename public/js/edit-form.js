@@ -1,6 +1,7 @@
 import serialize from "./utils/serialize.js";
 import loadingGifBase64 from "./loading-gif-base64.js";
 import modal from "./modal.js";
+import tooltipTriggerAndModal from "./tooltip-trigger-and-modal.js";
 import tracking from "./utils/tracking.js";
 
 const editForm = {
@@ -31,13 +32,6 @@ const editForm = {
       });
     }
 
-    const infoTriggerEls = document.querySelectorAll(".js-info-modal-trigger");
-    for (let i = 0; i < infoTriggerEls.length; i++) {
-      infoTriggerEls[i].addEventListener("click", event => {
-        this.openInfoModal(event);
-      });
-    }
-
     // if this page was loaded with the refreshAndClose param, we can close it programmatically
     // this is part of the flow to refresh auth state
     if (window.location.search.indexOf("refreshAndClose") > 0) {
@@ -59,20 +53,9 @@ const editForm = {
       });
     }
 
-    this.formEl = document.querySelector(".js-edit-form");
-  },
+    tooltipTriggerAndModal.init();
 
-  openInfoModal(event) {
-    event.preventDefault();
-    const triggerEl = event.target.closest("a");
-    const label = triggerEl.getAttribute("data-field-label");
-    const infoText = triggerEl.getAttribute("data-info-text");
-    const content = `
-      <h3>${label}</h3>
-      <p>${infoText}</p>
-    `;
-    modal.updateModal(content);
-    modal.openModal("aria-modal");
+    this.formEl = document.querySelector(".js-edit-form");
   },
 
   sendFormData() {
