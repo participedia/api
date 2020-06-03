@@ -1,9 +1,12 @@
-<a
-  href="#"
-  class="info-modal-trigger js-info-modal-trigger"
-  data-modal-header="{{modalHeader}}"
-  data-modal-text="{{modalText}}"
->
-  <span class="sr-only">click for more info</span>
+<a href="#" class="info-modal-trigger js-info-modal__trigger">
+  <span class="sr-only">{{t "click for more info"}}</span>
   {{> icon-info }}
+
+  <script type="text/template" class="js-info-modal__header">
+    {{{modalHeader}}}
+  </script>
+
+  <script type="text/template" class="js-info-modal__body">
+    {{{modalText}}}
+  </script>
 </a>
