@@ -28,6 +28,7 @@ const {
   maybeUpdateUserText,
   parseGetParams,
   validateUrl,
+  isValidDate,
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
@@ -224,9 +225,10 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
   const links = req.body.links;
+  const startDate = req.body.start_date;
+  const endDate = req.body.end_date;
 
   //validate url
-
   if (links) {
     for (let key in links) {
       let url = links[key].url;
@@ -240,6 +242,25 @@ async function postCaseUpdateHttp(req, res) {
           });
         }
       }
+    }
+  }
+
+  // Validate duration
+  if (startDate) {
+    if (!isValidDate(startDate)) {
+      return res.status(400).json({
+        OK: false,
+        errors: ["Invalid Start Date. Valid format is YYYY-MM-DD."],
+      });
+    }
+  }
+
+  if (endDate) {
+    if (!isValidDate(endDate)) {
+      return res.status(400).json({
+        OK: false,
+        errors: ["Invalid End Date. Valid format is YYYY-MM-DD."],
+      });
     }
   }
 

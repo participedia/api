@@ -345,6 +345,10 @@ const isValidURL = string => {
   return res !== null;
 };
 
+const isValidDate = date => {
+  return moment(date).isValid();
+};
+
 async function createLocalizedRecord(data, thingid) {
   var records = [];
   for (var i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
@@ -423,6 +427,7 @@ module.exports = {
   uniq,
   fixUpURLs,
   validateUrl,
+  isValidDate,
   verifyOrUpdateUrl,
   parseGetParams,
   returnByType,
