@@ -124,10 +124,6 @@ const offsetFromReq = req => {
 
 const limitFromReq = req => {
   let limit = parseInt(req.query.limit || RESPONSE_LIMIT);
-  const resultType = (req.query.resultType || "").toLowerCase();
-  if (resultType === "map") {
-    limit = 0; // return all
-  }
   return limit;
 };
 
