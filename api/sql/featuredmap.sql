@@ -43,6 +43,4 @@ WHERE
   ${type:name}.hidden = false
   ${facets:raw}
 ORDER BY ${type:name}.featured DESC, updated_date DESC
-OFFSET ${offset}
-LIMIT ${limit}
 ;

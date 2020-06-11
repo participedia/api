@@ -46,6 +46,4 @@ Where
       ${facets:raw}
 
 ORDER BY searchmatched DESC, featured DESC, updated_date DESC
-OFFSET ${offset}
-LIMIT ${limit}
 ;

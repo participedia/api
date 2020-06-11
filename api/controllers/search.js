@@ -124,6 +124,10 @@ const offsetFromReq = req => {
 
 const limitFromReq = req => {
   let limit = parseInt(req.query.limit || RESPONSE_LIMIT);
+  const resultType = (req.query.resultType || "").toLowerCase();
+  if (resultType === "map") {
+    limit = 0; // return all
+  }
   return limit;
 };
 
@@ -220,7 +224,7 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
   const params = parseGetParams(req, type);
 
   try {
-    const results = await db.any(queryFileFromReq(req), {
+    let results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
@@ -230,6 +234,10 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
       type: type + "s",
       facets: searchFiltersFromReq(req),
     });
+
+    if (req.query.resultType === "map" && parsed_query) {
+      results = results.filter(result => result.searchmatched);
+    }
 
     const total = Number(
       results.length ? results[0].total || results.length : 0
