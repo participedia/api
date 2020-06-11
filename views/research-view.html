@@ -22,13 +22,47 @@
     </p>
   {{/accordion}}
 
-  {{#> accordion title=(t "Data Repository")}}
-    <p><strong>{{t "research.data_repository.dataverse"}}</strong></p>
+  {{#> accordion title=(t "research.data_downloads_header")}}
+    <p>{{t "research.data_downloads.p1"}}</p>
+    <ul>
+      <li>
+        <strong>{{t "Cases"}}:</strong>
+        <a href="https://participedia.net/?selectedCategory=case&returns=csv" target="_blank">
+          https://participedia.net/?selectedCategory=case&returns=csv
+        </a>
+      </li>
+      <li>
+        <strong>{{t "Methods"}}:</strong>
+        <a href="https://participedia.net/?selectedCategory=method&returns=csv" target="_blank">
+          https://participedia.net/?selectedCategory=method&returns=csv
+        </a>
+      </li>
+      <li>
+        <strong>{{t "Organizations"}}:</strong>
+        <a href="https://participedia.net/?selectedCategory=organizations&returns=csv" target="_blank">
+          https://participedia.net/?selectedCategory=organizations&returns=csv
+        </a>
+      </li>
+    </ul>
+
+    <iframe src="https://graphcommons.com/graphs/d743b2ae-3da8-43a3-821a-6bc05f6d103c/embed?auto=false" frameborder="0" class="research-graph-commons-iframe" width="99%" height="600" allowfullscreen></iframe>
 
     <p>
       {{{__
+        "research.data_downloads.If you do any analysis..."
+        "<a href='mailto:data@participedia.net'>"
+        "</a>"
+        "<a href='https://twitter.com/participedia' target='_blank' rel='noopener'>"
+        "</a>"
+      }}}
+    </p>
+  {{/accordion}}
+
+  {{#> accordion title=(t "research.data_repository.dataverse")}}
+    <p>
+      {{{__
         "research.data_repository.p1"
-        "<a href='https://dataverse.harvard.edu/dataverse/Participedia' target='_blank'>"
+        "<a href='https://dataverse.harvard.edu/dataverse/Participedia' target='_blank' rel='noopener'>"
         "</a>"
       }}}
     </p>
@@ -69,3 +103,5 @@
     <p>{{t "research.surveys.p4"}}</p>
   {{/accordion}}
 {{/static-view-container}}
+
+{{> script-tag-with-cache-key filepath="/build/js/research-view.bundle.js"}}
