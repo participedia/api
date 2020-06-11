@@ -41,6 +41,13 @@
   margin-top: 0;
 }
 
+.research-graph-commons-iframe {
+  overflow:hidden;
+  border:1px solid #DDDDDD;
+  width:calc(100% - 2px);
+  height:600px;
+}
+
 @media (max-width: 1000px) {
   .static-view.full-width-container .left-col {
     display: none;

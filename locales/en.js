@@ -1570,7 +1570,7 @@
   "Research Assistant": "Research Assistant",
   "Research Associate": "Research Associate",
   "Research Design Committee": "Research Design Committee",
-  "research.data_repository.dataverse": "Participedia Dataverse Repository",
+  "research.data_repository.dataverse": "Dataverse Repository",
   "research.data_repository.feature.1": "metrics on the number of downloads of each dataset;",
   "research.data_repository.feature.2": "the ability to download datasets in multiple formats;",
   "research.data_repository.feature.3": "the ability to conduct data analysis right through the user interface without downloading data, since %sR%s is built into the user interface;",
@@ -1801,5 +1801,8 @@
   "Frequently Asked Questions": "Frequently Asked Questions",
   "faq_a9_p1": "To publish, view and edit an entry in another language, use the drop down language selector found on the top menu bar and footer of the site to change your preferred language.",
   "faq_a9_p2": "If the language you wish to enter is not yet supported on our site, please %scontact%s us to request it. In the meantime, you can use the English version of the site to submit your entry. In this case, please indicate the language in square brackets in the title of the entry, for example, “Your entry title [Your language]“.",
-  "click for more info": "click for more info"
+  "click for more info": "click for more info",
+  "research.data_downloads_header": "Real-time Data Downloads",
+  "research.data_downloads.p1": "Real-time Participedia data is available to download as csv files at the following links:",
+  "research.data_downloads.If you do any analysis...": "If you do any analysis, data visualization, or other types of projects with this data, we would love to see it. %sEmail us%s or share your project with us on %sTwitter%s."
 }
