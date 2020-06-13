@@ -13,19 +13,23 @@ const editTextarea = {
       counterEl.innerText = `${el.innerHTML.length}/${limit}`;
       counterEl.className = "textarea-counter";
       el.insertAdjacentElement("afterend", counterEl);
+      this.generateClass(counterEl, el.innerHTML.length, limit);
 
       // update count on every character change
       el.addEventListener("keyup", e => {
         const count = e.target.value.length;
         counterEl.innerText = `${count}/${limit}`;
-        if (count > limit) {
-          counterEl.classList.add("textarea-counter-over-limit");
-        } else {
-          counterEl.classList.remove("textarea-counter-over-limit");
-        }
+        this.generateClass(counterEl, count, limit);
       });
     });
   },
+  generateClass(counterEl, count, limit) {
+    if (count > limit) {
+      counterEl.classList.add("textarea-counter-over-limit");
+    } else {
+      counterEl.classList.remove("textarea-counter-over-limit");
+    }
+  }
 };
 
 export default editTextarea;
