@@ -10,7 +10,7 @@ const editTextarea = {
 
       // create and insert counter element
       const counterEl = document.createElement("div");
-      counterEl.innerText = `0/${limit}`;
+      counterEl.innerText = `${el.innerHTML.length}/${limit}`;
       counterEl.className = "textarea-counter";
       el.insertAdjacentElement("afterend", counterEl);
 
