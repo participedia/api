@@ -769,7 +769,7 @@ module.exports = {
       ) {
         // only add this edit if we don't already have an edit entry for this user on this day
         editsByUser[edit.user_id] = editsByUser[edit.user_id].concat([edit]);
-      } else {
+      } else if(!editsByUser[edit.user_id]) {
         editsByUser[edit.user_id] = [edit];
       }
     });

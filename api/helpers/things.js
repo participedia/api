@@ -201,8 +201,14 @@ async function maybeUpdateUserText(req, res, type) {
   });
   const author = {
     user_id: params.userid,
+    timestamp: "now",
     thingid: params.articleid,
   };
+
+  if (newArticle.updated_date) {
+    author['timestamp'] = moment(newArticle.updated_date, moment.ISO_8601).format();
+  }
+
   if (textModified) {
     return { updatedText, author, oldArticle };
   } else {
