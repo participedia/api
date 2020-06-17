@@ -24,10 +24,11 @@ const editTextarea = {
     });
   },
   generateClass(counterEl, count, limit) {
+    const textareaCounterClass = 'textarea-counter-over-limit';
     if (count > limit) {
-      counterEl.classList.add("textarea-counter-over-limit");
+      counterEl.classList.add(textareaCounterClass);
     } else {
-      counterEl.classList.remove("textarea-counter-over-limit");
+      counterEl.classList.remove(textareaCounterClass);
     }
   }
 };
