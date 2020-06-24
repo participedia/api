@@ -206,7 +206,14 @@ async function maybeUpdateUserText(req, res, type) {
   };
 
   if (newArticle.updated_date) {
-    author['timestamp'] = moment(newArticle.updated_date, moment.ISO_8601).format();
+    if (typeof newArticle.updated_date === 'string') {
+      // Means the value entered by the user.
+      author['timestamp'] = moment(newArticle.updated_date, moment.ISO_8601).format();
+    } else {
+      // Means the value is set using Date.now();
+      // And overwrite using moment().format();
+      author['timestamp'] = moment().format();
+    }
   }
 
   if (textModified) {
