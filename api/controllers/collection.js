@@ -27,7 +27,8 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
-  createLocalizedRecord
+  createLocalizedRecord,
+  validateFields
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -93,12 +94,12 @@ async function postCollectionNewHttp(req, res) {
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
     let original_language = req.body.original_language || "en";
-    let links = req.body.links;
+    const errors = validateFields(req.body, "collection");
 
-    if (!title) {
+    if (errors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: ["Cannot create a collection without at least a title."],
+        errors: errors,  
       });
     }
 
@@ -155,25 +156,16 @@ async function postCollectionUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCollection = req.body;
-  const links = req.body.links;
+  const errors = validateFields(newCollection, "collection");
 
-  //validate url
-
-  if (links) {
-    for (let key in links) {
-      let url = links[key].url;
-      if (url.length > 0) {
-        newCollection.links = verifyOrUpdateUrl(newCollection.links);
-        const isUrlValid = validateUrl(newCollection);
-        if (!isUrlValid) {
-          return res.status(400).json({
-            OK: false,
-            errors: ["Invalid link url."],
-          });
-        }
-      }
-    }
+  if (errors.length > 0) {
+    return res.status(400).json({
+      OK: false,
+      errors: errors,
+    });
   }
+
+  newCollection.links = verifyOrUpdateUrl(newCollection.links);
 
   // if this is a new collection, we don't have a post_date yet, so we set it here
   if (!newCollection.post_date) {

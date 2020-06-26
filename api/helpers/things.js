@@ -9,7 +9,7 @@ const authKeys = JSON.parse(keysEnvVar);
 authKeys['key'] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
 
-let { isString } = require("lodash");
+let { remove } = require("lodash");
 const cache = require("apicache");
 const equals = require("deep-equal");
 const moment = require("moment");
@@ -326,19 +326,19 @@ const searchFilterKeyLists = type => {
 };
 
 //check if url is valid, if http or https is not detected append http
-
 const verifyOrUpdateUrl = links => {
   let arr = links.map(link => {
     if (!/\b(http|https)/.test(link.url)) {
-      link.url = `http://${link.url}`;
+      if (link.url.length > 0) {
+        link.url = `http://${link.url}`;
+      }
     }
     return link;
   });
   return arr;
 };
 
-const validateUrl = article => {
-  let links = article.links;
+const validateUrl = links => {
   if (links) {
     let arr = links.map(item =>
       item.url.length > 0 ? isValidURL(item.url) : true
@@ -360,6 +360,52 @@ const isValidURL = string => {
 
 const isValidDate = date => {
   return moment(date).isValid();
+};
+
+const validateFields = (entry, entryName) => {
+  let links = entry.links;
+  const title = entry.title;
+  const startDate = entry.start_date;
+  const endDate = entry.end_date;
+  let errors = [];
+
+  // validate title
+  if (!title) {
+    errors.push(`Cannot create a ${entryName} without at least a title.`);
+  }
+
+  // validate url
+  if (links) {
+    let linkErrors = 0;
+    for (let key in links) {
+      let url = links[key].url;
+      if (url.length > 0) {
+        links = verifyOrUpdateUrl(links);
+        const isUrlValid = validateUrl(links);
+        if (!isUrlValid) {
+          linkErrors++;
+        }
+      }
+    }
+    if (linkErrors > 0) {
+      errors.push("Invalid link url.");
+    }
+  }
+
+  // Validate duration
+  if (startDate) {
+    if (!isValidDate(startDate)) {
+      errors.push("Invalid Start Date. Valid format is YYYY-MM-DD.");
+    }
+  }
+
+  if (endDate) {
+    if (!isValidDate(endDate)) {
+      errors.push("Invalid End Date. Valid format is YYYY-MM-DD.");
+    }
+  }
+
+  return errors;
 };
 
 async function createLocalizedRecord(data, thingid) {
@@ -450,5 +496,6 @@ module.exports = {
   searchFilterKeyLists,
   placeHolderPhotos,
   createLocalizedRecord,
-  getCollections
+  getCollections,
+  validateFields
 };

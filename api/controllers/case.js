@@ -33,7 +33,8 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
-  getCollections
+  getCollections,
+  validateFields
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -78,12 +79,12 @@ async function postCaseNewHttp(req, res) {
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
     let original_language = req.body.original_language || "en";
-    let links = req.body.links;
+    const errors = validateFields(req.body, "case");
 
-    if (!title) {
+    if (errors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: ["Cannot create a case without at least a title."],
+        errors: errors,  
       });
     }
 
@@ -94,6 +95,7 @@ async function postCaseNewHttp(req, res) {
       description,
       original_language,
     });
+
     req.params.thingid = thing.thingid;
     await postCaseUpdateHttp(req, res);
     let localizedData = {
@@ -224,45 +226,16 @@ async function postCaseUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
-  const links = req.body.links;
-  const startDate = req.body.start_date;
-  const endDate = req.body.end_date;
+  const errors = validateFields(newCase, "case");
 
-  //validate url
-  if (links) {
-    for (let key in links) {
-      let url = links[key].url;
-      if (url.length > 0) {
-        newCase.links = verifyOrUpdateUrl(newCase.links);
-        const isUrlValid = validateUrl(newCase);
-        if (!isUrlValid) {
-          return res.status(400).json({
-            OK: false,
-            errors: ["Invalid link url."],
-          });
-        }
-      }
-    }
+  if (errors.length > 0) {
+    return res.status(400).json({
+      OK: false,
+      errors: errors,
+    });
   }
 
-  // Validate duration
-  if (startDate) {
-    if (!isValidDate(startDate)) {
-      return res.status(400).json({
-        OK: false,
-        errors: ["Invalid Start Date. Valid format is YYYY-MM-DD."],
-      });
-    }
-  }
-
-  if (endDate) {
-    if (!isValidDate(endDate)) {
-      return res.status(400).json({
-        OK: false,
-        errors: ["Invalid End Date. Valid format is YYYY-MM-DD."],
-      });
-    }
-  }
+  newCase.links = verifyOrUpdateUrl(newCase.links);
 
   // if this is a new case, we don't have a post_date yet, so we set it here
   if (!newCase.post_date) {
