@@ -79,7 +79,7 @@ async function postCaseNewHttp(req, res) {
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
     let original_language = req.body.original_language || "en";
-    const errors = validateFields(req.body, 'case');
+    const errors = validateFields(req.body, "case");
 
     if (errors.length > 0) {
       return res.status(400).json({
@@ -226,8 +226,7 @@ async function postCaseUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
-  const links = req.body.links;
-  const errors = validateFields(newCase, 'case');
+  const errors = validateFields(newCase, "case");
 
   if (errors.length > 0) {
     return res.status(400).json({
@@ -237,6 +236,7 @@ async function postCaseUpdateHttp(req, res) {
   }
 
   newCase.links = verifyOrUpdateUrl(newCase.links);
+
   // if this is a new case, we don't have a post_date yet, so we set it here
   if (!newCase.post_date) {
     newCase.post_date = Date.now();
