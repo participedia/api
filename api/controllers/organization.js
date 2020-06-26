@@ -29,7 +29,8 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
-  getCollections
+  getCollections,
+  validateFields
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -86,10 +87,12 @@ async function postOrganizationNewHttp(req, res) {
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
     let original_language = req.body.original_language || "en";
-    if (!title) {
+    const errors = validateFields(req.body, "organization");
+
+    if (errors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: ["Cannot create Organization without at least a title"],
+        errors: errors,  
       });
     }
 
@@ -166,25 +169,16 @@ async function postOrganizationUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
-  const links = req.body.links;
+  const errors = validateFields(newOrganization, "organization");
 
-  //validate url
-
-  if (links) {
-    for (let key in links) {
-      let url = links[key].url;
-      if (url.length > 0) {
-        newOrganization.links = verifyOrUpdateUrl(newOrganization.links);
-        const isUrlValid = validateUrl(newOrganization);
-        if (!isUrlValid) {
-          return res.status(400).json({
-            OK: false,
-            errors: ["Invalid link url."],
-          });
-        }
-      }
-    }
+  if (errors.length > 0) {
+    return res.status(400).json({
+      OK: false,
+      errors: errors,
+    });
   }
+
+  newOrganization.links = verifyOrUpdateUrl(newOrganization.links);
 
   // if this is a new organization, we don't have a post_date yet, so we set it here
   if (!newOrganization.post_date) {

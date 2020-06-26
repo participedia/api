@@ -28,7 +28,8 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
-  getCollections
+  getCollections,
+  validateFields
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -87,10 +88,12 @@ async function postMethodNewHttp(req, res) {
     let body = req.body.body || req.body.summary || "";
     let description = req.body.description;
     let original_language = req.body.original_language || "en";
-    if (!title) {
+    const errors = validateFields(req.body, "method");
+
+    if (errors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: ["Cannot create a method without at least a title."],
+        errors: errors,  
       });
     }
 
@@ -167,25 +170,16 @@ async function postMethodUpdateHttp(req, res) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = req.body;
-  const links = req.body.links;
+  const errors = validateFields(newMethod, "method");
 
-  //validate url
-
-  if (links) {
-    for (let key in links) {
-      let url = links[key].url;
-      if (url.length > 0) {
-        newMethod.links = verifyOrUpdateUrl(newMethod.links);
-        const isUrlValid = validateUrl(newMethod);
-        if (!isUrlValid) {
-          return res.status(400).json({
-            OK: false,
-            errors: ["Invalid link url."],
-          });
-        }
-      }
-    }
+  if (errors.length > 0) {
+    return res.status(400).json({
+      OK: false,
+      errors: errors,
+    });
   }
+
+  newMethod.links = verifyOrUpdateUrl(newMethod.links);
 
   // if this is a new method, we don't have a post_date yet, so we set it here
   if (!newMethod.post_date) {
