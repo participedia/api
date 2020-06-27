@@ -99,6 +99,23 @@ header a {
   justify-content: center;
 }
 
+.icon-container:nth-child(3) {
+  order: 0;
+}
+
+.icon-container:nth-child(3) button {
+  background: none;
+  border: none;
+}
+
+.icon-container:nth-child(3) button.hidden {
+  display: none;
+}
+
+.icon-container:nth-child(3) svg path {
+  fill: white;
+}
+
 .icon-container i {
   height: 18px;
 }

@@ -50,10 +50,13 @@
     </div>
     <div class="middle-col">
       <div class="header-search-container">
-        <form action="/">
-          <input name="query" type="text" placeholder={{t "Search"}} value="{{req.query.query}}" />
+        <form action="/" class="js-query-search-form">
+          <input name="query" type="text" placeholder={{t "Search"}} value="{{req.query.query}}" class="js-query-search-input" />
           <div class="icon-container">
             {{> icon-search }}
+          </div>
+          <div class="icon-container">
+            <button type="button" class="js-query-search-close-button hidden">{{> icon-close }}</button>
           </div>
         </form>
       </div>
