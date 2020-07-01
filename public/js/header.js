@@ -4,6 +4,7 @@ const header = {
   init() {
     this.trackLoginButtonClick();
     this.initProfileDropdownMenu();
+    this.trackQuerySearchInput();
   },
 
   trackLoginButtonClick() {
@@ -45,6 +46,32 @@ const header = {
       }
     });
   },
+
+  trackQuerySearchInput() {
+    const searchInputEl = document.querySelector(".js-query-search-input");
+    const closeButtonEl = document.querySelector(".js-query-search-close-button");
+    const searchFormEl = document.querySelector(".js-query-search-form");
+    this.hideOrShowSearchCloseButton(searchInputEl.value, closeButtonEl);
+
+    searchInputEl.addEventListener("input", e => {
+      this.hideOrShowSearchCloseButton(e.target.value, closeButtonEl);
+    });
+
+    closeButtonEl.addEventListener("click", e => {
+      searchInputEl.value = "";
+      this.hideOrShowSearchCloseButton(searchInputEl.value, closeButtonEl);
+      history.pushState({}, "", '/');
+      location.href = '/';
+    });
+  },
+
+  hideOrShowSearchCloseButton(query, closeButtonEl) {
+    if (query.length > 0) {
+      closeButtonEl.classList.remove("hidden");
+    } else {
+      closeButtonEl.classList.add("hidden");
+    }
+  }
 };
 
 export default header;

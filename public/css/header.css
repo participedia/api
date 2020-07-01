@@ -58,13 +58,34 @@ header a {
   outline: 0;
 }
 
-.header-search-container input:focus + .icon-container {
+.header-search-container input:focus ~ .icon-container {
   background-color: #fff;
 }
 
 /* when search input is focused, change icon color to #222 */
-.header-search-container input:focus + .icon-container .icon-fill {
+.header-search-container input:focus ~ .icon-container .icon-fill {
   fill: #222;
+}
+
+.header-search-container .icon-container:nth-child(3) {
+  order: 0;
+}
+
+.header-search-container .icon-container:nth-child(3) button {
+  background: none;
+  border: none;
+}
+
+.header-search-container .icon-container:nth-child(3) button.hidden {
+  display: none;
+}
+
+.header-search-container .icon-container:nth-child(3) svg path {
+  fill: white;
+}
+
+.header-search-container .icon-container i {
+  height: 18px;
 }
 
 .header-profile-link {
@@ -97,10 +118,6 @@ header a {
   width: 40px;
   align-items: center;
   justify-content: center;
-}
-
-.icon-container i {
-  height: 18px;
 }
 
 .sidebar-menu-open .icon-fill,
