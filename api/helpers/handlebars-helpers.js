@@ -62,6 +62,8 @@ function getFirstThumbnailImageForArticle(article) {
 
   if (url) {
     let imagePath = 'thumbnail';
+
+    // Handle existing GIF by opening it from the raw folder
     if (url.indexOf('.gif') >= 0) {
       imagePath = 'raw';
     }
