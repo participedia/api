@@ -58,11 +58,19 @@ function getFirstLargeImageForArticle(article) {
 }
 
 function getFirstThumbnailImageForArticle(article) {
-  const url = getFirstLargeImageForArticle(article);
+  let url = getFirstLargeImageForArticle(article);
+
   if (url) {
+    let imagePath = 'thumbnail';
+
+    // Handle existing GIF by opening it from the raw folder
+    if (url.indexOf('.gif') >= 0) {
+      imagePath = 'raw';
+    }
+
     return url.replace(
       process.env.AWS_UPLOADS_URL,
-      `${process.env.AWS_UPLOADS_URL}thumbnail/`
+      `${process.env.AWS_UPLOADS_URL}${imagePath}/`
     );  
   }
 }
