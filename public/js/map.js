@@ -134,7 +134,7 @@ const map = {
     const successCB = response => {
       const results = JSON.parse(response.response).results;
       this.cacheResults(response.responseURL, results);
-      this.renderMarkers(results);
+      this.prepareMarkers(results);
     };
     const errorCB = response => {
       //console.log("err", response)
@@ -143,7 +143,7 @@ const map = {
     const cachedResults = this.getCachedResults(window.location.origin + url);
     if (cachedResults) {
       // if we have cached results, render the markers with those
-      this.renderMarkers(cachedResults);
+      this.prepareMarkers(cachedResults);
     } else {
       // if we don't have cached results, make the request
       xhrReq("GET", url, {}, successCB, errorCB);
@@ -205,18 +205,23 @@ const map = {
   },
 
   dropMarkers(markers) {
-    const gMarkers = markers.map((marker, i) => {
+    const featuredMarkers = markers.filter(m => m.featured);
+    const otherMarkers = markers.filter(m => !m.featured);
+
+    const markersForClustering = otherMarkers.map((marker, i) => {
       const markerPopOver = new google.maps.Marker({
         position: marker.position,
         map: this.map,
-        icon: marker.featured === true ? featuredMarkerIcon : defaultMarkerIcon,
+        icon: defaultMarkerIcon,
       });
       this.bindClickEventForMarker(markerPopOver, marker);
       return markerPopOver;
     });
-    const markerCluster = new MarkerClusterer(this.map, gMarkers, {
+
+    // render marker clusters
+    const markerCluster = new MarkerClusterer(this.map, markersForClustering, {
       maxZoom: 7,
-      gridSize: 90,
+      gridSize: 65,
       styles: [
         {
           width: 30,
@@ -236,18 +241,19 @@ const map = {
       ],
       clusterClass: "custom-clustericon",
     });
+    
+    // render featured markers
+    for (let i = 0; i < featuredMarkers.length; i++) {
+      const markerPopOver = new google.maps.Marker({
+        position: featuredMarkers[i].position,
+        map: this.map,
+        icon: featuredMarkerIcon,
+      });
+      this.bindClickEventForMarker(markerPopOver, featuredMarkers[i]);
+    }
   },
 
-  // createMarker(marker) {
-  //   const markerPopOver = new google.maps.Marker({
-  //     position: marker.position,
-  //     map: this.map,
-  //     icon: marker.featured === true ? featuredMarkerIcon : defaultMarkerIcon,
-  //   });
-  //   this.bindClickEventForMarker(markerPopOver, marker);
-  // },
-
-  renderMarkers(results) {
+  prepareMarkers(results) {
     const articleCardsContainer = document.querySelector(".js-cards-container");
     const filteredResults = this.filterResultsForTab(results);
 
