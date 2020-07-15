@@ -44,6 +44,7 @@
 
   {{#if (isHomeSearchView req)}}
     {{!-- import google api for the map widget --}}
+    <script type="text/javascript" src="/js/vendor/markerclustererplus.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{static.language}}"></script>
     {{> script-tag-with-cache-key filepath="/build/js/home-search-view.bundle.js"}}
   {{/if}}
