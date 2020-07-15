@@ -218,7 +218,7 @@ const hbs = exphbs.create({
   defaultLayout: "main",
   extname: ".html",
   helpers: Object.assign(handlebarsHelpers, {
-    GOOGLE_MAPS_API_KEY: () => process.env.GOOGLE_MAPS_API_KEY
+    GOOGLE_API_KEY: () => process.env.GOOGLE_API_KEY
   }),
 });
 
