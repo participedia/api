@@ -30,7 +30,6 @@ const map = {
       // don't fetch map results if we are on the methods or collections tab
       this.fetchMapResults();
     }
-
   },
 
   initMapOverlay() {
@@ -41,7 +40,9 @@ const map = {
     this.mapControls = document.querySelector(".js-map-controls");
     this.mapOverlayEl = document.querySelector(".js-map-overlay");
     this.mapLegend = document.querySelector(".js-map-legend");
-    this.activateMapCTAContainer = document.querySelector(".js-map-overlay-info");
+    this.activateMapCTAContainer = document.querySelector(
+      ".js-map-overlay-info"
+    );
 
     if (!this.isMethodTab && !this.isCollectionTab) {
       this.mapOverlayEl.addEventListener("click", e => {
@@ -57,9 +58,9 @@ const map = {
         // track activate map click
         tracking.send("home.map", "activate_map_button_click");
         this.showMapOverlay();
-      });  
+      });
     }
-    
+
     // if user is on method or collection tab, show overlay, but don't show activate map link
     // on all other tabs, if user has already clicked to activate map in the current browser session,
     // don't show overlay, show legend
@@ -204,22 +205,47 @@ const map = {
   },
 
   dropMarkers(markers) {
-    // use setTimeout to animate the markers appearing on screen
-    for (let i = 0; i < markers.length; i++) {
-      setTimeout(() => {
-        this.createMarker(markers[i]);
-      }, i * 5);
-    }
+    const gMarkers = markers.map((marker, i) => {
+      const markerPopOver = new google.maps.Marker({
+        position: marker.position,
+        map: this.map,
+        icon: marker.featured === true ? featuredMarkerIcon : defaultMarkerIcon,
+      });
+      this.bindClickEventForMarker(markerPopOver, marker);
+      return markerPopOver;
+    });
+    const markerCluster = new MarkerClusterer(this.map, gMarkers, {
+      maxZoom: 7,
+      gridSize: 90,
+      styles: [
+        {
+          width: 30,
+          height: 30,
+          className: "custom-clustericon-1",
+        },
+        {
+          width: 40,
+          height: 40,
+          className: "custom-clustericon-2",
+        },
+        {
+          width: 50,
+          height: 50,
+          className: "custom-clustericon-3",
+        },
+      ],
+      clusterClass: "custom-clustericon",
+    });
   },
 
-  createMarker(marker) {
-    const markerPopOver = new google.maps.Marker({
-      position: marker.position,
-      map: this.map,
-      icon: marker.featured === true ? featuredMarkerIcon : defaultMarkerIcon,
-    });
-    this.bindClickEventForMarker(markerPopOver, marker);
-  },
+  // createMarker(marker) {
+  //   const markerPopOver = new google.maps.Marker({
+  //     position: marker.position,
+  //     map: this.map,
+  //     icon: marker.featured === true ? featuredMarkerIcon : defaultMarkerIcon,
+  //   });
+  //   this.bindClickEventForMarker(markerPopOver, marker);
+  // },
 
   renderMarkers(results) {
     const articleCardsContainer = document.querySelector(".js-cards-container");

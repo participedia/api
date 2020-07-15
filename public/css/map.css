@@ -1,0 +1,45 @@
+.custom-clustericon {
+  background: var(--cluster-color);
+  color: #fff;
+  border-radius: 100%;
+  font-weight: bold;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.custom-clustericon::before,
+.custom-clustericon::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  background: var(--cluster-color);
+  opacity: 0.2;
+  border-radius: 100%;
+}
+
+.custom-clustericon::before {
+  padding: 7px;
+}
+
+.custom-clustericon::after {
+  padding: 14px;
+}
+
+.custom-clustericon-1 {
+  --cluster-color: #111;
+}
+
+.custom-clustericon-2 {
+  --cluster-color: #555;
+}
+
+.custom-clustericon-3 {
+  --cluster-color: #999;
+}
