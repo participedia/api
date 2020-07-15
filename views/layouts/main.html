@@ -45,7 +45,7 @@
   {{#if (isHomeSearchView req)}}
     {{!-- import google api for the map widget --}}
     <script type="text/javascript" src="/js/vendor/markerclustererplus.min.js"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYi8w5HOVTr3HyioFkAKUK_PofGow_7uA&libraries=places&language={{static.language}}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places&language={{static.language}}"></script>
     {{> script-tag-with-cache-key filepath="/build/js/home-search-view.bundle.js"}}
   {{/if}}
 
@@ -55,14 +55,14 @@
 
   {{#if (isEditView req)}}
     {{!-- import google api for the autocomplete widget --}}
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYi8w5HOVTr3HyioFkAKUK_PofGow_7uA&libraries=places&language={{static.language}}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places&language={{static.language}}"></script>
     <script type="text/javascript" src="/js/polyfills/DragDropTouch.js"></script>
     {{> script-tag-with-cache-key filepath="/build/js/edit-view.bundle.js"}}
   {{/if}}
 
   {{#if (isNewView req)}}
     {{!-- import google api for the autocomplete widget --}}
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYi8w5HOVTr3HyioFkAKUK_PofGow_7uA&libraries=places&language={{static.language}}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=places&language={{static.language}}"></script>
     <script type="text/javascript" src="/js/polyfills/DragDropTouch.js"></script>
     {{> script-tag-with-cache-key filepath="/build/js/edit-view.bundle.js"}}
   {{/if}}

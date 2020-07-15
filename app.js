@@ -217,7 +217,9 @@ const hbs = exphbs.create({
   // Specify helpers which are only registered on this instance.
   defaultLayout: "main",
   extname: ".html",
-  helpers: handlebarsHelpers,
+  helpers: Object.assign(handlebarsHelpers, {
+    GOOGLE_MAPS_API_KEY: () => process.env.GOOGLE_MAPS_API_KEY
+  }),
 });
 
 app.engine(".html", hbs.engine);
