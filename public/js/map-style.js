@@ -1,202 +1,60 @@
 const mapStyle = [
   {
-    featureType: "all",
+    featureType: "administrative",
     elementType: "all",
     stylers: [
       {
-        visibility: "off",
+        saturation: "-100",
       },
     ],
   },
   {
     featureType: "administrative",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.country",
     elementType: "geometry",
-    stylers: [
-      {
-        lightness: "0",
-      },
-      {
-        weight: "0.33",
-      },
-      {
-        color: "#646464",
-      },
-      {
-        visibility: "on",
-      },
-    ],
+    stylers: [{ visibility: "off" }],
   },
   {
     featureType: "administrative.country",
-    elementType: "labels.text",
-    stylers: [
-      {
-        visibility: "on",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.country",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
+    elementType: "geometry.stroke",
+    stylers: [{ visibility: "on" }],
   },
   {
     featureType: "administrative.province",
     elementType: "geometry.stroke",
-    stylers: [
-      {
-        color: "#969696",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.locality",
-    elementType: "all",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.locality",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
+    stylers: [{ visibility: "on" }],
   },
   {
     featureType: "administrative.locality",
     elementType: "geometry.stroke",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
+    stylers: [{ visibility: "on" }],
   },
   {
-    featureType: "administrative.locality",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.locality",
-    elementType: "labels.text",
-    stylers: [
-      {
-        weight: "1.69",
-      },
-      {
-        color: "#5f5c5c",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.locality",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-    ],
+    featureType: "administrative.neighborhood",
+    elementType: "geometry.stroke",
+    stylers: [{ visibility: "on" }],
   },
   {
     featureType: "administrative.land_parcel",
+    elementType: "geometry.stroke",
+    stylers: [{ visibility: "on" }],
+  },
+  {
+    featureType: "administrative.province",
     elementType: "all",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.land_parcel",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
+    stylers: [{ visibility: "off" }],
   },
   {
     featureType: "landscape",
-    elementType: "geometry",
+    elementType: "all",
     stylers: [
       {
-        saturation: "0",
+        saturation: -100,
       },
       {
-        lightness: "100",
-      },
-      {
-        gamma: "2.31",
+        lightness: 65,
       },
       {
         visibility: "on",
-      },
-    ],
-  },
-  {
-    featureType: "landscape",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-      {
-        lightness: "20",
-      },
-      {
-        gamma: "1",
-      },
-    ],
-  },
-  {
-    featureType: "landscape",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        saturation: "-100",
-      },
-      {
-        lightness: "-100",
-      },
-    ],
-  },
-  {
-    featureType: "landscape",
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "landscape.man_made",
-    elementType: "all",
-    stylers: [
-      {
-        visibility: "simplified",
       },
     ],
   },
@@ -205,37 +63,13 @@ const mapStyle = [
     elementType: "all",
     stylers: [
       {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "geometry",
-    stylers: [
-      {
-        lightness: "0",
+        saturation: -100,
       },
       {
-        saturation: "45",
-      },
-      {
-        gamma: "4.24",
+        lightness: "50",
       },
       {
         visibility: "simplified",
-      },
-      {
-        hue: "#00ff90",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "off",
       },
     ],
   },
@@ -244,72 +78,12 @@ const mapStyle = [
     elementType: "all",
     stylers: [
       {
-        visibility: "on",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "geometry",
-    stylers: [
-      {
         saturation: "-100",
-      },
-      {
-        color: "#f5f5f5",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.text",
-    stylers: [
-      {
-        visibility: "simplified",
-      },
-      {
-        color: "#666666",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "off",
       },
     ],
   },
   {
     featureType: "road.highway",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "geometry.stroke",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        saturation: "-25",
-      },
-    ],
-  },
-  {
-    featureType: "transit.line",
     elementType: "all",
     stylers: [
       {
@@ -318,43 +92,71 @@ const mapStyle = [
     ],
   },
   {
-    featureType: "transit.station.airport",
-    elementType: "labels.icon",
+    featureType: "road.arterial",
+    elementType: "all",
     stylers: [
       {
-        visibility: "off",
+        lightness: "30",
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    elementType: "all",
+    stylers: [
+      {
+        lightness: "40",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "all",
+    stylers: [
+      {
+        saturation: -100,
+      },
+      {
+        visibility: "simplified",
       },
     ],
   },
   {
     featureType: "water",
-    elementType: "all",
+    elementType: "geometry",
     stylers: [
       {
-        visibility: "on",
+        hue: "#C3CACB",
+      },
+      {
+        lightness: -25,
+      },
+      {
+        saturation: -92,
       },
     ],
   },
   {
     featureType: "water",
     elementType: "geometry.fill",
-    stylers: [{ color: "#e0f1f9" }],
+    stylers: [
+      {
+        lightness: "40",
+      },
+      {
+        color: "#C3CACB;",
+      },
+    ],
   },
   {
     featureType: "water",
     elementType: "labels",
     stylers: [
       {
-        visibility: "simplified",
+        lightness: -25,
       },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "labels.icon",
-    stylers: [
       {
-        visibility: "off",
+        saturation: -100,
       },
     ],
   },

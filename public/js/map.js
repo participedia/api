@@ -5,7 +5,8 @@ import { xhrReq } from "./utils/utils.js";
 import tracking from "./utils/tracking.js";
 
 const defaultMarkerIcon = "/images/map-marker-images/single-marker.svg";
-const featuredMarkerIcon = "/images/map-marker-images/single-marker-featured.svg";
+const featuredMarkerIcon =
+  "/images/map-marker-images/single-marker-featured.svg";
 
 const map = {
   init() {
@@ -219,6 +220,7 @@ const map = {
     });
 
     // render marker clusters
+    const markerTextColor = "#fff";
     const markerCluster = new MarkerClusterer(this.map, markersForClustering, {
       maxZoom: 7,
       gridSize: 65,
@@ -230,7 +232,7 @@ const map = {
           anchorText: [-3, 0],
           anchorIcon: [30, 10],
           textSize: 11,
-          textColor: "#fff",
+          textColor: markerTextColor,
         }),
         MarkerClusterer.withDefaultStyle({
           url: "/images/map-marker-images/m4.svg",
@@ -238,7 +240,7 @@ const map = {
           height: 53,
           anchorText: [-5, 0],
           anchorIcon: [53, 17],
-          textColor: "#fff",
+          textColor: markerTextColor,
           textSize: 13,
         }),
         MarkerClusterer.withDefaultStyle({
@@ -248,7 +250,7 @@ const map = {
           anchorText: [-10, 0],
           anchorIcon: [75, 25],
           textSize: 14,
-          textColor: "#fff",
+          textColor: markerTextColor,
         }),
       ],
       clusterClass: "custom-clustericon",
