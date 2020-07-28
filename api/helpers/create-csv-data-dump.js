@@ -189,11 +189,15 @@ function convertToIdTitleUrlFields(entry, field) {
   return entry;
 }
 
-async function createCSVDataDump(type) {
-  const entries = await db.many(LIST_ARTICLES, {
-    type: type + "s",
-    lang: "en",
-  });
+async function createCSVDataDump(type, results = []) {
+  var entries = results;
+
+  if (type !== 'thing') {
+    entries = await db.many(LIST_ARTICLES, {
+      type: type + "s",
+      lang: "en",
+    });
+  }
 
   const sqlForType = {
     case: CASE_BY_ID,
@@ -204,16 +208,19 @@ async function createCSVDataDump(type) {
   const fullEntries = [];
   await Promise.all(
     entries.map(async article => {
-      const params = {
-        type: type,
-        view: "view",
-        articleid: article.id,
-        lang: "en",
-        userid: null,
-      };
-      const articleRow = await db.one(sqlForType[type], params);
+      let articleType = type == 'thing' ? article.type : type;
+      if (articleType !== 'collection') {
+        const params = {
+          type: articleType,
+          view: "view",
+          articleid: article.id,
+          lang: "en",
+          userid: null,
+        };
+        const articleRow = await db.one(sqlForType[articleType], params);
 
-      fullEntries.push(articleRow.results);
+        fullEntries.push(articleRow.results);
+      }
     })
   );
 

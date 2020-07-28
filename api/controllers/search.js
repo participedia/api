@@ -281,15 +281,18 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
           user: req.user || null,
         });
       case "csv":
+        var entries = [];
         if (type === "thing") {
-          return res.status(200).json({
-            msg:
-              "You can only get a csv file from cases, methods or organizations tabs.",
+          entries = results.map(article => {
+            return {
+              "id": article.id,
+              "title": article.title,
+              "type": article.type
+            }
           });
-        } else {
-          const file = await createCSVDataDump(type);
-          return res.download(file);
         }
+        const file = await createCSVDataDump(type, entries);
+        return res.download(file);
       case "xml":
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through
