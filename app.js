@@ -46,6 +46,7 @@ const { organization } = require("./api/controllers/organization");
 const bookmark = require("./api/controllers/bookmark");
 const search = require("./api/controllers/search");
 const list = require("./api/controllers/list");
+const blogPost = require("./api/controllers/blog-post");
 const user = require("./api/controllers/user");
 const { getUserOrCreateUser } = require("./api/helpers/user.js");
 const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
@@ -248,6 +249,7 @@ app.use("/method", method);
 app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
+app.use("/blog-post", blogPost);
 
 // endpoint to set new locale
 app.get("/set-locale", function(req, res) {
