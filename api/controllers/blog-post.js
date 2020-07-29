@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
 			Authorization: `Bearer ${accessToken}`,
 		},
 		hostname: 'api.medium.com',
-		path: '/v1/me',
+		path: '/v1/users/18f729917fbdb970c2554947447fe880744d837d8e885efa9a26a1e9c1fb5f614/publications',
 	};
 
   https.get(options, r => {
