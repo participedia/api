@@ -4,8 +4,9 @@ import PopOver from "./GoogleMapsPopOver.js";
 import { xhrReq } from "./utils/utils.js";
 import tracking from "./utils/tracking.js";
 
-const defaultMarkerIcon = "/images/default-marker.svg";
-const featuredMarkerIcon = "/images/featured-marker.svg";
+const defaultMarkerIcon = "/images/map-marker-images/single-marker.svg";
+const featuredMarkerIcon =
+  "/images/map-marker-images/single-marker-featured.svg";
 
 const map = {
   init() {
@@ -219,29 +220,42 @@ const map = {
     });
 
     // render marker clusters
+    const markerTextColor = "#fff";
     const markerCluster = new MarkerClusterer(this.map, markersForClustering, {
       maxZoom: 7,
       gridSize: 65,
       styles: [
-        {
-          width: 30,
+        MarkerClusterer.withDefaultStyle({
+          url: "/images/map-marker-images/m3.svg",
+          width: 20,
           height: 30,
-          className: "custom-clustericon-1",
-        },
-        {
-          width: 40,
-          height: 40,
-          className: "custom-clustericon-2",
-        },
-        {
+          anchorText: [-3, 0],
+          anchorIcon: [30, 10],
+          textSize: 11,
+          textColor: markerTextColor,
+        }),
+        MarkerClusterer.withDefaultStyle({
+          url: "/images/map-marker-images/m4.svg",
+          width: 35,
+          height: 53,
+          anchorText: [-5, 0],
+          anchorIcon: [53, 17],
+          textColor: markerTextColor,
+          textSize: 13,
+        }),
+        MarkerClusterer.withDefaultStyle({
+          url: "/images/map-marker-images/m5.svg",
           width: 50,
-          height: 50,
-          className: "custom-clustericon-3",
-        },
+          height: 75,
+          anchorText: [-10, 0],
+          anchorIcon: [75, 25],
+          textSize: 14,
+          textColor: markerTextColor,
+        }),
       ],
       clusterClass: "custom-clustericon",
     });
-    
+
     // render featured markers
     for (let i = 0; i < featuredMarkers.length; i++) {
       const markerPopOver = new google.maps.Marker({
