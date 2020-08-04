@@ -9,12 +9,20 @@ const { chunk } = require("lodash");
 router.get("/", async (req, res) => {
   feed.load("https://medium.com/feed/@participediaproject")
     .then(rss => {
-      const blogItems = rss.items.length > 0 ? chunk(rss.items, 10)[0] : [];
+      const chunkItems = rss.items.length > 0 ? chunk(rss.items, 10)[0] : [];
+      const blogItems = chunkItems.map(x => {
+        return {
+          id: x.id,
+          title: x.title,
+          author: x.author,
+          createdAt: x.created,
+          description: x.content.substring(0, 280),
+          url: x.url,
+          imageUrl: null
+        };
+      });
       res.status(200).json({
-        success: true,
-        status: "success",
-        data: blogItems,
-        message: "Retrieved ALL blogs from https://medium.com/feed/@participediaproject feed",
+        blogPosts: blogItems
       });
     })
     .catch(error => {
