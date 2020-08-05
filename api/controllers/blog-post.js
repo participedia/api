@@ -10,6 +10,7 @@ router.get("/", async (req, res) => {
   feed.load("https://medium.com/feed/@participediaproject")
     .then(rss => {
       const chunkItems = rss.items.length > 0 ? chunk(rss.items, 10)[0] : [];
+      const regEx = /<img[^>]+src="?([^"\s]+)"?\s*\/>/;
       const blogItems = chunkItems.map(x => {
         return {
           id: x.id,
@@ -18,7 +19,7 @@ router.get("/", async (req, res) => {
           createdAt: x.created,
           description: x.content.substring(0, 280),
           url: x.url,
-          imageUrl: null
+          imageUrl: x.content.match(regEx) ? x.content.match(regEx)[1] : null
         };
       });
       res.status(200).json({
