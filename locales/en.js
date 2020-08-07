@@ -963,7 +963,7 @@
   "name:number_of_participants-key:small-longValue": "Small groups (e.g. less than 20 people)",
   "name:ongoing-key:no": "No",
   "name:ongoing-key:yes": "Yes",
-  "name:open_limited-key:both": "mixed",
+  "name:open_limited-key:both": "Mixed",
   "name:open_limited-key:both-longValue": "Mixed (i.e. some aspects are open to all and others are limited to some)",
   "name:open_limited-key:limited": "Limited to Only Some Groups or Individuals",
   "name:open_limited-key:open": "Open to All",
