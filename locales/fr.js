@@ -31,7 +31,7 @@
   "about.staff.p1": "Les membres de l'équipe principale de Participedia maintiennent les opérations quotidiennes, soutiennent la communauté et s'assurent que les objectifs du projet soient continuellement atteints et affinés.",
   "about.supporters.p1": "Participedia est présentement soutenu par le %sConseil de recherches en sciences humaines du Canada%s (CRSH) grâce à une subvention de partenariat de cinq ans ayant débuté en avril 2015.",
   "about.supporters.p2": "L’équipe design et technologie est basée au %sStudio for Extensive Aesthetics%s de l'Emily Carr University of Art & Design, et est soutenue par le %sprogramme des chaires de recherche du Canada%s et la %sFondation canadienne pour l’innovation%s.",
-  "about.supporters.p3": "Le logiciel de service de traduction de ce site Web est fourni par %sPhraseApp%s.",
+  "about.supporters.p3": "Le logiciel de service de traduction de ce site Web est fourni par %sPhrase%s.",
   "about.supporters.p4": "Le projet était auparavant financé par une subvention de partenariat du CRSH d'une durée de deux ans (avril 2011-2013). Une version antérieure du site de Participedia comprenait un prototype de fonctionnalité en langue allemande, développé grâce au généreux soutien de la %sFondation Bertelsmann%s en 2012.",
   "about.teach.p1": "Utilisez Participedia en classe pour faire participer les étudiant.e.s et présenter leurs travaux de recherche. Visitez notre page %sParticipedia en classe%s pour plus d'informations.",
   "about.teaching_resources.example": "Par exemple, ce modèle de critères de notation illustre comment Participedia peut être utilisé en classe.",

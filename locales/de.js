@@ -31,7 +31,7 @@
   "about.staff.p1": "Das Kernteam von Participedia unterhält den täglichen Betrieb, unterstützt die Community und stellt sicher, dass die Projektziele kontinuierlich erreicht und verfeinert werden.",
   "about.supporters.p1": "Participedia wird derzeit von der %sSocial Sciences and Humanities Research Council of Canada%s (SSHRC) durch einen fünfjährigen Partnerschaftszuschuss ab April 2015.",
   "about.supporters.p2": "Das Team für Design und Technologie arbeitet aus dem %sStudio für extensive Ästhetik%s an der Emily Carr University of Art & Design und wird unterstützt von dem %sCanada Research Chairs Program%s und die %sCanada Foundation for Innovation%s.",
-  "about.supporters.p3": "Übersetzungsmanagement-Software für diese Website wird von %sPhraseApp%s.",
+  "about.supporters.p3": "Übersetzungsmanagement-Software für diese Website wird von %sPhrase%s.",
   "about.supporters.p4": "Das Projekt wurde zuvor durch einen zweijährigen SSHRC Partnership Grant von April 2011-2013 finanziert. Mit Unterstützung der %sBertelsmann-Stiftung%s wurde im Jahr 2012 eine frühere Version der Participedia-Website mit einem Prototyp für die deutsche Sprachfunktion entwickelt. ",
   "about.teach.p1": "Nutzen Sie Participedia im Klassenzimmer, um die Schüler zu engagieren und ihre Forschung zu präsentieren.",
   "about.teaching_resources.example": "Dieser Abschnitt befindet sich im Bau und wird in Kürze verfügbar sein.",
