@@ -8,6 +8,77 @@ const defaultMarkerIcon = "/images/map-marker-images/single-marker.svg";
 const featuredMarkerIcon =
   "/images/map-marker-images/single-marker-featured.svg";
 
+const markerTextColor = "#fff";
+const smallMarkerStyle = {
+  url: "/images/map-marker-images/m3.svg",
+  textColor: markerTextColor,
+  width: 20,
+  height: 30,
+  anchorText: [-3, 0],
+  anchorIcon: [30, 10],
+  textSize: 11,
+};
+
+// the smallest marker (m3) always uses the same styles
+// m4 and m5 have different styles if on a smaller device
+const markerStylesByMarkerSize = {
+  m3: {
+    small: smallMarkerStyle,
+    large: smallMarkerStyle,
+  },
+  m4: {
+    small: {
+      url: "/images/map-marker-images/m4-small.svg",
+      textColor: markerTextColor,
+      width: 25,
+      height: 38,
+      anchorText: [-5, 0],
+      anchorIcon: [38, 13],
+      textSize: 11,
+    },
+    large: {
+      url: "/images/map-marker-images/m4.svg",
+      textColor: markerTextColor,
+      width: 35,
+      height: 53,
+      anchorText: [-5, 0],
+      anchorIcon: [53, 17],
+      textSize: 13,
+    },
+  },
+  m5: {
+    small: {
+      url: "/images/map-marker-images/m5-small.svg",
+      textColor: markerTextColor,
+      width: 40,
+      height: 60,
+      anchorText: [-10, 0],
+      anchorIcon: [60, 20],
+      textSize: 12,
+    },
+    large: {
+      url: "/images/map-marker-images/m5.svg",
+      textColor: markerTextColor,
+      width: 50,
+      height: 75,
+      anchorText: [-10, 0],
+      anchorIcon: [75, 25],
+      textSize: 14,
+    },
+  },
+};
+
+const markerStyles = markerSize => {
+  // markerSize is one of 'm3', 'm4', 'm5'
+  const isSmallViewport = window.innerWidth <= 640;
+
+  if (isSmallViewport) {
+    return markerStylesByMarkerSize[markerSize].small;
+  } else {
+    return markerStylesByMarkerSize[markerSize].large;
+  }
+};
+
 const map = {
   init() {
     const mapEl = document.querySelector(".js-map-inner");
@@ -220,38 +291,13 @@ const map = {
     });
 
     // render marker clusters
-    const markerTextColor = "#fff";
     const markerCluster = new MarkerClusterer(this.map, markersForClustering, {
       maxZoom: 7,
       gridSize: 65,
       styles: [
-        MarkerClusterer.withDefaultStyle({
-          url: "/images/map-marker-images/m3.svg",
-          width: 20,
-          height: 30,
-          anchorText: [-3, 0],
-          anchorIcon: [30, 10],
-          textSize: 11,
-          textColor: markerTextColor,
-        }),
-        MarkerClusterer.withDefaultStyle({
-          url: "/images/map-marker-images/m4.svg",
-          width: 35,
-          height: 53,
-          anchorText: [-5, 0],
-          anchorIcon: [53, 17],
-          textColor: markerTextColor,
-          textSize: 13,
-        }),
-        MarkerClusterer.withDefaultStyle({
-          url: "/images/map-marker-images/m5.svg",
-          width: 50,
-          height: 75,
-          anchorText: [-10, 0],
-          anchorIcon: [75, 25],
-          textSize: 14,
-          textColor: markerTextColor,
-        }),
+        MarkerClusterer.withDefaultStyle(markerStyles("m3")),
+        MarkerClusterer.withDefaultStyle(markerStyles("m4")),
+        MarkerClusterer.withDefaultStyle(markerStyles("m5")),
       ],
       clusterClass: "custom-clustericon",
     });
