@@ -39,8 +39,8 @@ const editForm = {
     }
 
     // do full version click
-    const fullVersionButtonEl = document.querySelector(".js-do-full-version");
-    if (fullVersionButtonEl) {
+    const fullVersionButtonEls = document.querySelectorAll(".js-do-full-version");
+    const handleFullVersionClick = (fullVersionButtonEl) => {
       fullVersionButtonEl.addEventListener("click", e => {
         e.preventDefault();
         const articleEl = document.querySelector("[data-submit-type]");
@@ -52,6 +52,7 @@ const editForm = {
         window.scrollTo(0, 0);
       });
     }
+    fullVersionButtonEls.forEach(el => handleFullVersionClick(el));
 
     tooltipTriggerAndModal.init();
 
