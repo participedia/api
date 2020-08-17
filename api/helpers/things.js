@@ -27,6 +27,7 @@ const {
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,
   COLLECTION_BY_ID,
+  COLLECTIONS,
   FEATURED
 } = require("./db");
 
@@ -243,15 +244,8 @@ function setConditional(
 }
 
 async function getCollections(lang) {
-  const results = await db.any(FEATURED, {
-    query: '',
-    limit: null,
-    offset: 0,
-    language: lang,
-    userId: null,
-    sortby: 'post_date',
-    type: 'collections',
-    facets: '',
+  const results = await db.any(COLLECTIONS, {
+    language: lang
   });
   return results;
 }
