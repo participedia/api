@@ -1,0 +1,233 @@
+.map-container {
+  margin-bottom: 30px;
+  height: 400px;
+  background-color: #C2CACC;
+  margin-top: -30px;
+}
+
+.map-inner {
+  height: 400px;
+}
+
+.map-controls {
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px;
+  /* unfortunately we need to use !important here because google maps is applying styling that i need to overwrite */
+  right: 15px!important;
+  top: 15px!important;
+}
+
+.map-controls button {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  min-width: unset;
+}
+
+.map-zoom-control-in {
+  border-bottom: 1px solid #E1E1E1;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.map-zoom-control-out {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.map-controls svg {
+  width: 8px;
+  padding-right: 0;
+}
+
+.map-controls .icon-fill {
+  fill: #000;
+}
+
+.map-controls button:hover .icon-fill {
+  fill: #333;
+}
+
+.map-overlay {
+  width: 100%;
+  height: 400px;
+  position: absolute;
+  margin-top: -400px;
+  padding: 0;
+  min-width: unset;
+  border-radius: 0;
+  text-align: left;
+  background: transparent;
+  border: 0px;
+}
+
+.map-overlay-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 30px 30px 30px;
+  height: 400px;
+}
+
+.map-overlay-tagline {
+  height: 300px;
+  flex-basis: 100%;
+  width: calc(50% - 60px);
+  display: table;
+}
+
+.map-overlay-tagline-inner {
+  vertical-align: middle;
+  display: table-cell;
+}
+
+.map-overlay-tagline h1 {
+  display: inline;
+  background-color: #fff;
+  font-size: 32px;
+  line-height: 47px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0 15px;
+  font-weight: 100;
+}
+
+.map-overlay-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.map-overlay-info {
+  background-color: #fff;
+  padding: 0 5px;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+}
+
+.map-overlay-info svg {
+  padding-left: 5px;
+  width: 16px;
+  height: 16px;
+}
+
+.map-overlay-info .icon-fill,
+.map-legend-featured-icon .icon-fill {
+  fill: #EC2024;
+}
+
+.map-overlay-info-inner {
+  display: flex;
+  align-items: center;
+}
+
+.map-legend {
+  width: auto;
+  height: auto;
+  position: absolute;
+  margin-top: -65px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  right: 30px;
+}
+
+.map-legend__list {
+  display: flex;
+  background-color: #fff;
+  padding: 0 5px;
+  margin: 0;
+  height: 30px;
+}
+
+.map-legend__list li {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+}
+
+.map-legend__list li:last-child {
+  margin-right: 0;
+}
+
+.map-legend button {
+  padding: 0;
+  min-width: unset;
+}
+
+.map-legend svg {
+  padding-right: 5px;
+  width: 16px;
+  height: 16px;
+}
+
+.map-legend button svg {
+  padding: 0;
+}
+
+@media (max-width: 1280px) {
+  .map-overlay-tagline {
+    width: calc(75% - 60px);
+  }
+}
+
+@media (max-width: 750px) {
+  .map-overlay-tagline h1 {
+    font-size: 24px;
+    line-height: 35px;
+  }
+}
+
+@media (max-width: 500px) {
+  .map-overlay-tagline {
+    width: calc(100% - 60px);
+    height: 230px;
+  }
+
+  .map-overlay-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .map-overlay-info {
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 450px) {
+  .map-legend {
+    margin-top: -80px;
+  }
+
+  .map-legend__list {
+    height: 37px;
+    padding: 5px;
+    flex-direction: column;
+  }
+
+  .map-legend__list li {
+    line-height: 16px;
+    font-size: 14px;
+  }
+
+  .map-legend__list li:first-child {
+    padding-bottom: 5px;
+  }
+
+  .map-legend__list li:last-child {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
+}
+
+@media (max-width: 390px) {
+  .map-overlay-tagline h1 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
