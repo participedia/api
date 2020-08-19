@@ -1,0 +1,14 @@
+.search-body {
+  margin: 0 30px 120px 30px;
+}
+
+.search-body .floating-action-button {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .search-body .floating-action-button {
+    display: flex;
+    right: 30px;
+  }
+}

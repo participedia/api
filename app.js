@@ -45,6 +45,7 @@ const { method } = require("./api/controllers/method");
 const { organization } = require("./api/controllers/organization");
 const bookmark = require("./api/controllers/bookmark");
 const search = require("./api/controllers/search");
+const home = require("./api/controllers/home");
 const list = require("./api/controllers/list");
 const blogPost = require("./api/controllers/blog-post");
 const user = require("./api/controllers/user");
@@ -240,8 +241,8 @@ app.use((req, res, next) => {
 });
 
 // ROUTES
-app.use("/", cache("5 minutes"), search);
-
+app.use("/", cache("5 minutes"), home);
+app.use("/search", cache("5 minutes"), search);
 app.use("/collection", collection_);
 app.use("/case", case_);
 app.use("/organization", organization);

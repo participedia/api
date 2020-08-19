@@ -868,7 +868,7 @@ module.exports = {
     // this is kind of hacky -- this will break in the case that when
     // have a default tab with the same name as a non-default tab on another page.
     // tab-contributions is default tab on /user/{id} (user-view)
-    // tab-all is default tab on / (home-search)
+    // tab-all is default tab on /search
     const defaultTabs = ["contributions", "all"];
     // if there is no param, make default tab active
     if (
@@ -1031,8 +1031,12 @@ module.exports = {
     );
   },
 
-  isHomeSearchView(req) {
-    return req.path === "/";
+  isHomeView(req) {
+    return req.path === "/" && req.baseUrl !== "/search";
+  },
+
+  isSearchView(req) {
+    return req.baseUrl === "/search";
   },
 
   isCollectionView(req) {

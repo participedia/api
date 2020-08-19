@@ -1,12 +1,10 @@
 .map-container {
-  margin-bottom: 30px;
-  height: 400px;
+  height: 600px;
   background-color: #C2CACC;
-  margin-top: -30px;
 }
 
 .map-inner {
-  height: 400px;
+  height: 600px;
 }
 
 .map-controls {

@@ -271,7 +271,7 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
           user: req.user || null,
         });
       case "htmlfrag":
-        return res.status(200).render("home-search", {
+        return res.status(200).render("search", {
           total,
           pages,
           searchhits,
@@ -296,7 +296,7 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through
       default:
-        return res.status(200).render("home-search", {
+        return res.status(200).render("search", {
           OK,
           total,
           pages,

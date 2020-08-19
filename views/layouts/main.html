@@ -41,12 +41,16 @@
   {{> contact-help-faq-popover }}
 
   {{> script-tag-with-cache-key filepath="/build/js/app.bundle.js"}}
-
-  {{#if (isHomeSearchView req)}}
+  
+  {{#if (isHomeView req)}}
     {{!-- import google api for the map widget --}}
     <script type="text/javascript" src="/js/vendor/markerclustererplus.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{static.language}}"></script>
-    {{> script-tag-with-cache-key filepath="/build/js/home-search-view.bundle.js"}}
+    {{> script-tag-with-cache-key filepath="/build/js/home-view.bundle.js"}}
+  {{/if}}
+
+  {{#if (isSearchView req)}}
+    {{> script-tag-with-cache-key filepath="/build/js/search-view.bundle.js"}}
   {{/if}}
 
   {{#if (isCollectionView req)}}

@@ -1,8 +1,4 @@
-{{> banner-notice }}
-
-{{> map }}
-
-<div class="home-search-body">
+<div class="search-body">
   {{#> tabs-with-cards req=req getTabs=(getHomeTabs)}}
     <div role="tabpanel" class="tab-all">
       {{#if (isSelectedHomeTab req "all")}}

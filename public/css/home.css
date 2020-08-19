@@ -1,0 +1,10 @@
+.homepage-section {
+  margin-bottom: 64px;
+}
+
+.homepage-section-header {
+  display: flex;
+  flex-direction: row; 
+  justify-content: space-between; 
+  overflow: hidden;
+}

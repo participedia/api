@@ -82,8 +82,6 @@ const markerStyles = markerSize => {
 const map = {
   init() {
     const mapEl = document.querySelector(".js-map-inner");
-    this.isMethodTab = document.getElementById("method").checked;
-    this.isCollectionTab = document.getElementById("collections").checked;
 
     if (!mapEl) return;
 
@@ -98,10 +96,7 @@ const map = {
     this.initZoomControls(this.map);
     this.initMapOverlay();
 
-    if (!this.isMethodTab && !this.isCollectionTab) {
-      // don't fetch map results if we are on the methods or collections tab
-      this.fetchMapResults();
-    }
+    this.fetchMapResults();
   },
 
   initMapOverlay() {
@@ -116,54 +111,20 @@ const map = {
       ".js-map-overlay-info"
     );
 
-    if (!this.isMethodTab && !this.isCollectionTab) {
-      this.mapOverlayEl.addEventListener("click", e => {
-        try {
-          window.sessionStorage.setItem("participedia:mapActivated", "true");
-        } catch (err) {
-          console.warn(err);
-        }
-        this.hideMapOverlay();
-      });
-
-      mapOverlayTriggerEl.addEventListener("click", e => {
-        // track activate map click
-        tracking.send("home.map", "activate_map_button_click");
-        this.showMapOverlay();
-      });
-    }
-
-    // if user is on method or collection tab, show overlay, but don't show activate map link
-    // on all other tabs, if user has already clicked to activate map in the current browser session,
-    // don't show overlay, show legend
-    if (this.isMethodTab || this.isCollectionTab) {
-      this.showMapOverlay();
-      this.activateMapCTAContainer.style.display = "none";
-    } else if (window.sessionStorage.getItem("participedia:mapActivated")) {
+    this.mapOverlayEl.addEventListener("click", e => {
+      try {
+        window.sessionStorage.setItem("participedia:mapActivated", "true");
+      } catch (err) {
+        console.warn(err);
+      }
       this.hideMapOverlay();
-    } else {
+    });
+
+    mapOverlayTriggerEl.addEventListener("click", e => {
+      // track activate map click
+      tracking.send("home.map", "activate_map_button_click");
       this.showMapOverlay();
-    }
-
-    this.initTracking();
-  },
-
-  initTracking() {
-    // track join now button click in map overlay
-    const joinNowButtonEl = document.querySelector(".js-join-now-button");
-    if (joinNowButtonEl) {
-      joinNowButtonEl.addEventListener("click", event => {
-        event.preventDefault();
-        tracking.sendWithCallback(
-          "home.map",
-          "join_now_button_click",
-          "",
-          () => {
-            window.location.href = event.target.href;
-          }
-        );
-      });
-    }
+    });
   },
 
   showMapOverlay() {
@@ -196,12 +157,7 @@ const map = {
   },
 
   fetchMapResults() {
-    let url = "";
-    if (window.location.search) {
-      url = `/${window.location.search}&resultType=map&returns=json`;
-    } else {
-      url = `/?resultType=map&returns=json`;
-    }
+    const url = `/search?resultType=map&returns=json`;
 
     const successCB = response => {
       const results = JSON.parse(response.response).results;
@@ -245,27 +201,6 @@ const map = {
       return null;
     } else {
       return results;
-    }
-  },
-
-  filterResultsForTab(results) {
-    const currentTab = document.querySelector(".js-tab-container input:checked")
-      .id;
-    if (currentTab === "organizations") {
-      // NOTE: currentTab for organizations is plural, but article type is singular
-      // organizations only
-      return results.filter(article => article.type === "organization");
-    } else if (currentTab === "case") {
-      // cases only
-      return results.filter(article => article.type === "case");
-    } else if (currentTab === "all") {
-      // cases and orgs
-      return results.filter(
-        article => article.type === "case" || article.type === "organization"
-      );
-    } else if (currentTab === "method") {
-      // none for methods
-      return null;
     }
   },
 
@@ -314,15 +249,12 @@ const map = {
   },
 
   prepareMarkers(results) {
-    const articleCardsContainer = document.querySelector(".js-cards-container");
-    const filteredResults = this.filterResultsForTab(results);
-
-    const markers = filteredResults
+    const markers = results
       .map(article => {
         const { latitude, longitude } = article;
 
         // if article doesn't have lat,lng coords, don't render markers
-        if (!latitude || !longitude || !articleCardsContainer) return;
+        if (!latitude || !longitude) return;
 
         return {
           id: article.id,
@@ -332,7 +264,7 @@ const map = {
           title: article.title,
           featured: article.featured,
           position: new google.maps.LatLng(latitude, longitude),
-          content: articleCardsContainer.querySelector("li"),
+          //content: articleCardsContainer.querySelector("li"),
         };
       })
       .filter(m => m !== undefined);

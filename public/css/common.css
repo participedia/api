@@ -286,10 +286,6 @@ pre {
   height: 16px;
 }
 
-.home-search-body .floating-action-button {
-  display: none;
-}
-
 footer .language-select {
   margin-top: 30px;
   width: 200px;
@@ -341,6 +337,12 @@ footer .language-select {
   margin-top: 90px!important;
 }
 
+.u-inner-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
 @media (max-width: 1200px) {
   .full-width-container .middle-col {
     width: 40%;
@@ -359,10 +361,6 @@ footer .language-select {
 @media (max-width: 1000px) {
   .quick-submit-button {
     display: none;
-  }
-  .home-search-body .floating-action-button {
-    display: flex;
-    right: 30px;
   }
 
   .full-width-container .left-col {
