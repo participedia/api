@@ -241,7 +241,7 @@ app.use((req, res, next) => {
 });
 
 // ROUTES
-app.use("/", cache("5 minutes"), home);
+app.use("/", home);
 app.use("/search", cache("5 minutes"), search);
 app.use("/collection", collection_);
 app.use("/case", case_);

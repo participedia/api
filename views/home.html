@@ -1,7 +1,7 @@
 <!-- {{> banner-notice }} -->
 
 <div class="home-section home-hero">
-<div class="home-hero-image" style="background-image: url('{{heroFeatures.[0].imageUrl}}')"></div>
+<div class="home-hero-image" style="background-image: url('{{heroFeature.imageUrl}}')"></div>
 <div class="home-hero-overlay"></div>
   <div class="u-inner-container">
     <h1 class="home-hero-header">
@@ -44,8 +44,8 @@
     <div class="home-hero-image-credit">
       {{> icon-camera}}
       <!-- todo: function to show random image from array -->
-      <a href="{{heroFeatures.[0].entryUrl}}" class="home-hero-image-credit__entry-link">{{heroFeatures.[0].entryTitle}}</a>
-      <small>Credit: {{heroFeatures.[0].imageCredit}}</small>
+      <a href="{{heroFeature.entryUrl}}" class="home-hero-image-credit__entry-link">{{heroFeature.entryTitle}}</a>
+      <small>Credit: {{heroFeature.imageCredit}}</small>
     </div>
   </div>
 </div>
