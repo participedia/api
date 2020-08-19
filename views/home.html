@@ -1,45 +1,94 @@
 <!-- {{> banner-notice }} -->
 
-<div class="homepage-section">
+<div class="home-section home-hero">
+<div class="home-hero-image" style="background-image: url('{{heroFeatures.[0].imageUrl}}')"></div>
+<div class="home-hero-overlay"></div>
   <div class="u-inner-container">
-    <h3>Hero image/stats/search block</h3>
+    <h1 class="home-hero-header">
+      A global crowdsourcing platform for researchers, activists, practitioners,
+      and anyone interested in public participation and democratic innovations.
+    </h1>
+    <ul class="unstyled-list home-hero-stats">
+      <li class="home-hero-stats__stat-item">
+        <h5>{{stats.cases}}</h5>
+        <h3>cases</h3>
+      </li>
+      <li class="home-hero-stats__stat-item">
+        <h5>{{stats.methods}}</h5>
+        <h3>methods</h3>
+      </li>
+      <li class="home-hero-stats__stat-item">
+        <h5>{{stats.organizations}}</h5>
+        <h3>organizations</h3>
+      </li>
+      <li class="home-hero-stats__stat-item">
+        <h5>{{stats.countries}}</h5>
+        <h3>countries</h3>
+      </li>
+      <li class="home-hero-stats__stat-item">
+        <h5>{{stats.contributors}}</h5>
+        <h3>contributors</h3>
+      </li>
+    </ul>
+    <div class="home-hero-search">
+      <form
+        action="/search"
+        class="home-hero-search__form js-home-hero-search__form"
+      >
+        <input name="query" type="text" placeholder={{t "Search"}}
+        class="js-home-hero-search__form-input" />
+      </form>
+      <a href="/search">Advanced search</a> or
+      <a href="/search">Browse all entries</a>
+    </div>
+    <div class="home-hero-image-credit">
+      {{> icon-camera}}
+      <!-- todo: function to show random image from array -->
+      <a href="{{heroFeatures.[0].entryUrl}}" class="home-hero-image-credit__entry-link">{{heroFeatures.[0].entryTitle}}</a>
+      <small>Credit: {{heroFeatures.[0].imageCredit}}</small>
+    </div>
   </div>
 </div>
 
-<div class="homepage-section">
+<div class="home-section">
   <div class="u-inner-container">
     <h3>3 column/research/contribute/teach</h3>
   </div>
 </div>
 
-<div class="homepage-section">
+<div class="home-section">
   <div class="u-inner-container">
     <h3>Featured Collections</h3>
   </div>
 </div>
 
-<div class="homepage-section">
+<div class="home-section">
   <div class="homepage-section-header u-inner-container">
     <h3>News</h3>
-    <a href="https://medium.com/@participediaproject" target="_blank" rel="noopener">View all</a>
+    <a
+      href="https://medium.com/@participediaproject"
+      target="_blank"
+      rel="noopener"
+      >View all</a
+    >
   </div>
 </div>
 
-<div class="homepage-section">
+<div class="home-section">
   <div class="u-inner-container">
     <h3>Featured Cases, Methods, Organizations</h3>
   </div>
 </div>
 
-<div class="homepage-section">
-  <div class="homepage-section-header u-inner-container">
+<div class="home-section">
+  <div class="home-section-header u-inner-container">
     <h3>Explore Cases & Organizations by location</h3>
   </div>
 
   {{> map }}
 </div>
 
-<div class="homepage-section">
+<div class="home-section">
   <div class="u-inner-container">
     <h3>3 column, About/newsletter/supporters</h3>
   </div>

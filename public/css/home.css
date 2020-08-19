@@ -1,10 +1,105 @@
-.homepage-section {
-  margin-bottom: 64px;
+.home-section {
+  margin-bottom: 60px;
 }
 
-.homepage-section-header {
+.home-section-header {
   display: flex;
   flex-direction: row; 
   justify-content: space-between; 
   overflow: hidden;
+}
+
+.home-hero {
+  /* should this be based on aspect ratio?  */
+  /* or on height of viewport? */
+  /* aspect ratio: 1282/700 = 1.83 */
+  margin-top: -30px;
+  margin-bottom: 30px;
+  height: 735px;  
+  color: #fff;
+  text-shadow: 0px 0px 15px rgba(0,0,0,.5); 
+}
+
+.home-hero a {
+  color: #fff;
+  text-shadow: 0px 0px 15px rgba(0,0,0,.5); 
+}
+
+.home-hero-image {
+  position: absolute;
+  height: 735px;
+  width: 100%;
+  z-index: -2;
+  background-size: cover;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  background-color: rgba(33,33,33, .5);
+  height: 735px;
+  width: 100%;
+  z-index: -1;
+}
+
+.home-hero-header {
+  font-size: 32px;
+  line-height: 43px;
+  color: #fff;
+  width: 64%;
+  padding-top: 75px;
+  margin-bottom: 75px;
+  font-weight: 900;
+  text-shadow: 0px 0px 15px rgba(0,0,0,.5); 
+}
+.home-hero-stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.home-hero-stats__stat-item {
+  border-left: 4px solid #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  flex-grow: 1;
+  padding: 45px 15px 30px 15px;
+}
+.home-hero-stats__stat-item:last-child {
+  border-right: 4px solid #fff;
+}
+
+.home-hero-stats__stat-item h5,
+.home-hero-stats__stat-item h3 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 0;
+  text-shadow: 0px 0px 15px rgba(0,0,0,.5); 
+}
+
+.home-hero-stats__stat-item h5 {
+  font-size: 3.75rem;
+  margin-bottom: 25px;
+  font-weight: 900;
+}
+.home-hero-stats__stat-item h3 {
+  font-size: 1.25rem;
+  text-transform: uppercase;
+}
+
+.home-hero-search__form {
+  margin-bottom: 30px;
+  margin-top: 75px;
+}
+
+.home-hero-image-credit {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 30px;
+}
+.home-hero-image-credit__entry-link {
+  padding: 0 15px 0 5px;
 }
