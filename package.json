@@ -118,7 +118,7 @@
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "deployprod": "heroku git:remote -a participedia-api && git push heroku master",
     "deploystage": "heroku git:remote -a ppedia-stage && git push heroku master",
-    "deploy-homepage-2020": "git checkout homepage-2020 && heroku git:remote -a participedia-homepage-2020 && git push heroku master",
+    "deploy-homepage-2020": "git checkout homepage-2020 && heroku git:remote -a participedia-homepage-2020 && git push heroku homepage-2020:master",
     "coverage": "NODE_ENV=test DATABASE_URL=${DATABASE_TEST_URL} istanbul cover _mocha -- -R spec && open coverage/lcov-report/index.html",
     "test": "NODE_ENV=test DATABASE_URL=${DATABASE_TEST_URL} mocha",
     "backuplocal": "pg_dump -O --clean participedia > ppedia_local.sql",
