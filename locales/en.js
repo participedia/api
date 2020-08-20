@@ -1806,5 +1806,8 @@
   "research.data_downloads.p1": "Real-time Participedia data is available to download as csv files at the following links:",
   "research.data_downloads.If you do any analysis...": "If you do any analysis, data visualization, or other types of projects with this data, we would love to see it. %sEmail us%s or share your project with us on %sTwitter%s.",
   "edit_form.quick submit notice": "This is the quick/short form and only contains a subset of the fields available to edit.",
-  "edit_form.view the full form...": "You can view the full form %shere%s."
+  "edit_form.view the full form...": "You can view the full form %shere%s.",
+  "search-error-not-available": "Sorry for the inconvenience, keyword search is not yet available in your language.",
+  "search-error-working-on-solution": "We are working on a solution but in the meantime, please make use of the search filters for %scases%s, %smethods%s and %sorganizations%s.",
+  "search-error-switch-to-en": "You can also use the language selector in footer or header to change your language to English if you would like to use the keyword search in English."
 }
