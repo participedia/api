@@ -227,7 +227,39 @@
 }
 
 .pagination-nav li {
-  margin-right: 5px;
+  margin: 7px;
+}
+
+.pagination-nav li .icon-only,
+.pagination-nav li .page-number.active {
+  border-radius: 50%;
+}
+
+.pagination-nav li .icon-only {
+  box-shadow: 0px 2px 4px #d5d5d5;
+  padding: 12px 14px;
+}
+
+.pagination-nav li .page-number {
+  color: #2C2C2C;
+  display: flex;
+  font-weight: bold;
+  padding: 8px;
+  text-decoration: none;
+}
+
+.pagination-nav li .page-number.hellip {
+  line-height: 1;
+}
+
+.pagination-nav li .page-number.active {
+  padding: 6px 13px;
+  background: #2C2C2C;
+  color: white;
+}
+
+.pagination-nav li .icon-only .icon-fill {
+  fill: #2C2C2C;
 }
 
 .pagination-nav li:last-child {
