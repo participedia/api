@@ -10,7 +10,7 @@
   {{/if}}
 
   {{#if totalResults}}
-    {{> pagination }}
+    {{> pagination-string }}
   {{/if}}
   <ul class="unstyled-list cards-container js-cards-container">
     {{#each cards }}
@@ -18,7 +18,7 @@
     {{/each}}
   </ul>
   {{#if totalResults}}
-    {{> pagination }}
+    {{> pagination-tab }}
   {{/if}}
 {{else}}
   {{#if includeSearchFilters}}

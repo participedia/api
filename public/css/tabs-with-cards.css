@@ -217,8 +217,11 @@
 .pagination {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   margin: 0 0 30px 0;
+}
+
+.pagination.tab {
+  justify-content: center;
 }
 
 .pagination-nav {
@@ -241,7 +244,6 @@
 }
 
 .pagination-nav li .page-number {
-  color: #2C2C2C;
   display: flex;
   font-weight: bold;
   padding: 8px;
@@ -253,9 +255,14 @@
 }
 
 .pagination-nav li .page-number.active {
-  padding: 6px 13px;
+  padding: 1px;
   background: #2C2C2C;
   color: white;
+  min-width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .pagination-nav li .icon-only .icon-fill {
@@ -335,11 +342,7 @@
 }
 
 @media (max-width: 580px) {
-  .pagination {
-    flex-direction: column;
-  }
   .pagination-nav {
-    margin-left: -8px;
     margin-top: 16px;
   }
 }

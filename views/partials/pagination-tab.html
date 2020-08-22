@@ -1,9 +1,4 @@
-<div class="pagination">
-  <div class="pagination-string">
-    {{paginationNumResults cards totalResults req}} {{t "results of"}} {{totalResults}}
-    {{#if req.query.query}} {{t "for"}} <strong>"{{req.query.query}}"</strong> {{/if}}
-    ({{t "page"}} {{getCurrentPage req}} {{t "of"}} {{totalPages}})
-  </div>
+<div class="pagination tab">
   <ul class="unstyled-list pagination-nav js-pagination-nav">
     <li>
       <a href="/?page=1" data-page-num="1" class="icon-only">
@@ -19,9 +14,9 @@
     </li>
     {{#each (getPaginationRange totalPages req)}}
     <li>
-      {{#if this}}
-      <a href="/?page={{this}}" data-page-num="{{this}}" class="page-number">
-        {{this}}
+      {{#if this.page}}
+      <a href="/?page={{this.page}}" data-page-num="{{this.page}}" class="page-number {{#if this.isActive}}active{{/if}}">
+        {{this.page}}
       </a>
       {{else}}
       <span class="page-number hellip">
