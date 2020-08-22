@@ -1,12 +1,6 @@
 <div class="pagination tab">
   <ul class="unstyled-list pagination-nav js-pagination-nav">
     <li>
-      <a href="/?page=1" data-page-num="1" class="icon-only">
-        <span class="sr-only">{{t "first page"}}</span>
-        {{> icon-double-arrow-left}}
-      </a>
-    </li>
-    <li>
       <a href="/?page={{getPrevPageNum req}}" data-page-num="{{getPrevPageNum req}}" class="icon-only">
         <span class="sr-only">{{t "previous"}}</span>
         {{> icon-arrow-left}}
@@ -29,12 +23,6 @@
       <a href="/?page={{getNextPageNum req pages}}" data-page-num="{{getNextPageNum req pages}}" class="icon-only">
         <span class="sr-only">{{t "next"}}</span>
         {{> icon-arrow-right}}
-      </a>
-    </li>
-    <li>
-      <a href="/?page={{pages}}" data-page-num="{{pages}}" class="icon-only">
-        <span class="sr-only">{{t "last page"}}</span>
-        {{> icon-double-arrow-right}}
       </a>
     </li>
   </ul>
