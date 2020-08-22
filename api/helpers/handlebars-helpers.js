@@ -876,15 +876,19 @@ module.exports = {
     start = Math.max(start, 1);
     start = Math.min(start, 1 + total - length);
 
-    let range = Array.from({length: length}, (el, i) => start + i);
+    let range = Array.from({length: length}, (el, i) => {
+       let page = start + i;
+       return {page: page, isActive: page == current};
+     });
 
     if (total > length) {
-      if (range[range.length - 1] == total) {
-        range.unshift(1, null);
-      } else {
-        range.push(null, total);
-      }
-    }
+       let dots = {page: null, isActive: false};
+       if (range[range.length - 1].page == total) {
+         range.unshift({page: 1, isActive: current == 1}, dots);
+       } else {
+         range.push(dots, {page: total, isActive: total == current});
+       }
+     }
 
     return range;
   },
