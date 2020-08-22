@@ -862,6 +862,33 @@ module.exports = {
     }
   },
 
+  getPaginationRange(total, req) {
+    let length = 3;
+    let current = 1;
+
+    if (req.query && req.query.page) {
+      current = req.query.page;
+    }
+
+    if (length > total) length = total;
+
+    let start = current - Math.floor(length / 2);
+    start = Math.max(start, 1);
+    start = Math.min(start, 1 + total - length);
+
+    let range = Array.from({length: length}, (el, i) => start + i);
+
+    if (total > length) {
+      if (range[range.length - 1] == total) {
+        range.unshift(1, null);
+      } else {
+        range.push(null, total);
+      }
+    }
+
+    return range;
+  },
+
   // tab helpers
   isTabActive(req, tabName) {
     const tabParam = req.query && req.query.selectedCategory;
