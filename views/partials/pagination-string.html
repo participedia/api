@@ -1,7 +1,6 @@
 <div class="pagination">
 	<div class="pagination-string">
-	  {{paginationNumResults cards totalResults req}} {{t "results of"}} {{totalResults}}
-	  {{#if req.query.query}} {{t "for"}} <strong>"{{req.query.query}}"</strong> {{/if}}
-	  ({{t "page"}} {{getCurrentPage req}} {{t "of"}} {{totalPages}})
+	  {{paginationNumResults cards totalResults req}} {{getPaginationCategoryLabel req}} {{totalResults}}
+	  {{#if req.query.query}} {{t "for"}} "{{req.query.query}}" {{/if}}
   </div>
 </div>

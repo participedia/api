@@ -836,14 +836,6 @@ module.exports = {
     }
   },
 
-  getCurrentPage(req) {
-    if (req.query && req.query.page) {
-      return req.query.page;
-    } else {
-      return 1;
-    }
-  },
-
   getPrevPageNum(req) {
     const currentPageNum = req.query && req.query.page;
     if (currentPageNum) {
@@ -891,6 +883,36 @@ module.exports = {
      }
 
     return range;
+  },
+
+  getPaginationCategoryLabel(req, context) {
+    const category = req.query.selectedCategory || undefined;
+    let text;
+
+    switch(category) {
+     case "case": {
+      text = "cases of";
+      break;
+     }
+     case "organizations": {
+      text = "organizations of";
+      break;
+     }
+     case "method": {
+      text = "methods of";
+      break;
+     }
+     case "collections": {
+      text = "collections of";
+      break;
+     }
+     default: {
+      text = "entries of";
+      break;
+     }
+    }
+
+    return i18n(text, context);
   },
 
   // tab helpers
