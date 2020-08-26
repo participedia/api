@@ -3,7 +3,7 @@ import {
   updateUrlParams,
   removeUrlParams,
 } from "./utils/utils.js";
-import modal from "./modal.js";
+import searchFilterModal from "./search-filter-modal.js";
 
 const tabsWithCards = {
   init() {
@@ -110,13 +110,7 @@ const tabsWithCards = {
   },
 
   openMoreFilterModal() {
-    const content = `
-      <div class="loading-modal-content">
-        <h3>Publishing</h3>
-      </div>
-    `;
-    modal.updateModal(content);
-    modal.openModal("search-filter-modal");
+    searchFilterModal.openModal("search-filter-modal");
   },
 };
 
