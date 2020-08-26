@@ -3,6 +3,7 @@ import {
   updateUrlParams,
   removeUrlParams,
 } from "./utils/utils.js";
+import modal from "./modal.js";
 
 const tabsWithCards = {
   init() {
@@ -21,6 +22,13 @@ const tabsWithCards = {
     // cards ui
     this.initCardLayout();
     this.initPagination();
+
+    // More Filters Button
+    const moreFilterBtnEl = document.querySelector(".search-button-filter-js");
+    console.log(moreFilterBtnEl);
+    moreFilterBtnEl.addEventListener("click", event => {
+      this.openModal();
+    });;
   },
 
   navigateToTab(category) {
@@ -100,6 +108,16 @@ const tabsWithCards = {
         this.viewEl.setAttribute("data-card-layout", type);
       }
     });
+  },
+
+  openMoreFilterModal() {
+    const content = `
+      <div class="loading-modal-content">
+        <h3>Publishing</h3>
+      </div>
+    `;
+    modal.updateModal(content);
+    modal.openModal("aria-modal");
   },
 };
 
