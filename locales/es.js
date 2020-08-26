@@ -809,6 +809,7 @@
   "Most Recent Changes By": "Cambios más recientes por",
   "most_recent_label": "Cambios más recientes por",
   "Mozambique": "Mozambique",
+  "more filters": "Más filtros",
   "Myanmar": "Myanmar",
   "name:approaches-key:advocacy": "Abogacía",
   "name:approaches-key:advocacy-longValue": "Abogacía (por ejemplo, lobbying; solicitudes colectivas)",

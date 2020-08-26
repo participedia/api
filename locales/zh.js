@@ -809,6 +809,7 @@
   "Most Recent Changes By": "最新更改按",
   "most_recent_label": "最新更改按",
   "Mozambique": "莫桑比克",
+  "more filters": "更多过滤器",
   "Myanmar": "缅甸",
   "name:approaches-key:advocacy": "宣传",
   "name:approaches-key:advocacy-longValue": "宣传(例如游说;请愿)",

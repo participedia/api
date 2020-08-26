@@ -809,6 +809,7 @@
   "Most Recent Changes By": "Modifiche più recenti di",
   "most_recent_label": "Modifiche più recenti di",
   "Mozambique": "Mozambico",
+  "more filters": "Più filtri",
   "Myanmar": "Myanmar",
   "name:approaches-key:advocacy": "Difesa civica ",
   "name:approaches-key:advocacy-longValue": "Difesa civica (ad es. lobbying; petizione)",

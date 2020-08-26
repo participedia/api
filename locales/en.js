@@ -743,6 +743,7 @@
   "Most Recent Changes By": "Most Recent Changes By",
   "most_recent_label": "Most recent changes by",
   "Mozambique": "Mozambique",
+  "more filters": "More Filters",
   "Myanmar": "Myanmar",
   "name:approaches-key:advocacy": "Advocacy",
   "name:approaches-key:advocacy-longValue": "Advocacy (e.g. lobbying; petitioning)",
