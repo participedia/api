@@ -26,7 +26,7 @@ const tabsWithCards = {
     // More Filters Button
     const moreFilterBtnEl = document.querySelector(".search-button-filter-js");
     moreFilterBtnEl.addEventListener("click", event => {
-      this.openModal();
+      this.openMoreFilterModal();
     });;
   },
 
@@ -116,7 +116,7 @@ const tabsWithCards = {
       </div>
     `;
     modal.updateModal(content);
-    modal.openModal("aria-modal");
+    modal.openModal("search-filter-modal");
   },
 };
 
