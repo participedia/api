@@ -25,7 +25,6 @@ const tabsWithCards = {
 
     // More Filters Button
     const moreFilterBtnEl = document.querySelector(".search-button-filter-js");
-    console.log(moreFilterBtnEl);
     moreFilterBtnEl.addEventListener("click", event => {
       this.openModal();
     });;
