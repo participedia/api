@@ -211,6 +211,10 @@ button {
   fill: #fff;
 }
 
+.button-bordered-grey {
+  border: 2px solid #A6A6A6;
+}
+
 .icon-only {
   border: 0px;
   padding: 8px;
