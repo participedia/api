@@ -12,16 +12,12 @@ const searchFilterModal = {
 
     // if we are showing the close button,
     // make it visible and attach click handler
-    // const modalEl = document.getElementById(id);
-    // if (options.showCloseBtn) {
-    //   modalEl.addEventListener("click", e => {
-    //     if (e.target.closest("[search-filter-data-modal-close]")) {
-    //       ARIAmodal.closeModal(options, id);
-    //     }
-    //   });
-    // } else {
-    //   modalEl.querySelector("[search-filter-data-modal-footer]").style.display = "none";
-    // }
+    const modalEl = document.getElementById(id);
+    modalEl.addEventListener("click", e => {
+      if (e.target.closest("[data-modal-close]")) {
+        ARIAmodal.closeModal(options, id);
+      }
+    });
   },
 
   closeModal() {
