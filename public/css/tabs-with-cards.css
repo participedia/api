@@ -13,10 +13,23 @@
   display: flex;
 }
 
-.tab-buttons-container .search-button-filter {
+.tab-buttons-container .tab-buttons-button-filter {
+  display: flex;
+  justify-content: space-between;
   margin-top: -12px;
-  padding-left: 30px;
-  padding-right: 30px;
+  width: 155px;
+}
+
+.tab-buttons-container .tab-buttons-total-filter-badge {
+  padding: 1px;
+  background: #EC2024;
+  color: white;
+  min-width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
 
 /* toggle layout buttons */
@@ -327,7 +340,7 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .tab-buttons-container .search-button-filter {
+  .tab-buttons-container .tab-buttons-button-filter {
     padding-left: 15px;
     padding-right: 15px;
   }
