@@ -278,7 +278,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .edit-multi-select .ss-option-selected:hover {
-  background-color: #5897fb!important;
+  background-color: #222222!important;
   color: #fff!important;
 }
 

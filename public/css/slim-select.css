@@ -146,7 +146,7 @@
         padding: 3px 5px;
         margin: 3px 5px 3px 0px;
         color: #ffffff;
-        background-color: #5897fb;
+        background-color: #222222;
         border-radius: 2px;
         animation-name: scaleIn;
         animation-duration: .2s;
@@ -234,7 +234,7 @@
           color: #8a8a8a;
           vertical-align: middle; }
         .ss-main .ss-content .ss-search input:focus {
-          box-shadow: 0 0 5px #5897fb; }
+          box-shadow: 0 0 5px #222222; }
       .ss-main .ss-content .ss-search .ss-addable {
         display: inline-flex;
         justify-content: center;
@@ -264,7 +264,7 @@
         cursor: pointer; }
         .ss-main .ss-content .ss-list .ss-optgroup-label-selectable:hover {
           color: #ffffff;
-          background-color: #5897fb; }
+          background-color: #222222; }
       .ss-main .ss-content .ss-list .ss-option {
         padding: 6px 10px 6px 10px;
         cursor: pointer;
@@ -273,14 +273,14 @@
           display: inline-block; }
         .ss-main .ss-content .ss-list .ss-option:hover, .ss-main .ss-content .ss-list .ss-option.ss-highlighted {
           color: #ffffff;
-          background-color: #5897fb; }
+          background-color: #222222; }
         .ss-main .ss-content .ss-list .ss-option.ss-disabled {
           cursor: not-allowed;
           color: #dedede;
           background-color: #ffffff; }
         .ss-main .ss-content .ss-list .ss-option:not(.ss-disabled).ss-option-selected {
-          color: #666666;
-          background-color: rgba(88, 151, 251, 0.1); }
+          color: #222222;
+          background-color: rgba(22, 22, 22, 0.1); }
         .ss-main .ss-content .ss-list .ss-option.ss-hide {
           display: none; }
         .ss-main .ss-content .ss-list .ss-option .ss-search-highlight {

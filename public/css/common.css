@@ -316,6 +316,30 @@ footer .language-select {
 }
 
 /* Utilities */
+.u-margin-left--xsmall {
+  margin-left: 15px!important;
+}
+.u-margin-left--small {
+  margin-left: 30px!important;
+}
+.u-margin-left--med {
+  margin-left: 60px!important;
+}
+.u-margin-left--large {
+  margin-left: 90px!important;
+}
+.u-margin-right--xsmall {
+  margin-right: 15px!important;
+}
+.u-margin-right--small {
+  margin-right: 30px!important;
+}
+.u-margin-right--med {
+  margin-right: 60px!important;
+}
+.u-margin-right--large {
+  margin-right: 90px!important;
+}
 .u-margin-bottom--xsmall {
   margin-bottom: 15px!important;
 }

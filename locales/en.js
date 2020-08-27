@@ -587,7 +587,7 @@
   "Luxembourg": "Luxembourg",
   "Macao": "Macao",
   "Madagascar": "Madagascar",
-  "main_tagline": "A crowdsourcing platform for researchers, activists, practitioners, and anyone interested in public participation and democratic innovations",
+  "main_tagline": "A global crowdsourcing platform for researchers, activists, practitioners, and anyone interested in public participation and democratic innovations.",
   "Malawi": "Malawi",
   "Malaysia": "Malaysia",
   "Maldives": "Maldives",
@@ -1812,5 +1812,9 @@
   "research.data_downloads.p1": "Real-time Participedia data is available to download as csv files at the following links:",
   "research.data_downloads.If you do any analysis...": "If you do any analysis, data visualization, or other types of projects with this data, we would love to see it. %sEmail us%s or share your project with us on %sTwitter%s.",
   "edit_form.quick submit notice": "This is the quick/short form and only contains a subset of the fields available to edit.",
-  "edit_form.view the full form...": "You can view the full form %shere%s."
+  "edit_form.view the full form...": "You can view the full form %shere%s.",
+  "Advanced search": "Advanced search",
+  "Browse all entries": "Browse all entries",
+  "contributors": "contributors",
+  "countries": "countries"
 }

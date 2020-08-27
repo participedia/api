@@ -10,27 +10,27 @@ function getRandomInt(max) {
 function getRandomHeroFeature() {
   const heroFeatures = [
     {
-      imageCredit: "Community Self-Reliance Centre",
-      imageUrl: "https://s3.amazonaws.com/participedia.prod/440c5d74-a8f0-49ca-9e8e-874bc97e5af8",
-      entryTitle: "Addressing the impact of COVID-19 on landless farmers and smallholders in Nepal",
-      entryUrl: "https://participedia.net/case/6553",
+      imageCredit: "unknown",
+      imageUrl: "https://s3.amazonaws.com/participedia.prod/ee8da85d-d17e-4bfb-a500-0fc2e3dfd72a-In%20the%20Participatory%20Community%20Boards%20the%20plans%20presented%20by%20the%20Housing%20Institute%20are%20shaped.",
+      entryTitle: "Participatory Slum Upgrading Process in the City of Buenos Aires: The \"Villa 20\" Case",
+      entryUrl: "/case/5988",
     },
     {
-      imageCredit: "Jack Guez/AFP via Getty Images",
-      imageUrl: "https://s3.amazonaws.com/participedia.prod/46c80250-162a-4e67-a143-a3eca3c81ab2",
-      entryTitle: "Anti-government social distancing protests in Israel",
-      entryUrl: "https://participedia.net/case/6477",
+      imageCredit: "unknown",
+      imageUrl: "https://s3.amazonaws.com/participedia.prod/b5294e0a-e875-4ece-afe1-a242f851a5c3",
+      entryTitle: "Decommissioning South African Social Services: Participatory Field Research in Delft",
+      entryUrl: "/case/5834",
     },
     {
-      imageCredit: "Manuel Peris Tirado",
-      imageUrl: "https://s3.amazonaws.com/participedia.prod/99810ed7-0c9c-4871-adc7-aab8298b4ab7",
-      entryTitle: "Mass Singing during the COVID-19 Pandemic",
-      entryUrl: "https://participedia.net/case/6431",
+      imageCredit: "Max Bender",
+      imageUrl: "https://s3.amazonaws.com/participedia.prod/d117cf067-9b0b-4d80-bc38-aee5b8553c8c",
+      entryTitle: "George Floyd Protests",
+      entryUrl: "/case/6590",
     },
   ];
 
   const randomIndex = getRandomInt(heroFeatures.length);
-  return heroFeatures[randomIndex];
+  return heroFeatures[0];
 }
 
 // placeholder data for development
