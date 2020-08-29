@@ -12,32 +12,32 @@ const searchFilterAutocomplete = {
     this.bindRemoveClick();
 	},
 
-	// bindRemoveClick() {
- //    const listEls = document.querySelectorAll(".js-edit-autocomplete-list");
- //    listEls.forEach(el => {
- //      el.addEventListener("click", e => this.handleRemoveClick(e));
- //    });
- //  },
+	bindRemoveClick() {
+    const listEls = document.querySelectorAll(".js-search-filter-autocomplete-list");
+    listEls.forEach(el => {
+      el.addEventListener("click", e => this.handleRemoveClick(e));
+    });
+  },
 
-  // handleRemoveClick(e) {
-  //   e.preventDefault();
+  handleRemoveClick(e) {
+    e.preventDefault();
 
-  //   const buttonEl = e.target.closest("button");
-  //   if (!buttonEl) return;
+    const buttonEl = e.target.closest("button");
+    if (!buttonEl) return;
 
-  //   const currentLiEl = buttonEl.closest("li");
-  //   const parentListEl = currentLiEl.parentNode;
-  //   const numItems = parentListEl.querySelectorAll("li").length;
+    const currentLiEl = buttonEl.closest("li");
+    const parentListEl = currentLiEl.parentNode;
+    const numItems = parentListEl.querySelectorAll("li").length;
 
-  //   // if we have more than 1 item, remove it from the list
-  //   // if there is only 1 item left, clear the value and hide it
-  //   if (numItems > 1) {
-  //     parentListEl.removeChild(currentLiEl);
-  //   } else {
-  //     currentLiEl.querySelector("input").value = null;
-  //     currentLiEl.style.display = "none";
-  //   }
-  // },
+    // if we have more than 1 item, remove it from the list
+    // if there is only 1 item left, clear the value and hide it
+    if (numItems > 1) {
+      parentListEl.removeChild(currentLiEl);
+    } else {
+      currentLiEl.querySelector("input").value = null;
+      currentLiEl.style.display = "none";
+    }
+  },
 
   getOptions(el) {
     const name = el.getAttribute("data-name");
@@ -53,49 +53,49 @@ const searchFilterAutocomplete = {
     return options;
   },
 
-  // addSelectedItem(name, item) {
-  //   const listToAppendToEl = document.querySelector(
-  //     `.js-edit-autocomplete-list[data-name=${name}]`
-  //   );
-  //   const isMulti = listToAppendToEl.getAttribute("data-multi");
-  //   const numItems = listToAppendToEl.querySelectorAll("li").length;
-  //   if (!isMulti && numItems > 0) {
-  //     // if it's a single item autocomplete, update the existing item and make visible
-  //     const currentLiEl = listToAppendToEl.querySelectorAll("li")[0];
-  //     // update label
-  //     currentLiEl.querySelector("span").innerText = item.label;
-  //     // update value on hidden input
-  //     currentLiEl.querySelector("input").value = item.value;
-  //     currentLiEl.style.display = "flex";
-  //   } else {
-  //     // if it's a multi field autocomplete,
-  //     // or if it's the first item getting added, insert a new item
-  //     const template = document.getElementById(
-  //       "js-edit-autocomplete-selected-item-template"
-  //     );
-  //     const newListContainer = document.createElement("ol");
-  //     newListContainer.innerHTML = template.innerHTML;
-  //     const newItemEl = newListContainer.querySelector("li");
-  //     const hiddenEl = newItemEl.querySelector("input");
+  addSelectedItem(name, item) {
+    const listToAppendToEl = document.querySelector(
+      `.js-search-filter-autocomplete-list[data-name=${name}]`
+    );
+    const isMulti = listToAppendToEl.getAttribute("data-multi");
+    const numItems = listToAppendToEl.querySelectorAll("li").length;
+    if (!isMulti && numItems > 0) {
+      // if it's a single item autocomplete, update the existing item and make visible
+      const currentLiEl = listToAppendToEl.querySelectorAll("li")[0];
+      // update label
+      currentLiEl.querySelector("span").innerText = item.label;
+      // update value on hidden input
+      currentLiEl.querySelector("input").value = item.value;
+      currentLiEl.style.display = "flex";
+    } else {
+      // if it's a multi field autocomplete,
+      // or if it's the first item getting added, insert a new item
+      const template = document.getElementById(
+        "js-search-filter-autocomplete-selected-item-template"
+      );
+      const newListContainer = document.createElement("ol");
+      newListContainer.innerHTML = template.innerHTML;
+      const newItemEl = newListContainer.querySelector("li");
+      const hiddenEl = newItemEl.querySelector("input");
 
-  //     // update name on li
-  //     newItemEl.setAttribute("data-name", name);
+      // update name on li
+      newItemEl.setAttribute("data-name", name);
 
-  //     // update name and index on hidden input
-  //     if (listToAppendToEl.getAttribute("data-multi")) {
-  //       const index = listToAppendToEl.querySelectorAll("li").length;
-  //       hiddenEl.name = `${name}[${index}]`;
-  //     } else {
-  //       hiddenEl.name = name;
-  //     }
-  //     // update label
-  //     newItemEl.querySelector("span").innerText = item.label;
-  //     // update value on hidden input
-  //     hiddenEl.value = item.value;
-  //     //append template item to list
-  //     listToAppendToEl.insertAdjacentElement("beforeend", newItemEl);
-  //   }
-  // },
+      // update name and index on hidden input
+      if (listToAppendToEl.getAttribute("data-multi")) {
+        const index = listToAppendToEl.querySelectorAll("li").length;
+        hiddenEl.name = `${name}[${index}]`;
+      } else {
+        hiddenEl.name = name;
+      }
+      // update label
+      newItemEl.querySelector("span").innerText = item.label;
+      // update value on hidden input
+      hiddenEl.value = item.value;
+      //append template item to list
+      listToAppendToEl.insertAdjacentElement("beforeend", newItemEl);
+    }
+  },
 
   initAutocompleteField(autocompleteEl) {
     const options = this.getOptions(autocompleteEl);
@@ -122,7 +122,7 @@ const searchFilterAutocomplete = {
       },
       emptyMsg: "No matches found",
       onSelect: item => {
-        // this.addSelectedItem(name, item);
+        this.addSelectedItem(name, item);
         // clear autocomplete field
         autocompleteEl.value = "";
       },

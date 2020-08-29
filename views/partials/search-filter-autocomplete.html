@@ -7,6 +7,13 @@
   autocomplete="{{name}}"
 />
 
+<ol class="unstyled-list search-filter-autocomplete-list js-search-filter-autocomplete-list" data-name="{{name}}" data-multi="true">
+</ol>
+
+<script type="text/template" id="js-search-filter-autocomplete-selected-item-template">
+  {{> search-filter-autocomplete-selected-item name=name }}
+</script>
+
 <ul class="js-search-filter-autocomplete-options-{{name}}" style="display: none;">
   {{#each (getOptionsForFilterKey "country")}}
   <li data-key="{{key}}">{{value}}</li>

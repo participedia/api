@@ -1,0 +1,25 @@
+<li
+  class="search-filter-autocomplete-selected-item"
+  data-name="{{name}}"
+>
+  <span>{{title}}</span>
+  <button
+    type="button"
+    class="icon-only js-search-filter-autocomplete-remove-item"
+  >
+    {{> icon-close }}
+  </button>
+  {{#if multi}}
+    <input
+      type="hidden"
+      name="{{name}}[{{index}}]"
+      value="{{value}}"
+    />
+  {{else}}
+    <input
+      type="hidden"
+      name="{{name}}"
+      value="{{value}}"
+    />
+  {{/if}}
+</li>
