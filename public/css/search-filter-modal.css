@@ -1,9 +1,0 @@
-#search-filter-modal .aria-modal-document .aria-modal-footer {
-  display: flex;
-  justify-content: space-between;
-}
-
-#search-filter-modal .aria-modal-document .aria-modal-footer .search-filter-modal-clear-btn {
-  background: none;
-  border: none;
-}

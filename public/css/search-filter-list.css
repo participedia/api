@@ -1,0 +1,33 @@
+#search-filter-modal .aria-modal-document .aria-modal-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+#search-filter-modal .aria-modal-document .aria-modal-footer .search-filter-modal-clear-btn {
+  background: none;
+  border: none;
+}
+
+.search-filter-list .search-filter-list-item {
+	margin-bottom: 30px;
+}
+
+.search-filter-list .search-filter-list-item .filter-label {
+	margin-bottom: 10px;
+}
+
+.search-filter-list .search-filter-list-item .filter-label label {
+	font-size: 1.25rem;
+	line-height: 1rem;
+	font-weight: 600;
+	display: inline-block;
+}
+
+.search-filter-list .search-filter-list-item .filter-input .keys-list {
+	display: flex;
+  flex-wrap: wrap;
+}
+
+.search-filter-list .search-filter-list-item .filter-input .keys-list li {
+	flex: 0 0 50%;
+}
