@@ -1,0 +1,14 @@
+<input
+  type="text"
+  class="js-search-filter-autocomplete"
+  data-name="{{name}}"
+  value=""
+  placeholder="Select {{name}}"
+  autocomplete="{{name}}"
+/>
+
+<ul class="js-search-filter-autocomplete-options-{{name}}" style="display: none;">
+  {{#each (getOptionsForFilterKey "country")}}
+  <li data-key="{{key}}">{{value}}</li>
+  {{/each}}
+</ul>
