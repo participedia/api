@@ -1,5 +1,10 @@
 <form class="search-filter-list js-search-filter-list">
 	<div class="search-filter-list-item">
-		{{> search-filter-autocomplete name="country"}}
+		<div class="filter-label">
+			<label for="country">Country</label>
+		</div>
+		<div class="filter-input">
+			{{> search-filter-autocomplete name="country"}}
+		</div>
   </div>
 </form>
