@@ -280,6 +280,9 @@ app.get("/content-chooser", function(req, res) {
 app.get("/help-faq-contact", function(req, res) {
   res.status(200).render("help-faq-contact-view");
 });
+app.get("/getting-started", function(req, res) {
+  res.status(200).render("getting-started-view");
+});
 
 // redirect old user profile for tanyapuravankara to new url
 // we are only doing it for this user account, since it gets hits on google
