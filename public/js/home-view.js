@@ -6,7 +6,23 @@ document.addEventListener("DOMContentLoaded", () => {
   map.init();
   editSelect.init();
   initSearchForm();
+  getBlogPosts();
 });
+
+function getBlogPosts() {
+  const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/blog-post", true);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState !== xhr.DONE) return;
+
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.response);
+        console.log("response")
+        console.log(response)
+      }
+    };
+    xhr.send();
+}
 
 function initSearchForm() {
   const searchFormEl = document.querySelector(".js-home-hero-search__form");
