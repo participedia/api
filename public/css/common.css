@@ -371,6 +371,14 @@ footer .language-select {
   padding: 0 30px;
 }
 
+.u-extra-bold {
+  font-weight: 900!important;
+}
+
+.u-text-align--center {
+  text-align: center!important;
+}
+
 @media (max-width: 1200px) {
   .full-width-container .middle-col {
     width: 40%;

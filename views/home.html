@@ -41,7 +41,8 @@
           {{> icon-search }}
         </div>
         <input name="query" type="text" placeholder={{t "Search"}}
-        class="home-hero-search__form-input js-home-hero-search__form-input u-margin-right--xsmall" />
+        class="home-hero-search__form-input js-home-hero-search__form-input
+        u-margin-right--xsmall" />
         <select
           name="type"
           class="home-hero-search__edit-select js-edit-select u-margin-right--xsmall"
@@ -65,7 +66,11 @@
         </select>
         <button class="button button-red" type="submit">{{t "Search"}}</button>
       </form>
-      <a href="/search?selectedCategory=case&openFilters=1" class="home-hero-search__advanced-link">{{t "Advanced search"}}</a>
+      <a
+        href="/search?selectedCategory=case&openFilters=1"
+        class="home-hero-search__advanced-link"
+        >{{t "Advanced search"}}</a
+      >
       <a href="/search">{{t "Browse all entries"}}</a>
     </div>
     <div class="home-hero-image-credit">
@@ -82,14 +87,47 @@
 
 <div class="home-section">
   <div class="u-inner-container">
-    <h3>3 column/research/contribute/teach</h3>
+    {{#> three-column-row }}
+      {{#> three-column-column}}
+      <div class="u-margin-bottom--small u-text-align--center">
+        <img src="/images/homepage/explore.svg" width="80%" />
+        <h2 class="u-extra-bold">Explore & Research</h2>
+        <div>
+          Explore the dataset via the search bar above, download the data in csv
+          files, or explore the data visually.
+        </div>
+        </div>
+
+        <a href="#" class="u-extra-bold u-text-align--center">Explore the data -></a>
+      {{/ three-column-column}}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small u-text-align--center">
+          <img src="/images/homepage/contribute.svg" width="80%" />
+          <h2 class="u-extra-bold">Contribute</h2>
+          <div>
+            Help expand our database by editing existing content or publishing
+            your own.
+          </div>
+        </div>
+        <a href="#" class="u-extra-bold u-text-align--center">Getting started guide -></a>
+      {{/ three-column-column}}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small u-text-align--center">
+          <img src="/images/homepage/teach.svg" width="80%" />
+          <h2 class="u-extra-bold">Teach</h2>
+          <div>
+            Use Participedia in the classroom to engage students and showcase
+            their research.
+          </div>
+        </div>
+        <a href="#" class="u-extra-bold u-text-align--center">Teaching Resources -></a>
+      {{/ three-column-column}}
+    {{/ three-column-row }}
   </div>
 </div>
 
 <div class="home-section">
-  <div class="u-inner-container">
-    <h3>Featured Collections</h3>
-  </div>
+  {{> featured-entries-carousel entries=featuredCollections title="Featured Collections"}}
 </div>
 
 <div class="home-section">
@@ -120,6 +158,37 @@
 
 <div class="home-section">
   <div class="u-inner-container">
-    <h3>3 column, About/newsletter/supporters</h3>
+    {{#> three-column-row }}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small">
+          <h3 class="u-extra-bold">About Participedia</h3>
+          <div>
+            Participedia is built on a global partnership between organizations, institutions, and individuals who share an interest in participatory politics and governance. Our partners include co-applicants and collaborators under the SSHRC Partnership Grant. 
+          </div>
+        </div>
+        <a href="/about">Read more about us -></a>
+      {{/ three-column-column}}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small">
+          <h3 class="u-extra-bold">Newsletter</h3>
+          <div>
+            Sign up for our community newsletter! We share the latest information about participatory democratic innovations around the world, stories from our wide community of partners and contributors, invitations to upcoming conferences and events, and more. 
+          </div>
+        </div>
+        <a href="https://mailchi.mp/participedia/subscribe">Sign up for our newsletter -></a>
+      {{/ three-column-column}}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small">
+          <h3 class="u-extra-bold">Supporters</h3>
+          <div>
+            <p></p>Participedia is currently supported by the Social Sciences and Humanities Research Council of Canada (SSHRC) through a five-year Partnership Grant beginning in April 2015.</p>
+
+            <p>The Design & technology Team operates out of the Studio for Extensive Aesthetics at Emily Carr University of Art & Design, and is supported by the Canada Research Chairs Programand the Canada Foundation for Innovation.</p>
+          </div>  
+        </div>
+        <a href="#">View all supporters -></a>
+      {{/ three-column-column}}
+    {{/ three-column-row }}
+    
   </div>
 </div>

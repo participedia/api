@@ -1,0 +1,71 @@
+<style>
+  .featured-entries-carousel {
+    height: 585px;
+    background-color: #f2f2f2;
+  }
+  .featured-entries-carousel__inner-container {
+    display: flex;
+    flex-direction: row;
+    justify-items: stretch;
+    height: 100%;
+  }
+  .featured-entries-carousel__image {
+    width: 50%;
+    background-size: cover;
+    background-position: center;
+  }
+  .featured-entries-carousel__content {
+    width: 50%;
+  }
+
+  .featured-entries-carousel__content-inner {
+    padding: 64px;
+    max-width: 585px;  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 64px - 64px);
+  }
+
+  .featured-entries-carousel__content-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .featured-entries-carousel__navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+</style>
+
+<div class="featured-entries-carousel">
+  <div class="featured-entries-carousel__inner-container">
+    <div
+      class="featured-entries-carousel__image"
+      style="background-image: url('{{entries.0.photos.0.url}}')"
+    ></div>
+    <div class="featured-entries-carousel__content">
+      <div class="featured-entries-carousel__content-inner">
+        <div>
+          <div class="featured-entries-carousel__content-header u-margin-bottom--small">
+            <h2 class="u-extra-bold">{{title}}</h2>
+            <a href="#">View All</a>
+          </div>
+
+          <h3>{{entries.0.title}}</h3>
+          <div class="u-margin-bottom--small">{{entries.0.description}}</div>
+          <a href="/{{entries.0.id}}" class="u-extra-bold">View Collection -></a>
+        </div>
+        <div class="featured-entries-carousel__navigation">
+          <a href="#">{{> icon-arrow-left-large}}</a>
+          <a href="#">{{> icon-arrow-right-large}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- {{#each featuredCollections}}
+  {{title}}
+{{/each}} -->
+</div>

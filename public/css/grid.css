@@ -1,0 +1,29 @@
+.grid-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.grid-column {
+  padding-right: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: flex-start;
+}
+
+.grid-one-third {
+  width:33%;
+}
+
+@media (max-width: 800px) {
+  .grid-container {
+    flex-direction: column;
+  }
+  .grid-column {
+    padding-right: 0;
+  }
+  .grid-one-third {
+    width: 100%;
+  }
+}
