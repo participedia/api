@@ -1278,5 +1278,5 @@ module.exports = {
     } else {
       return __("citizens_voices_collection_is_now_live", "<strong>", "</strong>");  
     }
-  }
+  },
 };

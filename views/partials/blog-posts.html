@@ -1,0 +1,30 @@
+{{#> three-column-row }}
+  {{#> three-column-column}}
+    <div class="js-blog-post-column"></div>
+  {{/ three-column-column}}
+  {{#> three-column-column}}
+    <div class="js-blog-post-column"></div>
+  {{/ three-column-column}}
+  {{#> three-column-column}}
+    <div class="js-blog-post-column"></div>
+  {{/ three-column-column}}
+{{/ three-column-row }}
+
+<style>
+  .blog-post-card__image {
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 185px;
+  }
+</style>
+
+<script type="text/template" id="js-blog-post-card-template">
+  <div>
+    <div class="js-blog-post-card__image blog-post-card__image"></div>
+    <h3 class="js-blog-post-card__title"></h3>  
+    <div class="js-blog-post-card__byline"></div>  
+    <div class="js-blog-post-card__description"></div>  
+  </div>
+  <a href="#" class="js-blog-post-card__link u-extra-bold">Read More -></a>
+</script>
