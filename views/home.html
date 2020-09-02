@@ -85,7 +85,7 @@
   </div>
 </div>
 
-<div class="home-section">
+<div class="home-section u-margin-bottom--large u-margin-top--med">
   <div class="u-inner-container">
     {{#> three-column-row }}
       {{#> three-column-column}}
@@ -143,14 +143,16 @@
 </div>
 
 <div class="home-section">
-  <div class="u-inner-container">
-    <h3>Featured Cases, Methods, Organizations</h3>
-  </div>
+  {{> featured-entries-carousel 
+      photoOnRight=true
+      entries=featuredCasesMethodsOrgs 
+      title="Featured Cases, Methods, Organizations"
+  }}
 </div>
 
 <div class="home-section">
   <div class="home-section-header u-inner-container">
-    <h3>Explore Cases & Organizations by location</h3>
+    <h2>Explore Cases & Organizations by location</h2>
   </div>
 
   {{> map }}

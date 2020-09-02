@@ -19,18 +19,23 @@
   }
 
   .featured-entries-carousel__content-inner {
-    padding: 64px;
-    max-width: 585px;  
+    padding: 60px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: calc(100% - 64px - 64px);
+    height: calc(100% - 60px - 60px);
   }
 
   .featured-entries-carousel__content-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .featured-entries-carousel__content-header h2 {
+    width: 75%;
+    margin-bottom: 0;
   }
 
   .featured-entries-carousel__navigation {
@@ -41,7 +46,10 @@
 </style>
 
 <div class="featured-entries-carousel">
-  <div class="featured-entries-carousel__inner-container">
+  <div 
+    class="featured-entries-carousel__inner-container"
+    {{#if photoOnRight}}style="flex-direction: row-reverse;"{{/if}}
+  >
     <div
       class="featured-entries-carousel__image"
       style="background-image: url('{{entries.0.photos.0.url}}')"
