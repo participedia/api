@@ -67,6 +67,7 @@
       {{/each}}
     {{/accordion}}
 
+    <div class="js-supporters">
     {{#> accordion title=(t "Supporters")}}
       <p>
         {{{__
@@ -104,6 +105,7 @@
          }}}
       </p>
     {{/accordion}}
+    </div>
 
     {{#> accordion title=(t "Staff")}}
       <p>{{t "about.staff.p1"}}</p>
@@ -198,3 +200,5 @@
     {{/accordion}}
   </section>
 {{/static-view-container}}
+
+{{> script-tag-with-cache-key filepath="/build/js/about-view.bundle.js"}}
