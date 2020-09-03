@@ -89,16 +89,17 @@
   <div class="u-inner-container">
     {{#> three-column-row }}
       {{#> three-column-column}}
-      <div class="u-margin-bottom--small u-text-align--center">
-        <img src="/images/homepage/explore.svg" width="80%" />
-        <h2 class="u-extra-bold">Explore & Research</h2>
-        <div>
-          Explore the dataset via the search bar above, download the data in csv
-          files, or explore the data visually.
-        </div>
+        <div class="u-margin-bottom--small u-text-align--center">
+          <img src="/images/homepage/explore.svg" width="80%" />
+          <h2 class="u-extra-bold">Explore & Research</h2>
+          <div>
+            Explore the dataset via the search bar above, <a href="/research#data-dl">download the data in csv files</a>, or <a href="#map">explore entries by location</a>.
+          </div>
         </div>
 
-        <a href="/research" class="u-extra-bold u-text-align--center">Explore the data -></a>
+        <a href="/research" class="u-extra-bold u-text-align--center">
+          Read more about our research ->
+        </a>
       {{/ three-column-column}}
       {{#> three-column-column}}
         <div class="u-margin-bottom--small u-text-align--center">
@@ -109,7 +110,9 @@
             your own.
           </div>
         </div>
-        <a href="/getting-started" class="u-extra-bold u-text-align--center">Getting started guide -></a>
+        <a href="/getting-started" class="u-extra-bold u-text-align--center">
+          Getting started guide ->
+        </a>
       {{/ three-column-column}}
       {{#> three-column-column}}
         <div class="u-margin-bottom--small u-text-align--center">
@@ -120,7 +123,9 @@
             their research.
           </div>
         </div>
-        <a href="/teaching" class="u-extra-bold u-text-align--center">Teaching resources -></a>
+        <a href="/teaching" class="u-extra-bold u-text-align--center">
+          Teaching resources ->
+        </a>
       {{/ three-column-column}}
     {{/ three-column-row }}
   </div>
@@ -154,7 +159,7 @@
   }}
 </div>
 
-<div class="home-section">
+<div class="home-section" id="map">
   <div class="home-section-header u-inner-container">
     <h2>Explore Cases & Organizations by Location</h2>
   </div>
@@ -169,7 +174,7 @@
         <div class="u-margin-bottom--small">
           <h3 class="u-extra-bold">About Participedia</h3>
           <div>
-            Participedia is built on a global partnership between organizations, institutions, and individuals who share an interest in participatory politics and governance. Our partners include co-applicants and collaborators under the SSHRC Partnership Grant. 
+            Participedia is built on a global partnership between organizations, institutions and individuals who share an interest in participatory politics and governance.  
           </div>
         </div>
         <a href="/about" class="u-extra-bold">Read more about us -></a>
@@ -181,15 +186,31 @@
             Sign up for our community newsletter! We share the latest information about participatory democratic innovations around the world, stories from our wide community of partners and contributors, invitations to upcoming conferences and events, and more. 
           </div>
         </div>
-        <a href="https://mailchi.mp/participedia/subscribe" class="u-extra-bold">Sign up for our newsletter -></a>
+        <a 
+          href="https://mailchi.mp/participedia/subscribe"  
+          target="_blank" 
+          rel="noopener"  
+          class="u-extra-bold"
+        >Sign up for our newsletter -></a>
       {{/ three-column-column}}
       {{#> three-column-column}}
         <div class="u-margin-bottom--small">
           <h3 class="u-extra-bold">Supporters</h3>
           <div>
-            <p></p>Participedia is currently supported by the Social Sciences and Humanities Research Council of Canada (SSHRC) through a five-year Partnership Grant beginning in April 2015.</p>
-
-            <p>The Design & technology Team operates out of the Studio for Extensive Aesthetics at Emily Carr University of Art & Design, and is supported by the Canada Research Chairs Programand the Canada Foundation for Innovation.</p>
+            {{{__
+              "about.supporters.p1"
+              "<a href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx' target='_blank'>"
+              "</a>"
+            }}}
+            {{{__
+              "about.supporters.p2"
+              "<a href='https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology' target='_blank'>"
+              "</a>"
+              "<a href='http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx' target='_blank'>"
+              "</a>"
+              "<a href='https://www.innovation.ca/'>"
+              "</a>"
+            }}}
           </div>  
         </div>
         <a href="/about#supporters" class="u-extra-bold">Read more about our supporters -></a>
