@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
           title: x.title,
           author: x.author,
           createdAt: x.created,
-          description: x.content.substring(0, 280),
+          description: x.content.substring(0, 320),
           url: x.url,
           imageUrl: x.content.match(regEx) ? x.content.match(regEx)[1] : null
         };

@@ -13,7 +13,11 @@
 }
 
 .grid-one-third {
-  width:33%;
+  width:33%
+}
+
+.grid-column:last-of-type  {
+  padding-right: 0;
 }
 
 @media (max-width: 800px) {
