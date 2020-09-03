@@ -155,6 +155,9 @@ const i18n = (key, context) =>
   context && context.data && context.data.root.__(key);
 
 module.exports = {
+  toJSON: obj =>  {
+    return JSON.stringify(obj);
+  },
   // transalation helpers
   getLocalizedTermsOfUsePartial: context => {
     const locale = context.data.root.locale || "en";

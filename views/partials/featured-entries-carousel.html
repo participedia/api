@@ -1,79 +1,36 @@
-<style>
-  .featured-entries-carousel {
-    height: 585px;
-    background-color: #f2f2f2;
-  }
-  .featured-entries-carousel__inner-container {
-    display: flex;
-    flex-direction: row;
-    justify-items: stretch;
-    height: 100%;
-  }
-  .featured-entries-carousel__image {
-    width: 50%;
-    background-size: cover;
-    background-position: center;
-  }
-  .featured-entries-carousel__content {
-    width: 50%;
-  }
-
-  .featured-entries-carousel__content-inner {
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: calc(100% - 60px - 60px);
-  }
-
-  .featured-entries-carousel__content-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-  
-  .featured-entries-carousel__content-header h2 {
-    width: 75%;
-    margin-bottom: 0;
-  }
-
-  .featured-entries-carousel__navigation {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-</style>
-
-<div class="featured-entries-carousel">
+<div class="featured-entries-carousel js-featured-entries-carousel" data-index="0" data-entries="{{toJSON entries}}">
   <div 
     class="featured-entries-carousel__inner-container"
     {{#if photoOnRight}}style="flex-direction: row-reverse;"{{/if}}
   >
     <div
-      class="featured-entries-carousel__image"
+      class="featured-entries-carousel__image js-featured-entries-carousel__image"
       style="background-image: url('{{entries.0.photos.0.url}}')"
     ></div>
     <div class="featured-entries-carousel__content">
       <div class="featured-entries-carousel__content-inner">
         <div>
-          <div class="featured-entries-carousel__content-header u-margin-bottom--small">
+          <div class="featured-entries-carousel__header u-margin-bottom--small">
             <h2 class="u-extra-bold">{{title}}</h2>
-            <a href="#">View All</a>
+            <a href="/search?selectedCategory={{entries.0.type}}">View All</a>
           </div>
 
-          <h3>{{entries.0.title}}</h3>
-          <div class="u-margin-bottom--small">{{entries.0.description}}</div>
-          <a href="/{{entries.0.id}}" class="u-extra-bold">View Collection -></a>
+          <div class="featured-entries-carousel__entry-content js-featured-entries-carousel__entry-content">
+            <h3 class="js-featured-entries-carousel__title">{{entries.0.title}}</h3>
+            <div class="u-margin-bottom--small js-featured-entries-carousel__description">{{entries.0.description}}</div>
+            <a href="/{{entries.0.type}}/{{entries.0.id}}" class="u-extra-bold js-featured-entries-carousel__view-entry-link">View Entry -></a>
+          </div>
         </div>
+
         <div class="featured-entries-carousel__navigation">
-          <a href="#">{{> icon-arrow-left-large}}</a>
-          <a href="#">{{> icon-arrow-right-large}}</a>
+          <a href="#" class="js-featured-entries-carousel__navigation-left-arrow">
+            {{> icon-arrow-left-large}}
+          </a>
+          <a href="#" class="js-featured-entries-carousel__navigation-right-arrow">
+            {{> icon-arrow-right-large}}
+          </a>
         </div>
       </div>
     </div>
   </div>
-  <!-- {{#each featuredCollections}}
-  {{title}}
-{{/each}} -->
 </div>

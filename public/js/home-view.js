@@ -2,6 +2,7 @@ import map from "./map.js";
 import bannerNotice from "./banner-notice.js";
 import editSelect from "./edit-select.js";
 import blogPosts from "./blog-posts.js";
+import featuredEntriesCarousel from "./featured-entries-carousel.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
@@ -9,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   map.init();
   editSelect.init();
   blogPosts.init();
+  featuredEntriesCarousel.init();
   initSearchForm();
 });
 
