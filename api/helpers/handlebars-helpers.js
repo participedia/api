@@ -155,6 +155,9 @@ const i18n = (key, context) =>
   context && context.data && context.data.root.__(key);
 
 module.exports = {
+  useInspectlet: () => {
+    return process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
+  },
   // transalation helpers
   getLocalizedTermsOfUsePartial: context => {
     const locale = context.data.root.locale || "en";
