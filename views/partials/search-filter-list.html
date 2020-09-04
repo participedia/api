@@ -7,10 +7,10 @@
 			{{> search-filter-autocomplete name="country"}}
 		</div>
   </div>
-
+  {{#each (searchFiltersSections type)}}
   <div class="search-filter-list-item">
 		<div class="filter-label">
-			<label for="country">General Issues</label>
+			<label for="{{fieldNameKeys}}">{{t sectionKey}}</label>
 		</div>
 		<div class="filter-input">
 			<ul class="unstyled-list keys-list js-keys-list" data-field-name="general_issues">
@@ -32,4 +32,5 @@
       <button type="button" class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn">Show all</button>
     </div>
   </div>
+  {{/each}}
 </form>

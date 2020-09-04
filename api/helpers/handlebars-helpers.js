@@ -1288,5 +1288,9 @@ module.exports = {
     if (index < 4) {
       return 'show';
     }
+  },
+
+  getSelectedCategory(req) {
+    return req.query.selectedCategory || null;
   }
 };
