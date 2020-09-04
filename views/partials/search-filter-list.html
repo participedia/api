@@ -12,25 +12,28 @@
 		<div class="filter-label">
 			<label for="{{fieldNameKeys}}">{{t sectionKey}}</label>
 		</div>
-		<div class="filter-input">
-			<ul class="unstyled-list keys-list js-keys-list" data-field-name="general_issues">
-        {{#each (getOptionsForFilterKey "general_issues")}}
-          <li class="hidden {{showFilterItem @index}}">
-            <input
-              type="checkbox"
-              data-field-name="general_issues"
-              data-section-key="{{../sectionKey}}"
-              name="{{key}}"
-              id="search_filter_general_issues[{{key}}]"
-              >
-            <label for="search_filter_general_issues[{{key}}]">{{value}}</label>
-          </li>
-        {{/each}}
-      </ul>
-		</div>
-    <div class="filter-show-all-container">
-      <button type="button" class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn">Show all</button>
-    </div>
+    {{#each fieldNameKeys}}
+  		<div class="filter-input">
+        <strong>{{searchFilterLabel ../../type this}}</strong>
+  			<ul class="unstyled-list keys-list js-keys-list" data-field-name="general_issues">
+          {{#each (getOptionsForFilterKey this)}}
+            <li class="hidden {{showFilterItem @index}}">
+              <input
+                type="checkbox"
+                data-field-name="general_issues"
+                data-section-key="{{../sectionKey}}"
+                name="{{key}}"
+                id="search_filter_general_issues[{{key}}]"
+                >
+              <label for="search_filter_general_issues[{{key}}]">{{value}}</label>
+            </li>
+          {{/each}}
+        </ul>
+        <div class="filter-show-all-container">
+          <button type="button" class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn">Show all</button>
+        </div>
+  		</div>
+    {{/each}}
   </div>
   {{/each}}
 </form>
