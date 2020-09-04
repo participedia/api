@@ -20,17 +20,23 @@
             <li class="hidden {{showFilterItem @index}}">
               <input
                 type="checkbox"
-                data-field-name="general_issues"
+                data-field-name="{{../this}}"
                 data-section-key="{{../sectionKey}}"
                 name="{{key}}"
-                id="search_filter_general_issues[{{key}}]"
+                id="{{../this}}[{{key}}]"
                 >
-              <label for="search_filter_general_issues[{{key}}]">{{value}}</label>
+              <label for="{{../this}}[{{key}}]">{{value}}</label>
             </li>
           {{/each}}
         </ul>
         <div class="filter-show-all-container">
-          <button type="button" class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn">Show all</button>
+          <button
+            class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn"
+            type="button"
+            data-field-keys="{{fieldNameKeys}}"
+          >
+            Show all
+          </button>
         </div>
   		</div>
     {{/each}}
