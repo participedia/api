@@ -10,14 +10,14 @@
   {{#each (searchFiltersSections type)}}
   <div class="search-filter-list-item">
 		<div class="filter-label">
-			<label for="{{fieldNameKeys}}">{{t sectionKey}}</label>
+			<label>{{t sectionKey}}</label>
 		</div>
     {{#each fieldNameKeys}}
   		<div class="filter-input">
         <strong>{{searchFilterLabel ../../type this}}</strong>
-  			<ul class="unstyled-list keys-list js-keys-list" data-field-name="general_issues">
+  			<ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
           {{#each (getOptionsForFilterKey this)}}
-            <li class="hidden {{showFilterItem @index}}">
+            <li class="{{getSearchFilterItemDisplayClass @index}}">
               <input
                 type="checkbox"
                 data-field-name="{{../this}}"
@@ -33,7 +33,7 @@
           <button
             class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn"
             type="button"
-            data-field-keys="{{fieldNameKeys}}"
+            data-list-key="{{this}}"
           >
             Show all
           </button>
