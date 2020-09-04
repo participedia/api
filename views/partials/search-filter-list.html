@@ -8,38 +8,37 @@
 		</div>
   </div>
   {{#each (searchFiltersSections type)}}
-  <div class="search-filter-list-item">
-		<div class="filter-label">
-			<label>{{t sectionKey}}</label>
-		</div>
     {{#each fieldNameKeys}}
-  		<div class="filter-input">
-        <strong>{{searchFilterLabel ../../type this}}</strong>
-  			<ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
-          {{#each (getOptionsForFilterKey this)}}
-            <li class="{{getSearchFilterItemDisplayClass @index}}">
-              <input
-                type="checkbox"
-                data-field-name="{{../this}}"
-                data-section-key="{{../sectionKey}}"
-                name="{{key}}"
-                id="{{../this}}[{{key}}]"
-                >
-              <label for="{{../this}}[{{key}}]">{{value}}</label>
-            </li>
-          {{/each}}
-        </ul>
-        <div class="filter-show-all-container">
-          <button
-            class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn"
-            type="button"
-            data-list-key="{{this}}"
-          >
-            Show all
-          </button>
-        </div>
-  		</div>
+      <div class="search-filter-list-item">
+    		<div class="filter-label">
+    			<label>{{searchFilterLabel ../../type this}}</label>
+    		</div>
+    		<div class="filter-input">
+    			<ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
+            {{#each (getOptionsForFilterKey this)}}
+              <li class="{{getSearchFilterItemDisplayClass @index}}">
+                <input
+                  type="checkbox"
+                  data-field-name="{{../this}}"
+                  data-section-key="{{../sectionKey}}"
+                  name="{{key}}"
+                  id="{{../this}}[{{key}}]"
+                  >
+                <label for="{{../this}}[{{key}}]">{{value}}</label>
+              </li>
+            {{/each}}
+          </ul>
+          <div class="filter-show-all-container">
+            <button
+              class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn"
+              type="button"
+              data-list-key="{{this}}"
+            >
+              Show all
+            </button>
+          </div>
+    		</div>
+      </div>
     {{/each}}
-  </div>
   {{/each}}
 </form>
