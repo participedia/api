@@ -15,7 +15,7 @@
 		<div class="filter-input">
 			<ul class="unstyled-list keys-list js-keys-list" data-field-name="general_issues">
         {{#each (getOptionsForFilterKey "general_issues")}}
-          <li>
+          <li class="hidden {{showFilterItem @index}}">
             <input
               type="checkbox"
               data-field-name="general_issues"
@@ -28,5 +28,8 @@
         {{/each}}
       </ul>
 		</div>
+    <div class="filter-show-all-container">
+      <button type="button" class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn">Show all</button>
+    </div>
   </div>
 </form>

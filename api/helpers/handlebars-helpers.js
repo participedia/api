@@ -1282,4 +1282,11 @@ module.exports = {
       return __("citizens_voices_collection_is_now_live", "<strong>", "</strong>");  
     }
   },
+
+  // Show first 4 filter items
+  showFilterItem(index) {
+    if (index < 4) {
+      return 'show';
+    }
+  }
 };

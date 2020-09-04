@@ -31,3 +31,11 @@
 .search-filter-list .search-filter-list-item .filter-input .keys-list li {
 	flex: 0 0 50%;
 }
+
+.search-filter-list .search-filter-list-item .filter-input .keys-list .hidden {
+	display: none;
+}
+
+.search-filter-list .search-filter-list-item .filter-input .keys-list .hidden.show {
+	display: block;
+}
