@@ -1283,13 +1283,6 @@ module.exports = {
     }
   },
 
-  // Show first 4 filter items
-  showFilterItem(index) {
-    if (index < 4) {
-      return 'show';
-    }
-  },
-
   getSelectedCategory(req) {
     return req.query.selectedCategory || null;
   }

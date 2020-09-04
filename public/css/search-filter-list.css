@@ -49,10 +49,6 @@
 	display: none;
 }
 
-.search-filter-list .search-filter-list-item .filter-input .keys-list .hidden.show {
-	display: block;
-}
-
 .search-filter-list .search-filter-list-item .filter-input .filter-show-all-container button {
 	display: flex;
   align-items: center;

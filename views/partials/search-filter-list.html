@@ -16,7 +16,7 @@
     		<div class="filter-input">
     			<ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
             {{#each (getOptionsForFilterKey this)}}
-              <li class="{{getSearchFilterItemDisplayClass @index}}">
+              <li>
                 <input
                   type="checkbox"
                   data-field-name="{{../this}}"
