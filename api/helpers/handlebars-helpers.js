@@ -1230,6 +1230,7 @@ module.exports = {
     return newData;
   },
 
+  // TODO: Remove this after new search filter
   getOptionsForFilterKey(name, context) {
     if (name === "country") {
       return countries.map(item => {
@@ -1239,6 +1240,18 @@ module.exports = {
         };
       });
     } else {
+      return sharedFieldOptions[name].map(key => {
+        return {
+          key: key,
+          value: i18n(`name:${name}-key:${key}`, context),
+        };
+      });
+    }
+  },
+
+  // TODO: Rename this after new search filter
+  getOptionsForFilterKeyNew(name, context) {
+    if (name !== "country") {
       return sharedFieldOptions[name].map(key => {
         return {
           key: key,
@@ -1282,4 +1295,8 @@ module.exports = {
       return __("citizens_voices_collection_is_now_live", "<strong>", "</strong>");  
     }
   },
+
+  getSelectedCategory(req) {
+    return req.query.selectedCategory || null;
+  }
 };
