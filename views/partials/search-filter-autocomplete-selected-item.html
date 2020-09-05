@@ -11,12 +11,14 @@
   </button>
   {{#if multi}}
     <input
+      data-field-name="{{name}}"
       type="hidden"
       name="{{name}}[{{index}}]"
       value="{{value}}"
     />
   {{else}}
     <input
+      data-field-name="{{name}}"
       type="hidden"
       name="{{name}}"
       value="{{value}}"

@@ -27,8 +27,6 @@ const searchFilterList = {
     this.submitBtnEl.addEventListener("click", e => {
       this.handleFormSubmit(e);
     });
-
-
 	},
 
   // handleRemoveSelectedFilter(e) {
@@ -67,6 +65,22 @@ const searchFilterList = {
         }
       }
     });
+
+    const countryInputEls = toArray(
+      document.querySelector(".js-search-filter-autocomplete-list[data-name=country]")
+        .querySelectorAll("input")
+    );
+
+    countryInputEls.forEach(el => {
+      let fieldName = "country";
+      let filterName = el.getAttribute("value");
+      if (Array.isArray(selectedFilters[fieldName])) {
+        selectedFilters[fieldName].push(filterName);
+      } else {
+        selectedFilters[fieldName] = [filterName];
+      }
+    });
+
     return selectedFilters;
   },
 
