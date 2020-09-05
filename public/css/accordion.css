@@ -11,7 +11,8 @@
   border-top: 0;
 }
 
-.accordion-small:last-of-type {
+.accordion-small:last-of-type,
+.accordion.accordion-show-all .accordion-content {
   margin-bottom: 15px;
 }
 
