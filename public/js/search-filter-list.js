@@ -126,7 +126,7 @@ const searchFilterList = {
 
         // Manually count country
         if (key == "country") {
-          searchFilterAutocomplete.addSelectedItem("country", {label: value, value: value});
+          searchFilterAutocomplete.addSelectedItem("country", {label: decodeURI(value), value: decodeURI(value)});
           this.totalFilters++;
         }
       });
