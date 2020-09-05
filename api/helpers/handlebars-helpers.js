@@ -1303,5 +1303,16 @@ module.exports = {
 
   getSelectedCategory(req) {
     return req.query.selectedCategory || null;
+  },
+
+  // Helper to identify if filter key will display as checkbox;
+  isSearchFilterCheckboxSelection(key) {
+    const excludedFilterKeys = ["country"];
+
+    if(excludedFilterKeys.indexOf(key) >= 0) {
+      return false;
+    }
+
+    return true;
   }
 };
