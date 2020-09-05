@@ -13,7 +13,7 @@
     		<div class="filter-label">
     			<label>{{searchFilterLabel ../../type this}}</label>
     		</div>
-        {{#> accordion-show-all title='Show All' key=(getRandomKey)}}
+        {{#> accordion-show-all key=(getRandomKey)}}
           <div class="accordion-summary-content unstyled-list keys-list js-keys-list" data-field-name="{{../this}}">
             {{#each (getOptionsForFilterKeyNew ../this true)}}
               <div class="keys-list-item">
