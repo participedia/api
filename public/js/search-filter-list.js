@@ -202,8 +202,13 @@ const searchFilterList = {
 
   handleFormSubmit(e) {
     e.preventDefault();
+    const openFilter = getValueForParam("openFilters");
+    const filters = openFilter == "1"
+      ? this.SEARCH_FILTER_KEYS.concat("openFilters")
+      : this.SEARCH_FILTER_KEYS;
+
     // remove old filters
-    removeUrlParams(this.SEARCH_FILTER_KEYS);
+    removeUrlParams(filters);
     const selectedFilters = this.getState();
     // add new filters as params
     Object.keys(selectedFilters).forEach(key => {
