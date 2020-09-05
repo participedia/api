@@ -11,6 +11,7 @@ const searchFilterList = {
 	init() {
 		this.searchFiltersFormEl = document.querySelector(".js-search-filter-list");
     this.selectedCountryListEl = document.querySelector(".js-search-filter-autocomplete-list[data-name=country]");
+    this.totalFilters = 0;
     const submitBtnEl = document.querySelector(".js-search-filter-modal-show-result-btn");
     const clearFilterBtnEl = document.querySelector(".js-search-filter-modal-clear-btn");
 
@@ -116,10 +117,27 @@ const searchFilterList = {
       const values = paramsFromUrl[key].split(",");
       values.forEach(value => {
         const input = document.getElementById(`${key}[${value}]`);
-        if (input) input.checked = true;
+        if (input) {
+          input.checked = true;
+          this.totalFilters++;
+        }
       });
     });
+
+    this.updateBadge();
     // this.updateChipButtonsState();
+  },
+
+  updateBadge() {
+    const badgeParentEl = document.querySelector(".js-tab-buttons-button-filter");
+    const badgeEl = document.querySelector(".js-total-filter-badge");
+
+    if (this.totalFilters < 1) {
+      badgeParentEl.style["justify-content"] = "center";
+    } else {
+      badgeEl.textContent = this.totalFilters;
+      badgeEl.style["display"] = "block";
+    }
   },
 
   // updateChipButtonsState() {
