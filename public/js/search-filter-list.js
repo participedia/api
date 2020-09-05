@@ -28,6 +28,8 @@ const searchFilterList = {
 
     submitBtnEl.addEventListener("click", e => this.handleFormSubmit(e));
     clearFilterBtnEl.addEventListener("click", e => this.handleClearAllFilter(e));
+
+    this.updateUIFromUrlParams();
 	},
 
   // handleRemoveSelectedFilter(e) {
@@ -102,23 +104,23 @@ const searchFilterList = {
   //   return selectedFilters;
   // },
 
-  // updateUIFromUrlParams() {
-  //   const paramsFromUrl = {};
-  //   window.location.search
-  //     .split("?")[1]
-  //     .split("&")
-  //     .map(p => p.split("="))
-  //     .forEach(param => (paramsFromUrl[param[0]] = param[1]));
+  updateUIFromUrlParams() {
+    const paramsFromUrl = {};
+    window.location.search
+      .split("?")[1]
+      .split("&")
+      .map(p => p.split("="))
+      .forEach(param => (paramsFromUrl[param[0]] = param[1]));
 
-  //   Object.keys(paramsFromUrl).forEach(key => {
-  //     const values = paramsFromUrl[key].split(",");
-  //     values.forEach(value => {
-  //       const input = document.getElementById(`${key}[${value}]`);
-  //       if (input) input.checked = true;
-  //     });
-  //   });
-  //   this.updateChipButtonsState();
-  // },
+    Object.keys(paramsFromUrl).forEach(key => {
+      const values = paramsFromUrl[key].split(",");
+      values.forEach(value => {
+        const input = document.getElementById(`${key}[${value}]`);
+        if (input) input.checked = true;
+      });
+    });
+    // this.updateChipButtonsState();
+  },
 
   // updateChipButtonsState() {
   //   this.chipButtonEls.forEach(el => {
