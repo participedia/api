@@ -26,8 +26,17 @@ const tabsWithCards = {
     // More Filters Button
     const moreFilterBtnEl = document.querySelector(".js-tab-buttons-button-filter");
     moreFilterBtnEl.addEventListener("click", event => {
-      modal.openModal("search-filter-modal", {showCloseBtn: true});
+      this.openSearchFilterModal();
     });;
+
+    const openFilter = getValueForParam("openFilters");
+    if (openFilter == "1") {
+      this.openSearchFilterModal();
+    }
+  },
+
+  openSearchFilterModal() {
+    modal.openModal("search-filter-modal", {showCloseBtn: true});
   },
 
   navigateToTab(category) {
