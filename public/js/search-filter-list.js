@@ -19,11 +19,7 @@ const searchFilterList = {
 
 		if (!this.searchFiltersFormEl) return;
 
-		const type = getValueForParam("selectedCategory");
-    this.SEARCH_FILTER_KEYS = [];
-    searchFiltersList[type].forEach(item => {
-      item.fieldNameKeys.forEach(key => this.SEARCH_FILTER_KEYS.push(key));
-    });
+    this.getFiltersList();
 
 		this.checkboxEls = toArray(
       this.searchFiltersFormEl.querySelectorAll(".js-keys-list-item input[type=checkbox]")
@@ -34,6 +30,23 @@ const searchFilterList = {
 
     this.updateUIFromUrlParams();
 	},
+
+  getFiltersList() {
+    const type = getValueForParam("selectedCategory");
+    this.SEARCH_FILTER_KEYS = [];
+
+    if (type == "all") {
+      Object.keys(searchFiltersList).forEach(key => {
+        searchFiltersList[key].forEach(item => {
+          item.fieldNameKeys.forEach(key => this.SEARCH_FILTER_KEYS.push(key));
+        });
+      });
+    } else {
+      searchFiltersList[type].forEach(item => {
+        item.fieldNameKeys.forEach(key => this.SEARCH_FILTER_KEYS.push(key));
+      });
+    }
+  },
 
   // handleRemoveSelectedFilter(e) {
   //   e.preventDefault();
@@ -140,11 +153,11 @@ const searchFilterList = {
     const badgeParentEl = document.querySelector(".js-tab-buttons-button-filter");
     const badgeEl = document.querySelector(".js-total-filter-badge");
 
-    if (this.totalFilters < 1) {
-      badgeParentEl.style["justify-content"] = "center";
-    } else {
+    if (this.totalFilters) {
       badgeEl.textContent = this.totalFilters;
       badgeEl.style["display"] = "block";
+    } else {
+      badgeParentEl.style["justify-content"] = "center";
     }
   },
 
