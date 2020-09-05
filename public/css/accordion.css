@@ -42,14 +42,19 @@
   color: #ec2024;
 }
 
-.accordion-content {
+.accordion-content,
+.accordion.accordion-show-all .accordion-content .accordion-full-content {
   overflow: hidden;
   max-height: 0em;
   position: relative;
 }
 
+.accordion.accordion-show-all .accordion-content {
+  max-height: 100%;
+}
+
 .accordion input[name='accordion']:checked ~ .accordion-content,
-.accordion.accordion-show-all input[name='accordion']:checked ~ .accordion-content {
+.accordion.accordion-show-all input[name='accordion']:checked ~ .accordion-content .accordion-full-content {
   max-height: 100%;
 }
 
