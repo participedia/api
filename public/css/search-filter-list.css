@@ -6,6 +6,7 @@
 #search-filter-modal .aria-modal-document .aria-modal-footer .search-filter-modal-clear-btn {
   background: none;
   border: none;
+  text-decoration: underline;
 }
 
 .search-filter-list .search-filter-list-item {
