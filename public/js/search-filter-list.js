@@ -10,6 +10,7 @@ const toArray = nodeList => Array.prototype.slice.call(nodeList);
 const searchFilterList = {
 	init() {
 		this.searchFiltersFormEl = document.querySelector(".js-search-filter-list");
+    this.selectedCountryListEl = document.querySelector(".js-search-filter-autocomplete-list[data-name=country]");
     const submitBtnEl = document.querySelector(".js-search-filter-modal-show-result-btn");
     const clearFilterBtnEl = document.querySelector(".js-search-filter-modal-clear-btn");
 
@@ -63,10 +64,7 @@ const searchFilterList = {
     });
 
     // Manually collect all country fields from autocomplete
-    const countryInputEls = toArray(
-      document.querySelector(".js-search-filter-autocomplete-list[data-name=country]")
-        .querySelectorAll("input")
-    );
+    const countryInputEls = toArray(this.selectedCountryListEl.querySelectorAll("input"));
     countryInputEls.forEach(el => {
       let fieldName = "country";
       let filterName = el.getAttribute("value");
@@ -141,6 +139,7 @@ const searchFilterList = {
     const allCheckboxes = toArray(
       this.searchFiltersFormEl.querySelectorAll("input:checked")
     );
+
     allCheckboxes.forEach(el => (el.checked = false));
     // this.updateChipButtonsState();
     removeUrlParams(this.SEARCH_FILTER_KEYS);
