@@ -53,33 +53,35 @@ const searchFilterList = {
   // },
 
   getState() {
-    const selectedFilters = {};
+    let selectedFilters = {};
     this.checkboxEls.forEach(el => {
       if (el.checked) {
-        const fieldName = el.getAttribute("data-field-name");
-        const filterName = el.getAttribute("name");
-        if (Array.isArray(selectedFilters[fieldName])) {
-          selectedFilters[fieldName].push(filterName);
-        } else {
-          selectedFilters[fieldName] = [filterName];
-        }
+        let fieldName = el.getAttribute("data-field-name");
+        let filterName = el.getAttribute("name");
+        selectedFilters = this.collectSelectedFilter(selectedFilters, fieldName, filterName);
       }
     });
 
+    // Manually collect all country fields from autocomplete
     const countryInputEls = toArray(
       document.querySelector(".js-search-filter-autocomplete-list[data-name=country]")
         .querySelectorAll("input")
     );
-
     countryInputEls.forEach(el => {
       let fieldName = "country";
       let filterName = el.getAttribute("value");
-      if (Array.isArray(selectedFilters[fieldName])) {
-        selectedFilters[fieldName].push(filterName);
-      } else {
-        selectedFilters[fieldName] = [filterName];
-      }
+      selectedFilters = this.collectSelectedFilter(selectedFilters, fieldName, filterName);
     });
+
+    return selectedFilters;
+  },
+
+  collectSelectedFilter(selectedFilters, fieldName, filterName) {
+    if (Array.isArray(selectedFilters[fieldName])) {
+      selectedFilters[fieldName].push(filterName);
+    } else {
+      selectedFilters[fieldName] = [filterName];
+    }
 
     return selectedFilters;
   },
