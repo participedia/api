@@ -3,12 +3,14 @@ import {
   removeUrlParams,
   getValueForParam,
 } from "./utils/utils.js";
+import searchFilterAutocomplete from "./search-filter-autocomplete.js";
 import searchFiltersList from "../../api/helpers/search-filters-list.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
 const searchFilterList = {
 	init() {
+    searchFilterAutocomplete.init();
 		this.searchFiltersFormEl = document.querySelector(".js-search-filter-list");
     this.selectedCountryListEl = document.querySelector(".js-search-filter-autocomplete-list[data-name=country]");
     this.totalFilters = 0;
@@ -124,6 +126,7 @@ const searchFilterList = {
 
         // Manually count country
         if (key == "country") {
+          searchFilterAutocomplete.addSelectedItem("country", {label: value, value: value});
           this.totalFilters++;
         }
       });
