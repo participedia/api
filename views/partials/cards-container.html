@@ -1,6 +1,7 @@
 {{#if cards}}
+  <!-- TODO: Remove this -->
   {{#if includeSearchFilters}}
-    {{> search-filters type=type }}
+    <!-- {{> search-filters type=type }} -->
   {{/if}}
 
   {{#if (isCollectionView req)}}        
@@ -21,8 +22,9 @@
     {{> pagination-tab }}
   {{/if}}
 {{else}}
+  <!-- TODO: Remove this -->
   {{#if includeSearchFilters}}
-    {{> search-filters type=type }}
+    <!-- {{> search-filters type=type }} -->
   {{/if}}
 
   {{#if (isCollectionView req)}}        
