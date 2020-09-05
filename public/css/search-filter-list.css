@@ -9,7 +9,7 @@
 }
 
 #search-filter-modal .aria-modal-document .aria-modal-footer .search-filter-modal-clear-btn,
-.search-filter-list .search-filter-list-item .filter-input .filter-show-all-container button {
+.search-filter-list .search-filter-list-item .filter-show-all-container button {
 	text-decoration: underline;
 }
 
@@ -21,7 +21,7 @@
 	margin-bottom: 0;
 }
 
-.search-filter-list .search-filter-list-item .filter-input {
+.search-filter-list .search-filter-list-item {
 	margin-bottom: 15px;
 }
 
@@ -36,20 +36,31 @@
 	display: inline-block;
 }
 
-.search-filter-list .search-filter-list-item .filter-input .keys-list {
+.search-filter-list .search-filter-list-item .keys-list {
 	display: flex;
   flex-wrap: wrap;
+
+  /* TODO: Remove this */
+  margin-bottom: 0;
 }
 
-.search-filter-list .search-filter-list-item .filter-input .keys-list li {
+.search-filter-list .search-filter-list-item .keys-list .keys-list-item label {
+  font-size: 16px !important;
+}
+
+.search-filter-list .search-filter-list-item .keys-list .keys-list-item label:after {
+  content: "";
+}
+
+.search-filter-list .search-filter-list-item .keys-list .keys-list-item {
 	flex: 0 0 50%;
 }
 
-.search-filter-list .search-filter-list-item .filter-input .keys-list .hidden {
+.search-filter-list .search-filter-list-item .keys-list .hidden {
 	display: none;
 }
 
-.search-filter-list .search-filter-list-item .filter-input .filter-show-all-container button {
+.search-filter-list .search-filter-list-item .filter-show-all-container button {
 	display: flex;
   align-items: center;
   background: none;
@@ -59,7 +70,7 @@
   text-align: center;
 }
 
-.search-filter-list .search-filter-list-item .filter-input .filter-show-all-container button:after {
+.search-filter-list .search-filter-list-item .filter-show-all-container button:after {
   content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26.7 13.7'%3e%3cpolygon fill='grey' points='13.3%2c13.7 0%2c1.5 1.3%2c0 13.3%2c11 25.3%2c0 26.7%2c1.5' /%3e%3c/svg%3e");
   position: absolute;
   right: 0;
@@ -67,7 +78,7 @@
   height: 1em;
 }
 
-.search-filter-list .search-filter-list-item .filter-input .filter-show-all-container button img {
+.search-filter-list .search-filter-list-item .filter-show-all-container button img {
 	margin-left: 10px;
 	width: 15px;
 }

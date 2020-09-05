@@ -13,22 +13,37 @@
     		<div class="filter-label">
     			<label>{{searchFilterLabel ../../type this}}</label>
     		</div>
-    		<div class="filter-input">
-    			<ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
-            {{#each (getOptionsForFilterKeyNew this)}}
-              <li>
+        {{#> accordion-show-all title='Show All' key=(getRandomKey)}}
+          <div class="accordion-summary-content unstyled-list keys-list js-keys-list" data-field-name="{{../this}}">
+            {{#each (getOptionsForFilterKeyNew ../this true)}}
+              <div class="keys-list-item">
                 <input
                   type="checkbox"
-                  data-field-name="{{../this}}"
+                  data-field-name="{{../../this}}"
                   data-section-key="{{../sectionKey}}"
                   name="{{key}}"
-                  id="{{../this}}[{{key}}]"
+                  id="{{../../this}}[{{key}}]"
                   >
-                <label for="{{../this}}[{{key}}]">{{value}}</label>
-              </li>
+                <label for="{{../../this}}[{{key}}]">{{value}}</label>
+              </div>
             {{/each}}
-          </ul>
-          <div class="filter-show-all-container">
+          </div>
+
+          <div class="accordion-full-content unstyled-list keys-list js-keys-list" data-field-name="{{../this}}">
+            {{#each (getOptionsForFilterKeyNew ../this false)}}
+              <div class="keys-list-item">
+                <input
+                  type="checkbox"
+                  data-field-name="{{../../this}}"
+                  data-section-key="{{../sectionKey}}"
+                  name="{{key}}"
+                  id="{{../../this}}[{{key}}]"
+                  >
+                <label for="{{../../this}}[{{key}}]">{{value}}</label>
+              </div>
+            {{/each}}
+          </div>
+          <!-- <div class="filter-show-all-container">
             <button
               class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn"
               type="button"
@@ -36,8 +51,8 @@
             >
               Show all
             </button>
-          </div>
-    		</div>
+          </div> -->
+        {{/accordion-show-all}}
       </div>
     {{/each}}
   {{/each}}

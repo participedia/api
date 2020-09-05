@@ -48,7 +48,8 @@
   position: relative;
 }
 
-.accordion input[name='accordion']:checked ~ .accordion-content {
+.accordion input[name='accordion']:checked ~ .accordion-content,
+.accordion.accordion-show-all input[name='accordion']:checked ~ .accordion-content {
   max-height: 100%;
 }
 

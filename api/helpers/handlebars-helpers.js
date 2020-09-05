@@ -1250,14 +1250,19 @@ module.exports = {
   },
 
   // TODO: Rename this after new search filter
-  getOptionsForFilterKeyNew(name, context) {
+  getOptionsForFilterKeyNew(name, isInitialDisplay, context) {
     if (name !== "country") {
-      return sharedFieldOptions[name].map(key => {
+      let items = sharedFieldOptions[name].map(key => {
         return {
           key: key,
           value: i18n(`name:${name}-key:${key}`, context),
         };
       });
+      
+      if (isInitialDisplay) {
+        return items.slice(0,4);
+      }
+      return items.slice(4);
     }
   },
 
