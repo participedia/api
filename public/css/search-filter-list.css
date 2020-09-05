@@ -9,15 +9,11 @@
 }
 
 .search-filter-list .search-filter-list-item {
-	margin-bottom: 85px;
+	margin-bottom: 60px;
 }
 
 .search-filter-list .search-filter-list-item:last-child {
 	margin-bottom: 0;
-}
-
-.search-filter-list .search-filter-list-item {
-	margin-bottom: 15px;
 }
 
 .search-filter-list .search-filter-list-item .filter-label {
