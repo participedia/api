@@ -10,7 +10,8 @@ const toArray = nodeList => Array.prototype.slice.call(nodeList);
 const searchFilterList = {
 	init() {
 		this.searchFiltersFormEl = document.querySelector(".js-search-filter-list");
-    this.submitBtnEl = document.querySelector(".js-search-filter-modal-show-result-btn");
+    const submitBtnEl = document.querySelector(".js-search-filter-modal-show-result-btn");
+    const clearFilterBtnEl = document.querySelector(".js-search-filter-modal-clear-btn");
 
 		if (!this.searchFiltersFormEl) return;
 
@@ -24,9 +25,8 @@ const searchFilterList = {
       this.searchFiltersFormEl.querySelectorAll(".js-keys-list-item input[type=checkbox]")
     );
 
-    this.submitBtnEl.addEventListener("click", e => {
-      this.handleFormSubmit(e);
-    });
+    submitBtnEl.addEventListener("click", e => this.handleFormSubmit(e));
+    clearFilterBtnEl.addEventListener("click", e => this.handleClearAllFilter(e));
 	},
 
   // handleRemoveSelectedFilter(e) {
@@ -136,17 +136,17 @@ const searchFilterList = {
   //   });
   // },
 
-  // handleClearAllClick(e) {
-  //   e.preventDefault();
-  //   const allCheckboxes = toArray(
-  //     this.searchFiltersFormEl.querySelectorAll("input:checked")
-  //   );
-  //   allCheckboxes.forEach(el => (el.checked = false));
-  //   this.updateChipButtonsState();
-  //   removeUrlParams(this.SEARCH_FILTER_KEYS);
-  //   // load new url without filter
-  //   location.href = location.href;
-  // },
+  handleClearAllFilter(e) {
+    e.preventDefault();
+    const allCheckboxes = toArray(
+      this.searchFiltersFormEl.querySelectorAll("input:checked")
+    );
+    allCheckboxes.forEach(el => (el.checked = false));
+    // this.updateChipButtonsState();
+    removeUrlParams(this.SEARCH_FILTER_KEYS);
+    // load new url without filter
+    location.href = location.href;
+  },
 
   // handleClearAllForSection(e) {
   //   e.preventDefault();
