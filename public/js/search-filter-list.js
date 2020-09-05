@@ -121,6 +121,11 @@ const searchFilterList = {
           input.checked = true;
           this.totalFilters++;
         }
+
+        // Manually count country
+        if (key == "country") {
+          this.totalFilters++;
+        }
       });
     });
 
