@@ -35,7 +35,7 @@ const searchFilterList = {
     const type = getValueForParam("selectedCategory");
     this.SEARCH_FILTER_KEYS = [];
 
-    if (type == "all") {
+    if (type == "all" || !type) {
       Object.keys(searchFiltersList).forEach(key => {
         searchFiltersList[key].forEach(item => {
           item.fieldNameKeys.forEach(key => this.SEARCH_FILTER_KEYS.push(key));
@@ -77,6 +77,13 @@ const searchFilterList = {
   },
 
   updateUIFromUrlParams() {
+    // TODO: This is temporary since search filter is not yet clear
+    // if available if there's no selected category.
+    if (!getValueForParam("selectedCategory")) {
+      this.updateBadge();
+      return;
+    }
+
     const paramsFromUrl = {};
     window.location.search
       .split("?")[1]
