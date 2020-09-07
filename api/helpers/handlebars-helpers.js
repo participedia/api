@@ -1314,5 +1314,11 @@ module.exports = {
     }
 
     return true;
+  },
+
+  showCountryAutoComplete(category) {
+    const allowedCategories = ["case", "organizations"];
+    if (allowedCategories.indexOf(category) >= 0) return true;
+    return false;
   }
 };

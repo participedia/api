@@ -1,4 +1,5 @@
 <form class="search-filter-list js-search-filter-list">
+  {{#if (showCountryAutoComplete type)}}
 	<div class="search-filter-list-item">
 		<div class="filter-label">
 			<label for="country">Country</label>
@@ -7,6 +8,8 @@
 			{{> search-filter-autocomplete name="country"}}
 		</div>
   </div>
+  {{/if}}
+
   {{#each (searchFiltersSections type)}}
     {{#each fieldNameKeys}}
       {{#if (isSearchFilterCheckboxSelection this)}}
