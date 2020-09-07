@@ -77,19 +77,16 @@ const searchFilterList = {
   },
 
   updateUIFromUrlParams() {
-    // TODO: This is temporary since search filter is not yet clear
-    // if available if there's no selected category.
-    if (!getValueForParam("selectedCategory")) {
-      this.updateBadge();
-      return;
-    }
-
     const paramsFromUrl = {};
-    window.location.search
-      .split("?")[1]
-      .split("&")
-      .map(p => p.split("="))
-      .forEach(param => (paramsFromUrl[param[0]] = param[1]));
+
+    // Get query parameters if exists
+    if (window.location.search) {
+      window.location.search
+        .split("?")[1]
+        .split("&")
+        .map(p => p.split("="))
+        .forEach(param => (paramsFromUrl[param[0]] = param[1]));
+    }
 
     Object.keys(paramsFromUrl).forEach(key => {
       const values = paramsFromUrl[key].split(",");
