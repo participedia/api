@@ -28,6 +28,12 @@ const searchFilterAutocomplete = {
     const currentLiEl = buttonEl.closest("li");
     const parentListEl = currentLiEl.parentNode;
     const numItems = parentListEl.querySelectorAll("li").length;
+    
+   /*
+    * There are strange behavior from aria.modal.min.js
+    * The modal is closing if a button inside of the modal remove from the dom.
+    * The below snippet will reproduce the issue.
+    * The below snippet is from ./edit-autoplete.js
 
     // if we have more than 1 item, remove it from the list
     // if there is only 1 item left, clear the value and hide it
@@ -37,6 +43,13 @@ const searchFilterAutocomplete = {
       currentLiEl.querySelector("input").value = null;
       currentLiEl.style.display = "none";
     }
+    */
+
+    // Hide the selected item from autocomplete instead.
+    // All hidden elements will be remove since
+    // search filter will refresh the page with fresh filter values.
+    currentLiEl.querySelector("input").value = null;
+    currentLiEl.style.display = "none";
   },
 
   getOptions(el) {
@@ -127,6 +140,20 @@ const searchFilterAutocomplete = {
         autocompleteEl.value = "";
       },
     });
+  },
+
+  getSelectedItems(name) {
+    const listEl = document.querySelector(`.js-search-filter-autocomplete-list[data-name=${name}]`);
+    const inputEls = toArray(listEl.querySelectorAll("input"));
+    const selectedItems = [];
+    inputEls.forEach(el => {
+      let fieldName = el.getAttribute("data-field-name");
+      let value = el.getAttribute("value");
+      if (value) {
+        selectedItems.push({fieldName: fieldName, value: value});
+      }
+    });
+    return selectedItems;
   }
 }
 

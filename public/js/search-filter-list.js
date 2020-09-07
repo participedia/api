@@ -12,10 +12,9 @@ const searchFilterList = {
 	init() {
     const submitBtnEl = document.querySelector(".js-search-filter-modal-show-result-btn");
     const clearFilterBtnEl = document.querySelector(".js-search-filter-modal-clear-btn");
-    
+
     searchFilterAutocomplete.init();
 		this.searchFiltersFormEl = document.querySelector(".js-search-filter-list");
-    this.selectedCountryListEl = document.querySelector(".js-search-filter-autocomplete-list[data-name=country]");
     this.totalFilters = 0;
 
 		if (!this.searchFiltersFormEl) return;
@@ -59,12 +58,9 @@ const searchFilterList = {
       }
     });
 
-    // Manually collect all country fields from autocomplete
-    const countryInputEls = toArray(this.selectedCountryListEl.querySelectorAll("input"));
-    countryInputEls.forEach(el => {
-      let fieldName = "country";
-      let filterName = el.getAttribute("value");
-      selectedFilters = this.collectSelectedFilter(selectedFilters, fieldName, filterName);
+    const selectedCountry = searchFilterAutocomplete.getSelectedItems("country");
+    selectedCountry.forEach(data => {
+      selectedFilters = this.collectSelectedFilter(selectedFilters, "country", data.value);
     });
 
     return selectedFilters;
