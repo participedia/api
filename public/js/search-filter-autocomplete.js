@@ -143,16 +143,18 @@ const searchFilterAutocomplete = {
   },
 
   getSelectedItems(name) {
-    const listEl = document.querySelector(`.js-search-filter-autocomplete-list[data-name=${name}]`);
-    const inputEls = toArray(listEl.querySelectorAll("input"));
     const selectedItems = [];
-    inputEls.forEach(el => {
-      let fieldName = el.getAttribute("data-field-name");
-      let value = el.getAttribute("value");
-      if (value) {
-        selectedItems.push({fieldName: fieldName, value: value});
-      }
-    });
+    const listEl = document.querySelector(`.js-search-filter-autocomplete-list[data-name=${name}]`);
+    if (listEl) {
+      const inputEls = toArray(listEl.querySelectorAll("input"));
+      inputEls.forEach(el => {
+        let fieldName = el.getAttribute("data-field-name");
+        let value = el.getAttribute("value");
+        if (value) {
+          selectedItems.push({fieldName: fieldName, value: value});
+        }
+      });
+    }
     return selectedItems;
   }
 }
