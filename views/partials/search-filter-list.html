@@ -19,13 +19,13 @@
       		</div>
           {{#> accordion-show-all key=(getRandomKey)}}
             <div class="accordion-summary-content keys-list js-keys-list" data-field-name="{{../this}}">
-              {{#each (getOptionsForFilterKeyNew ../this true)}}
+              {{#each (getOptionsForFilterKey ../this true)}}
                 {{> search-filter-key-list-item fieldName=../../this sectionKey=../sectionKey key=key value=value}}
               {{/each}}
             </div>
 
             <div class="accordion-full-content unstyled-list keys-list js-keys-list" data-field-name="{{../this}}">
-              {{#each (getOptionsForFilterKeyNew ../this false)}}
+              {{#each (getOptionsForFilterKey ../this false)}}
                 {{> search-filter-key-list-item fieldName=../../this sectionKey=../sectionKey key=key value=value}}
               {{/each}}
             </div>
