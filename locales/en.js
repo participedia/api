@@ -1818,5 +1818,6 @@
   "contributors": "contributors",
   "countries": "countries",
   "Show Results": "Show Results",
-  "Search Filters": "Search Filters"
+  "Search Filters": "Search Filters",
+  "Show All": "Show All"
 }
