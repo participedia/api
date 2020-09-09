@@ -1815,5 +1815,6 @@
   "Zoom Map Out": "Alejar mapa",
   "Show Results": "Mostrar resultados",
   "Search Filters": "Filtros de búsqueda",
-  "Show All": "Mostrar todos"
+  "Show All": "Mostrar todos",
+  "Select a country": "Seleccione un país"
 }
