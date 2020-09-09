@@ -10,17 +10,16 @@ const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
 const searchFilterList = {
 	init() {
+    this.searchFiltersFormEl = document.querySelector(".js-search-filter-list");
+    if (!this.searchFiltersFormEl) return;
+
     const submitBtnEl = document.querySelector(".js-search-filter-modal-show-result-btn");
     const clearFilterBtnEl = document.querySelector(".js-search-filter-modal-clear-btn");
-
-    searchFilterAutocomplete.init();
-		this.searchFiltersFormEl = document.querySelector(".js-search-filter-list");
     this.totalFilters = 0;
 
-		if (!this.searchFiltersFormEl) return;
-
+    searchFilterAutocomplete.init();
     this.getFiltersList();
-
+    
 		this.checkboxEls = toArray(
       this.searchFiltersFormEl.querySelectorAll(".js-keys-list-item input[type=checkbox]")
     );

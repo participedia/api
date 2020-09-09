@@ -1,9 +1,11 @@
 <div data-card-layout="{{cardLayoutType req}}">
   <div class="tab-buttons-container">
+    {{#if (includeSearchFilters req)}}
     <button type="button" class="tab-buttons-button-filter js-tab-buttons-button-filter button button-bordered-grey">
       <span>{{t "more filters"}}</span>
       <span class="tab-buttons-total-filter-badge js-total-filter-badge"></span>
     </button>
+    {{/if}}
     <ul class="unstyled-list card-layout-btns js-card-layout-btns">
       <li>
         <button class="icon-only toggle-list-layout-btn" data-type="list">
@@ -51,4 +53,6 @@
   </div>
 </div>
 
-{{> search-filter-modal type=(getSelectedCategory req)}}
+{{#if (includeSearchFilters req)}}
+  {{> search-filter-modal type=(getSelectedCategory req)}}
+{{/if}}

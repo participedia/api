@@ -1320,5 +1320,12 @@ module.exports = {
     const allowedCategories = ["case", "organizations"];
     if (allowedCategories.indexOf(category) >= 0) return true;
     return false;
+  },
+
+  includeSearchFilters(req) {
+    const category = req.query.selectedCategory || null;
+    const allowedCategories = ["case", "organizations", "method"];
+    if (allowedCategories.indexOf(category) >= 0) return true;
+    return false;
   }
 };

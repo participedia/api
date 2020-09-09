@@ -25,10 +25,12 @@ const tabsWithCards = {
 
     // More Filters Button
     const moreFilterBtnEl = document.querySelector(".js-tab-buttons-button-filter");
-    moreFilterBtnEl.addEventListener("click", event => {
-      this.openSearchFilterModal();
-    });;
-
+    if (moreFilterBtnEl) {
+      moreFilterBtnEl.addEventListener("click", event => {
+        this.openSearchFilterModal();
+      });
+    }
+    
     const openFilter = getValueForParam("openFilters");
     if (openFilter == "1") {
       this.openSearchFilterModal();
