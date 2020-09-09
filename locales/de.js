@@ -1812,5 +1812,7 @@
   "Zambia": "Sambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Karte vergrößern",
-  "Zoom Map Out": "Karte verkleinern"
+  "Zoom Map Out": "Karte verkleinern",
+  "Show Results": "Zeige Ergebnisse",
+  "Search Filters": "Search Filters"
 }

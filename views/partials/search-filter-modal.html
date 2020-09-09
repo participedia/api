@@ -1,14 +1,13 @@
 <div id="search-filter-modal" data-modal>
   <div class="aria-modal-document" data-modal-document>
     <div class="aria-modal-content" data-modal-content>
-      <h2>Search Filters</h2>
-      <!-- content to be inserted via JS before opening modal -->
+      <h2>{{t "Search Filters"}}</h2>
       {{> search-filter-list type=type}}
     </div>
     <div class="aria-modal-footer" data-modal-footer>
-      <button type="button" class="js-search-filter-modal-clear-btn search-filter-modal-clear-btn">Clear all</button>
+      <button type="button" class="js-search-filter-modal-clear-btn search-filter-modal-clear-btn">{{t "Clear All"}}</button>
       <button type="button" class="js-search-filter-modal-show-result-btn button button-red">
-        Show Results
+        {{t "Show Results"}}
       </button>
     </div>
   </div>

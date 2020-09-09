@@ -1812,5 +1812,7 @@
   "Zambia": "赞比亚",
   "Zimbabwe": "津巴布韦",
   "Zoom Map In": "放大缩小字体功能 放大缩小字体功能",
-  "Zoom Map Out": "放大缩小字体功能 放大缩小字体功能"
+  "Zoom Map Out": "放大缩小字体功能 放大缩小字体功能",
+  "Show Results": "显示结果",
+  "Search Filters": "搜索过滤器"
 }

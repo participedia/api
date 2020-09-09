@@ -1816,5 +1816,7 @@
   "Advanced search": "Advanced search",
   "Browse all entries": "Browse all entries",
   "contributors": "contributors",
-  "countries": "countries"
+  "countries": "countries",
+  "Show Results": "Show Results",
+  "Search Filters": "Search Filters"
 }
