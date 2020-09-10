@@ -198,12 +198,12 @@ module.exports = {
     return i18n(`${article.type}_${view}_${name}_instructional`, context);
   },
 
-  mapArticleCardwPhrases: (context) => {
+  mapArticleCardPhrases: (req, context) => {
     return JSON.stringify({
-      "Featured Case": i18n("Featured Case", context),
-      "Featured Organization": i18n("Featured Organization", context),
-      "case": i18n("Case", context),
-      "organization": i18n("Organization", context)
+      Featured_Case: i18n("Featured Case", context),
+      Featured_Organization: i18n("Featured Organization", context),
+      case: i18n("Case", context),
+      organization: i18n("Organization", context)
     });
   },
 

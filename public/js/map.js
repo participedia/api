@@ -95,7 +95,10 @@ const map = {
 
     this.initZoomControls(this.map);
     this.fetchMapResults();
-    this.i18n = JSON.parse(mapEl.getAttribute("data-i18n"));
+    console.log("mapEl", mapEl)
+    console.log('mapEl.getAttribute("data-i18n")', mapEl.getAttribute("data-i18n"))
+    const i18nPhrases = mapEl.getAttribute("data-i18n");
+    this.i18n = {} //JSON.parse(mapEl.getAttribute("data-i18n"));
   },
 
   initZoomControls(map) {
@@ -249,12 +252,11 @@ const map = {
       const articleTypeEl = popOverContentEl.querySelector(
         ".js-article-card-meta h5"
       );
-      const featuredTextByType = {
-        case: this.i18n["Featured Case"],
-        method: this.i18n["Featured Case"],
-      };
       if (marker.featured) {
-        articleTypeEl.innerHTML = featuredTextByType[type];
+        articleTypeEl.innerHTML = {
+          case: this.i18n["Featured_Case"],
+          method: this.i18n["Featured_Method"],
+        }[type];
       } else {
         articleTypeEl.innerHTML = this.i18n[type];
       }
