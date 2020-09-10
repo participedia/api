@@ -1230,6 +1230,15 @@ module.exports = {
     return newData;
   },
 
+  getCountryFilterKey(context) {
+    return countries.map(item => {
+      return {
+        key: item.value,
+        value: i18n(item.value, context),
+      };
+    });
+  },
+
   getOptionsForFilterKey(name, isInitialDisplay, context) {
     if (name !== "country") {
       let items = sharedFieldOptions[name].map(key => {

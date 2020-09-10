@@ -15,7 +15,7 @@
 </script>
 
 <ul class="js-search-filter-autocomplete-options-{{name}}" style="display: none;">
-  {{#each (getOptionsForFilterKey "country")}}
+  {{#each (getCountryFilterKey)}}
   <li data-key="{{key}}">{{value}}</li>
   {{/each}}
 </ul>
