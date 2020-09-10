@@ -94,50 +94,8 @@ const map = {
     });
 
     this.initZoomControls(this.map);
-    this.initMapOverlay();
-
     this.fetchMapResults();
-  },
-
-  initMapOverlay() {
-    const mapOverlayTriggerEl = document.querySelector(
-      ".js-map-overlay-trigger"
-    );
-
-    this.mapControls = document.querySelector(".js-map-controls");
-    this.mapOverlayEl = document.querySelector(".js-map-overlay");
-    this.mapLegend = document.querySelector(".js-map-legend");
-    this.activateMapCTAContainer = document.querySelector(
-      ".js-map-overlay-info"
-    );
-
-    this.mapOverlayEl.addEventListener("click", e => {
-      try {
-        window.sessionStorage.setItem("participedia:mapActivated", "true");
-      } catch (err) {
-        console.warn(err);
-      }
-      this.hideMapOverlay();
-    });
-
-    mapOverlayTriggerEl.addEventListener("click", e => {
-      // track activate map click
-      tracking.send("home.map", "activate_map_button_click");
-      this.showMapOverlay();
-    });
-  },
-
-  showMapOverlay() {
-    this.closePopOver();
-    this.mapOverlayEl.style.display = "block";
-    this.mapLegend.style.display = "none";
-    this.mapControls.style.display = "none";
-  },
-
-  hideMapOverlay() {
-    this.mapOverlayEl.style.display = "none";
-    this.mapLegend.style.display = "flex";
-    this.mapControls.style.display = "block";
+    this.i18n = JSON.parse(mapEl.getAttribute("data-i18n"));
   },
 
   initZoomControls(map) {
@@ -273,27 +231,32 @@ const map = {
     this.dropMarkers(markers);
   },
 
-  bindClickEventForMarker(markerEl, marker) {
-    // on marker click, show article card in popover on map
-    markerEl.addListener("click", event => {
-      const popOverContentEl = document.createElement("div");
+  renderMarkerCard(marker) {
+    if (!this.cardEl) {
+      this.cardEl = document.getElementById("js-map-article-card-template");
+    }
+
+    let cardTemplate =  document.createElement("div");
+    cardTemplate.innerHTML = this.cardEl.innerHTML;
+    cardTemplate = cardTemplate.querySelector("li").innerHTML;
+    
+    const popOverContentEl = document.createElement("div");
       // get card content from marker and set on content element
       popOverContentEl.classList = "article-card";
-      popOverContentEl.innerHTML = marker.content.innerHTML;
+      popOverContentEl.innerHTML = cardTemplate;
 
       // update type
       const articleTypeEl = popOverContentEl.querySelector(
         ".js-article-card-meta h5"
       );
-
+      const featuredTextByType = {
+        case: this.i18n["Featured Case"],
+        method: this.i18n["Featured Case"],
+      };
       if (marker.featured) {
-        articleTypeEl.innerHTML = marker.content.getAttribute(
-          `data-i18n-featured-${marker.type}`
-        );
+        articleTypeEl.innerHTML = featuredTextByType[type];
       } else {
-        articleTypeEl.innerHTML = marker.content.getAttribute(
-          `data-i18n-${marker.type}`
-        );
+        articleTypeEl.innerHTML = this.i18n[type];
       }
 
       // update image
@@ -327,13 +290,19 @@ const map = {
       articleLinks.forEach(el => {
         el.setAttribute("href", `/${marker.type}/${marker.id}`);
       });
+      return popOverContentEl;
+  },
 
+  bindClickEventForMarker(markerEl, marker) {    
+    // on marker click, show article card in popover on map
+    markerEl.addListener("click", event => {
       // if there is already a current pop over, remove it
       if (this.popOver) {
         this.popOver.setMap(null);
       }
 
       // insert pop over
+      const popOverContentEl = this.renderMarkerCard(marker);
       this.popOver = new PopOver(marker.position, popOverContentEl);
       this.popOver.setMap(this.map);
 
