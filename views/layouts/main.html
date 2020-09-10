@@ -47,19 +47,6 @@
     <script type="text/javascript" src="/js/vendor/markerclustererplus.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{static.language}}"></script>
     {{> script-tag-with-cache-key filepath="/build/js/home-search-view.bundle.js"}}
-    {{# if useInspectlet}}
-      <!-- Begin Inspectlet Asynchronous Code -->
-      <script type="text/javascript">
-        (function() {
-        window.__insp = window.__insp || [];
-        __insp.push(['wid', 929677093]);
-        var ldinsp = function(){
-        if(typeof window.__inspld != "undefined") return; window.__inspld = 1; var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js?wid=929677093&r=' + Math.floor(new Date().getTime()/3600000); var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); };
-        setTimeout(ldinsp, 0);
-        })();
-      </script>
-      <!-- End Inspectlet Asynchronous Code -->
-    {{/if}}
   {{/if}}
 
   {{#if (isCollectionView req)}}
@@ -95,6 +82,20 @@
   (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/80049ef3-8aba-45c2-9a72-88b56bb1b342.js';
   var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
   </script>
+
+  {{#if (useInspectlet)}}
+  <!-- Begin Inspectlet Asynchronous Code -->
+  <script type="text/javascript">
+    (function() {
+    window.__insp = window.__insp || [];
+    __insp.push(['wid', 929677093]);
+    var ldinsp = function(){
+    if(typeof window.__inspld != "undefined") return; window.__inspld = 1; var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js?wid=929677093&r=' + Math.floor(new Date().getTime()/3600000); var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); };
+    setTimeout(ldinsp, 0);
+    })();
+  </script>
+  <!-- End Inspectlet Asynchronous Code -->
+  {{/if}}
 
   <script type="text/javascript" src="/js/vendor/aria.modal.min.js"></script>
 </body>
