@@ -1,8 +1,4 @@
 {{#if cards}}
-  {{#if includeSearchFilters}}
-    {{> search-filters type=type }}
-  {{/if}}
-
   {{#if (isCollectionView req)}}        
     <div class="u-margin-bottom--small">
       {{getCollectionSummaryString article numArticlesByType}}      
@@ -21,10 +17,6 @@
     {{> pagination-tab }}
   {{/if}}
 {{else}}
-  {{#if includeSearchFilters}}
-    {{> search-filters type=type }}
-  {{/if}}
-
   {{#if (isCollectionView req)}}        
     <div class="u-margin-bottom--small">
       {{getCollectionSummaryString article numArticlesByType}}      

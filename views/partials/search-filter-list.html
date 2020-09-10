@@ -1,44 +1,37 @@
 <form class="search-filter-list js-search-filter-list">
+  {{#if (showCountryAutoComplete type)}}
 	<div class="search-filter-list-item">
 		<div class="filter-label">
-			<label for="country">Country</label>
+			<label for="country">{{t "country_label"}}</label>
 		</div>
 		<div class="filter-input">
-			{{> search-filter-autocomplete name="country"}}
+			{{> search-filter-autocomplete name="country" placeholder="Select a country"}}
 		</div>
   </div>
+  {{/if}}
+
   {{#each (searchFiltersSections type)}}
     {{#each fieldNameKeys}}
-      <div class="search-filter-list-item">
-    		<div class="filter-label">
-    			<label>{{searchFilterLabel ../../type this}}</label>
-    		</div>
-    		<div class="filter-input">
-    			<ul class="unstyled-list keys-list js-keys-list" data-field-name="{{this}}">
-            {{#each (getOptionsForFilterKeyNew this)}}
-              <li>
-                <input
-                  type="checkbox"
-                  data-field-name="{{../this}}"
-                  data-section-key="{{../sectionKey}}"
-                  name="{{key}}"
-                  id="{{../this}}[{{key}}]"
-                  >
-                <label for="{{../this}}[{{key}}]">{{value}}</label>
-              </li>
-            {{/each}}
-          </ul>
-          <div class="filter-show-all-container">
-            <button
-              class="filter-list-item-show-all-btn js-filter-list-item-show-all-btn"
-              type="button"
-              data-list-key="{{this}}"
-            >
-              Show all
-            </button>
-          </div>
-    		</div>
-      </div>
+      {{#if (isSearchFilterCheckboxSelection this)}}
+        <div class="search-filter-list-item">
+      		<div class="filter-label">
+      			<label>{{searchFilterLabel ../../type this}}</label>
+      		</div>
+          {{#> accordion-show-all key=(getRandomKey)}}
+            <div class="accordion-summary-content keys-list js-keys-list" data-field-name="{{../this}}">
+              {{#each (getOptionsForFilterKey ../this true)}}
+                {{> search-filter-key-list-item fieldName=../../this sectionKey=../sectionKey key=key value=value}}
+              {{/each}}
+            </div>
+
+            <div class="accordion-full-content unstyled-list keys-list js-keys-list" data-field-name="{{../this}}">
+              {{#each (getOptionsForFilterKey ../this false)}}
+                {{> search-filter-key-list-item fieldName=../../this sectionKey=../sectionKey key=key value=value}}
+              {{/each}}
+            </div>
+          {{/accordion-show-all}}
+        </div>
+      {{/if}}
     {{/each}}
   {{/each}}
 </form>

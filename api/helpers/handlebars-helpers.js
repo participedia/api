@@ -1230,34 +1230,28 @@ module.exports = {
     return newData;
   },
 
-  // TODO: Remove this after new search filter
-  getOptionsForFilterKey(name, context) {
-    if (name === "country") {
-      return countries.map(item => {
-        return {
-          key: item.value,
-          value: i18n(item.value, context),
-        };
-      });
-    } else {
-      return sharedFieldOptions[name].map(key => {
-        return {
-          key: key,
-          value: i18n(`name:${name}-key:${key}`, context),
-        };
-      });
-    }
+  getCountryFilterKey(context) {
+    return countries.map(item => {
+      return {
+        key: item.value,
+        value: i18n(item.value, context),
+      };
+    });
   },
 
-  // TODO: Rename this after new search filter
-  getOptionsForFilterKeyNew(name, context) {
+  getOptionsForFilterKey(name, isInitialDisplay, context) {
     if (name !== "country") {
-      return sharedFieldOptions[name].map(key => {
+      let items = sharedFieldOptions[name].map(key => {
         return {
           key: key,
           value: i18n(`name:${name}-key:${key}`, context),
         };
       });
+      
+      if (isInitialDisplay) {
+        return items.slice(0,4);
+      }
+      return items.slice(4);
     }
   },
 
@@ -1298,5 +1292,29 @@ module.exports = {
 
   getSelectedCategory(req) {
     return req.query.selectedCategory || null;
+  },
+
+  // Helper to identify if filter key will display as checkbox;
+  isSearchFilterCheckboxSelection(key) {
+    const excludedFilterKeys = ["country"];
+
+    if(excludedFilterKeys.indexOf(key) >= 0) {
+      return false;
+    }
+
+    return true;
+  },
+
+  showCountryAutoComplete(category) {
+    const allowedCategories = ["case", "organizations"];
+    if (allowedCategories.indexOf(category) >= 0) return true;
+    return false;
+  },
+
+  includeSearchFilters(req) {
+    const category = req.query.selectedCategory || null;
+    const allowedCategories = ["case", "organizations", "method"];
+    if (allowedCategories.indexOf(category) >= 0) return true;
+    return false;
   }
 };

@@ -3,7 +3,7 @@ import {
   updateUrlParams,
   removeUrlParams,
 } from "./utils/utils.js";
-import searchFilterModal from "./search-filter-modal.js";
+import modal from "./modal.js";
 
 const tabsWithCards = {
   init() {
@@ -25,9 +25,20 @@ const tabsWithCards = {
 
     // More Filters Button
     const moreFilterBtnEl = document.querySelector(".js-tab-buttons-button-filter");
-    moreFilterBtnEl.addEventListener("click", event => {
-      this.openMoreFilterModal();
-    });;
+    if (moreFilterBtnEl) {
+      moreFilterBtnEl.addEventListener("click", event => {
+        this.openSearchFilterModal();
+      });
+    }
+    
+    const openFilter = getValueForParam("openFilters");
+    if (openFilter == "1") {
+      this.openSearchFilterModal();
+    }
+  },
+
+  openSearchFilterModal() {
+    modal.openModal("search-filter-modal", {showCloseBtn: true});
   },
 
   navigateToTab(category) {
@@ -107,11 +118,7 @@ const tabsWithCards = {
         this.viewEl.setAttribute("data-card-layout", type);
       }
     });
-  },
-
-  openMoreFilterModal() {
-    searchFilterModal.openModal("search-filter-modal");
-  },
+  }
 };
 
 export default tabsWithCards;

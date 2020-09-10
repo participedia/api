@@ -1,9 +1,9 @@
 <input
   type="text"
-  class="js-search-filter-autocomplete"
+  class="search-filter-autocomplete js-search-filter-autocomplete"
   data-name="{{name}}"
   value=""
-  placeholder="Select {{name}}"
+  placeholder="{{t placeholder}}"
   autocomplete="{{name}}"
 />
 
@@ -15,7 +15,7 @@
 </script>
 
 <ul class="js-search-filter-autocomplete-options-{{name}}" style="display: none;">
-  {{#each (getOptionsForFilterKey "country")}}
+  {{#each (getCountryFilterKey)}}
   <li data-key="{{key}}">{{value}}</li>
   {{/each}}
 </ul>
