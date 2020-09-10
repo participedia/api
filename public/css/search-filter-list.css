@@ -1,4 +1,45 @@
+#search-filter-modal {
+  overflow: unset;
+  width: 60%;
+}
+
+#search-filter-modal .aria-modal-document {
+  max-height: calc(100vh - 3.5rem);
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+}
+
+#search-filter-modal .aria-modal-document .aria-modal-header,
 #search-filter-modal .aria-modal-document .aria-modal-footer {
+  padding: 20px;
+}
+
+#search-filter-modal .aria-modal-document .aria-modal-content {
+  padding-left: 20px;
+  margin-right: 20px;
+  overflow-y: scroll;
+}
+
+#search-filter-modal .aria-modal-document .aria-modal-content::-webkit-scrollbar {
+  width: 8px;
+  border: none;
+}
+#search-filter-modal .aria-modal-document .aria-modal-content::-webkit-scrollbar-track {
+  
+}
+::-webkit-scrollbar-thumb {
+  background: #e6e6e6;
+  border-radius: 5px;
+  transition: all 0.5s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #808080;
+  transition: all 0.5s;
+}
+
+#search-filter-modal .aria-modal-document .aria-modal-footer {
+  border-top: 1px solid #e6e6e6;
   display: flex !important;
   justify-content: space-between;
 }
@@ -7,6 +48,11 @@
   background: none;
   border: none;
   text-decoration: underline;
+}
+
+#search-filter-modal .aria-modal-document .is-icon-btn {
+  right: 45px;
+  top: 28px;
 }
 
 .search-filter-list .search-filter-list-item {
@@ -59,6 +105,10 @@
   float: left;
 }
 
+.search-filter-list .search-filter-list-item .search-filter-autocomplete {
+  width: 60%;
+}
+
 .keys-list label {
   float: left;
   width: 90%;
@@ -67,5 +117,12 @@
 @media (max-width: 800px) {
   .keys-list label {
     width: 85%;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  #search-filter-modal,
+  .search-filter-list .search-filter-list-item .search-filter-autocomplete {
+    width: 90%;
   }
 }
