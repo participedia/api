@@ -17,16 +17,16 @@
       		<div class="filter-label">
       			<label>{{searchFilterLabel ../../type this}}</label>
       		</div>
-          {{#> accordion-show-all key=(getRandomKey)}}
+          {{#> accordion-show-all key=this}}
             <div class="accordion-summary-content keys-list js-keys-list" data-field-name="{{../this}}">
               {{#each (getOptionsForFilterKey ../this true)}}
-                {{> search-filter-key-list-item fieldName=../../this sectionKey=../sectionKey key=key value=value}}
+                {{> search-filter-key-list-item fieldName=../../this sectionKey="summary" key=key value=value}}
               {{/each}}
             </div>
 
             <div class="accordion-full-content unstyled-list keys-list js-keys-list" data-field-name="{{../this}}">
               {{#each (getOptionsForFilterKey ../this false)}}
-                {{> search-filter-key-list-item fieldName=../../this sectionKey=../sectionKey key=key value=value}}
+                {{> search-filter-key-list-item fieldName=../../this sectionKey="full" key=key value=value}}
               {{/each}}
             </div>
           {{/accordion-show-all}}
