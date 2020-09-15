@@ -96,10 +96,9 @@ const searchFilterList = {
          
           // If selected filter is inside of dropdown, 
           // then open the dropdown
-          const sectionKey = input.getAttribute("data-section-key");
           const fieldName = input.getAttribute("data-field-name");
-          if (sectionKey == "full") {
-            const showAllInputEl = document.getElementById(`${fieldName}-accordion`);
+          if (input.getAttribute("data-section-key") == "full") {
+            let showAllInputEl = document.getElementById(`${fieldName}-accordion`);
             showAllInputEl.checked = true;
           }
 
