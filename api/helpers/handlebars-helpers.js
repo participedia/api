@@ -207,6 +207,15 @@ module.exports = {
     });
   },
 
+  featuredCarouselPhrases: (context) => {
+    return JSON.stringify({
+      View_Case: i18n("View Case", context),
+      View_Method: i18n("View Method", context),
+      View_Organization: i18n("View_Organization", context),
+      View_Collection: i18n("View Collection", context)
+    });
+  },
+
   placeholder: (article, name, context) => {
     const view = context.data.root.params.view;
     return i18n(`${article.type}_${view}_${name}_placeholder`, context);

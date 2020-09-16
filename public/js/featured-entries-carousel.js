@@ -3,6 +3,11 @@ const featuredEntriesCarousel = {
     const carouselEls = document.querySelectorAll(
       ".js-featured-entries-carousel"
     );
+
+    if (!carouselEls) return null;
+
+    this.i18n = JSON.parse(carouselEls[0].getAttribute("data-phrases"));
+
     for (let index = 0; index < carouselEls.length; index++) {
       this.initCarousel(carouselEls[index]);
     }
@@ -18,6 +23,9 @@ const featuredEntriesCarousel = {
     
     // preload entry images
     entries.forEach(entry => this.preloadImage(entry.photos[0].url));
+
+    // update initial entry
+    this.updateEntry(carouselEl, entries[0], 1);
 
     const leftArrow = carouselEl.querySelector(
       ".js-featured-entries-carousel__navigation-left-arrow"
@@ -69,11 +77,34 @@ const featuredEntriesCarousel = {
     const entryLinkEl = carouselEl.querySelector(
       ".js-featured-entries-carousel__view-entry-link"
     );
+    const typeEl = carouselEl.querySelector(
+      ".js-featured-entries-carousel__type"
+    );
+    const viewAllLinkEl = carouselEl.querySelector(
+      ".js-featured-entries-carousel__view-all-link"
+    );
+
+    const viewEntryText = {
+      case: this.i18n.View_Case,
+      method: this.i18n.View_Method,
+      organization: this.i18n.View_Organization,
+      collection: this.i18n.View_Collection,
+    };
+
+    const viewAllLink = {
+      case: "/search",
+      method: "/search",
+      organization: "/search",
+      collection: "/search?selectedCategory=collections",
+    };
   
     imageEl.style.backgroundImage = `url(${entry.photos[0].url})`;
     titleEl.innerText = entry.title;
     descriptionEl.innerText = entry.description;
     entryLinkEl.setAttribute("href", entryUrl(entry));
+    viewAllLinkEl.setAttribute("href", viewAllLink[entry.type]);  
+    entryLinkEl.innerText = viewEntryText[entry.type] + " ->";
+    typeEl.innerText = entry.type;
     carouselEl.setAttribute("data-index", nextIndex);    
   },
 };

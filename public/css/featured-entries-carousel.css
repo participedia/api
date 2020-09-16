@@ -42,3 +42,9 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.featured-entries-carousel__type {
+  margin: 0;
+  font-weight: normal;
+  text-transform: uppercase;
+}    
