@@ -8,9 +8,16 @@ const featuredEntriesCarousel = {
     }
   },
 
+  preloadImage(url) {
+    const img = new Image();
+    img.src = url;
+  },
+
   initCarousel(carouselEl) {
     const entries = JSON.parse(carouselEl.getAttribute("data-entries"));
-    // todo: lazy load other images in the background
+    
+    // preload entry images
+    entries.forEach(entry => this.preloadImage(entry.photos[0].url));
 
     const leftArrow = carouselEl.querySelector(
       ".js-featured-entries-carousel__navigation-left-arrow"
