@@ -95,10 +95,7 @@ const map = {
 
     this.initZoomControls(this.map);
     this.fetchMapResults();
-    console.log("mapEl", mapEl)
-    console.log('mapEl.getAttribute("data-i18n")', mapEl.getAttribute("data-i18n"))
-    const i18nPhrases = mapEl.getAttribute("data-i18n");
-    this.i18n = {} //JSON.parse(mapEl.getAttribute("data-i18n"));
+    this.i18n = JSON.parse(mapEl.getAttribute("data-i18n"));
   },
 
   initZoomControls(map) {
@@ -256,9 +253,9 @@ const map = {
         articleTypeEl.innerHTML = {
           case: this.i18n["Featured_Case"],
           method: this.i18n["Featured_Method"],
-        }[type];
+        }[marker.type];
       } else {
-        articleTypeEl.innerHTML = this.i18n[type];
+        articleTypeEl.innerHTML = this.i18n[marker.type];
       }
 
       // update image
