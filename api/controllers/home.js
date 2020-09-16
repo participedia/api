@@ -325,17 +325,6 @@ const data = {
       ],
     },
   ],
-  blogPosts: [
-    {
-      id: "",
-      title: "",
-      author: "",
-      createdAt: 1568911370000,
-      description: "",
-      url: "",
-      imageUrl: "",
-    },
-  ],
 };
 
 router.get("/", async function(req, res) {
