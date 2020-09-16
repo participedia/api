@@ -12,7 +12,32 @@ document.addEventListener("DOMContentLoaded", () => {
   blogPosts.init();
   featuredEntriesCarousel.init();
   initSearchForm();
+  initStatsAnimations();
 });
+
+function initStatsAnimations() {
+  const statsEls = toArray(document.querySelectorAll(".js-home-hero-stats__stat-number"));
+  
+  if (!statsEls) return;
+  
+  function startAnimation(el) {
+    const number = parseInt(el.innerHTML, 10);
+    
+    function tick(el, number) {
+      el.innerText = number;
+    }
+
+    let i = 0;
+    setInterval(() => {
+      if (i <= number) {
+        tick(el, i);
+        i++;
+      }
+    }, 1);
+  }
+
+  statsEls.forEach(el => startAnimation(el));
+}
 
 function initSearchForm() {
   const searchFormEl = document.querySelector(".js-home-hero-search__form");
