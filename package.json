@@ -23,6 +23,7 @@
     "compression": "^1.6.2",
     "connect-pg-simple": "^6.0.1",
     "cookie-parser": "^1.4.3",
+    "countup.js": "^2.0.7",
     "dotenv": "^4.0.0",
     "errorhandler": "^1.5.0",
     "express": "^4.16.0",

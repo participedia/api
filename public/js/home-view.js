@@ -3,6 +3,8 @@ import bannerNotice from "./banner-notice.js";
 import editSelect from "./edit-select.js";
 import blogPosts from "./blog-posts.js";
 import featuredEntriesCarousel from "./featured-entries-carousel.js";
+import easingFunctions from "./utils/easing-functions.js";
+import { CountUp } from 'countup.js';
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
@@ -22,20 +24,15 @@ function initStatsAnimations() {
   
   function startAnimation(el) {
     const number = parseInt(el.innerHTML, 10);
-    
-    function tick(el, number) {
-      el.innerText = number;
-    }
-
-    let i = 0;
-    setInterval(() => {
-      if (i <= number) {
-        tick(el, i);
-        i++;
-      }
-    }, 1);
+    const countUpOptions = { 
+      useEasing: true, 
+      duration: 3, 
+      useGrouping: false, 
+      easingFn: easingFunctions.easeOutExpo,
+    };
+    const countUp = new CountUp(el.id, number, countUpOptions);
+    countUp.start();
   }
-
   statsEls.forEach(el => startAnimation(el));
 }
 
