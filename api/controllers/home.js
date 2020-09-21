@@ -2,6 +2,51 @@
 let express = require("express");
 let router = express.Router();
 const logError = require("../helpers/log-error.js");
+const homepageData = {
+  stats: {
+    cases: 0, // (total entries)
+    methods: 0, // (total entries)
+    organizations: 0, // (total entries)
+    countries: 0, // (number of unique countries represented between cases and orgs)
+    contributors: 0, // (number of unique users who have created or edited an entry)
+  },
+  featuredCollections: [
+    {
+      id: 6499,
+      type: "collection",
+      title: "Covid-19 Response",
+      description:
+        "This collection includes diverse forms of public participation that address the Covid-19 pandemic, ranging from protests & volunteering to hackathons & distributed computing. These entries are crowdsourced and collaboratively written by Participedia’s community of wiki contributors.",
+      photos: [
+        {
+          url:
+            "https://s3.amazonaws.com/participedia.prod/6a03edfd-9869-4e3e-aaf8-2ef707a4c89f",
+          source_url: "",
+          attribution: "",
+          title: "NicoloCampo-GettyImages-viaBBC.jpg",
+        },
+      ],
+    },
+  ],
+  featuredCasesMethodsOrgs: [
+    {
+      id: 5515,
+      type: "case",
+      title: "Advancing Women’s Rights in Nicaragua’s Farming Cooperatives",
+      description:
+        "A gender audit of the National Federation of Cooperatives found women in Nicaragua lacked access to land. Reforms of the association and the development of a Women’s Land Fund increased women’s representation and participation.",
+      photos: [
+        {
+          url:
+            "https://s3.amazonaws.com/participedia.prod/3fe9ac66-d298-4721-88ee-eac81f55453f_coffee-women-MAIN.jpg",
+          source_url: "http://bit.ly/2CZZ1tU",
+          attribution: "Simon Rawles/Getty Images",
+          title: "",
+        },
+      ],
+    },
+  ],
+};
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -325,6 +370,7 @@ const data = {
       ],
     },
   ],
+  homepageData: homepageData
 };
 
 router.get("/", async function(req, res) {
