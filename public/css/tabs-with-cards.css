@@ -236,6 +236,13 @@
 [data-card-layout="list"] .toggle-list-layout-btn .icon-fill {
   fill: #EC2024;
 }
+.download-csv-btn svg .icon-fill {
+  fill: white;
+}
+.download-csv-btn svg {
+  background: #808080;
+  height: 20px;
+}
 
 /* pagination */
 .pagination {
