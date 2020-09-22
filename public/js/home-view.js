@@ -4,7 +4,7 @@ import editSelect from "./edit-select.js";
 import blogPosts from "./blog-posts.js";
 import featuredEntriesCarousel from "./featured-entries-carousel.js";
 import easingFunctions from "./utils/easing-functions.js";
-import { CountUp } from 'countup.js';
+import { CountUp } from "countup.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
@@ -18,16 +18,18 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initStatsAnimations() {
-  const statsEls = toArray(document.querySelectorAll(".js-home-hero-stats__stat-number"));
-  
+  const statsEls = toArray(
+    document.querySelectorAll(".js-home-hero-stats__stat-number")
+  );
+
   if (!statsEls) return;
-  
+
   function startAnimation(el) {
     const number = parseInt(el.innerHTML, 10);
-    const countUpOptions = { 
-      useEasing: true, 
-      duration: 3, 
-      useGrouping: false, 
+    const countUpOptions = {
+      useEasing: true,
+      duration: 3,
+      useGrouping: false,
       easingFn: easingFunctions.easeOutExpo,
     };
     const countUp = new CountUp(el.id, number, countUpOptions);
