@@ -64,7 +64,7 @@ async function getTotalCountries() {
   return total;
 }
 
-async function geTotalContributors() {
+async function getTotalContributors() {
   const results = await db.any("SELECT user_id FROM authors GROUP BY user_id");
   let total = 0;
   if (results && results.length) {
@@ -78,7 +78,7 @@ router.get("/", async function(req, res) {
   const language = req.cookies.locale || "en";
   const thingStatsResult = await getThingStatistic();
   const totalCounties = await getTotalCountries();
-  const totalContributors = await geTotalContributors();
+  const totalContributors = await getTotalContributors();
 
   // Collect Statistics
   const stats = {
