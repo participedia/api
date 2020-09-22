@@ -1,0 +1,1 @@
+SELECT * FROM collections WHERE featured = true ORDER BY post_date DESC LIMIT 3;
