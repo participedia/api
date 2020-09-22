@@ -4,14 +4,20 @@ let router = express.Router();
 const logError = require("../helpers/log-error.js");
 let { db, FEATURED_COLLECTION, FEATURED } = require("../helpers/db");
 
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
+function shuffle(array) {
+  const shuffledArray = array.slice();
+  console.log("shuffledArray[0].entryUrl", shuffledArray[0].entryUrl)
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
 }
 
-function getRandomHeroFeature() {
-  const heroFeatures = [
+function getHeroFeature() {
+  return shuffle([
     {
-      imageCredit: "unknown",
+      imageCredit: "Unknown",
       imageUrl:
         "https://s3.amazonaws.com/participedia.prod/ee8da85d-d17e-4bfb-a500-0fc2e3dfd72a-In%20the%20Participatory%20Community%20Boards%20the%20plans%20presented%20by%20the%20Housing%20Institute%20are%20shaped.",
       entryTitle:
@@ -19,7 +25,7 @@ function getRandomHeroFeature() {
       entryUrl: "/case/5988",
     },
     {
-      imageCredit: "unknown",
+      imageCredit: "Unknown",
       imageUrl:
         "https://s3.amazonaws.com/participedia.prod/b5294e0a-e875-4ece-afe1-a242f851a5c3",
       entryTitle:
@@ -29,14 +35,11 @@ function getRandomHeroFeature() {
     {
       imageCredit: "Max Bender",
       imageUrl:
-        "https://s3.amazonaws.com/participedia.prod/d117cf067-9b0b-4d80-bc38-aee5b8553c8c",
+        "https://s3.amazonaws.com/participedia.prod/d97cf067-9b0b-4d80-bc38-aee5b8553c8c",
       entryTitle: "George Floyd Protests",
       entryUrl: "/case/6590",
     },
-  ];
-
-  const randomIndex = getRandomInt(heroFeatures.length);
-  return heroFeatures[0];
+  ])[0];
 }
 
 async function getThingStatistic() {
@@ -79,6 +82,7 @@ router.get("/", async function(req, res) {
   const thingStatsResult = await getThingStatistic();
   const totalCounties = await getTotalCountries();
   const totalContributors = await getTotalContributors();
+  const heroFeature = getHeroFeature();
 
   // Collect Statistics
   const stats = {
@@ -105,12 +109,12 @@ router.get("/", async function(req, res) {
     offset: 1
   });
 
-  // Populate respose data
+  // Populate response data
   const data = {
     featuredCasesMethodsOrgs: featuredCasesMethodsOrgs,
     featuredCollections: featuredCollections,
     stats: stats,
-    heroFeature: getRandomHeroFeature()
+    heroFeature: heroFeature
   };
 
   switch (returnType) {
