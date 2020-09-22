@@ -22,7 +22,11 @@ const featuredEntriesCarousel = {
     const entries = JSON.parse(carouselEl.getAttribute("data-entries"));
     
     // preload entry images
-    entries.forEach(entry => this.preloadImage(entry.photos[0].url));
+    entries.forEach(entry => {
+      if (entry.photos && entry.photos.length > 0) {
+        this.preloadImage(entry.photos[0].url);
+      }
+    });
 
     // update initial entry
     this.updateEntry(carouselEl, entries[0], 1);
@@ -97,8 +101,10 @@ const featuredEntriesCarousel = {
       organization: "/search",
       collection: "/search?selectedCategory=collections",
     };
-  
-    imageEl.style.backgroundImage = `url(${entry.photos[0].url})`;
+    
+    if (entry.photos && entry.photos.length > 0) {
+      imageEl.style.backgroundImage = `url(${entry.photos[0].url})`;
+    }
     titleEl.innerText = entry.title;
     descriptionEl.innerText = entry.description;
     entryLinkEl.setAttribute("href", entryUrl(entry));
