@@ -18,6 +18,45 @@ const featuredEntriesCarousel = {
     img.src = url;
   },
 
+  renderDotNavigation(carouselEl, entries) {
+    //set up dot nav
+    const dotNavItemClasses = [
+      "featured-entries-carousel__dots-nav-item",
+      "js-featured-entries-carousel__dots-nav-item"
+    ];
+    let dotNavContainerEl = carouselEl.querySelector(
+      ".js-featured-entries-carousel__dots-nav"
+    );
+
+    // for each entry, render a dotNavItem
+    entries.forEach((entry, index) => {
+      const dotNavItem = document.createElement("a");
+      dotNavItem.setAttribute("href", "#");
+      dotNavItem.setAttribute("data-index", index);
+      
+      // set first item as index initially
+      if (index === 0) {
+        dotNavItem.classList.add("featured-entries-carousel__dots-nav-item--current")
+      }
+
+      dotNavItemClasses.forEach(c => dotNavItem.classList.add(c));
+      dotNavContainerEl.appendChild(dotNavItem);
+    });
+
+    // set click handlers
+    dotNavContainerEl.addEventListener("click", e => {
+      if (e.target.classList.contains("js-featured-entries-carousel__dots-nav-item")) {
+        e.preventDefault();
+        console.log("clicked dot");
+        // TODO: navigate to entry in carousel
+        // TODO: set new current
+      }
+    });
+
+    // TODO: on navigation, left or right, set current index on dots
+    
+  },
+
   initCarousel(carouselEl) {
     const entries = JSON.parse(carouselEl.getAttribute("data-entries"));
     
@@ -27,6 +66,9 @@ const featuredEntriesCarousel = {
         this.preloadImage(entry.photos[0].url);
       }
     });
+
+    // render dots and attach click handlers
+    this.renderDotNavigation(carouselEl, entries);
 
     // update initial entry
     this.updateEntry(carouselEl, entries[0], 1);
@@ -101,17 +143,17 @@ const featuredEntriesCarousel = {
       organization: "/search",
       collection: "/search?selectedCategory=collections",
     };
-    
+
     if (entry.photos && entry.photos.length > 0) {
       imageEl.style.backgroundImage = `url(${entry.photos[0].url})`;
     }
     titleEl.innerText = entry.title;
     descriptionEl.innerText = entry.description;
     entryLinkEl.setAttribute("href", entryUrl(entry));
-    viewAllLinkEl.setAttribute("href", viewAllLink[entry.type]);  
+    viewAllLinkEl.setAttribute("href", viewAllLink[entry.type]);
     entryLinkEl.innerText = viewEntryText[entry.type] + " ->";
     typeEl.innerText = entry.type;
-    carouselEl.setAttribute("data-index", nextIndex);    
+    carouselEl.setAttribute("data-index", nextIndex);
   },
 };
 
