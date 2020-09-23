@@ -59,18 +59,6 @@
   display: none;
 }
 
-/* add vertical divider before collections tab on home page */
-.tab-container-item-divider--collections {
-  content: '';
-  width: 1px;
-  display: inline-block;
-  height: 2rem;
-  border-left: 1px solid #E6E6E6;
-  padding-left: 1rem;
-  margin-left: 1rem;
-  margin-bottom: -.5rem;
-}
-
 .tab-container-label:hover,
 .tab-container-label--collections:hover,
 .tab-container-label--collections:active,
