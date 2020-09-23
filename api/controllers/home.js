@@ -17,7 +17,7 @@ function shuffle(array) {
 function getHeroFeature() {
   return shuffle([
     {
-      imageCredit: "Unknown",
+      imageCredit: "Housing Institute of Buenos Aires",
       imageUrl:
         "https://s3.amazonaws.com/participedia.prod/ee8da85d-d17e-4bfb-a500-0fc2e3dfd72a-In%20the%20Participatory%20Community%20Boards%20the%20plans%20presented%20by%20the%20Housing%20Institute%20are%20shaped.",
       entryTitle:
@@ -25,7 +25,7 @@ function getHeroFeature() {
       entryUrl: "/case/5988",
     },
     {
-      imageCredit: "Unknown",
+      imageCredit: "Research Team, University of the Western Cape: Professor Laurence Piper, Robyn Pasensie and Sondre Bailey",
       imageUrl:
         "https://s3.amazonaws.com/participedia.prod/b5294e0a-e875-4ece-afe1-a242f851a5c3",
       entryTitle:
