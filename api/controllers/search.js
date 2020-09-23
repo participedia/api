@@ -281,7 +281,7 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
         });
       case "csv":
         var entries = [];
-        if (type === "thing") {
+        if (type !== "thing") {
           entries = results.map(article => {
             return {
               "id": article.id,

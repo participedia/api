@@ -192,7 +192,7 @@ function convertToIdTitleUrlFields(entry, field) {
 async function createCSVDataDump(type, results = []) {
   var entries = results;
 
-  if (type !== 'thing') {
+  if (type === 'thing') {
     entries = await db.many(LIST_ARTICLES, {
       type: type + "s",
       lang: "en",
