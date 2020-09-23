@@ -67,6 +67,7 @@ async function getTotalCountries() {
   return total;
 }
 
+
 async function getTotalContributors() {
   const results = await db.any("SELECT user_id FROM authors GROUP BY user_id");
   let total = 0;
@@ -74,6 +75,17 @@ async function getTotalContributors() {
     total = parseInt(results.length);
   }
   return total;
+}
+
+function addTextureImageIfNeeded(entries) {
+  // add a texture placeholder if there are no images for an entry
+  return entries.map(entry => {
+    const newEntry = Object.assign(entry, {});
+    if (newEntry.photos && newEntry.photos.length < 1) {
+      newEntry.photos = [{ url: "/images/texture_3.svg" }];
+    }
+    return newEntry;
+  });
 }
 
 router.get("/", async function(req, res) {
@@ -93,13 +105,8 @@ router.get("/", async function(req, res) {
     contributors: totalContributors, // (number of unique users who have created or edited an entry)
   };
 
-  // Collect Featured Collections
-  const featuredCollections = await db.any(FEATURED_COLLECTION, {
-    language: language
-  });
-
   // Collect Featured Things
-  const featuredCasesMethodsOrgs = await db.any(FEATURED, {
+  let featuredEntries = await db.any(FEATURED, {
     language: language,
     limit: 7,
     sortby: "post_date",
@@ -108,6 +115,9 @@ router.get("/", async function(req, res) {
     facets: "",
     offset: 1
   });
+  featuredEntries = addTextureImageIfNeeded(featuredEntries);
+  const featuredCollections = featuredEntries.filter(entry => entry.type === "collection");
+  const featuredCasesMethodsOrgs = featuredEntries.filter(entry => entry.type !== "collection");
 
   // Populate response data
   const data = {
