@@ -15,7 +15,21 @@ document.addEventListener("DOMContentLoaded", () => {
   featuredEntriesCarousel.init();
   initSearchForm();
   initStatsAnimations();
+  initHeroUI();
 });
+
+function initHeroUI () {
+  // hero image should be the 
+  // height of the browser window - the height of the header
+  const heroEl = document.querySelector(".js-home-hero");
+  const heroOverlayEl = document.querySelector(".js-home-hero-overlay");
+  const heroImageEl = document.querySelector(".js-home-hero-image");
+  const headerEl = document.querySelector(".js-header");
+  const height = window.innerHeight - headerEl.offsetHeight;
+  heroEl.style.height = `${height}px`;
+  heroOverlayEl.style.height = `${height}px`;
+  heroImageEl.style.height = `${height}px`;
+}
 
 function initStatsAnimations() {
   const statsEls = toArray(
