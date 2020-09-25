@@ -53,7 +53,7 @@ const editAutocomplete = {
     return options;
   },
 
-  addSelectedItem(name, item) {
+  addSelectedItem(name, item, limit) {
     const listToAppendToEl = document.querySelector(
       `.js-edit-autocomplete-list[data-name=${name}]`
     );
@@ -100,6 +100,7 @@ const editAutocomplete = {
   initAutocompleteField(autocompleteEl) {
     const options = this.getOptions(autocompleteEl);
     const name = autocompleteEl.getAttribute("data-name");
+    const limit = autocompleteEl.getAttribute("data-limit");
     autocomplete({
       minLength: 1,
       input: autocompleteEl,
@@ -122,7 +123,7 @@ const editAutocomplete = {
       },
       emptyMsg: "No matches found",
       onSelect: item => {
-        this.addSelectedItem(name, item);
+        this.addSelectedItem(name, item, limit);
         // clear autocomplete field
         autocompleteEl.value = "";
       },
