@@ -68,6 +68,15 @@ const editAutocomplete = {
       currentLiEl.querySelector("input").value = item.value;
       currentLiEl.style.display = "flex";
     } else {
+      if (limit > 0) {
+        let currentSelectItemCount = this.getTotalSelectedItems(listToAppendToEl);
+        if (currentSelectItemCount >= limit) {
+          // TODO: Show modal for error
+          console.log('Error. currentSelectItemCount is in the limit');
+          return;
+        }
+      }
+
       // if it's a multi field autocomplete,
       // or if it's the first item getting added, insert a new item
       const template = document.getElementById(
@@ -129,6 +138,18 @@ const editAutocomplete = {
       },
     });
   },
+
+  getTotalSelectedItems(listEl) {
+    const list = listEl.querySelectorAll("li");
+    const count = list.length;
+    let total = 0;
+    for (var i = 0; i < count; i++) {
+      if (list[i].querySelector("input").getAttribute("value")) {
+        total++;
+      }
+    }
+    return total;
+  }
 };
 
 export default editAutocomplete;
