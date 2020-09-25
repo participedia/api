@@ -1,4 +1,5 @@
 import autocomplete from "autocompleter";
+import modal from "./modal.js";
 
 const toArray = nodelist => Array.prototype.slice.call(nodelist);
 
@@ -53,7 +54,7 @@ const editAutocomplete = {
     return options;
   },
 
-  addSelectedItem(name, item, limit) {
+  addSelectedItem(name, item, maxItems) {
     const listToAppendToEl = document.querySelector(
       `.js-edit-autocomplete-list[data-name=${name}]`
     );
@@ -68,11 +69,16 @@ const editAutocomplete = {
       currentLiEl.querySelector("input").value = item.value;
       currentLiEl.style.display = "flex";
     } else {
-      if (limit > 0) {
+      if (maxItems > 0) {
         let currentSelectItemCount = this.getTotalSelectedItems(listToAppendToEl);
-        if (currentSelectItemCount >= limit) {
+        if (currentSelectItemCount >= maxItems) {
           // TODO: Show modal for error
           console.log('Error. currentSelectItemCount is in the limit');
+
+          // insert error text & open modal
+          const errorText = `You can not add more than ${maxItems} items to this field.`;
+          modal.updateModal(errorText);
+          modal.openModal("aria-modal");
           return;
         }
       }
