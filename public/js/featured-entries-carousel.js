@@ -22,7 +22,7 @@ const featuredEntriesCarousel = {
     //set up dot nav
     const dotNavItemClasses = [
       "featured-entries-carousel__dots-nav-item",
-      "js-featured-entries-carousel__dots-nav-item"
+      "js-featured-entries-carousel__dots-nav-item",
     ];
     let dotNavContainerEl = carouselEl.querySelector(
       ".js-featured-entries-carousel__dots-nav"
@@ -33,10 +33,12 @@ const featuredEntriesCarousel = {
       const dotNavItem = document.createElement("a");
       dotNavItem.setAttribute("href", "#");
       dotNavItem.setAttribute("data-index", index);
-      
+
       // set first item as index initially
       if (index === 0) {
-        dotNavItem.classList.add("featured-entries-carousel__dots-nav-item--current")
+        dotNavItem.classList.add(
+          "featured-entries-carousel__dots-nav-item--current"
+        );
       }
 
       dotNavItemClasses.forEach(c => dotNavItem.classList.add(c));
@@ -45,21 +47,41 @@ const featuredEntriesCarousel = {
 
     // set click handlers
     dotNavContainerEl.addEventListener("click", e => {
-      if (e.target.classList.contains("js-featured-entries-carousel__dots-nav-item")) {
+      const dotNavEl = e.target;
+      if (
+        dotNavEl.classList.contains(
+          "js-featured-entries-carousel__dots-nav-item"
+        )
+      ) {
         e.preventDefault();
-        console.log("clicked dot");
-        // TODO: navigate to entry in carousel
-        // TODO: set new current
+        // navigate to entry in carousel
+        const nextIndex = dotNavEl.getAttribute("data-index");
+        this.updateEntry(carouselEl, entries[nextIndex], nextIndex);
+        this.updateDotNav(carouselEl, nextIndex);
       }
     });
+  },
 
-    // TODO: on navigation, left or right, set current index on dots
-    
+  updateDotNav(carouselEl, nextIndex) {
+    // set current index and current class on next index dot
+    const currentClassName =
+      "featured-entries-carousel__dots-nav-item--current";
+    const dotNavContainerEl = carouselEl.querySelector(
+      ".js-featured-entries-carousel__dots-nav"
+    );
+    const nextIndexDotNavEl = dotNavContainerEl.querySelectorAll(
+      ".js-featured-entries-carousel__dots-nav-item"
+    )[nextIndex];
+
+    dotNavContainerEl
+      .querySelector(`.${currentClassName}`)
+      .classList.remove(currentClassName);
+    nextIndexDotNavEl.classList.add(currentClassName);
   },
 
   initCarousel(carouselEl) {
     const entries = JSON.parse(carouselEl.getAttribute("data-entries"));
-    
+
     // preload entry images
     entries.forEach(entry => {
       if (entry.photos && entry.photos.length > 0) {
@@ -90,6 +112,7 @@ const featuredEntriesCarousel = {
         nextIndex = entries.length - 1;
       }
       this.updateEntry(carouselEl, entries[nextIndex], nextIndex);
+      this.updateDotNav(carouselEl, nextIndex);
     });
     rightArrow.addEventListener("click", e => {
       e.preventDefault();
@@ -101,6 +124,7 @@ const featuredEntriesCarousel = {
         nextIndex = 0;
       }
       this.updateEntry(carouselEl, entries[nextIndex], nextIndex);
+      this.updateDotNav(carouselEl, nextIndex);
     });
   },
 
