@@ -1846,5 +1846,6 @@
   "getting-started.editors.key_considerations.p4": "Use the site in your preferred language. All fixed data changes are applied across all languages, and text changes are applied in your language only. Read more about how translations works in the %sFAQs%s",
   "getting-started.p3": "We look forward to welcoming you as a publisher or editor on Participedia.net! Once you get started, you can find all your contributions on your profile page.",
   "getting-started.Looking for more information?": "Looking for more information?",
-  "getting-started.p4": "Read more %sabout Participedia%s, learn more about our %sresearch%s or check out our %steaching resources%s. Answers to other Frequently Asked Questions can be found %shere%s. If you need additional help, please %semail our support team%s."
+  "getting-started.p4": "Read more %sabout Participedia%s, learn more about our %sresearch%s or check out our %steaching resources%s. Answers to other Frequently Asked Questions can be found %shere%s. If you need additional help, please %semail our support team%s.",
+  "Getting Started": "Getting Started"
 }
