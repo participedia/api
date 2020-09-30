@@ -403,7 +403,7 @@
   "Cook Islands": "Cook Islands",
   "Costa Rica": "Costa Rica",
   "country_label": "Country",
-  "Credit": "Credit",
+  "Image credit": "Image credit",
   "Croatia": "Croatia",
   "Cuba": "Cuba",
   "current_password_placeholder": "Current password",

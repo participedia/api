@@ -6,7 +6,6 @@ let { db, FEATURED_COLLECTION, FEATURED } = require("../helpers/db");
 
 function shuffle(array) {
   const shuffledArray = array.slice();
-  console.log("shuffledArray[0].entryUrl", shuffledArray[0].entryUrl)
   for (let i = shuffledArray.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
     [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
@@ -14,7 +13,7 @@ function shuffle(array) {
   return shuffledArray;
 }
 
-function getHeroFeature() {
+function getHeroFeatures() {
   return shuffle([
     {
       imageCredit: "Housing Institute of Buenos Aires",
@@ -39,7 +38,7 @@ function getHeroFeature() {
       entryTitle: "George Floyd Protests",
       entryUrl: "/case/6590",
     },
-  ])[0];
+  ]);
 }
 
 async function getThingStatistic() {
@@ -94,7 +93,7 @@ router.get("/", async function(req, res) {
   const thingStatsResult = await getThingStatistic();
   const totalCounties = await getTotalCountries();
   const totalContributors = await getTotalContributors();
-  const heroFeature = getHeroFeature();
+  const heroFeatures = getHeroFeatures();
 
   // Collect Statistics
   const stats = {
@@ -124,7 +123,7 @@ router.get("/", async function(req, res) {
     featuredCasesMethodsOrgs: featuredCasesMethodsOrgs,
     featuredCollections: featuredCollections,
     stats: stats,
-    heroFeature: heroFeature
+    heroFeatures: heroFeatures
   };
 
   switch (returnType) {

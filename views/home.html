@@ -1,9 +1,9 @@
 <!-- {{> banner-notice }} -->
 
-<div class="home-section home-hero js-home-hero">
+<div class="home-section home-hero js-home-hero" data-hero-features="{{toJSON heroFeatures}}">
   <div
     class="home-hero-image js-home-hero-image"
-    style="background-image: url('{{heroFeature.imageUrl}}')"
+    style="background-image: url('{{heroFeatures.0.imageUrl}}')"
   ></div>
   <div class="home-hero-overlay js-home-hero-overlay"></div>
   <div class="u-inner-container">
@@ -77,14 +77,14 @@
       >
       <a href="/search">{{t "Browse all entries"}}</a>
     </div>
-    <div class="home-hero-image-credit">
+    <div class="home-hero-image-credit js-home-hero-image-credit">
       {{> icon-camera}}
       <a
-        href="{{heroFeature.entryUrl}}"
-        class="home-hero-image-credit__entry-link"
-        >{{heroFeature.entryTitle}}</a
+        href="{{heroFeatures.0.entryUrl}}"
+        class="home-hero-image-credit__entry-link js-home-hero-image-credit__entry-link"
+        >{{heroFeatures.0.entryTitle}}</a
       >
-      <small>{{t "Credit"}}: {{heroFeature.imageCredit}}</small>
+      <small>{{t "Image credit"}}: <span class="js-home-hero-image-credit__credit">{{heroFeatures.0.imageCredit}}</span></small>
     </div>
   </div>
 </div>

@@ -26,6 +26,7 @@
 }
 
 .home-hero-image {
+  background-color: #222;
   position: absolute;
   height: 735px;
   width: 100%;
@@ -35,7 +36,9 @@
 
 .home-hero-overlay {
   position: absolute;
-  background-color: rgba(33,33,33, .5);
+  background-color: rgba(33,33,33);
+  opacity: .5;
+  transition: 1s opacity ease-in;
   height: 735px;
   width: 100%;
   z-index: -1;
@@ -138,6 +141,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   margin-top: 60px;
+  transition: 1s opacity ease-in;
 }
 
 .home-hero-image-credit svg {
