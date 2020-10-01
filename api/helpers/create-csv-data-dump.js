@@ -93,6 +93,7 @@ const orderedCaseFields = [
   "audio_count",
   "evaluation_reports_count",
   "evaluation_links_count",
+  "collections"
 ];
 
 const orderedMethodFields = [
@@ -131,6 +132,7 @@ const orderedMethodFields = [
   "videos_count",
   "links_count",
   "audio_count",
+  "collections"
 ];
 
 const orderedOrganizationFields = [
@@ -170,6 +172,7 @@ const orderedOrganizationFields = [
   "videos_count",
   "links_count",
   "audio_count",
+  "collections"
 ];
 
 const orderedFieldsByType = {
@@ -358,6 +361,15 @@ async function createCSVDataDump(type, results = []) {
       }
     });
 
+    // Add "Collections" column
+    if (editedEntry.collections) {
+      let collections = editedEntry.collections.map(collection => {
+        return collection.title;
+      });
+
+      editedEntry.collections = collections.toString();
+    }
+    
     // reorder fields
     const orderOfFields = orderedFieldsByType[editedEntry.type];
 
