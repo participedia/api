@@ -267,6 +267,22 @@ async function createCSVDataDump(type, results = []) {
       editedEntry[field] = moment(editedEntry[field]).isValid() ? moment(editedEntry[field]).format("YYYY-MM-DD") : "";
     });
 
+    const booleanFields = ["featured", "ongoing", "staff", "volunteers"];
+    booleanFields.forEach(field => {
+      if (editedEntry[field] !== undefined) {
+        editedEntry[field] = editedEntry[field] ? 1 : 0;
+      }
+    });
+
+    const yesOrNoFields = ["legality", "facilitators", "impact_evidence", "formal_evaluation"];
+    yesOrNoFields.forEach(field => {
+      if (editedEntry[field] !== undefined) {
+        if (editedEntry[field] == "yes" || editedEntry[field] == "no") {
+          editedEntry[field] = editedEntry[field] == "yes" ? 1 : 0;
+        }
+      }
+    });
+
     // convert primary_organizer and is_component_of into three new fields (id, title, url)
     if (editedEntry.type === "case") {
       editedEntry = convertToIdTitleUrlFields(editedEntry, "is_component_of");
