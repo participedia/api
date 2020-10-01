@@ -264,7 +264,7 @@ async function createCSVDataDump(type, results = []) {
     // make sure all date fields are in the same format, ISO 8601
     const dateFields = ["post_date", "updated_date", "start_date", "end_date"];
     dateFields.forEach(field => {
-      editedEntry[field] = moment(editedEntry[field]).toISOString();
+      editedEntry[field] = moment(editedEntry[field]).isValid() ? moment(editedEntry[field]).format("YYYY-MM-DD") : "";
     });
 
     // convert primary_organizer and is_component_of into three new fields (id, title, url)
