@@ -174,9 +174,6 @@
   max-width: 50%;
 }
 
-.featured-entries-carousel__inner-container--on-right {
-  flex-direction: row-reverse;
-}
 
 @media (max-height: 800px) {
   .home-hero-header {
@@ -265,26 +262,6 @@
   }
   .home-hero-stats__stat-item h5:last-child {
     padding-right: 0;
-  }
-  .featured-entries-carousel {
-    height: unset;
-  }
-
-  .featured-entries-carousel__inner-container {
-    flex-direction: column;
-  }
-  .featured-entries-carousel__image {
-    height: 188px;
-    width: 100%;
-  }
-  .featured-entries-carousel__content-inner {
-    padding: 30px;
-  }
-  .featured-entries-carousel__content {
-    width: 100%
-  }
-  .featured-entries-carousel__navigation {
-    margin-top: 30px;
   }
   .home-section {
     margin-bottom: 60px;

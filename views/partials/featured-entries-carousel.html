@@ -1,5 +1,9 @@
 <div 
-  class="featured-entries-carousel js-featured-entries-carousel" 
+  class="
+    featured-entries-carousel 
+    js-featured-entries-carousel 
+    js-featured-entries-carousel-{{type}}
+  " 
   data-index="0" 
   data-entries="{{toJSON entries}}" 
   data-phrases="{{featuredCarouselPhrases}}"
@@ -42,17 +46,7 @@
           </div>
         </div>
 
-        <div class="featured-entries-carousel__navigation">
-          <a href="#" class="featured-entries-carousel__navigation-arrow js-featured-entries-carousel__navigation-left-arrow">
-            {{> icon-arrow-left-large}}
-          </a>
-          <div 
-            class="featured-entries-carousel__dots-nav js-featured-entries-carousel__dots-nav"
-          ></div>
-          <a href="#" class="featured-entries-carousel__navigation-arrow js-featured-entries-carousel__navigation-right-arrow">
-            {{> icon-arrow-right-large}}
-          </a>
-        </div>
+        {{> carousel-navigation type=type}}
       </div>
     </div>
   </div>

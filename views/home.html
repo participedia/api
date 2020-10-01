@@ -145,7 +145,11 @@
 </div>
 
 <div class="home-section">
-  {{> featured-entries-carousel entries=featuredCollections title="Featured Collections"}}
+  {{> featured-entries-carousel 
+      entries=featuredCollections 
+      title="Featured Collections" 
+      type="collections"
+    }}
 </div>
 
 <div class="home-section">
@@ -169,6 +173,7 @@
       photoOnRight=true
       entries=featuredCasesMethodsOrgs 
       title="Featured Entries"
+      type="cases-methods-orgs"
   }}
 </div>
 
