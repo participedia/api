@@ -29,6 +29,7 @@ const featuredEntriesCarousel = {
         this.preloadImage(entry.photos[0].url);
       }
     });
+    
     carouselNavigation.init({ 
       numItems: entries.length, 
       el: carouselEl,
