@@ -80,16 +80,20 @@
     </div>
     </div>
     <div class="home-hero-image-credit js-home-hero-image-credit">
-      <div>
+      <div class="home-hero-image-credit__entry-link-container">      
         {{> icon-camera}}
-      </div>
-      
-      <a
-        href="{{heroFeatures.0.entryUrl}}"
-        class="home-hero-image-credit__entry-link js-home-hero-image-credit__entry-link"
-        >{{heroFeatures.0.entryTitle}}</a
-      >
-      <small>{{t "Image credit"}}: <span class="js-home-hero-image-credit__credit">{{heroFeatures.0.imageCredit}}</span></small>
+        <a
+          href="{{heroFeatures.0.entryUrl}}"
+          class="home-hero-image-credit__entry-link js-home-hero-image-credit__entry-link"
+          >{{heroFeatures.0.entryTitle}}</a
+        >
+      </div>      
+      <small>
+        {{t "Image credit"}}: 
+        <span class="js-home-hero-image-credit__credit">
+          {{heroFeatures.0.imageCredit}}
+        </span>
+      </small>
     </div>
   </div>
 </div>
