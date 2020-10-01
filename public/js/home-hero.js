@@ -1,3 +1,5 @@
+import carouselNavigation from "./carousel-navigation.js";
+
 const homeHero = {
   init() {
     this.heroEl = document.querySelector(".js-home-hero");
@@ -26,10 +28,26 @@ const homeHero = {
   },
 
   initSlideshow() {
-    setInterval(() => this.updateHero(), 9000);
+    const slideshowId = setInterval(() => {
+      this.incrementCurrentIndex();
+      carouselNavigation.updateCurrentIndex(this.currentIndex);
+      this.updateHero(this.currentIndex);
+    }, 9000);
+    
+    carouselNavigation.init({ 
+      numItems: this.heroFeatures.length, 
+      shouldShowArrows: false,
+      el: this.heroEl,
+      onChange: index => {
+        if (slideshowId) {
+          clearInterval(slideshowId);
+        }
+        this.updateHero(index);
+      }        
+    });
   },
 
-  updateCurrentIndex() {
+  incrementCurrentIndex() {
     if (this.currentIndex === this.heroFeatures.length - 1) {
       this.currentIndex = 0;
     } else {
@@ -37,13 +55,12 @@ const homeHero = {
     }
   },
 
-  updateHero() {
-    this.updateCurrentIndex();
-
+  updateHero(index) {
+    this.currentIndex = index;
     // set opacity for transition
     this.heroOverlayEl.style.opacity = 1;
     this.heroCreditEl.style.opacity = 0;
-    const newEntry = this.heroFeatures[this.currentIndex];
+    const newEntry = this.heroFeatures[index];
 
     setTimeout(() => {
       // update image
@@ -57,7 +74,7 @@ const homeHero = {
       // fade opacity back up to initial
       this.heroOverlayEl.style.opacity = 0.5;
       this.heroCreditEl.style.opacity = 1;
-    }, 1000);
+    }, 250);
   },
 
   adjustHeight () {

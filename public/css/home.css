@@ -38,7 +38,7 @@
   position: absolute;
   background-color: rgba(33,33,33);
   opacity: .5;
-  transition: 1s opacity ease-in;
+  transition: .25s opacity ease-in;
   height: 735px;
   width: 100%;
   z-index: -1;
@@ -148,8 +148,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 60px 0;
-  transition: 1s opacity ease-in;
+  transition: .25s opacity ease-in;
 }
 
 .home-hero-image-credit svg {
@@ -174,6 +173,19 @@
   max-width: 50%;
 }
 
+.home-hero__carousel-navigation {
+  padding-bottom: 60px;
+  padding-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.home-hero__carousel-navigation .carousel-navigation__dots-nav-item {
+  background-color: #555;
+}
+.home-hero__carousel-navigation .carousel-navigation__dots-nav-item--current {
+  background-color: #fff;
+}
 
 @media (max-height: 800px) {
   .home-hero-header {

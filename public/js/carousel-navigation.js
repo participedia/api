@@ -1,10 +1,9 @@
 const carouselNavigation = {
-  init({ numItems, el, onChange = index => {}}) {
+  init({ numItems, el, shouldShowArrows=true, onChange = index => {}}) {
     this.items = Array.from({ length: numItems });
     this.el = el;
-    console.log("this.el", this.el)
+    this.shouldShowArrows = shouldShowArrows;
     this.dotNavContainerEl = this.el.querySelector(".js-carousel-navigation__dots-nav");
-    console.log("this.dotNavContainerEl.classList",this.dotNavContainerEl.classList)
     this.onChange = onChange;
     this.currentIndex = 0;
 
@@ -16,6 +15,11 @@ const carouselNavigation = {
     this.initArrowNav()
   },
 
+  updateCurrentIndex(index) {
+    this.currentIndex = index;
+    this.updateDotNav();
+  },
+
   initArrowNav() {
     const leftArrow = this.el.querySelector(
       ".js-carousel-navigation__left-arrow"
@@ -24,14 +28,19 @@ const carouselNavigation = {
       ".js-carousel-navigation__right-arrow"
     );
 
-    leftArrow.addEventListener("click", e => {
-      e.preventDefault();
-      this.onArrowClick('previous');
-    });
-    rightArrow.addEventListener("click", e => {
-      e.preventDefault();
-      this.onArrowClick('next');
-    });
+    if (this.shouldShowArrows) {
+      leftArrow.addEventListener("click", e => {
+        e.preventDefault();
+        this.onArrowClick('previous');
+      });
+      rightArrow.addEventListener("click", e => {
+        e.preventDefault();
+        this.onArrowClick('next');
+      });
+    } else {
+      leftArrow.style.display = "none";
+      rightArrow.style.display = "none";
+    }
   },
 
   onArrowClick(direction) {

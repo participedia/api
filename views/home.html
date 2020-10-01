@@ -8,92 +8,97 @@
   <div class="home-hero-overlay js-home-hero-overlay"></div>
   <div class="u-inner-container home-hero-content-inner">
     <div>
-    <h1 class="home-hero-header">
-      {{t "main_tagline"}}
-    </h1>
-    <ul class="unstyled-list home-hero-stats">
-      <li class="home-hero-stats__stat-item">
-        <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--cases">{{stats.cases}}</h5>
-        <h3>{{t "Cases"}}</h3>
-      </li>
-      <li class="home-hero-stats__stat-item">
-        <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--methods">{{stats.methods}}</h5>
-        <h3>{{t "Methods"}}</h3>
-      </li>
-      <li class="home-hero-stats__stat-item">
-        <h5 
-          class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--organizations"
+      <h1 class="home-hero-header">
+        {{t "main_tagline"}}
+      </h1>
+      <ul class="unstyled-list home-hero-stats">
+        <li class="home-hero-stats__stat-item">
+          <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--cases">{{stats.cases}}</h5>
+          <h3>{{t "Cases"}}</h3>
+        </li>
+        <li class="home-hero-stats__stat-item">
+          <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--methods">{{stats.methods}}</h5>
+          <h3>{{t "Methods"}}</h3>
+        </li>
+        <li class="home-hero-stats__stat-item">
+          <h5 
+            class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--organizations"
+          >
+            {{stats.organizations}}
+          </h5>
+          <h3>{{t "Organizations"}}</h3>
+        </li>
+        <li class="home-hero-stats__stat-item">
+          <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--countries">{{stats.countries}}</h5>
+          <h3>{{t "countries"}}</h3>
+        </li>
+        <li class="home-hero-stats__stat-item">
+          <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--contributors">{{stats.contributors}}</h5>
+          <h3>{{t "contributors"}}</h3>
+        </li>
+      </ul>
+      <div class="home-hero-search">
+        <form
+          action="/search"
+          class="home-hero-search__form js-home-hero-search__form"
         >
-          {{stats.organizations}}
-        </h5>
-        <h3>{{t "Organizations"}}</h3>
-      </li>
-      <li class="home-hero-stats__stat-item">
-        <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--countries">{{stats.countries}}</h5>
-        <h3>{{t "countries"}}</h3>
-      </li>
-      <li class="home-hero-stats__stat-item">
-        <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--contributors">{{stats.contributors}}</h5>
-        <h3>{{t "contributors"}}</h3>
-      </li>
-    </ul>
-    <div class="home-hero-search">
-      <form
-        action="/search"
-        class="home-hero-search__form js-home-hero-search__form"
-      >
-        <div class="home-hero-search__form-search-icon-container">
-          {{> icon-search }}
-        </div>
-        <input name="query" type="text" placeholder={{t "Search"}}
-        class="home-hero-search__form-input js-home-hero-search__form-input
-        u-margin-right--xsmall" />
-        <select
-          name="type"
-          class="home-hero-search__edit-select js-edit-select u-margin-right--xsmall"
-          id="js-home-hero-search__edit-select"
-        >
-          <option value="all">
-            {{t "All"}}
-          </option>
-          <option value="case">
-            {{t "Cases"}}
-          </option>
-          <option value="organizations">
-            {{t "Organizations"}}
-          </option>
-          <option value="institution">
-            {{t "Institutions"}}
-          </option>
-          <option value="collections">
-            {{t "Collections"}}
-          </option>
-        </select>
-        <button class="button button-red" type="submit">{{t "Search"}}</button>
-      </form>
-      <a
-        href="/search?selectedCategory=case&openFilters=1"
-        class="home-hero-search__advanced-link"
-        >{{t "Advanced search"}}</a
-      >
-      <a href="/search">{{t "Browse all entries"}}</a>
-    </div>
-    </div>
-    <div class="home-hero-image-credit js-home-hero-image-credit">
-      <div class="home-hero-image-credit__entry-link-container">      
-        {{> icon-camera}}
+          <div class="home-hero-search__form-search-icon-container">
+            {{> icon-search }}
+          </div>
+          <input name="query" type="text" placeholder={{t "Search"}}
+          class="home-hero-search__form-input js-home-hero-search__form-input
+          u-margin-right--xsmall" />
+          <select
+            name="type"
+            class="home-hero-search__edit-select js-edit-select u-margin-right--xsmall"
+            id="js-home-hero-search__edit-select"
+          >
+            <option value="all">
+              {{t "All"}}
+            </option>
+            <option value="case">
+              {{t "Cases"}}
+            </option>
+            <option value="organizations">
+              {{t "Organizations"}}
+            </option>
+            <option value="institution">
+              {{t "Institutions"}}
+            </option>
+            <option value="collections">
+              {{t "Collections"}}
+            </option>
+          </select>
+          <button class="button button-red" type="submit">{{t "Search"}}</button>
+        </form>
         <a
-          href="{{heroFeatures.0.entryUrl}}"
-          class="home-hero-image-credit__entry-link js-home-hero-image-credit__entry-link"
-          >{{heroFeatures.0.entryTitle}}</a
+          href="/search?selectedCategory=case&openFilters=1"
+          class="home-hero-search__advanced-link"
+          >{{t "Advanced search"}}</a
         >
-      </div>      
-      <small>
-        {{t "Image credit"}}: 
-        <span class="js-home-hero-image-credit__credit">
-          {{heroFeatures.0.imageCredit}}
-        </span>
-      </small>
+        <a href="/search">{{t "Browse all entries"}}</a>
+      </div>
+    </div>
+    <div>
+      <div class="home-hero-image-credit js-home-hero-image-credit">
+        <div class="home-hero-image-credit__entry-link-container">      
+          {{> icon-camera}}
+          <a
+            href="{{heroFeatures.0.entryUrl}}"
+            class="home-hero-image-credit__entry-link js-home-hero-image-credit__entry-link"
+            >{{heroFeatures.0.entryTitle}}</a
+          >
+        </div>      
+        <small>
+          {{t "Image credit"}}: 
+          <span class="js-home-hero-image-credit__credit">
+            {{heroFeatures.0.imageCredit}}
+          </span>
+        </small>
+      </div>
+      <div class="home-hero__carousel-navigation">
+        {{> carousel-navigation type="hero"}}
+      </div>
     </div>
   </div>
 </div>

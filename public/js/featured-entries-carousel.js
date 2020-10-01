@@ -6,7 +6,7 @@ const featuredEntriesCarousel = {
       ".js-featured-entries-carousel"
     );
 
-    if (!carouselEls) return null;
+    if (!carouselEls || carouselEls.length === 0) return null;
 
     this.i18n = JSON.parse(carouselEls[0].getAttribute("data-phrases"));
 
