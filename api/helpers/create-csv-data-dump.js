@@ -19,6 +19,19 @@ function sanitizeUserName(name) {
   return editedName;
 }
 
+function generateMultiSelectFieldColumn(field, stringArrayValue) {
+  const items = stringArrayValue.split(",");
+  const length = items.length;
+  let newObj = Object.create({});
+
+  for (let i = 0; i < length; i++) {
+    let count = i + 1;
+    newObj[`${field}_${count}`] = items[i];
+  }
+  
+  return newObj;
+}
+
 const orderedCaseFields = [
   "id",
   "type",
