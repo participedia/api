@@ -78,8 +78,8 @@ h5 {
 }
 small,
 .small {
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.25rem; /* 20px */
+  font-size: 0.875rem;
+  line-height: 1rem;
   font-weight: 300;
 }
 b,

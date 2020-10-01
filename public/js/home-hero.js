@@ -11,6 +11,8 @@ const homeHero = {
     
     this.currentIndex = 0;
 
+    window.addEventListener("resize", () => this.adjustHeight());
+    
     this.adjustHeight();
     this.preloadImages();
     this.initSlideshow();

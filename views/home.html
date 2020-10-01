@@ -6,7 +6,8 @@
     style="background-image: url('{{heroFeatures.0.imageUrl}}')"
   ></div>
   <div class="home-hero-overlay js-home-hero-overlay"></div>
-  <div class="u-inner-container">
+  <div class="u-inner-container home-hero-content-inner">
+    <div>
     <h1 class="home-hero-header">
       {{t "main_tagline"}}
     </h1>
@@ -77,8 +78,12 @@
       >
       <a href="/search">{{t "Browse all entries"}}</a>
     </div>
+    </div>
     <div class="home-hero-image-credit js-home-hero-image-credit">
-      {{> icon-camera}}
+      <div>
+        {{> icon-camera}}
+      </div>
+      
       <a
         href="{{heroFeatures.0.entryUrl}}"
         class="home-hero-image-credit__entry-link js-home-hero-image-credit__entry-link"
