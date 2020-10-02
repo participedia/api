@@ -188,25 +188,6 @@ const orderedOrganizationFields = [
   "collections"
 ];
 
-const multiSelectFields = [
-  "general_issues",
-  "specific_topics",
-  "implementers_of_change",
-  "change_types",
-  "funder_types",
-  "organizer_types",
-  "insights_outcomes",
-  "if_voting",
-  "decision_methods",
-  "learning_resources",
-  "participants_interactions",
-  "tools_techniques_types",
-  "method_types",
-  "targeted_participants",
-  "approaches",
-  "purposes"
-];
-
 const orderedFieldsByType = {
   case: orderedCaseFields,
   method: orderedMethodFields,
@@ -226,6 +207,7 @@ function convertToIdTitleUrlFields(entry, field) {
 
 async function createCSVDataDump(type, results = []) {
   var entries = results;
+  var csvFields = Object.create({});
 
   if (type === 'thing') {
     entries = await db.many(LIST_ARTICLES, {
@@ -407,22 +389,24 @@ async function createCSVDataDump(type, results = []) {
 
     const orderedEntry = {};
     orderOfFields.forEach(field => {
-      if (multiSelectFields.indexOf(field) >= 0) {
+      if (simpleArrayFields.indexOf(field) >= 0) {
           if (editedEntry[field]) {
             let object = generateMultiSelectFieldColumn(field, editedEntry[field]);
             Object.keys(object).forEach(key => {
               orderedEntry[key] = object[key];
+              csvFields[key] = true;
             });
           }
       } else {
         orderedEntry[field] = editedEntry[field];
+        csvFields[field] = true;
       }
     });
 
     return orderedEntry;
   });
 
-  const fields = Object.keys(editedEntries[0]);
+  const fields = Object.keys(csvFields);
 
   const opts = { fields };
 
