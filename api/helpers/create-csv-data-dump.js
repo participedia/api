@@ -188,6 +188,25 @@ const orderedOrganizationFields = [
   "collections"
 ];
 
+const multiSelectFields = [
+  "general_issues",
+  "specific_topics",
+  "implementers_of_change",
+  "change_types",
+  "funder_types",
+  "organizer_types",
+  "insights_outcomes",
+  "if_voting",
+  "decision_methods",
+  "learning_resources",
+  "participants_interactions",
+  "tools_techniques_types",
+  "method_types",
+  "targeted_participants",
+  "approaches",
+  "purposes"
+];
+
 const orderedFieldsByType = {
   case: orderedCaseFields,
   method: orderedMethodFields,
@@ -388,7 +407,16 @@ async function createCSVDataDump(type, results = []) {
 
     const orderedEntry = {};
     orderOfFields.forEach(field => {
-      orderedEntry[field] = editedEntry[field];
+      if (multiSelectFields.indexOf(field) >= 0) {
+          if (editedEntry[field]) {
+            let object = generateMultiSelectFieldColumn(field, editedEntry[field]);
+            Object.keys(object).forEach(key => {
+              orderedEntry[key] = object[key];
+            });
+          }
+      } else {
+        orderedEntry[field] = editedEntry[field];
+      }
     });
 
     return orderedEntry;
