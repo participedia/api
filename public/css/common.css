@@ -273,11 +273,27 @@ pre {
   align-items: center;
 }
 
-.floating-action-button {
+.small-action-button {
   margin: 0;
   border-radius: 2em;
+  box-shadow: 0px 0px 20px 1px #B3B3B3;
+  height: 20px;
+  width: 20px;
+  padding: 0;
+  min-width: unset;
+}
+
+.small-action-button svg {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+}
+
+.floating-action-button {
   position: fixed;
   bottom: 60px;
+  margin: 0;
+  border-radius: 2em;
   box-shadow: 0px 0px 20px 1px #B3B3B3;
   height: 60px;
   width: 60px;
@@ -288,6 +304,10 @@ pre {
   padding: 0;
   width: 16px;
   height: 16px;
+}
+
+.floating-quick-submit-button {
+  display: none;
 }
 
 footer .language-select {
@@ -407,6 +427,10 @@ footer .language-select {
   }
   .full-width-container .right-col {
     width: calc(33% - 20px);
+  }
+  .floating-quick-submit-button {
+    display: flex;
+    right: 30px;
   }
 }
 

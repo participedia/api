@@ -1,5 +1,5 @@
 {{#> static-view-container }}
-<h1>{{t "Getting Started as a Contributor"}}</h1>
+<h1>{{t "Getting Started as a Content Contributor"}}</h1>
 
 <section>
   <h3>
@@ -28,7 +28,15 @@
 <section class="u-margin-bottom--med">
   <h2>{{t "Publishers"}}</h2>
   <p>
-    {{t "getting-started.publishers.p1"}}
+    {{{
+      __
+      "getting-started.publishers.p1"
+      "<a href='/collection/6495'>"
+      "</a>"
+    }}}
+  </p>
+  <p>
+    {{t "getting-started.publishers.p2" }}
   </p>
 
   <h3 class="u-margin-top--small">{{t "Key Considerations for Publishers"}}</h3>
@@ -36,7 +44,17 @@
     <li>
       {{{
         __
+        "getting-started.publishers.key_considerations.p5"
+        "<a href='/help-faq-contact'>"
+        "</a>"
+      }}}
+    </li>
+    <li>
+      {{{
+        __
         "getting-started.publishers.key_considerations.p1"
+        "<strong><i>"
+        "</i></strong>"
         "<a href='/help-faq-contact'>"
         "</a>"
       }}}
@@ -50,30 +68,42 @@
     <li>
       {{t "getting-started.publishers.key_considerations.p4"}}
     </li>
+    <li>{{t "getting-started.publishers.key_considerations.p6"}}</li>
     <li>
       {{{
         __
-        "getting-started.publishers.key_considerations.p5"
-        '<a href="/help-faq-contact">'
+        "getting-started.publishers.key_considerations.p7"
+        "<a href='/content-chooser'>"
         "</a>"
       }}}
+      <a href="/content-chooser" class="button button-red small-action-button" title='{{t "Quick Submit"}}'>
+        <span class="sr-only">{{t "Quick Submit"}}</span>
+        {{> icon-add }}
+      </a>
     </li>
-    <li>{{t "getting-started.publishers.key_considerations.p6"}}</li>
   </ul>
 </section>
 
 <section class="u-margin-bottom--med">
   <h2>Editors</h2>
   <p>
-    {{t "getting-started.editors.p1"}}
+    {{{
+      __
+      "getting-started.editors.p1"
+      "<a href='https://en.wikipedia.org/wiki/Machine_translation' target='_blank' rel='noopener'>"
+      "</a>"
+    }}}
   </p>
-
-  <p>
-    {{t "getting-started.editors.p2"}}
-  </p>
-
   <h3 class="u-margin-top--small">{{t "getting-started.editors.key_considerations"}}</h3>
   <ul>
+    <li>
+      {{{
+        __
+        "getting-started.editors.key_considerations.p0"
+        "<a href='/help-faq-contact'>"
+        "</a>"
+      }}}
+    </li>
     <li>
       {{{
         __
@@ -97,17 +127,25 @@
       {{{
         __
         "getting-started.editors.key_considerations.p4"
-        '<a href="/help-faq-contact">'
+        "<a href='/help-faq-contact'>"
         "</a>"
-       
       }}}
+      <span class="button button-red small-action-button" style="cursor: auto;">
+        <span class="sr-only">{{t "Edit"}}</span>
+        {{> icon-edit }}
+      </span>
     </li>
   </ul>
 </section>
 
 <section>
   <p>
-    {{t "getting-started.p3"}}
+    {{{
+      __
+      "getting-started.p3"
+      "<a href='/profile'>"
+      "</a>"
+    }}}
   </p>
 
   <h2 class="u-margin-top--med">{{t "Looking for more information?"}}</h2>
@@ -115,15 +153,17 @@
     {{{
       __
       "getting-started.p4"
-      '<a href="/about">'
+      "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit?usp=sharing'>"
       "</a>"
-      '<a href="/research">'
+      "<a href='/about'>"
       "</a>"
-      '<a href="/teaching">'
+      "<a href='/research'>"
       "</a>"
-      '<a href="/help-faq-contact">'
+      "<a href='/teachin'>"
+      "</a>"
+      "<a href='/help-faq-contact'>"
       "</a>" 
-      '<a href="mailto: info@participedia.net">'
+      "<a href='mailto: info@participedia.net'>"
       "</a>" 
     }}}
   </p>
