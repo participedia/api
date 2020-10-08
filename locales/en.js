@@ -1865,7 +1865,7 @@
   "Explore Cases & Organizations by Location": "Explore Cases & Organizations by Location",
   "About Participedia": "About Participedia",
   "home.about.p1": "Our mission is to strengthen and mobilize knowledge about participatory democratic innovations throughout the world.",
-  "home.about.p2": "We provide an open source model for crowdsourcing and organizing data about public participation. Its content is generated and used by diverse networks of researchers, educators, practitioners, policymakers, and activist",
+  "home.about.p2": "We provide an open source model for crowdsourcing and organizing data about public participation. Its content is generated and used by diverse networks of researchers, educators, practitioners, policymakers, and activists.",
   "Read more": "Read more",
   "Newsletter": "Newsletter",
   "home.newsletter.p1": "Sign up for our community newsletter! We share the latest information about participatory democratic innovations around the world, stories from our large community of partners and contributors, invitations to upcoming conferences and events, and more.",
