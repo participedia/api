@@ -25,8 +25,7 @@ function generateMultiSelectFieldColumn(field, stringArrayValue) {
   let newObj = Object.create({});
 
   for (let i = 0; i < length; i++) {
-    let count = i + 1;
-    newObj[`${field}_${count}`] = items[i];
+    newObj[`${field}_${i+1}`] = items[i];
   }
   
   return newObj;
@@ -37,8 +36,7 @@ function generateCsvFields(orderFields, multiFieldArray, editedFields) {
   orderFields.forEach(field => {
     if (multiFieldArray.indexOf(field) >= 0) {
       for (let i = 0; i < 5; i++) {
-        let count = i + 1;
-        let multiField = `${field}_${count}`;
+        let multiField = `${field}_${i+1}`;
         if (editedFields.hasOwnProperty(multiField)) {
           csvFields[multiField] = true;
         }
