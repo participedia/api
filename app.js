@@ -160,8 +160,9 @@ passport.deserializeUser(async function(user, done) {
 
 // Perform the login, after login Auth0 will redirect to callback
 app.get("/login", function(req, res, next) {
-  // set returnTo session var to referer so user is redirected to current page after login
-  req.session.returnTo = req.headers.referer;
+  // by default, return user to the referring page
+  // if redirectTo query param is present, redirect there
+  req.session.returnTo = (req.query && req.query.redirectTo) || req.headers.referer;
   req.session.refreshAndClose = req.query.refreshAndClose;
   passport.authenticate(
     "auth0",
@@ -282,6 +283,14 @@ app.get("/help-faq-contact", function(req, res) {
 });
 app.get("/getting-started", function(req, res) {
   res.status(200).render("getting-started-view");
+});
+app.get("/profile", function(req, res) {
+  if (req.user) {
+    res.redirect(`/user/${req.user.id}`);
+  } else {
+    // else, go to sign up page
+    res.redirect("/login?redirectTo=/profile");
+  }
 });
 
 // redirect old user profile for tanyapuravankara to new url
