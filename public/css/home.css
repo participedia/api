@@ -61,16 +61,9 @@
 }
 
 .home-hero-stats__stat-item {
-  border-left: 4px solid #fff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  flex-grow: 1;
-  padding: 45px 15px 30px 15px;
-}
-.home-hero-stats__stat-item:last-child {
-  border-right: 4px solid #fff;
+  padding: 30px 0;
 }
 
 .home-hero-stats__stat-item h5,

@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router();
 const logError = require("../helpers/log-error.js");
-let { db, FEATURED_COLLECTION, FEATURED } = require("../helpers/db");
+let { db, FEATURED } = require("../helpers/db");
 
 function shuffle(array) {
   const shuffledArray = array.slice();
@@ -45,9 +45,10 @@ async function getThingStatistic() {
   const stats = {
     cases: 0,
     methods: 0,
-    organizations: 0
+    organizations: 0,
+    collections: 0
   };
-  const results = await db.any("SELECT type, COUNT(*) as total FROM things WHERE type <> 'collection' GROUP BY type");
+  const results = await db.any("SELECT type, COUNT(*) as total FROM things GROUP BY type");
   results.map(result => {
     let type = `${result.type}s`;
     if (stats.hasOwnProperty(type)) {
@@ -59,16 +60,6 @@ async function getThingStatistic() {
 
 async function getTotalCountries() {
   const results = await db.any("SELECT country FROM things WHERE type IN ('case', 'organization') and country <> '' GROUP BY country");
-  let total = 0;
-  if (results && results.length) {
-    total = parseInt(results.length);
-  }
-  return total;
-}
-
-
-async function getTotalContributors() {
-  const results = await db.any("SELECT user_id FROM authors GROUP BY user_id");
   let total = 0;
   if (results && results.length) {
     total = parseInt(results.length);
@@ -92,7 +83,6 @@ router.get("/", async function(req, res) {
   const language = req.cookies.locale || "en";
   const thingStatsResult = await getThingStatistic();
   const totalCounties = await getTotalCountries();
-  const totalContributors = await getTotalContributors();
   const heroFeatures = getHeroFeatures();
 
   // Collect Statistics
@@ -100,8 +90,8 @@ router.get("/", async function(req, res) {
     cases: thingStatsResult.cases, // (total entries)
     methods: thingStatsResult.methods, // (total entries)
     organizations: thingStatsResult.organizations, // (total entries)
+    collections: thingStatsResult.collections, // (total entries)
     countries: totalCounties, // (number of unique countries represented between cases and orgs)
-    contributors: totalContributors, // (number of unique users who have created or edited an entry)
   };
 
   // Collect Featured Things

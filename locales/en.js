@@ -591,6 +591,7 @@
   "Macao": "Macao",
   "Madagascar": "Madagascar",
   "main_tagline": "A global crowdsourcing platform for researchers, activists, practitioners, and anyone interested in public participation and democratic innovations.",
+  "home_hero_tagline": "A global network and crowdsourcing platform for researchers, educators, practitioners, policymakers, activists, and anyone interested in public participation and democratic innovations",
   "Malawi": "Malawi",
   "Malaysia": "Malaysia",
   "Maldives": "Maldives",
