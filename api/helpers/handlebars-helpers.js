@@ -158,6 +158,11 @@ module.exports = {
   toJSON: obj =>  {
     return JSON.stringify(obj);
   },
+
+  useInspectlet: () => {
+    return process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
+  },
+  
   // transalation helpers
   getLocalizedTermsOfUsePartial: context => {
     const locale = context.data.root.locale || "en";

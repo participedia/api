@@ -241,6 +241,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// if the locale is NOT 'en'
+// and if there is a keyword search query present
+// redirect to search error page 
+// until we can make keyword search work in all languages
+app.use((req, res, next) => {  
+  const hasQuery = req.query && req.query.query;
+  const isEnglish = req.cookies.locale && req.cookies.locale === 'en';
+  if (hasQuery && !isEnglish) {
+    return res.status(200).render("search-error");
+  } 
+  
+  next();
+});
+
 // ROUTES
 app.use("/", home);
 app.use("/search", cache("5 minutes"), search);

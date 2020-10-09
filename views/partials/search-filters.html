@@ -45,7 +45,7 @@
     <div class="unstyled-list filter-list-display js-filter-list-display">
       <div class="case-item">
         {{#each (searchFiltersDisplay req)}}
-          <strong>{{this.labelMetaData.sectionLabel}}:</strong>
+          <strong>{{t this.labelMetaData.sectionKey}}:</strong>
           {{#each (searchFiltersDisplayItems this.valueMetaData.queryValue this.valueMetaData.queryLabel)}}
           <div class="box item-{{key}}">
             <span class="label">{{value}}</span>
