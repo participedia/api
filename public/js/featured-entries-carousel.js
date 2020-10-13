@@ -30,7 +30,8 @@ const featuredEntriesCarousel = {
       }
     });
     
-    carouselNavigation.init({ 
+    const carouselNav = Object.create(carouselNavigation);
+    carouselNav.init({ 
       numItems: entries.length, 
       el: carouselEl,
       onChange: index => {

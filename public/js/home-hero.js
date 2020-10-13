@@ -34,7 +34,8 @@ const homeHero = {
       this.updateHero(this.currentIndex);
     }, 9000);
     
-    carouselNavigation.init({ 
+    const carouselNav = Object.create(carouselNavigation);
+    carouselNav.init({ 
       numItems: this.heroFeatures.length, 
       shouldShowArrows: false,
       el: this.heroEl,
