@@ -69,20 +69,16 @@ const editAutocomplete = {
       currentLiEl.querySelector("input").value = item.value;
       currentLiEl.style.display = "flex";
     } else {
-      // TODO: Validat limit
-      // if (maxItems > 0) {
-      //   let currentSelectItemCount = this.getTotalSelectedItems(listToAppendToEl);
-      //   if (currentSelectItemCount >= maxItems) {
-      //     // TODO: Show modal for error
-      //     console.log('Error. currentSelectItemCount is in the limit');
-
-      //     // insert error text & open modal
-      //     const errorText = `You can not add more than ${maxItems} items to this field.`;
-      //     modal.updateModal(errorText);
-      //     modal.openModal("aria-modal");
-      //     return;
-      //   }
-      // }
+      
+      if (maxItems > 0) {
+        let currentSelectItemCount = this.getTotalSelectedItems(listToAppendToEl);
+        if (currentSelectItemCount >= maxItems) {
+          const errorText = `You can not add more than ${maxItems} items to this field.`;
+          modal.updateModal(errorText);
+          modal.openModal("aria-modal");
+          return;
+        }
+      }
 
       // if it's a multi field autocomplete,
       // or if it's the first item getting added, insert a new item

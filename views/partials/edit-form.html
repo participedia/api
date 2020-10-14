@@ -33,7 +33,7 @@
               {{> edit-boolean name="hidden" quick-submit=true}}
               {{# if (isNotCollection article)}}
                 {{> article-edit-select name="completeness" quick-submit=true}}
-                {{> edit-autocomplete name="collections" max=0 multi=true }}
+                {{> edit-autocomplete name="collections" multi=true }}
               {{/if}}
               {{> edit-submission-details }}
             </div>
