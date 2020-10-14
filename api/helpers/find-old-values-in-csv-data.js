@@ -12,8 +12,8 @@ const ACCEPTED_VALUES = sharedFieldOptionKeys
   .flat();
 const IGNORED_VALUES = ["false", "true", "", null, "0", "1"];
 
-const INPUT_CSV = "./participedia-data-cases.csv";
-const OUTPUT_CSV_PATH = "old-db-values.csv";
+const INPUT_CSV = "./participedia-data-organizations.csv";
+const OUTPUT_CSV_PATH = "old-db-values-for-organizations.csv";
 
 start();
 
