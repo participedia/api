@@ -100,6 +100,7 @@ const editAutocomplete = {
   initAutocompleteField(autocompleteEl) {
     const options = this.getOptions(autocompleteEl);
     const name = autocompleteEl.getAttribute("data-name");
+    const maxItems = autocompleteEl.getAttribute("data-max");
     autocomplete({
       minLength: 1,
       input: autocompleteEl,
@@ -122,7 +123,7 @@ const editAutocomplete = {
       },
       emptyMsg: "No matches found",
       onSelect: item => {
-        this.addSelectedItem(name, item);
+        this.addSelectedItem(name, item, maxItems);
         // clear autocomplete field
         autocompleteEl.value = "";
       },
