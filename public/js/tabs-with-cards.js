@@ -30,11 +30,6 @@ const tabsWithCards = {
         this.openSearchFilterModal();
       });
     }
-    
-    const openFilter = getValueForParam("openFilters");
-    if (openFilter == "1") {
-      this.openSearchFilterModal();
-    }
   },
 
   openSearchFilterModal() {
