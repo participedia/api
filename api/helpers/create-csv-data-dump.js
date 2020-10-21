@@ -19,6 +19,35 @@ function sanitizeUserName(name) {
   return editedName;
 }
 
+function generateMultiSelectFieldColumn(field, stringArrayValue) {
+  const items = stringArrayValue.split(",");
+  const length = items.length;
+  let newObj = Object.create({});
+
+  for (let i = 0; i < length; i++) {
+    newObj[`${field}_${i+1}`] = items[i];
+  }
+  
+  return newObj;
+}
+
+function generateCsvFields(orderFields, multiFieldArray, editedFields) {
+  let csvFields = Object.create({});
+  orderFields.forEach(field => {
+    if (multiFieldArray.indexOf(field) >= 0) {
+      for (let i = 0; i < 5; i++) {
+        let multiField = `${field}_${i+1}`;
+        if (editedFields.hasOwnProperty(multiField)) {
+          csvFields[multiField] = true;
+        }
+      }
+    } else {
+      csvFields[field] = true;
+    }
+  });
+  return csvFields;
+}
+
 const orderedCaseFields = [
   "id",
   "type",
@@ -93,6 +122,7 @@ const orderedCaseFields = [
   "audio_count",
   "evaluation_reports_count",
   "evaluation_links_count",
+  "collections"
 ];
 
 const orderedMethodFields = [
@@ -131,6 +161,7 @@ const orderedMethodFields = [
   "videos_count",
   "links_count",
   "audio_count",
+  "collections"
 ];
 
 const orderedOrganizationFields = [
@@ -170,6 +201,32 @@ const orderedOrganizationFields = [
   "videos_count",
   "links_count",
   "audio_count",
+  "collections"
+];
+
+// convert simple arrays to strings
+const simpleArrayFields = [
+  "general_issues",
+  "specific_topics",
+  "implementers_of_change",
+  "change_types",
+  "funder_types",
+  "organizer_types",
+  "insights_outcomes",
+  "if_voting",
+  "decision_methods",
+  "learning_resources",
+  "participants_interactions",
+  "tools_techniques_types",
+  "method_types",
+  "targeted_participants",
+  "approaches",
+  "purposes",
+  "number_of_participants",
+  "scope_of_influence",
+  "purpose_method",
+  "type_method",
+  "type_tool",
 ];
 
 const orderedFieldsByType = {
@@ -191,8 +248,9 @@ function convertToIdTitleUrlFields(entry, field) {
 
 async function createCSVDataDump(type, results = []) {
   var entries = results;
+  var csvFields = Object.create({});
 
-  if (type !== 'thing') {
+  if (type === 'thing') {
     entries = await db.many(LIST_ARTICLES, {
       type: type + "s",
       lang: "en",
@@ -264,7 +322,23 @@ async function createCSVDataDump(type, results = []) {
     // make sure all date fields are in the same format, ISO 8601
     const dateFields = ["post_date", "updated_date", "start_date", "end_date"];
     dateFields.forEach(field => {
-      editedEntry[field] = moment(editedEntry[field]).toISOString();
+      editedEntry[field] = moment(editedEntry[field]).isValid() ? moment(editedEntry[field]).format("YYYY-MM-DD") : "";
+    });
+
+    const booleanFields = ["featured", "ongoing", "staff", "volunteers"];
+    booleanFields.forEach(field => {
+      if (editedEntry[field] !== undefined) {
+        editedEntry[field] = editedEntry[field] ? 1 : 0;
+      }
+    });
+
+    const yesOrNoFields = ["legality", "facilitators", "impact_evidence", "formal_evaluation"];
+    yesOrNoFields.forEach(field => {
+      if (editedEntry[field] !== undefined) {
+        if (editedEntry[field] == "yes" || editedEntry[field] == "no") {
+          editedEntry[field] = editedEntry[field] == "yes" ? 1 : 0;
+        }
+      }
     });
 
     // convert primary_organizer and is_component_of into three new fields (id, title, url)
@@ -312,48 +386,50 @@ async function createCSVDataDump(type, results = []) {
       }
     });
 
-    // convert simple arrays to strings
-    const simpleArrayFields = [
-      "general_issues",
-      "specific_topics",
-      "implementers_of_change",
-      "change_types",
-      "funder_types",
-      "organizer_types",
-      "insights_outcomes",
-      "if_voting",
-      "decision_methods",
-      "learning_resources",
-      "participants_interactions",
-      "tools_techniques_types",
-      "method_types",
-      "targeted_participants",
-      "approaches",
-      "purposes",
-      "number_of_participants",
-      "scope_of_influence",
-      "purpose_method",
-      "type_method",
-      "type_tool",
-    ];
     simpleArrayFields.forEach(field => {
       if (editedEntry[field]) {
         editedEntry[field] = editedEntry[field].toString().replace(/,/g, ", ");
       }
     });
 
+    // Add "Collections" column
+    if (editedEntry.collections) {
+      let collections = editedEntry.collections.map(collection => {
+        return collection.title;
+      });
+
+      editedEntry.collections = collections.toString();
+    }
+    
     // reorder fields
     const orderOfFields = orderedFieldsByType[editedEntry.type];
 
     const orderedEntry = {};
     orderOfFields.forEach(field => {
-      orderedEntry[field] = editedEntry[field];
+      if (simpleArrayFields.indexOf(field) >= 0) {
+        if (editedEntry[field]) {
+          let object = generateMultiSelectFieldColumn(field, editedEntry[field]);
+          Object.keys(object).forEach(key => {
+            orderedEntry[key] = object[key];
+            csvFields[key] = true;
+          });
+        }
+      } else {
+        orderedEntry[field] = editedEntry[field];
+        csvFields[field] = true;
+      }
     });
 
     return orderedEntry;
   });
+  
+  if (type === "thing") {
+    csvFields = editedEntries[0];
+  } else {
+    csvFields = generateCsvFields(orderedFieldsByType[type], simpleArrayFields, csvFields);
+  }
 
-  const fields = Object.keys(editedEntries[0]);
+  const fields = Object.keys(csvFields);
 
   const opts = { fields };
 
