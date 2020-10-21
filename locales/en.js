@@ -1821,6 +1821,7 @@
   "Browse all entries": "Browse all entries",
   "contributors": "contributors",
   "countries": "countries",
+  "Countries": "Countries",
   "Show Results": "Show Results",
   "Search Filters": "Search Filters",
   "Show All": "Show All",
@@ -1875,5 +1876,6 @@
   "home.supporters.p2": "Participedia’s Design & Technology Team operates out of the %sStudio for Extensive Aesthetics%s at Emily Carr University of Art & Design, and is supported by the %sCanada Research Chairs Program%s and the %sCanada Foundation for Innovation%s.",
   "search-error-not-available": "Sorry for the inconvenience, keyword search is not yet available in your language.",
   "search-error-working-on-solution": "We are working on a solution but in the meantime, please make use of the search filters for %scases%s, %smethods%s and %sorganizations%s.",
-  "search-error-switch-to-en": "You can also use the language selector in footer or header to change your language to English if you would like to use the keyword search in English."
+  "search-error-switch-to-en": "You can also use the language selector in footer or header to change your language to English if you would like to use the keyword search in English.",
+  "Select one or more countries": "Select one or more countries"
 }

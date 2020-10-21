@@ -219,6 +219,7 @@ button {
   border: 0px;
   padding: 8px;
   display: flex;
+  align-items: center;
   background-color: #fff;
   color: #808080;
 }
