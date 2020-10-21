@@ -1,4 +1,5 @@
 import autocomplete from "autocompleter";
+import modal from "./modal.js";
 
 const toArray = nodelist => Array.prototype.slice.call(nodelist);
 
@@ -53,7 +54,7 @@ const editAutocomplete = {
     return options;
   },
 
-  addSelectedItem(name, item) {
+  addSelectedItem(name, item, maxItems) {
     const listToAppendToEl = document.querySelector(
       `.js-edit-autocomplete-list[data-name=${name}]`
     );
@@ -138,6 +139,18 @@ const editAutocomplete = {
       },
     });
   },
+
+  getTotalSelectedItems(listEl) {
+    const list = listEl.querySelectorAll("li");
+    const count = list.length;
+    let total = 0;
+    for (var i = 0; i < count; i++) {
+      if (list[i].querySelector("input").getAttribute("value")) {
+        total++;
+      }
+    }
+    return total;
+  }
 };
 
 export default editAutocomplete;
