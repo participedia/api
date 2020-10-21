@@ -51,7 +51,6 @@
   .featured-entries-carousel {
     height: unset;
   }
-
   .featured-entries-carousel__inner-container {
     flex-direction: column;
   }
@@ -64,5 +63,8 @@
   }
   .featured-entries-carousel__content {
     width: 100%
+  }
+  .featured-entries-carousel__description {
+    display: none;
   }
 }
