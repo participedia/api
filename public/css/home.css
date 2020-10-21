@@ -120,6 +120,7 @@
 
 .home-hero-search__edit-select {
   width: 15%;
+  border: 1px solid #fff;
 }
 
 .home-hero-search__edit-select.ss-main .ss-single-selected {
