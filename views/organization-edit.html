@@ -3,7 +3,9 @@
     <h2 class="fieldset-header">{{t "overview_sectionlabel"}}</h2>
     
     {{> quick-submit-form-header }}
-
+    
+    {{> guidelines-info-text }}
+    
     {{> article-edit-text name="title" is_required=true quick-submit=true}}
     {{> article-edit-location}}
     {{> edit-multi-select name="scope_of_influence" max=3}}
