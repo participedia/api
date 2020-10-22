@@ -198,11 +198,13 @@
 
 @media (max-width: 450px) {
   .map-legend {
-    margin-top: -80px;
+    margin-top: -90px;
+    left: 30px;
+    right: unset;
   }
 
   .map-legend__list {
-    height: 37px;
+    height: auto;
     padding: 5px;
     flex-direction: column;
   }
@@ -210,16 +212,11 @@
   .map-legend__list li {
     line-height: 16px;
     font-size: 14px;
-  }
-
-  .map-legend__list li:first-child {
-    padding-bottom: 5px;
+    margin-bottom: 12px;
   }
 
   .map-legend__list li:last-child {
-    position: absolute;
-    right: 5px;
-    top: 5px;
+    margin-bottom: 0px;
   }
 }
 
