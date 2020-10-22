@@ -9,6 +9,7 @@ const homeHero = {
     this.headerEl = document.querySelector(".js-header");
     this.heroEntryLinkEl = document.querySelector(".js-home-hero-image-credit__entry-link"); 
     this.heroCreditEl = document.querySelector(".js-home-hero-image-credit"); 
+    this.heroCountryEl = document.querySelector(".js-home-hero-image-credit__country"); 
     this.heroCreditTextEl = document.querySelector(".js-home-hero-image-credit__credit"); 
     
     this.currentIndex = 0;
@@ -70,6 +71,8 @@ const homeHero = {
       this.heroEntryLinkEl.innerText = newEntry.entryTitle;
       // update credit
       this.heroCreditTextEl.innerText = newEntry.imageCredit;
+      // update country
+      this.heroCountryEl.innerText = newEntry.country;
       // update link
       this.heroEntryLinkEl.setAttribute("href", newEntry.entryUrl)
       // fade opacity back up to initial

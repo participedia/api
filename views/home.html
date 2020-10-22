@@ -52,58 +52,70 @@
           action="/search"
           class="home-hero-search__form js-home-hero-search__form"
         >
-          <div class="home-hero-search__form-search-icon-container">
-            {{> icon-search }}
+          <div class="home-hero-search__form-inputs">
+            <div class="home-hero-search__form-search-icon-container">
+              {{> icon-search }}
+            </div>
+            <input name="query" type="text" placeholder={{t "Search"}}
+            class="home-hero-search__form-input js-home-hero-search__form-input" />
+            <select
+              name="type"
+              class="home-hero-search__edit-select js-edit-select u-margin-right--xsmall"
+              id="js-home-hero-search__edit-select"
+            >
+              <option value="all">
+                {{t "All"}}
+              </option>
+              <option value="case">
+                {{t "Cases"}}
+              </option>
+              <option value="organizations">
+                {{t "Organizations"}}
+              </option>
+              <option value="method">
+                {{t "Methods"}}
+              </option>
+              <option value="collections">
+                {{t "Collections"}}
+              </option>
+            </select>
           </div>
-          <input name="query" type="text" placeholder={{t "Search"}}
-          class="home-hero-search__form-input js-home-hero-search__form-input
-          u-margin-right--xsmall" />
-          <select
-            name="type"
-            class="home-hero-search__edit-select js-edit-select u-margin-right--xsmall"
-            id="js-home-hero-search__edit-select"
-          >
-            <option value="all">
-              {{t "All"}}
-            </option>
-            <option value="case">
-              {{t "Cases"}}
-            </option>
-            <option value="organizations">
-              {{t "Organizations"}}
-            </option>
-            <option value="method">
-              {{t "Methods"}}
-            </option>
-            <option value="collections">
-              {{t "Collections"}}
-            </option>
-          </select>
           <button class="button button-red" type="submit">{{t "Search"}}</button>
+          <div class="home-hero-browse-all-link">
+            <a href="/search">{{t "Browse all entries"}}</a>
+          </div>
         </form>
-        <a href="/search">{{t "Browse all entries"}}</a>
       </div>
     </div>
-    <div>
-      <div class="home-hero-image-credit js-home-hero-image-credit">
-        <div class="home-hero-image-credit__entry-link-container">      
-          {{> icon-camera}}
-          <a
-            href="{{heroFeatures.0.entryUrl}}"
-            class="home-hero-image-credit__entry-link js-home-hero-image-credit__entry-link"
-            >{{heroFeatures.0.entryTitle}}</a
-          >
-        </div>      
-        <small>
-          {{t "Image credit"}}: 
-          <span class="js-home-hero-image-credit__credit">
-            {{heroFeatures.0.imageCredit}}
-          </span>
-        </small>
-      </div>
-      <div class="home-hero__carousel-navigation">
-        {{> carousel-navigation type="hero"}}
-      </div>
+    <div class="home-hero-footer">
+      {{#> three-column-row }}
+        {{#> three-column-column}}
+          <div>
+            <h3 class="home-hero-image-credit js-home-hero-image-credit">
+              <a
+                href="{{heroFeatures.0.entryUrl}}"
+                class="js-home-hero-image-credit__entry-link"
+                >{{t heroFeatures.0.entryTitle}}</a
+              >
+            </h3>      
+            <div class="js-home-hero-image-credit__country">{{heroFeatures.0.country}}</div>
+            <small>
+              {{t "Image credit"}}: 
+              <span class="js-home-hero-image-credit__credit">
+                {{heroFeatures.0.imageCredit}}
+              </span>
+            </small>
+          </div>  
+        {{/ three-column-column}}
+        {{#> three-column-column}}
+          <div class="home-hero__carousel-navigation">
+            {{> carousel-navigation type="hero"}}
+          </div>
+        {{/ three-column-column}}
+        {{#> three-column-column}}
+          <div></div>
+        {{/ three-column-column}}
+      {{/ three-column-row }}
     </div>
   </div>
 </div>

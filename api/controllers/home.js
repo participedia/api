@@ -22,6 +22,7 @@ function getHeroFeatures() {
       entryTitle:
         'Participatory Slum Upgrading Process in the City of Buenos Aires: The "Villa 20" Case',
       entryUrl: "/case/5988",
+      country: "Argentina"
     },
     {
       imageCredit: "Research Team, University of the Western Cape: Professor Laurence Piper, Robyn Pasensie and Sondre Bailey",
@@ -30,6 +31,7 @@ function getHeroFeatures() {
       entryTitle:
         "Decommissioning South African Social Services: Participatory Field Research in Delft",
       entryUrl: "/case/5834",
+      country: "South Africa"
     },
     {
       imageCredit: "Max Bender",
@@ -37,6 +39,7 @@ function getHeroFeatures() {
         "https://s3.amazonaws.com/participedia.prod/d97cf067-9b0b-4d80-bc38-aee5b8553c8c",
       entryTitle: "George Floyd Protests",
       entryUrl: "/case/6590",
+      country: "United States"
     },
   ]);
 }
