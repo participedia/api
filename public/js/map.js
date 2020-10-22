@@ -82,9 +82,11 @@ const markerStyles = markerSize => {
 const map = {
   init() {
     this.mapEl = document.querySelector(".js-map-inner");
-    this.headerEl = document.querySelector(".js-header");
 
     if (!this.mapEl) return;
+    
+    this.headerEl = document.querySelector(".js-header");
+    this.mapLegendEl = document.querySelector(".js-map-legend");
 
     this.map = new google.maps.Map(this.mapEl, {
       center: { lat: 6.1259722, lng: 20.9404108 },
@@ -320,7 +322,7 @@ const map = {
       // on screen widths less than 1100 the legend overlaps the marker card,
       // so in this case, hide the legend when the marker is shown
       if (window.innerWidth < 1100) {
-        this.mapLegend.style.display = "none";
+        this.mapLegendEl.style.display = "none";
       }
 
       // remove pop over on close button click
@@ -329,7 +331,7 @@ const map = {
         if (!closeButtonEl) return;
         this.popOver.setMap(null);
         // show legend when marker is closed
-        this.mapLegend.style.display = "flex";
+        this.mapLegendEl.style.display = "flex";
       });
     });
   },
