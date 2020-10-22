@@ -99,6 +99,7 @@ const carouselNavigation = {
   },
 
   updateDotNav() {
+    if (!this.dotNavContainerEl) return null;
     // set current class for current index
     const currentClassName ="carousel-navigation__dots-nav-item--current";
     const nextIndexDotNavEl = this.dotNavContainerEl.querySelectorAll(
