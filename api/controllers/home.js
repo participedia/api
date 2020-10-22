@@ -22,16 +22,17 @@ function getHeroFeatures() {
       entryTitle:
         'Participatory Slum Upgrading Process in the City of Buenos Aires: The "Villa 20" Case',
       entryUrl: "/case/5988",
-      country: "Argentina"
+      country: "Argentina",
     },
     {
-      imageCredit: "Research Team, University of the Western Cape: Professor Laurence Piper, Robyn Pasensie and Sondre Bailey",
+      imageCredit:
+        "Research Team, University of the Western Cape: Professor Laurence Piper, Robyn Pasensie and Sondre Bailey",
       imageUrl:
         "https://s3.amazonaws.com/participedia.prod/b5294e0a-e875-4ece-afe1-a242f851a5c3",
       entryTitle:
         "Decommissioning South African Social Services: Participatory Field Research in Delft",
       entryUrl: "/case/5834",
-      country: "South Africa"
+      country: "South Africa",
     },
     {
       imageCredit: "Max Bender",
@@ -39,7 +40,12 @@ function getHeroFeatures() {
         "https://s3.amazonaws.com/participedia.prod/d97cf067-9b0b-4d80-bc38-aee5b8553c8c",
       entryTitle: "George Floyd Protests",
       entryUrl: "/case/6590",
-      country: "United States"
+      country: "United States",
+    },
+    {
+      imageUrl: "/images/homepage/hero-map-static.png",
+      entryTitle: "Explore Cases & Organizations by Location",
+      entryUrl: "#map",
     },
   ]);
 }
@@ -49,9 +55,11 @@ async function getThingStatistic() {
     cases: 0,
     methods: 0,
     organizations: 0,
-    collections: 0
+    collections: 0,
   };
-  const results = await db.any("SELECT type, COUNT(*) as total FROM things GROUP BY type");
+  const results = await db.any(
+    "SELECT type, COUNT(*) as total FROM things GROUP BY type"
+  );
   results.map(result => {
     let type = `${result.type}s`;
     if (stats.hasOwnProperty(type)) {
@@ -62,7 +70,9 @@ async function getThingStatistic() {
 }
 
 async function getTotalCountries() {
-  const results = await db.any("SELECT country FROM things WHERE type IN ('case', 'organization') and country <> '' GROUP BY country");
+  const results = await db.any(
+    "SELECT country FROM things WHERE type IN ('case', 'organization') and country <> '' GROUP BY country"
+  );
   let total = 0;
   if (results && results.length) {
     total = parseInt(results.length);
@@ -105,25 +115,29 @@ router.get("/", async function(req, res) {
     type: "things",
     userId: req.user ? req.user.id : null,
     facets: "",
-    offset: 1
+    offset: 1,
   });
   featuredEntries = addTextureImageIfNeeded(featuredEntries);
-  const featuredCollections = featuredEntries.filter(entry => entry.type === "collection");
-  const featuredCasesMethodsOrgs = featuredEntries.filter(entry => entry.type !== "collection");
+  const featuredCollections = featuredEntries.filter(
+    entry => entry.type === "collection"
+  );
+  const featuredCasesMethodsOrgs = featuredEntries.filter(
+    entry => entry.type !== "collection"
+  );
 
   // Populate response data
   const data = {
     featuredCasesMethodsOrgs: featuredCasesMethodsOrgs,
     featuredCollections: featuredCollections,
     stats: stats,
-    heroFeatures: heroFeatures
+    heroFeatures: heroFeatures,
   };
 
   switch (returnType) {
     case "json":
       return res.status(200).json({
         user: req.user || null,
-        ...data
+        ...data,
       });
     case "html": // fall through
     default:

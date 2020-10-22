@@ -70,9 +70,19 @@ const homeHero = {
       // update title
       this.heroEntryLinkEl.innerText = newEntry.entryTitle;
       // update credit
-      this.heroCreditTextEl.innerText = newEntry.imageCredit;
+      if (newEntry.imageCredit) {
+        this.heroCreditTextEl.innerText = `Image Credit: ${newEntry.imageCredit}`;
+      } else {
+        this.heroCreditTextEl.innerText = "";
+      }
+      
       // update country
-      this.heroCountryEl.innerText = newEntry.country;
+      if (newEntry.country) {
+        this.heroCountryEl.innerText = newEntry.country;
+      } else {
+        this.heroCountryEl.innerText = "";
+      }
+      
       // update link
       this.heroEntryLinkEl.setAttribute("href", newEntry.entryUrl)
       // fade opacity back up to initial
