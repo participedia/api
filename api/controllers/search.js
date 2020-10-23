@@ -283,16 +283,13 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
           user: req.user || null,
         });
       case "csv":
-        var entries = [];
-        if (type !== "thing") {
-          entries = results.map(article => {
-            return {
-              "id": article.id,
-              "title": article.title,
-              "type": article.type
-            }
-          });
-        }
+        const entries = results.map(article => {
+          return {
+            "id": article.id,
+            "title": article.title,
+            "type": article.type
+          }
+        });
         const file = await createCSVDataDump(type, entries);
         return res.download(file);
       case "xml":
