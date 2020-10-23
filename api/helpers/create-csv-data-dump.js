@@ -250,13 +250,6 @@ async function createCSVDataDump(type, results = []) {
   var entries = results;
   var csvFields = Object.create({});
 
-  if (type === 'thing') {
-    entries = await db.many(LIST_ARTICLES, {
-      type: type + "s",
-      lang: "en",
-    });
-  }
-
   const sqlForType = {
     case: CASE_BY_ID,
     method: METHOD_BY_ID,
