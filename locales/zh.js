@@ -849,7 +849,7 @@
   "Mongolia": "蒙古",
   "Montserrat": "蒙特塞拉特",
   "More about this collection": "有关此集合的更多关于",
-  "more filters": "更多过滤器",
+  "filters": "过滤器",
   "Morocco": "摩洛哥",
   "Most Recent Change": "最新变化",
   "Most Recent Changes By": "最新更改按",
@@ -1738,7 +1738,6 @@
   "scope_of_influence_label": "影响范围",
   "scope_of_influence_placeholder": "选择地域或管辖范围",
   "Search": "搜索",
-  "Search Filters": "搜索过滤器",
   "search-error-not-available": "很抱歉给您带来不便，目前尚无法使用您的语言进行关键字搜索。",
   "search-error-switch-to-en": "如果您想使用英语关键字搜索，也可以在页脚或页眉中使用语言选择器将语言更改为英语。",
   "search-error-working-on-solution": "我们正在努力寻找解决方案，但与此同时，请对%s案例%s ， %s方法%s和%s组织%s使用搜索过滤器。",
@@ -1871,5 +1870,8 @@
   "Zambia": "赞比亚",
   "Zimbabwe": "津巴布韦",
   "Zoom Map In": "放大缩小字体功能 放大缩小字体功能",
-  "Zoom Map Out": "放大缩小字体功能 放大缩小字体功能"
+  "Zoom Map Out": "放大缩小字体功能 放大缩小字体功能",
+  "filter-for-case": "案例过滤器",
+  "filter-for-method": "方法过滤器",
+  "filter-for-organizations": "组织过滤器"
 }

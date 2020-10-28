@@ -747,7 +747,7 @@
   "Most Recent Changes By": "Most Recent Changes By",
   "most_recent_label": "Most recent changes by",
   "Mozambique": "Mozambique",
-  "more filters": "More Filters",
+  "filters": "Filters",
   "Myanmar": "Myanmar",
   "name:approaches-key:advocacy": "Advocacy",
   "name:approaches-key:advocacy-longValue": "Advocacy (e.g. lobbying; petitioning)",
@@ -1823,7 +1823,6 @@
   "countries": "countries",
   "Countries": "Countries",
   "Show Results": "Show Results",
-  "Search Filters": "Search Filters",
   "Show All": "Show All",
   "Select a country": "Select a country",
   "Getting Started as a Content Contributor": "Getting Started as a Content Contributor",
@@ -1877,5 +1876,8 @@
   "search-error-not-available": "Sorry for the inconvenience, keyword search is not yet available in your language.",
   "search-error-working-on-solution": "We are working on a solution but in the meantime, please make use of the search filters for %scases%s, %smethods%s and %sorganizations%s.",
   "search-error-switch-to-en": "You can also use the language selector in footer or header to change your language to English if you would like to use the keyword search in English.",
-  "Select one or more countries": "Select one or more countries"
+  "Select one or more countries": "Select one or more countries",
+  "filter-for-case": "Filters for Cases",
+  "filter-for-method": "Filters for Methods",
+  "filter-for-organizations": "Filters for Organizations"
 }

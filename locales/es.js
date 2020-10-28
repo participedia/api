@@ -849,7 +849,7 @@
   "Mongolia": "Mongolia",
   "Montserrat": "Montserrat",
   "More about this collection": "Más sobre esta colección",
-  "more filters": "Más filtros",
+  "filters": "Filtros",
   "Morocco": "Marruecos",
   "Most Recent Change": "Cambio más reciente",
   "Most Recent Changes By": "Cambios más recientes por",
@@ -1738,7 +1738,6 @@
   "scope_of_influence_label": "Ámbito de influencia",
   "scope_of_influence_placeholder": "Selecciona el ámbito geográfico o jurisdiccional",
   "Search": "Búsqueda de",
-  "Search Filters": "Filtros de búsqueda",
   "search-error-not-available": "Disculpe las molestias, la búsqueda de palabras clave aún no está disponible en su idioma.",
   "search-error-switch-to-en": "También puede usar el selector de idioma en el pie de página o en el encabezado para cambiar su idioma a inglés si desea usar la búsqueda de palabras clave en inglés.",
   "search-error-working-on-solution": "Estamos trabajando en una solución, pero mientras tanto, utilice los filtros de búsqueda para %s casos %s , %s métodos %s y %s organizaciones %s .",
@@ -1871,5 +1870,8 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabue",
   "Zoom Map In": "Acercar mapa",
-  "Zoom Map Out": "Alejar mapa"
+  "Zoom Map Out": "Alejar mapa",
+  "filter-for-case": "Filtros para casos",
+  "filter-for-method": "Filtros para métodos",
+  "filter-for-organizations": "Filtros para organizaciones"
 }
