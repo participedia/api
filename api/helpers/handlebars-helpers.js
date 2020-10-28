@@ -683,6 +683,10 @@ module.exports = {
     return article[name];
   },
 
+  getSearchFilterTitle: (key, context) => {
+    return i18n(`filter-for-${key}`, context);
+  },
+
   getLinkSetValue(article, name, index, attr) {
     if (!article[name]) return;
     if (!article[name][index]) return;

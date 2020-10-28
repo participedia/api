@@ -37,7 +37,6 @@
 .tab-buttons-container .card-layout-btns {
   display: flex;
   flex-direction: row;
-  width: 160px;
   flex-flow: row-reverse;
   margin-top: -4px;
 }

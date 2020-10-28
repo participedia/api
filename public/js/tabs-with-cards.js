@@ -27,8 +27,20 @@ const tabsWithCards = {
     const moreFilterBtnEl = document.querySelector(".js-tab-buttons-button-filter");
     if (moreFilterBtnEl) {
       moreFilterBtnEl.addEventListener("click", event => {
-        this.openSearchFilterModal();
+        const category = getValueForParam("selectedCategory");
+        if (["case", "organizations", "method"].indexOf(category) >= 0) {
+          this.openSearchFilterModal();
+        } else {
+          updateUrlParams("selectedCategory", "case");
+          updateUrlParams("openFilters", "1");
+          window.location.href = window.location.href;
+        }
       });
+    }
+
+    const openFilter = getValueForParam("openFilters");
+    if (openFilter == "1") {
+      this.openSearchFilterModal();
     }
   },
 
