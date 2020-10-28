@@ -1410,7 +1410,6 @@
   "Northern Mariana Islands": "Northern Mariana Islands",
   "Norway": "Norway",
   "no_items": "There are no items to display.",
-  "of": "of",
   "Oman": "Oman",
   "open menu": "open menu",
   "open_limited_label": "Open to All or Limited to Some?",
