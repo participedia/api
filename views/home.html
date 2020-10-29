@@ -99,9 +99,11 @@
               >
             </h3>      
             <div class="js-home-hero-image-credit__country">{{heroFeatures.0.country}}</div>
-            <small class="home-hero-image-credit__credit js-home-hero-image-credit__credit">
-              {{t "Image Credit"}}: {{heroFeatures.0.imageCredit}}
-            </small>
+            {{#if heroFeatures.0.imageCredit}}
+              <small class="home-hero-image-credit__credit js-home-hero-image-credit__credit">
+                {{t "Image Credit"}}: {{heroFeatures.0.imageCredit}}
+              </small>
+            {{/if}}
           </div>  
         {{/ three-column-column}}
         {{#> three-column-column}}
