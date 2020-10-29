@@ -28,13 +28,16 @@
   padding: 1px;
   background: #EC2024;
   color: white;
-  min-width: 22px;
-  height: 22px;
-  display: flex;
+  width: 24px;
+  height: 24px;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 24px;
   display: none;
+  position: relative;
+  top: -20px;
+  right: -24px;
+  margin-left: -16px;
 }
 
 /* toggle layout buttons */
