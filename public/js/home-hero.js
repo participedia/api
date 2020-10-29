@@ -94,7 +94,12 @@ const homeHero = {
   adjustHeight () {
     // hero image should be the 
     // height of the browser window - the height of the header
-    const height = window.innerHeight - this.headerEl.offsetHeight;
+    // but should never be less high than MAX_HEIGHT
+    const MAX_HEIGHT = 798;
+    let height = window.innerHeight - this.headerEl.offsetHeight;
+    if (height < MAX_HEIGHT) {
+      height = MAX_HEIGHT - this.headerEl.offsetHeight;
+    }
     this.heroEl.style.height = `${height}px`;
     this.heroOverlayEl.style.height = `${height}px`;
     this.heroImageEl.style.height = `${height}px`;

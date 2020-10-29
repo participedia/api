@@ -58,7 +58,7 @@
 
 .home-hero-stats__stat-item {
   border-right: 4px solid #fff;
-  padding: 30px 60px;
+  padding: 30px 4VW 25px 4VW;
 }
 .home-hero-stats__stat-item:first-child {
   padding-left: 0;
@@ -93,8 +93,8 @@
 }
 
 .home-hero-search__form {
+  margin-top: 60px;
   margin-bottom: 15px;
-  margin-top: 75px;
   display: flex;
   flex-direction: row;
 }
@@ -168,8 +168,9 @@
   margin-right: 4px;
 }
 
-.home-hero-image-credit small {
+.home-hero-image-credit__credit {
   margin-top: 4px;
+  display: inline-block;
 }
 
 .home-hero__carousel-navigation {
@@ -194,48 +195,25 @@
   margin-bottom: 0px;
 }
 
-@media (max-height: 800px) {
-  .home-hero-header {
-    font-size: 28px;
-    line-height: 36px;
-    margin-bottom: 30px;
-  }
-  .home-hero-stats__stat-item h5 {
-    font-size: 3rem;
-  }
-  .home-hero-stats {
-    margin-bottom: -30px;
-  }
-}
-
-@media (max-width: 1200px) { 
-  .home-hero-stats__stat-item {
-    padding: 30px 30px;
-  }
-}
-
 @media (max-width: 1000px) { 
   .home-hero-header {
-    width: 85%
+    width: 100%
   }
   .home-hero-stats__stat-item {
-    border-right: 4px solid #fff;
-    padding: 30px 60px;
+    border-right: 2px solid #fff;
+    padding-top: 5px;
+    padding-bottom: 0;
   }
-}
-
-@media (max-width: 900px) { 
   .home-hero-stats__stat-item h5 {
     font-size: 2rem;
-    margin-bottom: 5px;
+    line-height: 1.75rem;
   }
   .home-hero-stats__stat-item h3 {
     font-size: 1rem;
   }
 }
 
-
-@media (max-width: 800px) { 
+@media (max-width: 900px) { 
   .home-hero-stats {
     justify-content: flex-start;
     flex-wrap: wrap;
@@ -248,15 +226,16 @@
   .home-section-column-image {
     width: 30%;
   }
+  .home-hero-stats__stat-item {
+    padding: 0 2VW;
+    border-right: 2px solid #fff;
+  }
   .home-hero-stats__stat-item a {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 0;
-    border-left: 0;
-    flex-grow: unset;
-    padding-right: .5em;
+    padding-top: 2px;
   }
 
   .home-hero-stats__stat-item h5, 
@@ -267,11 +246,23 @@
   .home-hero-stats__stat-item h5 {
     padding-right: .25em; 
   }
-  .home-hero-stats__stat-item h5:last-child {
-    padding-right: 0;
-  }
   .home-section {
     margin-bottom: 60px;
+  }
+}
+
+@media (max-width: 850px) { 
+  .home-hero-search__edit-select {
+    display: none;
+  }
+  .home-hero-stats {
+    display: none;
+  }
+  .home-hero-search__form-input {
+    min-width: 200px;
+  }
+  .home-hero-search__form button {
+    max-width: 150px;
   }
 }
 
@@ -288,10 +279,14 @@
   .home-hero-search__form-input {
     margin-right: 0;
     margin-bottom: 15px;
+    max-width: 325px;
   }
   .home-hero-browse-all-link {
     margin-left: 0;
     margin-top: 15px;
+  }
+  .home-hero-browse-all-link {
+    display: none;
   }
 }
 
