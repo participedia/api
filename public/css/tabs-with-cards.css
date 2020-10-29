@@ -13,14 +13,18 @@
   display: flex;
 }
 
-.tab-buttons-container .tab-buttons-button-filter {
-  display: flex;
-  justify-content: space-between;
+.tab-buttons-button-filter {
   margin-top: -12px;
-  width: 155px;
+  margin-right: 15px;
+}
+.tab-buttons-button-filter .icon-fill {
+  fill: #000;
+}
+.tab-buttons-button-filter svg {
+  margin-bottom: -4px;
 }
 
-.tab-buttons-container .tab-buttons-total-filter-badge {
+.tab-buttons-total-filter-badge {
   padding: 1px;
   background: #EC2024;
   color: white;
