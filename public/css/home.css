@@ -194,7 +194,20 @@
 .home-hero-footer .grid-column {
   margin-bottom: 0px;
 }
-
+@media (max-height: 750px) { 
+  .home-hero-search__form {
+    display: none;
+  }
+  .home-hero-image-credit h3 {
+    font-size: 1rem;
+  }
+  .home-hero-header {
+    padding-top: 30px;
+  }
+  .home-hero-footer {
+    margin-bottom: 30px;
+  }
+}
 @media (max-width: 1000px) { 
   .home-hero-header {
     width: 100%
