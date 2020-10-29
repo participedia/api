@@ -1126,6 +1126,10 @@ module.exports = {
     return req.baseUrl === "/collection";
   },
 
+  isNotCollectionView(req) {
+    return req.baseUrl !== "/collection";
+  },
+
   isUserView(req) {
     return req.baseUrl === "/user" && req.path.indexOf("edit") === -1;
   },
