@@ -216,7 +216,7 @@ module.exports = {
     return JSON.stringify({
       View_Case: i18n("View Case", context),
       View_Method: i18n("View Method", context),
-      View_Organization: i18n("View_Organization", context),
+      View_Organization: i18n("View Organization", context),
       View_Collection: i18n("View Collection", context)
     });
   },
