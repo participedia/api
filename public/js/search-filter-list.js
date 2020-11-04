@@ -153,10 +153,9 @@ const searchFilterList = {
   },
 
   getSearchUrl() {
-    const filters = this.SEARCH_FILTER_KEYS
-
+    const filters = this.SEARCH_FILTER_KEYS.concat('openFilters')
     // remove old filters
-    removeUrlParams(filters.concat('openFilters'));
+    removeUrlParams(filters);
     const selectedFilters = this.getState();
     // add new filters as params
     Object.keys(selectedFilters).forEach(key => {
