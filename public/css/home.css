@@ -318,4 +318,10 @@
   .home-hero-image-credit {
     flex-direction: column;
   }
+  .home-hero-image-credit__credit {
+    display: none;
+  }
+  .home-hero__carousel-navigation {
+    display: none;
+  }
 }
