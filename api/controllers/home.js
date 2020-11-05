@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router();
 const logError = require("../helpers/log-error.js");
-let { db, FEATURED } = require("../helpers/db");
+let { db, FEATURED, CASE_BY_ID } = require("../helpers/db");
 
 function shuffle(array) {
   const shuffledArray = array.slice();
@@ -13,8 +13,37 @@ function shuffle(array) {
   return shuffledArray;
 }
 
-function getHeroFeatures() {
-  return shuffle([
+async function getLocalizedEntryTitles() {
+  const caseIdsByEnv = {
+    production: [5988, 5600, 6590],
+    development: [4772, 4242],
+    staging: [4772, 4242],
+    "homepage-2020": [5988, 5600, 6590],
+  };
+  if (caseIdsByEnv[process.env.NODE_ENV]) {
+    const promises = caseIdsByEnv[process.env.NODE_ENV].map(async id => {
+      try {
+        const localizedTitles = await db.many(
+          `select thingid, language, title from localized_texts where thingid = ${id};`
+        );
+        return localizedTitles[0];
+      } catch (err) {
+        console.warn("Error fetching hero features", err);
+      }
+    });
+    return await Promise.all(promises);
+  } else {
+    return null;
+  }
+}
+
+async function getHeroFeatures() {
+  const features = [
+    {
+      imageUrl: "/images/homepage/hero-map-static.png",
+      entryTitle: "Explore Cases & Organizations by Location",
+      entryUrl: "#map",
+    },
     {
       imageCredit: "Housing Institute of Buenos Aires",
       imageUrl:
@@ -22,6 +51,7 @@ function getHeroFeatures() {
       entryTitle:
         'Participatory Slum Upgrading Process in the City of Buenos Aires: The "Villa 20" Case',
       entryUrl: "/case/5988",
+      entryId: 5988,
       country: "Argentina",
     },
     {
@@ -30,8 +60,9 @@ function getHeroFeatures() {
       imageUrl:
         "https://s3.amazonaws.com/participedia.prod/b5294e0a-e875-4ece-afe1-a242f851a5c3",
       entryTitle:
-        "Decommissioning South African Social Services: Participatory Field Research in Delft",
-      entryUrl: "/case/5834",
+        "Participatory Research on the Decommissioning of South African Social Services",
+      entryUrl: "/case/5600",
+      entryId: 5600,
       country: "South Africa",
     },
     {
@@ -40,14 +71,30 @@ function getHeroFeatures() {
         "https://s3.amazonaws.com/participedia.prod/d97cf067-9b0b-4d80-bc38-aee5b8553c8c",
       entryTitle: "George Floyd Protests",
       entryUrl: "/case/6590",
+      entryId: 6590,
       country: "United States",
     },
-    {
-      imageUrl: "/images/homepage/hero-map-static.png",
-      entryTitle: "Explore Cases & Organizations by Location",
-      entryUrl: "#map",
-    },
-  ]);
+  ];
+
+  const localizedTitles = await getLocalizedEntryTitles();
+
+  let localizedTitlesById = {};
+  if (localizedTitles) {
+    localizedTitles.forEach(item => {
+      const newItem = {};
+      newItem[item.thingid] = item;
+      return newItem;
+    });
+  }
+
+  // use localized titles
+  const featuredArticles = features.map(feature => {
+    if (feature.entryId && localizedTitlesById[feature.entryId]) {
+      feature.entryTitle = localizedTitlesById[feature.entryId].title;
+    }
+    return feature;
+  });
+  return shuffle(featuredArticles);
 }
 
 async function getThingStatistic() {
@@ -96,7 +143,7 @@ router.get("/", async function(req, res) {
   const language = req.cookies.locale || "en";
   const thingStatsResult = await getThingStatistic();
   const totalCounties = await getTotalCountries();
-  const heroFeatures = getHeroFeatures();
+  const heroFeatures = await getHeroFeatures();
 
   // Collect Statistics
   const stats = {
