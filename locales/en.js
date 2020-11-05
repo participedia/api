@@ -1878,5 +1878,8 @@
   "Select one or more countries": "Select one or more countries",
   "filter-for-case": "Filters for Cases",
   "filter-for-method": "Filters for Methods",
-  "filter-for-organizations": "Filters for Organizations"
+  "filter-for-organizations": "Filters for Organizations",
+  "home_hero.feature.5988": "Participatory Slum Upgrading Process in the City of Buenos Aires: The \"Villa 20\" Case",
+  "home_hero.feature.5600": "Participatory Research on the Decommissioning of South African Social Services",
+  "home_hero.feature.6590": "George Floyd Protests"
 }
