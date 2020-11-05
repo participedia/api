@@ -43,6 +43,8 @@
 }
 
 .home-hero-header {
+  font-size: 2rem;
+  line-height: 2.3rem;
   color: #fff;
   width: 66%;
   margin-bottom: 75px;
@@ -83,8 +85,8 @@
 }
 
 .home-hero-stats__stat-item h5 {
-  font-size: 3.75rem;
-  line-height: 3.25rem;
+  font-size: 3rem;
+  line-height: 2.75rem;
 }
 .home-hero-stats__stat-item h3 {
   font-size: 1.25rem;
@@ -193,15 +195,49 @@
 .home-hero-footer .grid-column {
   margin-bottom: 0px;
 }
+
 @media (max-height: 750px) { 
   .home-hero-search__form {
     display: none;
+  }
+  .home-hero-stats {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .home-section-column-image {
+    width: 30%;
+  }
+  .home-hero-stats__stat-item {
+    padding: 0 2VW;
+    border-right: 2px solid #fff;
+  }
+  .home-hero-stats__stat-item a {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2px;
+  }
+
+  .home-hero-stats__stat-item h5, 
+  .home-hero-stats__stat-item h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0;
+  } 
+  .home-hero-stats__stat-item h5 {
+    padding-right: .25em; 
+    line-height: unset;
+  }
+  .home-section {
+    margin-bottom: 60px;
   }
   .home-hero-image-credit h3 {
     font-size: 1rem;
   }
   .home-hero-header {
+    width: 100%;
     padding-top: 30px;
+    margin-bottom: 60px;
   }
   .home-hero-footer {
     margin-bottom: 30px;
