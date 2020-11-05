@@ -105,7 +105,7 @@ async function getThingStatistic() {
     collections: 0,
   };
   const results = await db.any(
-    "SELECT type, COUNT(*) as total FROM things GROUP BY type"
+    "SELECT type, COUNT(*) as total FROM things WHERE hidden = false GROUP BY type"
   );
   results.map(result => {
     let type = `${result.type}s`;
