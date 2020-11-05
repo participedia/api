@@ -1372,12 +1372,15 @@ module.exports = {
   },
 
   showCsvButtonOnSearch(req) {
-    const category = req.query.selectedCategory || null;
-    const allowedCategories = ["case", "organizations", "method"];
-    return (
-      allowedCategories.indexOf(category) >= 0 &&
-      req.baseUrl.indexOf("collections") > 0
-    );
+    // const category = req.query.selectedCategory || null;
+    // const allowedCategories = ["case", "organizations", "method"];
+    // return (
+    //   allowedCategories.indexOf(category) >= 0 &&
+    //   req.baseUrl.indexOf("collections") > 0
+    // );
+
+    // do not show CSV download button for now
+    return false;
   },
 
   includeSearchFilters(req) {
