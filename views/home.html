@@ -100,8 +100,11 @@
             </h3>      
             <div class="js-home-hero-image-credit__country">{{heroFeatures.0.country}}</div>
             {{#if heroFeatures.0.imageCredit}}
-              <small class="home-hero-image-credit__credit js-home-hero-image-credit__credit">
-                {{t "Image Credit"}}: {{heroFeatures.0.imageCredit}}
+              <small 
+                class="home-hero-image-credit__credit js-home-hero-image-credit__credit" 
+                data-i18n-image-credit="{{t 'Image credit'}}"
+              >
+                {{t "Image credit"}}: {{heroFeatures.0.imageCredit}}
               </small>
             {{/if}}
           </div>  

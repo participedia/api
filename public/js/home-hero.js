@@ -67,9 +67,9 @@ const homeHero = {
 
   updateHero(index) {
     this.currentIndex = index;
+    
     const newEntry = this.heroFeatures[index];
-
-    const  =
+    const shouldUpdate =
       this.heroImageEl &&
       this.heroEntryLinkEl &&
       this.heroCreditTextEl &&
@@ -77,13 +77,13 @@ const homeHero = {
       this.heroEntryLinkEl &&
       this.heroOverlayEl &&
       this.heroCreditEl;
-    
+
     // set opacity for transition
-    if(shouldUpdate) {
+    if (shouldUpdate) {
       this.heroOverlayEl.style.opacity = 1;
       this.heroCreditEl.style.opacity = 0;
     }
-
+    
     setTimeout(() => {
       if (!shouldUpdate) return;
 
@@ -93,7 +93,8 @@ const homeHero = {
       this.heroEntryLinkEl.innerText = newEntry.entryTitle;
       // update credit
       if (newEntry.imageCredit) {
-        this.heroCreditTextEl.innerText = `Image Credit: ${
+        const i18nImageCredit = this.heroCreditTextEl.getAttribute("data-i18n-image-credit");
+        this.heroCreditTextEl.innerText = `${i18nImageCredit}: ${
           newEntry.imageCredit
         }`;
       } else {
