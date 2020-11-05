@@ -1371,7 +1371,7 @@ module.exports = {
     return false;
   },
 
-  shouldShowCsvButtonOnSearch(req) {
+  showCsvButtonOnSearch(req) {
     const category = req.query.selectedCategory || null;
     const allowedCategories = ["case", "organizations", "method"];
     return (

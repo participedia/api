@@ -396,6 +396,13 @@ footer .language-select {
   font-weight: 900!important;
 }
 
+.u-code {
+  background-color: #f7f7f7;
+  padding: 0 4px;
+  font-size: .9rem;
+  border: 1px solid #ccc;
+}
+
 .u-text-align--center {
   text-align: center!important;
 }
