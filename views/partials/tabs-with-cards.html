@@ -4,7 +4,7 @@
       <span>{{> icon-filter}} {{t "filters"}}</span>
       <span class="tab-buttons-total-filter-badge js-total-filter-badge"></span>
     </button>
-    {{#if (includeSearchFilters req)}}
+    {{#if (shouldShowCsvButtonOnSearch req)}}
       <button class="button button-bordered-grey download-csv-btn js-download-csv-btn">
         <span class="sr-only">{{t "download"}}</span>
         {{> icon-download-csv}} CSV

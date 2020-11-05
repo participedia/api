@@ -61,17 +61,17 @@ function getFirstThumbnailImageForArticle(article) {
   let url = getFirstLargeImageForArticle(article);
 
   if (url) {
-    let imagePath = 'thumbnail';
+    let imagePath = "thumbnail";
 
     // Handle existing GIF by opening it from the raw folder
-    if (url.indexOf('.gif') >= 0) {
-      imagePath = 'raw';
+    if (url.indexOf(".gif") >= 0) {
+      imagePath = "raw";
     }
 
     return url.replace(
       process.env.AWS_UPLOADS_URL,
       `${process.env.AWS_UPLOADS_URL}${imagePath}/`
-    );  
+    );
   }
 }
 
@@ -155,14 +155,17 @@ const i18n = (key, context) =>
   context && context.data && context.data.root.__(key);
 
 module.exports = {
-  toJSON: obj =>  {
+  toJSON: obj => {
     return JSON.stringify(obj);
   },
 
   useInspectlet: () => {
-    return process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
+    return (
+      process.env.NODE_ENV === "production" ||
+      process.env.NODE_ENV === "staging"
+    );
   },
-  
+
   // transalation helpers
   getLocalizedTermsOfUsePartial: context => {
     const locale = context.data.root.locale || "en";
@@ -208,16 +211,16 @@ module.exports = {
       Featured_Case: i18n("Featured Case", context),
       Featured_Organization: i18n("Featured Organization", context),
       case: i18n("Case", context),
-      organization: i18n("Organization", context)
+      organization: i18n("Organization", context),
     });
   },
 
-  featuredCarouselPhrases: (context) => {
+  featuredCarouselPhrases: context => {
     return JSON.stringify({
       View_Case: i18n("View Case", context),
       View_Method: i18n("View Method", context),
       View_Organization: i18n("View Organization", context),
-      View_Collection: i18n("View Collection", context)
+      View_Collection: i18n("View Collection", context),
     });
   },
 
@@ -248,7 +251,10 @@ module.exports = {
 
   shouldShowOriginalLanguageAlert: (article, context) => {
     const req = context.data.root.req;
-    return article.original_language && article.original_language !== req.cookies.locale;  
+    return (
+      article.original_language &&
+      article.original_language !== req.cookies.locale
+    );
   },
 
   isSelectedLanguage: (lang, context) => {
@@ -466,7 +472,7 @@ module.exports = {
     const articleToKeyMap = {
       organization: "organizations",
       method: "method",
-      case: "case"
+      case: "case",
     };
 
     // get all the keys that we are currently filtering on from the search filters list
@@ -482,9 +488,9 @@ module.exports = {
 
   getSearchLinkForTerm: (article, name, key) => {
     if (article.type === "organization") {
-      return `/?selectedCategory=${article.type}s&${name}=${key}`;  
+      return `/?selectedCategory=${article.type}s&${name}=${key}`;
     } else {
-      return `/?selectedCategory=${article.type}&${name}=${key}`;  
+      return `/?selectedCategory=${article.type}&${name}=${key}`;
     }
   },
 
@@ -807,7 +813,7 @@ module.exports = {
       ) {
         // only add this edit if we don't already have an edit entry for this user on this day
         editsByUser[edit.user_id] = editsByUser[edit.user_id].concat([edit]);
-      } else if(!editsByUser[edit.user_id]) {
+      } else if (!editsByUser[edit.user_id]) {
         editsByUser[edit.user_id] = [edit];
       }
     });
@@ -898,19 +904,19 @@ module.exports = {
     start = Math.max(start, 1);
     start = Math.min(start, 1 + total - length);
 
-    let range = Array.from({length: length}, (el, i) => {
-       let page = start + i;
-       return {page: page, isActive: page == current};
-     });
+    let range = Array.from({ length: length }, (el, i) => {
+      let page = start + i;
+      return { page: page, isActive: page == current };
+    });
 
     if (total > length) {
-       let dots = {page: null, isActive: false};
-       if (range[range.length - 1].page == total) {
-         range.unshift({page: 1, isActive: current == 1}, dots);
-       } else {
-         range.push(dots, {page: total, isActive: total == current});
-       }
-     }
+      let dots = { page: null, isActive: false };
+      if (range[range.length - 1].page == total) {
+        range.unshift({ page: 1, isActive: current == 1 }, dots);
+      } else {
+        range.push(dots, { page: total, isActive: total == current });
+      }
+    }
 
     return range;
   },
@@ -919,27 +925,27 @@ module.exports = {
     const category = req.query.selectedCategory || undefined;
     let text;
 
-    switch(category) {
-     case "case": {
-      text = "cases of";
-      break;
-     }
-     case "organizations": {
-      text = "organizations of";
-      break;
-     }
-     case "method": {
-      text = "methods of";
-      break;
-     }
-     case "collections": {
-      text = "collections of";
-      break;
-     }
-     default: {
-      text = "entries of";
-      break;
-     }
+    switch (category) {
+      case "case": {
+        text = "cases of";
+        break;
+      }
+      case "organizations": {
+        text = "organizations of";
+        break;
+      }
+      case "method": {
+        text = "methods of";
+        break;
+      }
+      case "collections": {
+        text = "collections of";
+        break;
+      }
+      default: {
+        text = "entries of";
+        break;
+      }
     }
 
     return i18n(text, context);
@@ -977,7 +983,7 @@ module.exports = {
       { title: i18n("All", context), key: "all" },
       { title: i18n("Cases", context), key: "case" },
       { title: i18n("Methods", context), key: "method" },
-      { title: i18n("Organizations", context), key: "organizations" }
+      { title: i18n("Organizations", context), key: "organizations" },
     ];
   },
 
@@ -1101,7 +1107,13 @@ module.exports = {
   },
 
   isEditView(req) {
-    const baseUrls = ["/case", "/method", "/organization", "/user", "/collection"];
+    const baseUrls = [
+      "/case",
+      "/method",
+      "/organization",
+      "/user",
+      "/collection",
+    ];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
@@ -1278,46 +1290,63 @@ module.exports = {
           value: i18n(`name:${name}-key:${key}`, context),
         };
       });
-      
+
       if (isInitialDisplay) {
-        return items.slice(0,4);
+        return items.slice(0, 4);
       }
       return items.slice(4);
     }
   },
 
-  isNotCollection: (article) => {
+  isNotCollection: article => {
     return article.type !== "collection";
   },
 
-  collectionHasLink: (collection) => {
-    return collection.links & collection.links.length > 0;
+  collectionHasLink: collection => {
+    return collection.links & (collection.links.length > 0);
   },
 
   getCollectionSummaryString: (collection, numArticlesByType, context) => {
     const __ = context.data.root.__;
 
-    const numStringForType = (type) => {
+    const numStringForType = type => {
       const numOfThing = numArticlesByType[type];
-       if (numOfThing === 0 || numOfThing > 1) {
+      if (numOfThing === 0 || numOfThing > 1) {
         return __(`collection_num_${type}_plural_or_zero`, `${numOfThing}`);
-       } else {
+      } else {
         return __(`collection_num_${type}`, `${numOfThing}`);
-       }
+      }
     };
     const numCasesString = numStringForType("case");
     const numMethodsString = numStringForType("method");
     const numOrgsString = numStringForType("organization");
-    return __("collection_summary_string", `${collection.title}`) + " " + numCasesString + ", " + numMethodsString  + ", " + numOrgsString + ".";
+    return (
+      __("collection_summary_string", `${collection.title}`) +
+      " " +
+      numCasesString +
+      ", " +
+      numMethodsString +
+      ", " +
+      numOrgsString +
+      "."
+    );
   },
 
   // banner-notice helpers
   getBannerText(withLink, context) {
     const __ = context.data.root.__;
     if (withLink === "withLink") {
-      return __("citizens_voices_collection_is_now_live", "<a href='/collection/6501'>", "</a>");
+      return __(
+        "citizens_voices_collection_is_now_live",
+        "<a href='/collection/6501'>",
+        "</a>"
+      );
     } else {
-      return __("citizens_voices_collection_is_now_live", "<strong>", "</strong>");  
+      return __(
+        "citizens_voices_collection_is_now_live",
+        "<strong>",
+        "</strong>"
+      );
     }
   },
 
@@ -1329,7 +1358,7 @@ module.exports = {
   isSearchFilterCheckboxSelection(key) {
     const excludedFilterKeys = ["country"];
 
-    if(excludedFilterKeys.indexOf(key) >= 0) {
+    if (excludedFilterKeys.indexOf(key) >= 0) {
       return false;
     }
 
@@ -1342,10 +1371,18 @@ module.exports = {
     return false;
   },
 
+  shouldShowCsvButtonOnSearch(req) {
+    const category = req.query.selectedCategory || null;
+    const allowedCategories = ["case", "organizations", "method"];
+    return (
+      allowedCategories.indexOf(category) >= 0 &&
+      req.baseUrl.indexOf("collections") > 0
+    );
+  },
+
   includeSearchFilters(req) {
     const category = req.query.selectedCategory || null;
     const allowedCategories = ["case", "organizations", "method"];
-    if (allowedCategories.indexOf(category) >= 0) return true;
-    return false;
-  }
+    return allowedCategories.indexOf(category) >= 0;
+  },
 };
