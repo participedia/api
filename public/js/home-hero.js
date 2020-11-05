@@ -67,12 +67,9 @@ const homeHero = {
 
   updateHero(index) {
     this.currentIndex = index;
-    // set opacity for transition
-    this.heroOverlayEl.style.opacity = 1;
-    this.heroCreditEl.style.opacity = 0;
     const newEntry = this.heroFeatures[index];
 
-    const shouldUpdate =
+    const  =
       this.heroImageEl &&
       this.heroEntryLinkEl &&
       this.heroCreditTextEl &&
@@ -80,6 +77,12 @@ const homeHero = {
       this.heroEntryLinkEl &&
       this.heroOverlayEl &&
       this.heroCreditEl;
+    
+    // set opacity for transition
+    if(shouldUpdate) {
+      this.heroOverlayEl.style.opacity = 1;
+      this.heroCreditEl.style.opacity = 0;
+    }
 
     setTimeout(() => {
       if (!shouldUpdate) return;
