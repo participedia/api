@@ -488,9 +488,9 @@ module.exports = {
 
   getSearchLinkForTerm: (article, name, key) => {
     if (article.type === "organization") {
-      return `/?selectedCategory=${article.type}s&${name}=${key}`;
+      return `/search?selectedCategory=${article.type}s&${name}=${key}`;
     } else {
-      return `/?selectedCategory=${article.type}&${name}=${key}`;
+      return `/search?selectedCategory=${article.type}&${name}=${key}`;
     }
   },
 
