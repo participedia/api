@@ -1,0 +1,34 @@
+.carousel-navigation {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.carousel-navigation-arrow {
+  height: 35px;
+}
+
+.carousel-navigation__dots-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.carousel-navigation__dots-nav-item {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #C8C8C8;
+  margin-right: 10px;
+}
+
+.carousel-navigation__dots-nav-item--current {
+  background-color: #000;
+}
+
+@media (max-width: 800px) { 
+  .carousel-navigation {
+    margin-top: 30px;
+  }
+}

@@ -1,35 +1,24 @@
 {{#if cards}}
-  {{#if includeSearchFilters}}
-    {{> search-filters type=type }}
-  {{/if}}
-
   {{#if (isCollectionView req)}}        
     <div class="u-margin-bottom--small">
       {{getCollectionSummaryString article numArticlesByType}}      
     </div>
   {{/if}}
 
-  {{#if totalResults}}
-    {{> pagination }}
+  {{#if (isNotCollectionView req)}} 
+    {{#if totalResults}}
+      {{> pagination-string }}
+    {{/if}}
   {{/if}}
+
   <ul class="unstyled-list cards-container js-cards-container">
     {{#each cards }}
       {{> article-card req=../req}}
     {{/each}}
   </ul>
   {{#if totalResults}}
-    {{> pagination }}
+    {{> pagination-tab }}
   {{/if}}
 {{else}}
-  {{#if includeSearchFilters}}
-    {{> search-filters type=type }}
-  {{/if}}
-
-  {{#if (isCollectionView req)}}        
-    <div class="u-margin-bottom--small">
-      {{getCollectionSummaryString article numArticlesByType}}      
-    </div>
-  {{/if}}
-  
   <div class="u-margin-bottom--large">{{t "no_items"}}</div>
 {{/if}}

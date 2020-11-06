@@ -1,0 +1,6 @@
+<div class="pagination">
+	<div class="pagination-string">
+	  {{paginationNumResults cards totalResults req}} {{getPaginationCategoryLabel req}} {{totalResults}}
+	  {{#if req.query.query}} {{t "for"}} "{{req.query.query}}" {{/if}}
+  </div>
+</div>

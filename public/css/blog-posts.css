@@ -1,0 +1,17 @@
+.blog-post-card__image {
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  height: 185px;
+}
+
+@media (max-width: 800px) { 
+  .blog-post-card__description {
+    display: none;
+  }
+  .blog-post-card__link {
+    display: none;
+  }
+}
+
+

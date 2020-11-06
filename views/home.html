@@ -1,0 +1,286 @@
+<!-- {{> banner-notice }} -->
+
+<div class="home-section home-hero js-home-hero" data-hero-features="{{toJSON heroFeatures}}">
+  <div
+    class="home-hero-image js-home-hero-image"
+    style="background-image: url('{{heroFeatures.0.imageUrl}}')"
+  ></div>
+  <div class="home-hero-overlay js-home-hero-overlay"></div>
+  <div class="u-inner-container home-hero-content-inner">
+    <div>
+      <h1 class="home-hero-header">
+        {{t "home_hero_tagline"}}
+      </h1>
+      <ul class="unstyled-list home-hero-stats">
+        <li class="home-hero-stats__stat-item">
+          <a href="/search?selectedCategory=case">
+            <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--cases">{{stats.cases}}</h5>
+            <h3>{{t "Cases"}}</h3>
+          </a>
+        </li>
+        <li class="home-hero-stats__stat-item">
+          <a href="/search?selectedCategory=method">
+            <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--methods">{{stats.methods}}</h5>
+            <h3>{{t "Methods"}}</h3>
+          </a>
+        </li>
+        <li class="home-hero-stats__stat-item">
+          <a href="/search?selectedCategory=organizations">
+            <h5 
+              class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--organizations"
+            >
+              {{stats.organizations}}
+            </h5>
+            <h3>{{t "Organizations"}}</h3>
+          </a>
+        </li>
+        <li class="home-hero-stats__stat-item">
+          <a href="/search?selectedCategory=collections">
+            <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--collections">{{stats.collections}}</h5>
+            <h3>{{t "collections"}}</h3>
+          </a>
+        </li>
+        <li class="home-hero-stats__stat-item">
+          <a href="#map">
+            <h5 class="js-home-hero-stats__stat-number" id="js-home-hero-stats__stat-number--countries">{{stats.countries}}</h5>
+            <h3>{{t "countries"}}</h3>
+          </a>
+        </li>
+      </ul>
+      <div class="home-hero-search">
+        <form
+          action="/search"
+          class="home-hero-search__form js-home-hero-search__form"
+        >
+          <div class="home-hero-search__form-inputs">
+            <div class="home-hero-search__form-search-icon-container">
+              {{> icon-search }}
+            </div>
+            <input name="query" type="text" placeholder={{t "Search"}}
+            class="home-hero-search__form-input js-home-hero-search__form-input" />
+            <select
+              name="type"
+              class="home-hero-search__edit-select js-edit-select u-margin-right--xsmall"
+              id="js-home-hero-search__edit-select"
+            >
+              <option value="all">
+                {{t "All"}}
+              </option>
+              <option value="case">
+                {{t "Cases"}}
+              </option>
+              <option value="organizations">
+                {{t "Organizations"}}
+              </option>
+              <option value="method">
+                {{t "Methods"}}
+              </option>
+              <option value="collections">
+                {{t "Collections"}}
+              </option>
+            </select>
+          </div>
+          <button class="button button-red" type="submit">{{t "Search"}}</button>
+          <div class="home-hero-browse-all-link">
+            <a href="/search">{{t "Browse all entries"}}</a>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="home-hero-footer">
+      {{#> three-column-row }}
+        {{#> three-column-column}}
+          <div>
+            <h3 class="home-hero-image-credit js-home-hero-image-credit">
+              <a
+                href="{{heroFeatures.0.entryUrl}}"
+                class="js-home-hero-image-credit__entry-link"
+                >{{t heroFeatures.0.entryTitle}}</a
+              >
+            </h3>      
+            <div class="js-home-hero-image-credit__country">{{heroFeatures.0.country}}</div>
+            {{#if heroFeatures.0.imageCredit}}
+              <small 
+                class="home-hero-image-credit__credit js-home-hero-image-credit__credit" 
+                data-i18n-image-credit="{{t 'Image credit'}}"
+              >
+                {{t "Image credit"}}: {{heroFeatures.0.imageCredit}}
+              </small>
+            {{/if}}
+          </div>  
+        {{/ three-column-column}}
+        {{#> three-column-column}}
+          <div class="home-hero__carousel-navigation">
+            {{> carousel-navigation type="hero"}}
+          </div>
+        {{/ three-column-column}}
+        {{#> three-column-column}}
+          <div></div>
+        {{/ three-column-column}}
+      {{/ three-column-row }}
+    </div>
+  </div>
+</div>
+
+<div class="home-section u-margin-bottom--large u-margin-top--med">
+  <div class="u-inner-container">
+    {{#> three-column-row }}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small u-text-align--center">
+          <img class="home-section-column-image" src="/images/homepage/explore.svg" width="80%" />
+          <h2 class="u-extra-bold">{{t "Explore & Research"}}</h2>
+          <div>
+            {{{
+              __
+              "home.explore our database"
+              "<a href='/research#data-dl'>"
+              "</a>"
+              "<a href='#map'>"
+              "</a>"
+            }}}
+          </div>
+        </div>
+
+        <a href="/research" class="u-extra-bold u-text-align--center">
+          {{t "Read more about our research"}} ->
+        </a>
+      {{/ three-column-column}}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small u-text-align--center">
+          <img class="home-section-column-image" src="/images/homepage/contribute.svg" width="80%" />
+          <h2 class="u-extra-bold">{{t "Contribute"}}</h2>
+          <div>
+            {{t "home.contribute.Help expand our database"}}
+          </div>
+        </div>
+        <a href="/getting-started" class="u-extra-bold u-text-align--center">
+          {{t "Getting started guide"}} ->
+        </a>
+      {{/ three-column-column}}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small u-text-align--center">
+          <img class="home-section-column-image" src="/images/homepage/teach.svg" width="80%" />
+          <h2 class="u-extra-bold">{{t "Teach"}}</h2>
+          <div>
+            {{t "home.teach.Use Participedia in the classroom"}}
+          </div>
+        </div>
+        <a href="/teaching" class="u-extra-bold u-text-align--center">
+          {{t "Teaching resources"}} ->
+        </a>
+      {{/ three-column-column}}
+    {{/ three-column-row }}
+  </div>
+</div>
+
+<div class="home-section">
+  {{> featured-entries-carousel 
+      entries=featuredCollections 
+      title=(t "Featured Collections")
+      type="collections"
+    }}
+</div>
+
+<div class="home-section">
+  <div class="u-inner-container">
+    <div class="home-section-header">
+      <h2>{{t "News"}}</h2>
+      <a
+        href="https://medium.com/@participediaproject"
+        target="_blank"
+        rel="noopener"
+      >
+        {{t "View all"}}
+      </a>
+    </div>
+    {{> blog-posts}}
+  </div>
+</div>
+
+<div class="home-section">
+  {{> featured-entries-carousel 
+      entries=featuredCasesMethodsOrgs 
+      title=(t "Featured Entries")
+      type="cases-methods-orgs"
+  }}
+</div>
+
+<div class="home-section" id="map">
+  <div class="home-section-header u-inner-container">
+    <h2>{{t "Explore Cases & Organizations by Location"}}</h2>
+  </div>
+
+  {{> map }}
+</div>
+
+<div class="home-section">
+  <div class="u-inner-container">
+    {{#> three-column-row }}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small">
+          <h2 class="u-extra-bold">{{t "About Participedia"}}</h2>
+          <p>{{t "home.about.p1"}}</p>
+          <p>{{t "home.about.p2"}}</p>
+        </div>
+        <a href="/about" class="u-extra-bold">{{t "Read more"}} -></a>
+      {{/ three-column-column}}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small">
+          <h2 class="u-extra-bold">{{t "Newsletter"}}</h2>
+          <p>
+            {{t "home.newsletter.p1"}} 
+          </p>
+        </div>
+        <a 
+          href="https://mailchi.mp/participedia/subscribe"  
+          target="_blank" 
+          rel="noopener"  
+          class="u-extra-bold"
+        >{{t "Sign up"}} -></a>
+      {{/ three-column-column}}
+      {{#> three-column-column}}
+        <div class="u-margin-bottom--small">
+          <h2 class="u-extra-bold">{{t "Supporters"}}</h2>
+          <p>
+            {{{
+              __
+              "home.supporters.p1"
+              "<a 
+                href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx' 
+                target='_blank' 
+                rel='noopener'
+              >"
+              "</a>"
+            }}}
+          </p>
+          <p>  
+            {{{
+              __
+              "home.supporters.p2"
+              "<a 
+                href='https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology' 
+                target='_blank' 
+                rel='noopener'
+              >"
+              "</a>"
+              "<a 
+                href='http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx' 
+                target='_blank' 
+                rel='noopener'
+              >"
+              "</a>"
+              "<a 
+                href='https://www.innovation.ca/' 
+                target='_blank' 
+                rel='noopener'
+              >"
+              "</a>"
+            }}}
+          </p>
+        </div>
+        <a href="/about#supporters" class="u-extra-bold">{{t "Read more"}} -></a>
+      {{/ three-column-column}}
+    {{/ three-column-row }}
+    
+  </div>
+</div>

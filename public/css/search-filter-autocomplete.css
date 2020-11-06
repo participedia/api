@@ -1,0 +1,15 @@
+.search-filter-autocomplete-list .search-filter-autocomplete-selected-item {
+	margin-top: 15px;
+  background-color: #fff;
+  border-radius: 2px;
+  border: 1px solid #e6e6e6;
+  display: flex;
+}
+
+.search-filter-autocomplete-list .search-filter-autocomplete-selected-item span {
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+  padding: 8px;
+  line-height: 1.2em;
+}

@@ -22,25 +22,26 @@
     </p>
   {{/accordion}}
 
+  <div class="js-data-dl">
   {{#> accordion title=(t "research.data_downloads_header")}}
     <p>{{t "research.data_downloads.p1"}}</p>
     <ul>
       <li>
         <strong>{{t "Cases"}}:</strong>
-        <a href="https://participedia.net/?selectedCategory=case&returns=csv" target="_blank">
-          https://participedia.net/?selectedCategory=case&returns=csv
+        <a href="/search?selectedCategory=case&returns=csv" target="_blank">
+          https://participedia.net/search?selectedCategory=case&returns=csv
         </a>
       </li>
       <li>
         <strong>{{t "Methods"}}:</strong>
-        <a href="https://participedia.net/?selectedCategory=method&returns=csv" target="_blank">
-          https://participedia.net/?selectedCategory=method&returns=csv
+        <a href="/search?selectedCategory=method&returns=csv" target="_blank">
+          https://participedia.net/search?selectedCategory=method&returns=csv
         </a>
       </li>
       <li>
         <strong>{{t "Organizations"}}:</strong>
-        <a href="https://participedia.net/?selectedCategory=organizations&returns=csv" target="_blank">
-          https://participedia.net/?selectedCategory=organizations&returns=csv
+        <a href="/search?selectedCategory=organizations&returns=csv" target="_blank">
+          https://participedia.net/search?selectedCategory=organizations&returns=csv
         </a>
       </li>
     </ul>
@@ -57,7 +58,8 @@
       }}}
     </p>
   {{/accordion}}
-
+  </div>
+  
   {{#> accordion title=(t "research.data_repository.dataverse")}}
     <p>
       {{{__

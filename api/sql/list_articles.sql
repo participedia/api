@@ -5,7 +5,7 @@ WITH all_titles AS
     select language from localized_texts where language = ${lang} and thingid = id limit 1
   ),
   ${type:name}.original_language
-)) title, hidden
+)) title, hidden, type
  FROM ${type:name}
  ORDER BY title)
 SELECT *

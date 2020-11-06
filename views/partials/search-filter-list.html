@@ -1,0 +1,37 @@
+<form class="search-filter-list js-search-filter-list">
+  {{#if (showCountryAutoComplete type)}}
+	<div class="search-filter-list-item">
+		<div class="filter-label">
+			<label for="country">{{t "Countries"}}</label>
+		</div>
+		<div class="filter-input">
+			{{> search-filter-autocomplete name="country" }}
+		</div>
+  </div>
+  {{/if}}
+
+  {{#each (searchFiltersSections type)}}
+    {{#each fieldNameKeys}}
+      {{#if (isSearchFilterCheckboxSelection this)}}
+        <div class="search-filter-list-item">
+      		<div class="filter-label">
+      			<label>{{searchFilterLabel ../../type this}}</label>
+      		</div>
+          {{#> accordion-show-all key=this}}
+            <div class="accordion-summary-content keys-list js-keys-list" data-field-name="{{../this}}">
+              {{#each (getOptionsForFilterKey ../this true)}}
+                {{> search-filter-key-list-item fieldName=../../this sectionKey="summary" key=key value=value}}
+              {{/each}}
+            </div>
+
+            <div class="accordion-full-content unstyled-list keys-list js-keys-list" data-field-name="{{../this}}">
+              {{#each (getOptionsForFilterKey ../this false)}}
+                {{> search-filter-key-list-item fieldName=../../this sectionKey="full" key=key value=value}}
+              {{/each}}
+            </div>
+          {{/accordion-show-all}}
+        </div>
+      {{/if}}
+    {{/each}}
+  {{/each}}
+</form>

@@ -1,8 +1,4 @@
-{{> banner-notice }}
-
-{{> map }}
-
-<div class="home-search-body">
+<div class="search-body">
   {{#> tabs-with-cards req=req getTabs=(getHomeTabs)}}
     <div role="tabpanel" class="tab-all">
       {{#if (isSelectedHomeTab req "all")}}
@@ -19,7 +15,6 @@
           totalResults=total
           totalPages=pages
           cards=results
-          includeSearchFilters=true
           type="case"
         }}
       {{/if}}
@@ -30,7 +25,6 @@
           totalResults=total
           totalPages=pages
           cards=results
-          includeSearchFilters=true
           type="method"
         }}
       {{/if}}
@@ -41,7 +35,6 @@
           totalResults=total
           totalPages=pages
           cards=results
-          includeSearchFilters=true
           type="organizations"
         }}
       {{/if}}
@@ -58,7 +51,7 @@
     </div>
   {{/tabs-with-cards}}
 
-  <a href="/content-chooser" class="button button-red floating-action-button" title='{{t "Quick Submit"}}'>
+  <a href="/content-chooser" class="button button-red floating-action-button floating-quick-submit-button" title='{{t "Quick Submit"}}'>
     <span class="sr-only">{{t "Quick Submit"}}</span>
     {{> icon-add }}
   </a>

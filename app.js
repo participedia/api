@@ -45,6 +45,7 @@ const { method } = require("./api/controllers/method");
 const { organization } = require("./api/controllers/organization");
 const bookmark = require("./api/controllers/bookmark");
 const search = require("./api/controllers/search");
+const home = require("./api/controllers/home");
 const list = require("./api/controllers/list");
 const blogPost = require("./api/controllers/blog-post");
 const user = require("./api/controllers/user");
@@ -159,8 +160,9 @@ passport.deserializeUser(async function(user, done) {
 
 // Perform the login, after login Auth0 will redirect to callback
 app.get("/login", function(req, res, next) {
-  // set returnTo session var to referer so user is redirected to current page after login
-  req.session.returnTo = req.headers.referer;
+  // by default, return user to the referring page
+  // if redirectTo query param is present, redirect there
+  req.session.returnTo = (req.query && req.query.redirectTo) || req.headers.referer;
   req.session.refreshAndClose = req.query.refreshAndClose;
   passport.authenticate(
     "auth0",
@@ -254,8 +256,8 @@ app.use((req, res, next) => {
 });
 
 // ROUTES
-app.use("/", cache("5 minutes"), search);
-
+app.use("/", home);
+app.use("/search", cache("5 minutes"), search);
 app.use("/collection", collection_);
 app.use("/case", case_);
 app.use("/organization", organization);
@@ -292,6 +294,17 @@ app.get("/content-chooser", function(req, res) {
 });
 app.get("/help-faq-contact", function(req, res) {
   res.status(200).render("help-faq-contact-view");
+});
+app.get("/getting-started", function(req, res) {
+  res.status(200).render("getting-started-view");
+});
+app.get("/profile", function(req, res) {
+  if (req.user) {
+    res.redirect(`/user/${req.user.id}`);
+  } else {
+    // else, go to sign up page
+    res.redirect("/login?redirectTo=/profile");
+  }
 });
 
 // redirect old user profile for tanyapuravankara to new url

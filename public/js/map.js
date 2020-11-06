@@ -81,13 +81,14 @@ const markerStyles = markerSize => {
 
 const map = {
   init() {
-    const mapEl = document.querySelector(".js-map-inner");
-    this.isMethodTab = document.getElementById("method").checked;
-    this.isCollectionTab = document.getElementById("collections").checked;
+    this.mapEl = document.querySelector(".js-map-inner");
 
-    if (!mapEl) return;
+    if (!this.mapEl) return;
+    
+    this.headerEl = document.querySelector(".js-header");
+    this.mapLegendEl = document.querySelector(".js-map-legend");
 
-    this.map = new google.maps.Map(mapEl, {
+    this.map = new google.maps.Map(this.mapEl, {
       center: { lat: 6.1259722, lng: 20.9404108 },
       zoom: 2.5,
       disableDefaultUI: true,
@@ -95,113 +96,40 @@ const map = {
       styles: mapStyle,
     });
 
-    this.initZoomControls(this.map);
-    this.initMapOverlay();
+    this.initZoomControls();
+    this.fetchMapResults();
+    this.setMapHeight();
+    window.addEventListener('resize', () => {
+      this.setMapHeight();
+    });
 
-    if (!this.isMethodTab && !this.isCollectionTab) {
-      // don't fetch map results if we are on the methods or collections tab
-      this.fetchMapResults();
-    }
+    this.i18n = JSON.parse(this.mapEl.getAttribute("data-i18n"));
   },
 
-  initMapOverlay() {
-    const mapOverlayTriggerEl = document.querySelector(
-      ".js-map-overlay-trigger"
-    );
-
-    this.mapControls = document.querySelector(".js-map-controls");
-    this.mapOverlayEl = document.querySelector(".js-map-overlay");
-    this.mapLegend = document.querySelector(".js-map-legend");
-    this.activateMapCTAContainer = document.querySelector(
-      ".js-map-overlay-info"
-    );
-
-    if (!this.isMethodTab && !this.isCollectionTab) {
-      this.mapOverlayEl.addEventListener("click", e => {
-        try {
-          window.sessionStorage.setItem("participedia:mapActivated", "true");
-        } catch (err) {
-          console.warn(err);
-        }
-        this.hideMapOverlay();
-      });
-
-      mapOverlayTriggerEl.addEventListener("click", e => {
-        // track activate map click
-        tracking.send("home.map", "activate_map_button_click");
-        this.showMapOverlay();
-      });
-    }
-
-    // if user is on method or collection tab, show overlay, but don't show activate map link
-    // on all other tabs, if user has already clicked to activate map in the current browser session,
-    // don't show overlay, show legend
-    if (this.isMethodTab || this.isCollectionTab) {
-      this.showMapOverlay();
-      this.activateMapCTAContainer.style.display = "none";
-    } else if (window.sessionStorage.getItem("participedia:mapActivated")) {
-      this.hideMapOverlay();
-    } else {
-      this.showMapOverlay();
-    }
-
-    this.initTracking();
+  setMapHeight() {
+    const mapHeight = `${window.innerHeight - this.headerEl.offsetHeight}px`;
+    this.mapEl.parentNode.style.height = mapHeight;
+    this.mapEl.style.height = mapHeight;
   },
 
-  initTracking() {
-    // track join now button click in map overlay
-    const joinNowButtonEl = document.querySelector(".js-join-now-button");
-    if (joinNowButtonEl) {
-      joinNowButtonEl.addEventListener("click", event => {
-        event.preventDefault();
-        tracking.sendWithCallback(
-          "home.map",
-          "join_now_button_click",
-          "",
-          () => {
-            window.location.href = event.target.href;
-          }
-        );
-      });
-    }
-  },
-
-  showMapOverlay() {
-    this.closePopOver();
-    this.mapOverlayEl.style.display = "block";
-    this.mapLegend.style.display = "none";
-    this.mapControls.style.display = "none";
-  },
-
-  hideMapOverlay() {
-    this.mapOverlayEl.style.display = "none";
-    this.mapLegend.style.display = "flex";
-    this.mapControls.style.display = "block";
-  },
-
-  initZoomControls(map) {
+  initZoomControls() {
     document
       .querySelector(".js-map-zoom-control-in")
       .addEventListener("click", () => {
-        map.setZoom(map.getZoom() + 1);
+        this.map.setZoom(this.map.getZoom() + 1);
       });
     document
       .querySelector(".js-map-zoom-control-out")
       .addEventListener("click", () => {
-        map.setZoom(map.getZoom() - 1);
+        this.map.setZoom(this.map.getZoom() - 1);
       });
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+    this.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
       document.querySelector(".js-map-controls")
     );
   },
 
   fetchMapResults() {
-    let url = "";
-    if (window.location.search) {
-      url = `/${window.location.search}&resultType=map&returns=json`;
-    } else {
-      url = `/?resultType=map&returns=json`;
-    }
+    const url = `/search?resultType=map&returns=json`;
 
     const successCB = response => {
       const results = JSON.parse(response.response).results;
@@ -245,27 +173,6 @@ const map = {
       return null;
     } else {
       return results;
-    }
-  },
-
-  filterResultsForTab(results) {
-    const currentTab = document.querySelector(".js-tab-container input:checked")
-      .id;
-    if (currentTab === "organizations") {
-      // NOTE: currentTab for organizations is plural, but article type is singular
-      // organizations only
-      return results.filter(article => article.type === "organization");
-    } else if (currentTab === "case") {
-      // cases only
-      return results.filter(article => article.type === "case");
-    } else if (currentTab === "all") {
-      // cases and orgs
-      return results.filter(
-        article => article.type === "case" || article.type === "organization"
-      );
-    } else if (currentTab === "method") {
-      // none for methods
-      return null;
     }
   },
 
@@ -314,15 +221,12 @@ const map = {
   },
 
   prepareMarkers(results) {
-    const articleCardsContainer = document.querySelector(".js-cards-container");
-    const filteredResults = this.filterResultsForTab(results);
-
-    const markers = filteredResults
+    const markers = results
       .map(article => {
         const { latitude, longitude } = article;
 
         // if article doesn't have lat,lng coords, don't render markers
-        if (!latitude || !longitude || !articleCardsContainer) return;
+        if (!latitude || !longitude) return;
 
         return {
           id: article.id,
@@ -332,7 +236,7 @@ const map = {
           title: article.title,
           featured: article.featured,
           position: new google.maps.LatLng(latitude, longitude),
-          content: articleCardsContainer.querySelector("li"),
+          //content: articleCardsContainer.querySelector("li"),
         };
       })
       .filter(m => m !== undefined);
@@ -341,27 +245,31 @@ const map = {
     this.dropMarkers(markers);
   },
 
-  bindClickEventForMarker(markerEl, marker) {
-    // on marker click, show article card in popover on map
-    markerEl.addListener("click", event => {
-      const popOverContentEl = document.createElement("div");
+  renderMarkerCard(marker) {
+    if (!this.cardEl) {
+      this.cardEl = document.getElementById("js-map-article-card-template");
+    }
+
+    let cardTemplate =  document.createElement("div");
+    cardTemplate.innerHTML = this.cardEl.innerHTML;
+    cardTemplate = cardTemplate.querySelector("li").innerHTML;
+    
+    const popOverContentEl = document.createElement("div");
       // get card content from marker and set on content element
       popOverContentEl.classList = "article-card";
-      popOverContentEl.innerHTML = marker.content.innerHTML;
+      popOverContentEl.innerHTML = cardTemplate;
 
       // update type
       const articleTypeEl = popOverContentEl.querySelector(
         ".js-article-card-meta h5"
       );
-
       if (marker.featured) {
-        articleTypeEl.innerHTML = marker.content.getAttribute(
-          `data-i18n-featured-${marker.type}`
-        );
+        articleTypeEl.innerHTML = {
+          case: this.i18n["Featured_Case"],
+          method: this.i18n["Featured_Method"],
+        }[marker.type];
       } else {
-        articleTypeEl.innerHTML = marker.content.getAttribute(
-          `data-i18n-${marker.type}`
-        );
+        articleTypeEl.innerHTML = this.i18n[marker.type];
       }
 
       // update image
@@ -395,20 +303,26 @@ const map = {
       articleLinks.forEach(el => {
         el.setAttribute("href", `/${marker.type}/${marker.id}`);
       });
+      return popOverContentEl;
+  },
 
+  bindClickEventForMarker(markerEl, marker) {    
+    // on marker click, show article card in popover on map
+    markerEl.addListener("click", event => {
       // if there is already a current pop over, remove it
       if (this.popOver) {
         this.popOver.setMap(null);
       }
 
       // insert pop over
+      const popOverContentEl = this.renderMarkerCard(marker);
       this.popOver = new PopOver(marker.position, popOverContentEl);
       this.popOver.setMap(this.map);
 
       // on screen widths less than 1100 the legend overlaps the marker card,
       // so in this case, hide the legend when the marker is shown
       if (window.innerWidth < 1100) {
-        this.mapLegend.style.display = "none";
+        this.mapLegendEl.style.display = "none";
       }
 
       // remove pop over on close button click
@@ -417,7 +331,7 @@ const map = {
         if (!closeButtonEl) return;
         this.popOver.setMap(null);
         // show legend when marker is closed
-        this.mapLegend.style.display = "flex";
+        this.mapLegendEl.style.display = "flex";
       });
     });
   },

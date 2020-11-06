@@ -4,7 +4,7 @@ const header = {
   init() {
     this.trackLoginButtonClick();
     this.initProfileDropdownMenu();
-    this.trackQuerySearchInput();
+    this.initClearSearchInput();
   },
 
   trackLoginButtonClick() {
@@ -47,29 +47,29 @@ const header = {
     });
   },
 
-  trackQuerySearchInput() {
+  initClearSearchInput() {
     const searchInputEl = document.querySelector(".js-query-search-input");
-    const closeButtonEl = document.querySelector(".js-query-search-close-button");
+    const clearSearchButtonEl = document.querySelector(".js-search-query-clear-button");
     const searchFormEl = document.querySelector(".js-query-search-form");
-    this.hideOrShowSearchCloseButton(searchInputEl.value, closeButtonEl);
+    this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
 
     searchInputEl.addEventListener("input", e => {
-      this.hideOrShowSearchCloseButton(e.target.value, closeButtonEl);
+      this.hideOrShowSearchCloseButton(e.target.value, clearSearchButtonEl);
     });
 
-    closeButtonEl.addEventListener("click", e => {
+    clearSearchButtonEl.addEventListener("click", e => {
       searchInputEl.value = "";
-      this.hideOrShowSearchCloseButton(searchInputEl.value, closeButtonEl);
-      history.pushState({}, "", '/');
-      location.href = '/';
+      this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
+      history.pushState({}, "", '/search');
+      location.href = '/search';
     });
   },
 
-  hideOrShowSearchCloseButton(query, closeButtonEl) {
+  hideOrShowSearchCloseButton(query, clearSearchButtonEl) {
     if (query.length > 0) {
-      closeButtonEl.classList.remove("hidden");
+      clearSearchButtonEl.classList.remove("hidden");
     } else {
-      closeButtonEl.classList.add("hidden");
+      clearSearchButtonEl.classList.add("hidden");
     }
   }
 };

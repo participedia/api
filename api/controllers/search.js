@@ -174,9 +174,9 @@ const searchFiltersFromReq = req => {
   return searchFilterKeysMapped.join("") + searchFilterKeyListMapped.join("");
 };
 
-const redirectToHomePageIfHasCollectionsQueryParameter = (req, res, next) => {
+const redirectToSearchPageIfHasCollectionsQueryParameter = (req, res, next) => {
   if (req.query.hasOwnProperty('collections')) {
-    res.redirect('?selectedCategory=collections');
+    res.redirect('/search?selectedCategory=collections');
     return;
   }
 
@@ -214,7 +214,7 @@ const redirectToHomePageIfHasCollectionsQueryParameter = (req, res, next) => {
 // if there is no query OR the query is "featured" then return all featured items
 // One further item: need an alternative search which returns only map-level items and has no pagination
 
-router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function(req, res) {
+router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async function(req, res) {
   const user_query = req.query.query || "";
   const parsed_query = preparse_query(user_query);
   const limit = limitFromReq(req);
@@ -271,7 +271,7 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
           user: req.user || null,
         });
       case "htmlfrag":
-        return res.status(200).render("home-search", {
+        return res.status(200).render("search", {
           total,
           pages,
           searchhits,
@@ -281,7 +281,7 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
         });
       case "csv":
         var entries = [];
-        if (type === "thing") {
+        if (type !== "thing") {
           entries = results.map(article => {
             return {
               "id": article.id,
@@ -296,7 +296,7 @@ router.get("/", redirectToHomePageIfHasCollectionsQueryParameter, async function
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through
       default:
-        return res.status(200).render("home-search", {
+        return res.status(200).render("search", {
           OK,
           total,
           pages,

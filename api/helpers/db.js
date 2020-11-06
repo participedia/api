@@ -59,6 +59,7 @@ const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
 const SEARCH = sql("../sql/search.sql");
 const FEATURED_MAP = sql("../sql/featuredmap.sql");
 const FEATURED = sql("../sql/featured.sql");
+const FEATURED_COLLECTION = sql("../sql/featured_collection.sql");
 const SEARCH_MAP = sql("../sql/searchmap.sql");
 const LIST_ARTICLES = sql("../sql/list_articles.sql");
 const LIST_MAP_CASES = sql("../sql/list_map_cases.sql");
@@ -532,6 +533,7 @@ module.exports = {
   SEARCH,
   FEATURED_MAP,
   FEATURED,
+  FEATURED_COLLECTION,
   SEARCH_MAP,
   LIST_ARTICLES,
   LIST_MAP_CASES,

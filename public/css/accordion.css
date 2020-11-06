@@ -3,11 +3,16 @@
   border-bottom: 1px solid #e6e6e6;
 }
 
+.accordion.accordion-show-all {
+  border: none;
+}
+
 .accordion + .accordion {
   border-top: 0;
 }
 
-.accordion-small:last-of-type {
+.accordion-small:last-of-type,
+.accordion.accordion-show-all .accordion-content {
   margin-bottom: 15px;
 }
 
@@ -15,10 +20,14 @@
   display: none;
 }
 
-.accordion label {
+.accordion .accordion-label,
+.accordion .accordion-show-all-label {
   position: relative;
-  display: block;
   cursor: pointer;
+}
+
+.accordion .accordion-label {
+  display: block;
   padding: 5px 0;
   font-size: 1.25rem;
   line-height: 1.4;
@@ -26,7 +35,13 @@
   color: #000;
 }
 
-.accordion label:after {
+.accordion .accordion-show-all-label {
+  padding-right: 25px;
+  text-decoration: underline;
+}
+
+.accordion .accordion-label:after,
+.accordion .accordion-show-all-label:after {
   content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26.7 13.7'%3e%3cpolygon fill='grey' points='13.3%2c13.7 0%2c1.5 1.3%2c0 13.3%2c11 25.3%2c0 26.7%2c1.5' /%3e%3c/svg%3e");
   position: absolute;
   right: 0;
@@ -34,21 +49,29 @@
   height: 1em;
 }
 
-.accordion input:checked + label:after {
+.accordion input:checked + .accordion-label:after,
+.accordion input:checked + .accordion-content + .accordion-show-all-label:after {
   content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26.7 13.7'%3e%3cpolygon fill='grey' points='13.3%2c0 26.7%2c12.2 25.3%2c13.7 13.3%2c2.7 1.3%2c13.7 0%2c12.2'/%3e%3c/svg%3e");
 }
 
-.accordion input:checked + label {
+.accordion input:checked + .accordion-label,
+.accordion input:checked + .accordion-content + .accordion-show-all-label {
   color: #ec2024;
 }
 
-.accordion-content {
+.accordion-content,
+.accordion.accordion-show-all .accordion-content .accordion-full-content {
   overflow: hidden;
   max-height: 0em;
   position: relative;
 }
 
-.accordion input[name='accordion']:checked ~ .accordion-content {
+.accordion.accordion-show-all .accordion-content {
+  max-height: 100%;
+}
+
+.accordion input[name='accordion']:checked ~ .accordion-content,
+.accordion.accordion-show-all input[name='accordion']:checked ~ .accordion-content .accordion-full-content {
   max-height: 100%;
 }
 
@@ -56,23 +79,23 @@
   border: 0;
 }
 
-.accordion-small label {
+.accordion-small .accordion-label {
   font-size: 1rem;
   padding-left: 2rem;
 }
 
-.accordion-small input:checked + label:after {
+.accordion-small input:checked + .accordion-label:after {
   content: "";
 }
 
-.accordion-small label:after {
+.accordion-small .accordion-label:after {
   content: "";
 }
 
-.accordion-small input:checked + label:before {
+.accordion-small input:checked + .accordion-label:before {
   content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26.7 13.7'%3e%3cpolygon fill='grey' points='13.3%2c0 26.7%2c12.2 25.3%2c13.7 13.3%2c2.7 1.3%2c13.7 0%2c12.2'/%3e%3c/svg%3e");
 }
-.accordion-small label:before {
+.accordion-small .accordion-label:before {
   content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26.7 13.7'%3e%3cpolygon fill='grey' points='13.3%2c13.7 0%2c1.5 1.3%2c0 13.3%2c11 25.3%2c0 26.7%2c1.5' /%3e%3c/svg%3e");
   position: absolute;
   left: 0;

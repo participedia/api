@@ -1,0 +1,61 @@
+<div
+  class="
+    featured-entries-carousel 
+    js-featured-entries-carousel 
+    js-featured-entries-carousel-{{type}}
+  "
+  data-index="0"
+  data-entries="{{toJSON entries}}"
+  data-phrases="{{featuredCarouselPhrases}}"
+>
+  <div
+    class="featured-entries-carousel__inner-container 
+    {{#if photoOnRight}}featured-entries-carousel__inner-container--on-right{{/if}}"
+  >
+    <div
+      class="featured-entries-carousel__image js-featured-entries-carousel__image"
+      style="background-image: url('{{entries.0.photos.0.url}}')"
+    ></div>
+    <div class="featured-entries-carousel__content">
+      <div class="featured-entries-carousel__content-inner">
+        <div>
+          <div class="featured-entries-carousel__header u-margin-bottom--small">
+            <h2 class="u-extra-bold">{{title}}</h2>
+            <a
+              href="/search?selectedCategory={{entries.0.type}}"
+              class="js-featured-entries-carousel__view-all-link"
+            >
+              {{t "View all"}}
+            </a>
+          </div>
+
+          <div
+            class="featured-entries-carousel__entry-content js-featured-entries-carousel__entry-content"
+          >
+            <h4
+              class="featured-entries-carousel__type js-featured-entries-carousel__type"
+            >
+              {{entries.0.type}}
+            </h4>
+            <h3 class="js-featured-entries-carousel__title">
+              {{entries.0.title}}
+            </h3>
+            <div
+              class="u-margin-bottom--small js-featured-entries-carousel__description featured-entries-carousel__description"
+            >
+              {{entries.0.description}}
+            </div>
+            <a
+              href="/{{entries.0.type}}/{{entries.0.id}}"
+              class="u-extra-bold js-featured-entries-carousel__view-entry-link"
+            >
+              {{t "View entry"}} ->
+            </a>
+          </div>
+        </div>
+
+        {{> carousel-navigation type=type}}
+      </div>
+    </div>
+  </div>
+</div>
