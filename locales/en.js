@@ -104,7 +104,7 @@
   "case_edit_audio_title_instructional": "Provide a title or description of this audio in 10 words or less.",
   "case_edit_audio_title_placeholder": "Title or description",
   "case_edit_audio_url_placeholder": "Add link to audio",
-  "case_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://docs.google.com/document/d/1lzhV6aoslzqaj9XhOtVUOHbSJYOPK0tiXg0ALzIkN-w/edit\" target=\"_blank\">guidelines</a> as you prepare your case entry.",
+  "case_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://goo.gl/FZJgMm\" target=\"_blank\">guidelines</a> as you prepare your case entry.",
   "case_edit_body_label": "Narrative",
   "case_edit_body_placeholder": "<h2>Problems and Purpose</h2><h2>Background History and Context</h2><h2>Organizing, Supporting, and Funding Entities</h2><h2>Participant Recruitment and Selection</h2><h2>Methods and Tools Used</h2><h2>What Went On: Process, Interaction, and Participation</h2><h2>Influence, Outcomes, and Effects</h2><h2>Analysis and Lessons Learned</h2><h2>See Also</h2><h2>References</h2><h2>External Links</h2><h2>Notes</h2>",
   "case_edit_change_types_info": "Provide additional detail in the \"Influence, Outcomes, and Effects\" section of the case narrative. ",
@@ -619,7 +619,7 @@
   "method_edit_audio_title_instructional": "Provide a title or description of this audio in 10 words or less.",
   "method_edit_audio_title_placeholder": "Title or description",
   "method_edit_audio_url_placeholder": "Add link to audio",
-  "method_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://docs.google.com/document/d/1lzhV6aoslzqaj9XhOtVUOHbSJYOPK0tiXg0ALzIkN-w/edit\" target=\"_blank\">guidelines</a> as you prepare your entry.",
+  "method_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://goo.gl/p6HYNk\" target=\"_blank\">guidelines</a> as you prepare your entry.",
   "method_edit_body_label": "Narrative",
   "method_edit_body_placeholder": "<h2>Problems and Purpose</h2><h2>Origins and Development</h2><h2>Participant Recruitment and Selection</h2><h2>How it Works: Process, Interaction, and Decision-Making</h2><h2>Influence, Outcomes, and Effects</h2><h2>Analysis and Lessons Learned</h2><h2>See Also</h2><h2>References</h2><h2>External Links</h2><h2>Notes</h2>",
   "method_edit_completeness_label": "Entry Completeness",
@@ -1434,7 +1434,7 @@
   "organization_edit_audio_title_instructional": "Provide a title or description of this audio in 10 words or less.",
   "organization_edit_audio_title_placeholder": "Title or description",
   "organization_edit_audio_url_placeholder": "Add link to audio",
-  "organization_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://docs.google.com/document/d/1lzhV6aoslzqaj9XhOtVUOHbSJYOPK0tiXg0ALzIkN-w/edit\" target=\"_blank\">guidelines</a> as you prepare your entry.",
+  "organization_edit_body_instructional": "The following standard structure makes it easier to compare and analyze entries. Please use the headings below and refer to our <a href=\"https://goo.gl/t2bDw4\" target=\"_blank\">guidelines</a> as you prepare your entry.",
   "organization_edit_body_label": "Narrative",
   "organization_edit_body_placeholder": "<h2>Mission and Purpose</h2><h2>Origins and Development</h2><h2>Organizational Structure, Membership, and Funding</h2><h2>Specializations, Methods and Tools</h2><h2>Major Projects and Events</h2><h2>Analysis and Lessons Learned</h2><h2>Publications</h2><h2>See Also</h2><h2>References</h2><h2>External Links</h2><h2>Notes</h2>",
   "organization_edit_completeness_label": "Entry Completeness",
@@ -1880,5 +1880,6 @@
   "filter-for-organizations": "Filters for Organizations",
   "home_hero.feature.5988": "Participatory Slum Upgrading Process in the City of Buenos Aires: The \"Villa 20\" Case",
   "home_hero.feature.5600": "Participatory Research on the Decommissioning of South African Social Services",
-  "home_hero.feature.6590": "George Floyd Protests"
+  "home_hero.feature.6590": "George Floyd Protests",
+  "guidelines_info_link": "For more information about this form, please review our %sguidelines%s."
 }

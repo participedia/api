@@ -619,6 +619,7 @@
   "Guadeloupe": "Guadalupe",
   "Guam": "Guam",
   "Guatemala": "Guatemala",
+  "guidelines_info_link": "Para obtener más información sobre este formulario, revise nuestras %s pautas %s .",
   "Guinea": "Guinea",
   "Guinea-Bissau": "Guinea-Bissau",
   "Guyana": "Guyana",

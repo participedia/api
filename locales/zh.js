@@ -619,6 +619,7 @@
   "Guadeloupe": "瓜德罗普",
   "Guam": "关岛",
   "Guatemala": "危地马拉",
+  "guidelines_info_link": "有关此表格的更多信息，请查看我们的%s指南%s 。",
   "Guinea": "几内亚",
   "Guinea-Bissau": "几内亚比绍",
   "Guyana": "圭亚那",

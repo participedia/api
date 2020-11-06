@@ -22,7 +22,6 @@
       >
         <input type="hidden" name="user" value="{{req.user.id}}" />
 
-        <!-- hidden fields for features that have not yet been implemented on the frontend. -->
         <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm article}}" />
 
         {{#if req.user.isadmin}}
@@ -41,7 +40,7 @@
         {{/if}}
 
         {{> original-language-alert}}
-
+        
         {{> @partial-block }}
 
         <div class="edit-buttons">
