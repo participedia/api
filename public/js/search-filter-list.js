@@ -27,7 +27,10 @@ const searchFilterList = {
 
     submitBtnEl.addEventListener("click", e => this.handleFormSubmit(e));
     clearFilterBtnEl.addEventListener("click", e => this.handleClearAllFilter(e));
-    downloadCsvBtnEl.addEventListener("click", e => this.handleDownloadCsv(e));
+    if (downloadCsvBtnEl) {
+      downloadCsvBtnEl.addEventListener("click", e => this.handleDownloadCsv(e));
+    }
+    
 
     this.updateUIFromUrlParams();
 	},
