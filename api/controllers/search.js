@@ -124,8 +124,11 @@ const offsetFromReq = req => {
 const limitFromReq = req => {
   let limit = parseInt(req.query.limit || RESPONSE_LIMIT);
   const resultType = (req.query.resultType || "").toLowerCase();
+  const returns = (req.query.returns || "").toLowerCase();
   if (resultType === "map") {
     limit = 0; // return all
+  } else if(returns === "csv") {
+    limit = 0;
   }
   return limit;
 };
@@ -280,16 +283,13 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
           user: req.user || null,
         });
       case "csv":
-        var entries = [];
-        if (type !== "thing") {
-          entries = results.map(article => {
-            return {
-              "id": article.id,
-              "title": article.title,
-              "type": article.type
-            }
-          });
-        }
+        const entries = results.map(article => {
+          return {
+            "id": article.id,
+            "title": article.title,
+            "type": article.type
+          }
+        });
         const file = await createCSVDataDump(type, entries);
         return res.download(file);
       case "xml":
