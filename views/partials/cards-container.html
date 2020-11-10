@@ -5,11 +5,14 @@
     </div>
   {{/if}}
 
-  {{#if (isNotCollectionView req)}} 
-    {{#if totalResults}}
-      {{> pagination-string }}
+  <div class="tab-panel-header">
+    {{#if (isNotCollectionView req)}} 
+      {{#if totalResults}}
+        {{> pagination-string }}
+      {{/if}}
     {{/if}}
-  {{/if}}
+    {{> search-filter-button }}
+  </div>
 
   <ul class="unstyled-list cards-container js-cards-container">
     {{#each cards }}

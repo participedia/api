@@ -8,6 +8,10 @@
   display: none;
 }
 
+.tab-panel-header {
+  margin: 0 0 30px 0;
+}
+
 .tab-buttons-container {
   float: right;
   display: flex;
@@ -251,7 +255,6 @@
 .pagination {
   display: flex;
   flex-direction: row;
-  margin: 0 0 30px 0;
 }
 
 .pagination.tab {

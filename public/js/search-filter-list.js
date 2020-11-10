@@ -122,14 +122,21 @@ const searchFilterList = {
   },
 
   updateBadge() {
-    const badgeParentEl = document.querySelector(".js-tab-buttons-button-filter");
-    const badgeEl = document.querySelector(".js-total-filter-badge");
+    const badgeEls = document.querySelectorAll(".js-total-filter-badge");
+    const badgeParentEls = Array.prototype.slice.call(
+      document.querySelectorAll(".js-tab-buttons-button-filter")
+    );
+    
+    for (let i = 0; i < badgeParentEls.length; i++) {
+      let badgeEl = badgeEls[i];
+      let badgeParentEl = badgeParentEls[i];
 
-    if (this.totalFilters) {
-      badgeEl.textContent = this.totalFilters;
-      badgeEl.style["display"] = "block";
-    } else {
-      badgeParentEl.style["justify-content"] = "center";
+      if (this.totalFilters) {
+        badgeEl.textContent = this.totalFilters;
+        badgeEl.style["display"] = "block";
+      } else {
+        badgeParentEl.style["justify-content"] = "center";
+      }
     }
   },
 
