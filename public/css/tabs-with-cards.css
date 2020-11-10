@@ -23,8 +23,7 @@
   flex: 0 0 95px;
 }
 
-.tab-panel-header .pagination,
-.no-result-container span {
+.tab-panel-header .pagination {
   padding-right: 4px;
 }
 
