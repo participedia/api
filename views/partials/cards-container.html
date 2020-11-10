@@ -23,5 +23,9 @@
     {{> pagination-tab }}
   {{/if}}
 {{else}}
-  <div class="u-margin-bottom--large">{{t "no_items"}}</div>
+  <div class="no-result-container u-margin-bottom--large">
+    <span>{{t "no_items"}}</span>
+    {{> search-filter-button }}
+  </div>
+  
 {{/if}}
