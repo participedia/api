@@ -127,4 +127,7 @@
   .search-filter-list .search-filter-autocomplete-list {
     width: 90%;
   }
+  .search-filter-list .search-filter-list-item .keys-list .keys-list-item {
+    flex: 0 0 100%;
+  }
 }
