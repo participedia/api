@@ -3,6 +3,7 @@ import bannerNotice from "./banner-notice.js";
 import editSelect from "./edit-select.js";
 import blogPosts from "./blog-posts.js";
 import featuredEntriesCarousel from "./featured-entries-carousel.js";
+import homeHero from "./home-hero.js";
 import easingFunctions from "./utils/easing-functions.js";
 import { CountUp } from "countup.js";
 
@@ -13,23 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
   editSelect.init();
   blogPosts.init();
   featuredEntriesCarousel.init();
+  homeHero.init();
   initSearchForm();
   initStatsAnimations();
-  initHeroUI();
 });
-
-function initHeroUI () {
-  // hero image should be the 
-  // height of the browser window - the height of the header
-  const heroEl = document.querySelector(".js-home-hero");
-  const heroOverlayEl = document.querySelector(".js-home-hero-overlay");
-  const heroImageEl = document.querySelector(".js-home-hero-image");
-  const headerEl = document.querySelector(".js-header");
-  const height = window.innerHeight - headerEl.offsetHeight;
-  heroEl.style.height = `${height}px`;
-  heroOverlayEl.style.height = `${height}px`;
-  heroImageEl.style.height = `${height}px`;
-}
 
 function initStatsAnimations() {
   const statsEls = toArray(

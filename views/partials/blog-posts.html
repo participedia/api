@@ -12,16 +12,18 @@
 
 <script type="text/template" id="js-blog-post-card-template">
   <div>
-    <div class="js-blog-post-card__image blog-post-card__image u-margin-bottom--small"></div>
-    <h3 class="js-blog-post-card__title u-margin-bottom--small"></h3>  
-    <div class="js-blog-post-card__description u-margin-bottom--small"></div>  
+    <div class="js-blog-post-card__image blog-post-card__image u-margin-bottom--xsmall"></div>
+    <h3 class="u-margin-bottom--xsmall">
+      <a href="#"  target="_blank"rel="noopener" class="js-blog-post-card__title"></a>
+    </h3>
+    <div class="js-blog-post-card__description blog-post-card__description u-margin-bottom--xsmall"></div>
   </div>
-  <a 
-    href="#" 
-    target="_blank" 
-    rel="noopener" 
-    class="js-blog-post-card__link u-extra-bold"
+  <a
+    href="#"
+    target="_blank"
+    rel="noopener"
+    class="js-blog-post-card__link blog-post-card__link u-extra-bold"
   >
-    Read More ->
+    {{t "Read more"}} ->
   </a>
 </script>

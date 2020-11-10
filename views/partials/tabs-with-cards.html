@@ -1,33 +1,23 @@
 <div data-card-layout="{{cardLayoutType req}}">
   <div class="tab-buttons-container">
-    {{#if (includeSearchFilters req)}}
     <button type="button" class="tab-buttons-button-filter js-tab-buttons-button-filter button button-bordered-grey">
-      <span>{{t "more filters"}}</span>
+      <span>{{> icon-filter}} {{t "filters"}}</span>
       <span class="tab-buttons-total-filter-badge js-total-filter-badge"></span>
     </button>
+    {{#if (showCsvButtonOnSearch req)}}
+      <button class="button button-bordered-grey download-csv-btn js-download-csv-btn">
+        <span class="sr-only">{{t "download"}}</span>
+        {{> icon-download-csv}} CSV
+      </button>
     {{/if}}
-    <ul class="unstyled-list card-layout-btns js-card-layout-btns">
-      <li>
-        <button class="icon-only toggle-list-layout-btn" data-type="list">
-          <span class="sr-only">{{t "list view"}}</span>
-          {{> icon-list}}
-        </button>
-      </li>
-      <li>
-        <button class="icon-only toggle-grid-layout-btn" data-type="grid">
-          <span class="sr-only">{{t "grid view"}}</span>
-          {{> icon-grid}}
-        </button>
-      </li>
-      {{#if (includeSearchFilters req)}}
-      <li>
-        <button class="icon-only download-csv-btn js-download-csv-btn">
-          <span class="sr-only">{{t "download"}}</span>
-          {{> icon-download-csv}}
-        </button>
-      </li>
-      {{/if}}
-    </ul>
+    <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
+      <span class="sr-only">{{t "list view"}}</span>
+      {{> icon-list}}
+    </button>
+    <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="grid">
+      <span class="sr-only">{{t "grid view"}}</span>
+      {{> icon-grid}}
+    </button>
   </div>
 
   <!-- select for navigating to different tabs in mobile view -->
@@ -39,7 +29,7 @@
     </select>
     {{#if (isCollectionView req)}}
       <div class="u-margin-top--small">
-        <a href="/?selectedCategory=collections">{{t "Collections"}}</a>
+        <a href="/search?selectedCategory=collections">{{t "Collections"}}</a>
       </div>
     {{/if}}
   </div>

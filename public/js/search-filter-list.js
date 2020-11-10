@@ -27,7 +27,10 @@ const searchFilterList = {
 
     submitBtnEl.addEventListener("click", e => this.handleFormSubmit(e));
     clearFilterBtnEl.addEventListener("click", e => this.handleClearAllFilter(e));
-    downloadCsvBtnEl.addEventListener("click", e => this.handleDownloadCsv(e));
+    if (downloadCsvBtnEl) {
+      downloadCsvBtnEl.addEventListener("click", e => this.handleDownloadCsv(e));
+    }
+    
 
     this.updateUIFromUrlParams();
 	},
@@ -153,11 +156,7 @@ const searchFilterList = {
   },
 
   getSearchUrl() {
-    const openFilter = getValueForParam("openFilters");
-    const filters = openFilter == "1"
-      ? this.SEARCH_FILTER_KEYS.concat("openFilters")
-      : this.SEARCH_FILTER_KEYS;
-
+    const filters = this.SEARCH_FILTER_KEYS.concat('openFilters')
     // remove old filters
     removeUrlParams(filters);
     const selectedFilters = this.getState();

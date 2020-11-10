@@ -17,11 +17,11 @@ https://participedia.net/method/4951
 https://participedia.net/user/324582
 https://participedia.net/case/634
 https://participedia.net/user/158322
-https://participedia.net/?selectedCategory=method
+https://participedia.net/search?selectedCategory=method
 https://participedia.net/method/5154
 https://participedia.net/method/4324
 https://participedia.net/method/161
-https://participedia.net/?selectedCategory=organizations
+https://participedia.net/search?selectedCategory=organizations
 https://participedia.net/about
 https://participedia.net/?page=119
 https://participedia.net/method/6410
@@ -39,7 +39,7 @@ https://participedia.net/case/5524
 https://participedia.net/method/4451
 https://participedia.net/case/5834
 https://participedia.net/organization/201
-https://participedia.net/?selectedCategory=case
+https://participedia.net/search?selectedCategory=case
 https://participedia.net/user/417803
 https://participedia.net/
 https://participedia.net/case/5176
@@ -64,7 +64,6 @@ https://participedia.net/case/63
 https://participedia.net/case/1087
 https://participedia.net/case/2197
 https://participedia.net/case/88
-https://participedia.net/?selectedCategory=case&amp;method_types=public
 https://participedia.net/case/79
 https://participedia.net/case/1
 https://participedia.net/user/1361

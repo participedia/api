@@ -27,10 +27,17 @@ const tabsWithCards = {
     const moreFilterBtnEl = document.querySelector(".js-tab-buttons-button-filter");
     if (moreFilterBtnEl) {
       moreFilterBtnEl.addEventListener("click", event => {
-        this.openSearchFilterModal();
+        const category = getValueForParam("selectedCategory");
+        if (["case", "organizations", "method"].indexOf(category) >= 0) {
+          this.openSearchFilterModal();
+        } else {
+          updateUrlParams("selectedCategory", "case");
+          updateUrlParams("openFilters", "1");
+          window.location.href = window.location.href;
+        }
       });
     }
-    
+
     const openFilter = getValueForParam("openFilters");
     if (openFilter == "1") {
       this.openSearchFilterModal();
@@ -103,21 +110,20 @@ const tabsWithCards = {
   },
 
   initCardLayout() {
-    const toggleLayoutBtnsEl = this.viewEl.querySelector(
-      ".js-card-layout-btns"
+    const toggleLayoutBtnsEls = this.viewEl.querySelectorAll(
+      ".js-card-layout-btn"
     );
 
-    // event listeners for grid/list toggle buttons
-    toggleLayoutBtnsEl.addEventListener("click", event => {
-      const btnEl = event.target.closest("button");
-
-      if (btnEl) {
+    for (let index = 0; index < toggleLayoutBtnsEls.length; index++) {
+      const btnEl = toggleLayoutBtnsEls[index];
+      // event listeners for grid/list toggle buttons
+      btnEl.addEventListener("click", event => {
         const type = btnEl.getAttribute("data-type");
         if (!type) return;
         updateUrlParams("layout", type);
         this.viewEl.setAttribute("data-card-layout", type);
-      }
-    });
+      });
+    }
   }
 };
 

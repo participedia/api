@@ -11,33 +11,46 @@
 .tab-buttons-container {
   float: right;
   display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
-.tab-buttons-container .tab-buttons-button-filter {
-  display: flex;
-  justify-content: space-between;
-  margin-top: -12px;
-  width: 155px;
+.tab-buttons-container .button {
+  padding: 0 10px;
 }
 
-.tab-buttons-container .tab-buttons-total-filter-badge {
+.tab-buttons-button-filter {
+  margin-right: 15px;
+}
+.tab-buttons-button-filter .icon-fill {
+  fill: #000;
+}
+.tab-buttons-button-filter svg {
+  height: 12px;
+  padding-right: 0;
+  margin-bottom: -1px;
+}
+
+.tab-buttons-total-filter-badge {
   padding: 1px;
   background: #EC2024;
   color: white;
-  min-width: 22px;
-  height: 22px;
-  display: flex;
+  width: 24px;
+  height: 24px;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 24px;
   display: none;
+  position: relative;
+  top: -15px;
+  right: -20px;
+  margin-left: -15px;
 }
 
 /* toggle layout buttons */
 .tab-buttons-container .card-layout-btns {
   display: flex;
   flex-direction: row;
-  width: 160px;
   flex-flow: row-reverse;
   margin-top: -4px;
 }
@@ -211,6 +224,9 @@
 .pop-over .article-card-meta .small {
   margin-bottom: 0;
 }
+.toggle-grid-layout-btn, .toggle-grid-layout-btn {
+  padding: 0;
+}
 
 [data-card-layout="grid"] .toggle-grid-layout-btn .icon-fill {
   fill: #EC2024;
@@ -224,12 +240,11 @@
 [data-card-layout="list"] .toggle-list-layout-btn .icon-fill {
   fill: #EC2024;
 }
-.download-csv-btn svg .icon-fill {
-  fill: white;
+.download-csv-btn {
+  margin-right: 30px;
 }
-.download-csv-btn svg {
-  background: #808080;
-  height: 20px;
+.download-csv-btn .icon-fill {
+  fill: #000;
 }
 
 /* pagination */

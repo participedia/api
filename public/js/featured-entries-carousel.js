@@ -1,10 +1,12 @@
+import carouselNavigation from "./carousel-navigation.js";
+
 const featuredEntriesCarousel = {
   init() {
     const carouselEls = document.querySelectorAll(
       ".js-featured-entries-carousel"
     );
 
-    if (!carouselEls) return null;
+    if (!carouselEls || carouselEls.length === 0) return null;
 
     this.i18n = JSON.parse(carouselEls[0].getAttribute("data-phrases"));
 
@@ -18,90 +20,27 @@ const featuredEntriesCarousel = {
     img.src = url;
   },
 
-  renderDotNavigation(carouselEl, entries) {
-    //set up dot nav
-    const dotNavItemClasses = [
-      "featured-entries-carousel__dots-nav-item",
-      "js-featured-entries-carousel__dots-nav-item"
-    ];
-    let dotNavContainerEl = carouselEl.querySelector(
-      ".js-featured-entries-carousel__dots-nav"
-    );
-
-    // for each entry, render a dotNavItem
-    entries.forEach((entry, index) => {
-      const dotNavItem = document.createElement("a");
-      dotNavItem.setAttribute("href", "#");
-      dotNavItem.setAttribute("data-index", index);
-      
-      // set first item as index initially
-      if (index === 0) {
-        dotNavItem.classList.add("featured-entries-carousel__dots-nav-item--current")
-      }
-
-      dotNavItemClasses.forEach(c => dotNavItem.classList.add(c));
-      dotNavContainerEl.appendChild(dotNavItem);
-    });
-
-    // set click handlers
-    dotNavContainerEl.addEventListener("click", e => {
-      if (e.target.classList.contains("js-featured-entries-carousel__dots-nav-item")) {
-        e.preventDefault();
-        console.log("clicked dot");
-        // TODO: navigate to entry in carousel
-        // TODO: set new current
-      }
-    });
-
-    // TODO: on navigation, left or right, set current index on dots
-    
-  },
-
   initCarousel(carouselEl) {
     const entries = JSON.parse(carouselEl.getAttribute("data-entries"));
-    
+
     // preload entry images
     entries.forEach(entry => {
       if (entry.photos && entry.photos.length > 0) {
         this.preloadImage(entry.photos[0].url);
       }
     });
-
-    // render dots and attach click handlers
-    this.renderDotNavigation(carouselEl, entries);
+    
+    const carouselNav = Object.create(carouselNavigation);
+    carouselNav.init({ 
+      numItems: entries.length, 
+      el: carouselEl,
+      onChange: index => {
+        this.updateEntry(carouselEl, entries[index], index);
+      }        
+    });
 
     // update initial entry
     this.updateEntry(carouselEl, entries[0], 1);
-
-    const leftArrow = carouselEl.querySelector(
-      ".js-featured-entries-carousel__navigation-left-arrow"
-    );
-    const rightArrow = carouselEl.querySelector(
-      ".js-featured-entries-carousel__navigation-right-arrow"
-    );
-
-    leftArrow.addEventListener("click", e => {
-      e.preventDefault();
-      const currentIndex = parseInt(carouselEl.getAttribute("data-index"), 10);
-      let nextIndex = null;
-      if (currentIndex > 0) {
-        nextIndex = currentIndex - 1;
-      } else {
-        nextIndex = entries.length - 1;
-      }
-      this.updateEntry(carouselEl, entries[nextIndex], nextIndex);
-    });
-    rightArrow.addEventListener("click", e => {
-      e.preventDefault();
-      const currentIndex = parseInt(carouselEl.getAttribute("data-index"), 10);
-      let nextIndex = null;
-      if (currentIndex < entries.length - 1) {
-        nextIndex = currentIndex + 1;
-      } else {
-        nextIndex = 0;
-      }
-      this.updateEntry(carouselEl, entries[nextIndex], nextIndex);
-    });
   },
 
   updateEntry(carouselEl, entry, nextIndex) {

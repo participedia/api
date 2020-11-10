@@ -37,6 +37,7 @@ const blogPosts = {
 
       imgDivEl.style.backgroundImage = `url(${posts[i].imageUrl})`;
       titleEl.innerHTML = posts[i].title;
+      titleEl.href = posts[i].url;
       descriptionEl.innerHTML = posts[i].description + "...";
       linkEl.setAttribute("href", posts[i].url);
 

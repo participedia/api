@@ -81,11 +81,14 @@ const markerStyles = markerSize => {
 
 const map = {
   init() {
-    const mapEl = document.querySelector(".js-map-inner");
+    this.mapEl = document.querySelector(".js-map-inner");
 
-    if (!mapEl) return;
+    if (!this.mapEl) return;
+    
+    this.headerEl = document.querySelector(".js-header");
+    this.mapLegendEl = document.querySelector(".js-map-legend");
 
-    this.map = new google.maps.Map(mapEl, {
+    this.map = new google.maps.Map(this.mapEl, {
       center: { lat: 6.1259722, lng: 20.9404108 },
       zoom: 2.5,
       disableDefaultUI: true,
@@ -93,23 +96,34 @@ const map = {
       styles: mapStyle,
     });
 
-    this.initZoomControls(this.map);
+    this.initZoomControls();
     this.fetchMapResults();
-    this.i18n = JSON.parse(mapEl.getAttribute("data-i18n"));
+    this.setMapHeight();
+    window.addEventListener('resize', () => {
+      this.setMapHeight();
+    });
+
+    this.i18n = JSON.parse(this.mapEl.getAttribute("data-i18n"));
   },
 
-  initZoomControls(map) {
+  setMapHeight() {
+    const mapHeight = `${window.innerHeight - this.headerEl.offsetHeight}px`;
+    this.mapEl.parentNode.style.height = mapHeight;
+    this.mapEl.style.height = mapHeight;
+  },
+
+  initZoomControls() {
     document
       .querySelector(".js-map-zoom-control-in")
       .addEventListener("click", () => {
-        map.setZoom(map.getZoom() + 1);
+        this.map.setZoom(this.map.getZoom() + 1);
       });
     document
       .querySelector(".js-map-zoom-control-out")
       .addEventListener("click", () => {
-        map.setZoom(map.getZoom() - 1);
+        this.map.setZoom(this.map.getZoom() - 1);
       });
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+    this.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
       document.querySelector(".js-map-controls")
     );
   },
@@ -308,7 +322,7 @@ const map = {
       // on screen widths less than 1100 the legend overlaps the marker card,
       // so in this case, hide the legend when the marker is shown
       if (window.innerWidth < 1100) {
-        this.mapLegend.style.display = "none";
+        this.mapLegendEl.style.display = "none";
       }
 
       // remove pop over on close button click
@@ -317,7 +331,7 @@ const map = {
         if (!closeButtonEl) return;
         this.popOver.setMap(null);
         // show legend when marker is closed
-        this.mapLegend.style.display = "flex";
+        this.mapLegendEl.style.display = "flex";
       });
     });
   },

@@ -160,8 +160,9 @@ passport.deserializeUser(async function(user, done) {
 
 // Perform the login, after login Auth0 will redirect to callback
 app.get("/login", function(req, res, next) {
-  // set returnTo session var to referer so user is redirected to current page after login
-  req.session.returnTo = req.headers.referer;
+  // by default, return user to the referring page
+  // if redirectTo query param is present, redirect there
+  req.session.returnTo = (req.query && req.query.redirectTo) || req.headers.referer;
   req.session.refreshAndClose = req.query.refreshAndClose;
   passport.authenticate(
     "auth0",
@@ -240,6 +241,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// if the locale is NOT 'en'
+// and if there is a keyword search query present
+// redirect to search error page 
+// until we can make keyword search work in all languages
+app.use((req, res, next) => {  
+  const hasQuery = req.query && req.query.query;
+  const isEnglish = req.cookies.locale && req.cookies.locale === 'en';
+  if (hasQuery && !isEnglish) {
+    return res.status(200).render("search-error");
+  } 
+  
+  next();
+});
+
 // ROUTES
 app.use("/", home);
 app.use("/search", cache("5 minutes"), search);
@@ -282,6 +297,14 @@ app.get("/help-faq-contact", function(req, res) {
 });
 app.get("/getting-started", function(req, res) {
   res.status(200).render("getting-started-view");
+});
+app.get("/profile", function(req, res) {
+  if (req.user) {
+    res.redirect(`/user/${req.user.id}`);
+  } else {
+    // else, go to sign up page
+    res.redirect("/login?redirectTo=/profile");
+  }
 });
 
 // redirect old user profile for tanyapuravankara to new url

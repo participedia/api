@@ -1,12 +1,16 @@
-<div 
-  class="featured-entries-carousel js-featured-entries-carousel" 
-  data-index="0" 
-  data-entries="{{toJSON entries}}" 
+<div
+  class="
+    featured-entries-carousel 
+    js-featured-entries-carousel 
+    js-featured-entries-carousel-{{type}}
+  "
+  data-index="0"
+  data-entries="{{toJSON entries}}"
   data-phrases="{{featuredCarouselPhrases}}"
 >
-  <div 
-    class="featured-entries-carousel__inner-container"
-    {{#if photoOnRight}}style="flex-direction: row-reverse;"{{/if}}
+  <div
+    class="featured-entries-carousel__inner-container 
+    {{#if photoOnRight}}featured-entries-carousel__inner-container--on-right{{/if}}"
   >
     <div
       class="featured-entries-carousel__image js-featured-entries-carousel__image"
@@ -17,24 +21,32 @@
         <div>
           <div class="featured-entries-carousel__header u-margin-bottom--small">
             <h2 class="u-extra-bold">{{title}}</h2>
-            <a 
+            <a
               href="/search?selectedCategory={{entries.0.type}}"
               class="js-featured-entries-carousel__view-all-link"
             >
-              {{t "View All"}}
+              {{t "View all"}}
             </a>
           </div>
 
-          <div class="featured-entries-carousel__entry-content js-featured-entries-carousel__entry-content">
-            <h4 class="featured-entries-carousel__type js-featured-entries-carousel__type">
+          <div
+            class="featured-entries-carousel__entry-content js-featured-entries-carousel__entry-content"
+          >
+            <h4
+              class="featured-entries-carousel__type js-featured-entries-carousel__type"
+            >
               {{entries.0.type}}
             </h4>
-            <h3 class="js-featured-entries-carousel__title">{{entries.0.title}}</h3>
-            <div class="u-margin-bottom--small js-featured-entries-carousel__description">
+            <h3 class="js-featured-entries-carousel__title">
+              {{entries.0.title}}
+            </h3>
+            <div
+              class="u-margin-bottom--small js-featured-entries-carousel__description featured-entries-carousel__description"
+            >
               {{entries.0.description}}
             </div>
-            <a 
-              href="/{{entries.0.type}}/{{entries.0.id}}" 
+            <a
+              href="/{{entries.0.type}}/{{entries.0.id}}"
               class="u-extra-bold js-featured-entries-carousel__view-entry-link"
             >
               {{t "View entry"}} ->
@@ -42,17 +54,7 @@
           </div>
         </div>
 
-        <div class="featured-entries-carousel__navigation">
-          <a href="#" class="featured-entries-carousel__navigation-arrow js-featured-entries-carousel__navigation-left-arrow">
-            {{> icon-arrow-left-large}}
-          </a>
-          <div 
-            class="featured-entries-carousel__dots-nav js-featured-entries-carousel__dots-nav"
-          ></div>
-          <a href="#" class="featured-entries-carousel__navigation-arrow js-featured-entries-carousel__navigation-right-arrow">
-            {{> icon-arrow-right-large}}
-          </a>
-        </div>
+        {{> carousel-navigation type=type}}
       </div>
     </div>
   </div>
