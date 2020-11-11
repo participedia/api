@@ -24,19 +24,22 @@ const tabsWithCards = {
     this.initPagination();
 
     // More Filters Button
-    const moreFilterBtnEl = document.querySelector(".js-tab-buttons-button-filter");
-    if (moreFilterBtnEl) {
-      moreFilterBtnEl.addEventListener("click", event => {
-        const category = getValueForParam("selectedCategory");
-        if (["case", "organizations", "method"].indexOf(category) >= 0) {
-          this.openSearchFilterModal();
-        } else {
-          updateUrlParams("selectedCategory", "case");
-          updateUrlParams("openFilters", "1");
-          window.location.href = window.location.href;
-        }
-      });
-    }
+    const moreFilterBtnEls = document.querySelectorAll(".js-tab-buttons-button-filter");
+
+    moreFilterBtnEls.forEach(moreFilterBtnEl => {
+      if (moreFilterBtnEl) {
+        moreFilterBtnEl.addEventListener("click", event => {
+          const category = getValueForParam("selectedCategory");
+          if (["case", "organizations", "method"].indexOf(category) >= 0) {
+            this.openSearchFilterModal();
+          } else {
+            updateUrlParams("selectedCategory", "case");
+            updateUrlParams("openFilters", "1");
+            window.location.href = window.location.href;
+          }
+        });
+      }
+    });
 
     const openFilter = getValueForParam("openFilters");
     if (openFilter == "1") {

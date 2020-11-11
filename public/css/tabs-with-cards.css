@@ -8,6 +8,25 @@
   display: none;
 }
 
+.tab-panel-header,
+.no-result-container {
+  margin: 0 0 30px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.tab-panel-header .tab-buttons-button-filter,
+.no-result-container .tab-buttons-button-filter {
+  margin-right: 0;
+  display: none;
+  flex: 0 0 95px;
+}
+
+.tab-panel-header .pagination {
+  padding-right: 4px;
+}
+
 .tab-buttons-container {
   float: right;
   display: flex;
@@ -21,6 +40,7 @@
 
 .tab-buttons-button-filter {
   margin-right: 15px;
+  position: relative;
 }
 .tab-buttons-button-filter .icon-fill {
   fill: #000;
@@ -41,9 +61,9 @@
   align-items: center;
   border-radius: 24px;
   display: none;
-  position: relative;
+  position: absolute;
   top: -15px;
-  right: -20px;
+  right: -10px;
   margin-left: -15px;
 }
 
@@ -251,7 +271,6 @@
 .pagination {
   display: flex;
   flex-direction: row;
-  margin: 0 0 30px 0;
 }
 
 .pagination.tab {
@@ -380,6 +399,11 @@
 
   .tab-panels {
     margin-top: 30px;
+  }
+
+  .tab-panel-header .tab-buttons-button-filter,
+  .no-result-container .tab-buttons-button-filter {
+    display: block;
   }
 }
 
