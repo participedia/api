@@ -1,9 +1,10 @@
 const carouselNavigation = {
-  init({ numItems, el, shouldShowArrows=true, onChange = index => {}}) {
+  init({ numItems, el, shouldShowArrows=true, autoAdvanceIntervalinMs=0, onChange = index => {}}) {
     this.items = Array.from({ length: numItems });
     this.el = el;
     this.shouldShowArrows = shouldShowArrows;
     this.dotNavContainerEl = this.el.querySelector(".js-carousel-navigation__dots-nav");
+    this.autoAdvanceIntervalinMs = autoAdvanceIntervalinMs;
     this.onChange = onChange;
     this.currentIndex = 0;
 
@@ -12,7 +13,16 @@ const carouselNavigation = {
 
   render(){
     this.initDotNav();
-    this.initArrowNav()
+    this.initArrowNav();
+    this.initAutoAdvance();
+  },
+
+  initAutoAdvance() {
+    if (this.autoAdvanceIntervalinMs > 0) {
+      this.autoAdvanceIntervalId = setInterval(() => {
+        this.onArrowClick('next');
+      }, this.autoAdvanceIntervalinMs);
+    }
   },
 
   updateCurrentIndex(index) {
@@ -31,10 +41,14 @@ const carouselNavigation = {
     if (this.shouldShowArrows) {
       leftArrow.addEventListener("click", e => {
         e.preventDefault();
+        // if the user interacts with the navigation, cancel the auto interval updates
+        clearInterval(this.autoAdvanceIntervalId);
         this.onArrowClick('previous');
       });
       rightArrow.addEventListener("click", e => {
         e.preventDefault();
+        // if the user interacts with the navigation, cancel the auto interval updates
+        clearInterval(this.autoAdvanceIntervalId);
         this.onArrowClick('next');
       });
     } else {
@@ -82,6 +96,8 @@ const carouselNavigation = {
 
       dotNavItem.addEventListener("click", e => {
         e.preventDefault();
+        // if the user interacts with the navigation, cancel the auto interval updates
+        clearInterval(this.autoAdvanceIntervalId);
         this.onDotClick(index);
       });
 
