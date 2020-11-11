@@ -40,7 +40,7 @@ const homeHero = {
       numItems: this.heroFeatures.length,
       shouldShowArrows: false,
       el: this.heroEl,
-      autoAdvanceIntervalinMs: 4000,
+      autoAdvanceIntervalinMs: 9000,
       onChange: index => {
         this.updateHero(index);
       },
