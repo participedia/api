@@ -110,7 +110,8 @@ const editMultiSelect = {
     const currentSelect = document.querySelector(
       `.js-edit-multi-select[name=${name}]`
     );
-    const maxItems = currentList.getAttribute("data-max");
+    const DEFAULT_MAX_ITEMS = 5;
+    const maxItems = currentList.getAttribute("data-max") || DEFAULT_MAX_ITEMS;
     const numItems = this.getNumItems(currentList);
     const newItemHTML = this.listItemTemplate(
       name,

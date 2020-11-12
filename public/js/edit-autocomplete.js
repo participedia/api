@@ -1,4 +1,5 @@
 import autocomplete from "autocompleter";
+import modal from "./modal.js";
 
 const toArray = nodelist => Array.prototype.slice.call(nodelist);
 
@@ -53,7 +54,7 @@ const editAutocomplete = {
     return options;
   },
 
-  addSelectedItem(name, item) {
+  addSelectedItem(name, item, maxItems) {
     const listToAppendToEl = document.querySelector(
       `.js-edit-autocomplete-list[data-name=${name}]`
     );
@@ -68,6 +69,17 @@ const editAutocomplete = {
       currentLiEl.querySelector("input").value = item.value;
       currentLiEl.style.display = "flex";
     } else {
+      
+      if (maxItems > 0) {
+        let currentSelectItemCount = this.getTotalSelectedItems(listToAppendToEl);
+        if (currentSelectItemCount >= maxItems) {
+          const errorText = `You can not add more than ${maxItems} items to this field.`;
+          modal.updateModal(errorText);
+          modal.openModal("aria-modal");
+          return;
+        }
+      }
+
       // if it's a multi field autocomplete,
       // or if it's the first item getting added, insert a new item
       const template = document.getElementById(
@@ -100,6 +112,7 @@ const editAutocomplete = {
   initAutocompleteField(autocompleteEl) {
     const options = this.getOptions(autocompleteEl);
     const name = autocompleteEl.getAttribute("data-name");
+    const maxItems = autocompleteEl.getAttribute("data-max");
     autocomplete({
       minLength: 1,
       input: autocompleteEl,
@@ -122,12 +135,24 @@ const editAutocomplete = {
       },
       emptyMsg: "No matches found",
       onSelect: item => {
-        this.addSelectedItem(name, item);
+        this.addSelectedItem(name, item, maxItems);
         // clear autocomplete field
         autocompleteEl.value = "";
       },
     });
   },
+
+  getTotalSelectedItems(listEl) {
+    const list = listEl.querySelectorAll("li");
+    const count = list.length;
+    let total = 0;
+    for (var i = 0; i < count; i++) {
+      if (list[i].querySelector("input").getAttribute("value")) {
+        total++;
+      }
+    }
+    return total;
+  }
 };
 
 export default editAutocomplete;
