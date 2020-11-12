@@ -1,16 +1,18 @@
 <div id="search-filter-modal" data-modal>
-  <div class="aria-modal-document" data-modal-document>
-    <div class="aria-modal-header">
+  <div class="aria-modal-document search-filter-modal__document" data-modal-document>
+    <div class="aria-modal-header search-filter-modal__header">
       <h2>{{getSearchFilterTitle type}}</h2>
     </div>
-    <div class="aria-modal-content" data-modal-content>
+    <div class="aria-modal-content search-filter-modal__content" data-modal-content>
       {{> search-filter-list type=type}}
     </div>
-    <div class="aria-modal-footer" data-modal-footer>
-      <button type="button" class="js-search-filter-modal-clear-btn search-filter-modal-clear-btn">{{t "Clear All"}}</button>
-      <button type="button" class="js-search-filter-modal-show-result-btn button button-red">
-        {{t "Show Results"}}
-      </button>
+    <div class="aria-modal-footer search-filter-modal__footer" data-modal-footer>
+      <div class="search-filter-modal__footer-inner">
+        <button type="button" class="js-search-filter-modal-clear-btn search-filter-modal-clear-btn">{{t "Clear All"}}</button>
+        <button type="button" class="js-search-filter-modal-show-result-btn button button-red">
+          {{t "Show Results"}}
+        </button>
+      </div>
     </div>
   </div>
 </div>
