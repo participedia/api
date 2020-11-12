@@ -1,6 +1,8 @@
 <div data-card-layout="{{cardLayoutType req}}">
   <div class="tab-buttons-container">
-    {{> search-filter-button }}
+    {{#if (includeSearchFilters req)}}
+      {{> search-filter-button }}
+    {{/if}}
     {{#if (showCsvButtonOnSearch req)}}
       <button class="button button-bordered-grey download-csv-btn js-download-csv-btn">
         <span class="sr-only">{{t "download"}}</span>

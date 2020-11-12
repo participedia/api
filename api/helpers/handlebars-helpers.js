@@ -1372,20 +1372,17 @@ module.exports = {
   },
 
   showCsvButtonOnSearch(req) {
-    // const category = req.query.selectedCategory || null;
-    // const allowedCategories = ["case", "organizations", "method"];
-    // return (
-    //   allowedCategories.indexOf(category) >= 0 &&
-    //   req.baseUrl.indexOf("collections") > 0
-    // );
-
-    // do not show CSV download button for now
-    return false;
+    const category = req.query.selectedCategory || null;
+    console.log("req.query.selectedCategory", req.query.selectedCategory)
+    const allowedCategories = ["case", "organizations", "method"];
+    return (
+      allowedCategories.indexOf(category) >= 0 &&
+      req.baseUrl.indexOf("collection") < 0
+    );
   },
 
   includeSearchFilters(req) {
-    const category = req.query.selectedCategory || null;
-    const allowedCategories = ["case", "organizations", "method"];
-    return allowedCategories.indexOf(category) >= 0;
-  },
+    // do not show search filters on collection pages
+    return req.baseUrl.indexOf("collection") < 0;
+  }
 };
