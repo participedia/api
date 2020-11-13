@@ -1512,7 +1512,7 @@
   "New Caledonia": "Nouvelle-Calédonie",
   "New Zealand": "Nouvelle-Zélande",
   "News": "Nouvelles",
-  "Newsletter": "Newsletter",
+  "Newsletter": "Bulletin",
   "Newsletter Sign Up": "Inscription au bulletin d'information",
   "next": "suivant",
   "Nicaragua": "Nicaragua",
