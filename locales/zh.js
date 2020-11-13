@@ -1865,7 +1865,7 @@
   "Vietnam": "越南",
   "View all": "查看全部",
   "View all collections": "查看所有集合",
-  "View Collection": "查看集合",
+  "View collection": "查看集合",
   "View case": "查看案例",
   "View method": "查看方法",
   "View organization": "查看组织",

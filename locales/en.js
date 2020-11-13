@@ -1796,7 +1796,7 @@
   "All Collections": "All Collections",
   "More about this collection": "More about this collection",
   "close banner": "close banner",
-  "View Collection": "View Collection",
+  "View collection": "View Collection",
   "View case": "View Case",
   "View method": "View Method",
   "View organization": "View Organization",

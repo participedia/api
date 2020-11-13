@@ -1865,7 +1865,7 @@
   "Vietnam": "Vietnam",
   "View all": "Ver todo",
   "View all collections": "Ver todas las colecciones",
-  "View Collection": "Ver colección",
+  "View collection": "Ver colección",
   "View case": "Ver caso",
   "View method": "Método de vista",
   "View organization": "Ver organización",
