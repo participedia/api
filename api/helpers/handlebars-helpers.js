@@ -229,7 +229,7 @@ module.exports = {
     return i18n(`${article.type}_${view}_${name}_placeholder`, context);
   },
 
-  getFeaturedEntryDisplayText: (type, context) => {
+  getFeaturedEntryViewDisplayText: (type, context) => {
     return i18n(`View ${type}`, context);
   },
 
