@@ -491,6 +491,7 @@
   "faq_q8": "How do I edit content?",
   "faq_q9": "How do I create content in another language?",
   "Faroe Islands": "Faroe Islands",
+  "Featured Collections": "Featured Collections",
   "Featured Entries": "Featured Entries",
   "Featured [type]": "Featured %s",
   "Featured Case": "Featured Case",

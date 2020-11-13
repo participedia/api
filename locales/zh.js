@@ -554,6 +554,7 @@
   "faq_q9": "如何用其他语言创建内容?",
   "Faroe Islands": "法罗群岛",
   "Featured Case": "精选案例",
+  "Featured Collections": "精选集",
   "Featured Entries": "精选参赛作品",
   "Featured Method": "特色方法",
   "Featured Organization": "特色组织",

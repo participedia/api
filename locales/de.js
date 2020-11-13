@@ -554,6 +554,7 @@
   "faq_q9": "Wie erstelle ich Inhalte in einer anderen Sprache?",
   "Faroe Islands": "Färöer Inseln",
   "Featured Case": "gekennzeichneter Fall",
+  "Featured Collections": "Ausgewählte Sammlungen",
   "Featured Entries": "Empfohlene Einträge",
   "Featured Method": "Empfohlene Methode",
   "Featured Organization": "Gekennzeichnete Organisation",

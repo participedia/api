@@ -554,6 +554,7 @@
   "faq_q9": "¿Cómo puedo crear contenido en otro idioma?",
   "Faroe Islands": "Islas Faroe",
   "Featured Case": "Caso destacado",
+  "Featured Collections": "Colecciones destacadas",
   "Featured Entries": "Entradas destacadas",
   "Featured Method": "Método destacado",
   "Featured Organization": "Organización destacada",
