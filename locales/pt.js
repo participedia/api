@@ -382,6 +382,7 @@
   "Collaborator": "Colaborador",
   "Collaborators": "Colaboradores",
   "Collection": "Coleção",
+  "collection": "Coleção",
   "collections": "Coleções",
   "Collections": "Coleções",
   "collections of": "coleções de",

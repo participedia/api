@@ -382,6 +382,7 @@
   "Collaborator": "合作",
   "Collaborators": "合作",
   "Collection": "收集",
+  "collection": "收集",
   "collections": "集合",
   "Collections": "集合",
   "collections of": "相关合集",

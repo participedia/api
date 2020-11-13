@@ -382,6 +382,7 @@
   "Collaborator": "Mitarbeiter*in",
   "Collaborators": "Mitarbeiter*innen",
   "Collection": "Auflistung",
+  "collection": "Auflistung",
   "collections": "Sammlungen",
   "Collections": "Sammlungen",
   "collections of": "Sammlungen von",

@@ -382,6 +382,7 @@
   "Collaborator": "Collaborateur.rice",
   "Collaborators": "Collaborateur.rice.s",
   "Collection": "Collection",
+  "collection": "Collection",
   "collections": "Collections",
   "Collections": "Collections",
   "collections of": "collections de",

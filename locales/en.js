@@ -1759,6 +1759,7 @@
   "View this entry in its original language": "View this entry in its original language",
   "This entry was originally added in %s.": "This entry was originally added in %s.",
   "Collection": "Collection",
+  "collection": "Collection",
   "Collections": "Collections",
   "View all collections": "View all collections",
   "collection_edit_featured_label": "Featured",
