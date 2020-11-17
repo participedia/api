@@ -112,7 +112,7 @@ router.get("/", async function(req, res) {
   // Collect Featured Things
   let featuredEntries = await db.any(FEATURED, {
     language: language,
-    limit: 13,
+    limit: 10,
     sortby: "post_date",
     type: "things",
     userId: req.user ? req.user.id : null,
