@@ -365,14 +365,18 @@ async function getCaseHttp(req, res) {
 
 async function getEditStaticText(params) {
   const lang = params.lang;
+  const cases = listCases(lang);
+  const methods = listMethods(lang);
+  const organizations = listOrganizations(lang);
   let staticText = Object.assign({}, sharedFieldOptions);
+
   staticText.collections = await getCollections(lang);
   staticText.authors = listUsers();
-  staticText.cases = listCases(lang).filter(article => !article.hidden);
-  staticText.methods = listMethods(lang).filter(article => !article.hidden);
-  staticText.organizations = listOrganizations(lang).filter(
+  staticText.cases = Array.isArray(cases) ? cases.filter(article => !article.hidden) : [];
+  staticText.methods = Array.isArray(methods) ? methods.filter(article => !article.hidden) : [];
+  staticText.organizations = Array.isArray(organizations) ? organizations.filter(
     article => !article.hidden
-  );
+  ) : [];
   return staticText;
 }
 
