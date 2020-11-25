@@ -229,6 +229,10 @@ module.exports = {
     return i18n(`${article.type}_${view}_${name}_placeholder`, context);
   },
 
+  getFeaturedEntryViewDisplayText: (type, context) => {
+    return i18n(`View ${type}`, context);
+  },
+
   t: (key, context) => i18n(key, context),
 
   getLocale(context) {

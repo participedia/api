@@ -20,7 +20,7 @@
       <div class="featured-entries-carousel__content-inner">
         <div>
           <div class="featured-entries-carousel__header u-margin-bottom--small">
-            <h2 class="u-extra-bold">{{title}}</h2>
+            <h2 class="u-extra-bold">{{t title}}</h2>
             <a
               href="/search?selectedCategory={{entries.0.type}}"
               class="js-featured-entries-carousel__view-all-link"
@@ -35,7 +35,7 @@
             <h4
               class="featured-entries-carousel__type js-featured-entries-carousel__type"
             >
-              {{entries.0.type}}
+              {{t entries.0.type}}
             </h4>
             <h3 class="js-featured-entries-carousel__title">
               {{entries.0.title}}
@@ -49,7 +49,7 @@
               href="/{{entries.0.type}}/{{entries.0.id}}"
               class="u-extra-bold js-featured-entries-carousel__view-entry-link"
             >
-              {{t "View entry"}} ->
+              {{getFeaturedEntryViewDisplayText entries.0.type}} ->
             </a>
           </div>
         </div>

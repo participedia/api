@@ -45,7 +45,7 @@
   {{#if (isHomeView req)}}
     {{!-- import google api for the map widget --}}
     <script type="text/javascript" src="/js/vendor/markerclustererplus.min.js"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{static.language}}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{getLocale}}"></script>
     {{> script-tag-with-cache-key filepath="/build/js/home-view.bundle.js"}}
     <!-- Begin Inspectlet Asynchronous Code -->
     <script type="text/javascript">
@@ -70,14 +70,14 @@
 
   {{#if (isEditView req)}}
     {{!-- import google api for the autocomplete widget --}}
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{static.language}}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{getLocale}}"></script>
     <script type="text/javascript" src="/js/polyfills/DragDropTouch.js"></script>
     {{> script-tag-with-cache-key filepath="/build/js/edit-view.bundle.js"}}
   {{/if}}
 
   {{#if (isNewView req)}}
     {{!-- import google api for the autocomplete widget --}}
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{static.language}}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{getLocale}}"></script>
     <script type="text/javascript" src="/js/polyfills/DragDropTouch.js"></script>
     {{> script-tag-with-cache-key filepath="/build/js/edit-view.bundle.js"}}
   {{/if}}
