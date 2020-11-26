@@ -1,11 +1,7 @@
-<div class="full-width-container static-view">
-  <div class="left-col">&nbsp;</div>
-  <div class="middle-col">
-    {{> @partial-block }}
+<div class="full-width-container">
+  <div class="static-view">
+    <div class="static-view__content-container">
+      {{> @partial-block }}
+    </div>
   </div>
-  <div class="right-col">&nbsp;</div>
-  <a href="/content-chooser" class="button button-red floating-action-button floating-quick-submit-button" title='{{t "Quick Submit"}}'>
-    <span class="sr-only">{{t "Quick Submit"}}</span>
-    {{> icon-add }}
-  </a>
 </div>
