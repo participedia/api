@@ -121,7 +121,7 @@ router.get("/", async function(req, res) {
   });
   featuredEntries = addTextureImageIfNeeded(featuredEntries);
   const featuredCollections = featuredEntries.filter(
-    entry => entry.type === "collection"
+    entry => entry.type === "collection" && entry.featured === true
   );
   const featuredCasesMethodsOrgs = featuredEntries.filter(
     entry => entry.type !== "collection" && entry.featured === true
