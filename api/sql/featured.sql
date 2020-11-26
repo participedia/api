@@ -47,7 +47,6 @@ total_featured AS (
 )
 SELECT all_featured.*, total_featured.total
 FROM all_featured, total_featured
-WHERE featured = true
 ORDER BY featured DESC, ${sortby:name} DESC
 OFFSET ${offset}
 LIMIT ${limit}
