@@ -59,7 +59,7 @@
 
 .home-hero-stats__stat-item {
   border-right: 4px solid #fff;
-  padding: 30px 4VW 25px 4VW;
+  padding: 30px 2VW 25px 2VW;
 }
 .home-hero-stats__stat-item:first-child {
   padding-left: 0;
