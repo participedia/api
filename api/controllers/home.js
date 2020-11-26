@@ -124,7 +124,7 @@ router.get("/", async function(req, res) {
     entry => entry.type === "collection"
   );
   const featuredCasesMethodsOrgs = featuredEntries.filter(
-    entry => entry.type !== "collection"
+    entry => entry.type !== "collection" && entry.featured === true
   );
 
   // Populate response data
