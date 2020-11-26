@@ -3,7 +3,7 @@
     {{#if (includeSearchFilters req)}}
       {{> search-filter-button }}
     {{/if}}
-    {{#if (showCsvButtonOnSearch req)}}
+    {{#if (showCsvButton req)}}
       {{> download-csv-button }}
     {{/if}}
     <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
