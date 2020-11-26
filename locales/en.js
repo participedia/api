@@ -1886,5 +1886,6 @@
   "home_hero.feature.5988": "Participatory Slum Upgrading Process in the City of Buenos Aires: The \"Villa 20\" Case",
   "home_hero.feature.5600": "Participatory Research on the Decommissioning of South African Social Services",
   "home_hero.feature.6590": "George Floyd Protests",
-  "guidelines_info_link": "For more information about this form, please review our %sguidelines%s."
+  "guidelines_info_link": "For more information about this form, please review our %sguidelines%s.",
+  "Results CSV": "Results CSV"
 }
