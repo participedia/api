@@ -28,11 +28,13 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
-  validateFields
+  validateFields,
+  limitFromReq,
+  offsetFromReq
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
-const RESPONSE_LIMIT = 20;
+const { RESPONSE_LIMIT } = require("./../../constants.js");
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 const COLLECTION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/collection-structure.json", "utf8")
@@ -50,21 +52,6 @@ const typeFromReq = req => {
     cat = "all";
   }
   return cat === "all" ? "thing" : cat;
-};
-
-const limitFromReq = req => {
-  let limit = parseInt(req.query.limit || RESPONSE_LIMIT);
-  const resultType = (req.query.resultType || "").toLowerCase();
-  if (resultType === "map") {
-    limit = 0; // return all
-  }
-  return limit;
-};
-
-const offsetFromReq = req => {
-  let query = req.query.page ? req.query.page.replace(/[^0-9]/g, "") : "";
-  const page = Math.max(as.number(query || 1), 1);
-  return (page - 1) * limitFromReq(req);
 };
 
 const getTypes = params => {
