@@ -110,11 +110,12 @@ const returnByType = async (res, params, article, static, user, results = {}, to
       return res.status(200).json({ OK: true, article, results, total, pages, numArticlesByType });
     case "csv":
       // TODO: implement CSV
-      let category = params.selectedCategory;
-      if(params.type === 'collection' && supportedTypes.indexOf(category) >= 0) {
-        const file = await createCSVDataDump(category, results);
+      let category = params.selectedCategory == "organizations" ? "organization" : params.selectedCategory;
+      if(params.type === "collection" && supportedTypes.indexOf(category) >= 0) {
+        let file = await createCSVDataDump(category, results);
         return res.download(file);
       }
+      return res.status(500, "CSV not implemented yet").render();
     case "xml":
       // TODO: implement XML
       return res.status(500, "XML not implemented yet").render();
