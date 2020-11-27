@@ -32,4 +32,4 @@ const SUPPORTED_LANGUAGES = [
 const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpg", "image/jpeg"];
 const RESPONSE_LIMIT = 20;
 
-module.exports = { SUPPORTED_LANGUAGES, ALLOWED_IMAGE_TYPES };
+module.exports = { SUPPORTED_LANGUAGES, ALLOWED_IMAGE_TYPES, RESPONSE_LIMIT };
