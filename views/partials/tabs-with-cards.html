@@ -3,11 +3,8 @@
     {{#if (includeSearchFilters req)}}
       {{> search-filter-button }}
     {{/if}}
-    {{#if (showCsvButtonOnSearch req)}}
-      <button class="button button-bordered-grey download-csv-btn js-download-csv-btn">
-        <span class="sr-only">{{t "download"}}</span>
-        {{> icon-download-csv}} {{t "Results CSV"}}
-      </button>
+    {{#if (showCsvButton req)}}
+      {{> download-csv-button }}
     {{/if}}
     <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
       <span class="sr-only">{{t "list view"}}</span>

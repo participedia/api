@@ -15,7 +15,6 @@ const searchFilterList = {
 
     const submitBtnEl = document.querySelector(".js-search-filter-modal-show-result-btn");
     const clearFilterBtnEl = document.querySelector(".js-search-filter-modal-clear-btn");
-    const downloadCsvBtnEl = document.querySelector(".js-download-csv-btn");
     this.totalFilters = 0;
 
     searchFilterAutocomplete.init();
@@ -27,11 +26,6 @@ const searchFilterList = {
 
     submitBtnEl.addEventListener("click", e => this.handleFormSubmit(e));
     clearFilterBtnEl.addEventListener("click", e => this.handleClearAllFilter(e));
-    if (downloadCsvBtnEl) {
-      downloadCsvBtnEl.addEventListener("click", e => this.handleDownloadCsv(e));
-    }
-    
-
     this.updateUIFromUrlParams();
 	},
 
@@ -155,11 +149,6 @@ const searchFilterList = {
   handleFormSubmit(e) {
     e.preventDefault();
     location.href = this.getSearchUrl();
-  },
-
-  handleDownloadCsv() {
-    const url = `${this.getSearchUrl()}&returns=csv`;
-    window.open(url, '_blank');
   },
 
   getSearchUrl() {

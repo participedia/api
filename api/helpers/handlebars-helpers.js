@@ -1375,14 +1375,11 @@ module.exports = {
     return false;
   },
 
-  showCsvButtonOnSearch(req) {
-    const category = req.query.selectedCategory || null;
-    console.log("req.query.selectedCategory", req.query.selectedCategory)
-    const allowedCategories = ["case", "organizations", "method"];
-    return (
-      allowedCategories.indexOf(category) >= 0 &&
-      req.baseUrl.indexOf("collection") < 0
-    );
+  showCsvButton(req) {
+    if (["/search", "/collection"].indexOf(req.baseUrl) >= 0) {
+      return ["case", "organizations", "method"].indexOf(req.query.selectedCategory) >= 0;
+    }
+    return false;
   },
 
   includeSearchFilters(req) {

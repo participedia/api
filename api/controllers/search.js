@@ -18,11 +18,13 @@ const {
   parseGetParams,
   searchFilterKeys,
   searchFilterKeyLists,
+  limitFromReq,
+  offsetFromReq
 } = require("../helpers/things");
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
+const { RESPONSE_LIMIT } = require("./../../constants.js");
 const selectedCategoryValues = ['all', 'case', 'method', 'organization', 'collection'];
-const RESPONSE_LIMIT = 20;
 
 function randomTexture() {
   let index = Math.floor(Math.random() * 6) + 1;
@@ -113,24 +115,6 @@ const queryFileFromReq = req => {
     queryfile = SEARCH_MAP;
   }
   return queryfile;
-};
-
-const offsetFromReq = req => {
-  let query = req.query.page ? req.query.page.replace(/[^0-9]/g, "") : "";
-  const page = Math.max(as.number(query || 1), 1);
-  return (page - 1) * limitFromReq(req);
-};
-
-const limitFromReq = req => {
-  let limit = parseInt(req.query.limit || RESPONSE_LIMIT);
-  const resultType = (req.query.resultType || "").toLowerCase();
-  const returns = (req.query.returns || "").toLowerCase();
-  if (resultType === "map") {
-    limit = 0; // return all
-  } else if(returns === "csv") {
-    limit = 0;
-  }
-  return limit;
 };
 
 const sortbyFromReq = req => {
