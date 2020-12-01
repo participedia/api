@@ -15,6 +15,7 @@ const {
   UPDATE_AUTHOR_LAST,
   FEATURED_MAP,
   ENTRIES_BY_COLLECTION_ID,
+  ENTRIES_SUMMARY_BY_COLLECTION_ID,
   refreshSearch,
   ErrorReporter,
 } = require("../helpers/db");
@@ -258,6 +259,8 @@ async function getCollectionHttp(req, res) {
   const limit = limitFromReq(req);
   const offset = offsetFromReq(req);
   const types = getTypes(params);
+  const articleid = params.articleid;
+  const facets = `AND collections @> ARRAY[${articleid}]`;
 
   // always fetch all article types so we can calculate totals for a collection
   let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
@@ -268,18 +271,17 @@ async function getCollectionHttp(req, res) {
     sortby: "updated_date",
     userId: req.user ? req.user.id : null,
     types: types,
-    facets: `AND collections @> ARRAY[${params.articleid}]`,
+    facets: facets
   });
-
+  
   // get summary of article types for the collection
+  const summaryRow = await db.one(ENTRIES_SUMMARY_BY_COLLECTION_ID, {articleid, facets});
+  const summary = summaryRow.results;
   let numArticlesByType = {
-    case: 0,
-    method: 0,
-    organization: 0,
+    case: summary.total_cases,
+    method: summary.total_methods,
+    organization: summary.total_organizations,
   };
-  results.forEach(article => {
-    numArticlesByType[article.type] = numArticlesByType[article.type] + 1;
-  });
 
   // const limit = 20; // number of entries displayed on one page
   let total, pages;
