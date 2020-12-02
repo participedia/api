@@ -262,7 +262,7 @@ async function getCollectionHttp(req, res) {
   // always fetch all article types so we can calculate totals for a collection
   let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
     query: null,
-    limit: limit,
+    limit: limit ? limit : null, // null is no limit in SQL
     offset: offset,
     language: as.value(req.cookies.locale || "en"),
     sortby: "updated_date",
