@@ -1756,6 +1756,7 @@
   "Senegal": "塞内加尔",
   "Seychelles": "塞舌尔",
   "Show All": "显示全部",
+  "Show Less": "显示较少",
   "Show Results": "显示结果",
   "Sierra Leone": "塞拉利昂",
   "Sign out": "注销",

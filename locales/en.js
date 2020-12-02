@@ -1827,6 +1827,7 @@
   "Countries": "Countries",
   "Show Results": "Show Results",
   "Show All": "Show All",
+  "Show Less": "Show Less",
   "Select a country": "Select a country",
   "Getting Started as a Content Contributor": "Getting Started as a Content Contributor",
   "getting-started.p1": "Anyone can help document participatory initiatives by publishing and editing crowdsourced entries on participedia.net.",

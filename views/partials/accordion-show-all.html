@@ -3,5 +3,8 @@
   <div class="accordion-content">
     {{> @partial-block }}
   </div>
-  <label class="accordion-show-all-label" for="{{key}}-accordion">{{t "Show All"}}</label>
+  <label class="accordion-toggle" for="{{key}}-accordion">
+    <span class="accordion-show-all-label">{{t "Show All"}}</span>
+    <span class="accordion-show-less-label">{{t "Show Less"}}</span>
+  </label>
 </div>
