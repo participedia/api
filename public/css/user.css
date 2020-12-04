@@ -39,6 +39,12 @@
   margin-top: -160px;
 }
 
+.user-view-admin-only-section {
+  padding: 20px;
+  background-color: #F8F8F8;
+  margin-bottom: 60px;
+}
+
 /* user-edit */
 .user-edit-container {
   margin-bottom: 0;
