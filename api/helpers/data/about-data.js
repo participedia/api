@@ -399,6 +399,20 @@ const partners = [
         name: "Changdong Zhang",
         descriptors: ["Department of Political Science", "Peking University"],
       },
+      {
+        name: "David Talukder",
+        descriptors: [
+          "Centre d'Etude de la Vie Politique (CEVIPOL)", 
+          "Université libre de Bruxelles"
+        ],
+      },
+      {
+        name: "Julien Vrydagh",
+        descriptors: [
+          "Department of Political Science", 
+          "Vrije Universiteit Brussel and Université catholique de Louvain"
+        ],
+      },
     ],
   },
   {
