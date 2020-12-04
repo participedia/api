@@ -94,7 +94,7 @@
 }
 
 .home-hero-search__form {
-  margin-top: 45px;
+  margin-top: 47px;
   margin-bottom: 15px;
   display: flex;
   flex-direction: row;
@@ -251,6 +251,9 @@
     padding-top: 40px;
     margin-bottom: 45px;
   }
+  .home-hero-search__form {
+    display: none;
+  }
 }
 @media (max-width: 1200px) { 
   .home-hero-header {
@@ -377,10 +380,4 @@
     font-size: 16px;
     line-height: 20px;
   }
-  /* .home-hero-search__form-inputs {
-    display: none;
-  }
-  .home-hero-search__form button {
-    display: none;
-  } */
 }
