@@ -97,8 +97,9 @@ article .reader-view-social-links {
   .edit-history-accordion .accordion {
     border-bottom: 0;
   }
+  
   .reader-view-social-links {
-    display: none;
+    width: auto;
   }
 
   article .reader-view-social-links {
