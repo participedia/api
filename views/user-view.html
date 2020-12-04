@@ -21,6 +21,13 @@
       </br>
     {{/if}}
     {{#if profile.bio}}<div class="user-view-bio">{{{profile.bio}}}</div>{{/if}}
+
+    {{#if req.user.isadmin}}
+      <div class="user-view-admin-only-section">
+        <h2>Admin only</h2>
+        <p><strong>user email:</strong> {{profile.email}}</p>
+      </div>
+    {{/if}}
   </div>
 </div>
 <div class="user-view-body">
