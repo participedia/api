@@ -1756,6 +1756,7 @@
   "Senegal": "Sénégal",
   "Seychelles": "Seychelles",
   "Show All": "Voir tous",
+  "Show Less": "Montrer moins",
   "Show Results": "Montrer les résultats",
   "Sierra Leone": "Sierra Leone",
   "Sign out": "Se déconnecter",
