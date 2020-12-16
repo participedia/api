@@ -17,7 +17,22 @@ document.addEventListener("DOMContentLoaded", () => {
   homeHero.init();
   initSearchForm();
   initStatsAnimations();
+  initTracking();
 });
+
+function initTracking() {
+  const statsLinkEls = toArray(
+    document.querySelectorAll(".js-stats-link")
+  );
+  
+  if (!statsLinkEls) return;
+
+  statsLinkEls.forEach(el => {
+    el.addEventListener("click", e => {
+      // Track here
+    });
+  });
+}
 
 function initStatsAnimations() {
   const statsEls = toArray(
