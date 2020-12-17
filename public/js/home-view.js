@@ -22,21 +22,30 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initTracking() {
-  const statsLinkEls = toArray(
-    document.querySelectorAll(".js-stats-link")
-  );
+  const statsLinkEls = toArray(document.querySelectorAll(".js-stats-link"));
+  const browseAllLinkEl = document.querySelector(".js-home-hero-browse-all-link");
   
-  if (!statsLinkEls) return;
-
-  statsLinkEls.forEach(el => {
-    el.addEventListener("click", e => {
-      e.preventDefault();
-      let type = el.getAttribute("data-stats-tracking-name");
-      tracking.sendWithCallback("home.hero", "stat_click", type, () => {
-        location.href = el.getAttribute("href");
+  if (statsLinkEls) {
+    statsLinkEls.forEach(el => {
+      el.addEventListener("click", e => {
+        e.preventDefault();
+        let type = el.getAttribute("data-stats-tracking-name");
+        tracking.sendWithCallback("home.hero", "stat_click", type, () => {
+          location.href = el.getAttribute("href");
+        });
       });
     });
-  });
+  }
+
+  if(browseAllLinkEl) {
+    browseAllLinkEl.addEventListener("click", e => {
+      e.preventDefault();
+      console.log(e.target.href);
+      tracking.sendWithCallback("home.hero", "browse_all_entries_click", "", () => {
+        location.href = e.target.href;
+      });
+    });
+  }
 }
 
 function initStatsAnimations() {
