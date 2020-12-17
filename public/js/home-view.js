@@ -80,6 +80,9 @@ function initSearchForm() {
     } else if (query) {
       searchUrl = `${searchUrl}?query=${query}`;
     }
+    if(query) {
+      tracking.send("home.hero", "search_submit", query);
+    }
 
     location.href = searchUrl;
   });
