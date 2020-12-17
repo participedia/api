@@ -1,8 +1,9 @@
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
 const blogPosts = {
-  init() {
+  init(tracking) {
     this.fetch();
+    this.tracking = tracking;
   },
 
   fetch() { 
@@ -37,12 +38,27 @@ const blogPosts = {
 
       imgDivEl.style.backgroundImage = `url(${posts[i].imageUrl})`;
       titleEl.innerHTML = posts[i].title;
+      titleEl.setAttribute("data-title", posts[i].title);
       titleEl.href = posts[i].url;
       descriptionEl.innerHTML = posts[i].description + "...";
       linkEl.setAttribute("href", posts[i].url);
 
       columnEl.innerHTML = postHTML.innerHTML;
     });
+
+    // Track article clicks
+    const titleEls = toArray(document.querySelectorAll(".js-blog-post-card__title"));
+    if(titleEls) {
+      titleEls.forEach(el => {
+        el.addEventListener("click", e => {
+          e.preventDefault();
+          let title = el.getAttribute("data-title");
+          this.tracking.sendWithCallback("home.news", "blog_article_click", title, () => {
+            window.open(e.target.href);
+          });
+        });
+      });
+    }
   },
 };
 
