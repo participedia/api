@@ -6,6 +6,7 @@ import featuredEntriesCarousel from "./featured-entries-carousel.js";
 import homeHero from "./home-hero.js";
 import easingFunctions from "./utils/easing-functions.js";
 import { CountUp } from "countup.js";
+import tracking from "./utils/tracking.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
@@ -29,7 +30,11 @@ function initTracking() {
 
   statsLinkEls.forEach(el => {
     el.addEventListener("click", e => {
-      // Track here
+      e.preventDefault();
+      let type = el.getAttribute("data-stats-tracking-name");
+      tracking.sendWithCallback("home.hero", "stat_click", type, () => {
+        location.href = el.getAttribute("href");
+      });
     });
   });
 }
