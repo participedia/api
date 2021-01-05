@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   hamburgerMenu.init();
   contactHelpFaqPopover.init(tracking);
   header.init();
-  languageSelect.init();
+  languageSelect.init(tracking);
 
   // Listen to tab events to enable outlines (accessibility improvement)
   document.body.addEventListener("keyup", function(e) {
