@@ -44,6 +44,13 @@ const tabsWithCards = {
       }
     });
 
+    const downloadCsvBtnEl = document.querySelector(".js-download-csv-btn");
+    if (downloadCsvBtnEl) {
+      downloadCsvBtnEl.addEventListener("click", e => {
+        tracking.send("search", "results_csv_button_click");
+      });
+    }
+
     const openFilter = getValueForParam("openFilters");
     if (openFilter == "1") {
       this.openSearchFilterModal();
