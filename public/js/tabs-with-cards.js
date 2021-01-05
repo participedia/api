@@ -4,6 +4,7 @@ import {
   removeUrlParams,
 } from "./utils/utils.js";
 import modal from "./modal.js";
+import tracking from "./utils/tracking.js";
 
 const tabsWithCards = {
   init() {
@@ -37,6 +38,8 @@ const tabsWithCards = {
             updateUrlParams("openFilters", "1");
             window.location.href = window.location.href;
           }
+
+          tracking.send("search", "filter_button_click");
         });
       }
     });
