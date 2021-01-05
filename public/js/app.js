@@ -4,6 +4,7 @@ import elementClosestPolyfill from "./polyfills/element.closest.polyfill.js";
 import contactHelpFaqPopover from "./contact-help-faq-popover.js";
 import languageSelect from "./language-select.js";
 import header from "./header.js";
+import tracking from "./utils/tracking.js";
 
 function loadFonts() {
   const faktFont = new FontFaceObserver("Fakt", {
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // common
   loadFonts();
   hamburgerMenu.init();
-  contactHelpFaqPopover.init();
+  contactHelpFaqPopover.init(tracking);
   header.init();
   languageSelect.init();
 

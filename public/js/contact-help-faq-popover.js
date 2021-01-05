@@ -1,5 +1,6 @@
 const contactHelpFaqPopover = {
-  init() {
+  init(tracking) {
+    this.tracking = tracking;
     const helpLinkEls = document.querySelectorAll("a[href='/help']");
     this.contactHelpFaqPopoverEl = document.querySelector(
       ".js-contact-help-faq-popover"
@@ -39,6 +40,7 @@ const contactHelpFaqPopover = {
     for (let i = 0; i < helpLinkEls.length; i++) {
       helpLinkEls[i].addEventListener("click", e => {
         e.preventDefault();
+        this.tracking.send("help", "help_contact_click", e.target.getAttribute("data-location"));
         this.contactHelpFaqPopoverEl.style = "display: block;";
       });
     }
