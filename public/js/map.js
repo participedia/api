@@ -333,6 +333,9 @@ const map = {
         // show legend when marker is closed
         this.mapLegendEl.style.display = "flex";
       });
+
+      // Track marker click
+      tracking.send("home.map", "marker_click", marker.id);
     });
   },
 };

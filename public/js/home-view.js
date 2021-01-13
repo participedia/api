@@ -5,19 +5,63 @@ import blogPosts from "./blog-posts.js";
 import featuredEntriesCarousel from "./featured-entries-carousel.js";
 import homeHero from "./home-hero.js";
 import easingFunctions from "./utils/easing-functions.js";
-import { CountUp } from "countup.js";
+// import { CountUp } from "countup.js";
+import tracking from "./utils/tracking.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
 document.addEventListener("DOMContentLoaded", () => {
   map.init();
   editSelect.init();
-  blogPosts.init();
+  blogPosts.init(tracking);
   featuredEntriesCarousel.init();
   homeHero.init();
   initSearchForm();
-  initStatsAnimations();
+  // initStatsAnimations();
+  initTracking();
 });
+
+function initTracking() {
+  const statsLinkEls = toArray(document.querySelectorAll(".js-stats-link"));
+  const browseAllLinkEl = document.querySelector(".js-home-hero-browse-all-link");
+  const heroCurrentSlide = document.querySelector(".js-home-hero-image-credit__entry-link");
+  
+  if (statsLinkEls) {
+    statsLinkEls.forEach(el => {
+      el.addEventListener("click", e => {
+        e.preventDefault();
+        let type = el.getAttribute("data-stats-tracking-name");
+        tracking.sendWithCallback("home.hero", "stat_click", type, () => {
+          location.href = el.getAttribute("href");
+        });
+      });
+    });
+  }
+
+  if(browseAllLinkEl) {
+    browseAllLinkEl.addEventListener("click", e => {
+      e.preventDefault();
+      console.log(e.target.href);
+      tracking.sendWithCallback("home.hero", "browse_all_entries_click", "", () => {
+        location.href = e.target.href;
+      });
+    });
+  }
+
+  if(heroCurrentSlide) {
+    heroCurrentSlide.addEventListener("click", e => {
+      e.preventDefault();
+      const link = e.target.href;
+      const id = parseInt(link.substring(link.lastIndexOf('/') + 1));
+
+      if(!Number.isInteger(id)) return;
+
+      tracking.sendWithCallback("home.hero", "hero_entry_title_click", id, () => {
+        location.href = e.target.href;
+      });
+    });
+  }
+}
 
 function initStatsAnimations() {
   const statsEls = toArray(
@@ -59,6 +103,9 @@ function initSearchForm() {
       searchUrl = `${searchUrl}&query=${query}`;
     } else if (query) {
       searchUrl = `${searchUrl}?query=${query}`;
+    }
+    if(query) {
+      tracking.send("home.hero", "search_submit", query);
     }
 
     location.href = searchUrl;

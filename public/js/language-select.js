@@ -4,14 +4,19 @@ const things = ['method', 'case', 'organization'];
 const languageSelect = {
   redirectUrl: null,
   isThingDetailsPageWithLanguageParam: false,
-  init() {
+  init(tracking) {
+    this.tracking = tracking;
     this.generateRedirectPath();
     const selectEls = document.querySelectorAll(".js-language-select");
 
     if (!selectEls) return;
 
     toArray(selectEls).forEach(select => {
-      select.addEventListener("change", e => this.handleSelectChange(e));
+      select.addEventListener("change", e => {
+        this.tracking.sendWithCallback("language", "language_dropdown", e.target.value, () => {
+          this.handleSelectChange(e);
+        });
+      });
     });
   },
 

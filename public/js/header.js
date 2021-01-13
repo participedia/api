@@ -53,6 +53,13 @@ const header = {
     const searchFormEl = document.querySelector(".js-query-search-form");
     this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
 
+    searchFormEl.addEventListener("submit", e => {
+      tracking.sendWithCallback("header", "search_submit", searchInputEl.value, () => {
+        location.href = `/search?query=${searchInputEl.value}`;
+      });
+      e.preventDefault();
+    });
+
     searchInputEl.addEventListener("input", e => {
       this.hideOrShowSearchCloseButton(e.target.value, clearSearchButtonEl);
     });

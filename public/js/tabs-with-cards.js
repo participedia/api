@@ -4,6 +4,7 @@ import {
   removeUrlParams,
 } from "./utils/utils.js";
 import modal from "./modal.js";
+import tracking from "./utils/tracking.js";
 
 const tabsWithCards = {
   init() {
@@ -37,9 +38,18 @@ const tabsWithCards = {
             updateUrlParams("openFilters", "1");
             window.location.href = window.location.href;
           }
+
+          tracking.send("search", "filter_button_click");
         });
       }
     });
+
+    const downloadCsvBtnEl = document.querySelector(".js-download-csv-btn");
+    if (downloadCsvBtnEl) {
+      downloadCsvBtnEl.addEventListener("click", e => {
+        tracking.send("search", "results_csv_button_click");
+      });
+    }
 
     const openFilter = getValueForParam("openFilters");
     if (openFilter == "1") {
