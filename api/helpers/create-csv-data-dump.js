@@ -256,22 +256,22 @@ async function createCSVDataDump(type, results = []) {
     organization: ORGANIZATION_BY_ID,
   };
 
-  const fullEntries = [];
-  await Promise.all(
-    entries.map(async article => {
-      let articleType = type == 'thing' ? article.type : type;
-      if (articleType !== 'collection') {
-        const params = {
-          type: articleType,
-          view: "view",
-          articleid: article.id,
-          lang: "en",
-          userid: null,
-        };
-        const articleRow = await db.one(sqlForType[articleType], params);
+  const fullEntries = await Promise.all(
+    entries.filter(article => {
+      return article.type !== 'collection';
+    })
+    .map(async article => {
+      let articleType =  type == 'thing' ? article.type : type;
+      const params = {
+        type: articleType,
+        view: "view",
+        articleid: article.id,
+        lang: "en",
+        userid: null,
+      };
+      const articleRow = await db.one(sqlForType[articleType], params);
 
-        fullEntries.push(articleRow.results);
-      }
+      return articleRow.results;
     })
   );
 
