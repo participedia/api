@@ -424,7 +424,10 @@ async function createCSVDataDump(type, results = []) {
 
   const fields = Object.keys(csvFields);
 
-  const opts = { fields };
+  const opts = {
+    fields: fields,
+    withBOM: true
+  };
 
   const csv = parse(editedEntries, opts);
 
