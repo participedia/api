@@ -48,6 +48,14 @@ function generateCsvFields(orderFields, multiFieldArray, editedFields) {
   return csvFields;
 }
 
+function removeWhiteSpaces(string) {
+  return string.replace(/\s \s+/g,'');
+}
+
+function removeNBSP(string) {
+  return string.replace(/&nbsp;/g,'');
+}
+
 const orderedCaseFields = [
   "id",
   "type",
@@ -292,6 +300,9 @@ async function createCSVDataDump(type, results = []) {
     if (editedEntry.body && editedEntry.body.length > MAX_CHAR_LENGTH) {
       editedEntry.body = editedEntry.body.substring(0, MAX_CHAR_LENGTH);
     }
+
+    editedEntry.body = removeNBSP(removeWhiteSpaces(editedEntry.body));
+    editedEntry.description = removeNBSP(removeWhiteSpaces(editedEntry.description));
 
     // add creator and last_updated_by name and profile url
     if (editedEntry.creator) {
