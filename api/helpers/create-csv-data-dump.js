@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { parse } = require("json2csv");
 const moment = require("moment");
+const { sortBy } = require("lodash");
 const {
   db,
   LIST_ARTICLES,
@@ -440,7 +441,7 @@ async function createCSVDataDump(type, results = []) {
     withBOM: true
   };
 
-  const csv = parse(editedEntries, opts);
+  const csv = parse(sortBy(editedEntries, "id"), opts);
 
   const filePath = `./public/participedia-data-${type}s.csv`;
 
