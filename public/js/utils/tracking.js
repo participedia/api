@@ -15,8 +15,8 @@ function createFunctionWithTimeout(callback, opt_timeout) {
 
 const tracking = {
   send(eventCategory, eventAction, eventLabel = "") {
-    if (!window.gtag) return;
-    window.gtag("event", eventAction, {
+    if (!gtag) return;
+    gtag("event", eventAction, {
       event_category: eventCategory,
       event_label: eventLabel,
       event_action: eventAction,
@@ -24,11 +24,11 @@ const tracking = {
   },
 
   sendWithCallback(eventCategory, eventAction, eventLabel = "", callback) {
-    if (!window.gtag) {
+    if (!gtag) {
       callback();
       return;
     }
-    window.gtag("event", eventAction, {
+    gtag("event", eventAction, {
       event_category: eventCategory,
       event_label: eventLabel,
       event_action: eventAction,
