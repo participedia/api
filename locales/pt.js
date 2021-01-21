@@ -434,7 +434,7 @@
   "completeness.partial_editing_alert": "%s A entrada a seguir precisa de assistência com conteúdo e edição.%s Por favor, ajude-nos. %s a completá-lo%s.",
   "completeness.partial_editing_modal_text_1": "Esse tipo de entrada precisa de melhorias significativas em sua gramática ou ortografia, e pode ser qualquer nível de completude (esboço, parcial ou completo). Entradas que precisam de gramática ou edições ortográficas podem ser identificadas usando o filtro de pesquisa \"completude de entrada\" na página inicial.",
   "completeness.Stub": "Esboço",
-  "completeness.stub_alert": "%s A entrada a seguir é esboço.%s Por favor, ajude-nos. %completá-lo%s.",
+  "completeness.stub_alert": "%s A entrada a seguir é esboço.%s Por favor, ajude-nos. %scompletá-lo%s.",
   "completeness.stub_modal_text_1": "As inscrições de stub contêm poucas informações além de um título, proporcionando vagas de início ideais para os alunos e qualquer pessoa interessada em contribuir para o Participedia. Mais entradas de stub podem ser encontradas usando o filtro de pesquisa de \"completude de entrada\" na página inicial.",
   "components_sectionlabel": "Componentes",
   "confirm_new_password_placeholder": "Confirmar nova senha",
