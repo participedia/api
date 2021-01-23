@@ -315,8 +315,7 @@ module.exports = {
     "random",
     "stratified",
     "appointment",
-    "election",
-    "not",
+    "election"
   ],
   targeted_participants: [
     "appointed",
