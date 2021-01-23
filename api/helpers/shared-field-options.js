@@ -288,7 +288,7 @@ module.exports = {
   ongoing: ["yes", "no"],
   impact_evidence: ["yes", "no"],
   formal_evaluation: ["yes", "no"],
-  facilitators: ["yes", "no", "not_applicable"],
+  facilitators: ["yes", "no"],
   decision_methods: ["opinion", "idea", "general", "voting", "n/a", "dont"],
   time_limited: ["a", "repeated"],
   approaches: [
