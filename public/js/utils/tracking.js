@@ -1,6 +1,5 @@
 // Utility function to handle case when Google Analytics is down or slow.
-// If the hitCallback function hasn't been called within 1s, execute the callback.
-// https://developers.google.com/analytics/devguides/collection/analyticsjs/sending-hits
+// If the `event_callback` fn called in `sendWithCallback` hasn't been called within 1s, execute the callback.
 // The following utility function accepts a function as input and returns a new function. If the returned function is called before the timeout period (the default timeout is one second), it clears the timeout and invokes the input function. If the returned function isn't called before the timeout period, the input function is called regardless.
 function createFunctionWithTimeout(callback, opt_timeout) {
   var called = false;
@@ -16,18 +15,24 @@ function createFunctionWithTimeout(callback, opt_timeout) {
 
 const tracking = {
   send(eventCategory, eventAction, eventLabel = "") {
-    if (!window.ga) return;
-
-    window.ga("send", "event", eventCategory, eventAction, eventLabel);
+    if (!gtag) return;
+    gtag("event", eventAction, {
+      event_category: eventCategory,
+      event_label: eventLabel,
+      event_action: eventAction,
+    });
   },
 
   sendWithCallback(eventCategory, eventAction, eventLabel = "", callback) {
-    if (!window.ga) {
+    if (!gtag) {
       callback();
       return;
     }
-    window.ga("send", "event", eventCategory, eventAction, eventLabel, {
-      hitCallback: createFunctionWithTimeout(callback),
+    gtag("event", eventAction, {
+      event_category: eventCategory,
+      event_label: eventLabel,
+      event_action: eventAction,
+      event_callback: createFunctionWithTimeout(callback),
     });
   },
 };
