@@ -414,8 +414,7 @@ module.exports = {
     "philanthropic",
     "regional",
     "social",
-    "labortrade",
-    "n/a",
+    "labortrade"
   ],
   funder_types: [
     "academic",
