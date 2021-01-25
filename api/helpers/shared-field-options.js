@@ -397,8 +397,7 @@ module.exports = {
     "petitions",
     "protestspublic",
     "public_hearingsmeetings",
-    "word",
-    "n/a",
+    "word"
   ],
   organizer_types: [
     "academic",
