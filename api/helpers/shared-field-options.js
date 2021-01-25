@@ -385,8 +385,7 @@ module.exports = {
     "plurality",
     "majoritarian",
     "supermajoritarian",
-    "unanimous",
-    "dont",
+    "unanimous"
   ],
   insights_outcomes: [
     "artistic",
