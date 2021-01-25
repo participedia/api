@@ -446,8 +446,7 @@ module.exports = {
     "elected",
     "appointed",
     "experts",
-    "corporations",
-    "dont",
+    "corporations"
   ],
   sector: ["for_profit", "government", "non_profit_non_gov", "higher_ed"],
   level_polarization: ["not", "low", "moderate", "polarized", "high"],
