@@ -431,8 +431,7 @@ module.exports = {
     "philanthropic",
     "regional",
     "social",
-    "labortrade",
-    "n/a",
+    "labortrade"
   ],
   change_types: [
     "changes",
