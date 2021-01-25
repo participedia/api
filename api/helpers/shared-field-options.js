@@ -378,8 +378,7 @@ module.exports = {
     "teachins",
     "video",
     "written",
-    "no_info",
-    "not",
+    "no_info"
   ],
   if_voting: [
     "preferential",
