@@ -697,7 +697,7 @@
   "method_edit_purpose_method_instructional": "Select and rank up to three purposes that this method best serves, with “1” indicating the most relevant. ",
   "method_edit_purpose_method_label": "Typical Purpose",
   "method_edit_purpose_method_placeholder": "Select & rank up to 3 purposes",
-  "method_edit_recruitment_method_instructional": "If relevant, select and rank up to three techniques this method can use to recruit a limited subset of the population as participants, with “1” indicating the optimal approach.",
+  "method_edit_recruitment_method_instructional": "What technique does this method use to recruit a limited subset of the population as participants?",
   "method_edit_recruitment_method_label": "Recruitment Method for Limited Subset of Population",
   "method_edit_recruitment_method_placeholder": "Select recruitment method",
   "method_edit_scope_of_influence_instructional": "Select up to three geographical or jurisdictional boundaries within which this method can be implemented.",
