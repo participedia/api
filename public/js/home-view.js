@@ -5,7 +5,7 @@ import blogPosts from "./blog-posts.js";
 import featuredEntriesCarousel from "./featured-entries-carousel.js";
 import homeHero from "./home-hero.js";
 import easingFunctions from "./utils/easing-functions.js";
-// import { CountUp } from "countup.js";
+import { CountUp } from "countup.js";
 import tracking from "./utils/tracking.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   featuredEntriesCarousel.init();
   homeHero.init();
   initSearchForm();
-  // initStatsAnimations();
+  initStatsAnimations();
   initTracking();
 });
 
