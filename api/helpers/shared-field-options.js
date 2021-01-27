@@ -289,7 +289,7 @@ module.exports = {
   impact_evidence: ["yes", "no"],
   formal_evaluation: ["yes", "no"],
   facilitators: ["yes", "no"],
-  decision_methods: ["opinion", "idea", "general", "voting", "n/a", "dont"],
+  decision_methods: ["opinion", "idea", "general", "voting", "n/a"],
   time_limited: ["a", "repeated"],
   approaches: [
     "advocacy",
