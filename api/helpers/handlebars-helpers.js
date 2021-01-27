@@ -798,7 +798,12 @@ module.exports = {
     return toTitleCase(article.type + " Data");
   },
 
-  sortedEditHistory(editHistory) {
+  sortedEditHistory(article) {
+    let editHistory = article.edit_history;
+    const isSameDate = (list, timestamp) => {
+      return list.find(entry => moment(entry.timestamp).isSame(timestamp, "day"));
+    }
+    
     // Filter and sort edit history to show one edit per user, per day
     // in the order of most recent edits first.
     // (do not show multiple edits by the same author on the same day)
@@ -809,12 +814,7 @@ module.exports = {
 
     let editsByUser = {};
     editHistory.forEach(edit => {
-      if (
-        editsByUser[edit.user_id] &&
-        !editsByUser[edit.user_id].find(entry =>
-          moment(entry.timestamp).isSame(edit.timestamp, "day")
-        )
-      ) {
+      if (editsByUser[edit.user_id] && !isSameDate(editsByUser[edit.user_id], edit.timestamp)) {
         // only add this edit if we don't already have an edit entry for this user on this day
         editsByUser[edit.user_id] = editsByUser[edit.user_id].concat([edit]);
       } else if (!editsByUser[edit.user_id]) {
@@ -828,9 +828,28 @@ module.exports = {
         entry => (editsToBeSorted = editsToBeSorted.concat([entry]))
       );
     });
-    return editsToBeSorted.sort((a, b) => {
+
+    const history = editsToBeSorted.sort((a, b) => {
       return new Date(b.timestamp) - new Date(a.timestamp);
     });
+
+    const creator = article.creator;
+    const postDate = article.post_date;
+    const postDateIsInHistory = () => {
+      const userIsIn = history.find(entry => entry.user_id === creator.user_id);
+      const dateIsIn = isSameDate(history, postDate);
+      return (userIsIn && dateIsIn);
+    }
+
+    if (!postDateIsInHistory()) {
+      history.unshift({
+        "user_id": creator.user_id,
+        "timestamp": postDate,
+        "name": creator.name
+      });
+    }
+
+    return history;
   },
 
   // search layout helpers
