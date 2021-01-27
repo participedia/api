@@ -842,7 +842,7 @@ module.exports = {
     }
 
     if (!postDateIsInHistory()) {
-      history.unshift({
+      history.push({
         "user_id": creator.user_id,
         "timestamp": postDate,
         "name": creator.name
