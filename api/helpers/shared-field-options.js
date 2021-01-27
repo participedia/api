@@ -288,8 +288,8 @@ module.exports = {
   ongoing: ["yes", "no"],
   impact_evidence: ["yes", "no"],
   formal_evaluation: ["yes", "no"],
-  facilitators: ["yes", "no", "not_applicable"],
-  decision_methods: ["opinion", "idea", "general", "voting", "n/a", "dont"],
+  facilitators: ["yes", "no"],
+  decision_methods: ["opinion", "idea", "general", "voting", "n/a"],
   time_limited: ["a", "repeated"],
   approaches: [
     "advocacy",
@@ -315,8 +315,7 @@ module.exports = {
     "random",
     "stratified",
     "appointment",
-    "election",
-    "not",
+    "election"
   ],
   targeted_participants: [
     "appointed",
@@ -379,16 +378,14 @@ module.exports = {
     "teachins",
     "video",
     "written",
-    "no_info",
-    "not",
+    "no_info"
   ],
   if_voting: [
     "preferential",
     "plurality",
     "majoritarian",
     "supermajoritarian",
-    "unanimous",
-    "dont",
+    "unanimous"
   ],
   insights_outcomes: [
     "artistic",
@@ -400,8 +397,7 @@ module.exports = {
     "petitions",
     "protestspublic",
     "public_hearingsmeetings",
-    "word",
-    "n/a",
+    "word"
   ],
   organizer_types: [
     "academic",
@@ -418,8 +414,7 @@ module.exports = {
     "philanthropic",
     "regional",
     "social",
-    "labortrade",
-    "n/a",
+    "labortrade"
   ],
   funder_types: [
     "academic",
@@ -436,8 +431,7 @@ module.exports = {
     "philanthropic",
     "regional",
     "social",
-    "labortrade",
-    "n/a",
+    "labortrade"
   ],
   change_types: [
     "changes",
@@ -452,8 +446,7 @@ module.exports = {
     "elected",
     "appointed",
     "experts",
-    "corporations",
-    "dont",
+    "corporations"
   ],
   sector: ["for_profit", "government", "non_profit_non_gov", "higher_ed"],
   level_polarization: ["not", "low", "moderate", "polarized", "high"],
