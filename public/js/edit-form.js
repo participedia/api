@@ -1,6 +1,7 @@
 import serialize from "./utils/serialize.js";
 import loadingGifBase64 from "./loading-gif-base64.js";
 import modal from "./modal.js";
+import infoModal from "./info-modal";
 import tooltipTriggerAndModal from "./tooltip-trigger-and-modal.js";
 import tracking from "./utils/tracking.js";
 
@@ -57,6 +58,7 @@ const editForm = {
     tooltipTriggerAndModal.init();
 
     this.formEl = document.querySelector(".js-edit-form");
+    infoModal.init(modal);
   },
 
   sendFormData() {
