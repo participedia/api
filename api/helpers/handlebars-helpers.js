@@ -1396,7 +1396,7 @@ module.exports = {
 
   showCsvButton(req) {
     if (["/search", "/collection"].indexOf(req.baseUrl) >= 0) {
-      return ["case", "organizations", "method"].indexOf(req.query.selectedCategory) >= 0;
+      return req.query.selectedCategory != 'collections';
     }
     return false;
   },
