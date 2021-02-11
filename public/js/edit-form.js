@@ -1,7 +1,6 @@
 import serialize from "./utils/serialize.js";
 import loadingGifBase64 from "./loading-gif-base64.js";
 import modal from "./modal.js";
-import infoModal from "./info-modal";
 import infoIconToModal from "./info-icon-to-modal.js";
 import tracking from "./utils/tracking.js";
 
@@ -58,7 +57,6 @@ const editForm = {
     infoIconToModal.init();
 
     this.formEl = document.querySelector(".js-edit-form");
-    infoModal.init(modal);
   },
 
   sendFormData() {
