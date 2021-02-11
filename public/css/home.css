@@ -211,6 +211,10 @@
   width: 80%
 }
 
+.home-quick-sumbit__floating-action-button {
+  display: none;
+}
+
 @media (max-height: 598px) { 
   .home-hero-stats {
     justify-content: flex-start;
@@ -272,6 +276,9 @@
   }
   .home-hero-stats__stat-item h3 {
     font-size: 1rem;
+  }
+  .home-quick-sumbit__floating-action-button { 
+    display: flex;
   }
 }
 
