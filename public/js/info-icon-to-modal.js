@@ -20,7 +20,7 @@ const infoIconToModal = {
       <p>${body}</p>
     `;
     modal.updateModal(content);
-    modal.openModal("aria-modal");
+    modal.openModal("aria-modal", { showCloseBtn: true });
   },
 }
 
