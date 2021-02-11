@@ -3,7 +3,7 @@
     <span>
       <strong>{{getOriginalLanguageAlertText article}}</strong>
       <a href="/{{article.type}}/{{article.id}}?lang={{article.original_language}}">{{t "View this entry in its original language"}}</a>.
-      {{> tooltip-trigger-and-modal 
+      {{> info-icon-to-modal 
         modalHeader=(t "How does translation work?") 
         modalText=(originalLanguageModalBody)
       }}
