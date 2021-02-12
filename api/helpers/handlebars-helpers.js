@@ -244,6 +244,20 @@ module.exports = {
     }
   },
 
+  getLocalizedLanguageLabel: context => {
+    const req = context.data.root.req;
+    const locale = req && req.cookies.locale;
+
+    const language = SUPPORTED_LANGUAGES.filter(lang => {
+      return lang.twoLetterCode === locale;
+    });
+    if (language.length > 0) {
+      return i18n(language[0].name, context);
+    } else {
+      return "missing language";
+    };
+  },
+
   getLanguageOptions: () => {
     return SUPPORTED_LANGUAGES;
   },

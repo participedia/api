@@ -61,6 +61,7 @@
     "slim-select": "1.23.0",
     "sortablejs": "1.9.0",
     "tape": "^4.6.3",
+    "tippy.js": "^6.2.7",
     "uuid": "3.3.2"
   },
   "devDependencies": {

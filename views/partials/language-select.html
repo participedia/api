@@ -1,4 +1,4 @@
-<div class="language-selector">
+<div class="language-selector js-language-selector">
   <label class="selected-language">{{getLocale}}</label>
   <select name="locale" class="language-select js-language-select">
     {{#if showTwoLetterCode}}
@@ -17,5 +17,27 @@
       {{/if}}
     {{/each}}
   </select>
-
 </div>
+
+<script 
+  type="text/template" 
+  class="js-language-select-modal-content"
+  data-header="{{t 'faq_q14'}}"
+>
+  <p>{{t "faq_a14_p1"}}</p>
+  <p>{{t "faq_a14_p2"}}</p>
+  <p>{{t "faq_a14_p3"}}</p>
+  <p>{{t "faq_a14_p4"}}</p>
+</script>
+
+<script type="text/template" class="js-language-select-tooltip-template">
+  <div>
+    To ensure accurate translation, please enter text in 
+    <strong>{{getLocalizedLanguageLabel}}</strong>, 
+    or change selected language here.
+  </div>
+  <div class="language-select-tooltip__actions">
+    <a href="#" class="js-language-select-tooltip__more-link">Tell me more...</a>
+    <a href="#" class="js-language-select-tooltip__got-it-link">Got it</a>
+  </div>
+</script>

@@ -3,6 +3,7 @@ import loadingGifBase64 from "./loading-gif-base64.js";
 import modal from "./modal.js";
 import infoIconToModal from "./info-icon-to-modal.js";
 import tracking from "./utils/tracking.js";
+import languageSelectTooltipForNewEntries from './language-select-tooltip-for-new-entries.js'
 
 const editForm = {
   init() {
@@ -39,8 +40,10 @@ const editForm = {
     }
 
     // do full version click
-    const fullVersionButtonEls = document.querySelectorAll(".js-do-full-version");
-    const handleFullVersionClick = (fullVersionButtonEl) => {
+    const fullVersionButtonEls = document.querySelectorAll(
+      ".js-do-full-version"
+    );
+    const handleFullVersionClick = fullVersionButtonEl => {
       fullVersionButtonEl.addEventListener("click", e => {
         e.preventDefault();
         const articleEl = document.querySelector("[data-submit-type]");
@@ -51,12 +54,14 @@ const editForm = {
         // scroll to top
         window.scrollTo(0, 0);
       });
-    }
+    };
     fullVersionButtonEls.forEach(el => handleFullVersionClick(el));
 
     infoIconToModal.init();
 
     this.formEl = document.querySelector(".js-edit-form");
+
+    languageSelectTooltipForNewEntries.init();
   },
 
   sendFormData() {
