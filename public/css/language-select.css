@@ -1,0 +1,10 @@
+.language-select-tooltip__actions a {
+  color: #fff;
+}
+.language-select-tooltip__actions {
+  display: flex; 
+  flex-direction: row; 
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 12px;
+}

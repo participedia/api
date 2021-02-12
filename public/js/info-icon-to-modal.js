@@ -1,6 +1,6 @@
 import modal from "./modal.js";
 
-const tooltipTriggerAndModal = {
+const infoIconToModal = {
   init() {
     const infoTriggerEls = document.querySelectorAll(".js-info-modal__trigger");
     for (let i = 0; i < infoTriggerEls.length; i++) {
@@ -20,8 +20,8 @@ const tooltipTriggerAndModal = {
       <p>${body}</p>
     `;
     modal.updateModal(content);
-    modal.openModal("aria-modal");
+    modal.openModal("aria-modal", { showCloseBtn: true });
   },
 }
 
-export default tooltipTriggerAndModal;
+export default infoIconToModal;
