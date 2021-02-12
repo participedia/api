@@ -366,7 +366,7 @@ header .right-col {
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 385px) {
   .header-buttons .language-selector {
     display: none;
   }
