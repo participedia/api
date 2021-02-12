@@ -32,12 +32,15 @@
 
 <script type="text/template" class="js-language-select-tooltip-template">
   <div>
-    To ensure accurate translation, please enter text in 
-    <strong>{{getLocalizedLanguageLabel}}</strong>, 
-    or change selected language here.
+    {{{__
+      "new-entry-language-select-tooltip__text"
+      "<strong>"
+      (getLocalizedLanguageLabel)
+      "</strong>"
+    }}}
   </div>
   <div class="language-select-tooltip__actions">
-    <a href="#" class="js-language-select-tooltip__more-link">Tell me more...</a>
-    <a href="#" class="js-language-select-tooltip__got-it-link">Got it</a>
+    <a href="#" class="js-language-select-tooltip__more-link">{{t "Tell me more..."}}</a>
+    <a href="#" class="js-language-select-tooltip__got-it-link">{{t "Got it"}}</a>
   </div>
 </script>

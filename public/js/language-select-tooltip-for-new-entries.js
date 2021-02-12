@@ -28,6 +28,17 @@ const languageSelectTooltipForNewEntries = {
       });
       this.initGotItLink();
       this.initTellMeMoreLink();
+
+      // hide tooltip if the language selector is hidden on smaller screens
+      const hideTooltipIfLanguageSelectorVisible = () => {
+        const languageSelectorEl = document.querySelector(".js-language-selector");
+        const isVisible = getComputedStyle(languageSelectorEl).display === "block";
+        if (!isVisible) {
+          this.tooltipInstance.hide();
+        }
+      }
+      hideTooltipIfLanguageSelectorVisible();
+      window.onresize = hideTooltipIfLanguageSelectorVisible;
     }
   },
 
