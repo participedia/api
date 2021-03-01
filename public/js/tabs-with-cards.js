@@ -5,6 +5,7 @@ import {
 } from "./utils/utils.js";
 import modal from "./modal.js";
 import tracking from "./utils/tracking.js";
+import csvGenerator from "./csv-generator.js";
 
 const tabsWithCards = {
   init() {
@@ -14,6 +15,9 @@ const tabsWithCards = {
     this.viewEl = document.querySelector("[data-card-layout]");
 
     if (this.tabInputEls.length === 0) return;
+
+    // Initiate CSV generator
+    this.initiateCsvGenerator();
 
     // tabs ui
     this.initDesktopTabNav();
@@ -47,6 +51,16 @@ const tabsWithCards = {
     const downloadCsvBtnEl = document.querySelector(".js-download-csv-btn");
     if (downloadCsvBtnEl) {
       downloadCsvBtnEl.addEventListener("click", e => {
+        // Custom logic for CSV download button if category is all.
+        if (!this.isCsvGenerator()) {
+          // Update selectedCategory to case and reload the page.
+          updateUrlParams("selectedCategory", "case");
+          window.location.href = window.location.href;
+
+          // Download CSV cases
+          let url = `${window.location.href}&returns=csv`;
+      	  window.open(url, '_blank');
+        }
         tracking.send("search", "results_csv_button_click");
       });
     }
@@ -55,6 +69,17 @@ const tabsWithCards = {
     if (openFilter == "1") {
       this.openSearchFilterModal();
     }
+  },
+
+  initiateCsvGenerator() {
+    if (this.isCsvGenerator()) {
+      csvGenerator.init();
+    }
+  },
+
+  isCsvGenerator() {
+    const category = getValueForParam("selectedCategory");
+    return ["case", "organizations", "method"].indexOf(category) >= 0;
   },
 
   openSearchFilterModal() {
