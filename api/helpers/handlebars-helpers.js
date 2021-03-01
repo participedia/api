@@ -1416,7 +1416,7 @@ module.exports = {
   },
 
   includeSearchFilters(req) {
-    // do not show search filters on collection pages
-    return req.baseUrl.indexOf("collection") < 0;
-  }
+    // do not show search filters on collection and user pages
+    return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") > 0 ? false : true;
+  },
 };
