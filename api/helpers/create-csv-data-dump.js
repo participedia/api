@@ -50,7 +50,10 @@ function generateCsvFields(orderFields, multiFieldArray, editedFields) {
 }
 
 function removeWhiteSpaces(string) {
-  return string.replace(/\s \s+/g,'');
+  if(string) {
+    return string.replace(/\s \s+/g,'');
+  }
+  return '';
 }
 
 function removeNBSP(string) {
