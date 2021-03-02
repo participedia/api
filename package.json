@@ -17,7 +17,7 @@
     "apicache": "^1.1.1",
     "async": "^2.3.0",
     "autocompleter": "^4.0.2",
-    "aws-sdk": "^2.70.0",
+    "aws-sdk": "^2.853.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
     "compression": "^1.6.2",
@@ -85,6 +85,7 @@
     "lint-staged": "^10.0.2",
     "mocha": "^5.2.0",
     "npm-run-all": "^4.1.5",
+    "pg": "^8.5.1",
     "pre-commit": "1.2.2",
     "prettier": "^1.15.3",
     "watchify": "^3.11.0"
@@ -147,7 +148,8 @@
     "textdump": "pg_dump --format=p --file=one_schema.sql --clean --create --no-owner --if-exists --dbname=participedia",
     "migratelatest": "f(){ psql -d \"${DATABASE_URL}\" -f \"migrations/migration_050.sql\"; };f",
     "migratetest": "f(){ psql -d \"${DATABASE_TEST_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
-    "migrate-i18n-staging": "f(){ psql -d \"${DATABASE_I18N_STAGING_URL}\" -f \"migrations/migration_${item}.sql\"; };f"
+    "migrate-i18n-staging": "f(){ psql -d \"${DATABASE_I18N_STAGING_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
+    "aws:comprehend": "node scripts/language-detector.js"
   },
   "husky": {
     "hooks": {
