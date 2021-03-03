@@ -3,6 +3,7 @@ require("dotenv").config();
 const fs = require("fs");
 const promise = require("bluebird");
 const { Parser } = require("json2csv");
+const { htmlToText } = require("html-to-text");
 
 const AWS = require("aws-sdk");
 const parses = require("pg-connection-string").parse;
@@ -23,9 +24,10 @@ const comprehend = new AWS.Comprehend({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
+// Update to set maximum items to fetch from DB
 const numData = -1;
+// Maximum no of items to batch per request. Max is 25
 const maxBatchSize = 25;
-let currentBatched = 0;
 
 detectLangauge = async str => {
   const resCases = await tt(numData, "case");
@@ -114,7 +116,7 @@ async function comprehendIt(data) {
   const dataArr = chunkArr(data, maxBatchSize);
   dataArr.forEach(el => {
     let params = {
-      TextList: el.map(el => el.bodyString),
+      TextList: el.map(el => el.bodyString).filter(elem => elem.length > 0),
     };
     promises.push(comprehend.batchDetectDominantLanguage(params).promise());
   });
@@ -129,14 +131,15 @@ async function tt(count = 10, type = "case") {
   query = `SELECT lt.body, lt.thingid, lt.language, t.original_language, t.type
   FROM localized_texts lt
   LEFT JOIN things t
-  ON t.id = lt.thingid WHERE t.type = '${type}' ${
+  ON t.id = lt.thingid WHERE t.type = '${type}' AND t.published = true AND t.hidden = false ${
     count > -1 ? "LIMIT " + count : ""
-  } `;
+  }`;
 
   return client.query(query).then(res => {
     for (let i = 0; i < res.rows.length; i++) {
       const data = res.rows[i];
-      const bodyString = data.body.replace(/<[^>]*>?/gm, "").substring(0, 300);
+      let bodyString = htmlToText(data.body || "");
+      bodyString = bodyString.replace(/(\r\n|\n|\r)/gm, " ").substring(0, 300);
       texts.push({
         bodyString,
         language: data.language,

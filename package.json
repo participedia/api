@@ -78,6 +78,8 @@
     "eslint-config-google": "^0.9.1",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-prettier": "^2.0.1",
+    "csvtojson": "^2.0.10",
+    "html-to-text": "^7.0.0",
     "esmify": "^2.0.0",
     "husky": "^4.2.1",
     "istanbul": "^0.4.5",
