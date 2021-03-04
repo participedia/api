@@ -30,10 +30,10 @@ const numData = -1;
 const maxBatchSize = 25;
 
 detectLangauge = async str => {
-  const resCases = await tt(numData, "case");
-  const resOrg = await tt(numData, "organization");
-  const resMethod = await tt(numData, "method");
-  const resCollection = await tt(numData, "collections");
+  const resCases = await getDBData(numData, "case");
+  const resOrg = await getDBData(numData, "organization");
+  const resMethod = await getDBData(numData, "method");
+  const resCollection = await getDBData(numData, "collections");
 
   const arr = [
     {
@@ -123,7 +123,7 @@ async function comprehendIt(data) {
   return Promise.allSettled(promises);
 }
 
-async function tt(count = 10, type = "case") {
+async function getDBData(count = 10, type = "case") {
   const { Client } = require("pg");
   const client = new Client(process.env.DATABASE_URL);
   await client.connect();
