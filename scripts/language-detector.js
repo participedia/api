@@ -25,7 +25,7 @@ const comprehend = new AWS.Comprehend({
 });
 
 // Update to set maximum items to fetch from DB
-const numData = -1;
+const numData = 5;
 // Maximum no of items to batch per request. Max is 25
 const maxBatchSize = 25;
 
@@ -123,12 +123,41 @@ async function comprehendIt(data) {
   return Promise.allSettled(promises);
 }
 
+async function comprehendText(Text, type = "case") {
+  let params = {
+    Text,
+  };
+  comprehend.detectDominantLanguage(params, function(err, data) {
+    if (err) console.log(err, err.stack);
+    else {
+      writeToCSVFile(
+        data,
+        [
+          "languageDetected",
+          "original_language",
+          "language",
+          "Score",
+          "thingID",
+        ],
+        [
+          "Detected Language",
+          "Original Language",
+          "Language",
+          "Confidence",
+          "Thing ID",
+        ],
+        type
+      );
+    }
+  });
+}
+
 async function getDBData(count = 10, type = "case") {
   const { Client } = require("pg");
   const client = new Client(process.env.DATABASE_URL);
   await client.connect();
   const texts = [];
-  query = `SELECT lt.body, lt.thingid, lt.language, t.original_language, t.type
+  query = `SELECT lt.body, lt.description, lt.thingid, lt.language, t.original_language, t.type
   FROM localized_texts lt
   LEFT JOIN things t
   ON t.id = lt.thingid WHERE t.type = '${type}' AND t.published = true AND t.hidden = false ${
@@ -138,7 +167,9 @@ async function getDBData(count = 10, type = "case") {
   return client.query(query).then(res => {
     for (let i = 0; i < res.rows.length; i++) {
       const data = res.rows[i];
-      let bodyString = htmlToText(data.body || "");
+      let bodyString = htmlToText(
+        data.description.trim().length ? data.description : data.body || ""
+      );
       bodyString = bodyString.replace(/(\r\n|\n|\r)/gm, " ").substring(0, 300);
       texts.push({
         bodyString,
@@ -149,6 +180,33 @@ async function getDBData(count = 10, type = "case") {
     }
     client.end();
     return Promise.resolve(texts);
+  });
+}
+
+async function getSingleDBData(thingid, type = "case") {
+  const { Client } = require("pg");
+  const client = new Client(process.env.DATABASE_URL);
+  await client.connect();
+  const texts = [];
+  query = `SELECT lt.body, lt.description, lt.thingid, lt.language, t.original_language, t.type
+  FROM localized_texts lt WHERE lt.thingid = ${thingid} LIMIT 1"
+  }`;
+
+  return client.query(query).then(res => {
+    // for (let i = 0; i < res.rows.length; i++) {
+    const data = res.rows[0];
+    let bodyString = htmlToText(
+      data.description.trim().length ? data.description : data.body || ""
+    );
+    bodyString = bodyString.replace(/(\r\n|\n|\r)/gm, " ").substring(0, 300);
+    texts.push({
+      bodyString,
+      language: data.language,
+      original_language: data.original_language,
+      thingID: data.thingid,
+    });
+    // }
+    comprehendText(bodyString).then(re);
   });
 }
 
@@ -174,4 +232,28 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
   }
 }
 
-detectLangauge();
+// detectLangauge();
+
+const csvtojsonV2 = require("csvtojson/v2");
+const csvFilePath = "csvs/organization.csv";
+
+csvtojsonV2()
+  .fromFile(csvFilePath)
+  .then(jsonObj => {
+    // console.log(jsonObj);
+    const els = [];
+    const filtered = jsonObj.filter((el, i) => {
+      if (el.languageDetected !== el.language) {
+        els.push(jsonObj[i]);
+        return true;
+      }
+    });
+    writeToCSVFile(filtered, null, "organization_filtered");
+  });
+
+const text = htmlToText(html, {
+  wordwrap: 130,
+});
+console.log(text);
+
+getSingleDBData(1041, "case");
