@@ -25,7 +25,7 @@ const comprehend = new AWS.Comprehend({
 });
 
 // Update to set maximum items to fetch from DB
-const numData = 100;
+const numData = -1;
 // Maximum no of items to batch per request. Max is 25
 const maxBatchSize = 25;
 
