@@ -52,7 +52,7 @@ async function getUniqueIDs(type = "case") {
   return client.query(query).then(res => {
     uniqueIDs = res.rows.map(el => el.thingid);
     uniqueIDs.forEach(elm => {
-      let uniqueQuery = `SELECT DISTINCT on (lt."language") * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false ${
+      let uniqueQuery = `SELECT * FROM (SELECT DISTINCT on (lt."language") * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false) ta ORDER BY timestamp DESC ${
         numData > -1 ? "LIMIT " + numData : ""
       }`;
       // console.log(uniqueQuery);
@@ -228,12 +228,11 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
 }
 
 // const csvtojsonV2 = require("csvtojson/v2");
-// const csvFilePath = "csvs/organization.csv";
+// const csvFilePath = "csvs/case.csv";
 
 // csvtojsonV2()
 //   .fromFile(csvFilePath)
 //   .then(jsonObj => {
-//     // console.log(jsonObj);
 //     const els = [];
 //     const filtered = jsonObj.filter((el, i) => {
 //       if (el.languageDetected !== el.language) {
@@ -241,7 +240,7 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
 //         return true;
 //       }
 //     });
-//     writeToCSVFile(filtered, null, "organization_filtered");
+//     writeToCSVFile(filtered, null, null, "case_filtered");
 //   });
 
 // const text = htmlToText(html, {
