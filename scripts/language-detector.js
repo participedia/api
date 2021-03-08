@@ -52,10 +52,9 @@ async function getUniqueIDs(type = "case") {
   return client.query(query).then(res => {
     uniqueIDs = res.rows.map(el => el.thingid);
     uniqueIDs.forEach(elm => {
-      let uniqueQuery = `SELECT * FROM (SELECT DISTINCT on (lt."language") * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false) ta ORDER BY timestamp DESC ${
+      let uniqueQuery = `SELECT * FROM (SELECT DISTINCT on (lt."language") * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false ORDER BY lt.language, timestamp DESC) ta  ${
         numData > -1 ? "LIMIT " + numData : ""
       }`;
-      // console.log(uniqueQuery);
       return client.query(uniqueQuery).then(res => {
         const TextList = res.rows
           .map(el => {
@@ -243,11 +242,4 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
 //     writeToCSVFile(filtered, null, null, "case_filtered");
 //   });
 
-// const text = htmlToText(html, {
-//   wordwrap: 130,
-// });
-// console.log(text);
-
-// getSingleDBData(1041, "case");
-// getDBData();
 getUniqueIDs();
