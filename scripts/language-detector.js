@@ -25,91 +25,9 @@ const comprehend = new AWS.Comprehend({
 });
 
 // Update to set maximum items to fetch from DB
-const numData = 5;
+const numData = 100;
 // Maximum no of items to batch per request. Max is 25
 const maxBatchSize = 25;
-
-detectLangauge = async str => {
-  const resCases = await getDBData(numData, "case");
-  const resOrg = await getDBData(numData, "organization");
-  const resMethod = await getDBData(numData, "method");
-  const resCollection = await getDBData(numData, "collections");
-
-  const arr = [
-    {
-      fileName: "case",
-      data: resCases,
-      processed: comprehendIt(resCases),
-    },
-    {
-      fileName: "organization",
-      data: resOrg,
-      processed: comprehendIt(resOrg),
-    },
-    {
-      fileName: "method",
-      data: resMethod,
-      processed: comprehendIt(resMethod),
-    },
-    {
-      fileName: "collections",
-      data: resCollection,
-      processed: comprehendIt(resCollection),
-    },
-  ];
-
-  const lists = {};
-  arr.forEach(el => {
-    const flatList = [];
-    el.processed.then(reslt => {
-      console.log(el.fileName);
-      reslt.map(ele => {
-        if (ele.status === "fulfilled") {
-          flatList.push(ele.value.ResultList.map(elem => elem.Languages[0]));
-        }
-      });
-      lists[el.fileName] = flatList;
-      const flattendList = flatList.flat().map((element, i) => {
-        const returnedData = {
-          ...el.data[i],
-          ...element,
-          languageDetected: element.LanguageCode,
-        };
-        delete returnedData["bodyString"];
-        delete returnedData["LanguageCode"];
-        return returnedData;
-      });
-      writeToCSVFile(
-        flattendList,
-        [
-          "languageDetected",
-          "original_language",
-          "language",
-          "Score",
-          "thingID",
-        ],
-        [
-          "Detected Language",
-          "Original Language",
-          "Language",
-          "Confidence",
-          "Thing ID",
-        ],
-        el.fileName
-      );
-    });
-    console.log(lists);
-  });
-  console.log(lists);
-};
-
-function chunkArr(arr, size) {
-  const chunked = [];
-  for (let i = 0; i < arr.length; i += size) {
-    chunked.push(arr.slice(i, size + i));
-  }
-  return chunked;
-}
 
 async function comprehendIt(data) {
   const promises = [];
@@ -123,16 +41,111 @@ async function comprehendIt(data) {
   return Promise.allSettled(promises);
 }
 
+async function getUniqueIDs(type = "case") {
+  const { Client } = require("pg");
+  const client = new Client(process.env.DATABASE_URL);
+  await client.connect();
+  let uniqueIDs = [];
+  let query = `SELECT DISTINCT thingid FROM localized_texts${
+    numData > -1 ? " LIMIT " + numData : ""
+  }`;
+  return client.query(query).then(res => {
+    uniqueIDs = res.rows.map(el => el.thingid);
+    uniqueIDs.forEach(elm => {
+      let uniqueQuery = `SELECT DISTINCT on (lt."language") * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false ${
+        numData > -1 ? "LIMIT " + numData : ""
+      }`;
+      // console.log(uniqueQuery);
+      return client.query(uniqueQuery).then(res => {
+        const TextList = res.rows
+          .map(el => {
+            let bodyString = htmlToText(
+              el.description && el.description.trim().length
+                ? el.description
+                : el.body || ""
+            );
+            bodyString = bodyString
+              .replace(/(\r\n|\n|\r)/gm, " ")
+              .substring(0, 300);
+            return bodyString;
+          })
+          .filter(elem => elem.length > 0);
+        // });
+        let params = {
+          TextList,
+        };
+        if (!params.TextList.length) {
+          return;
+        }
+        comprehend.batchDetectDominantLanguage(params, function(err, data) {
+          if (err) console.log(err, err.stack);
+          else {
+            // console.log(Text.bodyString, data);
+            const reslt = data.ResultList.map(el => el.Languages[0]);
+            const formattedData = [];
+
+            reslt.forEach((elem, i) => {
+              formattedData.push({
+                textSample: (res.rows[i].description &&
+                res.rows[i].description.trim().length
+                  ? res.rows[i].description
+                  : res.rows[i].body || ""
+                ).substring(0, 150),
+                languageDetected: elem.LanguageCode,
+                original_language: res.rows[i].original_language,
+                language: res.rows[i].language,
+                Score: elem.Score,
+                thingID: elm,
+              });
+            });
+
+            writeToCSVFile(
+              formattedData,
+              [
+                "textSample",
+                "languageDetected",
+                "original_language",
+                "language",
+                "Score",
+                "thingID",
+              ],
+              [
+                "Detected Language",
+                "Original Language",
+                "Language",
+                "Confidence",
+                "Thing ID",
+              ],
+              type
+            );
+          }
+        });
+      });
+    });
+  });
+}
+
 async function comprehendText(Text, type = "case") {
   let params = {
-    Text,
+    Text: Text.bodyString,
   };
   comprehend.detectDominantLanguage(params, function(err, data) {
     if (err) console.log(err, err.stack);
     else {
+      console.log(Text.bodyString, data);
+      const reslt = data.Languages[0];
+      const formattedData = {
+        textSample: Text.bodyString.substring(0, 150),
+        languageDetected: reslt.LanguageCode,
+        original_language: Text.original_language,
+        language: Text.language,
+        Score: reslt.Score,
+        thingID: Text.thingID,
+      };
       writeToCSVFile(
-        data,
+        formattedData,
         [
+          "textSample",
           "languageDetected",
           "original_language",
           "language",
@@ -152,23 +165,23 @@ async function comprehendText(Text, type = "case") {
   });
 }
 
-async function getDBData(count = 10, type = "case") {
+async function getDBData(type = "case") {
   const { Client } = require("pg");
   const client = new Client(process.env.DATABASE_URL);
   await client.connect();
   const texts = [];
-  query = `SELECT lt.body, lt.description, lt.thingid, lt.language, t.original_language, t.type
-  FROM localized_texts lt
-  LEFT JOIN things t
+  query = `SELECT lt.body, lt.description, lt.thingid, lt.language, t.original_language, t.type FROM localized_texts lt LEFT JOIN things t
   ON t.id = lt.thingid WHERE t.type = '${type}' AND t.published = true AND t.hidden = false ${
-    count > -1 ? "LIMIT " + count : ""
+    numData > -1 ? "LIMIT " + numData : ""
   }`;
 
   return client.query(query).then(res => {
     for (let i = 0; i < res.rows.length; i++) {
       const data = res.rows[i];
       let bodyString = htmlToText(
-        data.description.trim().length ? data.description : data.body || ""
+        data.description && data.description.trim().length
+          ? data.description
+          : data.body || ""
       );
       bodyString = bodyString.replace(/(\r\n|\n|\r)/gm, " ").substring(0, 300);
       texts.push({
@@ -179,34 +192,10 @@ async function getDBData(count = 10, type = "case") {
       });
     }
     client.end();
-    return Promise.resolve(texts);
-  });
-}
-
-async function getSingleDBData(thingid, type = "case") {
-  const { Client } = require("pg");
-  const client = new Client(process.env.DATABASE_URL);
-  await client.connect();
-  const texts = [];
-  query = `SELECT lt.body, lt.description, lt.thingid, lt.language, t.original_language, t.type
-  FROM localized_texts lt WHERE lt.thingid = ${thingid} LIMIT 1"
-  }`;
-
-  return client.query(query).then(res => {
-    // for (let i = 0; i < res.rows.length; i++) {
-    const data = res.rows[0];
-    let bodyString = htmlToText(
-      data.description.trim().length ? data.description : data.body || ""
-    );
-    bodyString = bodyString.replace(/(\r\n|\n|\r)/gm, " ").substring(0, 300);
-    texts.push({
-      bodyString,
-      language: data.language,
-      original_language: data.original_language,
-      thingID: data.thingid,
+    texts.forEach((text, i) => {
+      comprehendText(text, type);
     });
-    // }
-    comprehendText(bodyString).then(re);
+    return Promise.resolve(texts);
   });
 }
 
@@ -217,14 +206,20 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
   };
   const filePath = "csvs/" + filename + ".csv";
   try {
-    const parser = new Parser(opts);
-    const csv = parser.parse(data);
+    let parser;
+    let csv;
     if (fs.existsSync(filePath)) {
-      const parser = new Parser();
-      const csv = parser.parse(data);
-      fs.appendFileSync(filePath, "\n");
-      fs.appendFileSync(filePath, csv);
+      parser = new Parser();
+      csv = parser.parse(data);
+      csv = csv.replace(
+        '"textSample","languageDetected","original_language","language","Score","thingID"\n',
+        ""
+      );
+
+      fs.appendFileSync(filePath, `\n${csv}`);
     } else {
+      parser = new Parser(opts);
+      csv = parser.parse(data);
       fs.writeFileSync(filePath, csv);
     }
   } catch (err) {
@@ -232,28 +227,28 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
   }
 }
 
-// detectLangauge();
+// const csvtojsonV2 = require("csvtojson/v2");
+// const csvFilePath = "csvs/organization.csv";
 
-const csvtojsonV2 = require("csvtojson/v2");
-const csvFilePath = "csvs/organization.csv";
+// csvtojsonV2()
+//   .fromFile(csvFilePath)
+//   .then(jsonObj => {
+//     // console.log(jsonObj);
+//     const els = [];
+//     const filtered = jsonObj.filter((el, i) => {
+//       if (el.languageDetected !== el.language) {
+//         els.push(jsonObj[i]);
+//         return true;
+//       }
+//     });
+//     writeToCSVFile(filtered, null, "organization_filtered");
+//   });
 
-csvtojsonV2()
-  .fromFile(csvFilePath)
-  .then(jsonObj => {
-    // console.log(jsonObj);
-    const els = [];
-    const filtered = jsonObj.filter((el, i) => {
-      if (el.languageDetected !== el.language) {
-        els.push(jsonObj[i]);
-        return true;
-      }
-    });
-    writeToCSVFile(filtered, null, "organization_filtered");
-  });
+// const text = htmlToText(html, {
+//   wordwrap: 130,
+// });
+// console.log(text);
 
-const text = htmlToText(html, {
-  wordwrap: 130,
-});
-console.log(text);
-
-getSingleDBData(1041, "case");
+// getSingleDBData(1041, "case");
+// getDBData();
+getUniqueIDs();
