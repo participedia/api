@@ -49,11 +49,11 @@ async function getUniqueIDs(type = "case") {
   let query = `SELECT DISTINCT thingid FROM localized_texts${
     numData > -1 ? " LIMIT " + numData : ""
   }`;
-  return client.query(query).then(res => {
-    uniqueIDs = res.rows.map(el => el.thingid);
-    uniqueIDs.forEach(elm => {
-      let uniqueQuery = `SELECT * FROM (SELECT DISTINCT on (lt."language") * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false ORDER BY lt.language, timestamp DESC) ta  ${
-        numData > -1 ? "LIMIT " + numData : ""
+  return client.query(query).then(reslt => {
+    uniqueIDs = reslt.rows.map(el => el.thingid);
+    uniqueIDs.forEach((elm, i) => {
+      let uniqueQuery = `SELECT * FROM (SELECT DISTINCT on (lt."language") * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false ORDER BY lt.language, timestamp DESC) ta${
+        numData > -1 ? " LIMIT " + numData : ""
       }`;
       return client.query(uniqueQuery).then(res => {
         const TextList = res.rows
@@ -226,8 +226,9 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
   }
 }
 
+// const fileName = 'organization'
 // const csvtojsonV2 = require("csvtojson/v2");
-// const csvFilePath = "csvs/case.csv";
+// const csvFilePath = `csvs/${fileName}.csv`;
 
 // csvtojsonV2()
 //   .fromFile(csvFilePath)
@@ -239,7 +240,7 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
 //         return true;
 //       }
 //     });
-//     writeToCSVFile(filtered, null, null, "case_filtered");
+//     writeToCSVFile(filtered, null, null, `${fileName}_filtered`);
 //   });
 
 getUniqueIDs();
