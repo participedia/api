@@ -10,6 +10,7 @@ const keysEnvVar = process.env["GOOGLE_TRANSLATE_CREDENTIALS"];
 const { Client } = require("pg");
 const client = new Client(process.env.DATABASE_URL);
 let loadingCSV = false;
+const itemsToTranslate = 10;
 
 if (!keysEnvVar) {
   throw new Error(
@@ -18,29 +19,32 @@ if (!keysEnvVar) {
   return;
 }
 
-function loadCsvAsJSON(fileName = "case") {
+function loadCsvAsJSON(fileName = "case_test") {
   const csvFilePath = `csvs/${fileName}.csv`;
   loadedCSV = null;
   loadingCSV = true;
-  csvtojsonV2()
+  return csvtojsonV2()
     .fromFile(csvFilePath)
     .then(
       jsonObj => {
         loadedCSV = jsonObj;
         loadingCSV = false;
+        return Promise.resolve();
       },
       err => {
         console.log("Loading CSV failed", err);
         loadingCSV = false;
+        return Promise.reject();
       }
     );
 }
 
-function filterLowScoreEntries() {
+function filterHighScoreEntries() {
   if (loadedCSV) {
     const filtered = jsonObj.filter((el, i) => {
-      return Number(el.Score) < 0.9;
+      return Number(el.Score) > 0.9;
     });
+    lowScoreEntries = filtered;
     return filtered;
   }
   throw new Error("CSV entries not found");
@@ -56,11 +60,10 @@ async function saveRecord(records) {
 }
 
 async function getRecordToTranslate(thingID, language) {
-  await client.connect();
   const query = `SELECT * FROM localized_texts WHERE thingid = ${thingID} AND language = '${language}' ORDER BY timestamp DESC LIMIT 1`;
   return client.query(query).then(
     reslt => {
-      reslt.rows[0];
+      return reslt.rows[0];
     },
     err => console.log("Record fetch failed", err)
   );
@@ -75,3 +78,13 @@ async function translateText(text, targetLanguage) {
     });
   return translation;
 }
+
+await client.connect();
+loadCsvAsJSON().then(res => {
+  filterHighScoreEntries();
+  highScoreEntries.splice(0, itemsToTranslate || Infinity).forEach((el, i) => {
+    getRecordToTranslate(el.thingID, el.languageDetected).then(res => {
+      translateText(res.description || res.text, el.language);
+    });
+  });
+});
