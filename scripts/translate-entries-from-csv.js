@@ -149,7 +149,7 @@ client.connect().then(res => {
         ).then(res => {
           translateText(res.description || res.body, el.language).then(
             reslt => {
-              if (res.description.trim().length > 0) {
+              if (res.description?.trim().length > 0) {
                 res.description = reslt;
               } else {
                 res.body = reslt;
