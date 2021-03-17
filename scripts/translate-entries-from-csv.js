@@ -15,7 +15,7 @@ const lowScoreEntries = [];
 const { Client } = require("pg");
 const client = new Client(process.env.DATABASE_URL);
 let loadingCSV = false;
-const itemsToTranslate = 10;
+const itemsToTranslate = 50;
 const fileName = "case";
 const fileToWriteName = "case_report";
 
@@ -63,34 +63,37 @@ function filterHighScoreEntries() {
 }
 
 async function saveRecord(record) {
-  const { body, description } = record;
-  const query = `UPDATE localized_texts SET body = $1, description = $2 WHERE ctid = (SELECT ctid FROM localized_texts lt WHERE lt.thingid = ${record.id} AND lt.language = '${record.language}' ORDER BY timestamp DESC LIMIT 1) RETURNING *, ctid`;
-  client.query(query, [body, description], (err, res) => {
+  const { body, description, title } = record;
+  const query = `UPDATE localized_texts SET body = $1, description = $2, title = $3 WHERE ctid = (SELECT ctid FROM localized_texts lt WHERE lt.thingid = ${record.id} AND lt.language = '${record.language}' ORDER BY timestamp DESC LIMIT 1) RETURNING *, ctid`;
+  client.query(query, [body, description, title], (err, res) => {
     if (err) {
       console.log(err.stack);
     } else {
       console.info("Updated data: ", JSON.stringify(res.rows[0]));
-      const { body, description, thingid, language } = res.rows[0];
+      const result = res.rows[0];
       writeToCSVFile({
-        textSample: htmlToText(
-          description && description.trim().length
-            ? description.substr(0, 150)
-            : body.substr(0, 150) || ""
+        title: htmlToText((result.title || "").trim().substr(0, 200)),
+        body: htmlToText((result.body || "").trim().substr(0, 200)),
+        description: htmlToText(
+          (result.description || "").trim().substr(0, 200)
         ),
-        language,
-        thingid,
+        language: result.language,
+        thingid: result.thingid,
       });
     }
   });
 }
 
-async function getRecordToCopy(thingID, language, detected_language) {
+function getRecordToCopy(thingID, language, detected_language) {
   const query = `SELECT * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${thingID} AND lt.language = '${language}' ORDER BY timestamp DESC LIMIT 1`;
   return client.query(query).then(
     reslt => {
-      return reslt.rows[0];
+      return Promise.resolve(reslt.rows[0]);
     },
-    err => console.log("Record fetch failed", err)
+    err => {
+      console.log("Record fetch failed", err);
+      return Promise.reject(err);
+    }
   );
 }
 
@@ -104,10 +107,10 @@ async function translateText(text, targetLanguage) {
   return translation;
 }
 
-async function writeToCSVFile(data) {
+function writeToCSVFile(data) {
   const opts = {
-    fields: ["textSample", "language", "thingid"],
-    fieldNames: ["Sample", "Language", "Thing ID"],
+    fields: ["title", "body", "description", "language", "thingid"],
+    fieldNames: ["Title", "BOdy", "Description", "Language", "Thing ID"],
   };
   const filePath = "csvs/" + fileToWriteName + ".csv";
   try {
@@ -117,7 +120,7 @@ async function writeToCSVFile(data) {
       parser = new Parser();
       csv = parser.parse(data);
       csv = csv.replace(
-        '"textSample","languageDetected","original_language","language","Score","thingID"\n',
+        '"title","body","description","language","thingid"\n',
         ""
       );
 
@@ -132,32 +135,32 @@ async function writeToCSVFile(data) {
   }
 }
 
-function copyEntry(entryData) {
-  saveRecord(entryData);
-}
-
-client.connect().then(res => {
-  loadCsvAsJSON(fileName).then(res => {
-    filterHighScoreEntries();
-    highScoreEntries
-      .splice(0, itemsToTranslate || Infinity)
-      .forEach((el, i) => {
-        getRecordToCopy(
+async function runTranslations() {
+  client.connect().then(res => {
+    loadCsvAsJSON(fileName).then(async res => {
+      filterHighScoreEntries();
+      const filtered = highScoreEntries.splice(0, itemsToTranslate || Infinity);
+      for (const el of filtered) {
+        const record = await getRecordToCopy(
           el.thingID,
           el.original_language,
           el.languageDetected
-        ).then(res => {
-          translateText(res.description || res.body, el.language).then(
-            reslt => {
-              if (res.description?.trim().length > 0) {
-                res.description = reslt;
-              } else {
-                res.body = reslt;
-              }
-              copyEntry(res);
-            }
-          );
+        );
+        const tText = await translateText(
+          [record.title || "", record.body || "", record.description || ""],
+          el.language
+        );
+        await saveRecord({
+          id: record.id,
+          language: record.language,
+          title: tText[0],
+          body: tText[1],
+          description: tText[2],
         });
-      });
+      }
+      console.info("--------------------Done------------------");
+    });
   });
-});
+}
+
+runTranslations();
