@@ -1,4 +1,7 @@
 require("dotenv").config();
+const fs = require("fs");
+const { Parser } = require("json2csv");
+const { htmlToText } = require("html-to-text");
 const keysEnvVar = process.env["GOOGLE_TRANSLATE_CREDENTIALS"];
 const csvtojsonV2 = require("csvtojson/v2");
 const { Translate } = require("@google-cloud/translate").v2;
@@ -12,7 +15,7 @@ const lowScoreEntries = [];
 const { Client } = require("pg");
 const client = new Client(process.env.DATABASE_URL);
 let loadingCSV = false;
-const itemsToTranslate = 1;
+const itemsToTranslate = 10;
 const fileName = "case";
 const fileToWriteName = "case_report";
 
@@ -60,20 +63,29 @@ function filterHighScoreEntries() {
 }
 
 async function saveRecord(record) {
-  const { body, title, description, language } = record;
-  const query = `UPDATE localized_texts lt SET lt.body = $1, lt.title = $2, lt.description = $3, lt.language = $4 WHERE id = ${record.id} RETURNING *`;
-  client.query(query, [body, title, description, language], (err, res) => {
+  const { body, description } = record;
+  const query = `UPDATE localized_texts SET body = $1, description = $2 WHERE ctid = (SELECT ctid FROM localized_texts lt WHERE lt.thingid = ${record.id} AND lt.language = '${record.language}' ORDER BY timestamp DESC LIMIT 1) RETURNING *, ctid`;
+  client.query(query, [body, description], (err, res) => {
     if (err) {
       console.log(err.stack);
     } else {
-      console.log("Updated: ", JSON.stringify(res.rows[0]));
-      writeToCSVFile(res.rows[0]);
+      console.info("Updated data: ", JSON.stringify(res.rows[0]));
+      const { body, description, thingid, language } = res.rows[0];
+      writeToCSVFile({
+        textSample: htmlToText(
+          description && description.trim().length
+            ? description.substr(0, 150)
+            : body.substr(0, 150) || ""
+        ),
+        language,
+        thingid,
+      });
     }
   });
 }
 
 async function getRecordToCopy(thingID, language, detected_language) {
-  const query = `SELECT * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${thingID} AND lt.language = '${language}' AND lt.language != '${detected_language}' ORDER BY timestamp DESC LIMIT 1`;
+  const query = `SELECT * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${thingID} AND lt.language = '${language}' ORDER BY timestamp DESC LIMIT 1`;
   return client.query(query).then(
     reslt => {
       return reslt.rows[0];
@@ -94,21 +106,8 @@ async function translateText(text, targetLanguage) {
 
 async function writeToCSVFile(data) {
   const opts = {
-    fields: [
-      "textSample",
-      "languageDetected",
-      "original_language",
-      "language",
-      "Score",
-      "thingID",
-    ],
-    fieldNames: [
-      "Detected Language",
-      "Original Language",
-      "Language",
-      "Confidence",
-      "Thing ID",
-    ],
+    fields: ["textSample", "language", "thingid"],
+    fieldNames: ["Sample", "Language", "Thing ID"],
   };
   const filePath = "csvs/" + fileToWriteName + ".csv";
   try {
@@ -148,8 +147,16 @@ client.connect().then(res => {
           el.original_language,
           el.languageDetected
         ).then(res => {
-          // translateText(res.description || res.text, el.language);
-          copyEntry(res);
+          translateText(res.description || res.body, el.language).then(
+            reslt => {
+              if (res.description.trim().length > 0) {
+                res.description = reslt;
+              } else {
+                res.body = reslt;
+              }
+              copyEntry(res);
+            }
+          );
         });
       });
   });
