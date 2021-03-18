@@ -67,3 +67,4 @@ public/participedia-data-organizations.csv
 
 aws-lambda-functions/optimize-images.zip
 *.env
+*.csv
