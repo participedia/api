@@ -14,10 +14,9 @@ let highScoreEntries = [];
 const lowScoreEntries = [];
 const { Client } = require("pg");
 const client = new Client(process.env.DATABASE_URL);
-let loadingCSV = false;
-const itemsToTranslate = 50;
-const fileName = "case";
-const fileToWriteName = "case_report";
+const itemsToTranslate = null;
+const fileName = "organization";
+const fileToWriteName = `${fileName}_report`;
 
 if (!keysEnvVar) {
   throw new Error(
