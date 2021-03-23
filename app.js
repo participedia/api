@@ -183,6 +183,9 @@ app.get("/redirect", function(req, res, next) {
       // return res.redirect("/login");
       return res.redirect("/");
     }
+    if(!user._json.email_verified) {
+      return res.redirect("/?email_verified=0");
+    }
     req.logIn(user, function(err) {
       if (err) {
         return next(err);

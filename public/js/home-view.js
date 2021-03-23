@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSearchForm();
   initStatsAnimations();
   initTracking();
+  checkEmailStatus();
 });
 
 function initTracking() {
@@ -110,4 +111,11 @@ function initSearchForm() {
 
     location.href = searchUrl;
   });
+}
+
+function checkEmailStatus() {
+  const urlParams = new URLSearchParams(window.location.search)
+  if(urlParams.get('email_verified') === '0') {
+    alert('Please verify your email address');
+  } 
 }
