@@ -643,6 +643,8 @@
   "home_hero.feature.5988": "Partizipativer Slum-Modernisierungsprozess in Buenos Aires: Der Fall \"Villa 20\"",
   "home_hero.feature.6590": "George-Floyd-Proteste",
   "home_hero_tagline": "Ein globales Netzwerk und eine Crowdsourcing-Plattform für Forscher*innen, Pädagog*innen, Praktiker*innen, politische Entscheidungsträger*innen, Aktivist*innen und alle, die an öffentlicher Beteiligung und demokratischen Innovationen interessiert sind.",
+  "home.verify_email.title": "Überprüfen Sie Ihre E-Mail",
+  "home.verify_email.text": "Sie müssen Ihre E-Mail-Adresse bestätigen, um fortzufahren.",
   "Honduras": "Honduras",
   "Hong Kong": "Hongkong",
   "How does translation work?": "Wie funktioniert die Übersetzung?",

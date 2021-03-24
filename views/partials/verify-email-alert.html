@@ -1,0 +1,10 @@
+{{#if (shouldShowVerifyEmail emailNotVerified)}}
+  <div class="alert">
+    <span>
+      {{> modal-opened 
+        modalHeader=(t "home.verify_email.title") 
+        modalText=(t "home.verify_email.text")
+      }}
+    </span>
+  </div>  
+{{/if}}

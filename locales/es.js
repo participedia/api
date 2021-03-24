@@ -643,6 +643,8 @@
   "home_hero.feature.5988": "Proceso participativo de mejoramiento de barrios marginales en la Ciudad de Buenos Aires: el caso \"Villa 20\"",
   "home_hero.feature.6590": "Protestas de George Floyd",
   "home_hero_tagline": "Una red global y una plataforma de crowdsourcing para investigadores, educadores, profesionales, legisladores, activistas y cualquier persona interesada en la participación pública y las innovaciones democráticas.",
+  "home.verify_email.title": "Verifica tu correo electrónico",
+   "home.verify_email.text": "Debe verificar su correo electrónico para continuar", 
   "Honduras": "Honduras",
   "Hong Kong": "Hong Kong",
   "How does translation work?": "¿Cómo funciona la traducción?",

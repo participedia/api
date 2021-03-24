@@ -643,6 +643,8 @@
   "home_hero.feature.5988": "布宜诺斯艾利斯市参与式贫民窟改造过程：“ Villa 20”案例",
   "home_hero.feature.6590": "乔治·弗洛伊德抗议",
   "home_hero_tagline": "面向科研工作者，教育工作者，从业者，政策制定人，活动家以及所有对公众参与和民主创新感兴趣的人的全球网络和众包平台",
+  "home.verify_email.title"："验证您的电子邮件"，
+  "home.verify_email.text"："您需要验证电子邮件才能继续。"，
   "Honduras": "洪都拉斯",
   "Hong Kong": "香港",
   "How does translation work?": "翻译工作如何？",

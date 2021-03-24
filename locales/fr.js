@@ -643,6 +643,8 @@
   "home_hero.feature.5988": "Processus participatif de rénovation des bidonvilles de la ville de Buenos Aires: le cas de la «Villa 20»",
   "home_hero.feature.6590": "Protestations de George Floyd",
   "home_hero_tagline": "Un réseau mondial et une plateforme de crowdsourcing pour les chercheur.es, les enseignant.es, les praticien.nes, les décideur.ses politiques, les activistes et toute personne intéressée par la participation publique et les innovations démocratiques",
+  "home.verify_email.title": "Vérifiez votre adresse e-mail",
+   "home.verify_email.text": "Vous devez vérifier votre adresse e-mail pour continuer.",
   "Honduras": "Honduras",
   "Hong Kong": "Hong Kong",
   "How does translation work?": "Comment fonctionne la traduction?",

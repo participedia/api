@@ -375,6 +375,10 @@ module.exports = {
     }
   },
 
+  shouldShowVerifyEmail: emailNotVerified => {
+    return emailNotVerified;
+  },
+
   getCompletenessPrompt: (article, context) => {
     if (!article.completeness || article.completeness === "complete") return;
 

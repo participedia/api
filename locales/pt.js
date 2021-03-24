@@ -643,6 +643,8 @@
   "home_hero.feature.5988": "Processo participativo de urbanização de favelas na cidade de Buenos Aires: o caso \"Villa 20\"",
   "home_hero.feature.6590": "Protestos de George Floyd",
   "home_hero_tagline": "Uma rede global e plataforma de crowdsourcing para pesquisadores, educadores, profissionais, formuladores de políticas, ativistas e qualquer pessoa interessada na participação pública e inovações democráticas",
+  "home.verify_email.title": "Verifique seu e-mail",
+   "home.verify_email.text": "Você precisa verificar seu e-mail para continuar.",
   "Honduras": "Honduras",
   "Hong Kong": "Hong Kong",
   "How does translation work?": "Como funciona a tradução?",

@@ -133,6 +133,7 @@ router.get("/", async function(req, res) {
     featuredCollections: featuredCollections,
     stats: stats,
     heroFeatures: heroFeatures,
+    emailNotVerified: req.originalUrl.includes('email_verified=0'),
   };
 
   switch (returnType) {
