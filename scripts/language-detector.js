@@ -1,13 +1,15 @@
-// Depencies
+// Dependencies
 require("dotenv").config();
 const fs = require("fs");
 const promise = require("bluebird");
 const { Parser } = require("json2csv");
 const { htmlToText } = require("html-to-text");
+const { chunk, flatten } = require("lodash");
 
 const AWS = require("aws-sdk");
 const parses = require("pg-connection-string").parse;
-
+const { Client } = require("pg");
+const { delay } = require("bluebird");
 const config = parses(process.env.DATABASE_URL);
 
 const options = {
@@ -17,6 +19,7 @@ const options = {
 
 const pgp = require("pg-promise")(options);
 let db = pgp(config);
+let client;
 
 const comprehend = new AWS.Comprehend({
   region: process.env.AWS_REGION,
@@ -29,99 +32,95 @@ const numData = -1;
 // Maximum no of items to batch per request. Max is 25
 const maxBatchSize = 25;
 
-async function comprehendIt(data) {
-  const promises = [];
-  const dataArr = chunkArr(data, maxBatchSize);
-  dataArr.forEach(el => {
-    let params = {
-      TextList: el.map(el => el.bodyString).filter(elem => elem.length > 0),
-    };
-    promises.push(comprehend.batchDetectDominantLanguage(params).promise());
-  });
-  return Promise.allSettled(promises);
-}
-
-async function getUniqueIDs(type = "case") {
-  const { Client } = require("pg");
-  const client = new Client(process.env.DATABASE_URL);
-  await client.connect();
-  let uniqueIDs = [];
+async function getUniqueThingIDs() {
   let query = `SELECT DISTINCT thingid FROM localized_texts${
     numData > -1 ? " LIMIT " + numData : ""
   }`;
-  return client.query(query).then(reslt => {
-    uniqueIDs = reslt.rows.map(el => el.thingid);
-    uniqueIDs.forEach((elm, i) => {
-      let uniqueQuery = `SELECT * FROM (SELECT DISTINCT on (lt."language") * FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false ORDER BY lt.language, timestamp DESC) ta${
-        numData > -1 ? " LIMIT " + numData : ""
-      }`;
-      return client.query(uniqueQuery).then(res => {
-        const TextList = res.rows
-          .map(el => {
-            let bodyString = htmlToText(
-              el.description && el.description.trim().length
-                ? el.description
-                : el.body || ""
-            );
-            bodyString = bodyString
-              .replace(/(\r\n|\n|\r)/gm, " ")
-              .substring(0, 300);
-            return bodyString;
-          })
-          .filter(elem => elem.length > 0);
-        // });
-        let params = {
-          TextList,
-        };
-        if (!params.TextList.length) {
-          return;
-        }
-        comprehend.batchDetectDominantLanguage(params, function(err, data) {
-          if (err) console.log(err, err.stack);
-          else {
-            // console.log(Text.bodyString, data);
-            const reslt = data.ResultList.map(el => el.Languages[0]);
-            const formattedData = [];
+  const reslt = await client.query(query);
+  const uniqueIDs = reslt.rows.map(el => el.thingid);
+  return uniqueIDs;
+}
 
-            reslt.forEach((elem, i) => {
-              formattedData.push({
-                textSample: (res.rows[i].description &&
-                res.rows[i].description.trim().length
-                  ? res.rows[i].description
-                  : res.rows[i].body || ""
-                ).substring(0, 150),
-                languageDetected: elem.LanguageCode,
-                original_language: res.rows[i].original_language,
-                language: res.rows[i].language,
-                Score: elem.Score,
-                thingID: elm,
-              });
-            });
+async function getLatestEntriesForIDs(uniqueIDs, type = "case") {
+  const latestEntries = [];
+  for (let index = 0; index < uniqueIDs.length; index++) {
+    const elm = uniqueIDs[index];
+    let uniqueQuery = `SELECT * FROM (SELECT DISTINCT on (lt."language") *, lt.ctid FROM localized_texts lt LEFT JOIN things t ON t.id = lt.thingid WHERE lt.thingid = ${elm} AND t.type = '${type}' AND t.published = true AND t.hidden = false ORDER BY lt.language, timestamp DESC) ta${
+      numData > -1 ? " LIMIT " + numData : ""
+    }`;
+    const res = await client.query(uniqueQuery);
+    latestEntries.push(
+      ...res.rows.map(el => {
+        let { id, body, description, title, ctid } = el;
+        const uppercase = false;
+        body = htmlToText(body, { uppercase });
+        description = htmlToText(description, { uppercase });
+        title = htmlToText(title, { uppercase });
+        body = body.replace(/(\r\n|\n|\r)/gm, " ").substring(0, 300);
+        description = description
+          .replace(/(\r\n|\n|\r)/gm, " ")
+          .substring(0, 300);
+        return { body, description, title, id, ctid };
+      })
+    );
+  }
+  return latestEntries;
+}
 
-            writeToCSVFile(
-              formattedData,
-              [
-                "textSample",
-                "languageDetected",
-                "original_language",
-                "language",
-                "Score",
-                "thingID",
-              ],
-              [
-                "Detected Language",
-                "Original Language",
-                "Language",
-                "Confidence",
-                "Thing ID",
-              ],
-              type
-            );
-          }
-        });
-      });
-    });
+async function detectLanguages(entries) {
+  let reslt = await batchDetectLanguages(entries);
+  // reslt = flatten(reslt)
+  reslt = reslt.map((el, i) => {
+    if (!el.length) {
+      return null;
+    }
+    const isNotEmptyBody = !entries[i][0].includes("{{###PLACEHOLDERTEXT###}}");
+    const isNotEmptyDescription = !entries[i][1].includes(
+      "{{###PLACEHOLDERTEXT###}}"
+    );
+    const isNotEmptyTitle = !entries[i][2].includes(
+      "{{###PLACEHOLDERTEXT###}}"
+    );
+
+    return [
+      isNotEmptyBody ? el[0].LanguageCode : null,
+      isNotEmptyBody ? el[0].Score : null,
+      isNotEmptyDescription ? el[1].LanguageCode : null,
+      isNotEmptyDescription ? el[1].Score : null,
+      isNotEmptyTitle ? el[2].LanguageCode : null,
+      isNotEmptyTitle ? el[2].Score : null,
+    ];
   });
+  return reslt;
+}
+
+function batchDetectLanguages(entries) {
+  const batchedEntries = entries;
+  const detectedLanguagesPromisified = [];
+
+  for (let j = 0; j < batchedEntries.length; j++) {
+    const TextList = batchedEntries[j];
+    let params = {
+      TextList,
+    };
+    if (!params.TextList.length) {
+      continue;
+    }
+    detectedLanguagesPromisified.push(
+      new Promise((resolve, reject) =>
+        comprehend.batchDetectDominantLanguage(params, function(err, data) {
+          if (err) {
+            console.log(err, err.stack);
+            resolve([]);
+          } else {
+            const reslt = data.ResultList.map(el => el.Languages[0]);
+            resolve(reslt);
+          }
+        })
+      )
+    );
+  }
+  return Promise.all(detectedLanguagesPromisified);
 }
 
 async function comprehendText(Text, type = "case") {
@@ -164,40 +163,6 @@ async function comprehendText(Text, type = "case") {
   });
 }
 
-async function getDBData(type = "case") {
-  const { Client } = require("pg");
-  const client = new Client(process.env.DATABASE_URL);
-  await client.connect();
-  const texts = [];
-  query = `SELECT lt.body, lt.description, lt.thingid, lt.language, t.original_language, t.type FROM localized_texts lt LEFT JOIN things t
-  ON t.id = lt.thingid WHERE t.type = '${type}' AND t.published = true AND t.hidden = false ${
-    numData > -1 ? "LIMIT " + numData : ""
-  }`;
-
-  return client.query(query).then(res => {
-    for (let i = 0; i < res.rows.length; i++) {
-      const data = res.rows[i];
-      let bodyString = htmlToText(
-        data.description && data.description.trim().length
-          ? data.description
-          : data.body || ""
-      );
-      bodyString = bodyString.replace(/(\r\n|\n|\r)/gm, " ").substring(0, 300);
-      texts.push({
-        bodyString,
-        language: data.language,
-        original_language: data.original_language,
-        thingID: data.thingid,
-      });
-    }
-    client.end();
-    texts.forEach((text, i) => {
-      comprehendText(text, type);
-    });
-    return Promise.resolve(texts);
-  });
-}
-
 async function writeToCSVFile(data, fields, fieldNames, filename) {
   const opts = {
     fields,
@@ -210,10 +175,7 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
     if (fs.existsSync(filePath)) {
       parser = new Parser();
       csv = parser.parse(data);
-      csv = csv.replace(
-        '"textSample","languageDetected","original_language","language","Score","thingID"\n',
-        ""
-      );
+      csv = csv.replace(`"${fields.join('","')}"\n`, "");
 
       fs.appendFileSync(filePath, `\n${csv}`);
     } else {
@@ -243,4 +205,62 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
 //     writeToCSVFile(filtered, null, null, `${fileName}_filtered`);
 //   });
 
-getUniqueIDs();
+// getUniqueIDs();
+
+async function runDetector(type = "case") {
+  client = new Client(process.env.DATABASE_URL);
+  await client.connect();
+  const uniqueIDs = await getUniqueThingIDs();
+  const latestEntries = await getLatestEntriesForIDs(uniqueIDs);
+  const arrayedEntries = [];
+  for (let k = 0; k < latestEntries.length; k++) {
+    const { body, description, title } = latestEntries[k];
+    const entryAsArray = [
+      body || "{{###PLACEHOLDERTEXT###}}",
+      description || "{{###PLACEHOLDERTEXT###}}",
+      title || "{{###PLACEHOLDERTEXT###}}",
+    ];
+    arrayedEntries.push(entryAsArray);
+  }
+  const detectedLanguages = await detectLanguages(arrayedEntries);
+  for (let n = 0; n < detectedLanguages.length; n++) {
+    detectedLanguages[n].unshift(latestEntries[n].id);
+    const detectedEntry = {
+      "Thing ID": detectedLanguages[n][0],
+      "Body Language Detected": detectedLanguages[n][1],
+      "Body Language Score": detectedLanguages[n][2],
+      "Description Language Detected": detectedLanguages[n][3],
+      "Description Language Score": detectedLanguages[n][4],
+      "Title Language Detected": detectedLanguages[n][5],
+      "Title Language Score": detectedLanguages[n][6],
+    };
+    writeToCSVFile(
+      detectedEntry,
+      [
+        "Thing ID",
+        "Body Language Detected",
+        "Body Language Score",
+        "Description Language Detected",
+        "Description Language Score",
+        "Title Language Detected",
+        "Title Language Score",
+      ],
+      [
+        "Thing ID",
+        "Body Language Detected",
+        "Body Language Score",
+        "Description Language Detected",
+        "Description Language Score",
+        "Title Language Detected",
+        "Title Language Score",
+      ],
+      type
+    );
+    await delay(150);
+  }
+
+  client.end();
+  console.info("End of script");
+}
+
+runDetector();
