@@ -4,8 +4,6 @@ const fs = require("fs");
 const promise = require("bluebird");
 const { Parser } = require("json2csv");
 const { htmlToText } = require("html-to-text");
-const { chunk, flatten } = require("lodash");
-
 const AWS = require("aws-sdk");
 const parses = require("pg-connection-string").parse;
 const { Client } = require("pg");
@@ -123,46 +121,6 @@ function batchDetectLanguages(entries) {
   return Promise.all(detectedLanguagesPromisified);
 }
 
-async function comprehendText(Text, type = "case") {
-  let params = {
-    Text: Text.bodyString,
-  };
-  comprehend.detectDominantLanguage(params, function(err, data) {
-    if (err) console.log(err, err.stack);
-    else {
-      console.log(Text.bodyString, data);
-      const reslt = data.Languages[0];
-      const formattedData = {
-        textSample: Text.bodyString.substring(0, 150),
-        languageDetected: reslt.LanguageCode,
-        original_language: Text.original_language,
-        language: Text.language,
-        Score: reslt.Score,
-        thingID: Text.thingID,
-      };
-      writeToCSVFile(
-        formattedData,
-        [
-          "textSample",
-          "languageDetected",
-          "original_language",
-          "language",
-          "Score",
-          "thingID",
-        ],
-        [
-          "Detected Language",
-          "Original Language",
-          "Language",
-          "Confidence",
-          "Thing ID",
-        ],
-        type
-      );
-    }
-  });
-}
-
 async function writeToCSVFile(data, fields, fieldNames, filename) {
   const opts = {
     fields,
@@ -225,6 +183,7 @@ async function runDetector(type = "case") {
   const detectedLanguages = await detectLanguages(arrayedEntries);
   for (let n = 0; n < detectedLanguages.length; n++) {
     detectedLanguages[n].unshift(latestEntries[n].id);
+    detectedLanguages[n].push(latestEntries[n].ctid);
     const detectedEntry = {
       "Thing ID": detectedLanguages[n][0],
       "Body Language Detected": detectedLanguages[n][1],
@@ -233,6 +192,7 @@ async function runDetector(type = "case") {
       "Description Language Score": detectedLanguages[n][4],
       "Title Language Detected": detectedLanguages[n][5],
       "Title Language Score": detectedLanguages[n][6],
+      CTID: detectedLanguages[n][7],
     };
     writeToCSVFile(
       detectedEntry,
@@ -244,6 +204,7 @@ async function runDetector(type = "case") {
         "Description Language Score",
         "Title Language Detected",
         "Title Language Score",
+        "CTID",
       ],
       [
         "Thing ID",
