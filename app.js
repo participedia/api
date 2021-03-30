@@ -184,7 +184,8 @@ app.get("/redirect", function(req, res, next) {
       return res.redirect("/");
     }
     if(!user._json.email_verified) {
-      return res.redirect("/?email_verified=0");
+      req.logOut();
+      return res.redirect("logout/?federated&email_verified=0");
     }
     req.logIn(user, function(err) {
       if (err) {
@@ -204,7 +205,10 @@ app.get("/redirect", function(req, res, next) {
 
 // Perform session logout and redirect to homepage
 app.get("/logout", (req, res) => {
-  const currentUrl = `${req.protocol}://${req.headers.host}`;
+  let currentUrl = `${req.protocol}://${req.headers.host}`;
+  if(req.originalUrl.includes('email_verified=0')) {
+    currentUrl += '?email_verified=0';
+  }
   req.logout();
   res.redirect(
     `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
