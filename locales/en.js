@@ -1894,7 +1894,7 @@
   "home_hero.feature.5600": "Participatory Research on the Decommissioning of South African Social Services",
   "home_hero.feature.6590": "George Floyd Protests",
   "home.verify_email.title": "Verify your email",
-  "home.verify_email.text": "You need to verify your email to continue.",
+  "home.verify_email.text": "Please verify your email address.",
   "guidelines_info_link": "For more information about this form, please review our %sguidelines%s.",
   "Results CSV": "Results CSV",
   "new-entry-language-select-tooltip__text": "To ensure accurate translation, please enter text in %s%s%s, or change selected language here.",
