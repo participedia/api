@@ -11,7 +11,7 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 
 async function getUserById(userId, req, res, view = "view") {
   try {
-    const language = req.params.language || "en";
+    const language = req.cookies.locale || "en";
     if (Number.isNaN(userId)) {
       return res.status(404).render("404");
     }
