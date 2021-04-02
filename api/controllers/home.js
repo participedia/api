@@ -133,8 +133,11 @@ router.get("/", async function(req, res) {
     featuredCollections: featuredCollections,
     stats: stats,
     heroFeatures: heroFeatures,
-    emailNotVerified: req.originalUrl.includes('email_verified=0'),
+    emailNotVerified: req.cookies.verify_email === 'true',
   };
+  if(req.cookies.verify_email) {
+    res.clearCookie('verify_email');
+  }
 
   switch (returnType) {
     case "json":

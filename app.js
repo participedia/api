@@ -180,12 +180,8 @@ app.get("/redirect", function(req, res, next) {
       return next(err);
     }
     if (!user) {
-      // return res.redirect("/login");
+      res.cookie('verify_email', req.originalUrl.includes('error_description=verify_email'));
       return res.redirect("/");
-    }
-    if(!user._json.email_verified) {
-      req.logOut();
-      return res.redirect("logout/?federated&email_verified=0");
     }
     req.logIn(user, function(err) {
       if (err) {
@@ -206,9 +202,6 @@ app.get("/redirect", function(req, res, next) {
 // Perform session logout and redirect to homepage
 app.get("/logout", (req, res) => {
   let currentUrl = `${req.protocol}://${req.headers.host}`;
-  if(req.originalUrl.includes('email_verified=0')) {
-    currentUrl += '?email_verified=0';
-  }
   req.logout();
   res.redirect(
     `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
