@@ -16,6 +16,7 @@
     "@sentry/node": "5.5.0",
     "apicache": "^1.1.1",
     "async": "^2.3.0",
+    "auth0": "^2.14.0",
     "autocompleter": "^4.0.2",
     "aws-sdk": "^2.70.0",
     "bluebird": "^3.4.7",
@@ -65,7 +66,6 @@
     "uuid": "3.3.2"
   },
   "devDependencies": {
-    "auth0": "^2.14.0",
     "auth0-js": "^9.13.2",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",
