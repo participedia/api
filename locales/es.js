@@ -644,7 +644,7 @@
   "home_hero.feature.6590": "Protestas de George Floyd",
   "home_hero_tagline": "Una red global y una plataforma de crowdsourcing para investigadores, educadores, profesionales, legisladores, activistas y cualquier persona interesada en la participación pública y las innovaciones democráticas.",
   "home.verify_email.title": "Verifica tu correo electrónico",
-   "home.verify_email.text": "Por favor verifique su dirección de correo electrónico.", 
+   "home.verify_email.text": "Por favor verifique su dirección de correo electrónico. Si no ha recibido el correo electrónico, marque su casilla de correo no deseado o intente %sreviar correo electrónico de verificación%s.", 
   "Honduras": "Honduras",
   "Hong Kong": "Hong Kong",
   "How does translation work?": "¿Cómo funciona la traducción?",

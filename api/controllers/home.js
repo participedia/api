@@ -133,9 +133,10 @@ router.get("/", async function(req, res) {
     featuredCollections: featuredCollections,
     stats: stats,
     heroFeatures: heroFeatures,
-    emailNotVerified: req.cookies.verify_email === 'true',
+    emailNotVerified: req.cookies.verify_email,
   };
   if(req.cookies.verify_email) {
+    req.session.user_to_verify = req.cookies.verify_email;
     res.clearCookie('verify_email');
   }
 
