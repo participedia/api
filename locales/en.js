@@ -474,7 +474,7 @@
   "faq_a3": "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance. Please read our %sguidelines%s on how to write an organization. ",
   "faq_a4": "Surveys are supplementary to Participedia’s current data and narrative descriptions, and are intended to gain further insight on the outcomes and effects of cases. Completed surveys are linked to corresponding cases. See the %sResearch page%s for more information about surveys.",
   "faq_a5": "To create a new account, click “Login” on the main menu bar.",
-  "faq_a6": "Once you are signed in, you can create content by clicking the “quick submit” button from the main menu and choosing the type of article you would like to create. Please review our %sguidelines%s on how to write Participedia entries or %scontact%s our managing editor for more information. ",
+  "faq_a6": "Once you are signed in, you can create content by clicking the “quick submit” button from the main menu and choosing the type of article you would like to create. Please review our %sguidelines%s on how to write Participedia entries or %scontact%s us for more information.",
   "faq_a7": "Clicking “Quick Submit” allows you to publish a case, method, or organization in minutes. All you need to provide is a title. Adding an external link or source is also helpful.",
   "faq_a8": "While viewing a case, method, or organization entry, click the red pen icon in the bottom right-hand corner to add to or amend the entry’s content.",
   "faq_q1": "What is a case?",
