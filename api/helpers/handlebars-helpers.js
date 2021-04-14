@@ -376,6 +376,9 @@ module.exports = {
   },
 
   shouldShowVerifyEmail: emailNotVerified => {
+    if(!emailNotVerified) {
+      return false;
+    }
     return "<a href='/resend-verification/" + emailNotVerified + "' target='_blank'>";
   },
 
