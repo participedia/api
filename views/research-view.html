@@ -28,7 +28,14 @@
 
   <div class="js-data-dl">
   {{#> accordion title=(t "research.data_downloads_header")}}
-    <p>{{t "research.data_downloads.p1"}}</p>
+    
+    <p>{{{__ 
+      "research.data_downloads.p1"
+      "<a href='https://drive.google.com/file/d/1hE2fOih3YambGB7Sm8w0YH20_0c2BlZ9/view?usp=sharing' target='_blank'>"
+      "</a>"
+    }}}</p>
+
+    <p>{{t "research.data_downloads.p2"}}</p>
     <ul>
       <li>
         <a href="/search?selectedCategory=case&returns=csv" target="_blank">
