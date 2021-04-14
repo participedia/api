@@ -2,6 +2,7 @@
 
 // deploy on heroku-18 stack
 const path = require("path");
+const ManagementClient = require("auth0").ManagementClient;
 const process = require("process");
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
 const express = require("express");
@@ -83,13 +84,15 @@ i18n.configure({
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
-  updateFiles: false
+  updateFiles: false,
 });
 
 app.use((req, res, next) => {
   // set english as the default locale, if it's not already set
   if (!req.cookies.locale) {
-    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${req.path}`;
+    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
+      req.path
+    }`;
     res.cookie("locale", "en", { path: "/" });
     return res.redirect(currentUrl);
   }
@@ -97,14 +100,16 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  // if the lang query param is present and it's not the same as the locale coookie, 
+  // if the lang query param is present and it's not the same as the locale coookie,
   // redirect to set-locale route with the redirect param set to the current page
   const lang = req.query && req.query.lang;
   if (lang && lang !== req.cookies.locale) {
-    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${req.path}`;
+    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
+      req.path
+    }`;
     res.redirect(`/set-locale?locale=${lang}&redirectTo=${currentUrl}`);
   } else {
-    next();  
+    next();
   }
 });
 
@@ -162,7 +167,8 @@ passport.deserializeUser(async function(user, done) {
 app.get("/login", function(req, res, next) {
   // by default, return user to the referring page
   // if redirectTo query param is present, redirect there
-  req.session.returnTo = (req.query && req.query.redirectTo) || req.headers.referer;
+  req.session.returnTo =
+    (req.query && req.query.redirectTo) || req.headers.referer;
   req.session.refreshAndClose = req.query.refreshAndClose;
   passport.authenticate(
     "auth0",
@@ -179,8 +185,9 @@ app.get("/redirect", function(req, res, next) {
     if (err) {
       return next(err);
     }
-    if (!user) {
-      // return res.redirect("/login");
+    if (!user && req.originalUrl.includes("error_description=verify_email")) {
+      const params = new URLSearchParams(req.originalUrl);
+      res.cookie("verify_email", params.get("error_description").split("|\|")[1]);
       return res.redirect("/");
     }
     req.logIn(user, function(err) {
@@ -199,9 +206,26 @@ app.get("/redirect", function(req, res, next) {
   })(req, res, next);
 });
 
+app.get("/resend-verification", function(req, res, next) {
+  const user_id = req.session.user_to_verify;
+  let currentUrl = `${req.protocol}://${req.headers.host}`;
+  if (user_id) {
+    const auth0Cient = new ManagementClient({
+      domain: process.env.AUTH0_DOMAIN,
+      clientId: process.env.AUTH0_CLIENT_ID,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET,
+      scope: 'read:users update:users'
+    });
+    auth0Cient.sendEmailVerification({user_id});
+  }
+  req.session.user_to_verify = '';
+  res.redirect(currentUrl || "/");
+
+});
+
 // Perform session logout and redirect to homepage
 app.get("/logout", (req, res) => {
-  const currentUrl = `${req.protocol}://${req.headers.host}`;
+  let currentUrl = `${req.protocol}://${req.headers.host}`;
   req.logout();
   res.redirect(
     `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
@@ -221,7 +245,7 @@ const hbs = exphbs.create({
   defaultLayout: "main",
   extname: ".html",
   helpers: Object.assign(handlebarsHelpers, {
-    GOOGLE_API_KEY: () => process.env.GOOGLE_API_KEY
+    GOOGLE_API_KEY: () => process.env.GOOGLE_API_KEY,
   }),
 });
 
@@ -243,15 +267,15 @@ app.use((req, res, next) => {
 
 // if the locale is NOT 'en'
 // and if there is a keyword search query present
-// redirect to search error page 
+// redirect to search error page
 // until we can make keyword search work in all languages
-app.use((req, res, next) => {  
+app.use((req, res, next) => {
   const hasQuery = req.query && req.query.query;
-  const isEnglish = req.cookies.locale && req.cookies.locale === 'en';
+  const isEnglish = req.cookies.locale && req.cookies.locale === "en";
   if (hasQuery && !isEnglish) {
     return res.status(200).render("search-error");
-  } 
-  
+  }
+
   next();
 });
 
@@ -316,7 +340,9 @@ app.get("/en/people/tanyapuravankara", function(req, res) {
 // /citizensvoicescovid
 // vanity url for covid related intiative, redirects to a google site page
 app.get("/citizensvoicescovid", function(req, res) {
-  return res.redirect("https://sites.google.com/participedia.net/citizensvoicescovid");
+  return res.redirect(
+    "https://sites.google.com/participedia.net/citizensvoicescovid"
+  );
 });
 
 // redirect old .net urls to their new urls

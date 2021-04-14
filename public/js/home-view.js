@@ -7,6 +7,8 @@ import homeHero from "./home-hero.js";
 import easingFunctions from "./utils/easing-functions.js";
 import { CountUp } from "countup.js";
 import tracking from "./utils/tracking.js";
+import infoIconToModal from "./info-icon-to-modal.js";
+import modalOpened from "./modal-opened.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
@@ -19,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initSearchForm();
   initStatsAnimations();
   initTracking();
+  infoIconToModal.init();
+  modalOpened.init();
 });
 
 function initTracking() {

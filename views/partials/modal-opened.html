@@ -1,0 +1,15 @@
+<div class="alert js-info-modal-opened__alert" style="display: none;">
+
+  <a href="#" class="info-modal__trigger js-info-modal-opened__trigger">
+    <span class="sr-only">{{t "click for more info"}}</span>
+    {{> icon-info }}
+
+    <script type="text/template" class="js-info-modal__header">
+    {{{modalHeader}}}
+  </script>
+
+    <script type="text/template" class="js-info-modal__body">
+    {{{modalText}}}
+  </script>
+  </a>
+</div>

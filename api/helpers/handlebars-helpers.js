@@ -375,6 +375,10 @@ module.exports = {
     }
   },
 
+  shouldShowVerifyEmail: emailNotVerified => {
+    return "<a href='/resend-verification/" + emailNotVerified + "' target='_blank'>";
+  },
+
   getCompletenessPrompt: (article, context) => {
     if (!article.completeness || article.completeness === "complete") return;
 
@@ -1213,7 +1217,7 @@ module.exports = {
 
   jsCacheVersion(filepath) {
     // return last modified datetime in ms for filepath
-    const stats = fs.statSync(`${process.env.PWD}/public${filepath}`);
+    const stats = fs.statSync(`public${filepath}`);
     return stats.mtimeMs;
   },
 

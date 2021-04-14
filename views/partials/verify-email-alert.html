@@ -1,0 +1,12 @@
+{{#if (shouldShowVerifyEmail emailNotVerified)}}
+    <div>
+      {{> modal-opened 
+        modalHeader=(t "home.verify_email.title") 
+        modalText=(__ 
+          "home.verify_email.text"
+          "<a href='/resend-verification'>"
+          "</a>"  
+        )
+      }}
+    </div>
+{{/if}}
