@@ -128,9 +128,9 @@ const searchFilterKeyFromReq = (req, name) => {
   let value = req.query[name];
   if (value) {
     if (name === "country") {
-      return ` AND ${name} = ANY ('{${value}}') `;
+      return ` OR ${name} = ANY ('{${value}}') `;
     } else {
-      return value ? ` AND ${name} ='${value}' ` : "";
+      return value ? ` OR ${name} ='${value}' ` : "";
     }
   }
 };
@@ -141,10 +141,10 @@ const searchFilterKeyListFromReq = (req, name) => {
     return "";
   }
   if (name === "completeness") {
-    return ` AND ${name} = ANY ('{${value}}') `;
+    return ` OR ${name} = ANY ('{${value}}') `;
   } else {
     value = as.array(value.split(","));
-    return ` AND ${name} && ${value} `;
+    return ` OR ${name} && ${value} `;
   }
 };
 
