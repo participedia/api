@@ -6,6 +6,10 @@
   display: none;
 }
 
+.reader-view article hgroup h1 {
+  word-wrap: break-word;
+}
+
 .reader-view .article-body-content a {
   overflow-wrap: break-word;
 
