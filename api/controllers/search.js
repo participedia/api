@@ -128,10 +128,17 @@ const searchFilterKeyFromReq = (req, name) => {
   let value = req.query[name];
   if (value) {
     if (name === "country") {
-      return ` OR ${name} = ANY ('{${value}}') `;
+      return ` AND ${name} = ANY ('{${value}}') `;
     } else {
-      return value ? ` OR ${name} ='${value}' ` : "";
-    }
+      const values = value.split(',');
+      let partial = values.length ? ' AND ' : '';
+      partial += values[0] ? ` ${name}='${values[0]}'` : '';
+      for (let i = 1; i < values.length; i++) {
+        const element = values[i];
+        partial += ` OR ${name}='${element}' `;
+      }
+      return partial;
+    } 
   }
 };
 
@@ -141,10 +148,11 @@ const searchFilterKeyListFromReq = (req, name) => {
     return "";
   }
   if (name === "completeness") {
-    return ` OR ${name} = ANY ('{${value}}') `;
-  } else {
+    return ` AND ${name} = ANY ('{${value}}') `;
+  }  
+  else {
     value = as.array(value.split(","));
-    return ` OR ${name} && ${value} `;
+    return ` AND ${name} && ${value} `;
   }
 };
 
