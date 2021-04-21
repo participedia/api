@@ -38,8 +38,7 @@ WITH all_featured  AS (
     ${type:name},
     get_localized_texts_fallback(${type:name}.id, ${language}, ${type:name}.original_language) AS texts
   WHERE
-    ${type:name}.hidden = false
-    ${facets:raw}
+    ${type:name}."hidden" = false AND ${facets:raw}
   ORDER BY featured DESC, updated_date DESC
 ),
 total_featured AS (
@@ -47,7 +46,7 @@ total_featured AS (
   FROM all_featured WHERE hidden = false
 )
 SELECT all_featured.*, total_featured.total
-FROM all_featured, total_featured
+FROM all_featured, total_featured WHERE hidden = false
 ORDER BY featured DESC, ${sortby:name} DESC
 OFFSET ${offset}
 LIMIT ${limit}
