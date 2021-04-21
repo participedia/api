@@ -26,6 +26,7 @@ WITH all_featured  AS (
     province,
     postal_code,
     country,
+    hidden,
     latitude,
     longitude,
     to_json(COALESCE(photos, '{}')) AS photos,
@@ -43,7 +44,7 @@ WITH all_featured  AS (
 ),
 total_featured AS (
   SELECT count(all_featured.id) AS total
-  FROM all_featured
+  FROM all_featured WHERE hidden = false
 )
 SELECT all_featured.*, total_featured.total
 FROM all_featured, total_featured
