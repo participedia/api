@@ -38,7 +38,7 @@ WITH all_featured  AS (
     ${type:name},
     get_localized_texts_fallback(${type:name}.id, ${language}, ${type:name}.original_language) AS texts
   WHERE
-    ${type:name}."hidden" = false AND ${facets:raw}
+    ${type:name}."hidden" = false ${facets:raw}
   ORDER BY featured DESC, updated_date DESC
 ),
 total_featured AS (
