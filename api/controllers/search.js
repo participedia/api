@@ -131,7 +131,7 @@ const searchFilterKeyFromReq = (req, name) => {
       return ` AND ${name} = ANY ('{${value}}') `;
     } else {
       const values = value.split(',');
-      let partial = '';
+      let partial = values.length ? ' AND ' : '';
       partial += values[0] ? ` ${name}='${values[0]}'` : '';
       for (let i = 1; i < values.length; i++) {
         const element = values[i];
