@@ -49,7 +49,7 @@ async function getLatestEntriesForIDs(uniqueIDs, type = "case") {
     const res = await client.query(uniqueQuery);
     latestEntries.push(
       ...res.rows.map(el => {
-        let { id, body, description, title, ctid } = el;
+        let { id, body, description, title, ctid, language } = el;
         const uppercase = false;
         body = htmlToText(body, { uppercase });
         description = htmlToText(description, { uppercase });
@@ -58,7 +58,7 @@ async function getLatestEntriesForIDs(uniqueIDs, type = "case") {
         description = description
           .replace(/(\r\n|\n|\r)/gm, " ")
           .substring(0, 300);
-        return { body, description, title, id, ctid };
+        return { body, description, title, id, ctid, language };
       })
     );
   }
@@ -146,30 +146,11 @@ async function writeToCSVFile(data, fields, fieldNames, filename) {
   }
 }
 
-// const fileName = 'organization'
-// const csvtojsonV2 = require("csvtojson/v2");
-// const csvFilePath = `csvs/${fileName}.csv`;
-
-// csvtojsonV2()
-//   .fromFile(csvFilePath)
-//   .then(jsonObj => {
-//     const els = [];
-//     const filtered = jsonObj.filter((el, i) => {
-//       if (el.languageDetected !== el.language) {
-//         els.push(jsonObj[i]);
-//         return true;
-//       }
-//     });
-//     writeToCSVFile(filtered, null, null, `${fileName}_filtered`);
-//   });
-
-// getUniqueIDs();
-
 async function runDetector(type = "case") {
   client = new Client(process.env.DATABASE_URL);
   await client.connect();
   const uniqueIDs = await getUniqueThingIDs();
-  const latestEntries = await getLatestEntriesForIDs(uniqueIDs);
+  const latestEntries = await getLatestEntriesForIDs(uniqueIDs, type);
   const arrayedEntries = [];
   for (let k = 0; k < latestEntries.length; k++) {
     const { body, description, title } = latestEntries[k];
@@ -182,46 +163,105 @@ async function runDetector(type = "case") {
   }
   const detectedLanguages = await detectLanguages(arrayedEntries);
   for (let n = 0; n < detectedLanguages.length; n++) {
-    detectedLanguages[n].unshift(latestEntries[n].id);
-    detectedLanguages[n].push(latestEntries[n].ctid);
-    const detectedEntry = {
-      "Thing ID": detectedLanguages[n][0],
-      "Body Language Detected": detectedLanguages[n][1],
-      "Body Language Score": detectedLanguages[n][2],
-      "Description Language Detected": detectedLanguages[n][3],
-      "Description Language Score": detectedLanguages[n][4],
-      "Title Language Detected": detectedLanguages[n][5],
-      "Title Language Score": detectedLanguages[n][6],
-      CTID: detectedLanguages[n][7],
-    };
-    writeToCSVFile(
-      detectedEntry,
-      [
-        "Thing ID",
-        "Body Language Detected",
-        "Body Language Score",
-        "Description Language Detected",
-        "Description Language Score",
-        "Title Language Detected",
-        "Title Language Score",
-        "CTID",
-      ],
-      [
-        "Thing ID",
-        "Body Language Detected",
-        "Body Language Score",
-        "Description Language Detected",
-        "Description Language Score",
-        "Title Language Detected",
-        "Title Language Score",
-      ],
-      type
-    );
-    await delay(150);
+    if (detectedLanguages[n]) {
+      detectedLanguages[n].unshift(latestEntries[n].id);
+      detectedLanguages[n].push(latestEntries[n].ctid);
+      const detectedEntry = {
+        ID: latestEntries[n].id,
+        "Thing ID": detectedLanguages[n][0],
+        "Body Language Detected": detectedLanguages[n][1],
+        "Body Language Score": detectedLanguages[n][2],
+        "Description Language Detected": detectedLanguages[n][3],
+        "Description Language Score": detectedLanguages[n][4],
+        "Title Language Detected": detectedLanguages[n][5],
+        "Title Language Score": detectedLanguages[n][6],
+        Language: latestEntries[n].language,
+        CTID: detectedLanguages[n][7],
+      };
+      writeToCSVFile(
+        detectedEntry,
+        [
+          "ID",
+          "Thing ID",
+          "Body Language Detected",
+          "Body Language Score",
+          "Description Language Detected",
+          "Description Language Score",
+          "Title Language Detected",
+          "Title Language Score",
+          "Language",
+          "CTID",
+        ],
+        [
+          "ID",
+          "Thing ID",
+          "Body Language Detected",
+          "Body Language Score",
+          "Description Language Detected",
+          "Description Language Score",
+          "Title Language Detected",
+          "Title Language Score",
+          "Language",
+          "CTID",
+        ],
+        type
+      );
+      await delay(150);
+    }
   }
 
   client.end();
   console.info("End of script");
 }
 
-runDetector();
+// runDetector('method');
+
+const fileName = "method";
+const csvtojsonV2 = require("csvtojson/v2");
+const csvFilePath = `csvs/${fileName}.csv`;
+
+csvtojsonV2()
+  .fromFile(csvFilePath)
+  .then(jsonObj => {
+    const els = [];
+    const filtered = jsonObj.filter((el, i) => {
+      if (
+        el["Body Language Detected"] &&
+        el["Body Language Detected"] != el.Language
+      ) {
+        els.push(jsonObj[i]);
+        return true;
+      }
+      return false;
+    });
+    writeToCSVFile(
+      filtered,
+      [
+        "ID",
+        "Thing ID",
+        "Body Language Detected",
+        "Body Language Score",
+        "Description Language Detected",
+        "Description Language Score",
+        "Title Language Detected",
+        "Title Language Score",
+        "Language",
+        "CTID",
+      ],
+      [
+        "ID",
+        "Thing ID",
+        "Body Language Detected",
+        "Body Language Score",
+        "Description Language Detected",
+        "Description Language Score",
+        "Title Language Detected",
+        "Title Language Score",
+        "Language",
+        "CTID",
+      ],
+      `${fileName}_filtered`
+    );
+  });
+
+// getUniqueIDs();

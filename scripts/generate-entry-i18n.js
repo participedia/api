@@ -9,6 +9,7 @@
 // then require the script and run the function you want
 // > var GenerateEntryI18n = require("/app/scripts/generate-entry-i18n.js");
 // > GenerateEntryI18n.translateListOfEntries([{type: "case", id: 2}]);
+require("dotenv").config();
 
 // Get google translate credentials
 const keysEnvVar = process.env["GOOGLE_TRANSLATE_CREDENTIALS"];
@@ -129,16 +130,12 @@ async function createNewRecord(data, thingid) {
         }
 
         console.log(
-          `ThingID: ${thingid} => saving record for ${
-            language.twoLetterCode
-          } from ${data.language}`
+          `ThingID: ${thingid} => saving record for ${language.twoLetterCode} from ${data.language}`
         );
 
         await saveRecord([item]).then(() => {
           console.log(
-            `ThingID: ${thingid} => record for ${language.twoLetterCode} from ${
-              data.language
-            } DONE!`
+            `ThingID: ${thingid} => record for ${language.twoLetterCode} from ${data.language} DONE!`
           );
           console.log(`ThingID: ${item.title}`);
           console.log(
@@ -211,3 +208,29 @@ module.exports = {
   translateListOfEntries,
   getListOfNonTranslatedEntries,
 };
+
+// const type = 'method';
+// const fileName = 'method_filtered';
+// const csvtojsonV2 = require("csvtojson/v2");
+// const csvFilePath = `csvs/${fileName}.csv`;
+
+// csvtojsonV2()
+//   .fromFile(csvFilePath)
+//   .then(jsonObj => {
+//     const els = [];
+//     const ids = jsonObj.map(el => el.ID);
+//     const set = new Set(ids);
+//     const elIDs = Array.from(set);
+//     for (let i = 0; i < elIDs.length; i++) {
+//       const elementID = elIDs[i];
+
+//       els.push({
+//         type,
+//         id: elementID
+//       })
+//     }
+
+// translateListOfEntries(els);
+// });
+
+// translateListOfEntries([{type: 'organization', id: 4684}])
