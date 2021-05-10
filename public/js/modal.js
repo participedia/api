@@ -20,7 +20,6 @@ const modal = {
     if (options.showCloseBtn) {
       modalEl.querySelector("[data-modal-footer]").style.display = "block";
       modalEl.addEventListener("click", e => {
-        window.scrollTo(0,0);
         if (e.target.closest("[data-modal-close]")) {
           ARIAmodal.closeModal(options, id);
         }
