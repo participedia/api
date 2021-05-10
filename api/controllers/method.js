@@ -171,6 +171,7 @@ async function postMethodUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = req.body;
   const errors = validateFields(newMethod, "method");
+  const isNewMethod = !newMethod.post_date;
 
   if (errors.length > 0) {
     return res.status(400).json({
@@ -182,12 +183,12 @@ async function postMethodUpdateHttp(req, res) {
   newMethod.links = verifyOrUpdateUrl(newMethod.links);
 
   // if this is a new method, we don't have a post_date yet, so we set it here
-  if (!newMethod.post_date) {
+  if (isNewMethod) {
     newMethod.post_date = Date.now();
   }
 
   // if this is a new method, we don't have a updated_date yet, so we set it here
-  if (!newMethod.updated_date) {
+  if (isNewMethod) {
     newMethod.updated_date = Date.now();
   }
 
@@ -213,8 +214,10 @@ async function postMethodUpdateHttp(req, res) {
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-method", async t => {
+        if(!isNewMethod) {
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        }
         await t.none(INSERT_AUTHOR, author);
-        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
         await t.none(UPDATE_METHOD, updatedMethod);
       });
       //if this is a new method, set creator id to userid and isAdmin

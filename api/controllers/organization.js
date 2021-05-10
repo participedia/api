@@ -170,6 +170,7 @@ async function postOrganizationUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
   const errors = validateFields(newOrganization, "organization");
+  const isNewOrganization = !newOrganization.post_date;
 
   if (errors.length > 0) {
     return res.status(400).json({
@@ -181,12 +182,12 @@ async function postOrganizationUpdateHttp(req, res) {
   newOrganization.links = verifyOrUpdateUrl(newOrganization.links);
 
   // if this is a new organization, we don't have a post_date yet, so we set it here
-  if (!newOrganization.post_date) {
+  if (isNewOrganization) {
     newOrganization.post_date = Date.now();
   }
 
   // if this is a new method, we don't have a updated_date yet, so we set it here
-  if (!newOrganization.updated_date) {
+  if (isNewOrganization) {
     newOrganization.updated_date = Date.now();
   }
 
@@ -208,8 +209,10 @@ async function postOrganizationUpdateHttp(req, res) {
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-organization", async t => {
+        if(!isNewOrganization) {
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        }
         await t.none(INSERT_AUTHOR, author);
-        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
         await t.none(UPDATE_ORGANIZATION, updatedOrganization);
       });
       //if this is a new organization, set creator id to userid and isAdmin

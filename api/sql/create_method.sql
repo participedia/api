@@ -8,13 +8,14 @@ WITH insert_method as (
     ) RETURNING id as thingid
 )
 
-INSERT INTO localized_texts(body, title, description, language, thingid)
+INSERT INTO localized_texts(body, title, description, language, thingid, timestamp)
 VALUES
   (
     ${body},
     ${title},
     ${description},
     ${original_language},
-    (select thingid from insert_method)
+    (select thingid from insert_method),
+    'now'
   ) RETURNING thingid
 ;
