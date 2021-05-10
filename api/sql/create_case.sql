@@ -8,13 +8,14 @@ WITH insert_case as (
     ) RETURNING id as thingid
 )
 
-INSERT INTO localized_texts(body, title, description, language, thingid)
+INSERT INTO localized_texts(body, title, description, language, thingid, timestamp)
 VALUES
   (
     ${body},
     ${title},
     ${description},
     ${original_language},
-    (select thingid from insert_case)
+    (select thingid from insert_case),
+    'now'
   ) RETURNING thingid
 ;

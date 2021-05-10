@@ -227,6 +227,7 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
   const errors = validateFields(newCase, "case");
+  const isNewCase = !newCase.post_date;
 
   if (errors.length > 0) {
     return res.status(400).json({
@@ -238,12 +239,12 @@ async function postCaseUpdateHttp(req, res) {
   newCase.links = verifyOrUpdateUrl(newCase.links);
 
   // if this is a new case, we don't have a post_date yet, so we set it here
-  if (!newCase.post_date) {
+  if (isNewCase) {
     newCase.post_date = Date.now();
   }
 
   // if this is a new case, we don't have a updated_date yet, so we set it here
-  if (!newCase.updated_date) {
+  if (isNewCase) {
     newCase.updated_date = Date.now();
   }
 
@@ -261,8 +262,10 @@ async function postCaseUpdateHttp(req, res) {
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
+        if(!isNewCase) {
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        }
         await t.none(INSERT_AUTHOR, author);
-        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
         await t.none(UPDATE_CASE, updatedCase);
       });
       //if this is a new case, set creator id to userid and isAdmin
