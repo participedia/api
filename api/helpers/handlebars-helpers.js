@@ -1170,6 +1170,7 @@ module.exports = {
       "/user",
       "/collection",
     ];
+    console.log('req', req);
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
@@ -1444,5 +1445,25 @@ module.exports = {
   includeSearchFilters(req) {
     // do not show search filters on new case, organization, method and collection as well as on collection and user pages
     return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") > 0 || ["/case", "/method", "/organization"].includes(req.baseUrl) ? false : true;
+  },
+
+  eachIncludeParent ( context, options ) {
+    var fn = options.fn,
+        inverse = options.inverse,
+        ret = "",
+        _context = [];
+        $.each(context, function (index, object) {
+            var _object = $.extend({}, object);
+            _context.push(_object);
+        });
+    if ( _context && _context.length > 0 ) {
+        for ( var i = 0, j = _context.length; i < j; i++ ) {
+            _context[i]["parentContext"] = options.hash.parent;
+            ret = ret + fn(_context[i]);
+        }
+    } else {
+        ret = inverse(this);
+    }
+    return ret;
   },
 };

@@ -1,5 +1,4 @@
 {{#> edit-form}}
-{{#> tabs-with-cards req=req getTabs=(getLanguageSelectorTabs)}}
 
 <fieldset>
   <h2 class="fieldset-header">{{t "overview_sectionlabel"}}</h2>
@@ -49,6 +48,5 @@
   {{> edit-multi-select name="type_tool" max=3 ranked=true}}
   {{> edit-autocomplete name="specific_methods_tools_techniques" multi=true}}
 </fieldset>
-{{/tabs-with-cards}}
 
 {{/ edit-form}}

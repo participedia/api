@@ -10,27 +10,31 @@
         data-view-new
       {{/if}}
     >
+     {{#> tabs-with-cards req=req getTabs=(getLanguageSelectorTabs)}}
+
+      {{#each (getLanguageSelectorTabs)}}
+      {{../../req.baseUrl}}, {{../article.id}}<br/>
       <form
-        {{#if (isEditView req)}}
-          action="/{{article.type}}/{{article.id}}"
+        {{#if (isEditView ../req)}}
+          action="/{{../article.type}}/{{../article.id}}"
         {{else}}
-          action="/{{article.type}}/new"
+          action="/{{../article.type}}/new"
         {{/if}}
         method="post"
         enctype="application/x-www-form-urlencoded"
         class="js-edit-form"
       >
-        <input type="hidden" name="user" value="{{req.user.id}}" />
+        <input type="hidden" name="user" value="{{../req.user.id}}" />
 
-        <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm article}}" />
+        <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm ../article}}" />
 
-        {{#if req.user.isadmin}}
+        {{#if ../req.user.isadmin}}
           <fieldset class="admin-only">
             <div class="edit-form-admin-only-section">
               <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
               {{> edit-boolean name="featured" quick-submit=true}}
               {{> edit-boolean name="hidden" quick-submit=true}}
-              {{# if (isNotCollection article)}}
+              {{# if (isNotCollection ../article)}}
                 {{> article-edit-select name="completeness" quick-submit=true}}
                 {{> edit-autocomplete name="collections" multi=true }}
               {{/if}}
@@ -39,7 +43,7 @@
           </fieldset>
         {{/if}}
 
-        {{> original-language-alert}}
+        {{> original-language-alert article=../article}}
         
         {{> @partial-block }}
 
@@ -48,16 +52,21 @@
             {{> icon-submit }} {{t "Publish"}}
           </button>
 
-          {{# if (isNotCollection article)}}
+          {{# if (isNotCollection ../article)}}
             <a href="?full=1" class="button button-dark-grey quickonly js-do-full-version">{{t "Do Full Version"}}</a>
           {{/if}}
         </div>
 
         <div class="something-missing-prompt">
           <h3>{{t "Something Missing?"}}</h3>
-          <p>{{t "Suggest edits..."}} <a target="_blank" rel="noopener" href="mailto:info@participedia.net?subject=Suggested form edits - {{article.type}}">info@participedia.net</a></p>
+          <p>{{t "Suggest edits..."}} <a target="_blank" rel="noopener" href="mailto:info@participedia.net?subject=Suggested form edits - {{../article.type}}">info@participedia.net</a></p>
         </div>
       </form>
+      {{/each}}
+      
+
+      
+      {{/tabs-with-cards}}
     </article>
   </div>
   <div class="right-col">
