@@ -1435,14 +1435,14 @@ module.exports = {
   },
 
   hideGridToggle(req) {
-    if (["/new"].indexOf(req.baseUrl) >= 0) {
-      return true;
+    if (["/case", "/method", "/organization"].includes(req.baseUrl)) {
+      return false;
     }
-    return false;
+    return true;
   },
 
   includeSearchFilters(req) {
     // do not show search filters on new case, organization, method and collection as well as on collection and user pages
-    return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") || req.baseUrl.indexOf("new") > 0 ? false : true;
+    return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") > 0 || ["/case", "/method", "/organization"].includes(req.baseUrl) ? false : true;
   },
 };
