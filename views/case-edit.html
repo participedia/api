@@ -1,7 +1,8 @@
 {{#> edit-form}}
   <fieldset class="overview">
 
-    {{> submit-form-language-selector }}
+    {{#> tabs-with-cards req=req getTabs=(getLanguageSelectorTabs)}}
+    <!-- {{> submit-form-language-selector }} -->
 
     <h2 class="fieldset-header">{{t "overview_sectionlabel"}}</h2>
    
@@ -19,6 +20,9 @@
       value=(getvalue article "body")
       placeholderText=(placeholder article "body")
     }}
+
+    {{/tabs-with-cards}}
+
   </fieldset>
   <fieldset class="location">
     <h2 class="fieldset-header">{{t "location_sectionlabel"}}</h2>

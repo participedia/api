@@ -1022,6 +1022,18 @@ module.exports = {
     ];
   },
 
+  getLanguageSelectorTabs(context) {
+    return [
+      { title: i18n("English", context), key: "en" },
+      { title: i18n("French", context), key: "fr" },
+      { title: i18n("German", context), key: "de" },
+      { title: i18n("Spanish", context), key: "es" },
+      { title: i18n("Chinese", context), key: "zh" },
+      { title: i18n("Italian", context), key: "it" },
+      { title: i18n("Portugese", context), key: "pt" },
+    ];
+  },
+
   getCollectionTabs(context) {
     return [
       { title: i18n("All", context), key: "all" },
@@ -1416,14 +1428,21 @@ module.exports = {
   },
 
   showCsvButton(req) {
-    if (["/search", "/collection"].indexOf(req.baseUrl) >= 0) {
+    if (["/search", "/collection", "/new"].indexOf(req.baseUrl) >= 0) {
       return req.query.selectedCategory != 'collections';
     }
     return false;
   },
 
+  hideGridToggle(req) {
+    if (["/new"].indexOf(req.baseUrl) >= 0) {
+      return true;
+    }
+    return false;
+  },
+
   includeSearchFilters(req) {
-    // do not show search filters on collection and user pages
-    return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") > 0 ? false : true;
+    // do not show search filters on new case, organization, method and collection as well as on collection and user pages
+    return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") || req.baseUrl.indexOf("new") > 0 ? false : true;
   },
 };
