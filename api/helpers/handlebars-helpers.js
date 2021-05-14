@@ -1170,7 +1170,6 @@ module.exports = {
       "/user",
       "/collection",
     ];
-    console.log('req', req);
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 

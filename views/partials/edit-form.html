@@ -13,7 +13,7 @@
      {{#> tabs-with-cards req=req getTabs=(getLanguageSelectorTabs)}}
 
       {{#each (getLanguageSelectorTabs)}}
-      {{../../req.baseUrl}}, {{../article.id}}<br/>
+
       <form
         {{#if (isEditView ../req)}}
           action="/{{../article.type}}/{{../article.id}}"
@@ -35,17 +35,17 @@
               {{> edit-boolean name="featured" quick-submit=true}}
               {{> edit-boolean name="hidden" quick-submit=true}}
               {{# if (isNotCollection ../article)}}
-                {{> article-edit-select name="completeness" quick-submit=true}}
-                {{> edit-autocomplete name="collections" multi=true }}
+                {{> article-edit-select article=../article name="completeness" quick-submit=true}}
+                {{> edit-autocomplete article=../article name="collections" multi=true }}
               {{/if}}
               {{> edit-submission-details }}
             </div>
           </fieldset>
         {{/if}}
 
-        {{> original-language-alert article=../article}}
+        {{> original-language-alert  article=../article}}
         
-        {{> @partial-block }}
+        {{> @partial-block article=../article __=../__ static=../static}}
 
         <div class="edit-buttons">
           <button type="submit" class="button button-light-grey" data-cy="main-form-submit">
@@ -62,8 +62,8 @@
           <p>{{t "Suggest edits..."}} <a target="_blank" rel="noopener" href="mailto:info@participedia.net?subject=Suggested form edits - {{../article.type}}">info@participedia.net</a></p>
         </div>
       </form>
+
       {{/each}}
-      
 
       
       {{/tabs-with-cards}}
