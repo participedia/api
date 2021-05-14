@@ -5,11 +5,20 @@ import infoIconToModal from "./info-icon-to-modal.js";
 import tracking from "./utils/tracking.js";
 import languageSelectTooltipForNewEntries from './language-select-tooltip-for-new-entries.js';
 import submitFormLanguageSelector from './submit-form-language-selector';
+import tabsWithCards from "./tabs-with-cards.js";
+
 
 const editForm = {
   init() {
     // bind event listener for publish buttons clicks
     const submitButtonEls = document.querySelectorAll("[type=submit]");
+
+    // reference to all forms
+    const localForms = document.querySelectorAll("form[data-local=local]");
+
+    if(localForms) {
+      return this.initLocalForms();
+    }
 
     if (!submitButtonEls) return;
 
@@ -64,6 +73,15 @@ const editForm = {
 
     languageSelectTooltipForNewEntries.init();
     submitFormLanguageSelector.init();
+    tabsWithCards.init();
+  },
+
+  initLocalForms() {
+    // reference to all forms
+    const localForms = document.querySelectorAll("form[data-local=local]");
+    // bind event listener for publish buttons clicks
+    const submitButtonEls = document.querySelectorAll("[type=submit]");
+    // for
   },
 
   sendFormData() {

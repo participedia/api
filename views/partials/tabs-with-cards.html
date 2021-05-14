@@ -35,7 +35,7 @@
   <div class="tab-container js-tab-container">
     <div class="js-tab-items">
       {{#each getTabs}}
-        <input id="{{key}}" type="radio" name="tabs" {{isTabActive ../req key}} class="tab-container-input">
+        <input id="{{key}}" type="radio" name="tabs" data-local={{isLocalNav key}} {{isTabActive ../req key}} class="tab-container-input">
         <label for="{{key}}" class="tab-container-label">{{title}}</label>
       {{/each}}
     </div>

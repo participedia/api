@@ -1012,6 +1012,11 @@ module.exports = {
     }
   },
 
+  isLocalNav(tabName) {
+      const localTabs = ['en', 'fr', 'de', 'es', 'zh', 'pt', 'it'];
+      return localTabs.includes(tabName) ? "local" : "server";
+  },
+
   getHomeTabs(context) {
     return [
       { title: i18n("All", context), key: "all" },
