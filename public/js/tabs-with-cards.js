@@ -16,6 +16,7 @@ const tabsWithCards = {
       document.querySelectorAll(".js-tab-container input[name='tabs'][data-local='local']")
     );
     this.viewEl = document.querySelector("[data-card-layout]");
+    this.localForms = document.querySelectorAll("form[data-local=local]");
 
     if (this.tabInputEls.length === 0) return;
 
@@ -23,6 +24,7 @@ const tabsWithCards = {
     this.initiateCsvGenerator();
 
     // tabs ui
+    debugger;
     if(this.localTabInputEls) {
       this.initLocalDesktopTabNav();
       this.initLocalMobileTabNav();
@@ -109,19 +111,22 @@ const tabsWithCards = {
 
   navigateToLocalTab(tabName) {
     // reference to all forms
-    const localForms = document.querySelectorAll("form[data-local=local]");
-
+    // $(localForms).hide();
+    this.localForms.forEach(el => el.classList.add('hide'));
+    document.querySelector(`form[data-lang='${tabName}']`).classList.remove('hide');
 
   },
 
   initLocalDesktopTabNav() {
     // update url param to indicate current tab
+    debugger;
     this.localTabInputEls.forEach(el => {
       el.addEventListener("click", event => {
         debugger;
         this.navigateToLocalTab(event.target.id);
       });
     });
+    this.localForms.forEach(el => el.classList.add('hide'));
   },
 
   initLocalMobileTabNav() {

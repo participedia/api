@@ -79,6 +79,10 @@
   display: none;
 }
 
+.tab-container-input[data-local='local'] {
+  
+}
+
 .tab-container-label, .tab-container-label--collections {
   padding: .5rem;
   display: inline-block;

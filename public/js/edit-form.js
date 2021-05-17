@@ -73,7 +73,6 @@ const editForm = {
 
     languageSelectTooltipForNewEntries.init();
     submitFormLanguageSelector.init();
-    tabsWithCards.init();
   },
 
   initLocalForms() {
@@ -81,7 +80,18 @@ const editForm = {
     const localForms = document.querySelectorAll("form[data-local=local]");
     // bind event listener for publish buttons clicks
     const submitButtonEls = document.querySelectorAll("[type=submit]");
-    // for
+    for (let i = 0; i < submitButtonEls.length; i++) {
+      const submitBtn = submitButtonEls[i];
+      submitBtn.addEventListener('click', () => {
+        // submit button clicked, validate forms
+        this.validateLocalForms();
+      });
+    }
+    tabsWithCards.init();
+  },
+
+  validateLocalForms() {
+
   },
 
   sendFormData() {
