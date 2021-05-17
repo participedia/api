@@ -66,6 +66,7 @@ const editForm = {
     fullVersionButtonEls.forEach(el => handleFullVersionClick(el));
 
     infoIconToModal.init();
+    this.initPinTabs();
 
     this.formEl = document.querySelector(".js-edit-form");
 
@@ -94,6 +95,24 @@ const editForm = {
 
   validateLocalForms() {
 
+  },
+
+  initPinTabs() {
+    const tabsContainer = document.querySelector('.js-tab-items');
+    const mobileTabsContainer = document.querySelector('.js-tab-select-container');
+    document.addEventListener('scroll', (e) => {
+      console.log(window.scrollY);
+      if(window.scrollY > 25) {
+        tabsContainer.classList.add('fixed-language-tab');
+      } else {
+        tabsContainer.classList.remove('fixed-language-tab');
+      }
+      if(window.scrollY > 30) {
+        mobileTabsContainer.classList.add('fixed-language-tab');
+      } else {
+        mobileTabsContainer.classList.remove('fixed-language-tab');
+      }
+    })
   },
 
   sendFormData() {

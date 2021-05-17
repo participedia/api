@@ -1296,9 +1296,39 @@ input[type=number]::-webkit-inner-spin-button {
   display: none;
 } 
 
+.fixed-language-tab {
+  position: fixed;
+  top: 60px;
+  background: #fff;
+  z-index: 10;
+  width: 100%;
+}
+
 @media screen and (max-width: 1200px) {
   .main-content .middle-col {
     width: 100%;
     margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .fixed-language-tab {
+    top: 116px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .fixed-language-tab {
+    position: fixed;
+    width: 90vw;
+    left: 0;
+    padding: 20px 5%;
+    top: 115px;
+    z-index: 10;
+    background: #fff;
+  }
+
+  .js-tab-items {
+    display: none;
   }
 }
