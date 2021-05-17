@@ -4,6 +4,8 @@ import modal from "./modal.js";
 import infoIconToModal from "./info-icon-to-modal.js";
 import tracking from "./utils/tracking.js";
 import languageSelectTooltipForNewEntries from './language-select-tooltip-for-new-entries.js';
+import languageSelectTooltipForNewEntryInput from './language-select-tooltip-for-new-entry-input';
+
 import submitFormLanguageSelector from './submit-form-language-selector';
 import tabsWithCards from "./tabs-with-cards.js";
 
@@ -14,11 +16,7 @@ const editForm = {
     const submitButtonEls = document.querySelectorAll("[type=submit]");
 
     // reference to all forms
-    const localForms = document.querySelectorAll("form[data-local=local]");
-
-    if(localForms) {
-      return this.initLocalForms();
-    }
+    this.localForms = document.querySelectorAll("form[data-local=local]");
 
     if (!submitButtonEls) return;
 
@@ -71,13 +69,17 @@ const editForm = {
 
     this.formEl = document.querySelector(".js-edit-form");
 
-    languageSelectTooltipForNewEntries.init();
+    if(this.localForms) {
+      this.initLocalForms();
+    }
+    // Stopped initialization of new entries due to languageSelectTooltipForNewEntryInput init.
+    // languageSelectTooltipForNewEntries.init();
+    languageSelectTooltipForNewEntryInput.init();
     submitFormLanguageSelector.init();
   },
 
   initLocalForms() {
     // reference to all forms
-    const localForms = document.querySelectorAll("form[data-local=local]");
     // bind event listener for publish buttons clicks
     const submitButtonEls = document.querySelectorAll("[type=submit]");
     for (let i = 0; i < submitButtonEls.length; i++) {

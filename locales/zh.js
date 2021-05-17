@@ -1896,5 +1896,6 @@
   "Zambia": "赞比亚",
   "Zimbabwe": "津巴布韦",
   "Zoom Map In": "放大缩小字体功能 放大缩小字体功能",
-  "Zoom Map Out": "放大缩小字体功能 放大缩小字体功能"
+  "Zoom Map Out": "放大缩小字体功能 放大缩小字体功能",
+  "new-entry-input-language-select-tooltip__text": "您可以使用以下语言编辑该条目。 要更改网站显示语言，请使用上方搜索栏旁边的语言选择器。"
 }

@@ -1896,5 +1896,6 @@
   "Zambia": "Zambie",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoomer sur la carte",
-  "Zoom Map Out": "Dézoomer sur la carte"
+  "Zoom Map Out": "Dézoomer sur la carte",
+  "new-entry-input-language-select-tooltip__text": "Vous pouvez modifier cette entrée dans les langues suivantes. Pour changer la langue d'affichage du site Web, utilisez le sélecteur de langue situé à côté de la barre de recherche ci-dessus."
 }

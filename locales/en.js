@@ -1900,5 +1900,7 @@
   "Results CSV": "Results CSV",
   "new-entry-language-select-tooltip__text": "To ensure accurate translation, please enter text in %s%s%s, or change selected language here.",
   "Tell me more...": "Tell me more...",
-  "Got it": "Got it"
+  "Got it": "Got it",
+  "new-entry-input-language-select-tooltip__text": "You may edit this entry in the following languages. To change the website display language, use the language selector located beside the search bar above."
+
 }
