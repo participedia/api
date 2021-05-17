@@ -1,0 +1,14 @@
+<div class="edit-buttons">
+    <button type="submit" class="button button-light-grey" data-cy="main-form-submit">
+      {{> icon-submit }} {{t "Publish"}}
+    </button>
+
+    {{# if (isNotCollection article)}}
+      <a href="?full=1" class="button button-dark-grey quickonly js-do-full-version">{{t "Do Full Version"}}</a>
+    {{/if}}
+  </div>
+
+  <div class="something-missing-prompt">
+    <h3>{{t "Something Missing?"}}</h3>
+    <p>{{t "Suggest edits..."}} <a target="_blank" rel="noopener" href="mailto:info@participedia.net?subject=Suggested form edits - {{../article.type}}">info@participedia.net</a></p>
+  </div>
