@@ -24,7 +24,6 @@ const tabsWithCards = {
     this.initiateCsvGenerator();
 
     // tabs ui
-    debugger;
     if(this.localTabInputEls) {
       this.initLocalDesktopTabNav();
       this.initLocalMobileTabNav();
@@ -119,14 +118,13 @@ const tabsWithCards = {
 
   initLocalDesktopTabNav() {
     // update url param to indicate current tab
-    debugger;
     this.localTabInputEls.forEach(el => {
       el.addEventListener("click", event => {
-        debugger;
         this.navigateToLocalTab(event.target.id);
       });
     });
     this.localForms.forEach(el => el.classList.add('hide'));
+    this.localTabInputEls[0].click();
   },
 
   initLocalMobileTabNav() {
