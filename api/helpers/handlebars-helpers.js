@@ -151,8 +151,14 @@ function concactArr(arr) {
   return str;
 }
 
-const i18n = (key, context) =>
-  context && context.data && context.data.root.__(key);
+const i18n = (key, context, locale = undefined) => {
+  if(locale && typeof locale === "string") {
+    return context && context.data && context.data.root.__({phrase: key, locale});
+  } else {
+    return context && context.data && context.data.root.__(key);
+  }
+  
+}
 
 module.exports = {
   toJSON: obj => {
