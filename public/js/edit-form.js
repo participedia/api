@@ -117,10 +117,13 @@ const editForm = {
 
   sendFormData() {
     const formData = serialize(this.formEl);
-
+    const formsData = {};
+    this.localForms.forEach(form => {
+      formsData[form.dataset['lang']] = serialize(form);
+    });
     const xhr = new XMLHttpRequest();
     xhr.open("POST", this.formEl.getAttribute("action"), true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = () => {
       // wait for request to be done
@@ -153,7 +156,7 @@ const editForm = {
       }
     };
 
-    xhr.send(formData);
+    xhr.send(JSON.stringify(formsData));
     // open publishing feedback modal as soon as we send the request
     this.openPublishingFeedbackModal();
   },

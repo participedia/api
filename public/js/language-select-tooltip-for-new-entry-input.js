@@ -8,7 +8,6 @@ const languageSelectTooltipForNewEntryInput = {
     // only init language tooltip if
     // 1. user is on quick submit page
     // 2. user has not yet seen tooltip
-    debugger;
     const hasSeenTooltip = localStorage.getItem(LOCAL_STORAGE_KEY);
     const isQuickSubmit =
       location.pathname.indexOf("/case/new") === 0 ||
