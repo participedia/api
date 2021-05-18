@@ -497,6 +497,50 @@ async function createLocalizedRecord(data, thingid, localesToTranslate = undefin
     });
 }
 
+async function createUntranslatedLocalizedRecords(data, thingid) {
+  let records = [];
+
+  if(!Array.isArray(data)) return;
+  const supportedTwoLetterCodes = SUPPORTED_LANGUAGES.map(lang => lang.twoLetterCode);
+
+  for (let i = 0; i < data.length; i++) {
+    const entry = data[i];
+    if(supportedTwoLetterCodes.includes(entry.language)) {
+      const item = {
+        body: '',
+        title: '',
+        description: '',
+        language: entry.language,
+        thingid: thingid,
+        timestamp: 'now'
+      };
+
+      if (entry.body) {
+        item.body = entry.body;
+      }
+
+      if (entry.title) {
+        item.title = entry.title;
+      }
+
+      if (entry.description) {
+        item.description = entry.description;
+      }
+      
+      records.push(item);
+    }
+  }
+  const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid', 'timestamp'], 'localized_texts');
+
+  db.none(insert)
+  .then(function(data) {
+    console.log(data);
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+}
+
 async function translateText(data, targetLanguage) {
   // The text to translate
   let allTranslation = '';
@@ -543,6 +587,7 @@ module.exports = {
   searchFilterKeyLists,
   placeHolderPhotos,
   createLocalizedRecord,
+  createUntranslatedLocalizedRecords,
   getCollections,
   validateFields,
   requireTranslation,

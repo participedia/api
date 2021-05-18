@@ -33,6 +33,7 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
+  createUntranslatedLocalizedRecords,
   getCollections,
   validateFields,
   requireTranslation
@@ -140,6 +141,7 @@ async function postCaseNewHttp(req, res) {
     // for (let localeToTranslateIndex = 0; localeToTranslate < localesToTranslate.length; localeToTranslate++) {
     //   const localeToTranslate = localesToTranslate[localeToTranslateIndex];
     await createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
+    await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
     // }
     
   } catch (error) {

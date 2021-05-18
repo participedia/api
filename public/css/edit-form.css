@@ -1300,7 +1300,7 @@ input[type=number]::-webkit-inner-spin-button {
   position: fixed;
   top: 60px;
   background: #fff;
-  z-index: 10;
+  z-index: 5;
   width: 100%;
 }
 
@@ -1324,7 +1324,7 @@ input[type=number]::-webkit-inner-spin-button {
     left: 0;
     padding: 20px 5%;
     top: 115px;
-    z-index: 10;
+    z-index: 5;
     background: #fff;
   }
 
