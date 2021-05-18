@@ -34,7 +34,8 @@ const {
   fixUpURLs,
   createLocalizedRecord,
   getCollections,
-  validateFields
+  validateFields,
+  requireTranslation
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -75,20 +76,51 @@ async function postCaseNewHttp(req, res) {
   // create new `case` in db
   try {
     cache.clear();
-    let title = req.body.title;
-    let body = req.body.body || req.body.summary || "";
-    let description = req.body.description;
-    let original_language = req.body.original_language || "en";
-    const errors = validateFields(req.body, "case");
+    const langErrors = [];
+    const localesToTranslate = [];
+    const localesToNotTranslate = [];
+    let originalLanguageEntry;
 
-    if (errors.length > 0) {
+    // Get locales to translate
+    for (const entryLocale in req.body) {
+      if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+        const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+        if(requireTranslation(entry)) {
+          localesToTranslate.push(entryLocale);
+        }
+        if(entryLocale === entry.original_language) {
+          originalLanguageEntry = entry;
+        }
+      }
+    }
+
+    // Validate the rest
+    for (const entryLocale in req.body) {
+      if (Object.hasOwnProperty.call(req.body, entryLocale) && !localesToTranslate.includes(entryLocale)) {
+        const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+        const errors = validateFields(entry, "case");
+        langErrors.push({locale: entryLocale, errors});
+        localesToNotTranslate.push(entry);
+      }
+    }
+    const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+    if (hasErrors) {
       return res.status(400).json({
         OK: false,
-        errors: errors,  
+        errors: langErrors,  
       });
     }
 
-    const user_id = req.user.id;
+    // Write entries to not translate to DB
+    // for (let localeToNotTranslateIndex = 0; localeToNotTranslate < localesToNottranslate.length; localeToNotTranslate++) {
+    //   const localeToNotTranslate = localesToNottranslate[localeToNotTranslateIndex];
+      
+    // }
+    let title = originalLanguageEntry.title;
+    let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    let description = originalLanguageEntry.description;
+    let original_language = originalLanguageEntry.original_language || "en";
+  
     const thing = await db.one(CREATE_CASE, {
       title,
       body,
@@ -97,14 +129,19 @@ async function postCaseNewHttp(req, res) {
     });
 
     req.params.thingid = thing.thingid;
-    await postCaseUpdateHttp(req, res);
+    await postCaseUpdateHttp(req, res, originalLanguageEntry);
     let localizedData = {
       body: body,
       description: description,
       language: original_language,
       title: title
     };
-     createLocalizedRecord(localizedData, thing.thingid);
+
+    // for (let localeToTranslateIndex = 0; localeToTranslate < localesToTranslate.length; localeToTranslate++) {
+    //   const localeToTranslate = localesToTranslate[localeToTranslateIndex];
+    await createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
+    // }
+    
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
@@ -220,12 +257,12 @@ function getUpdatedCase(user, params, newCase, oldCase) {
 
 // Only changes to title, description, and/or body trigger a new author and version
 
-async function postCaseUpdateHttp(req, res) {
+async function postCaseUpdateHttp(req, res, entry = undefined) {
   // cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
-  const newCase = req.body;
+  const newCase = entry || req.body;
   const errors = validateFields(newCase, "case");
   const isNewCase = !newCase.post_date;
 
@@ -236,7 +273,7 @@ async function postCaseUpdateHttp(req, res) {
     });
   }
 
-  newCase.links = verifyOrUpdateUrl(newCase.links);
+  newCase.links = verifyOrUpdateUrl(newCase.links || []);
 
   // if this is a new case, we don't have a post_date yet, so we set it here
   if (isNewCase) {

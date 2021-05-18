@@ -426,12 +426,41 @@ const validateFields = (entry, entryName) => {
   return errors;
 };
 
-async function createLocalizedRecord(data, thingid) {
-  var records = [];
-  for (var i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+const requireTranslation = (entry, entryName) => {
+  let links = entry.links;
+  const title = entry.title;
+  const startDate = entry.start_date;
+  const endDate = entry.end_date;
+  let linkErrors = 0;
+  let errors = [];
+
+  // validate url
+  if (links) {
+    for (let key in links) {
+      let url = links[key].url;
+      if (url.length > 0) {
+        links = verifyOrUpdateUrl(links);
+        const isUrlValid = validateUrl(links);
+        if (!isUrlValid) {
+          linkErrors++;
+        }
+      }
+    }
+    if (linkErrors > 0) {
+      errors.push("Invalid link url.");
+    }
+  }
+  const requiresTranslation = !title;
+  return requiresTranslation;
+};
+
+async function createLocalizedRecord(data, thingid, localesToTranslate = undefined) {
+  let records = [];
+  let languagesToTranslate = localesToTranslate || SUPPORTED_LANGUAGES || [];
+  for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     const language = SUPPORTED_LANGUAGES[i];
 
-    if (language.twoLetterCode !== data.language) {
+    if (languagesToTranslate.includes(language.twoLetterCode) && language.twoLetterCode !== data.language) {
       const item = {
         body: '',
         title: '',
@@ -478,7 +507,7 @@ async function translateText(data, targetLanguage) {
   if (length > 5000) {
     // Get text chunks
     let textParts = data.match(/.{1,5000}/g);
-    for(var text of textParts){
+    for(let text of textParts){
       let [translation] = await translate
         .translate(text, target)
         .catch(function(error) {
@@ -516,6 +545,7 @@ module.exports = {
   createLocalizedRecord,
   getCollections,
   validateFields,
+  requireTranslation,
   limitFromReq,
   offsetFromReq
 };
