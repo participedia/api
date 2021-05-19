@@ -112,11 +112,6 @@ async function postCaseNewHttp(req, res) {
       });
     }
 
-    // Write entries to not translate to DB
-    // for (let localeToNotTranslateIndex = 0; localeToNotTranslate < localesToNottranslate.length; localeToNotTranslate++) {
-    //   const localeToNotTranslate = localesToNottranslate[localeToNotTranslateIndex];
-      
-    // }
     let title = originalLanguageEntry.title;
     let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description;
@@ -130,7 +125,7 @@ async function postCaseNewHttp(req, res) {
     });
 
     req.params.thingid = thing.thingid;
-    await postCaseUpdateHttp(req, res, originalLanguageEntry);
+    await caseUpdateHttp(req, res, originalLanguageEntry);
     let localizedData = {
       body: body,
       description: description,
@@ -138,11 +133,8 @@ async function postCaseNewHttp(req, res) {
       title: title
     };
 
-    // for (let localeToTranslateIndex = 0; localeToTranslate < localesToTranslate.length; localeToTranslate++) {
-    //   const localeToTranslate = localesToTranslate[localeToTranslateIndex];
     await createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
     await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
-    // }
     
   } catch (error) {
     logError(error);
@@ -257,9 +249,7 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   return [updatedCase, er];
 }
 
-// Only changes to title, description, and/or body trigger a new author and version
-
-async function postCaseUpdateHttp(req, res, entry = undefined) {
+async function caseUpdateHttp(req, res, entry = undefined) {
   // cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
@@ -346,6 +336,137 @@ async function postCaseUpdateHttp(req, res, entry = undefined) {
       errors: er.errors,
     });
   }
+}
+
+// Only changes to title, description, and/or body trigger a new author and version
+
+async function postCaseUpdateHttp(req, res) {
+  // cache.clear();
+  const params = parseGetParams(req, "case");
+  // const user = req.user;
+  const { articleid } = params;
+  // const newCase = entry || req.body;
+  // const errors = validateFields(newCase, "case");
+  // const isNewCase = !newCase.post_date;
+  const langErrors = [];
+  const localeEntries = [];
+  let originalLanguageEntry;
+
+
+  for (const entryLocale in req.body) {
+    if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+      const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+      const errors = validateFields(entry, "case");
+      langErrors.push({locale: entryLocale, errors});
+    }
+  }
+  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+  if (hasErrors) {
+    return res.status(400).json({
+      OK: false,
+      errors: langErrors,  
+    });
+  }
+
+  for (const entryLocale in req.body) {
+    if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+      const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+      localeEntries.push(entry);
+      if(entryLocale === entry.original_language) {
+        originalLanguageEntry = entry;
+      }
+    }
+  }
+
+  await caseUpdateHttp(req, res, originalLanguageEntry);
+
+  await createUntranslatedLocalizedRecords(localeEntries, articleid);
+  const freshArticle = await getCase(params, res);
+  res.status(200).json({
+    OK: true,
+    article: freshArticle,
+  });
+  refreshSearch();
+  
+
+  // if (errors.length > 0) {
+  //   return res.status(400).json({
+  //     OK: false,
+  //     errors: errors,
+  //   });
+  // }
+
+  // newCase.links = verifyOrUpdateUrl(newCase.links || []);
+
+  // // if this is a new case, we don't have a post_date yet, so we set it here
+  // if (isNewCase) {
+  //   newCase.post_date = Date.now();
+  // }
+
+  // // if this is a new case, we don't have a updated_date yet, so we set it here
+  // if (isNewCase) {
+  //   newCase.updated_date = Date.now();
+  // }
+
+  // // save any changes to the user-submitted text
+  // const {
+  //   updatedText,
+  //   author,
+  //   oldArticle: oldCase,
+  // } = await maybeUpdateUserText(req, res, "case");
+  // const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+
+  // //get current date when user.isAdmin is false;
+  // updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
+
+  // if (!er.hasErrors()) {
+  //   if (updatedText) {
+  //     await db.tx("update-case", async t => {
+  //       if(!isNewCase) {
+  //         await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+  //       }
+  //       await t.none(INSERT_AUTHOR, author);
+  //       await t.none(UPDATE_CASE, updatedCase);
+  //     });
+  //     //if this is a new case, set creator id to userid and isAdmin
+  //     if (user.isadmin) {
+  //       const creator = {
+  //         user_id: newCase.creator ? newCase.creator : params.userid,
+  //         thingid: params.articleid,
+  //       };
+  //       const updatedBy = {
+  //         user_id: newCase.last_updated_by
+  //           ? newCase.last_updated_by
+  //           : params.userid,
+  //         thingid: params.articleid,
+  //         updated_date: newCase.updated_date || "now",
+  //       };
+  //       await db.tx("update-case", async t => {
+  //         await t.none(UPDATE_AUTHOR_FIRST, creator);
+  //         await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+  //       });
+  //     }
+  //   } else {
+  //     await db.tx("update-case", async t => {
+  //       await t.none(INSERT_AUTHOR, author);
+  //       await t.none(UPDATE_CASE, updatedCase);
+  //     });
+  //   }
+  //   // the client expects this request to respond with json
+  //   // save successful response
+  //   const freshArticle = await getCase(params, res);
+  //   res.status(200).json({
+  //     OK: true,
+  //     article: freshArticle,
+  //   });
+  //   refreshSearch();
+  // } else {
+  //   logError(`400 with errors: ${er.errors.join(", ")}`);
+  //   res.status(400).json({
+  //     OK: false,
+  //     errors: er.errors,
+  //   });
+  // }
 }
 
 /**
@@ -457,4 +578,5 @@ module.exports = {
   postCaseNewHttp,
   getCaseHttp,
   postCaseUpdateHttp,
+  caseUpdateHttp
 };
