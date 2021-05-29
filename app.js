@@ -185,9 +185,11 @@ app.get("/redirect", function(req, res, next) {
     if (err) {
       return next(err);
     }
-    if (!user && req.originalUrl.includes("error_description=verify_email")) {
-      const params = new URLSearchParams(req.originalUrl);
-      res.cookie("verify_email", params.get("error_description").split("|\|")[1]);
+    if (!user) { // blocked user
+      if(req.originalUrl.includes("error_description=verify_email")) {// unverified user
+        const params = new URLSearchParams(req.originalUrl);
+        res.cookie("verify_email", params.get("error_description").split("|\|")[1]);
+      }
       return res.redirect("/");
     }
     req.logIn(user, function(err) {
