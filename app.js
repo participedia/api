@@ -212,13 +212,14 @@ app.get("/resend-verification", function(req, res, next) {
   const user_id = req.session.user_to_verify;
   let currentUrl = `${req.protocol}://${req.headers.host}`;
   if (user_id) {
-    const auth0Cient = new ManagementClient({
+    const auth0Client = new ManagementClient({
       domain: process.env.AUTH0_DOMAIN,
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       scope: 'read:users update:users'
     });
-    auth0Cient.sendEmailVerification({user_id});
+    auth0Client.getUser()
+    auth0Client.sendEmailVerification({user_id});
   }
   req.session.user_to_verify = '';
   res.redirect(currentUrl || "/");
