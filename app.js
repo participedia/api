@@ -185,7 +185,7 @@ app.get("/redirect", function(req, res, next) {
     if (err) {
       return next(err);
     }
-    if (!user) { // blocked user
+    if (!user) { // unverified/deleted/blocked user
       if(req.originalUrl.includes("error_description=verify_email")) {// unverified user
         const params = new URLSearchParams(req.originalUrl);
         res.cookie("verify_email", params.get("error_description").split("|\|")[1]);

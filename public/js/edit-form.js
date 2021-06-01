@@ -77,7 +77,9 @@ const editForm = {
 
       if (xhr.status === 0) {
         // if user is not logged in
-        this.openAuthWarning();
+        // this.openAuthWarning();
+        window.sessionStorage.setItem("submitButtonClick", "true");
+        window.location.href = '/logout';
       } else if (xhr.status === 413) {
         // if file uploads are too large
         this.handleErrors([

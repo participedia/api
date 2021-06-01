@@ -12,12 +12,11 @@ module.exports = function () {
     return async function isPostOrPutUser(req, res, next) {        
         
         const auth0User = await auth0Client.getUser({id: `${req.user.auth0_user_id}`});
-        console.table(auth0User);
-        // TODO: Update conditional for blocked/deleted user
         if (auth0User && !auth0User.blocked) {
             return next();
         }
-        req.session.returnTo = req.originalUrl;
-        res.redirect("/login");
+        req.logout();
+        res.writeHead(301, { Location: '/logout' });
+        res.end();
     };
 };
