@@ -8,15 +8,23 @@ const auth0Client = new ManagementClient({
     scope: 'read:users update:users'
 });
 
+const handleInvalidUser = (req, res) => {
+    req.logout();
+    res.writeHead(301, { Location: '/logout' });
+    res.end();
+}
+
 module.exports = function () {
     return async function isPostOrPutUser(req, res, next) {        
         
-        const auth0User = await auth0Client.getUser({id: `${req.user.auth0_user_id}`});
-        if (auth0User && !auth0User.blocked) {
-            return next();
-        }
-        req.logout();
-        res.writeHead(301, { Location: '/logout' });
-        res.end();
+        auth0Client.getUser({id: `${req.user.auth0_user_id}`}, (err, auth0User) => {
+            if(err){
+                return handleInvalidUser(req, res);
+            }
+            if (auth0User && !auth0User.blocked) {
+                return next();
+            }
+            handleInvalidUser(req, res);
+        });
     };
 };
