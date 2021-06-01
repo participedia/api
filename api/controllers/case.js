@@ -411,7 +411,7 @@ router.get("/:thingid/edit", requireAuthenticatedUser(), getCaseEditHttp);
 router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
 router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postCaseNewHttp);
 router.get("/:thingid/:language?", setAndValidateLanguage(), getCaseHttp);
-router.post("/:thingid", requireAuthenticatedUser(), postCaseUpdateHttp);
+router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postCaseUpdateHttp);
 
 module.exports = {
   case_: router,

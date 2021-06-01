@@ -346,7 +346,7 @@ router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
 router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postMethodNewHttp);
 // these have to come *after* /new or BAD THINGS HAPPEN
 router.get("/:thingid/:language?", setAndValidateLanguage(), getMethodHttp);
-router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
+router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postMethodUpdateHttp);
 
 module.exports = {
   method: router,

@@ -196,6 +196,7 @@ app.get("/redirect", function(req, res, next) {
       if (err) {
         return next(err);
       }
+      req.session.auth0_user_id = user.id;
       let returnToUrl = req.session.returnTo;
       const refreshAndClose = req.session.refreshAndClose;
       delete req.session.returnTo;
@@ -218,7 +219,6 @@ app.get("/resend-verification", function(req, res, next) {
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       scope: 'read:users update:users'
     });
-    auth0Client.getUser()
     auth0Client.sendEmailVerification({user_id});
   }
   req.session.user_to_verify = '';
