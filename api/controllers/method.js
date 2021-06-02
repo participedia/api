@@ -42,6 +42,8 @@ const METHOD_STRUCTURE = JSON.parse(
 
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
+const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
+
 async function getEditStaticText(params) {
   let staticText = {};
   try {
@@ -341,10 +343,10 @@ async function getMethodNewHttp(req, res) {
 const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getMethodEditHttp);
 router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
-router.post("/new", requireAuthenticatedUser(), postMethodNewHttp);
+router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postMethodNewHttp);
 // these have to come *after* /new or BAD THINGS HAPPEN
 router.get("/:thingid/:language?", setAndValidateLanguage(), getMethodHttp);
-router.post("/:thingid", requireAuthenticatedUser(), postMethodUpdateHttp);
+router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postMethodUpdateHttp);
 
 module.exports = {
   method: router,

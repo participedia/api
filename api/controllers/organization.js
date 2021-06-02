@@ -41,6 +41,7 @@ const ORGANIZATION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/organization-structure.json", "utf8")
 );
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
+const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
 
 async function getEditStaticText(params) {
   let staticText = {};
@@ -343,9 +344,9 @@ async function getOrganizationNewHttp(req, res) {
 const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getOrganizationEditHttp);
 router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
-router.post("/new", requireAuthenticatedUser(), postOrganizationNewHttp);
+router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizationNewHttp);
 router.get("/:thingid/:language?", setAndValidateLanguage(), getOrganizationHttp);
-router.post("/:thingid", requireAuthenticatedUser(), postOrganizationUpdateHttp);
+router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizationUpdateHttp);
 
 module.exports = {
   organization: router,

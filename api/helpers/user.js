@@ -37,7 +37,7 @@ async function getUserOrCreateUser(auth0User) {
     userId: userId,
     language: "en",
   });
-
+  result.user.auth0_user_id = auth0User.user_id;
   return result.user;
 }
 

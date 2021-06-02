@@ -185,7 +185,7 @@ app.get("/redirect", function(req, res, next) {
     if (err) {
       return next(err);
     }
-    if (!user) { // blocked user
+    if (!user) { // unverified/deleted/blocked user
       if(req.originalUrl.includes("error_description=verify_email")) {// unverified user
         const params = new URLSearchParams(req.originalUrl);
         res.cookie("verify_email", params.get("error_description").split("|\|")[1]);
@@ -196,6 +196,7 @@ app.get("/redirect", function(req, res, next) {
       if (err) {
         return next(err);
       }
+      req.session.auth0_user_id = user.id;
       let returnToUrl = req.session.returnTo;
       const refreshAndClose = req.session.refreshAndClose;
       delete req.session.returnTo;
@@ -212,13 +213,13 @@ app.get("/resend-verification", function(req, res, next) {
   const user_id = req.session.user_to_verify;
   let currentUrl = `${req.protocol}://${req.headers.host}`;
   if (user_id) {
-    const auth0Cient = new ManagementClient({
+    const auth0Client = new ManagementClient({
       domain: process.env.AUTH0_DOMAIN,
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       scope: 'read:users update:users'
     });
-    auth0Cient.sendEmailVerification({user_id});
+    auth0Client.sendEmailVerification({user_id});
   }
   req.session.user_to_verify = '';
   res.redirect(currentUrl || "/");
