@@ -4,7 +4,7 @@
   */
   set @sql = '
     create function dbo._get_all_thing_locale (@thing_id int, @language_arr text[])
-    returns nvarchar(517) as
+    returns table(ody, title, description, language, timestamp, thingid) as
     begin
       return 
         SELECT body, title, description, language, "timestamp", thingid FROM (
