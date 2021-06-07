@@ -24,7 +24,7 @@ const tabsWithCards = {
     this.initiateCsvGenerator();
 
     // tabs ui
-    if(this.localTabInputEls) {
+    if(this.localTabInputEls.length > 0) {
       this.initLocalDesktopTabNav();
       this.initLocalMobileTabNav();
     } else {
