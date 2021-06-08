@@ -10,6 +10,7 @@ const {
   CASES_BY_COUNTRY,
   CREATE_CASE,
   CASE_BY_ID,
+  CASES_LOCALE_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
@@ -500,7 +501,7 @@ async function getCase(params, res) {
     if (Number.isNaN(params.articleid)) {
       return null;
     }
-    const articleRow = await db.one(CASE_BY_ID, params);
+    const articleRow = await db.one(CASES_LOCALE_BY_ID, params);
     const article = articleRow.results;
     fixUpURLs(article);
     return article;

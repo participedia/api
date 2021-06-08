@@ -42,6 +42,7 @@ function sql(filename) {
 const COLLECTION_BY_ID = sql("../sql/collection_by_id.sql");
 const COLLECTIONS = sql("../sql/collections.sql");
 const CASE_BY_ID = sql("../sql/case_by_id.sql");
+const CASES_LOCALE_BY_ID = sql("../sql/case_by_id_locale_array.sql");
 const METHOD_BY_ID = sql("../sql/method_by_id.sql");
 const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
@@ -549,6 +550,7 @@ module.exports = {
   COLLECTION_BY_ID,
   COLLECTIONS,
   CASE_BY_ID,
+  CASES_LOCALE_BY_ID,
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,
   UPDATE_AUTHOR_FIRST,

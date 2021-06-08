@@ -2,8 +2,8 @@
   define function here, within a string
   note the underscore prefix, a good convention for user-defined temporary objects
   */
-  set @sql = '
-    create function dbo._get_all_thing_locale (@thing_id int, @language_arr text[])
+  -- set @sql = '
+    create or replace function dbo._get_all_thing_locale (thing_id int, language_arr text[])
     returns table(ody, title, description, language, timestamp, thingid) as
     begin
       return 
@@ -11,16 +11,16 @@
           SELECT body, title, description, language, "timestamp", thingid,
           ROW_NUMBER() OVER (PARTITION BY thingid ORDER BY "timestamp" DESC) rn
           FROM localized_texts
-          WHERE thingid = $1 AND language IN @language_arr
+          WHERE thingid = $1 AND language IN $2
         ) tmp WHERE rn = 1
     end
-  '
+  -- '
 
   /*
   create the function by executing the string, with a conditional object drop upfront
   */
-  if object_id('dbo._get_all_thing_locale') is not null drop function _get_all_thing_locale
-  exec (@sql)
+  -- if object_id('dbo._get_all_thing_locale') is not null drop function _get_all_thing_locale
+  -- exec (@sql)
 
   /*
   use the function in a query
