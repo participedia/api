@@ -3,7 +3,7 @@
   note the underscore prefix, a good convention for user-defined temporary objects
   */
   -- set @sql = '
-    create or replace function dbo._get_all_thing_locale (thing_id int, language_arr text[])
+    create or replace function _get_all_thing_locale (thing_id int, language_arr text[])
     returns table(ody, title, description, language, timestamp, thingid) as
     begin
       return 
