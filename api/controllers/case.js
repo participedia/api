@@ -501,7 +501,7 @@ async function getCase(params, res) {
     if (Number.isNaN(params.articleid)) {
       return null;
     }
-    const articleRow = await db.one(CASES_LOCALE_BY_ID, params);
+    const articleRow = await (await db.any(CASES_LOCALE_BY_ID, params)).map(el => el.row_to_json);
     const article = articleRow.results;
     fixUpURLs(article);
     return article;
