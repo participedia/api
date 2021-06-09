@@ -575,10 +575,9 @@ async function getEditStaticText(params) {
     if (Number.isNaN(params.articleid)) {
       return null;
     }
-    const articleRow = await (await db.any(CASES_LOCALE_BY_ID, params)).map(el => el.row_to_json);
-    const article = articleRow.results;
-    fixUpURLs(article);
-    return article;
+    const articleRows = await (await db.any(CASES_LOCALE_BY_ID, params)).map(el => el.row_to_json);
+    articleRows.forEach(article => fixUpURLs(article));
+    return articleRows;
   } catch (error) {
     // only log actual excaptional results, not just data not found
     if (error.message !== "No data returned from the query.") {
@@ -593,13 +592,13 @@ async function getCaseEditHttp(req, res) {
   let startTime = new Date();
   const params = parseGetParams(req, "case");
   params.view = "edit";
-  const article = await getCaseEdit(params, res);
-  if (!article) {
+  const articles = await getCaseEdit(params, res);
+  if (!articles) {
     res.status(404).render("404");
     return null;
   }
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user);
+  returnByType(res, params, articles, staticText, req.user);
 }
 
 async function getCaseNewHttp(req, res) {
