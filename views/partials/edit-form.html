@@ -48,9 +48,9 @@
           </fieldset>
         {{/if}}
 
-        {{> original-language-alert  article=../article}}
+        {{> original-language-alert article=../article}}
         
-        {{> @partial-block article=../article __=../__ static=../static}}
+        {{> @partial-block  (lookup ../article key) article=this __=../__ static=../static}}
 
       </form>
 

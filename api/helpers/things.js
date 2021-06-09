@@ -93,8 +93,19 @@ const returnByType = async (res, params, article, static, user, results = {}, to
   if (!article) return;
 
   // if article is hidden and user is not admin, return 404
-  if (article.hidden && (!user || (user && !user.isadmin))) {
-    return res.status(404).render("404");
+  if(Array.isArray(article)) {
+    if (article[0].hidden && (!user || (user && !user.isadmin))) {
+      return res.status(404).render("404");
+    }
+    article = article.map(e => {
+      const keyed = {}
+      keyed[e.language] = e;
+      return keyed;
+    });
+  } else {
+    if (article.hidden && (!user || (user && !user.isadmin))) {
+      return res.status(404).render("404");
+    }
   }
 
   switch (returns) {

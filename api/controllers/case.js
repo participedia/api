@@ -577,7 +577,7 @@ async function getEditStaticText(params) {
     }
     const articleRows = await (await db.any(CASES_LOCALE_BY_ID, params)).map(el => el.row_to_json);
     articleRows.forEach(article => fixUpURLs(article));
-    return articleRows;
+  return articleRows;
   } catch (error) {
     // only log actual excaptional results, not just data not found
     if (error.message !== "No data returned from the query.") {
