@@ -97,7 +97,7 @@ const map = {
     });
 
     this.initZoomControls();
-    this.fetchMapResults();
+    // this.fetchMapResults();
     this.setMapHeight();
     window.addEventListener('resize', () => {
       this.setMapHeight();
