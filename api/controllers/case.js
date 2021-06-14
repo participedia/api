@@ -229,7 +229,7 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
   const errors = validateFields(newCase, "case");
-  const isNewCase = !newCase.post_date;
+  const isNewCase = !newCase.article_id;
 
   if (errors.length > 0) {
     return res.status(400).json({

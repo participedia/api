@@ -22,6 +22,11 @@
       >
         <input type="hidden" name="user" value="{{req.user.id}}" />
 
+        {{#if (isEditView req)}}
+        <input type="hidden" name="article_id" value="{{article.id}}" />
+        {{/if}}
+
+
         <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm article}}" />
 
         {{#if req.user.isadmin}}

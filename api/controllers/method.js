@@ -173,7 +173,7 @@ async function postMethodUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = req.body;
   const errors = validateFields(newMethod, "method");
-  const isNewMethod = !newMethod.post_date;
+  const isNewMethod = !newMethod.article_id;
 
   if (errors.length > 0) {
     return res.status(400).json({

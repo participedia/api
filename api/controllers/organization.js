@@ -171,7 +171,7 @@ async function postOrganizationUpdateHttp(req, res) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newOrganization = req.body;
   const errors = validateFields(newOrganization, "organization");
-  const isNewOrganization = !newOrganization.post_date;
+  const isNewOrganization = !newOrganization.article_id;
 
   if (errors.length > 0) {
     return res.status(400).json({
