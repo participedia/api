@@ -17,8 +17,8 @@ select distinct on (localized_texts."language") *,
   latitude,
   longitude,
   scope_of_influence,
-  get_components(id, ${lang}) as has_components,
-  get_object_title(is_component_of, ${lang}) as is_component_of,
+  get_components(id, '') as has_components,
+  get_object_title(is_component_of, '') as is_component_of,
   files,
   links,
   photos,
@@ -37,7 +37,7 @@ select distinct on (localized_texts."language") *,
   COALESCE(targeted_participants, '{}') as targeted_participants,
   COALESCE(method_types, '{}') as method_types,
   COALESCE(tools_techniques_types, '{}') as tools_techniques_types,
-  COALESCE(get_object_title_list(specific_methods_tools_techniques, ${lang}, cases.original_language), '{}') as specific_methods_tools_techniques,
+  COALESCE(get_object_title_list(specific_methods_tools_techniques, '', cases.original_language), '{}') as specific_methods_tools_techniques,
   legality,
   facilitators,
   facilitator_training,
@@ -47,7 +47,7 @@ select distinct on (localized_texts."language") *,
   COALESCE(decision_methods, '{}') as decision_methods,
   COALESCE(if_voting, '{}') as if_voting,
   COALESCE(insights_outcomes, '{}') as insights_outcomes,
-  get_object_title(primary_organizer, ${lang}) as primary_organizer,
+  get_object_title(primary_organizer, '') as primary_organizer,
   COALESCE(organizer_types, '{}') as organizer_types,
   funder,
   COALESCE(funder_types, '{}') as funder_types,
@@ -72,10 +72,10 @@ select distinct on (localized_texts."language") *,
   get_edit_authors(${articleid}) as edit_history,
   hidden,
   completeness,
-  COALESCE(get_object_title_list(collections, ${lang}, cases.original_language), '{}') as collections
+  COALESCE(get_object_title_list(collections, '', cases.original_language), '{}') as collections
 from 
   cases
   INNER JOIN localized_texts on thingid = ${articleid}
 where cases.id = ${articleid}
-ORDER BY localized_texts.language, cases.updated_date DESC
+ORDER BY localized_texts.language, localized_texts.timestamp DESC
 ) AS results ;

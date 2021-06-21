@@ -257,7 +257,7 @@ async function caseUpdateHttp(req, res, entry = undefined) {
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = entry || req.body;
   const errors = validateFields(newCase, "case");
-  const isNewCase = !newCase.post_date;
+  const isNewCase = !newCase.article_id;
 
   if (errors.length > 0) {
     return res.status(400).json({
