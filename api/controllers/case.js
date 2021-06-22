@@ -27,6 +27,7 @@ const {
 const {
   setConditional,
   maybeUpdateUserText,
+  maybeUpdateUserTextLocaleEntry,
   parseGetParams,
   validateUrl,
   isValidDate,
@@ -37,7 +38,8 @@ const {
   createUntranslatedLocalizedRecords,
   getCollections,
   validateFields,
-  requireTranslation
+  parseAndValidateThingPostData,
+  getThingEdit
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -78,34 +80,16 @@ async function postCaseNewHttp(req, res) {
   // create new `case` in db
   try {
     cache.clear();
-    const langErrors = [];
-    const localesToTranslate = [];
-    const localesToNotTranslate = [];
-    let originalLanguageEntry;
+    
 
-    // Get locales to translate
-    for (const entryLocale in req.body) {
-      if (Object.hasOwnProperty.call(req.body, entryLocale)) {
-        const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
-        if(requireTranslation(entry)) {
-          localesToTranslate.push(entryLocale);
-        }
-        if(entryLocale === entry.original_language) {
-          originalLanguageEntry = entry;
-        }
-      }
-    }
-
-    // Validate the rest
-    for (const entryLocale in req.body) {
-      if (Object.hasOwnProperty.call(req.body, entryLocale) && !localesToTranslate.includes(entryLocale)) {
-        const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
-        const errors = validateFields(entry, "case");
-        langErrors.push({locale: entryLocale, errors});
-        localesToNotTranslate.push(entry);
-      }
-    }
-    const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+    let {
+      hasErrors,
+      langErrors,
+      localesToTranslate,
+      localesToNotTranslate,
+      originalLanguageEntry
+    } = parseAndValidateThingPostData(req.body, "case");
+    
     if (hasErrors) {
       return res.status(400).json({
         OK: false,
@@ -126,17 +110,30 @@ async function postCaseNewHttp(req, res) {
     });
 
     req.params.thingid = thing.thingid;
-    await caseUpdateHttp(req, res, originalLanguageEntry);
+    const {article, errors } = await caseUpdate(req, res, originalLanguageEntry);
+    if(errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
     let localizedData = {
-      body: body,
-      description: description,
+      body,
+      description,
       language: original_language,
-      title: title
+      title
     };
 
     await createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
-    await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
-    
+    if(localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+    }
+    res.status(200).json({
+      OK: true,
+      article,
+    });
+    refreshSearch();
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
@@ -283,7 +280,7 @@ async function caseUpdateHttp(req, res, entry = undefined) {
     updatedText,
     author,
     oldArticle: oldCase,
-  } = await maybeUpdateUserText(req, res, "case");
+  } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
 
   //get current date when user.isAdmin is false;
@@ -339,16 +336,94 @@ async function caseUpdateHttp(req, res, entry = undefined) {
   }
 }
 
+async function caseUpdate(req, res, entry = undefined) {
+  // cache.clear();
+  const params = parseGetParams(req, "case");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
+  const newCase = entry || req.body;
+  const errors = validateFields(newCase, "case");
+  const isNewCase = !newCase.article_id;
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      OK: false,
+      errors: errors,
+    });
+  }
+
+  newCase.links = verifyOrUpdateUrl(newCase.links || []);
+
+  // if this is a new case, we don't have a post_date yet, so we set it here
+  if (isNewCase) {
+    newCase.post_date = Date.now();
+  }
+
+  // if this is a new case, we don't have a updated_date yet, so we set it here
+  if (isNewCase) {
+    newCase.updated_date = Date.now();
+  }
+
+  // save any changes to the user-submitted text
+  const {
+    updatedText,
+    author,
+    oldArticle: oldCase,
+  } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
+  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+
+  //get current date when user.isAdmin is false;
+  updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
+
+  if (!er.hasErrors()) {
+    if (updatedText) {
+      await db.tx("update-case", async t => {
+        if(!isNewCase) {
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        }
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_CASE, updatedCase);
+      });
+      //if this is a new case, set creator id to userid and isAdmin
+      if (user.isadmin) {
+        const creator = {
+          user_id: newCase.creator ? newCase.creator : params.userid,
+          thingid: params.articleid,
+        };
+        const updatedBy = {
+          user_id: newCase.last_updated_by
+            ? newCase.last_updated_by
+            : params.userid,
+          thingid: params.articleid,
+          updated_date: newCase.updated_date || "now",
+        };
+        await db.tx("update-case", async t => {
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+        });
+      }
+    } else {
+      await db.tx("update-case", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_CASE, updatedCase);
+      });
+    }
+    // the client expects this request to respond with json
+    // save successful response
+    const freshArticle = await getCase(params, res);
+    return {article: freshArticle};
+  } else {
+    logError(`400 with errors: ${er.errors.join(", ")}`);
+    return {errors: er.errors};
+  }
+}
+
 // Only changes to title, description, and/or body trigger a new author and version
 
 async function postCaseUpdateHttp(req, res) {
   // cache.clear();
   const params = parseGetParams(req, "case");
-  // const user = req.user;
   const { articleid } = params;
-  // const newCase = entry || req.body;
-  // const errors = validateFields(newCase, "case");
-  // const isNewCase = !newCase.post_date;
   const langErrors = [];
   const localeEntries = [];
   let originalLanguageEntry;
@@ -388,86 +463,6 @@ async function postCaseUpdateHttp(req, res) {
     article: freshArticle,
   });
   refreshSearch();
-  
-
-  // if (errors.length > 0) {
-  //   return res.status(400).json({
-  //     OK: false,
-  //     errors: errors,
-  //   });
-  // }
-
-  // newCase.links = verifyOrUpdateUrl(newCase.links || []);
-
-  // // if this is a new case, we don't have a post_date yet, so we set it here
-  // if (isNewCase) {
-  //   newCase.post_date = Date.now();
-  // }
-
-  // // if this is a new case, we don't have a updated_date yet, so we set it here
-  // if (isNewCase) {
-  //   newCase.updated_date = Date.now();
-  // }
-
-  // // save any changes to the user-submitted text
-  // const {
-  //   updatedText,
-  //   author,
-  //   oldArticle: oldCase,
-  // } = await maybeUpdateUserText(req, res, "case");
-  // const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
-
-  // //get current date when user.isAdmin is false;
-  // updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-
-  // if (!er.hasErrors()) {
-  //   if (updatedText) {
-  //     await db.tx("update-case", async t => {
-  //       if(!isNewCase) {
-  //         await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-  //       }
-  //       await t.none(INSERT_AUTHOR, author);
-  //       await t.none(UPDATE_CASE, updatedCase);
-  //     });
-  //     //if this is a new case, set creator id to userid and isAdmin
-  //     if (user.isadmin) {
-  //       const creator = {
-  //         user_id: newCase.creator ? newCase.creator : params.userid,
-  //         thingid: params.articleid,
-  //       };
-  //       const updatedBy = {
-  //         user_id: newCase.last_updated_by
-  //           ? newCase.last_updated_by
-  //           : params.userid,
-  //         thingid: params.articleid,
-  //         updated_date: newCase.updated_date || "now",
-  //       };
-  //       await db.tx("update-case", async t => {
-  //         await t.none(UPDATE_AUTHOR_FIRST, creator);
-  //         await t.none(UPDATE_AUTHOR_LAST, updatedBy);
-  //       });
-  //     }
-  //   } else {
-  //     await db.tx("update-case", async t => {
-  //       await t.none(INSERT_AUTHOR, author);
-  //       await t.none(UPDATE_CASE, updatedCase);
-  //     });
-  //   }
-  //   // the client expects this request to respond with json
-  //   // save successful response
-  //   const freshArticle = await getCase(params, res);
-  //   res.status(200).json({
-  //     OK: true,
-  //     article: freshArticle,
-  //   });
-  //   refreshSearch();
-  // } else {
-  //   logError(`400 with errors: ${er.errors.join(", ")}`);
-  //   res.status(400).json({
-  //     OK: false,
-  //     errors: er.errors,
-  //   });
-  // }
 }
 
 /**
@@ -570,29 +565,29 @@ async function getEditStaticText(params) {
  *
  */
 
- async function getCaseEdit(params, res) {
-  try {
-    if (Number.isNaN(params.articleid)) {
-      return null;
-    }
-    const articleRows = await (await db.any(CASES_LOCALE_BY_ID, params)).map(el => el.row_to_json);
-    articleRows.forEach(article => fixUpURLs(article));
-  return articleRows;
-  } catch (error) {
-    // only log actual excaptional results, not just data not found
-    if (error.message !== "No data returned from the query.") {
-      logError(error);
-    }
-    // if no entry is found, render the 404 page
-    return null;
-  }
-}
+//  async function getCaseEdit(params, res) {
+//   try {
+//     if (Number.isNaN(params.articleid)) {
+//       return null;
+//     }
+//     const articleRows = await (await db.any(CASES_LOCALE_BY_ID, params)).map(el => el.row_to_json);
+//     articleRows.forEach(article => fixUpURLs(article));
+//   return articleRows;
+//   } catch (error) {
+//     // only log actual excaptional results, not just data not found
+//     if (error.message !== "No data returned from the query.") {
+//       logError(error);
+//     }
+//     // if no entry is found, render the 404 page
+//     return null;
+//   }
+// }
 
 async function getCaseEditHttp(req, res) {
   let startTime = new Date();
   const params = parseGetParams(req, "case");
   params.view = "edit";
-  const articles = await getCaseEdit(params, res);
+  const articles = await getThingEdit(params, CASES_LOCALE_BY_ID, res);
   if (!articles) {
     res.status(404).render("404");
     return null;
