@@ -1,65 +1,67 @@
 {{#> edit-form}}
-  <fieldset>
-    <h2 class="fieldset-header">{{t "overview_sectionlabel"}}</h2>
-    
-    {{> quick-submit-form-header }}
 
-    {{> guidelines-info-text }}
+<fieldset>
+  <h2 class="fieldset-header">{{t "overview_sectionlabel"}}</h2>
 
-    {{> article-edit-text name="title" is_required=true quick-submit=true}}
-    {{> article-edit-select name="facetoface_online_or_both" quick-submit=true}}
-  </fieldset>
+  {{> quick-submit-form-header }}
 
-  <fieldset>
-    <h2 class="fieldset-header">{{t "type_purpose_sectionlabel"}}</h2>
+  {{> guidelines-info-text }}
 
-    {{> edit-multi-select name="method_types" quick-submit=true max=3 ranked=true}}
-    {{> edit-multi-select name="purpose_method" max=3 ranked=true}}
-    {{> article-edit-select name="public_spectrum"}}
-  </fieldset>
+  {{> article-edit-text name="title" is_required=true quick-submit=true}}
+  {{> article-edit-select name="facetoface_online_or_both" quick-submit=true}}
+</fieldset>
 
-  <fieldset>
-    <h2 class="fieldset-header">{{t "description_narrative_sectionlabel"}}</h2>
+<fieldset>
+  <h2 class="fieldset-header">{{t "type_purpose_sectionlabel"}}</h2>
 
-    {{> edit-textarea name="description" quick-submit=true charLimit=280}}
-    {{> edit-richtext
-      name="body"
-      value=(getvalue article "body")
-      placeholderText=(placeholder article "body")
-    }}
-  </fieldset>
+  {{> edit-multi-select locale=locale name="method_types" quick-submit=true max=3 ranked=true}}
+  {{> edit-multi-select locale=locale name="purpose_method" max=3 ranked=true}}
+  {{> article-edit-select name="public_spectrum"}}
+</fieldset>
 
-  <fieldset>
-    <h2 class="fieldset-header">{{t "media_sectionlabel"}}</h2>
+<fieldset>
+  <h2 class="fieldset-header">{{t "description_narrative_sectionlabel"}}</h2>
 
-    {{> edit-media name="files" quick-submit=true}}
-    {{> edit-link-set name="links" quick-submit=true}}
-    {{> edit-media name="photos" type="image" quick-submit=true}}
-    {{> edit-link-set name="videos" quick-submit=true}}
-    {{> edit-link-set name="audio" quick-submit=true}}
-  </fieldset>
+  {{> edit-textarea name="description" quick-submit=true charLimit=280}}
+  {{> edit-richtext
+  name="body"
+  value=(getvalue article "body")
+  placeholderText=(placeholder article "body")
+  }}
+</fieldset>
 
-  <fieldset class="fullonly">
-    <h2 class="fieldset-header">{{t "participants_sectionlabel"}}</h2>
-    {{> article-edit-select name="open_limited" }}
-    {{> article-edit-select name="recruitment_method"}}
-    {{> edit-multi-select name="number_of_participants" max=3 ranked=true }}
-  </fieldset>
+<fieldset>
+  <h2 class="fieldset-header">{{t "media_sectionlabel"}}</h2>
 
-   <fieldset class="fullonly">
-    <h2 class="fieldset-header">{{t "process_sectionlabel"}}</h2>
+  {{> edit-media name="files" quick-submit=true}}
+  {{> edit-link-set name="links" quick-submit=true}}
+  {{> edit-media name="photos" type="image" quick-submit=true}}
+  {{> edit-link-set name="videos" quick-submit=true}}
+  {{> edit-link-set name="audio" quick-submit=true}}
+</fieldset>
 
-    {{> edit-multi-select name="participants_interactions" max=3 ranked=true }}
-    {{> article-edit-select name="facilitators" }}
-    {{> edit-multi-select name="decision_methods" max=3 ranked=true }}
-    {{> edit-multi-select name="if_voting" max=3 ranked=true }}
-  </fieldset>
+<fieldset class="fullonly">
+  <h2 class="fieldset-header">{{t "participants_sectionlabel"}}</h2>
+  {{> article-edit-select name="open_limited" }}
+  {{> article-edit-select name="recruitment_method"}}
+  {{> edit-multi-select locale=locale name="number_of_participants" max=3 ranked=true }}
+</fieldset>
 
-  <fieldset class="fullonly">
-    <h2 class="fieldset-header">{{t "suitable_for_sectionlabel"}}</h2>
+<fieldset class="fullonly">
+  <h2 class="fieldset-header">{{t "process_sectionlabel"}}</h2>
 
-    {{> edit-multi-select name="scope_of_influence" max=3}}
-    {{> article-edit-select name="level_polarization" }}
-    {{> article-edit-select name="level_complexity" }}
-  </fieldset>
+  {{> edit-multi-select locale=locale name="participants_interactions" max=3 ranked=true }}
+  {{> article-edit-select name="facilitators" }}
+  {{> edit-multi-select locale=locale name="decision_methods" max=3 ranked=true }}
+  {{> edit-multi-select locale=locale name="if_voting" max=3 ranked=true }}
+</fieldset>
+
+<fieldset class="fullonly">
+  <h2 class="fieldset-header">{{t "suitable_for_sectionlabel"}}</h2>
+
+  {{> edit-multi-select locale=locale name="scope_of_influence" max=3}}
+  {{> article-edit-select name="level_polarization" }}
+  {{> article-edit-select name="level_complexity" }}
+</fieldset>
+
 {{/edit-form}}

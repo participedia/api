@@ -9,6 +9,7 @@ const {
   as,
   CREATE_ORGANIZATION,
   ORGANIZATION_BY_ID,
+  ORGANIZATION_LOCALE_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_ORGANIZATION,
@@ -29,8 +30,12 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
+  createUntranslatedLocalizedRecords,
   getCollections,
-  validateFields
+  validateFields,
+  parseAndValidateThingPostData,
+  maybeUpdateUserTextLocaleEntry,
+  getThingEdit
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -84,20 +89,39 @@ async function postOrganizationNewHttp(req, res) {
   // create new `organization` in db
   try {
     cache.clear();
-    let title = req.body.title;
-    let body = req.body.body || req.body.summary || "";
-    let description = req.body.description;
-    let original_language = req.body.original_language || "en";
-    const errors = validateFields(req.body, "organization");
+    // let title = req.body.title;
+    // let body = req.body.body || req.body.summary || "";
+    // let description = req.body.description;
+    // let original_language = req.body.original_language || "en";
+    // const errors = validateFields(req.body, "organization");
 
-    if (errors.length > 0) {
+    // if (errors.length > 0) {
+    //   return res.status(400).json({
+    //     OK: false,
+    //     errors: errors,  
+    //   });
+    // }
+    let {
+      hasErrors,
+      langErrors,
+      localesToTranslate,
+      localesToNotTranslate,
+      originalLanguageEntry
+    } = parseAndValidateThingPostData(req.body, "organization");
+
+    if (hasErrors) {
       return res.status(400).json({
         OK: false,
-        errors: errors,  
+        errors: langErrors,  
       });
     }
 
-    const user_id = req.user.id;
+    let title = originalLanguageEntry.title;
+    let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    let description = originalLanguageEntry.description;
+    let original_language = originalLanguageEntry.original_language || "en";
+
+    // const user_id = req.user.id;
     const thing = await db.one(CREATE_ORGANIZATION, {
       title,
       body,
@@ -105,14 +129,30 @@ async function postOrganizationNewHttp(req, res) {
       original_language,
     });
     req.params.thingid = thing.thingid;
-    await postOrganizationUpdateHttp(req, res);
+    // await postOrganizationUpdateHttp(req, res);
+    const {article, errors } = await organizationUpdate(req, res, originalLanguageEntry);
+    if(errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
+    
     let localizedData = {
       body: body,
       description: description,
       language: original_language,
       title: title
     };
-    createLocalizedRecord(localizedData, thing.thingid);
+    createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
+    if(localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+    }
+    res.status(200).json({
+      OK: true,
+      article,
+    });
   } catch (error) {
     logError(error);
     return res.status(400).json({ OK: false, error: error });
@@ -167,9 +207,138 @@ async function getOrganization(params, res) {
 async function postOrganizationUpdateHttp(req, res) {
   cache.clear();
   const params = parseGetParams(req, "organization");
+  // const user = req.user;
+  const { articleid } = params;
+  const langErrors = [];
+  const localeEntries = [];
+  let originalLanguageEntry;
+
+  // if (errors.length > 0) {
+  //   return res.status(400).json({
+  //     OK: false,
+  //     errors: errors,
+  //   });
+  // }
+
+  for (const entryLocale in req.body) {
+    if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+      const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+      const errors = validateFields(entry, "organization");
+      langErrors.push({locale: entryLocale, errors});
+    }
+  }
+  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+
+  if (hasErrors) {
+    return res.status(400).json({
+      OK: false,
+      errors: langErrors,  
+    });
+  }
+
+  for (const entryLocale in req.body) {
+    if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+      const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+      localeEntries.push(entry);
+      if(entryLocale === entry.original_language) {
+        originalLanguageEntry = entry;
+      }
+    }
+  }
+
+  await organizationUpdate(req, res, originalLanguageEntry);
+
+  await createUntranslatedLocalizedRecords(localeEntries, articleid);
+  const freshArticle = await getOrganization(params, res);
+  res.status(200).json({
+    OK: true,
+    article: freshArticle,
+  });
+  refreshSearch();
+
+  // newOrganization.links = verifyOrUpdateUrl(newOrganization.links);
+
+  // // if this is a new organization, we don't have a post_date yet, so we set it here
+  // if (isNewOrganization) {
+  //   newOrganization.post_date = Date.now();
+  // }
+
+  // // if this is a new method, we don't have a updated_date yet, so we set it here
+  // if (isNewOrganization) {
+  //   newOrganization.updated_date = Date.now();
+  // }
+
+  // const {
+  //   updatedText,
+  //   author,
+  //   oldArticle: oldOrganization,
+  // } = await maybeUpdateUserText(req, res, "organization");
+  // const [updatedOrganization, er] = getUpdatedOrganization(
+  //   user,
+  //   params,
+  //   newOrganization,
+  //   oldOrganization
+  // );
+  // //get current date when user.isAdmin is false;
+  // updatedOrganization.updated_date = !user.isadmin
+  //   ? "now"
+  //   : updatedOrganization.updated_date;
+  // if (!er.hasErrors()) {
+  //   if (updatedText) {
+  //     await db.tx("update-organization", async t => {
+  //       if(!isNewOrganization) {
+  //         await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+  //       }
+  //       await t.none(INSERT_AUTHOR, author);
+  //       await t.none(UPDATE_ORGANIZATION, updatedOrganization);
+  //     });
+  //     //if this is a new organization, set creator id to userid and isAdmin
+  //     if (user.isadmin) {
+  //       const creator = {
+  //         user_id: newOrganization.creator
+  //           ? newOrganization.creator
+  //           : params.userid,
+  //         thingid: params.articleid,
+  //       };
+  //       const updatedBy = {
+  //         user_id: newOrganization.last_updated_by
+  //           ? newOrganization.last_updated_by
+  //           : params.userid,
+  //         thingid: params.articleid,
+  //         updated_date: newOrganization.updated_date || "now",
+  //       };
+  //       await db.tx("update-organization", async t => {
+  //         await t.none(UPDATE_AUTHOR_FIRST, creator);
+  //         await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+  //       });
+  //     }
+  //   } else {
+  //     await db.tx("update-organization", async t => {
+  //       await t.none(INSERT_AUTHOR, author);
+  //       await t.none(UPDATE_ORGANIZATION, updatedOrganization);
+  //     });
+  //   }
+  //   const freshArticle = await getOrganization(params, res);
+  //   res.status(200).json({
+  //     OK: true,
+  //     article: freshArticle,
+  //   });
+  //   refreshSearch();
+  // } else {
+  //   logError(`400 with errors: ${er.errors.join(", ")}`);
+  //   res.status(400).json({
+  //     OK: false,
+  //     errors: er.errors,
+  //   });
+  // }
+}
+
+async function organizationUpdate(req, res, entry = undefined){
+
+  const params = parseGetParams(req, "organization");
   const user = req.user;
-  const { articleid, type, view, userid, lang, returns } = params;
-  const newOrganization = req.body;
+  const { articlesid, type, view, userid, lang, returns } = params;
+  const newOrganization = entry || req.body;
   const errors = validateFields(newOrganization, "organization");
   const isNewOrganization = !newOrganization.article_id;
 
@@ -180,7 +349,8 @@ async function postOrganizationUpdateHttp(req, res) {
     });
   }
 
-  newOrganization.links = verifyOrUpdateUrl(newOrganization.links);
+  // Temp fix for newOrganization.links undefined
+  newOrganization.links = verifyOrUpdateUrl(newOrganization.links || []);
 
   // if this is a new organization, we don't have a post_date yet, so we set it here
   if (isNewOrganization) {
@@ -196,7 +366,7 @@ async function postOrganizationUpdateHttp(req, res) {
     updatedText,
     author,
     oldArticle: oldOrganization,
-  } = await maybeUpdateUserText(req, res, "organization");
+  } = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization"); //maybeUpdateUserText(req, res, "organization");
   const [updatedOrganization, er] = getUpdatedOrganization(
     user,
     params,
@@ -243,17 +413,19 @@ async function postOrganizationUpdateHttp(req, res) {
       });
     }
     const freshArticle = await getOrganization(params, res);
-    res.status(200).json({
-      OK: true,
-      article: freshArticle,
-    });
-    refreshSearch();
+    return {article: freshArticle};
+    // res.status(200).json({
+    //   OK: true,
+    //   article: freshArticle,
+    // });
+    // refreshSearch();
   } else {
     logError(`400 with errors: ${er.errors.join(", ")}`);
-    res.status(400).json({
-      OK: false,
-      errors: er.errors,
-    });
+    // res.status(400).json({
+    //   OK: false,
+    //   errors: er.errors,
+    // });
+    return {errors: er.errors};
   }
 }
 
@@ -324,13 +496,13 @@ async function getOrganizationHttp(req, res) {
 async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
-  const article = await getOrganization(params, res);
-  if (!article) {
+  const articles = await getThingEdit(params, ORGANIZATION_LOCALE_BY_ID, res);
+  if (!articles) {
     res.status(404).render("404");
     return null;
   }
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user);
+  returnByType(res, params, articles, staticText, req.user);
 }
 
 async function getOrganizationNewHttp(req, res) {

@@ -10,7 +10,7 @@
   <fieldset>
     <h2 class="fieldset-header">{{t "type_purpose_sectionlabel"}}</h2>
 
-    {{> edit-multi-select name="type_tool" quick-submit=true max=3}}
+    {{> edit-multi-select locale=locale name="type_tool" quick-submit=true max=3}}
   </fieldset>
 
   <fieldset>
@@ -43,7 +43,7 @@
    <fieldset class="fullonly">
     <h2 class="fieldset-header">{{t "process_sectionlabel"}}</h2>
 
-    {{> edit-multi-select name="types_interaction" }}
+    {{> edit-multi-select locale=locale name="types_interaction" }}
     {{> article-edit-select name="facilitation" }}
   </fieldset>
 {{/edit-form}}

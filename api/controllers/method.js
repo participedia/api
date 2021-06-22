@@ -9,6 +9,7 @@ const {
   as,
   CREATE_METHOD,
   METHOD_BY_ID,
+  METHODS_LOCALE_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_METHOD,
@@ -28,8 +29,12 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
+  createUntranslatedLocalizedRecords,
   getCollections,
-  validateFields
+  validateFields,
+  parseAndValidateThingPostData,
+  maybeUpdateUserTextLocaleEntry,
+  getThingEdit
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -62,7 +67,7 @@ async function getEditStaticText(params) {
  * @api {post} /method/new Create new method
  * @apiGroup Methods
  * @apiVersion 0.1.0
- * @apiName newMethod
+ * @apiName ll
  *
  * @apiSuccess {Boolean} OK true if call was successful
  * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
@@ -86,35 +91,62 @@ async function postMethodNewHttp(req, res) {
   // create new `method` in db
   try {
     cache.clear();
-    let title = req.body.title;
-    let body = req.body.body || req.body.summary || "";
-    let description = req.body.description;
-    let original_language = req.body.original_language || "en";
-    const errors = validateFields(req.body, "method");
+    // let title = req.body.title;
+    // let body = req.body.body || req.body.summary || "";
+    // let description = req.body.description;
+    // let original_language = req.body.original_language || "en";
+    // const errors = validateFields(req.body, "method");
 
-    if (errors.length > 0) {
+    let {
+      hasErrors,
+      langErrors,
+      localesToTranslate,
+      localesToNotTranslate,
+      originalLanguageEntry
+    } = parseAndValidateThingPostData(req.body, "case");
+
+    if (hasErrors) {
       return res.status(400).json({
         OK: false,
-        errors: errors,  
+        errors: langErrors,  
       });
     }
 
-    const user_id = req.user.id;
+    let title = originalLanguageEntry.title;
+    let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    let description = originalLanguageEntry.description;
+    let original_language = originalLanguageEntry.original_language || "en";
+
     const thing = await db.one(CREATE_METHOD, {
       title,
       body,
       description,
       original_language,
     });
+    
     req.params.thingid = thing.thingid;
-    await postMethodUpdateHttp(req, res);
+    const {article, errors } = await methodUpdate(req, res, originalLanguageEntry);
+    if(errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
     let localizedData = {
       body: body,
       description: description,
       language: original_language,
       title: title
     };
-    createLocalizedRecord(localizedData, thing.thingid);
+    await createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
+    if(localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+    }
+    res.status(200).json({
+      OK: true,
+      article,
+    });
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
@@ -169,9 +201,138 @@ async function getMethod(params, res) {
 async function postMethodUpdateHttp(req, res) {
   cache.clear();
   const params = parseGetParams(req, "method");
+  // const user = req.user;
+  const { articleid } = params;
+  const langErrors = [];
+  const localeEntries = [];
+  let originalLanguageEntry;
+
+  // if (errors.length > 0) {
+  //   return res.status(400).json({
+  //     OK: false,
+  //     errors: errors,
+  //   });
+  // }
+
+  for (const entryLocale in req.body) {
+    if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+      const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+      const errors = validateFields(entry, "method");
+      langErrors.push({locale: entryLocale, errors});
+    }
+  }
+  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+
+  if (hasErrors) {
+    return res.status(400).json({
+      OK: false,
+      errors: langErrors,  
+    });
+  }
+
+  for (const entryLocale in req.body) {
+    if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+      const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+      localeEntries.push(entry);
+      if(entryLocale === entry.original_language) {
+        originalLanguageEntry = entry;
+      }
+    }
+  }
+
+  await methodUpdate(req, res, originalLanguageEntry);
+
+  await createUntranslatedLocalizedRecords(localeEntries, articleid);
+  const freshArticle = await getMethod(params, res);
+  res.status(200).json({
+    OK: true,
+    article: freshArticle,
+  });
+  refreshSearch();
+  // if this is a new method, we don't have a post_date yet, so we set it here
+  // if (isNewMethod) {
+  //   newMethod.post_date = Date.now();
+  // }
+
+  // // if this is a new method, we don't have a updated_date yet, so we set it here
+  // if (isNewMethod) {
+  //   newMethod.updated_date = Date.now();
+  // }
+
+  // // save any changes to the user-submitted text
+  // const {
+  //   updatedText,
+  //   author,
+  //   oldArticle: oldMethod,
+  // } = await maybeUpdateUserText(req, res, "method");
+
+  // const [updatedMethod, er] = getUpdatedMethod(
+  //   user,
+  //   params,
+  //   newMethod,
+  //   oldMethod
+  // );
+
+  // //get current date when user.isAdmin is false;
+  // updatedMethod.updated_date = !user.isadmin
+  //   ? "now"
+  //   : updatedMethod.updated_date;
+
+  // if (!er.hasErrors()) {
+  //   if (updatedText) {
+  //     await db.tx("update-method", async t => {
+  //       if(!isNewMethod) {
+  //         await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+  //       }
+  //       await t.none(INSERT_AUTHOR, author);
+  //       await t.none(UPDATE_METHOD, updatedMethod);
+  //     });
+  //     //if this is a new method, set creator id to userid and isAdmin
+  //     if (user.isadmin) {
+  //       const creator = {
+  //         user_id: newMethod.creator ? newMethod.creator : params.userid,
+  //         thingid: params.articleid,
+  //       };
+  //       const updatedBy = {
+  //         user_id: newMethod.last_updated_by
+  //           ? newMethod.last_updated_by
+  //           : params.userid,
+  //         thingid: params.articleid,
+  //         updated_date: newMethod.updated_date || "now",
+  //       };
+  //       await db.tx("update-method", async t => {
+  //         await t.none(UPDATE_AUTHOR_FIRST, creator);
+  //         await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+  //       });
+  //     }
+  //   } else {
+  //     await db.tx("update-method", async t => {
+  //       await t.none(INSERT_AUTHOR, author);
+  //       await t.none(UPDATE_METHOD, updatedMethod);
+  //     });
+  //   }
+  //   // the client expects this request to respond with json
+  //   // save successful response
+  //   const freshArticle = await getMethod(params, res);
+  //   res.status(200).json({
+  //     OK: true,
+  //     article: freshArticle,
+  //   });
+  //   refreshSearch();
+  // } else {
+  //   logError(er);
+  //   res.status(400).json({
+  //     OK: false,
+  //     errors: er.errors,
+  //   });
+  // }
+}
+
+async function methodUpdateHttp(req, res, entry = undefined) {
+  const params = parseGetParams(req, "method");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
-  const newMethod = req.body;
+  const newMethod = entry || req.body;
   const errors = validateFields(newMethod, "method");
   const isNewMethod = !newMethod.article_id;
 
@@ -182,7 +343,7 @@ async function postMethodUpdateHttp(req, res) {
     });
   }
 
-  newMethod.links = verifyOrUpdateUrl(newMethod.links);
+  newMethod.links = verifyOrUpdateUrl(newMethod.links || []);
 
   // if this is a new method, we don't have a post_date yet, so we set it here
   if (isNewMethod) {
@@ -263,6 +424,96 @@ async function postMethodUpdateHttp(req, res) {
   }
 }
 
+async function methodUpdate(req, res, entry = undefined) {
+  const params = parseGetParams(req, "method");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
+  const newMethod = entry || req.body;
+  const errors = validateFields(newMethod, "method");
+  const isNewMethod = !newMethod.article_id;
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      OK: false,
+      errors: errors,
+    });
+  }
+
+  newMethod.links = verifyOrUpdateUrl(newMethod.links || []);
+
+  // if this is a new method, we don't have a post_date yet, so we set it here
+  if (isNewMethod) {
+    newMethod.post_date = Date.now();
+  }
+
+  // if this is a new method, we don't have a updated_date yet, so we set it here
+  if (isNewMethod) {
+    newMethod.updated_date = Date.now();
+  }
+
+  // save any changes to the user-submitted text
+  const {
+    updatedText,
+    author,
+    oldArticle: oldMethod,
+  } = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method");
+
+  const [updatedMethod, er] = getUpdatedMethod(
+    user,
+    params,
+    newMethod,
+    oldMethod
+  );
+
+  //get current date when user.isAdmin is false;
+  updatedMethod.updated_date = !user.isadmin
+    ? "now"
+    : updatedMethod.updated_date;
+
+  if (!er.hasErrors()) {
+    if (updatedText) {
+      await db.tx("update-method", async t => {
+        if(!isNewMethod) {
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        }
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_METHOD, updatedMethod);
+      });
+      //if this is a new method, set creator id to userid and isAdmin
+      if (user.isadmin) {
+        const creator = {
+          user_id: newMethod.creator ? newMethod.creator : params.userid,
+          thingid: params.articleid,
+        };
+        const updatedBy = {
+          user_id: newMethod.last_updated_by
+            ? newMethod.last_updated_by
+            : params.userid,
+          thingid: params.articleid,
+          updated_date: newMethod.updated_date || "now",
+        };
+        await db.tx("update-method", async t => {
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+        });
+      }
+    } else {
+      await db.tx("update-method", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_METHOD, updatedMethod);
+      });
+    }
+    // the client expects this request to respond with json
+    // save successful response
+    const freshArticle = await getMethod(params, res);
+    return {article: freshArticle};
+  } else {
+    logError(er);
+    return {errors: er.errors};
+  }
+}
+
+
 function getUpdatedMethod(user, params, newMethod, oldMethod) {
   const updatedMethod = Object.assign({}, oldMethod);
   const er = new ErrorReporter();
@@ -323,13 +574,13 @@ async function getMethodHttp(req, res) {
 async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
-  const article = await getMethod(params, res);
-  if (!article) {
+  const articles = await getThingEdit(params, METHODS_LOCALE_BY_ID, res);
+  if (!articles) {
     res.status(404).render("404");
     return null;
   }
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user);
+  returnByType(res, params, articles, staticText, req.user);
 }
 
 async function getMethodNewHttp(req, res) {

@@ -88,13 +88,31 @@ const placeHolderPhotos = article => {
 };
 
 const returnByType = async (res, params, article, static, user, results = {}, total = null, pages = null, numArticlesByType = null) => {
-  const { returns, type, view } = params;
+  const { returns, type, view, articleid} = params;
+  const articles = {};
 
   if (!article) return;
 
   // if article is hidden and user is not admin, return 404
-  if (article.hidden && (!user || (user && !user.isadmin))) {
-    return res.status(404).render("404");
+  if(Array.isArray(article)) {
+    if (article[0] && article[0].hidden && (!user || (user && !user.isadmin))|| article.length === 0) {
+      return res.status(404).render("404");
+    }
+    article.forEach(e => {
+      articles[e.language] = e;
+    });
+    article = articles;
+  } else {
+    if (article.hidden && (!user || (user && !user.isadmin))) {
+      return res.status(404).render("404");
+    }
+    if(!articleid) {
+      // A new article
+      SUPPORTED_LANGUAGES.forEach(lang => {
+        articles[lang.twoLetterCode] = article;
+      });
+      article = articles;
+    }
   }
 
   switch (returns) {
@@ -189,7 +207,14 @@ async function maybeUpdateUserText(req, res, type) {
   // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
   // if none of the user-submitted text fields have changed, don't add a record
   // to localized_text or
-  const newArticle = req.body;
+    return maybeUpdateUserTextLocaleEntry(req.body, req, res, type);
+}
+
+async function maybeUpdateUserTextLocaleEntry(body, req, res, type) {
+  // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
+  // if none of the user-submitted text fields have changed, don't add a record
+  // to localized_text or
+  const newArticle = body;
   const params = parseGetParams(req, type);
   const oldArticle = (await db.one(queries[type], params)).results;
   if (!oldArticle) {
@@ -426,18 +451,48 @@ const validateFields = (entry, entryName) => {
   return errors;
 };
 
-async function createLocalizedRecord(data, thingid) {
-  var records = [];
-  for (var i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+const requireTranslation = (entry, entryName) => {
+  let links = entry.links;
+  const title = entry.title;
+  const startDate = entry.start_date;
+  const endDate = entry.end_date;
+  let linkErrors = 0;
+  let errors = [];
+
+  // validate url
+  if (links) {
+    for (let key in links) {
+      let url = links[key].url;
+      if (url.length > 0) {
+        links = verifyOrUpdateUrl(links);
+        const isUrlValid = validateUrl(links);
+        if (!isUrlValid) {
+          linkErrors++;
+        }
+      }
+    }
+    if (linkErrors > 0) {
+      errors.push("Invalid link url.");
+    }
+  }
+  const requiresTranslation = !title;
+  return requiresTranslation;
+};
+
+async function createLocalizedRecord(data, thingid, localesToTranslate = undefined) {
+  let records = [];
+  let languagesToTranslate = localesToTranslate || SUPPORTED_LANGUAGES || [];
+  for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     const language = SUPPORTED_LANGUAGES[i];
 
-    if (language.twoLetterCode !== data.language) {
+    if (languagesToTranslate.includes(language.twoLetterCode) && language.twoLetterCode !== data.language) {
       const item = {
         body: '',
         title: '',
         description: '',
         language: language.twoLetterCode,
         thingid: thingid,
+        // TODO: Admin check here
         timestamp: 'now'
       };
 
@@ -468,6 +523,51 @@ async function createLocalizedRecord(data, thingid) {
     });
 }
 
+async function createUntranslatedLocalizedRecords(data, thingid) {
+  let records = [];
+
+  if(!Array.isArray(data)) return;
+  const supportedTwoLetterCodes = SUPPORTED_LANGUAGES.map(lang => lang.twoLetterCode);
+
+  for (let i = 0; i < data.length; i++) {
+    const entry = data[i];
+    if(supportedTwoLetterCodes.includes(entry.language)) {
+      const item = {
+        body: '',
+        title: '',
+        description: '',
+        language: entry.language,
+        thingid: thingid,
+        // TODO: Admin check here
+        timestamp: 'now'
+      };
+
+      if (entry.body) {
+        item.body = entry.body;
+      }
+
+      if (entry.title) {
+        item.title = entry.title;
+      }
+
+      if (entry.description) {
+        item.description = entry.description;
+      }
+      
+      records.push(item);
+    }
+  }
+  const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid', 'timestamp'], 'localized_texts');
+
+  db.none(insert)
+  .then(function(data) {
+    console.log(data);
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+}
+
 async function translateText(data, targetLanguage) {
   // The text to translate
   let allTranslation = '';
@@ -478,7 +578,7 @@ async function translateText(data, targetLanguage) {
   if (length > 5000) {
     // Get text chunks
     let textParts = data.match(/.{1,5000}/g);
-    for(var text of textParts){
+    for(let text of textParts){
       let [translation] = await translate
         .translate(text, target)
         .catch(function(error) {
@@ -496,6 +596,63 @@ async function translateText(data, targetLanguage) {
   return allTranslation;
 }
 
+function parseAndValidateThingPostData(body, entryName) {
+  const langErrors = [];
+    const localesToTranslate = [];
+    const localesToNotTranslate = [];
+    let originalLanguageEntry;
+
+    // Get locales to translate
+    for (const entryLocale in body) {
+      if (Object.hasOwnProperty.call(body, entryLocale)) {
+        const entry = Object.fromEntries(new URLSearchParams(body[entryLocale]));
+        if(requireTranslation(entry)) {
+          localesToTranslate.push(entryLocale);
+        }
+        if(entryLocale === entry.original_language) {
+          originalLanguageEntry = entry;
+        }
+      }
+    }
+
+    // Validate the rest
+    for (const entryLocale in body) {
+      if (Object.hasOwnProperty.call(body, entryLocale) && !localesToTranslate.includes(entryLocale)) {
+        const entry = Object.fromEntries(new URLSearchParams(body[entryLocale]));
+        const errors = validateFields(entry, entryName);
+        langErrors.push({locale: entryLocale, errors});
+        localesToNotTranslate.push(entry);
+      }
+    }
+    const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+
+    return {
+      hasErrors,
+      langErrors,
+      localesToTranslate,
+      localesToNotTranslate,
+      originalLanguageEntry
+    }
+}
+
+async function getThingEdit(params, sqlFile, res) {
+  try {
+    if (Number.isNaN(params.articleid)) {
+      return null;
+    }
+    const articleRows = await (await db.any(sqlFile, params)).map(el => el.row_to_json ? el.row_to_json : el.results);
+    articleRows.forEach(article => fixUpURLs(article));
+  return articleRows;
+  } catch (error) {
+    // only log actual excaptional results, not just data not found
+    if (error.message !== "No data returned from the query.") {
+      logError(error);
+    }
+    // if no entry is found, render the 404 page
+    return null;
+  }
+}
+
 module.exports = {
   supportedTypes,
   titleKeys,
@@ -510,12 +667,17 @@ module.exports = {
   returnByType,
   setConditional,
   maybeUpdateUserText,
+  maybeUpdateUserTextLocaleEntry,
   searchFilterKeys,
   searchFilterKeyLists,
   placeHolderPhotos,
   createLocalizedRecord,
+  createUntranslatedLocalizedRecords,
   getCollections,
   validateFields,
+  requireTranslation,
   limitFromReq,
-  offsetFromReq
+  offsetFromReq,
+  parseAndValidateThingPostData,
+  getThingEdit
 };

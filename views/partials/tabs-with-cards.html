@@ -6,14 +6,17 @@
     {{#if (showCsvButton req)}}
       {{> download-csv-button }}
     {{/if}}
-    <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
-      <span class="sr-only">{{t "list view"}}</span>
-      {{> icon-list}}
-    </button>
-    <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="grid">
-      <span class="sr-only">{{t "grid view"}}</span>
-      {{> icon-grid}}
-    </button>
+    {{#if (hideGridToggle req)}}
+      <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
+        <span class="sr-only">{{t "list view"}}</span>
+        {{> icon-list}}
+      </button>
+      <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="grid">
+        <span class="sr-only">{{t "grid view"}}</span>
+        {{> icon-grid}}
+      </button>
+    {{/if}}
+    
   </div>
 
   <!-- select for navigating to different tabs in mobile view -->
@@ -30,11 +33,13 @@
     {{/if}}
   </div>
   <div class="tab-container js-tab-container">
-    {{#each getTabs}}
-      <input id="{{key}}" type="radio" name="tabs" {{isTabActive ../req key}} class="tab-container-input">
-      <label for="{{key}}" class="tab-container-label">{{title}}</label>
-    {{/each}}
-
+    <div class="js-tab-items">
+      {{#each getTabs}}
+        <input id="{{key}}" type="radio" name="tabs" data-local={{isLocalNav key}} {{isTabActive ../req key}} class="tab-container-input">
+        <label for="{{key}}" class="tab-container-label">{{title}}</label>
+      {{/each}}
+    </div>
+    
     <div class="tab-panels">
       {{> @partial-block }}
     </div>

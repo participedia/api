@@ -1896,5 +1896,7 @@
   "Zambia": "Zâmbia",
   "Zimbabwe": "Zimbábue",
   "Zoom Map In": "Ampliar o mapa",
-  "Zoom Map Out": "Diminuir o mapa"
+  "Zoom Map Out": "Diminuir o mapa",
+  "new-entry-input-language-select-tooltip__text": "Você pode editar esta entrada nos seguintes idiomas. Para alterar o idioma de exibição do site, use o seletor de idioma localizado ao lado da barra de pesquisa acima."
+
 }

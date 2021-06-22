@@ -151,8 +151,14 @@ function concactArr(arr) {
   return str;
 }
 
-const i18n = (key, context) =>
-  context && context.data && context.data.root.__(key);
+const i18n = (key, context, locale = undefined) => {
+  if(locale && typeof locale === "string") {
+    return context && context.data && context.data.root.__({phrase: key, locale});
+  } else {
+    return context && context.data && context.data.root.__(key);
+  }
+  
+}
 
 module.exports = {
   toJSON: obj => {
@@ -264,7 +270,7 @@ module.exports = {
 
   getOriginalLanguageValueForEditForm: (article, context) => {
     const req = context.data.root.req;
-    return article.original_language || req.cookies.locale || "en";
+    return article.original_language || req.cookies.locale || "en"
   },
 
   shouldShowOriginalLanguageAlert: (article, context) => {
@@ -314,11 +320,18 @@ module.exports = {
     );
   },
 
-  i18nEditFieldValue: (name, option, context) => {
+  i18nEditFieldValue: (name, option, locale = null, context) => {
     const defaultKey = `name:${name}-key:${option}`;
     const longKey = `${defaultKey}-longValue`;
-    const i18nValue = i18n(defaultKey, context);
-    const i18nLongValue = i18n(longKey, context);
+    let i18nValue;
+    let i18nLongValue;
+    if(locale) {
+        i18nValue = i18n(defaultKey, context,locale);
+        i18nLongValue = i18n(longKey, context, locale);
+    } else {
+        i18nValue = i18n(defaultKey, context);
+        i18nLongValue = i18n(longKey, context);
+    }
 
     const fieldNamesMappedToListOfArticles = {
       is_component_of: "cases",
@@ -643,7 +656,7 @@ module.exports = {
     }
   },
 
-  getvalue: (article, name) => {
+  getvalue: (article, name, locale = 'en') => {
     const item = article[name];
     if (!item) return;
 
@@ -1012,6 +1025,11 @@ module.exports = {
     }
   },
 
+  isLocalNav(tabName) {
+      const localTabs = ['en', 'fr', 'de', 'es', 'zh', 'pt', 'it'];
+      return localTabs.includes(tabName) ? "local" : "server";
+  },
+
   getHomeTabs(context) {
     return [
       { title: i18n("All", context), key: "all" },
@@ -1019,6 +1037,18 @@ module.exports = {
       { title: i18n("Methods", context), key: "method" },
       { title: i18n("Organizations", context), key: "organizations" },
       { title: i18n("Collections", context), key: "collections" },
+    ];
+  },
+
+  getLanguageSelectorTabs(context) {
+    return [
+      { title: i18n("English", context), key: "en" },
+      { title: i18n("French", context), key: "fr" },
+      { title: i18n("German", context), key: "de" },
+      { title: i18n("Spanish", context), key: "es" },
+      { title: i18n("Chinese", context), key: "zh" },
+      { title: i18n("Italian", context), key: "it" },
+      { title: i18n("Portugese", context), key: "pt" },
     ];
   },
 
@@ -1416,14 +1446,45 @@ module.exports = {
   },
 
   showCsvButton(req) {
-    if (["/search", "/collection"].indexOf(req.baseUrl) >= 0) {
+    if (["/search", "/collection", "/new"].indexOf(req.baseUrl) >= 0) {
       return req.query.selectedCategory != 'collections';
     }
     return false;
   },
 
+  hideGridToggle(req) {
+    if (["/case", "/method", "/organization"].includes(req.baseUrl)) {
+      return false;
+    }
+    return true;
+  },
+
   includeSearchFilters(req) {
-    // do not show search filters on collection and user pages
-    return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") > 0 ? false : true;
+    // do not show search filters on new case, organization, method and collection as well as on collection and user pages
+    return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") > 0 || ["/case", "/method", "/organization"].includes(req.baseUrl) ? false : true;
+  },
+
+  withItem (object, options) {
+    return options.fn(object[options.hash.key]);
+  },
+
+  eachIncludeParent ( context, options ) {
+    var fn = options.fn,
+        inverse = options.inverse,
+        ret = "",
+        _context = [];
+        $.each(context, function (index, object) {
+            var _object = $.extend({}, object);
+            _context.push(_object);
+        });
+    if ( _context && _context.length > 0 ) {
+        for ( var i = 0, j = _context.length; i < j; i++ ) {
+            _context[i]["parentContext"] = options.hash.parent;
+            ret = ret + fn(_context[i]);
+        }
+    } else {
+        ret = inverse(this);
+    }
+    return ret;
   },
 };

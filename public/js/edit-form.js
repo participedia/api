@@ -3,12 +3,20 @@ import loadingGifBase64 from "./loading-gif-base64.js";
 import modal from "./modal.js";
 import infoIconToModal from "./info-icon-to-modal.js";
 import tracking from "./utils/tracking.js";
-import languageSelectTooltipForNewEntries from './language-select-tooltip-for-new-entries.js'
+import languageSelectTooltipForNewEntries from './language-select-tooltip-for-new-entries.js';
+import languageSelectTooltipForNewEntryInput from './language-select-tooltip-for-new-entry-input';
+
+import submitFormLanguageSelector from './submit-form-language-selector';
+import tabsWithCards from "./tabs-with-cards.js";
+
 
 const editForm = {
   init() {
     // bind event listener for publish buttons clicks
     const submitButtonEls = document.querySelectorAll("[type=submit]");
+
+    // reference to all forms
+    this.localForms = document.querySelectorAll("form[data-local=local]");
 
     if (!submitButtonEls) return;
 
@@ -58,18 +66,64 @@ const editForm = {
     fullVersionButtonEls.forEach(el => handleFullVersionClick(el));
 
     infoIconToModal.init();
+    this.initPinTabs();
 
     this.formEl = document.querySelector(".js-edit-form");
 
-    languageSelectTooltipForNewEntries.init();
+    if(this.localForms) {
+      this.initLocalForms();
+    }
+    // Stopped initialization of new entries due to languageSelectTooltipForNewEntryInput init.
+    // languageSelectTooltipForNewEntries.init();
+    languageSelectTooltipForNewEntryInput.init();
+    submitFormLanguageSelector.init();
+  },
+
+  initLocalForms() {
+    // reference to all forms
+    // bind event listener for publish buttons clicks
+    const submitButtonEls = document.querySelectorAll("[type=submit]");
+    for (let i = 0; i < submitButtonEls.length; i++) {
+      const submitBtn = submitButtonEls[i];
+      submitBtn.addEventListener('click', () => {
+        // submit button clicked, validate forms
+        this.validateLocalForms();
+      });
+    }
+    tabsWithCards.init();
+  },
+
+  validateLocalForms() {
+
+  },
+
+  initPinTabs() {
+    const tabsContainer = document.querySelector('.js-tab-items');
+    const mobileTabsContainer = document.querySelector('.js-tab-select-container');
+    document.addEventListener('scroll', (e) => {
+      console.log(window.scrollY);
+      if(window.scrollY > 25) {
+        tabsContainer.classList.add('fixed-language-tab');
+      } else {
+        tabsContainer.classList.remove('fixed-language-tab');
+      }
+      if(window.scrollY > 30) {
+        mobileTabsContainer.classList.add('fixed-language-tab');
+      } else {
+        mobileTabsContainer.classList.remove('fixed-language-tab');
+      }
+    })
   },
 
   sendFormData() {
     const formData = serialize(this.formEl);
-
+    const formsData = {};
+    this.localForms.forEach(form => {
+      formsData[form.dataset['lang']] = serialize(form);
+    });
     const xhr = new XMLHttpRequest();
     xhr.open("POST", this.formEl.getAttribute("action"), true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = () => {
       // wait for request to be done
@@ -104,7 +158,7 @@ const editForm = {
       }
     };
 
-    xhr.send(formData);
+    xhr.send(JSON.stringify(formsData));
     // open publishing feedback modal as soon as we send the request
     this.openPublishingFeedbackModal();
   },

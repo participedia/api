@@ -10,6 +10,7 @@ const {
   CASES_BY_COUNTRY,
   CREATE_CASE,
   CASE_BY_ID,
+  CASES_LOCALE_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
   UPDATE_CASE,
@@ -26,6 +27,7 @@ const {
 const {
   setConditional,
   maybeUpdateUserText,
+  maybeUpdateUserTextLocaleEntry,
   parseGetParams,
   validateUrl,
   isValidDate,
@@ -33,8 +35,11 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
+  createUntranslatedLocalizedRecords,
   getCollections,
-  validateFields
+  validateFields,
+  parseAndValidateThingPostData,
+  getThingEdit
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -77,20 +82,28 @@ async function postCaseNewHttp(req, res) {
   // create new `case` in db
   try {
     cache.clear();
-    let title = req.body.title;
-    let body = req.body.body || req.body.summary || "";
-    let description = req.body.description;
-    let original_language = req.body.original_language || "en";
-    const errors = validateFields(req.body, "case");
+    
 
-    if (errors.length > 0) {
+    let {
+      hasErrors,
+      langErrors,
+      localesToTranslate,
+      localesToNotTranslate,
+      originalLanguageEntry
+    } = parseAndValidateThingPostData(req.body, "case");
+    
+    if (hasErrors) {
       return res.status(400).json({
         OK: false,
-        errors: errors,  
+        errors: langErrors,  
       });
     }
 
-    const user_id = req.user.id;
+    let title = originalLanguageEntry.title;
+    let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    let description = originalLanguageEntry.description;
+    let original_language = originalLanguageEntry.original_language || "en";
+  
     const thing = await db.one(CREATE_CASE, {
       title,
       body,
@@ -99,14 +112,30 @@ async function postCaseNewHttp(req, res) {
     });
 
     req.params.thingid = thing.thingid;
-    await postCaseUpdateHttp(req, res);
+    const {article, errors } = await caseUpdate(req, res, originalLanguageEntry);
+    if(errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
     let localizedData = {
-      body: body,
-      description: description,
+      body,
+      description,
       language: original_language,
-      title: title
+      title
     };
-     createLocalizedRecord(localizedData, thing.thingid);
+
+    await createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
+    if(localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+    }
+    res.status(200).json({
+      OK: true,
+      article,
+    });
+    refreshSearch();
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
@@ -220,14 +249,12 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   return [updatedCase, er];
 }
 
-// Only changes to title, description, and/or body trigger a new author and version
-
-async function postCaseUpdateHttp(req, res) {
+async function caseUpdateHttp(req, res, entry = undefined) {
   // cache.clear();
   const params = parseGetParams(req, "case");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
-  const newCase = req.body;
+  const newCase = entry || req.body;
   const errors = validateFields(newCase, "case");
   const isNewCase = !newCase.article_id;
 
@@ -238,7 +265,7 @@ async function postCaseUpdateHttp(req, res) {
     });
   }
 
-  newCase.links = verifyOrUpdateUrl(newCase.links);
+  newCase.links = verifyOrUpdateUrl(newCase.links || []);
 
   // if this is a new case, we don't have a post_date yet, so we set it here
   if (isNewCase) {
@@ -255,7 +282,7 @@ async function postCaseUpdateHttp(req, res) {
     updatedText,
     author,
     oldArticle: oldCase,
-  } = await maybeUpdateUserText(req, res, "case");
+  } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
 
   //get current date when user.isAdmin is false;
@@ -311,6 +338,135 @@ async function postCaseUpdateHttp(req, res) {
   }
 }
 
+async function caseUpdate(req, res, entry = undefined) {
+  // cache.clear();
+  const params = parseGetParams(req, "case");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
+  const newCase = entry || req.body;
+  const errors = validateFields(newCase, "case");
+  const isNewCase = !newCase.article_id;
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      OK: false,
+      errors: errors,
+    });
+  }
+
+  newCase.links = verifyOrUpdateUrl(newCase.links || []);
+
+  // if this is a new case, we don't have a post_date yet, so we set it here
+  if (isNewCase) {
+    newCase.post_date = Date.now();
+  }
+
+  // if this is a new case, we don't have a updated_date yet, so we set it here
+  if (isNewCase) {
+    newCase.updated_date = Date.now();
+  }
+
+  // save any changes to the user-submitted text
+  const {
+    updatedText,
+    author,
+    oldArticle: oldCase,
+  } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
+  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+
+  //get current date when user.isAdmin is false;
+  updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
+
+  if (!er.hasErrors()) {
+    if (updatedText) {
+      await db.tx("update-case", async t => {
+        if(!isNewCase) {
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        }
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_CASE, updatedCase);
+      });
+      //if this is a new case, set creator id to userid and isAdmin
+      if (user.isadmin) {
+        const creator = {
+          user_id: newCase.creator ? newCase.creator : params.userid,
+          thingid: params.articleid,
+        };
+        const updatedBy = {
+          user_id: newCase.last_updated_by
+            ? newCase.last_updated_by
+            : params.userid,
+          thingid: params.articleid,
+          updated_date: newCase.updated_date || "now",
+        };
+        await db.tx("update-case", async t => {
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+        });
+      }
+    } else {
+      await db.tx("update-case", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_CASE, updatedCase);
+      });
+    }
+    // the client expects this request to respond with json
+    // save successful response
+    const freshArticle = await getCase(params, res);
+    return {article: freshArticle};
+  } else {
+    logError(`400 with errors: ${er.errors.join(", ")}`);
+    return {errors: er.errors};
+  }
+}
+
+// Only changes to title, description, and/or body trigger a new author and version
+
+async function postCaseUpdateHttp(req, res) {
+  // cache.clear();
+  const params = parseGetParams(req, "case");
+  const { articleid } = params;
+  const langErrors = [];
+  const localeEntries = [];
+  let originalLanguageEntry;
+
+
+  for (const entryLocale in req.body) {
+    if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+      const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+      const errors = validateFields(entry, "case");
+      langErrors.push({locale: entryLocale, errors});
+    }
+  }
+  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+  if (hasErrors) {
+    return res.status(400).json({
+      OK: false,
+      errors: langErrors,  
+    });
+  }
+
+  for (const entryLocale in req.body) {
+    if (Object.hasOwnProperty.call(req.body, entryLocale)) {
+      const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
+      localeEntries.push(entry);
+      if(entryLocale === entry.original_language) {
+        originalLanguageEntry = entry;
+      }
+    }
+  }
+
+  await caseUpdate(req, res, originalLanguageEntry);
+
+  await createUntranslatedLocalizedRecords(localeEntries, articleid);
+  const freshArticle = await getCase(params, res);
+  res.status(200).json({
+    OK: true,
+    article: freshArticle,
+  });
+  refreshSearch();
+}
+
 /**
  * @api {get} /case/:thingid Get the last version of a case
  * @apiGroup Cases
@@ -342,7 +498,7 @@ async function getCase(params, res) {
     if (Number.isNaN(params.articleid)) {
       return null;
     }
-    const articleRow = await db.one(CASE_BY_ID, params);
+    const articleRow = await (await db.one(CASE_BY_ID, params));
     const article = articleRow.results;
     fixUpURLs(article);
     return article;
@@ -389,13 +545,13 @@ async function getCaseEditHttp(req, res) {
   let startTime = new Date();
   const params = parseGetParams(req, "case");
   params.view = "edit";
-  const article = await getCase(params, res);
-  if (!article) {
+  const articles = await getThingEdit(params, CASES_LOCALE_BY_ID, res);
+  if (!articles) {
     res.status(404).render("404");
     return null;
   }
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user);
+  returnByType(res, params, articles, staticText, req.user);
 }
 
 async function getCaseNewHttp(req, res) {
@@ -420,4 +576,5 @@ module.exports = {
   postCaseNewHttp,
   getCaseHttp,
   postCaseUpdateHttp,
+  caseUpdateHttp
 };

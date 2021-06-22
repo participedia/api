@@ -12,16 +12,26 @@ const tabsWithCards = {
     this.tabInputEls = Array.prototype.slice.call(
       document.querySelectorAll(".js-tab-container input[name='tabs']")
     );
+    this.localTabInputEls = Array.prototype.slice.call(
+      document.querySelectorAll(".js-tab-container input[name='tabs'][data-local='local']")
+    );
     this.viewEl = document.querySelector("[data-card-layout]");
+    this.localForms = document.querySelectorAll("form[data-local=local]");
 
-    if (this.tabInputEls.length === 0) return;
+    if (this.tabInputEls.length === 0 && this.localTabInputEls.length === 0) return;
 
     // Initiate CSV generator
     this.initiateCsvGenerator();
 
     // tabs ui
-    this.initDesktopTabNav();
-    this.initMobileTabNav();
+    if(this.localTabInputEls.length > 0) {
+      this.initLocalDesktopTabNav();
+      this.initLocalMobileTabNav();
+    } else {
+      this.initDesktopTabNav();
+      this.initMobileTabNav();
+    }
+    
 
     if (!this.viewEl) return;
     // cards ui
@@ -96,6 +106,49 @@ const tabsWithCards = {
     }
 
     window.location.href = url;
+  },
+
+  navigateToLocalTab(tabName) {
+    // reference to all forms
+    // $(localForms).hide();
+    this.localForms.forEach(el => el.classList.add('hide'));
+    document.querySelector(`form[data-lang='${tabName}']`).classList.remove('hide');
+
+  },
+
+  initLocalDesktopTabNav() {
+    // update url param to indicate current tab
+    this.localTabInputEls.forEach(el => {
+      el.addEventListener("click", event => {
+        this.navigateToLocalTab(event.target.id);
+      });
+    });
+    this.localForms.forEach(el => el.classList.add('hide'));
+    this.localTabInputEls[0].click();
+  },
+
+  initLocalMobileTabNav() {
+    // TODO: Implement local mobile navigation
+    const selectEl = document.querySelector(".js-tab-select-container select");
+
+    if (!selectEl) return;
+
+    // select current tab
+    const optionEls = Array.prototype.slice.call(
+      selectEl.querySelectorAll("option")
+    );
+    const currentTab = this.tabInputEls.find(el => el.checked);
+    optionEls.forEach(el => (el.selected = el.value === currentTab.id));
+
+    // event listener for select change
+    selectEl.addEventListener("change", event => {
+      // change tab to selected type
+      const newTabId = event.target.value;
+      // toggle checked attr on inputs
+      this.tabInputEls.forEach(el => (el.checked = el.id === newTabId));
+      // go to new tab
+      this.navigateToTab(newTabId);
+    });
   },
 
   initDesktopTabNav() {

@@ -10,59 +10,59 @@
         data-view-new
       {{/if}}
     >
-      <form
-        {{#if (isEditView req)}}
-          action="/{{article.type}}/{{article.id}}"
-        {{else}}
-          action="/{{article.type}}/new"
-        {{/if}}
-        method="post"
-        enctype="application/x-www-form-urlencoded"
-        class="js-edit-form"
-      >
-        <input type="hidden" name="user" value="{{req.user.id}}" />
+     {{#> tabs-with-cards req=req getTabs=(getLanguageSelectorTabs)}}
 
-        {{#if (isEditView req)}}
-        <input type="hidden" name="article_id" value="{{article.id}}" />
-        {{/if}}
+      {{#each (getLanguageSelectorTabs)}}
+        {{#withItem ../article key=key}}
+          <form
+            data-lang="{{../key}}"
+            id="{{../key}}"
+            data-local="local"
+            {{#if (isEditView ../../req)}}
+              action="/{{type}}/{{id}}"
+            {{else}}
+              action="/{{type}}/new"
+            {{/if}}
+            method="post"
+            enctype="application/x-www-form-urlencoded"
+            class="js-edit-form"
+          >
+            <input type="hidden" name="user" value="{{../../req.user.id}}" />
 
+            {{#if (isEditView ../../req)}}
+            <input type="hidden" name="article_id" value="{{id}}" />
+            {{/if}}
 
-        <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm article}}" />
+            <input type="hidden" name="language" value="{{../key}}" />
 
-        {{#if req.user.isadmin}}
-          <fieldset class="admin-only">
-            <div class="edit-form-admin-only-section">
-              <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
-              {{> edit-boolean name="featured" quick-submit=true}}
-              {{> edit-boolean name="hidden" quick-submit=true}}
-              {{# if (isNotCollection article)}}
-                {{> article-edit-select name="completeness" quick-submit=true}}
-                {{> edit-autocomplete name="collections" multi=true }}
-              {{/if}}
-              {{> edit-submission-details }}
-            </div>
-          </fieldset>
-        {{/if}}
+            <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm this}}" />
 
-        {{> original-language-alert}}
-        
-        {{> @partial-block }}
+            {{#if ../../req.user.isadmin}}
+              <fieldset class="admin-only">
+                <div class="edit-form-admin-only-section">
+                  <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
+                  {{> edit-boolean name="featured" quick-submit=true}}
+                  {{> edit-boolean name="hidden" quick-submit=true}}
+                  {{# if (isNotCollection this)}}
+                    {{> article-edit-select article=this name="completeness" quick-submit=true}}
+                    {{> edit-autocomplete article=this name="collections" multi=true }}
+                  {{/if}}
+                  {{> edit-submission-details }}
+                </div>
+              </fieldset>
+            {{/if}}
 
-        <div class="edit-buttons">
-          <button type="submit" class="button button-light-grey" data-cy="main-form-submit">
-            {{> icon-submit }} {{t "Publish"}}
-          </button>
+            {{> original-language-alert article=this}}
+            {{> @partial-block locale=../key article=this __=../../__ static=../../static}}
 
-          {{# if (isNotCollection article)}}
-            <a href="?full=1" class="button button-dark-grey quickonly js-do-full-version">{{t "Do Full Version"}}</a>
-          {{/if}}
-        </div>
+          </form>
 
-        <div class="something-missing-prompt">
-          <h3>{{t "Something Missing?"}}</h3>
-          <p>{{t "Suggest edits..."}} <a target="_blank" rel="noopener" href="mailto:info@participedia.net?subject=Suggested form edits - {{article.type}}">info@participedia.net</a></p>
-        </div>
-      </form>
+        {{/withItem}}
+      {{/each}}
+
+      {{> edit-form-submit-button article=this}}
+
+      {{/tabs-with-cards}}
     </article>
   </div>
   <div class="right-col">
@@ -72,3 +72,14 @@
     </button>
   </div>
 </div>
+
+<script type="text/template" class="js-input-language-select-tooltip-template">
+  <div>
+    {{t "new-entry-input-language-select-tooltip__text"}}
+  </div>
+  <div class="language-select-tooltip__actions">
+    <a href="#" class="js-input-language-select-tooltip__got-it-link">{{t "Got it"}}</a>
+  </div>
+</script>
+
+
