@@ -320,11 +320,18 @@ module.exports = {
     );
   },
 
-  i18nEditFieldValue: (name, option, context) => {
+  i18nEditFieldValue: (name, option, locale = null, context) => {
     const defaultKey = `name:${name}-key:${option}`;
     const longKey = `${defaultKey}-longValue`;
-    const i18nValue = i18n(defaultKey, context);
-    const i18nLongValue = i18n(longKey, context);
+    let i18nValue;
+    let i18nLongValue;
+    if(locale) {
+        i18nValue = i18n(defaultKey, context,locale);
+        i18nLongValue = i18n(longKey, context, locale);
+    } else {
+        i18nValue = i18n(defaultKey, context);
+        i18nLongValue = i18n(longKey, context);
+    }
 
     const fieldNamesMappedToListOfArticles = {
       is_component_of: "cases",
@@ -649,7 +656,7 @@ module.exports = {
     }
   },
 
-  getvalue: (article, name) => {
+  getvalue: (article, name, locale = 'en') => {
     const item = article[name];
     if (!item) return;
 

@@ -9,7 +9,7 @@
 
   {{> article-edit-text name="title" is_required=true quick-submit=true}}
   {{> article-edit-location}}
-  {{> edit-multi-select name="scope_of_influence" max=3}}
+  {{> edit-multi-select locale=locale name="scope_of_influence" max=3}}
 </fieldset>
 
 <fieldset>
@@ -27,8 +27,8 @@
   <h2 class="fieldset-header">{{t "focus_areas_sectionlabel"}}</h2>
 
   {{> article-edit-select name="sector"}}
-  {{> edit-multi-select name="general_issues" max=3 ranked=true}}
-  {{> edit-multi-select name="specific_topics" max=3 ranked=true}}
+  {{> edit-multi-select locale=locale name="general_issues" max=3 ranked=true}}
+  {{> edit-multi-select locale=locale name="specific_topics" max=3 ranked=true}}
 </fieldset>
 
 <fieldset>
@@ -44,8 +44,8 @@
 <fieldset class="fullonly">
   <h2 class="fieldset-header">{{t "tools_techniques_sectionlabel"}}</h2>
 
-  {{> edit-multi-select name="type_method" max=3 ranked=true}}
-  {{> edit-multi-select name="type_tool" max=3 ranked=true}}
+  {{> edit-multi-select locale=locale name="type_method" max=3 ranked=true}}
+  {{> edit-multi-select locale=locale name="type_tool" max=3 ranked=true}}
   {{> edit-autocomplete name="specific_methods_tools_techniques" multi=true}}
 </fieldset>
 

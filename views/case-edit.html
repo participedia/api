@@ -8,8 +8,8 @@
   {{> guidelines-info-text }}
 
   {{> article-edit-text name="title" is_required=true quick-submit=true}}
-  {{> edit-multi-select ranked=true name="general_issues" quick-submit=true max=3 }}
-  {{> edit-multi-select ranked=true name="specific_topics" max=3 quick-submit=true }}
+  {{> edit-multi-select locale=locale ranked=true name="general_issues" quick-submit=true max=3 }}
+  {{> edit-multi-select locale=locale ranked=true name="specific_topics" max=3 quick-submit=true }}
   {{> edit-textarea name="description" quick-submit=true charLimit=280}}
 
   {{> edit-richtext
@@ -45,8 +45,8 @@
 </fieldset>
 <fieldset class="purpose_and_approach fullonly">
   <h2 class="fieldset-header">{{t "purpose_sectionlabel"}}</h2>
-  {{> edit-multi-select ranked=true name="purposes" max=3 }}
-  {{> edit-multi-select ranked=true name="approaches" max=3 }}
+  {{> edit-multi-select locale=locale ranked=true name="purposes" max=3 }}
+  {{> edit-multi-select locale=locale ranked=true name="approaches" max=3 }}
   {{> article-edit-select name="public_spectrum" }}
 </fieldset>
 <fieldset class="participants fullonly">
@@ -54,40 +54,40 @@
   {{> edit-number name="number_of_participants" }}
   {{> article-edit-select name="open_limited" }}
   {{> article-edit-select name="recruitment_method" }}
-  {{> edit-multi-select name="targeted_participants" max=3 }}
+  {{> edit-multi-select locale=locale name="targeted_participants" max=3 }}
 </fieldset>
 <fieldset class="process fullonly">
   <h2 class="fieldset-header">{{t "process_sectionlabel"}}</h2>
-  {{> edit-multi-select ranked=true name="method_types" max=3 }}
-  {{> edit-multi-select ranked=true name="tools_techniques_types" max=3 }}
+  {{> edit-multi-select locale=locale ranked=true name="method_types" max=3 }}
+  {{> edit-multi-select locale=locale ranked=true name="tools_techniques_types" max=3 }}
   {{> edit-autocomplete name="specific_methods_tools_techniques" multi=true }}
   {{> article-edit-select name="legality" }}
   {{> article-edit-select name="facilitators" }}
   {{> article-edit-select name="facilitator_training" }}
   {{> article-edit-select name="facetoface_online_or_both" }}
-  {{> edit-multi-select ranked=true name="participants_interactions" max=3 }}
-  {{> edit-multi-select name="learning_resources" }}
-  {{> edit-multi-select name="decision_methods" }}
-  {{> edit-multi-select name="if_voting" }}
-  {{> edit-multi-select name="insights_outcomes" max=3 }}
+  {{> edit-multi-select locale=locale ranked=true name="participants_interactions" max=3 }}
+  {{> edit-multi-select locale=locale name="learning_resources" }}
+  {{> edit-multi-select locale=locale name="decision_methods" }}
+  {{> edit-multi-select locale=locale name="if_voting" }}
+  {{> edit-multi-select locale=locale name="insights_outcomes" max=3 }}
 </fieldset>
 <fieldset class="organizations_and_supporters fullonly">
   <h2 class="fieldset-header">{{t "organizers_sectionlabel"}}</h2>
   {{> edit-autocomplete name="primary_organizer" }}
-  {{> edit-multi-select name="organizer_types" max=3 }}
+  {{> edit-multi-select locale=locale name="organizer_types" max=3 }}
 </fieldset>
 <fieldset class="resources fullonly">
   <h2 class="fieldset-header">{{t "resources_sectionlabel"}}</h2>
   {{> article-edit-text name="funder" }}
-  {{> edit-multi-select name="funder_types" max=3 }}
+  {{> edit-multi-select locale=locale name="funder_types" max=3 }}
   {{> article-edit-boolean-select name="staff" }}
   {{> article-edit-boolean-select name="volunteers" }}
 </fieldset>
 <fieldset class="evidence_of_impact fullonly">
   <h2 class="fieldset-header">{{t "evidence_sectionlabel"}}</h2>
   {{> article-edit-select name="impact_evidence" }}
-  {{> edit-multi-select ranked=true name="change_types" }}
-  {{> edit-multi-select ranked=true name="implementers_of_change" max=3 }}
+  {{> edit-multi-select locale=locale ranked=true name="change_types" }}
+  {{> edit-multi-select locale=locale ranked=true name="implementers_of_change" max=3 }}
   {{> article-edit-select name="formal_evaluation" }}
   {{> edit-media name="evaluation_reports" }}
   {{> edit-link-set name="evaluation_links" }}
