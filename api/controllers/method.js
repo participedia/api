@@ -33,6 +33,7 @@ const {
   getCollections,
   validateFields,
   parseAndValidateThingPostData,
+  maybeUpdateUserTextLocaleEntry,
   getThingEdit
 } = require("../helpers/things");
 
@@ -94,7 +95,7 @@ async function postMethodNewHttp(req, res) {
     // let original_language = req.body.original_language || "en";
     // const errors = validateFields(req.body, "method");
 
-    const {
+    let {
       hasErrors,
       langErrors,
       localesToTranslate,
@@ -113,14 +114,23 @@ async function postMethodNewHttp(req, res) {
     let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description;
     let original_language = originalLanguageEntry.original_language || "en";
+
     const thing = await db.one(CREATE_METHOD, {
       title,
       body,
       description,
       original_language,
     });
+    
     req.params.thingid = thing.thingid;
-    await methodUpdateHttp(req, res, originalLanguageEntry);
+    const {article, errors } = await methodUpdate(req, res, originalLanguageEntry);
+    if(errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
     let localizedData = {
       body: body,
       description: description,
@@ -128,8 +138,13 @@ async function postMethodNewHttp(req, res) {
       title: title
     };
     await createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
-    await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
-
+    if(localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+    }
+    res.status(200).json({
+      OK: true,
+      article,
+    });
   } catch (error) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
@@ -186,9 +201,6 @@ async function postMethodUpdateHttp(req, res) {
   const params = parseGetParams(req, "method");
   // const user = req.user;
   const { articleid } = params;
-  // const newMethod = req.body;
-  // const errors = validateFields(newMethod, "method");
-  // const isNewMethod = !newMethod.article_id;
   const langErrors = [];
   const localeEntries = [];
   let originalLanguageEntry;
@@ -208,6 +220,7 @@ async function postMethodUpdateHttp(req, res) {
     }
   }
   const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+
   if (hasErrors) {
     return res.status(400).json({
       OK: false,
@@ -225,13 +238,15 @@ async function postMethodUpdateHttp(req, res) {
     }
   }
 
-await methodUpdateHttp(req, res, originalLanguageEntry);
-const freshArticle = await getMethod(params, res);
-    res.status(200).json({
-      OK: true,
-      article: freshArticle,
-    });
-    refreshSearch();
+  await methodUpdate(req, res, originalLanguageEntry);
+
+  await createUntranslatedLocalizedRecords(localeEntries, articleid);
+  const freshArticle = await getMethod(params, res);
+  res.status(200).json({
+    OK: true,
+    article: freshArticle,
+  });
+  refreshSearch();
   // if this is a new method, we don't have a post_date yet, so we set it here
   // if (isNewMethod) {
   //   newMethod.post_date = Date.now();
@@ -404,6 +419,95 @@ async function methodUpdateHttp(req, res, entry = undefined) {
       OK: false,
       errors: er.errors,
     });
+  }
+}
+
+async function methodUpdate(req, res, entry = undefined) {
+  const params = parseGetParams(req, "method");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
+  const newMethod = entry || req.body;
+  const errors = validateFields(newMethod, "method");
+  const isNewMethod = !newMethod.article_id;
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      OK: false,
+      errors: errors,
+    });
+  }
+
+  newMethod.links = verifyOrUpdateUrl(newMethod.links || []);
+
+  // if this is a new method, we don't have a post_date yet, so we set it here
+  if (isNewMethod) {
+    newMethod.post_date = Date.now();
+  }
+
+  // if this is a new method, we don't have a updated_date yet, so we set it here
+  if (isNewMethod) {
+    newMethod.updated_date = Date.now();
+  }
+
+  // save any changes to the user-submitted text
+  const {
+    updatedText,
+    author,
+    oldArticle: oldMethod,
+  } = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method");
+
+  const [updatedMethod, er] = getUpdatedMethod(
+    user,
+    params,
+    newMethod,
+    oldMethod
+  );
+
+  //get current date when user.isAdmin is false;
+  updatedMethod.updated_date = !user.isadmin
+    ? "now"
+    : updatedMethod.updated_date;
+
+  if (!er.hasErrors()) {
+    if (updatedText) {
+      await db.tx("update-method", async t => {
+        if(!isNewMethod) {
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        }
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_METHOD, updatedMethod);
+      });
+      //if this is a new method, set creator id to userid and isAdmin
+      if (user.isadmin) {
+        const creator = {
+          user_id: newMethod.creator ? newMethod.creator : params.userid,
+          thingid: params.articleid,
+        };
+        const updatedBy = {
+          user_id: newMethod.last_updated_by
+            ? newMethod.last_updated_by
+            : params.userid,
+          thingid: params.articleid,
+          updated_date: newMethod.updated_date || "now",
+        };
+        await db.tx("update-method", async t => {
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+        });
+      }
+    } else {
+      await db.tx("update-method", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_METHOD, updatedMethod);
+      });
+    }
+    // the client expects this request to respond with json
+    // save successful response
+    const freshArticle = await getMethod(params, res);
+    return {article: freshArticle};
+  } else {
+    logError(er);
+    return {errors: er.errors};
   }
 }
 

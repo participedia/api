@@ -454,7 +454,7 @@ async function postCaseUpdateHttp(req, res) {
     }
   }
 
-  await caseUpdateHttp(req, res, originalLanguageEntry);
+  await caseUpdate(req, res, originalLanguageEntry);
 
   await createUntranslatedLocalizedRecords(localeEntries, articleid);
   const freshArticle = await getCase(params, res);
@@ -538,50 +538,6 @@ async function getEditStaticText(params) {
   ) : [];
   return staticText;
 }
-
-/**
- * @api {get} /case/:thingid Get the last version of a case
- * @apiGroup Cases
- * @apiVersion 0.1.0
- * @apiName returnCaseById
- * @apiParam {Number} thingid Case ID
- *
- * @apiSuccess {Boolean} OK true if call was successful
- * @apiSuccess {String[]} errors List of error strings (when `OK` is false)
- * @apiSuccess {Object} data case data
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "OK": true,
- *       "data": {
- *         "ID": 3,
- *         "Description": 'foo'
- *        }
- *     }
- *
- * @apiError NotAuthenticated The user is not authenticated
- * @apiError NotAuthorized The user doesn't have permission to perform this operation.
- *
- */
-
-//  async function getCaseEdit(params, res) {
-//   try {
-//     if (Number.isNaN(params.articleid)) {
-//       return null;
-//     }
-//     const articleRows = await (await db.any(CASES_LOCALE_BY_ID, params)).map(el => el.row_to_json);
-//     articleRows.forEach(article => fixUpURLs(article));
-//   return articleRows;
-//   } catch (error) {
-//     // only log actual excaptional results, not just data not found
-//     if (error.message !== "No data returned from the query.") {
-//       logError(error);
-//     }
-//     // if no entry is found, render the 404 page
-//     return null;
-//   }
-// }
 
 async function getCaseEditHttp(req, res) {
   let startTime = new Date();
