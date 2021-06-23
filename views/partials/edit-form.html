@@ -41,13 +41,13 @@
               <fieldset class="admin-only">
                 <div class="edit-form-admin-only-section">
                   <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
-                  {{> edit-boolean name="featured" quick-submit=true}}
-                  {{> edit-boolean name="hidden" quick-submit=true}}
+                  {{> edit-boolean article=this name="featured" quick-submit=true}}
+                  {{> edit-boolean article=this name="hidden" quick-submit=true}}
                   {{# if (isNotCollection this)}}
-                    {{> article-edit-select article=this name="completeness" quick-submit=true}}
-                    {{> edit-autocomplete article=this name="collections" multi=true }}
+                    {{> article-edit-select article=this static=../../static name="completeness" quick-submit=true}}
+                    {{> edit-autocomplete article=this static=../../static name="collections" multi=true }}
                   {{/if}}
-                  {{> edit-submission-details }}
+                  {{> edit-submission-details article=this }}
                 </div>
               </fieldset>
             {{/if}}
