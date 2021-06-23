@@ -326,7 +326,7 @@ module.exports = {
     let i18nValue;
     let i18nLongValue;
     if(locale) {
-        i18nValue = i18n(defaultKey, context,locale);
+        i18nValue = i18n(defaultKey, context, locale);
         i18nLongValue = i18n(longKey, context, locale);
     } else {
         i18nValue = i18n(defaultKey, context);

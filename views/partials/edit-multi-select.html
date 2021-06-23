@@ -10,7 +10,7 @@
       <option
         value="{{this}}"
       >
-        {{i18nEditFieldValue ../name this ../locale}}
+        {{i18nEditFieldValue  ../name this ../locale}}
       </option>
     {{/each}}
   </select>
@@ -26,7 +26,7 @@
           {{> edit-multi-select-li
             name=../name
             key=this
-            value=(i18nEditFieldValue ../name this)
+            value=(i18nEditFieldValue  ../name this ../locale)
             index=@index
           }}
         {{else if (isEqual ../name "specific_methods_tools_techniques")}}
@@ -46,7 +46,7 @@
           {{> edit-multi-select-li
             name=../name
             key=this.key
-            value=(i18nEditFieldValue ../name this.key)
+            value=(i18nEditFieldValue  ../name this ../locale)
             index=@index
           }}
         {{/if}}

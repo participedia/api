@@ -6,7 +6,7 @@
         value="{{this}}"
         {{#if (isEqual ../selectedValue this)}}selected{{/if}}
       >
-        {{i18nEditFieldValue ../name this}}
+        {{i18nEditFieldValue ../name this ../locale}}
       </option>
     {{/each}}
   </select>
