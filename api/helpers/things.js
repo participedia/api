@@ -106,13 +106,13 @@ const returnByType = async (res, params, article, static, user, results = {}, to
     if (article.hidden && (!user || (user && !user.isadmin))) {
       return res.status(404).render("404");
     }
-    if(!articleid) {
-      // A new article
-      SUPPORTED_LANGUAGES.forEach(lang => {
-        articles[lang.twoLetterCode] = article;
-      });
-      article = articles;
-    }
+    // if(!articleid) {
+    //   // A new article
+    //   SUPPORTED_LANGUAGES.forEach(lang => {
+    //     articles[lang.twoLetterCode] = article;
+    //   });
+    //   article = articles;
+    // }
   }
 
   switch (returns) {

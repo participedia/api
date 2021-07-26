@@ -10,15 +10,8 @@
         data-view-new
       {{/if}}
     >
-     {{#> tabs-with-cards req=req getTabs=(getLanguageSelectorTabs)}}
-
-      {{#each (getLanguageSelectorTabs)}}
-        {{#withItem ../article key=key}}
           <form
-            data-lang="{{../key}}"
-            id="{{../key}}"
-            data-local="local"
-            {{#if (isEditView ../../req)}}
+            {{#if (isEditView req)}}
               action="/{{type}}/{{id}}"
             {{else}}
               action="/{{type}}/new"
@@ -27,42 +20,35 @@
             enctype="application/x-www-form-urlencoded"
             class="js-edit-form"
           >
-            <input type="hidden" name="user" value="{{../../req.user.id}}" />
+            <input type="hidden" name="user" value="{{req.user.id}}" />
 
-            {{#if (isEditView ../../req)}}
-            <input type="hidden" name="article_id" value="{{id}}" />
+            {{#if (isEditView req)}}
+              <input type="hidden" name="article_id" value="{{id}}" />
             {{/if}}
 
-            <input type="hidden" name="language" value="{{../key}}" />
+            <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm article}}" />
 
-            <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm this}}" />
-
-            {{#if ../../req.user.isadmin}}
+            {{#if req.user.isadmin}}
               <fieldset class="admin-only">
                 <div class="edit-form-admin-only-section">
                   <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
-                  {{> edit-boolean article=this name="featured" quick-submit=true}}
-                  {{> edit-boolean article=this name="hidden" quick-submit=true}}
-                  {{# if (isNotCollection this)}}
-                    {{> article-edit-select article=this static=../../static name="completeness" quick-submit=true}}
-                    {{> edit-autocomplete article=this static=../../static name="collections" multi=true }}
+                  {{> edit-boolean article=article name="featured" quick-submit=true}}
+                  {{> edit-boolean article=article name="hidden" quick-submit=true}}
+                  {{# if (isNotCollection article)}}
+                    {{> article-edit-select article=article static=../static name="completeness" quick-submit=true}}
+                    {{> edit-autocomplete article=article static=../static name="collections" multi=true }}
                   {{/if}}
-                  {{> edit-submission-details article=this }}
+                  {{> edit-submission-details article=article }}
                 </div>
               </fieldset>
             {{/if}}
 
-            {{> original-language-alert article=this}}
-            {{> @partial-block locale=../key article=this __=../../__ static=../../static}}
+            {{> original-language-alert article=article}}
+            {{> @partial-block article=article __=__ static=static}}
 
           </form>
+      {{> edit-form-submit-button article=article}}
 
-        {{/withItem}}
-      {{/each}}
-
-      {{> edit-form-submit-button article=this}}
-
-      {{/tabs-with-cards}}
     </article>
   </div>
   <div class="right-col">
