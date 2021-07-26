@@ -65,6 +65,8 @@ const editForm = {
     };
     fullVersionButtonEls.forEach(el => handleFullVersionClick(el));
 
+    initOtherLangSelector();
+
     infoIconToModal.init();
     this.initPinTabs();
 
@@ -91,6 +93,37 @@ const editForm = {
       });
     }
     tabsWithCards.init();
+  },
+
+  initOtherLangSelector(){
+    this.entryLocaleData = {
+      title: {},
+      description: {},
+      body: {}
+    };
+
+    const selectors = document.querySelectorAll('other_lang_select_ctnr select');
+    const selectorLoaders = document.querySelectorAll('js_other_lang_select');
+
+    selectorLoaders.forEach(el => {
+      el.addEventListener('click', evt => {
+        evt.preventDefault();
+        evt.cancelBubble();
+
+        const field = evt.target.dataset;
+        console.log(field);
+      });
+    });
+
+    selectors.forEach(el => {
+      el.addEventListener('change', evt => {
+        evt.preventDefault();
+        evt.cancelBubble();
+
+        const field = evt.target.value;
+        console.log(field);
+      });
+    });
   },
 
   validateLocalForms() {

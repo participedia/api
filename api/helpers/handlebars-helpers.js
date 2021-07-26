@@ -172,6 +172,18 @@ module.exports = {
     );
   },
 
+  getLanguageSelectorTabs: (context) => {
+    return [
+      { title: i18n("English", context), key: "en" },
+      { title: i18n("French", context), key: "fr" },
+      { title: i18n("German", context), key: "de" },
+      { title: i18n("Spanish", context), key: "es" },
+      { title: i18n("Chinese", context), key: "zh" },
+      { title: i18n("Italian", context), key: "it" },
+      { title: i18n("Portugese", context), key: "pt" },
+    ];
+  },
+
   // transalation helpers
   getLocalizedTermsOfUsePartial: context => {
     const locale = context.data.root.locale || "en";
@@ -286,7 +298,7 @@ module.exports = {
     return lang === req.cookies.locale;
   },
 
-  getArticleOptions: (staticText, name) => {
+  getArticleOptions: (staticText, name, context) => {
     // has_components and is_component_of fields use the cases options
     // uses mapIdTitleToKeyValue function to map id/title keys to key/value keys
     if (name === "is_component_of") {
@@ -297,6 +309,11 @@ module.exports = {
       return mapIdTitleToKeyValue(staticText["organizations"]);
     } else if (name === "collections") {
       return mapIdTitleToKeyValue(staticText["collections"]);
+    } else if(['title', 'description', 'body'].includes(name)) {
+      return SUPPORTED_LANGUAGES.map(item => {
+        return item.twoLetterCode;
+        // };
+      });
     } else {
       return staticText[name];
     }
@@ -1040,18 +1057,6 @@ module.exports = {
     ];
   },
 
-  getLanguageSelectorTabs(context) {
-    return [
-      { title: i18n("English", context), key: "en" },
-      { title: i18n("French", context), key: "fr" },
-      { title: i18n("German", context), key: "de" },
-      { title: i18n("Spanish", context), key: "es" },
-      { title: i18n("Chinese", context), key: "zh" },
-      { title: i18n("Italian", context), key: "it" },
-      { title: i18n("Portugese", context), key: "pt" },
-    ];
-  },
-
   getCollectionTabs(context) {
     return [
       { title: i18n("All", context), key: "all" },
@@ -1178,6 +1183,10 @@ module.exports = {
   isNewView(req) {
     const baseUrls = ["/case", "/method", "/organization", "/collection"];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("new") === 1;
+  },
+
+  isTranslatable(article, name, context) {
+    return ['title', 'description', 'body'].includes(name);
   },
 
   isEditView(req) {
