@@ -337,8 +337,8 @@ module.exports = {
     );
   },
 
-  i18nEditFieldValue: (name, option, locale = null, context) => {
-    const defaultKey = `name:${name}-key:${option}`;
+  i18nEditFieldValue: (name, option, locale = null, useNoKey = false, context) => {
+    const defaultKey = !useNoKey ? `name:${name}-key:${option}` : `name:${option}`;
     const longKey = `${defaultKey}-longValue`;
     let i18nValue;
     let i18nLongValue;

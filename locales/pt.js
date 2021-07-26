@@ -1902,6 +1902,13 @@
   "mission.p1": "Participedia é uma rede global e plataforma de crowdsourcing para pesquisadores, educadores, profissionais, formuladores de políticas, ativistas e qualquer pessoa interessada em inovações democráticas. Por democrático, queremos dizer práticas ou instituições que potencialmente promovem ideais de autogoverno - individualmente, coletivamente e através do tempo, espaço e geografia. Por inovações, queremos dizer práticas ou instituições que são relativamente novas para um contexto ou lugar. Nossa missão é mobilizar o conhecimento sobre as práticas e instituições que melhoram a democracia que as pessoas estão inventando, remodelando, protegendo e transferindo de outros contextos.",
   "mission.p2": "Embora comprometida com os ideais democráticos, a Participédia não promove nenhuma agenda ideológica, programática, institucional ou governamental. Acreditamos que há muitas maneiras de fazer avançar a democracia e que elas variam de acordo com o local, a história, a cultura e os desafios baseados no contexto. Reconhecemos as desigualdades existentes na coleta, teorização e mobilização do conhecimento sobre as formas não ocidentais de inovações democráticas. A Participedia está empenhada em trabalhar para resolver esse desequilíbrio. Também reconhecemos que nem todos os casos e métodos documentados pela Participedia promoverão a democracia e que os impactos variam de acordo com o contexto. “Nossa missão é mobilizar conhecimento sobre práticas e instituições promotoras da democracia que sustentem as respostas à pergunta: Que tipo de inovação democrática funciona melhor, para quais propósitos e em que condições?",
   "mission.p3": "A Fase 1 da Participedia enfatizou as inovações democráticas na governança participativa. A Fase 2 da Participedia, lançada em junho de 2021, está se expandindo para incluir uma gama mais ampla de práticas e instituições que potencialmente apóiam ideais democráticos, incluindo inovações em direitos humanos e políticos, responsabilidade democrática, representação democrática, democracia internacional e comunicações digitais. A Fase 2 reconhece que o projeto democrático se baseia em ecologias complexas de práticas e instituições e desenvolverá a infraestrutura conceitual necessária para capturar esses domínios mais amplos de inovações democráticas por meio de crowdsourcing.",
-  "know_other_lang": "Você conhece outro idioma?"
+  "know_other_lang": "Você conhece outro idioma?",
+  "name: en": "English",
+  "name: fr": "French",
+  "name: pt": "português",
+  "name: es": "espanhol",
+  "name: zh": "chinês",
+  "name: it": "italiano",
+  "name: de": "alemão"
 
 }

@@ -1907,5 +1907,11 @@
   "mission.p2": "Although committed to democratic ideals, Participedia does not advance any ideological, programmatic, institutional, or government agenda. We believe that there are many ways to advance democracy, and that they will differ by place, history, culture, and context-based challenges. We recognize existing inequalities in the collection, theorization, and mobilization of knowledge about non-Western forms of democratic innovations. Participedia is committed to working to address this imbalance.  We also recognize that not all cases and methods documented by Participedia will advance democracy, and that impacts will vary by context. “Our mission is to mobilize knowledge about democracy-enhancing practices and institutions that will support answers to the question: What kinds of democratic innovations work best, for what purposes, under what conditions?",
   "mission.p3": "Participedia Phase 1 emphasized democratic innovations in participatory governance. Participedia Phase 2, launched in June 2021, is expanding to include a broader range of practices and institutions that potentially support democratic ideals, including innovations in human and political rights, democratic accountability, democratic representation, democracy across borders, and digital communications. Phase 2 recognizes that the democratic project builds on complex ecologies of practices and institutions, and will develop the conceptual infrastructure necessary to capture these broader domains of democratic innovations through crowdsourcing.",
   "know_other_lang": "%sDo you know another language?%s",
-  "name:title-key:en": "English"
+  "name:en": "English",
+  "name:fr": "French",
+  "name:pt": "Portuguese",
+  "name:es": "Spanish",
+  "name:zh": "Chinese",
+  "name:it": "Italian",
+  "name:de": "German"
 }
