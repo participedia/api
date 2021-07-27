@@ -1,13 +1,19 @@
 <select name={{name}} class="js-edit-select" id="js-edit-select-{{name}}">
-    <option data-placeholder="true" value="">{{placeholder_txt}}</option>
-    {{#each options}}
-      <option
-        value="{{this}}"
-        {{#if (isEqual ../selectedValue this)}}selected{{/if}}
-      >
-        {{i18nEditFieldValue name this ../locale ../noKey}}  {{toJSON this}}
-      </option>
-    {{/each}}
-  </select>
-  {{toJSON options}}
-  {{toJSON name}}
+  <option data-placeholder="true" value="">{{placeholder_txt}}</option>
+  {{#if (booleanCheck isLanguage)}}
+  <option value="en">{{t 'name:en'}}</option>
+  <option value="fr">{{t 'name:fr'}}</option>
+  <option value="es">{{t 'name:es'}}</option>
+  <option value="pt">{{t 'name:pt'}}</option>
+  <option value="zh">{{t 'name:zh'}}</option>
+  <option value="de">{{t 'name:de'}}</option>
+  <option value="it">{{t 'name:it'}}</option>
+  {{/each}}
+  {{else}}
+  {{#each options}}
+  <option value="{{this}}" {{#if (isEqual ../selectedValue this)}}selected{{/if}}>
+    {{i18nEditFieldValue ../name this ../locale noKey}}
+  </option>
+  {{/each}}
+  {{/if}}
+</select>

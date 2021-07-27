@@ -280,6 +280,10 @@ module.exports = {
     return SUPPORTED_LANGUAGES;
   },
 
+  booleanCheck: (value) => {
+    return !!value;
+  },
+
   getOriginalLanguageValueForEditForm: (article, context) => {
     const req = context.data.root.req;
     return article.original_language || req.cookies.locale || "en"
@@ -338,7 +342,6 @@ module.exports = {
   },
 
   i18nEditFieldValue: (name, option, locale = null, useNoKey = false, context) => {
-    console.log(name, option, locale, useNoKey);
     const defaultKey = !useNoKey ? `name:${name}-key:${option}` : `name:${option}`;
     const longKey = `${defaultKey}-longValue`;
     let i18nValue;

@@ -282,6 +282,15 @@ module.exports = {
     "multinational",
     "no_geo",
   ],
+  languages: [
+    "en",
+    "fr",
+    "pt",
+    "es",
+    "zh",
+    "it",
+    "de"
+  ],
   legality: ["yes", "no"],
   staff: ["yes", "no"],
   volunteers: ["yes", "no"],
@@ -464,14 +473,5 @@ module.exports = {
     "partial_citations",
     "partial_editing",
     "complete",
-  ],
-  languages: [
-    "en",
-    "fr",
-    "pt",
-    "es",
-    "zh",
-    "it",
-    "de"
   ],
 };
