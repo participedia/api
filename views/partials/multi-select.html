@@ -1,0 +1,47 @@
+<select name="{{name}}" class="edit-multi-select js-edit-multi-select" id="js-edit-multi-select-{{name}}" {{#if
+    ranked}}data-ranked="true" {{/if}}>
+    <option data-placeholder="true" value="">{{placeholder article name}}</option>
+    {{#each (getArticleOptions static name)}}
+    <option value="{{this}}">
+        {{i18nEditFieldValue ../name this ../locale ../noKey}}
+    </option>
+    {{/each}}
+</select>
+<ol class="unstyled-list edit-multi-select-list js-edit-multi-select-list" {{#if ranked}}data-draggable="true" {{/if}}
+    data-name="{{name}}" {{#if max}}data-max="{{max}}" {{/if}}>
+    {{#each (getOptions article name)}}
+    {{#if (isSelectedInArray ../article ../name this)}}
+    {{#if (isString this)}}
+    {{> edit-multi-select-li
+    name=../name
+    key=this
+    value=(i18nEditFieldValue ../name this ../locale)
+    index=@index
+    }}
+    {{else if (isEqual ../name "specific_methods_tools_techniques")}}
+    {{!--
+    specific_methods_tools_techniques object is shaped like
+    {id: "1", type: "method", title: "My Title" }
+    while all others are
+    { key: "key", value: "value" }
+    --}}
+    {{> edit-multi-select-li
+    name=../name
+    key=this.id
+    value=this.title
+    index=@index
+    }}
+    {{else}}
+    {{> edit-multi-select-li
+    name=../name
+    key=this.key
+    value=(i18nEditFieldValue ../name this ../locale)
+    index=@index
+    }}
+    {{/if}}
+    {{/if}}
+    {{/each}}
+</ol>
+<script type="text/template" id="js-edit-multi-select-list-item">
+    {{> edit-multi-select-li }}
+  </script>
