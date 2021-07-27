@@ -465,4 +465,13 @@ module.exports = {
     "partial_editing",
     "complete",
   ],
+  languages: [
+    "en",
+    "fr",
+    "pt",
+    "es",
+    "zh",
+    "it",
+    "de"
+  ],
 };
