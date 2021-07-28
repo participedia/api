@@ -38,8 +38,8 @@
                   {{> edit-boolean article=article name="featured" quick-submit=true}}
                   {{> edit-boolean article=article name="hidden" quick-submit=true}}
                   {{# if (isNotCollection article)}}
-                    {{> article-edit-select article=article static=../static name="completeness" quick-submit=true}}
-                    {{> edit-autocomplete article=article static=../static name="collections" multi=true }}
+                    {{> article-edit-select article=article static=static name="completeness" quick-submit=true}}
+                    {{> edit-autocomplete article=article static=static name="collections" multi=true }}
                   {{/if}}
                   {{> edit-submission-details article=article }}
                 </div>
