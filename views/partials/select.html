@@ -1,4 +1,4 @@
-<select name={{name}} class="js-edit-select" id="js-edit-select-{{name}}">
+<select name={{name}} class="js-edit-select" {{#if (isEqual isLanguage false)}}id="js-edit-select-{{name}}"{{/if}}>
   <option data-placeholder="true" value="">{{placeholder_txt}}</option>
   {{#if (booleanCheck isLanguage)}}
   <option value="en">{{t 'name:en'}}</option>

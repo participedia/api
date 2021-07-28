@@ -3,12 +3,11 @@ import loadingGifBase64 from "./loading-gif-base64.js";
 import modal from "./modal.js";
 import infoIconToModal from "./info-icon-to-modal.js";
 import tracking from "./utils/tracking.js";
-import languageSelectTooltipForNewEntries from './language-select-tooltip-for-new-entries.js';
-import languageSelectTooltipForNewEntryInput from './language-select-tooltip-for-new-entry-input';
+import languageSelectTooltipForNewEntries from "./language-select-tooltip-for-new-entries.js";
+import languageSelectTooltipForNewEntryInput from "./language-select-tooltip-for-new-entry-input";
 
-import submitFormLanguageSelector from './submit-form-language-selector';
+import submitFormLanguageSelector from "./submit-form-language-selector";
 import tabsWithCards from "./tabs-with-cards.js";
-
 
 const editForm = {
   init() {
@@ -65,14 +64,14 @@ const editForm = {
     };
     fullVersionButtonEls.forEach(el => handleFullVersionClick(el));
 
-    initOtherLangSelector();
+    this.initOtherLangSelector();
 
     infoIconToModal.init();
-    this.initPinTabs();
+    // this.initPinTabs();
 
     this.formEl = document.querySelector(".js-edit-form");
 
-    if(this.localForms) {
+    if (this.localForms) {
       this.initLocalForms();
     }
     // Stopped initialization of new entries due to languageSelectTooltipForNewEntryInput init.
@@ -87,7 +86,7 @@ const editForm = {
     const submitButtonEls = document.querySelectorAll("[type=submit]");
     for (let i = 0; i < submitButtonEls.length; i++) {
       const submitBtn = submitButtonEls[i];
-      submitBtn.addEventListener('click', () => {
+      submitBtn.addEventListener("click", () => {
         // submit button clicked, validate forms
         this.validateLocalForms();
       });
@@ -95,65 +94,121 @@ const editForm = {
     tabsWithCards.init();
   },
 
-  initOtherLangSelector(){
+  initOtherLangSelector() {
+    this.currentInputValue = '';
     this.entryLocaleData = {
       title: {},
       description: {},
-      body: {}
+      body: {},
     };
 
-    const selectors = document.querySelectorAll('other_lang_select_ctnr select');
-    const selectorLoaders = document.querySelectorAll('js_other_lang_select');
+      const selectors = document.querySelectorAll(
+        "select.js-edit-select[name=languages]"
+      );
+      const selectorLoaders = document.querySelectorAll(".js_other_lang_select");
+      const inputFields = document.querySelectorAll(
+        "select.js-edit-select[name=languages]+input, select.js-edit-select[name=languages]+textarea");
+        const bodyField = document.querySelector(".ql-editor");
+        console.log(bodyField);
+        bodyField.addEventListener("keyup", (evt) => {
+          console.log(evt.target.innerHTML);
+          this.entryLocaleData['body'][this.field] = evt.target.innerHTML;
+        });
+        inputFields.forEach(input => {
+          input.addEventListener("focus", (evt) => {
+            this.currentInputValue = evt.target.value;
+            this.currentInput = evt.target.name;
+          });
+          input.addEventListener("keyup", (evt) => {
+            this.currentInputValue = evt.target.value;
+            this.currentInput = evt.target.name;
+            if(this.field) {
+              this.entryLocaleData[this.inputName][this.field] = this.currentInputValue;
+            }
+          });
+        });
 
-    selectorLoaders.forEach(el => {
-      el.addEventListener('click', evt => {
-        evt.preventDefault();
-        evt.cancelBubble();
+      console.log(inputFields);
+      selectorLoaders.forEach(el => {
+        el.addEventListener("click", evt => {
+          evt.preventDefault();
 
-        const field = evt.target.dataset;
-        console.log(field);
+          const field = evt.target.dataset;
+          console.log(field);
+          el.nextElementSibling.classList.toggle("is-visible");
+        });
       });
-    });
 
-    selectors.forEach(el => {
-      el.addEventListener('change', evt => {
-        evt.preventDefault();
-        evt.cancelBubble();
+      selectors.forEach(el => {
+        el.addEventListener("change", evt => {
+          evt.preventDefault();
 
-        const field = evt.target.value;
-        console.log(field);
+          const isBody = el.nextElementSibling.className.includes('ql-toolbar');
+          this.field = evt.target.value;
+          this.inputName = isBody ? 'body' : el.nextElementSibling.name;
+          const inputField = isBody ? bodyField : el.nextElementSibling;
+
+          console.log(this.field, this.inputName);
+          if(this.entryLocaleData[this.inputName] && this.entryLocaleData[this.inputName][this.field]){
+            // if(this.field === "title" || this.field === "description"){
+              if(isBody) {
+                inputField.innerHTML = this.entryLocaleData[this.inputName][this.field];
+              } else {
+                inputField.value = this.entryLocaleData[this.inputName][this.field];
+              }
+            // }
+          } else {
+            this.entryLocaleData[this.inputName][this.field] = ''
+            if(isBody) {
+              inputField.innerHTML = this.entryLocaleData[this.inputName][this.field];
+            } else {
+              inputField.value = this.entryLocaleData[this.inputName][this.field];
+            }
+          }
+        });
       });
-    });
   },
 
-  validateLocalForms() {
-
-  },
+  validateLocalForms() {},
 
   initPinTabs() {
-    const tabsContainer = document.querySelector('.js-tab-items');
-    const mobileTabsContainer = document.querySelector('.js-tab-select-container');
-    document.addEventListener('scroll', (e) => {
+    const tabsContainer = document.querySelector(".js-tab-items");
+    const mobileTabsContainer = document.querySelector(
+      ".js-tab-select-container"
+    );
+    document.addEventListener("scroll", e => {
       console.log(window.scrollY);
-      if(window.scrollY > 25) {
-        tabsContainer.classList.add('fixed-language-tab');
+      if (window.scrollY > 25) {
+        tabsContainer.classList.add("fixed-language-tab");
       } else {
-        tabsContainer.classList.remove('fixed-language-tab');
+        tabsContainer.classList.remove("fixed-language-tab");
       }
-      if(window.scrollY > 30) {
-        mobileTabsContainer.classList.add('fixed-language-tab');
+      if (window.scrollY > 30) {
+        mobileTabsContainer.classList.add("fixed-language-tab");
       } else {
-        mobileTabsContainer.classList.remove('fixed-language-tab');
+        mobileTabsContainer.classList.remove("fixed-language-tab");
       }
-    })
+    });
   },
 
   sendFormData() {
     const formData = serialize(this.formEl);
+    const originalEntry = Object.fromEntries(new URLSearchParams(formData));
+    const formObject = Object.fromEntries(new URLSearchParams(formData));
     const formsData = {};
-    this.localForms.forEach(form => {
-      formsData[form.dataset['lang']] = serialize(form);
+    const supportedLanguages = JSON.parse(this.formEl.supportedLangs.value) || [];
+
+    supportedLanguages.forEach(lang => {
+
+      formsData[lang.key] = formObject;
+      formsData[lang.key]['title'] = this.entryLocaleData['title']?.[lang.key] || '';
+      formsData[lang.key]['description'] = this.entryLocaleData['description']?.[lang.key] || '';
+      formsData[lang.key]['body'] = this.entryLocaleData['body']?.[lang.key] || '';
     });
+    // const formsData = {};
+    // this.localForms.forEach(form => {
+    //   formsData[form.dataset["lang"]] = serialize(form);
+    // });
     const xhr = new XMLHttpRequest();
     xhr.open("POST", this.formEl.getAttribute("action"), true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -166,7 +221,7 @@ const editForm = {
         // if user is not logged in
         // this.openAuthWarning();
         window.sessionStorage.setItem("submitButtonClick", "true");
-        window.location.href = '/logout';
+        window.location.href = "/logout";
       } else if (xhr.status === 413) {
         // if file uploads are too large
         this.handleErrors([
@@ -191,7 +246,7 @@ const editForm = {
       }
     };
 
-    xhr.send(JSON.stringify(formsData));
+    xhr.send(JSON.stringify({...formsData, entryLocales: this.entryLocaleData, originalEntry}));
     // open publishing feedback modal as soon as we send the request
     this.openPublishingFeedbackModal();
   },

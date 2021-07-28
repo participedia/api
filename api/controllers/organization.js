@@ -145,7 +145,9 @@ async function postOrganizationNewHttp(req, res) {
       language: original_language,
       title: title
     };
-    createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
+
+    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+    createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
     if(localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
     }

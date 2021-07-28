@@ -17,14 +17,12 @@
     </p>
   {{/if}}
   {{#if (isTranslatable article name)}}
-    <p class="other_lang_select_ctnr {{name}}">
       {{{__
         "know_other_lang"
-        "<a class='js_other_lang_select' data-field-name='{{name}}' href='#'>"
+        "<a class='js_other_lang_select' data-field-name='languages' href='#'>"
         "</a>"
       }}}
       {{> select isLanguage=true quick-submit=quick-submit name="languages" noKey=true is_required=is_required}}
-    </p>
   {{/if}}
   {{> @partial-block }}
 </div>

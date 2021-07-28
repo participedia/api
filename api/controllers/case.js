@@ -127,7 +127,8 @@ async function postCaseNewHttp(req, res) {
       title
     };
 
-    await createLocalizedRecord(localizedData, thing.thingid, localesToTranslate);
+    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+    await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
     if(localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
     }

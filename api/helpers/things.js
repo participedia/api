@@ -606,14 +606,16 @@ function parseAndValidateThingPostData(body, entryName) {
     for (const entryLocale in body) {
       if (Object.hasOwnProperty.call(body, entryLocale)) {
         const entry = Object.fromEntries(new URLSearchParams(body[entryLocale]));
-        if(requireTranslation(entry)) {
+        if(!entry.title || entry.description || entry.body || requireTranslation(entry)) {
           localesToTranslate.push(entryLocale);
         }
-        if(entryLocale === entry.original_language) {
-          originalLanguageEntry = entry;
-        }
+        // if(entryLocale === entry.original_language) {
+        //   originalLanguageEntry = entry;
+        // }
       }
     }
+
+    originalLanguageEntry = body.originalEntry;
 
     // Validate the rest
     for (const entryLocale in body) {
@@ -624,6 +626,10 @@ function parseAndValidateThingPostData(body, entryName) {
         localesToNotTranslate.push(entry);
       }
     }
+
+    const originalEntryErrors = validateFields(originalLanguageEntry, entryName);
+    langErrors.push({locale: originalLanguageEntry.original_language, errors: originalEntryErrors});
+    
     const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
 
     return {

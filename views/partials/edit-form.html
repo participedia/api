@@ -14,13 +14,17 @@
             {{#if (isEditView req)}}
               action="/{{type}}/{{id}}"
             {{else}}
-              action="/{{type}}/new"
+              action="new"
             {{/if}}
             method="post"
             enctype="application/x-www-form-urlencoded"
             class="js-edit-form"
           >
             <input type="hidden" name="user" value="{{req.user.id}}" />
+
+            {{toJSON (getLanguageSelectorTabs)}}
+
+            <input type="hidden" name="supportedLangs" value="{{toJSON (getLanguageSelectorTabs)}}">
 
             {{#if (isEditView req)}}
               <input type="hidden" name="article_id" value="{{id}}" />

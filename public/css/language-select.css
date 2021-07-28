@@ -8,3 +8,14 @@
   align-items: flex-end;
   margin-top: 12px;
 }
+.js-edit-select[name=languages] {
+  display: none;
+}
+
+.js-edit-select.is-visible {
+  display: block;
+}
+
+select.js-edit-select[name=languages] {
+  margin-bottom: 10px;
+}
