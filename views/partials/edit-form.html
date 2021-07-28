@@ -22,8 +22,6 @@
           >
             <input type="hidden" name="user" value="{{req.user.id}}" />
 
-            {{toJSON (getLanguageSelectorTabs)}}
-
             <input type="hidden" name="supportedLangs" value="{{toJSON (getLanguageSelectorTabs)}}">
 
             {{#if (isEditView req)}}
