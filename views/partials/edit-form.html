@@ -26,6 +26,7 @@
 
             {{#if (isEditView req)}}
               <input type="hidden" name="article_id" value="{{id}}" />
+              <input type="hidden" name="article_data" value="{{toJSON articles}}" />
             {{/if}}
 
             <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm article}}" />

@@ -184,6 +184,10 @@ module.exports = {
     ];
   },
 
+  setSelectedLanguageArticle: (articles, context) => {
+    return articles[req.cookies.locale];
+  },
+
   // transalation helpers
   getLocalizedTermsOfUsePartial: context => {
     const locale = context.data.root.locale || "en";
@@ -898,9 +902,9 @@ module.exports = {
 
     if (!postDateIsInHistory()) {
       history.push({
-        "user_id": creator.user_id,
+        "user_id": creator?.user_id,
         "timestamp": postDate,
-        "name": creator.name
+        "name": creator?.name
       });
     }
 
