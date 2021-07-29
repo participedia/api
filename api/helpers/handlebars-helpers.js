@@ -904,7 +904,7 @@ module.exports = {
       history.push({
         "user_id": creator ? creator.user_id : null,
         "timestamp": postDate,
-        "name": creator ? creator.name || null
+        "name": creator ? creator.name : null
       });
     }
 
