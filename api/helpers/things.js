@@ -90,6 +90,7 @@ const placeHolderPhotos = article => {
 const returnByType = async (res, params, article, static, user, results = {}, total = null, pages = null, numArticlesByType = null) => {
   const { returns, type, view, articleid} = params;
   const articles = {};
+  const currentLocale = res.locale || "en";
 
   if (!article) return;
 
@@ -101,7 +102,7 @@ const returnByType = async (res, params, article, static, user, results = {}, to
     article.forEach(e => {
       articles[e.language] = e;
     });
-    article = articles;
+    article = articles[currentLocale];
   } else {
     if (article.hidden && (!user || (user && !user.isadmin))) {
       return res.status(404).render("404");
@@ -134,7 +135,7 @@ const returnByType = async (res, params, article, static, user, results = {}, to
     default:
       return res
         .status(200)
-        .render(type + "-" + view, { article, results, static, user, params, total, pages, numArticlesByType });
+        .render(type + "-" + view, { articles, article, results, static, user, params, total, pages, numArticlesByType });
   }
 };
 
