@@ -191,7 +191,7 @@ const editForm = {
       const currentLocale = document.querySelector("input[name=locale").value;
 
       for (const locale in articleData) {
-        if (Object.hasOwnProperty.call(locale)) {
+        if (articleData.hasOwnProperty(locale)) {
           const localeArticle = articleData[locale];
           this.entryLocaleData.title[locale] = localeArticle.title;
           this.entryLocaleData.description[locale] = localeArticle.description;
@@ -247,10 +247,7 @@ const editForm = {
       formsData[lang.key]["body"] =
         this.entryLocaleData["body"]?.[lang.key] || "";
     });
-    // const formsData = {};
-    // this.localForms.forEach(form => {
-    //   formsData[form.dataset["lang"]] = serialize(form);
-    // });
+
     const xhr = new XMLHttpRequest();
     xhr.open("POST", this.formEl.getAttribute("action"), true);
     xhr.setRequestHeader("Content-Type", "application/json");
