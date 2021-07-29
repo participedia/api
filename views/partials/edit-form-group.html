@@ -17,12 +17,14 @@
     </p>
   {{/if}}
   {{#if (isTranslatable article name)}}
+    {{#if (isEqual (isEditView req) false)}}
       {{{__
         "know_other_lang"
         "<a class='js_other_lang_select' data-field-name='languages' href='#'>"
         "</a>"
       }}}
-      {{> select isLanguage=true quick-submit=quick-submit name="languages" noKey=true is_required=is_required}}
+    {{/if}}
+    {{> select isLanguage=true quick-submit=quick-submit name="languages" noKey=true is_required=is_required}}
   {{/if}}
   {{> @partial-block }}
 </div>

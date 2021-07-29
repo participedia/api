@@ -12,7 +12,7 @@
     >
           <form
             {{#if (isEditView req)}}
-              action="/{{type}}/{{id}}"
+              action="/{{article.type}}/{{article.id}}"
             {{else}}
               action="new"
             {{/if}}
@@ -21,11 +21,11 @@
             class="js-edit-form"
           >
             <input type="hidden" name="user" value="{{req.user.id}}" />
-
+            <input type="hidden" name="locale" value="{{req.locale}}" />
             <input type="hidden" name="supportedLangs" value="{{toJSON (getLanguageSelectorTabs)}}">
 
             {{#if (isEditView req)}}
-              <input type="hidden" name="article_id" value="{{id}}" />
+              <input type="hidden" name="article_id" value="{{article.id}}" />
               <input type="hidden" name="article_data" value="{{toJSON articles}}" />
             {{/if}}
 

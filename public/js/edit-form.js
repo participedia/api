@@ -95,78 +95,117 @@ const editForm = {
   },
 
   initOtherLangSelector() {
-    this.currentInputValue = '';
+    this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
+    this.currentInputValue = "";
     this.entryLocaleData = {
       title: {},
       description: {},
       body: {},
     };
 
-      const selectors = document.querySelectorAll(
-        "select.js-edit-select[name=languages]"
-      );
-      const selectorLoaders = document.querySelectorAll(".js_other_lang_select");
-      const inputFields = document.querySelectorAll(
-        "select.js-edit-select[name=languages]+input, select.js-edit-select[name=languages]+textarea");
-        const bodyField = document.querySelector(".ql-editor");
-        console.log(bodyField);
-        bodyField.addEventListener("keyup", (evt) => {
-          console.log(evt.target.innerHTML);
-          this.entryLocaleData['body'][this.field] = evt.target.innerHTML;
-        });
-        inputFields.forEach(input => {
-          input.addEventListener("focus", (evt) => {
-            this.currentInputValue = evt.target.value;
-            this.currentInput = evt.target.name;
-          });
-          input.addEventListener("keyup", (evt) => {
-            this.currentInputValue = evt.target.value;
-            this.currentInput = evt.target.name;
-            if(this.field) {
-              this.entryLocaleData[this.inputName][this.field] = this.currentInputValue;
-            }
-          });
-        });
-
-      console.log(inputFields);
-      selectorLoaders.forEach(el => {
-        el.addEventListener("click", evt => {
-          evt.preventDefault();
-
-          const field = evt.target.dataset;
-          console.log(field);
-          el.nextElementSibling.classList.toggle("is-visible");
-        });
+    const selectors = document.querySelectorAll(
+      "select.js-edit-select[name=languages]"
+    );
+    const selectorLoaders = document.querySelectorAll(".js_other_lang_select");
+    const inputFields = document.querySelectorAll(
+      "select.js-edit-select[name=languages]+input, select.js-edit-select[name=languages]+textarea"
+    );
+    const bodyField = document.querySelector(".ql-editor");
+    console.log(bodyField);
+    bodyField.addEventListener("keyup", evt => {
+      console.log(evt.target.innerHTML);
+      this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
+    });
+    inputFields.forEach(input => {
+      input.addEventListener("focus", evt => {
+        this.currentInputValue = evt.target.value;
+        this.currentInput = evt.target.name;
       });
+      input.addEventListener("keyup", evt => {
+        this.currentInputValue = evt.target.value;
+        this.currentInput = evt.target.name;
+        if (this.field) {
+          this.entryLocaleData[this.inputName][
+            this.field
+          ] = this.currentInputValue;
+        }
+      });
+    });
+
+    selectorLoaders.forEach(el => {
+      el.addEventListener("click", evt => {
+        evt.preventDefault();
+
+        const field = evt.target.dataset;
+        console.log(field);
+        el.nextElementSibling.classList.toggle("is-visible");
+      });
+    });
+
+    selectors.forEach(el => {
+      el.addEventListener("change", evt => {
+        evt.preventDefault();
+
+        const isBody = el.nextElementSibling.className.includes("ql-toolbar");
+        this.field = evt.target.value;
+        this.inputName = isBody ? "body" : el.nextElementSibling.name;
+        const inputField = isBody ? bodyField : el.nextElementSibling;
+
+        console.log(this.field, this.inputName);
+        if (
+          this.entryLocaleData[this.inputName] &&
+          this.entryLocaleData[this.inputName][this.field]
+        ) {
+          if (isBody) {
+            inputField.innerHTML = this.entryLocaleData[this.inputName][
+              this.field
+            ];
+          } else {
+            inputField.value = this.entryLocaleData[this.inputName][this.field];
+          }
+          // }
+        } else {
+          this.entryLocaleData[this.inputName][this.field] = "";
+          if (isBody) {
+            inputField.innerHTML = this.entryLocaleData[this.inputName][
+              this.field
+            ];
+          } else {
+            inputField.value = this.entryLocaleData[this.inputName][this.field];
+          }
+        }
+      });
+    });
+
+    if(this.isEditMode) {
+      this.initOtherLangSelectorForEditMode();
+    }
+  },
+
+  initOtherLangSelectorForEditMode() {
+    try {
+      const articles = document.querySelector("input[name=article_data]").value || '{}' ;
+      const selectors = document.querySelectorAll("select[name=languages");
+      const articleData = JSON.parse(articles);
+      const bodyField = document.querySelector(".ql-editor");
+      const currentLocale = document.querySelector("input[name=locale").value;
+
+      for (const locale in articleData) {
+        if (Object.hasOwnProperty.call(locale)) {
+          const localeArticle = articleData[locale];
+          this.entryLocaleData.title[locale] = localeArticle.title;
+          this.entryLocaleData.description[locale] = localeArticle.description;
+          this.entryLocaleData.body[locale] = localeArticle.body;
+        }
+      }
 
       selectors.forEach(el => {
-        el.addEventListener("change", evt => {
-          evt.preventDefault();
-
-          const isBody = el.nextElementSibling.className.includes('ql-toolbar');
-          this.field = evt.target.value;
-          this.inputName = isBody ? 'body' : el.nextElementSibling.name;
-          const inputField = isBody ? bodyField : el.nextElementSibling;
-
-          console.log(this.field, this.inputName);
-          if(this.entryLocaleData[this.inputName] && this.entryLocaleData[this.inputName][this.field]){
-            // if(this.field === "title" || this.field === "description"){
-              if(isBody) {
-                inputField.innerHTML = this.entryLocaleData[this.inputName][this.field];
-              } else {
-                inputField.value = this.entryLocaleData[this.inputName][this.field];
-              }
-            // }
-          } else {
-            this.entryLocaleData[this.inputName][this.field] = ''
-            if(isBody) {
-              inputField.innerHTML = this.entryLocaleData[this.inputName][this.field];
-            } else {
-              inputField.value = this.entryLocaleData[this.inputName][this.field];
-            }
-          }
-        });
+        el.classList.add("is-visible");
       });
+      
+    } catch (error) {
+      
+    }
   },
 
   validateLocalForms() {},
@@ -196,14 +235,17 @@ const editForm = {
     const originalEntry = Object.fromEntries(new URLSearchParams(formData));
     const formObject = Object.fromEntries(new URLSearchParams(formData));
     const formsData = {};
-    const supportedLanguages = JSON.parse(this.formEl.supportedLangs.value) || [];
+    const supportedLanguages =
+      JSON.parse(this.formEl.supportedLangs.value) || [];
 
     supportedLanguages.forEach(lang => {
-
       formsData[lang.key] = formObject;
-      formsData[lang.key]['title'] = this.entryLocaleData['title']?.[lang.key] || '';
-      formsData[lang.key]['description'] = this.entryLocaleData['description']?.[lang.key] || '';
-      formsData[lang.key]['body'] = this.entryLocaleData['body']?.[lang.key] || '';
+      formsData[lang.key]["title"] =
+        this.entryLocaleData["title"]?.[lang.key] || "";
+      formsData[lang.key]["description"] =
+        this.entryLocaleData["description"]?.[lang.key] || "";
+      formsData[lang.key]["body"] =
+        this.entryLocaleData["body"]?.[lang.key] || "";
     });
     // const formsData = {};
     // this.localForms.forEach(form => {
@@ -246,7 +288,13 @@ const editForm = {
       }
     };
 
-    xhr.send(JSON.stringify({...formsData, entryLocales: this.entryLocaleData, originalEntry}));
+    xhr.send(
+      JSON.stringify({
+        ...formsData,
+        entryLocales: this.entryLocaleData,
+        originalEntry,
+      })
+    );
     // open publishing feedback modal as soon as we send the request
     this.openPublishingFeedbackModal();
   },
