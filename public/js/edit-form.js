@@ -96,6 +96,7 @@ const editForm = {
 
   initOtherLangSelector() {
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
+    this.field = document.querySelector("input[name=locale]").value;
     this.currentInputValue = "";
     this.entryLocaleData = {
       title: {},
@@ -125,7 +126,7 @@ const editForm = {
         this.currentInputValue = evt.target.value;
         this.currentInput = evt.target.name;
         if (this.field) {
-          this.entryLocaleData[this.inputName][
+          this.entryLocaleData[this.currentInput][
             this.field
           ] = this.currentInputValue;
         }

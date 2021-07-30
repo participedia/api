@@ -590,6 +590,40 @@ async function translateText(data, targetLanguage) {
   return allTranslation;
 }
 
+function generateLocaleArticle(article, uniqueTranslateData, isEdit = false) {
+  const articles = {};
+
+  if(!isEdit) {
+    SUPPORTED_LANGUAGES.forEach((language) => {
+      const translatedData = {...article};
+      if (translatedData) {
+        articles[language.twoLetterCode] = {
+          ...article[language.twoLetterCode],
+          body: uniqueTranslateData.body[language.twoLetterCode] ||  null,
+          title: uniqueTranslateData.title[language.twoLetterCode] || null,
+          description: uniqueTranslateData.description[language.twoLetterCode] || null,
+          language: language.twoLetterCode
+        };
+      }
+    });
+  } else {
+    SUPPORTED_LANGUAGES.forEach((language) => {
+      const translatedData = {...article[language.twoLetterCode]};
+      if (translatedData) {
+        articles[language.twoLetterCode] = {
+          ...article[language.twoLetterCode],
+          body: uniqueTranslateData.body[language.twoLetterCode] ||  null,
+          title: uniqueTranslateData.title[language.twoLetterCode] || null,
+          description: uniqueTranslateData.description[language.twoLetterCode] || null,
+          language: language.twoLetterCode
+        };
+      }
+    });
+  }
+  
+  return articles;
+}
+
 function parseAndValidateThingPostData(body, entryName) {
   const langErrors = [];
     const localesToTranslate = [];
@@ -598,23 +632,21 @@ function parseAndValidateThingPostData(body, entryName) {
 
     // Get locales to translate
     for (const entryLocale in body) {
-      if (Object.hasOwnProperty.call(body, entryLocale)) {
-        const entry = Object.fromEntries(new URLSearchParams(body[entryLocale]));
-        if(!entry.title || entry.description || entry.body || requireTranslation(entry)) {
+      if (body.hasOwnProperty(entryLocale)) {
+        const entry = body[entryLocale];
+        if(!entry.title || requireTranslation(entry)) {
           localesToTranslate.push(entryLocale);
         }
-        // if(entryLocale === entry.original_language) {
-        //   originalLanguageEntry = entry;
-        // }
+        if(entryLocale === entry.original_language) {
+          originalLanguageEntry = entry;
+        }
       }
     }
 
-    originalLanguageEntry = body.originalEntry;
-
     // Validate the rest
     for (const entryLocale in body) {
-      if (Object.hasOwnProperty.call(body, entryLocale) && !localesToTranslate.includes(entryLocale)) {
-        const entry = Object.fromEntries(new URLSearchParams(body[entryLocale]));
+      if (body.hasOwnProperty(entryLocale) && !localesToTranslate.includes(entryLocale)) {
+        const entry = body[entryLocale];
         const errors = validateFields(entry, entryName);
         langErrors.push({locale: entryLocale, errors});
         localesToNotTranslate.push(entry);
@@ -679,5 +711,6 @@ module.exports = {
   limitFromReq,
   offsetFromReq,
   parseAndValidateThingPostData,
-  getThingEdit
+  getThingEdit,
+  generateLocaleArticle
 };
