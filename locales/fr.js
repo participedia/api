@@ -1902,12 +1902,13 @@
   "mission.p1": "Participedia est un réseau mondial et une plate-forme de crowdsourcing pour les chercheurs, les éducateurs, les praticiens, les décideurs politiques, les militants et toute personne intéressée par les innovations démocratiques. Par démocratique, nous entendons des pratiques ou des institutions qui font potentiellement avancer les idéaux d'autonomie gouvernementale – individuellement, collectivement et à travers le temps, l'espace et la géographie. Par innovations, nous entendons des pratiques ou des institutions relativement nouvelles dans un contexte ou un lieu. Notre mission est de mobiliser les connaissances sur les pratiques et les institutions favorisant la démocratie que les gens inventent, remodèlent, protègent et transfèrent à partir d'autres contextes.",
   "mission.p2": "Bien que attaché aux idéaux démocratiques, Participedia ne fait avancer aucun agenda idéologique, programmatique, institutionnel ou gouvernemental. Nous pensons qu'il existe de nombreuses façons de faire progresser la démocratie et qu'elles différeront selon le lieu, l'histoire, la culture et les défis contextuels. Nous reconnaissons les inégalités existantes dans la collecte, la théorisation et la mobilisation des connaissances sur les formes non occidentales d'innovations démocratiques. Participedia s'engage à travailler pour remédier à ce déséquilibre. Nous reconnaissons également que tous les cas et méthodes documentés par Participedia ne feront pas progresser la démocratie et que les impacts varieront selon le contexte. « Notre mission est de mobiliser les connaissances sur les pratiques et les institutions favorisant la démocratie qui soutiendront les réponses à la question : quels types d'innovations démocratiques fonctionnent le mieux, à quelles fins, dans quelles conditions ?",
   "mission.p3": "Participedia Phase 1 a mis l'accent sur les innovations démocratiques en matière de gouvernance participative. La phase 2 de Participedia, lancée en juin 2021, s'étend pour inclure un plus large éventail de pratiques et d'institutions qui soutiennent potentiellement les idéaux démocratiques, y compris les innovations en matière de droits humains et politiques, de responsabilité démocratique, de représentation démocratique, de démocratie transfrontalière et de communications numériques. La phase 2 reconnaît que le projet démocratique s'appuie sur des écologies complexes de pratiques et d'institutions, et développera l'infrastructure conceptuelle nécessaire pour saisir ces domaines plus larges d'innovations démocratiques grâce au crowdsourcing.",
-  "know_other_lang": "Connaissez-vous une autre langue ?",
+  "know_other_lang": "%sConnaissez-vous une autre langue ?%s",
   "name:en": "Anglais",
   "name:fr": "Français",
   "name:pt": "Portugais",
   "name:es": "Espagnol",
   "name:zh": "Chinois",
   "name:it": "Italien",
-  "name:de": "Allemand"
+  "name:de": "Allemand",
+  "language_select_placeholder": "Sélectionnez une langue"
 }

@@ -457,16 +457,6 @@ async function postCaseUpdateHttp(req, res) {
     });
   }
 
-  // for (const entryLocale in req.body) {
-  //   if (Object.hasOwnProperty.call(req.body, entryLocale)) {
-  //     const entry = Object.fromEntries(new URLSearchParams(req.body[entryLocale]));
-  //     localeEntries.push(entry);
-  //     if(entryLocale === entry.original_language) {
-  //       originalLanguageEntry = entry;
-  //     }
-  //   }
-  // }
-
   await caseUpdate(req, res, originalLanguageEntry);
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
 

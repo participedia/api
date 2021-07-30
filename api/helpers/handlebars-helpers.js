@@ -251,6 +251,10 @@ module.exports = {
     return i18n(`${article.type}_${view}_${name}_placeholder`, context);
   },
 
+  languageSelectorPlaceholder: (context) => {
+    return i18n(`language_select_placeholder`, context);
+  },
+
   getFeaturedEntryViewDisplayText: (type, context) => {
     return i18n(`View ${type}`, context);
   },

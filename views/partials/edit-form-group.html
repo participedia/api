@@ -24,7 +24,7 @@
         "</a>"
       }}}
     {{/if}}
-    {{> select isLanguage=true quick-submit=quick-submit name="languages" noKey=true is_required=is_required}}
+    {{> select placeholder_txt=(languageSelectorPlaceholder) isLanguage=true quick-submit=quick-submit name="languages" noKey=true is_required=is_required}}
   {{/if}}
   {{> @partial-block }}
 </div>

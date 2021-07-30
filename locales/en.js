@@ -1913,5 +1913,6 @@
   "name:es": "Spanish",
   "name:zh": "Chinese",
   "name:it": "Italian",
-  "name:de": "German"
+  "name:de": "German",
+  "language_select_placeholder": "Select a language"
 }
