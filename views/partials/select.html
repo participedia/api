@@ -1,5 +1,7 @@
 <select name={{name}} class="js-edit-select" {{#if (isEqual isLanguage false)}}id="js-edit-select-{{name}}"{{/if}}>
-  <option data-placeholder="true" value="">{{placeholder_txt}}</option>
+  {{#if (isEqual noPlaceholder false) }}
+  <option  data-placeholder="true" value="">{{placeholder_txt}}</option>
+  {{/if}}
   {{#if (booleanCheck isLanguage)}}
   <option {{#if (isEqual req.locale "en")}}selected{{/if}} value="en">{{t 'name:en'}}</option>
   <option {{#if (isEqual req.locale "fr")}}selected{{/if}} value="fr">{{t 'name:fr'}}</option>
