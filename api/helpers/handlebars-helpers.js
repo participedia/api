@@ -261,6 +261,22 @@ module.exports = {
 
   t: (key, context) => i18n(key, context),
 
+  getTranslatedEntryPlaceholders: (article, context) => {
+    const type = article.type;
+    const placeholders = {};
+    SUPPORTED_LANGUAGES.forEach(lang => {
+      placeholders[lang.twoLetterCode] = {
+        title: i18n(`${type}_edit_title_placeholder`, context, lang.twoLetterCode),
+        description: i18n(`${type}_edit_description_placeholder`, context, lang.twoLetterCode),
+        image: i18n(`${type}_edit_image_placeholder`, context, lang.twoLetterCode),
+        video: i18n(`${type}_edit_video_placeholder`, context, lang.twoLetterCode),
+        link: i18n(`${type}_edit_link_placeholder`, context, lang.twoLetterCode),
+        map: i18n(`${type}_edit_map_placeholder`, context, lang.twoLetterCode),
+      }
+    });
+    return JSON.stringify(placeholders);
+  },
+
   getLocale(context) {
     const req = context.data.root.req;
     if (req.cookies.locale) {

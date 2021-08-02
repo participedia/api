@@ -97,6 +97,11 @@ const editForm = {
   initOtherLangSelector() {
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
     this.field = document.querySelector("input[name=locale]").value;
+    try {
+      this.localePlaceholders = JSON.parse(document.querySelector("input[name=locale_placeholders]").value || '{}');
+    } catch (error) {
+      this.localePlaceholders = {};
+    }
     this.currentInputValue = "";
     this.entryLocaleData = {
       title: {},
@@ -136,7 +141,6 @@ const editForm = {
     selectorLoaders.forEach(el => {
       el.addEventListener("click", evt => {
         evt.preventDefault();
-
         const field = evt.target.dataset;
         console.log(field);
         el.nextElementSibling.classList.toggle("is-visible");
@@ -146,11 +150,12 @@ const editForm = {
     selectors.forEach(el => {
       el.addEventListener("change", evt => {
         evt.preventDefault();
-
         const isBody = el.nextElementSibling.className.includes("ql-toolbar");
+        const inputField = isBody ? bodyField : el.nextElementSibling;
+
         this.field = evt.target.value;
         this.inputName = isBody ? "body" : el.nextElementSibling.name;
-        const inputField = isBody ? bodyField : el.nextElementSibling;
+        el.nextElementSibling.setAttribute('placeholder', this.localePlaceholders[this.field][this.inputName] || '');
 
         console.log(this.field, this.inputName);
         if (
