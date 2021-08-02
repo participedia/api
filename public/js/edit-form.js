@@ -97,6 +97,8 @@ const editForm = {
   initOtherLangSelector() {
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
     this.field = document.querySelector("input[name=locale]").value;
+    const articles = document.querySelector("input[name=article_data]").value || '{}' ;
+    this.articleData = JSON.parse(articles);
     try {
       this.localePlaceholders = JSON.parse(document.querySelector("input[name=locale_placeholders]").value || '{}');
     } catch (error) {
@@ -155,7 +157,11 @@ const editForm = {
 
         this.field = evt.target.value;
         this.inputName = isBody ? "body" : el.nextElementSibling.name;
-        el.nextElementSibling.setAttribute('placeholder', this.localePlaceholders[this.field][this.inputName] || '');
+        if(isBody) {
+          this.entryLocaleData[this.inputName][this.field] = this.entryLocaleData[this.inputName][this.field] || this.localePlaceholders[this.field][this.inputName];
+        } else {
+          el.nextElementSibling.setAttribute('placeholder', this.localePlaceholders[this.field][this.inputName] || '');
+        }
 
         console.log(this.field, this.inputName);
         if (
@@ -163,9 +169,7 @@ const editForm = {
           this.entryLocaleData[this.inputName][this.field]
         ) {
           if (isBody) {
-            inputField.innerHTML = this.entryLocaleData[this.inputName][
-              this.field
-            ];
+            inputField.innerHTML = this.entryLocaleData[this.inputName][this.field];
           } else {
             inputField.value = this.entryLocaleData[this.inputName][this.field];
           }
@@ -190,15 +194,13 @@ const editForm = {
 
   initOtherLangSelectorForEditMode() {
     try {
-      const articles = document.querySelector("input[name=article_data]").value || '{}' ;
       const selectors = document.querySelectorAll("select[name=languages");
-      const articleData = JSON.parse(articles);
       const bodyField = document.querySelector(".ql-editor");
       const currentLocale = document.querySelector("input[name=locale").value;
 
-      for (const locale in articleData) {
-        if (articleData.hasOwnProperty(locale)) {
-          const localeArticle = articleData[locale];
+      for (const locale in this.articleData) {
+        if (this.articleData.hasOwnProperty(locale)) {
+          const localeArticle = this.articleData[locale];
           this.entryLocaleData.title[locale] = localeArticle.title;
           this.entryLocaleData.description[locale] = localeArticle.description;
           this.entryLocaleData.body[locale] = localeArticle.body;

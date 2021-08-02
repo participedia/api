@@ -24,10 +24,10 @@
             <input type="hidden" name="locale" value="{{req.locale}}" />
             <input type="hidden" name="supportedLangs" value="{{toJSON (getLanguageSelectorTabs)}}">
             <input type="hidden" name="locale_placeholders" value="{{getTranslatedEntryPlaceholders article}}" />
+            <input type="hidden" name="article_data" value="{{toJSON articles}}" />
 
             {{#if (isEditView req)}}
               <input type="hidden" name="article_id" value="{{article.id}}" />
-              <input type="hidden" name="article_data" value="{{toJSON articles}}" />
             {{/if}}
 
             <input type="hidden" name="original_language" value="{{getOriginalLanguageValueForEditForm article}}" />
