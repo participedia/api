@@ -357,7 +357,9 @@ const editForm = {
     if (!Array.isArray(errors)) {
       return `<h3>Sorry, something went wrong. Please try again.</h3>`;
     } else {
-      const errorsHtml = errors.map(error => `<li>${error}</li>`).join("");
+      const errorsHtml = errors.map(error => {
+        return error.errors.map(err => `<li>${err}</li>`).join("");
+      }).join("");
       return `
         <h3>Please fix the following issues</h3>
         <ul>
