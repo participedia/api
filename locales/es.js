@@ -431,7 +431,7 @@
   "completeness.partial_citation_modal_text_1": "A este tipo de entradas le faltan citas (notas al pie), pero de lo contrario está completa. Las entradas que necesitan citas se pueden identificar utilizando el filtro de búsqueda \"calidad de la entrada\" en la página de inicio.",
   "completeness.partial_content_alert": "%sEsta entrada está incompleta.%s Puedes ayudar a Participedia %sañadiéndole información%s.",
   "completeness.partial_content_modal_text_1": "Las entradas parciales cuentan con aproximadamente la mitad de la información y sirven como un buen punto de partida para estudiantes y cualquier persona interesada en contribuir a Participedia. Se pueden encontrar más entradas parciales utilizando el filtro de búsqueda \"calidad la entrada\" en la página de inicio.",
-  "completeness.partial_editing_alert": "%sEsta entrada necesita ayuda con el contenido y la edición.%s Por favor, ayúdanos a %mejorarla%s.",
+  "completeness.partial_editing_alert": "%sEsta entrada necesita ayuda con el contenido y la edición.%s Por favor, ayúdanos a %sejorarla%s.",
   "completeness.partial_editing_modal_text_1": "Este tipo de entrada necesita mejoras significativas en su gramática u ortografía, y puede tener cualquier nivel de calidad (boceto, parcial o completa). Las entradas que necesitan modificaciones gramaticales u ortográficas se pueden identificar mediante el filtro de búsqueda \"calidad de la contribución\" en la página de inicio.",
   "completeness.Stub": "Boceto",
   "completeness.stub_alert": "%sEsta entrada es un boceto%s Por favor, ayúdanos a %smejorarla%s.",
