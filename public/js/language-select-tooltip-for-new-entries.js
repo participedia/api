@@ -49,6 +49,9 @@ const languageSelectTooltipForNewEntries = {
     const tooltipGotItLink = document.querySelector(
       ".js-language-select-tooltip__got-it-link"
     );
+
+    if(!tooltipGotItLink) return;
+
     tooltipGotItLink.addEventListener("click", e => {
       e.preventDefault();
       // hide tooltip
