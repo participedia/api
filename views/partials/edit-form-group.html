@@ -1,30 +1,30 @@
 <div
-  class="form-group form-group-{{name}}"
-  {{#if quick-submit}}data-quick-submit="{{quick-submit}}"{{/if}}
+    class="form-group form-group-{{name}}"
+    {{#if quick-submit}}data-quick-submit="{{quick-submit}}"{{/if}}
 >
-  <label for="{{name}}" {{#if is_required}}data-required={{is_required}}{{/if}}>
-    {{label article name}}
-  </label>
-  {{#if (hasInstructional article name)}}
-    <p>
-      {{{instructional article name}}}
-      {{#if (hasInfo article name)}}
-        {{> info-icon-to-modal 
-            modalHeader=(label article name) 
-            modalText=(info article name) 
-        }}
-      {{/if}}
-    </p>
+<label for="{{name}}" {{#if is_required}}data-required={{is_required}}{{/if}}>
+  {{label article name}}
+</label>
+{{#if (hasInstructional article name)}}
+<p>
+  {{{instructional article name}}}
+  {{#if (hasInfo article name)}}
+  {{> info-icon-to-modal
+  modalHeader=(label article name)
+  modalText=(info article name)
+  }}
   {{/if}}
-  {{#if (isTranslatable article name)}}
-    {{#if (isEqual (isEditView req) false)}}
-      {{{__
-        "know_other_lang"
-        "<a class='js_other_lang_select' data-field-name='languages' href='#'>"
-        "</a>"
-      }}}
-    {{/if}}
-    {{> select noPlaceholder=true placeholder_txt=(languageSelectorPlaceholder) isLanguage=true quick-submit=quick-submit name="languages" noKey=true is_required=is_required}}
-  {{/if}}
-  {{> @partial-block }}
+</p>
+{{/if}}
+{{#if (isTranslatable article name)}}
+{{#if (isEqual (isEditView req) false)}}
+{{{__
+"know_other_lang"
+"<a class='js-other-lang-select' data-field-name='languages' href='#'>"
+  "</a>"
+}}}
+{{/if}}
+{{> select noPlaceholder=true isLanguage=true quick-submit=quick-submit name="languages" idSuffix=name noKey=true is_required=is_required}}
+{{/if}}
+{{> @partial-block }}
 </div>

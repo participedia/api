@@ -111,10 +111,19 @@ const editForm = {
       body: {},
     };
 
+    const formLanguageSelector = document.querySelector(".js-other-lang-select");
+    if(formLanguageSelector) {
+      formLanguageSelector.addEventListener("click", evt => {
+        evt.preventDefault();
+        const field = evt.target.dataset;
+        console.log(field);
+        formLanguageSelector.nextElementSibling.classList.toggle("is-visible");
+      });
+    }
+
     const selectors = document.querySelectorAll(
       "select.js-edit-select[name=languages]"
     );
-    const selectorLoaders = document.querySelectorAll(".js_other_lang_select");
     const inputFields = document.querySelectorAll(
       "select.js-edit-select[name=languages]+input, select.js-edit-select[name=languages]+textarea"
     );
@@ -137,15 +146,6 @@ const editForm = {
             this.field
           ] = this.currentInputValue;
         }
-      });
-    });
-
-    selectorLoaders.forEach(el => {
-      el.addEventListener("click", evt => {
-        evt.preventDefault();
-        const field = evt.target.dataset;
-        console.log(field);
-        el.nextElementSibling.classList.toggle("is-visible");
       });
     });
 
