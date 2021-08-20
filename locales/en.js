@@ -1686,6 +1686,8 @@
   "teaching.These resources can be used to:": "These resources can be used to:",
   "teaching.tlrc.header": "Teaching & Learning Resource Centre",
   "teaching.What are Teaching & Learning Resources?": "What are Teaching & Learning Resources?",
+  "teaching.learning_webinar": "Democratic Teaching & Learning Webinar Series",
+  "teaching.learning_webinar.p1": "This webinar series was designed to connect Participedia researchers and collaborators with shared interests and to exchange knowledge about challenges and successes in the field of teaching methods, theories and cases that support democratic participation. The series was developed and launched in 2018 by Co-Chairs of the Teaching, Training and Mentoring Committee of %sParticipedia.net%s, Drs. Joanna Ashworth & Bettina von Lieres.",
   "Tech Lead": "Tech Lead",
   "teching.Here are a few types of Teaching & Learning Resources": "Here are a few types of Teaching & Learning Resources we hope to collect and share with the Participedia Community:",
   "Terms of Use": "Terms of Use",

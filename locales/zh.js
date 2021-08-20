@@ -1835,6 +1835,8 @@
   "teaching.These resources can be used to:": "这些资源可用于:",
   "teaching.tlrc.header": "教学与学习资源中心",
   "teaching.What are Teaching & Learning Resources?": "什么是教学与学习资源？",
+  "teaching.learning_webinar": "民主教学网络研讨会系列",
+  "teaching.learning_webinar.p1": "该网络研讨会系列旨在将 Participedia 研究人员和合作者与具有共同兴趣的人员联系起来，并交流有关支持民主参与的教学方法、理论和案例领域的挑战和成功的知识。 该系列于 2018 年由 %sParticipedia.net%s 的教学、培训和指导委员会的联合主席、Dr. 乔安娜·阿什沃思和贝蒂娜·冯·列雷斯。",
   "Tech Lead": "技术领先",
   "teching.Here are a few types of Teaching & Learning Resources": "以下是我们希望收集和与参与社区共享的几种教学与学习资源：",
   "Tell me more...": "告诉我更多...",

@@ -1837,6 +1837,8 @@
   "teaching.These resources can be used to:": "Estos recursos se pueden utilizar para:",
   "teaching.tlrc.header": "Centro de recursos para enseñanza y aprendizaje ",
   "teaching.What are Teaching & Learning Resources?": "¿Qué son los recursos de enseñanza y aprendizaje?",
+  "teaching.learning_webinar": "Serie de seminarios web sobre enseñanza y aprendizaje democráticos",
+  "teaching.learning_webinar.p1": "Esta serie de webinars fue diseñada para conectar a investigadores y colaboradores de Participedia con intereses compartidos e intercambiar conocimientos sobre desafíos y éxitos en el campo de métodos de enseñanza, teorías y casos que apoyan la participación democrática. La serie fue desarrollada y lanzada en 2018 por los Copresidentes del Comité de Enseñanza, Capacitación y Tutoría de% sParticipedia.net% s, los Dres. Joanna Ashworth y Bettina von Lieres.",
   "Tech Lead": "Jefe de Tecnología",
   "teching.Here are a few types of Teaching & Learning Resources": "Estos son algunos tipos de recursos de enseñanza y aprendizaje que esperamos recopilar y compartir con la comunidad de Participedia:",
   "Tell me more...": "Dime más...",
