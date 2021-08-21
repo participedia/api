@@ -325,6 +325,9 @@ app.get("/help-faq-contact", function(req, res) {
 app.get("/getting-started", function(req, res) {
   res.status(200).render("getting-started-view");
 });
+app.get("/phase2", function(req, res) {
+  res.redirect('https://sites.google.com/participedia.net/phase2');
+});
 app.get("/profile", function(req, res) {
   if (req.user) {
     res.redirect(`/user/${req.user.id}`);
