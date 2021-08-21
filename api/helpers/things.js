@@ -536,16 +536,18 @@ async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
         timestamp: 'now'
       };
 
-      if (!entry.title && mainEntry.title) {
-        item.title = await translateText(mainEntry.title, entry.language);
-      }
+      if(mainEntry) {
+        if (!entry.title && mainEntry.title) {
+          item.title = await translateText(mainEntry.title, entry.language);
+        }
 
-      if (!entry.body && mainEntry.body) {
-        item.body = await translateText(mainEntry.body, entry.language);
-      }
+        if (!entry.body && mainEntry.body) {
+          item.body = await translateText(mainEntry.body, entry.language);
+        }
 
-      if (!entry.description && mainEntry.description) {
-        item.description = await translateText(mainEntry.description, entry.language);
+        if (!entry.description && mainEntry.description) {
+          item.description = await translateText(mainEntry.description, entry.language);
+        }
       }
 
       records.push(item);
