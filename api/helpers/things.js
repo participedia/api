@@ -201,7 +201,7 @@ async function maybeUpdateUserText(req, res, type) {
   // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
   // if none of the user-submitted text fields have changed, don't add a record
   // to localized_text or
-    return maybeUpdateUserTextLocaleEntry(req.body, req, res, type);
+  return maybeUpdateUserTextLocaleEntry(req.body, req, res, type);
 }
 
 async function maybeUpdateUserTextLocaleEntry(body, req, res, type) {
@@ -501,7 +501,7 @@ async function createLocalizedRecord(data, thingid, localesToTranslate = undefin
       if (data.description) {
         item.description = await translateText(data.description, language.twoLetterCode);
       }
-      
+
       records.push(item);
     }
   }
@@ -517,7 +517,7 @@ async function createLocalizedRecord(data, thingid, localesToTranslate = undefin
     });
 }
 
-async function createUntranslatedLocalizedRecords(data, thingid) {
+async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
   let records = [];
 
   if(!Array.isArray(data)) return;
@@ -527,39 +527,39 @@ async function createUntranslatedLocalizedRecords(data, thingid) {
     const entry = data[i];
     if(supportedTwoLetterCodes.includes(entry.language)) {
       const item = {
-        body: '',
-        title: '',
-        description: '',
+        body: entry.body || '',
+        title: entry.title || '',
+        description: entry.description || '',
         language: entry.language,
         thingid: thingid,
         // TODO: Admin check here
         timestamp: 'now'
       };
 
-      if (entry.body) {
-        item.body = entry.body;
+      if (!entry.title && mainEntry.title) {
+        item.title = await translateText(mainEntry.title, entry.language);
       }
 
-      if (entry.title) {
-        item.title = entry.title;
+      if (!entry.body && mainEntry.body) {
+        item.body = await translateText(mainEntry.body, entry.language);
       }
 
-      if (entry.description) {
-        item.description = entry.description;
+      if (!entry.description && mainEntry.description) {
+        item.description = await translateText(mainEntry.description, entry.language);
       }
-      
+
       records.push(item);
     }
   }
   const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid', 'timestamp'], 'localized_texts');
 
   db.none(insert)
-  .then(function(data) {
-    console.log(data);
-  })
-  .catch(function(error) {
-    console.log(error);
-  });
+    .then(function(data) {
+      console.log(data);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
 }
 
 async function translateText(data, targetLanguage) {
@@ -582,10 +582,10 @@ async function translateText(data, targetLanguage) {
     }
   } else {
     [allTranslation] = await translate
-    .translate(data, target)
-    .catch(function(error) {
-      logError(error);
-    });
+      .translate(data, target)
+      .catch(function(error) {
+        logError(error);
+      });
   }
   return allTranslation;
 }
@@ -620,51 +620,51 @@ function generateLocaleArticle(article, uniqueTranslateData, isEdit = false) {
       }
     });
   }
-  
+
   return articles;
 }
 
 function parseAndValidateThingPostData(body, entryName) {
   const langErrors = [];
-    const localesToTranslate = [];
-    const localesToNotTranslate = [];
-    let originalLanguageEntry;
+  const localesToTranslate = [];
+  const localesToNotTranslate = [];
+  let originalLanguageEntry;
 
-    // Get locales to translate
-    for (const entryLocale in body) {
-      if (body.hasOwnProperty(entryLocale)) {
-        const entry = body[entryLocale];
-        if(!entry.title || requireTranslation(entry)) {
-          localesToTranslate.push(entryLocale);
-        }
-        if(entryLocale === entry.original_language) {
-          originalLanguageEntry = entry;
-        }
+  // Get locales to translate
+  for (const entryLocale in body) {
+    if (body.hasOwnProperty(entryLocale)) {
+      const entry = body[entryLocale];
+      if(!entry.title || requireTranslation(entry)) {
+        localesToTranslate.push(entryLocale);
+      }
+      if(entryLocale === entry.original_language) {
+        originalLanguageEntry = entry;
       }
     }
+  }
 
-    // Validate the rest
-    for (const entryLocale in body) {
-      if (body.hasOwnProperty(entryLocale) && !localesToTranslate.includes(entryLocale)) {
-        const entry = body[entryLocale];
-        const errors = validateFields(entry, entryName);
-        langErrors.push({locale: entryLocale, errors});
-        localesToNotTranslate.push(entry);
-      }
+  // Validate the rest
+  for (const entryLocale in body) {
+    if (body.hasOwnProperty(entryLocale) && !localesToTranslate.includes(entryLocale)) {
+      const entry = body[entryLocale];
+      const errors = validateFields(entry, entryName);
+      langErrors.push({locale: entryLocale, errors});
+      localesToNotTranslate.push(entry);
     }
+  }
 
-    const originalEntryErrors = validateFields(originalLanguageEntry, entryName);
-    langErrors.push({locale: originalLanguageEntry.original_language, errors: originalEntryErrors});
-    
-    const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+  const originalEntryErrors = validateFields(originalLanguageEntry, entryName);
+  langErrors.push({locale: originalLanguageEntry.original_language, errors: originalEntryErrors});
 
-    return {
-      hasErrors,
-      langErrors,
-      localesToTranslate,
-      localesToNotTranslate,
-      originalLanguageEntry
-    }
+  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+
+  return {
+    hasErrors,
+    langErrors,
+    localesToTranslate,
+    localesToNotTranslate,
+    originalLanguageEntry
+  }
 }
 
 async function getThingEdit(params, sqlFile, res) {
@@ -674,7 +674,7 @@ async function getThingEdit(params, sqlFile, res) {
     }
     const articleRows = await (await db.any(sqlFile, params)).map(el => el.row_to_json ? el.row_to_json : el.results);
     articleRows.forEach(article => fixUpURLs(article));
-  return articleRows;
+    return articleRows;
   } catch (error) {
     // only log actual excaptional results, not just data not found
     if (error.message !== "No data returned from the query.") {
