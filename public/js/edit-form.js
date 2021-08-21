@@ -141,11 +141,29 @@ const editForm = {
     });
 
     selectorLoaders.forEach(el => {
-      el.addEventListener("click", evt => {
-        evt.preventDefault();
-        const field = evt.target.dataset;
-        console.log(field);
-        el.nextElementSibling.classList.toggle("is-visible");
+      const selectEl = el.nextElementSibling;
+      const inputEl  = selectEl.nextElementSibling;
+      const _disableSelectEl = (value) => {
+        if(!value) {
+          selectEl.disabled = true;
+        } else {
+          selectEl.disabled = false;
+        }
+      };
+
+      if(["input", "textarea"].indexOf(inputEl.localName) >= 0) {
+        // Toggle select element disable state
+        _disableSelectEl(inputEl.value);
+
+        // Listen to keyup event of input element
+        inputEl.addEventListener("keyup", e => {
+          _disableSelectEl(e.target.value);
+        });
+      }
+
+      el.addEventListener("click", e => {
+        e.preventDefault();
+        selectEl.classList.toggle("is-visible");
       });
     });
 
@@ -163,7 +181,6 @@ const editForm = {
           el.nextElementSibling.setAttribute('placeholder', this.localePlaceholders[this.field][this.inputName] || '');
         }
 
-        console.log(this.field, this.inputName);
         if (
           this.entryLocaleData[this.inputName] &&
           this.entryLocaleData[this.inputName][this.field]
