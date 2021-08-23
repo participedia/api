@@ -1915,5 +1915,6 @@
   "language_select_placeholder": "Wählen Sie eine Sprache aus",
 "case_edit_title_info": "Alle nicht eingegebenen Sprachen werden maschinell aus dem Deutschen übersetzt.",
   "method_edit_title_info": "Alle nicht eingegebenen Sprachen werden maschinell aus dem Deutschen übersetzt.",
-  "organization_edit_title_info": "Alle nicht eingegebenen Sprachen werden maschinell aus dem Deutschen übersetzt."
+  "organization_edit_title_info": "Alle nicht eingegebenen Sprachen werden maschinell aus dem Deutschen übersetzt.",
+  "disabled_language_selector_note": "Sobald Sie Text in Deutsch eingegeben haben, können Sie weitere Sprachen hinzufügen."
 }

@@ -1915,5 +1915,6 @@
   "language_select_placeholder": "Sélectionnez une langue",
 "case_edit_title_info": "Toute langue non renseignée sera traduite automatiquement du français.",
   "method_edit_title_info": "Toute langue non renseignée sera traduite automatiquement du français.",
-  "organization_edit_title_info": "Toute langue non renseignée sera traduite automatiquement du français."
+  "organization_edit_title_info": "Toute langue non renseignée sera traduite automatiquement du français.",
+  "disabled_language_selector_note": "Une fois que vous avez saisi du texte en français, vous pouvez ajouter d'autres langues."
 }

@@ -1915,5 +1915,6 @@
   "language_select_placeholder": "Seleziona una lingua",
 "case_edit_title_info": "Qualquer idioma que não for inserido será traduzido automaticamente do italiano.",
   "method_edit_title_info": "Qualquer idioma que não for inserido será traduzido automaticamente do italiano.",
-  "organization_edit_title_info": "Qualquer idioma que não for inserido será traduzido automaticamente do italiano."
+  "organization_edit_title_info": "Qualquer idioma que não for inserido será traduzido automaticamente do italiano.",
+  "disabled_language_selector_note": "Una volta inserito il testo in italiano puoi aggiungere altre lingue."
 }

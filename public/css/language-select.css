@@ -8,11 +8,17 @@
   align-items: flex-end;
   margin-top: 12px;
 }
-.js-edit-select[name=languages] {
+
+.language-select-container {
   display: none;
 }
 
-.js-edit-select.is-visible {
+.disabled-language-select-note {
+  color: #ec2024;
+  font-size: 14px;
+}
+
+.language-select-container.is-visible {
   display: block;
 }
 

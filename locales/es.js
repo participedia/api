@@ -1915,5 +1915,6 @@
   "language_select_placeholder": "Seleccionar un idioma",
 "case_edit_title_info": "Cualquier idioma que no se ingrese será traducido automáticamente del español.",
   "method_edit_title_info": "Cualquier idioma que no se ingrese será traducido automáticamente del español.",
-  "organization_edit_title_info": "Cualquier idioma que no se ingrese será traducido automáticamente del español."
+  "organization_edit_title_info": "Cualquier idioma que no se ingrese será traducido automáticamente del español.",
+  "disabled_language_selector_note": "Una vez que ingrese el texto en español, puede agregar otros idiomas".
 }
