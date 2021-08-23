@@ -1913,8 +1913,8 @@
   "name:it": "italiano",
   "name:de": "alemán",
   "language_select_placeholder": "Seleccionar un idioma",
-"case_edit_title_info": "Cualquier idioma que no se ingrese será traducido automáticamente del Español.",
-  "method_edit_title_info": "Cualquier idioma que no se ingrese será traducido automáticamente del Español.",
-  "organization_edit_title_info": "Cualquier idioma que no se ingrese será traducido automáticamente del Español.",
+"case_edit_title_locale": "Cualquier idioma que no se ingrese será traducido automáticamente del Español.",
+  "method_edit_title_locale": "Cualquier idioma que no se ingrese será traducido automáticamente del Español.",
+  "organization_edit_title_locale": "Cualquier idioma que no se ingrese será traducido automáticamente del Español.",
   "disabled_language_selector_note": "Una vez que ingrese el texto en Español, puede agregar otros idiomas".
 }

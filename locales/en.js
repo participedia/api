@@ -1917,8 +1917,8 @@
   "name:it": "Italian",
   "name:de": "German",
   "language_select_placeholder": "Select a language",
-  "case_edit_title_info": "Any language that is not entered will be machine translated from English.",
-  "method_edit_title_info": "Any language that is not entered will be machine translated from English.",
-  "organization_edit_title_info": "Any language that is not entered will be machine translated from English.",
+  "case_edit_title_locale": "Any language that is not entered will be machine translated from English.",
+  "method_edit_title_locale": "Any language that is not entered will be machine translated from English.",
+  "organization_edit_title_locale": "Any language that is not entered will be machine translated from English.",
   "disabled_language_selector_note": "Once you enter text in English you can add other languages."
 }

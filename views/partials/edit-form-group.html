@@ -17,13 +17,22 @@
 </p>
 {{/if}}
 {{#if (isTranslatable article name)}}
-{{#if (isEqual (isEditView req) false)}}
-{{{__
-"know_other_lang"
-"<a class='js-other-lang-select other-lang-select ' data-field-name='languages' href='#'>"
-"</a>"
-}}}
-{{/if}}
+  {{#if (isEqual (isEditView req) false)}}
+  <p class="js-other-lang-select">
+    {{{__
+    "know_other_lang"
+    "<a class='js-other-lang-select other-lang-select ' data-field-name='languages' href='#'>"
+    "</a>"
+    }}}
+  {{/if}}
+  {{#if (hasLocaleInfo article name)}}
+    {{> info-icon-to-modal
+      modalHeader=(label article name)
+      modalText=(info article name)
+    }}
+  {{/if}}
+</p>
+
 
 <p class="language-select-container">
   <span class="disabled-language-select-note js-disabled-select-note">{{__ "disabled_language_selector_note"}}</span>
