@@ -1912,5 +1912,8 @@
   "name:zh": "Chinois",
   "name:it": "Italien",
   "name:de": "Allemand",
-  "language_select_placeholder": "Sélectionnez une langue"
+  "language_select_placeholder": "Sélectionnez une langue",
+"case_edit_title_info": "Toute langue non renseignée sera traduite automatiquement du français.",
+  "method_edit_title_info": "Toute langue non renseignée sera traduite automatiquement du français.",
+  "organization_edit_title_info": "Toute langue non renseignée sera traduite automatiquement du français."
 }

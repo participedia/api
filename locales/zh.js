@@ -1912,5 +1912,8 @@
   "name:zh": "中文",
   "name:it": "意大利语",
   "name:de": "德语",
-  "language_select_placeholder": "选择语言"
+  "language_select_placeholder": "选择语言",
+"case_edit_title_info": "任何未输入的语言将由中文机器翻译。",
+  "method_edit_title_info": "任何未输入的语言将由中文机器翻译。",
+  "organization_edit_title_info": "任何未输入的语言将由中文机器翻译。"
 }

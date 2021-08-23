@@ -1912,6 +1912,9 @@
   "name:zh": "chinês",
   "name:it": "italiano",
   "name:de": "alemão",
-  "language_select_placeholder": "Selecione um idioma"
+  "language_select_placeholder": "Selecione um idioma",
+"case_edit_title_info": "Qualquer idioma que não for inserido será traduzido automaticamente do português.",
+  "method_edit_title_info": "Qualquer idioma que não for inserido será traduzido automaticamente do português.",
+  "organization_edit_title_info": "Qualquer idioma que não for inserido será traduzido automaticamente do português."
 
 }
