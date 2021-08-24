@@ -152,21 +152,32 @@ const editForm = {
         }
       };
 
+      const _disableBodySelectEl = (value) => {
+        if(!value || value.length === 1) {
+          selectEl.disabled = true;
+        } else if(!bodyField.className.includes("dirty")) {
+          selectEl.disabled = true;
+        } else {
+          selectEl.disabled = false;
+        }
+      };
+
       if(["input", "textarea"].indexOf(inputEl.localName) >= 0) {
         // Toggle select element disable state
         _disableSelectEl(inputEl.value);
+        
 
         // Listen to keyup event of input element
         inputEl.addEventListener("keyup", e => {
           _disableSelectEl(e.target.value);
         });
-      } else if(el.className.includes("ql-toolbar")) {
-        _disableSelectEl(el.nextElementSibling.innerHTML);
-
-        // Listen to keyup event of input element
-        inputEl.addEventListener("keyup", e => {
-          _disableSelectEl(e.target.value);
+      } else if(inputEl.className.includes("ql-toolbar")) {
+        _disableBodySelectEl(bodyField.innerText);
+        bodyField.addEventListener("keyup", e => {
+          bodyField.classList.add('dirty');
+          _disableBodySelectEl(bodyField.innerText);
         });
+        
       }
 
       el.addEventListener("click", e => {

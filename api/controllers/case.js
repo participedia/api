@@ -100,12 +100,6 @@ async function postCaseNewHttp(req, res) {
       });
     }
 
-    // for (const locale in localesToNotTranslate) {
-    //   if (localesToNotTranslate.hasOwnProperty(locale)) {
-    //     const element = localesToNotTranslate[locale];
-        
-    //   }
-    // }
     let title = originalLanguageEntry.title;
     let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description || '';
