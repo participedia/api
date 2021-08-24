@@ -1920,5 +1920,11 @@
   "case_edit_title_locale": "Any language that is not entered will be machine translated from English.",
   "method_edit_title_locale": "Any language that is not entered will be machine translated from English.",
   "organization_edit_title_locale": "Any language that is not entered will be machine translated from English.",
-  "disabled_language_selector_note": "Once you enter text in English you can add other languages."
+  "disabled_language_selector_note": "Once you enter text in English you can add other languages.",
+  "case_edit_description_locale": "Any language that is not entered will be machine translated from English.",
+  "method_edit_description_locale": "Any language that is not entered will be machine translated from English.",
+  "organization_edit_description_locale": "Any language that is not entered will be machine translated from English.",
+  "case_edit_body_locale": "Any language that is not entered will be machine translated from English.",
+  "method_edit_body_locale": "Any language that is not entered will be machine translated from English.",
+  "organization_edit_body_locale": "Any language that is not entered will be machine translated from English."
 }

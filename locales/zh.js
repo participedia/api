@@ -1913,8 +1913,14 @@
   "name:it": "意大利语",
   "name:de": "德语",
   "language_select_placeholder": "选择语言",
-"case_edit_title_locale": "任何未输入的语言将由中文机器翻译。",
+  "case_edit_title_locale": "任何未输入的语言将由中文机器翻译。",
   "method_edit_title_locale": "任何未输入的语言将由中文机器翻译。",
   "organization_edit_title_locale": "任何未输入的语言将由中文机器翻译。",
-  "disabled_language_selector_note": "用意大利语输入文本后，您可以添加其他语言。"
+  "disabled_language_selector_note": "用意大利语输入文本后，您可以添加其他语言。",
+  "case_edit_description_locale": "任何未输入的语言将由中文机器翻译。",
+  "method_edit_description_locale": "任何未输入的语言将由中文机器翻译。",
+  "organization_edit_description_locale": "任何未输入的语言将由中文机器翻译。",
+  "case_edit_body_locale": "任何未输入的语言将由中文机器翻译。",
+  "method_edit_body_locale": "任何未输入的语言将由中文机器翻译。",
+  "organization_edit_body_locale": "任何未输入的语言将由中文机器翻译。"
 }
