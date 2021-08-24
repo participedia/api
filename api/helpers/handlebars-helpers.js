@@ -218,6 +218,11 @@ module.exports = {
     return i18nValue !== key;
   },
 
+  localeInfo: (article, name, context) => {
+    const view = context.data.root.params.view;
+    return i18n(`${article.type}_${view}_${name}_locale`, context);
+  },
+
   info: (article, name, context) => {
     const view = context.data.root.params.view;
     return i18n(`${article.type}_${view}_${name}_info`, context);

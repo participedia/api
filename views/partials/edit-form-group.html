@@ -24,13 +24,14 @@
     "<a class='other-lang-select' data-field-name='languages' href='#'>"
     "</a>"
     }}}
+    {{#if (hasLocaleInfo article name)}}
+      {{> info-icon-to-modal
+        modalHeader=(label article name)
+        modalText=(localeInfo article name)
+      }}
+    {{/if}}
   {{/if}}
-  {{#if (hasLocaleInfo article name)}}
-    {{> info-icon-to-modal
-      modalHeader=(label article name)
-      modalText=(info article name)
-    }}
-  {{/if}}
+  
 </p>
 
 
