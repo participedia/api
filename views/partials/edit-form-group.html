@@ -21,7 +21,7 @@
   <p class="js-other-lang-select">
     {{{__
     "know_other_lang"
-    "<a class='js-other-lang-select other-lang-select ' data-field-name='languages' href='#'>"
+    "<a class='other-lang-select' data-field-name='languages' href='#'>"
     "</a>"
     }}}
   {{/if}}
@@ -34,7 +34,7 @@
 </p>
 
 
-<p class="language-select-container">
+<p class="language-select-container js-language-select-container">
   <span class="disabled-language-select-note js-disabled-select-note">{{__ "disabled_language_selector_note"}}</span>
   {{> select noPlaceholder=true isLanguage=true quick-submit=quick-submit name="languages" noKey=true is_required=is_required}}
 </p>

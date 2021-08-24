@@ -114,6 +114,7 @@ const editForm = {
     const selectors = document.querySelectorAll(
       "select.js-edit-select[name=languages]"
     );
+    // const selectorLoaders = document.querySelectorAll(".js-language-select-container");
     const selectorLoaders = document.querySelectorAll(".js-other-lang-select");
     const inputFields = document.querySelectorAll(
       "select.js-edit-select[name=languages]+input, select.js-edit-select[name=languages]+textarea"
@@ -141,8 +142,8 @@ const editForm = {
     });
 
     selectorLoaders.forEach(el => {
-      const selectEl = el.nextElementSibling;
-      const inputEl  = selectEl.nextElementSibling;
+      const selectEl = el.nextElementSibling.children[1];
+      const inputEl  = el.nextElementSibling.nextElementSibling;
       const _disableSelectEl = (value) => {
         if(!value) {
           selectEl.disabled = true;
@@ -159,26 +160,33 @@ const editForm = {
         inputEl.addEventListener("keyup", e => {
           _disableSelectEl(e.target.value);
         });
+      } else if(el.className.includes("ql-toolbar")) {
+        _disableSelectEl(el.nextElementSibling.innerHTML);
+
+        // Listen to keyup event of input element
+        inputEl.addEventListener("keyup", e => {
+          _disableSelectEl(e.target.value);
+        });
       }
 
       el.addEventListener("click", e => {
         e.preventDefault();
-        selectEl.classList.toggle("is-visible");
+        e.target.parentElement.nextElementSibling.classList.toggle("is-visible");
       });
     });
 
     selectors.forEach(el => {
       el.addEventListener("change", evt => {
         evt.preventDefault();
-        const isBody = el.nextElementSibling.className.includes("ql-toolbar");
-        const inputField = isBody ? bodyField : el.nextElementSibling;
+        const isBody = el.parentElement.nextElementSibling.className.includes("ql-toolbar");
+        const inputField = isBody ? bodyField : el.parentElement.nextElementSibling;
 
         this.field = evt.target.value;
-        this.inputName = isBody ? "body" : el.nextElementSibling.name;
+        this.inputName = isBody ? "body" : el.parentElement.nextElementSibling.name;
         if(isBody) {
           this.entryLocaleData[this.inputName][this.field] = this.entryLocaleData[this.inputName][this.field] || this.localePlaceholders[this.field][this.inputName];
         } else {
-          el.nextElementSibling.setAttribute('placeholder', this.localePlaceholders[this.field][this.inputName] || '');
+          el.parentElement.nextElementSibling.setAttribute('placeholder', this.localePlaceholders[this.field][this.inputName] || '');
         }
 
         if (
