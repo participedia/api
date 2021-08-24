@@ -147,7 +147,9 @@ const editForm = {
       const _disableSelectEl = (value) => {
         if(!value) {
           selectEl.disabled = true;
+          selectEl.previousElementSibling.style.display = "initial";
         } else {
+          selectEl.previousElementSibling.style.display = "none";
           selectEl.disabled = false;
         }
       };
@@ -155,9 +157,12 @@ const editForm = {
       const _disableBodySelectEl = (value) => {
         if(!value || value.length === 1) {
           selectEl.disabled = true;
+          selectEl.previousElementSibling.style.display = "initial";
         } else if(!bodyField.className.includes("dirty")) {
+          selectEl.previousElementSibling.style.display = "initial";
           selectEl.disabled = true;
         } else {
+          selectEl.previousElementSibling.style.display = "none";
           selectEl.disabled = false;
         }
       };
