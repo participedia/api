@@ -280,7 +280,7 @@ module.exports = {
       placeholders[lang.twoLetterCode] = {
         title: i18n(`${type}_edit_title_placeholder`, context, lang.twoLetterCode),
         description: i18n(`${type}_edit_description_placeholder`, context, lang.twoLetterCode),
-        body: i18n(`body_placeholder`, context, lang.twoLetterCode),
+        body: i18n(`${type}_edit_body_placeholder`, context, lang.twoLetterCode),
       }
     });
     return JSON.stringify(placeholders);
