@@ -110,7 +110,7 @@
   "case_edit_audio_url_placeholder": "Ajouter un lien audio",
   "case_edit_body_instructional": "La structure standard suivante permet de comparer et d’analyser plus facilement les entrées. Veuillez utiliser les rubriques ci-dessous et vous référez à notre <a href=\"https://goo.gl/FZJgMm\" target=\"_blank\">directives</a> lorsque vous préparez votre saisie de cas.",
   "case_edit_body_label": "Compte rendu",
-  "case_edit_body_placeholder": "<h2>Problèmes et objectifs</h2><h2>Histoire et contexte</h2><h2>Organismes d’organisation, de soutien et de financement</h2><h2>Recrutement et sélection des participant.e.s</h2><h2>Méthodes et outils utilisés</h2><h2>Ce qui s’est passé: processus, interactions et participation</h2><h2>Influence, résultats et effets</h2><h2>Analyse et enseignements tirés</h2><h2>Voir aussi</h2><h2>Références</h2><h2>Liens externes</h2><h2>Notes</h2>",
+  "case_edit_body_placeholder": "<h2>Problèmes et objectifs</h2><h2>Histoire et contexte</h2><h2>Organisation, soutien, et financement</h2><h2>Recrutement et sélection des participant.e.s</h2><h2>Méthodes et outils utilisés</h2><h2>Délibération, prise de décision et interaction avec le public</h2><h2>Influence, résultats et effets</h2><h2>Analyse et enseignements tirés</h2><h2>Voir aussi</h2><h2>Références</h2><h2>Liens externes</h2><h2>Notes</h2>",
   "case_edit_change_types_info": "Fournissez des précisions supplémentaires dans la section «influence, résultats et effets» du compte rendu. ",
   "case_edit_change_types_instructional": "Sélectionnez et classez jusqu’à cinq types de changement auxquels ce cas a contribué, par ordre de pertinence, où «1» correspond au type de changement le plus pertinent.",
   "case_edit_change_types_label": "Types de changement",
