@@ -117,7 +117,7 @@ const editForm = {
     // const selectorLoaders = document.querySelectorAll(".js-language-select-container");
     const selectorLoaders = document.querySelectorAll(".js-other-lang-select");
     const inputFields = document.querySelectorAll(
-      "select.js-edit-select[name=languages]+input, select.js-edit-select[name=languages]+textarea"
+      ".js-language-select-container+input, .js-language-select-container+textarea"
     );
     const bodyField = document.querySelector(".ql-editor");
     console.log(bodyField);
@@ -131,12 +131,11 @@ const editForm = {
         this.currentInput = evt.target.name;
       });
       input.addEventListener("keyup", evt => {
+        debugger;
         this.currentInputValue = evt.target.value;
         this.currentInput = evt.target.name;
         if (this.field) {
-          this.entryLocaleData[this.currentInput][
-            this.field
-          ] = this.currentInputValue;
+          this.entryLocaleData[this.currentInput][this.field] = this.currentInputValue;
         }
       });
     });

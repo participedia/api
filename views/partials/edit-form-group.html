@@ -17,7 +17,6 @@
 </p>
 {{/if}}
 {{#if (isTranslatable article name)}}
-  {{#if (isEqual (isEditView req) false)}}
   <p class="js-other-lang-select">
     {{{__
     "know_other_lang"
@@ -30,7 +29,6 @@
         modalText=(localeInfo article name)
       }}
     {{/if}}
-  {{/if}}
   
 </p>
 

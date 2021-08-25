@@ -53,6 +53,7 @@ const CASE_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
 );
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
+const { SUPPORTED_LANGUAGES } = require("../../constants");
 
 /**
  * @api {post} /case/new Create new case
@@ -437,9 +438,10 @@ async function postCaseUpdateHttp(req, res) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
       if(entryLocale === entry.original_language) {
-        originalLanguageEntry = entry;
+        originalLanguageEntry = req.body.originalEntry;
       }
-      const errors = validateFields(entry, "case");
+      let errors = validateFields(entry, "case");
+      errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({locale: entryLocale, errors});
     }
   }
