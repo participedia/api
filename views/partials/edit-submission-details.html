@@ -31,29 +31,7 @@
         />
       </div>
 
-      <div class="form-group">
-        <label for="last_updated_by">{{t "Most Recent Changes By"}}</label>
-        <input
-          type="text"
-          id="js-last-updated-by-name"
-          value="{{user.name}}"
-          autocomplete="false"
-          autocomplete="off"
-        />
-        <input
-          type="hidden"
-          name="last_updated_by"
-          value="{{user.id}}"
-        />
-      </div>
-      <div class="form-group">
-        <label for="updated_date">{{t "Most Recent Change"}}</label>
-        <input
-          type="date"
-          value="{{formatCurrentDate "YYYY-MM-DD"}}"
-          name="updated_date"
-        />
-      </div>
+    
     </div>
     <ul class="js-author-list" style="display: none;">
       {{#each static.authors}}
