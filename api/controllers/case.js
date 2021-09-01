@@ -295,12 +295,15 @@ async function caseUpdateHttp(req, res, entry = undefined) {
       await db.tx("update-case", async t => {
         if(!isNewCase) {
           await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        } else {
+          await t.none(INSERT_AUTHOR, author);
         }
-        await t.none(INSERT_AUTHOR, author);
         await t.none(UPDATE_CASE, updatedCase);
       });
       //if this is a new case, set creator id to userid and isAdmin
+      console.log('here')
       if (user.isadmin) {
+        console.log(user.isadmin)
         const creator = {
           user_id: newCase.creator ? newCase.creator : params.userid,
           thingid: params.articleid,
@@ -313,7 +316,7 @@ async function caseUpdateHttp(req, res, entry = undefined) {
           updated_date: newCase.updated_date || "now",
         };
         await db.tx("update-case", async t => {
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          // await t.none(UPDATE_AUTHOR_FIRST, creator);
           await t.none(UPDATE_AUTHOR_LAST, updatedBy);
         });
       }
@@ -384,8 +387,9 @@ async function caseUpdate(req, res, entry = undefined) {
       await db.tx("update-case", async t => {
         if(!isNewCase) {
           await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        } else {
+          await t.none(INSERT_AUTHOR, author);
         }
-        await t.none(INSERT_AUTHOR, author);
         await t.none(UPDATE_CASE, updatedCase);
       });
       //if this is a new case, set creator id to userid and isAdmin
@@ -399,11 +403,11 @@ async function caseUpdate(req, res, entry = undefined) {
             ? newCase.last_updated_by
             : params.userid,
           thingid: params.articleid,
-          updated_date: newCase.updated_date || "now",
+          updated_date: user.isadmin ? oldCase.updated_date : newCase.updated_date || "now",
         };
         await db.tx("update-case", async t => {
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
-          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+          // await t.none(UPDATE_AUTHOR_FIRST, creator);
+          // await t.none(UPDATE_AUTHOR_LAST, updatedBy);
         });
       }
     } else {
