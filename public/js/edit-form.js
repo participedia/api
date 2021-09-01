@@ -134,6 +134,11 @@ const editForm = {
         debugger;
         this.currentInputValue = evt.target.value;
         this.currentInput = evt.target.name;
+
+        if(Object.keys(this.entryLocaleData[this.currentInput]).length === 0) {
+          this.field = document.querySelector("input[name=locale]").value;
+        }
+        
         if (this.field) {
           this.entryLocaleData[this.currentInput][this.field] = this.currentInputValue;
         }
