@@ -407,6 +407,7 @@ async function caseUpdate(req, res, entry = undefined) {
         };
         await db.tx("update-case", async t => {
           // await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, creator);
           // await t.none(UPDATE_AUTHOR_LAST, updatedBy);
         });
       }
