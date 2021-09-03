@@ -149,7 +149,7 @@ const editForm = {
       const selectEl = el.nextElementSibling.children[1];
       const inputEl  = el.nextElementSibling.nextElementSibling;
       const _disableSelectEl = (value) => {
-        if(!value) {
+        if(!value && Object.keys(this.entryLocaleData[this.currentInput]).length === 0) {
           selectEl.disabled = true;
           selectEl.previousElementSibling.style.display = "initial";
         } else {
@@ -159,7 +159,7 @@ const editForm = {
       };
 
       const _disableBodySelectEl = (value) => {
-        if(!value || value.length === 1) {
+        if((!value || value.length === 1) && Object.keys(this.entryLocaleData["body"]).length === 0) {
           selectEl.disabled = true;
           selectEl.previousElementSibling.style.display = "initial";
         } else if(!bodyField.className.includes("dirty")) {
