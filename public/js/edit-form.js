@@ -172,15 +172,19 @@ const editForm = {
       };
         
       const _disableBodySelectEl = (value) => {
-        if(!this.entryLocaleData['body'][userLocale] || !value.trim().length) {
-          selectEl.disabled = true;
-          selectEl.previousElementSibling.style.display = "initial";
-        } else if(!bodyField.className.includes("dirty")) {
-          selectEl.previousElementSibling.style.display = "initial";
-          selectEl.disabled = true;
-        } else {
-          selectEl.previousElementSibling.style.display = "none";
+        selectEl.disabled = true;
+        selectEl.previousElementSibling.style.display = "initial";
+
+        if(value.trim().length) {
           selectEl.disabled = false;
+          selectEl.previousElementSibling.style.display = "none";
+        }
+        const localeBodyFieldValueEl = document.createElement('div');
+        localeBodyFieldValueEl.innerHTML = this.entryLocaleData['body'][userLocale];
+        if(localeBodyFieldValueEl.innerText.trim().length) {
+          selectEl.disabled = false;
+          selectEl.previousElementSibling.style.display = "none";
+          return;        
         }
       };
 
