@@ -8,13 +8,7 @@ const editSubmissionDetails = {
     const firstSubmittedHiddenEl = document.querySelector(
       "input[name=creator]"
     );
-    const mostRecentChangeAutoCompleteEl = document.querySelector(
-      "#js-last-updated-by-name"
-    );
-    const mostRecentChangeHiddenEl = document.querySelector(
-      "input[name=last_updated_by]"
-    );
-
+   
     if (!firstSubmittedAutoCompleteEl) return; // if submission field not present, don't continue
 
     // get author data from ui
@@ -24,13 +18,6 @@ const editSubmissionDetails = {
     this.initAutocompleteField(
       firstSubmittedAutoCompleteEl,
       firstSubmittedHiddenEl,
-      authors
-    );
-
-    // most recent
-    this.initAutocompleteField(
-      mostRecentChangeAutoCompleteEl,
-      mostRecentChangeHiddenEl,
       authors
     );
 
