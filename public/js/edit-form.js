@@ -95,6 +95,7 @@ const editForm = {
   },
 
   initOtherLangSelector() {
+    const userLocale = document.querySelector("input[name=locale]").value;
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
     this.field = document.querySelector("input[name=locale]").value;
     const articles = document.querySelector("input[name=article_data]").value || '{}' ;
@@ -120,11 +121,13 @@ const editForm = {
       ".js-language-select-container+input, .js-language-select-container+textarea"
     );
     const bodyField = document.querySelector(".ql-editor");
-    console.log(bodyField);
-    bodyField.addEventListener("keyup", evt => {
-      console.log(evt.target.innerHTML);
-      this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
-    });
+    // bodyField.addEventListener("keyup", evt => {
+    //   this.currentInput = 'body';
+    //   console.log(evt.target.innerHTML);
+    //   this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
+    //   bodyField.classList.add('dirty');
+    //   _disableBodySelectEl(bodyField.innerText);
+    // });
     inputFields.forEach(input => {
       input.addEventListener("focus", evt => {
         this.currentInputValue = evt.target.value;
@@ -148,18 +151,28 @@ const editForm = {
     selectorLoaders.forEach(el => {
       const selectEl = el.nextElementSibling.children[1];
       const inputEl  = el.nextElementSibling.nextElementSibling;
+
       const _disableSelectEl = (value) => {
-        if(!value && Object.keys(this.entryLocaleData[this.currentInput]).length === 0) {
-          selectEl.disabled = true;
-          selectEl.previousElementSibling.style.display = "initial";
-        } else {
-          selectEl.previousElementSibling.style.display = "none";
+        debugger
+        selectEl.disabled = true;
+        selectEl.previousElementSibling.style.display = "initial";
+
+        if(value.trim().length) {
           selectEl.disabled = false;
+          selectEl.previousElementSibling.style.display = "none";
+        }
+        if(this.currentInput) {
+          if(this.entryLocaleData[this.currentInput][userLocale]) {
+            selectEl.disabled = false;
+            selectEl.previousElementSibling.style.display = "none";
+            return;
+          }
+        
         }
       };
-
+        
       const _disableBodySelectEl = (value) => {
-        if((!value || value.length === 1) && Object.keys(this.entryLocaleData["body"]).length === 0) {
+        if(!this.entryLocaleData['body'][userLocale] || !value.trim().length) {
           selectEl.disabled = true;
           selectEl.previousElementSibling.style.display = "initial";
         } else if(!bodyField.className.includes("dirty")) {
@@ -182,7 +195,10 @@ const editForm = {
         });
       } else if(inputEl.className.includes("ql-toolbar")) {
         _disableBodySelectEl(bodyField.innerText);
-        bodyField.addEventListener("keyup", e => {
+        bodyField.addEventListener("keyup", evt => {
+          this.currentInput = 'body';
+          console.log(evt.target.innerHTML);
+          this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
           bodyField.classList.add('dirty');
           _disableBodySelectEl(bodyField.innerText);
         });
