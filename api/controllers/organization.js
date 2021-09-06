@@ -285,6 +285,7 @@ async function organizationUpdate(req, res, entry = undefined){
   updatedOrganization.updated_date = !user.isadmin
     ? "now"
     : updatedOrganization.updated_date;
+    author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-organization", async t => {
@@ -302,6 +303,7 @@ async function organizationUpdate(req, res, entry = undefined){
             ? newOrganization.creator
             : params.userid,
           thingid: params.articleid,
+          timestamp: new Date(newOrganization.post_date)
         };
         await db.tx("update-organization", async t => {
           await t.none(UPDATE_AUTHOR_LAST, creator);
