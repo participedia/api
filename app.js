@@ -46,6 +46,7 @@ const { method } = require("./api/controllers/method");
 const { organization } = require("./api/controllers/organization");
 const bookmark = require("./api/controllers/bookmark");
 const search = require("./api/controllers/search");
+const api = require("./api/controllers/api");
 const home = require("./api/controllers/home");
 const list = require("./api/controllers/list");
 const blogPost = require("./api/controllers/blog-post");
@@ -293,6 +294,7 @@ app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
 app.use("/blog-post", blogPost);
+app.use("/api", api);
 
 // endpoint to set new locale
 app.get("/set-locale", function(req, res) {
