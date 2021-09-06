@@ -372,7 +372,7 @@ async function caseUpdate(req, res, entry = undefined) {
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
@@ -388,7 +388,8 @@ async function caseUpdate(req, res, entry = undefined) {
         const creator = {
           user_id: newCase.creator ? newCase.creator : params.userid,
           thingid: params.articleid,
-          timestamp: newCase.post_date
+          timestamp: new Date(newCase.post_date)
+
         };
         // const updatedBy = {
         //   user_id: newCase.last_updated_by
