@@ -152,7 +152,7 @@ async function postMethodNewHttp(req, res) {
     });
   } catch (error) {
     logError(error);
-    res.status(400).json({ OK: false, error: error });
+    return res.status(400).json({ OK: false, error: error });
   }
 }
 
@@ -242,7 +242,6 @@ async function postMethodUpdateHttp(req, res) {
   refreshSearch();
 }
   
-
 async function methodUpdateHttp(req, res, entry = undefined) {
   const params = parseGetParams(req, "method");
   const user = req.user;
@@ -276,7 +275,6 @@ async function methodUpdateHttp(req, res, entry = undefined) {
     author,
     oldArticle: oldMethod,
   } = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method");
-
   const [updatedMethod, er] = getUpdatedMethod(
     user,
     params,
