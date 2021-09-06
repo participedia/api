@@ -34,7 +34,8 @@ const {
   validateFields,
   parseAndValidateThingPostData,
   maybeUpdateUserTextLocaleEntry,
-  getThingEdit
+  getThingEdit,
+  generateLocaleArticle
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
