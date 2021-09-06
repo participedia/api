@@ -302,23 +302,13 @@ async function caseUpdateHttp(req, res, entry = undefined) {
         await t.none(UPDATE_CASE, updatedCase);
       });
       //if this is a new case, set creator id to userid and isAdmin
-      console.log('here')
       if (user.isadmin) {
-        console.log(user.isadmin)
         const creator = {
           user_id: newCase.creator ? newCase.creator : params.userid,
           thingid: params.articleid,
         };
-        const updatedBy = {
-          user_id: newCase.last_updated_by
-            ? newCase.last_updated_by
-            : params.userid,
-          thingid: params.articleid,
-          updated_date: newCase.updated_date || "now",
-        };
         await db.tx("update-case", async t => {
-          // await t.none(UPDATE_AUTHOR_FIRST, creator);
-          await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+          await t.none(UPDATE_AUTHOR_LAST, creator);
         });
       }
     } else {
@@ -399,13 +389,13 @@ async function caseUpdate(req, res, entry = undefined) {
           user_id: newCase.creator ? newCase.creator : params.userid,
           thingid: params.articleid,
         };
-        const updatedBy = {
-          user_id: newCase.last_updated_by
-            ? newCase.last_updated_by
-            : params.userid,
-          thingid: params.articleid,
-          updated_date: user.isadmin ? oldCase.updated_date : newCase.updated_date || "now",
-        };
+        // const updatedBy = {
+        //   user_id: newCase.last_updated_by
+        //     ? newCase.last_updated_by
+        //     : params.userid,
+        //   thingid: params.articleid,
+        //   updated_date: user.isadmin ? oldCase.updated_date : newCase.updated_date || "now",
+        // };
         await db.tx("update-case", async t => {
           // await t.none(UPDATE_AUTHOR_FIRST, creator);
           await t.none(UPDATE_AUTHOR_LAST, creator);
@@ -545,7 +535,6 @@ async function getEditStaticText(params) {
 }
 
 async function getCaseEditHttp(req, res) {
-  let startTime = new Date();
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const articles = await getThingEdit(params, CASES_LOCALE_BY_ID, res);
