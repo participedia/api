@@ -121,20 +121,12 @@ const editForm = {
       ".js-language-select-container+input, .js-language-select-container+textarea"
     );
     const bodyField = document.querySelector(".ql-editor");
-    // bodyField.addEventListener("keyup", evt => {
-    //   this.currentInput = 'body';
-    //   console.log(evt.target.innerHTML);
-    //   this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
-    //   bodyField.classList.add('dirty');
-    //   _disableBodySelectEl(bodyField.innerText);
-    // });
     inputFields.forEach(input => {
       input.addEventListener("focus", evt => {
         this.currentInputValue = evt.target.value;
         this.currentInput = evt.target.name;
       });
       input.addEventListener("keyup", evt => {
-        debugger;
         this.currentInputValue = evt.target.value;
         this.currentInput = evt.target.name;
 
@@ -153,7 +145,6 @@ const editForm = {
       const inputEl  = el.nextElementSibling.nextElementSibling;
 
       const _disableSelectEl = (value) => {
-        debugger
         selectEl.disabled = true;
         selectEl.previousElementSibling.style.display = "initial";
 
@@ -175,12 +166,23 @@ const editForm = {
         selectEl.disabled = true;
         selectEl.previousElementSibling.style.display = "initial";
 
-        if(value.trim().length) {
+        const placeholderText = document.createElement('div');
+        placeholderText.innerHTML = this.localePlaceholders[this.field].body;
+        if(placeholderText.innerText === value) {
+          selectEl.disabled = true;
+          selectEl.previousElementSibling.style.display = "initial";
+          return;
+        }
+
+        const localeBodyFieldValueEl = document.createElement('div');
+        localeBodyFieldValueEl.innerHTML = this.entryLocaleData['body'][userLocale] || '';
+
+        if(this.entryLocaleData['body'][userLocale] || !value.trim().length) {
           selectEl.disabled = false;
           selectEl.previousElementSibling.style.display = "none";
+          return
         }
-        const localeBodyFieldValueEl = document.createElement('div');
-        localeBodyFieldValueEl.innerHTML = this.entryLocaleData['body'][userLocale];
+       
         if(localeBodyFieldValueEl.innerText.trim().length) {
           selectEl.disabled = false;
           selectEl.previousElementSibling.style.display = "none";
