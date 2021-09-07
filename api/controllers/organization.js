@@ -48,6 +48,8 @@ const ORGANIZATION_STRUCTURE = JSON.parse(
 );
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
+const { SUPPORTED_LANGUAGES } = require("../../constants");
+
 
 async function getEditStaticText(params) {
   let staticText = {};
@@ -306,7 +308,7 @@ async function organizationUpdate(req, res, entry = undefined){
           timestamp: new Date(newOrganization.post_date)
         };
         await db.tx("update-organization", async t => {
-          await t.none(UPDATE_AUTHOR_LAST, creator);
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
         });
       }
     } else {
@@ -316,17 +318,11 @@ async function organizationUpdate(req, res, entry = undefined){
       });
     }
     const freshArticle = await getOrganization(params, res);
-    res.status(200).json({
-      OK: true,
-      article: freshArticle,
-    });
+    return {article: freshArticle};
     refreshSearch();
   } else {
     logError(`400 with errors: ${er.errors.join(", ")}`);
-    res.status(400).json({
-      OK: false,
-      errors: er.errors,
-    });
+    return {errors: er.errors};
   }
 }
 

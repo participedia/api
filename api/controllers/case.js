@@ -391,17 +391,9 @@ async function caseUpdate(req, res, entry = undefined) {
           timestamp: new Date(newCase.post_date)
 
         };
-        // const updatedBy = {
-        //   user_id: newCase.last_updated_by
-        //     ? newCase.last_updated_by
-        //     : params.userid,
-        //   thingid: params.articleid,
-        //   updated_date: user.isadmin ? oldCase.updated_date : newCase.updated_date || "now",
-        // };
         await db.tx("update-case", async t => {
           await t.none(UPDATE_AUTHOR_FIRST, creator);
-          // await t.none(UPDATE_AUTHOR_LAST, creator);
-          // await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+
         });
       }
     } else {

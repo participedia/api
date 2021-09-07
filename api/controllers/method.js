@@ -49,6 +49,7 @@ const METHOD_STRUCTURE = JSON.parse(
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
+const { SUPPORTED_LANGUAGES } = require("../../constants");
 
 async function getEditStaticText(params) {
   let staticText = {};
@@ -306,7 +307,7 @@ async function methodUpdateHttp(req, res, entry = undefined) {
           timestamp: new Date(newMethod.post_date)
         };
         await db.tx("update-method", async t => {
-          await t.none(UPDATE_AUTHOR_LAST, creator);
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
         });
       }
     } else {
