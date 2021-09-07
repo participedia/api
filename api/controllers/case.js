@@ -381,7 +381,7 @@ async function caseUpdate(req, res, entry = undefined) {
         } else {
           await t.none(INSERT_AUTHOR, author);
         }
-        await t.none(UPDATE_CASE, updatedCase);
+        await t.none(UPDATE_CASE, updatedCase); 
       });
       //if this is a new case, set creator id to userid and isAdmin
       if (user.isadmin) {
@@ -420,7 +420,7 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid } = params;
   const langErrors = [];
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
-  let originalLanguageEntry;
+  let originalLanguageEntry; 
 
 
   for (const entryLocale in localeEntries) {
