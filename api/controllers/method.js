@@ -49,6 +49,7 @@ const METHOD_STRUCTURE = JSON.parse(
 const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
+const { SUPPORTED_LANGUAGES } = require("../../constants");
 
 async function getEditStaticText(params) {
   let staticText = {};
@@ -286,6 +287,7 @@ async function methodUpdateHttp(req, res, entry = undefined) {
   updatedMethod.updated_date = !user.isadmin
     ? "now"
     : updatedMethod.updated_date;
+    author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
 
   if (!er.hasErrors()) {
     if (updatedText) {
@@ -302,9 +304,10 @@ async function methodUpdateHttp(req, res, entry = undefined) {
         const creator = {
           user_id: newMethod.creator ? newMethod.creator : params.userid,
           thingid: params.articleid,
+          timestamp: new Date(newMethod.post_date)
         };
         await db.tx("update-method", async t => {
-          await t.none(UPDATE_AUTHOR_LAST, creator);
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
         });
       }
     } else {
@@ -375,6 +378,7 @@ async function methodUpdate(req, res, entry = undefined) {
   updatedMethod.updated_date = !user.isadmin
     ? "now"
     : updatedMethod.updated_date;
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
 
   if (!er.hasErrors()) {
     if (updatedText) {
@@ -391,14 +395,8 @@ async function methodUpdate(req, res, entry = undefined) {
         const creator = {
           user_id: newMethod.creator ? newMethod.creator : params.userid,
           thingid: params.articleid,
+          timestamp: new Date(newMethod.post_date)
         };
-        // const updatedBy = {
-        //   user_id: newMethod.last_updated_by
-        //     ? newMethod.last_updated_by
-        //     : params.userid,
-        //   thingid: params.articleid,
-        //   updated_date: newMethod.updated_date || "now",
-        // };
         await db.tx("update-method", async t => {
           await t.none(UPDATE_AUTHOR_LAST, creator);
         });

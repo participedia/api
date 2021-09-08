@@ -356,6 +356,11 @@ module.exports = {
     }
   },
 
+  // debuggerFn: (data = null, context) => {
+  //   console.debug(data, context);
+  //   // debugger;
+  // },
+
   linkSetPlaceholder: (article, name, attr, context) => {
     const view = context.data.root.params.view;
     return i18n(`${article.type}_${view}_${name}_${attr}_placeholder`, context);

@@ -15,15 +15,15 @@
     {{> edit-multi-select-li
     name=../name
     key=this
-    value=(i18nEditFieldValue ../name this ../locale)
+    value=(i18nEditFieldValue ../name this ../locale ../noKey)
     index=@index
     }}
     {{else if (isEqual ../name "specific_methods_tools_techniques")}}
     {{!--
-    specific_methods_tools_techniques object is shaped like
-    {id: "1", type: "method", title: "My Title" }
-    while all others are
-    { key: "key", value: "value" }
+        specific_methods_tools_techniques object is shaped like
+        {id: "1", type: "method", title: "My Title" }
+        while all others are
+        { key: "key", value: "value" }
     --}}
     {{> edit-multi-select-li
     name=../name
@@ -35,7 +35,7 @@
     {{> edit-multi-select-li
     name=../name
     key=this.key
-    value=(i18nEditFieldValue ../name this ../locale)
+    value=(i18nEditFieldValue ../name this ../locale ../noKey)
     index=@index
     }}
     {{/if}}
@@ -44,4 +44,4 @@
 </ol>
 <script type="text/template" id="js-edit-multi-select-list-item">
     {{> edit-multi-select-li }}
-  </script>
+</script>

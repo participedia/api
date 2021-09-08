@@ -372,7 +372,7 @@ async function caseUpdate(req, res, entry = undefined) {
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
@@ -381,25 +381,19 @@ async function caseUpdate(req, res, entry = undefined) {
         } else {
           await t.none(INSERT_AUTHOR, author);
         }
-        await t.none(UPDATE_CASE, updatedCase);
+        await t.none(UPDATE_CASE, updatedCase); 
       });
       //if this is a new case, set creator id to userid and isAdmin
       if (user.isadmin) {
         const creator = {
           user_id: newCase.creator ? newCase.creator : params.userid,
           thingid: params.articleid,
+          timestamp: new Date(newCase.post_date)
+
         };
-        // const updatedBy = {
-        //   user_id: newCase.last_updated_by
-        //     ? newCase.last_updated_by
-        //     : params.userid,
-        //   thingid: params.articleid,
-        //   updated_date: user.isadmin ? oldCase.updated_date : newCase.updated_date || "now",
-        // };
         await db.tx("update-case", async t => {
-          // await t.none(UPDATE_AUTHOR_FIRST, creator);
-          await t.none(UPDATE_AUTHOR_LAST, creator);
-          // await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+
         });
       }
     } else {
@@ -426,7 +420,7 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid } = params;
   const langErrors = [];
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
-  let originalLanguageEntry;
+  let originalLanguageEntry; 
 
 
   for (const entryLocale in localeEntries) {
