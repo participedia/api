@@ -2,9 +2,11 @@
 const app = require("express");
 const api = app.Router();
 const {
+    db,
     listCases,
     listMethods,
     listOrganizations,
+    SEARCH
 } = require("../../helpers/db");
 
 const {
@@ -24,10 +26,20 @@ api.get("/cases", async function(req, res) {
             error: params.error,
         });
     }
-    const cases = listCases('en');
+    const results = await db.any(SEARCH, {
+        query: '',
+        limit: params.limit, // null is no limit in SQL
+        offset: params.skip,
+        language: params.locale,
+        userId: req.user ? req.user.id : null,
+        sortby: params.sortKey,
+        type: 'cases',
+        facets: ''
+      });
+      console.log(results);
     res.status(200).json({
         OK: true,
-        cases,
+        results,
     });
 })
 module.exports = api;
