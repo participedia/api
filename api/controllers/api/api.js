@@ -6,7 +6,8 @@ const {
     listCases,
     listMethods,
     listOrganizations,
-    SEARCH
+    SEARCH,
+    CASE
 } = require("../../helpers/db");
 
 const {
@@ -26,15 +27,17 @@ api.get("/cases", async function(req, res) {
             error: params.error,
         });
     }
-    const results = await db.any(SEARCH, {
+    const results = await db.any(CASE, {
         query: '',
         limit: params.limit, // null is no limit in SQL
         offset: params.skip,
         language: params.locale,
-        userId: req.user ? req.user.id : null,
+        userId: '418161', // req.user ? req.user.id : null,
         sortby: params.sortKey,
         type: 'cases',
         facets: ''
+      }).catch(err => {
+          console.log(err);
       });
       console.log(results);
     res.status(200).json({

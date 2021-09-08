@@ -8,6 +8,9 @@ const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
   capSQL: true, // when building SQL queries dynamically, capitalize SQL keywords
+  query(e) {
+    console.log(e.query);
+  }
 };
 const fs = require("fs");
 
@@ -56,6 +59,7 @@ const CREATE_USER_ID = sql("../sql/create_user_id.sql");
 const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
 const CREATE_COLLECTION = sql("../sql/create_collection.sql");
 const CREATE_CASE = sql("../sql/create_case.sql");
+const CASE = sql("../sql/case.sql");
 const CREATE_METHOD = sql("../sql/create_method.sql");
 const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
 const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
@@ -552,6 +556,7 @@ module.exports = {
   COLLECTION_BY_ID,
   COLLECTIONS,
   CASE_BY_ID,
+  CASE,
   CASES_LOCALE_BY_ID,
   METHOD_BY_ID,
   METHODS_LOCALE_BY_ID,
