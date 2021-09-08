@@ -77,6 +77,7 @@ FROM
   get_localized_texts_fallback(cases.id, 'en', cases.original_language) as localized_texts
 WHERE
   cases.hidden = false
+ORDER BY ${sortby:raw} ${orderby:raw}
 LIMIT ${limit}
 OFFSET ${offset}
 

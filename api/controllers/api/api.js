@@ -29,20 +29,19 @@ api.get("/cases", async function(req, res) {
     }
     const results = await db.any(CASE, {
         query: '',
-        limit: params.limit, // null is no limit in SQL
+        limit: params.limit,
         offset: params.skip,
         language: params.locale,
-        userId: '418161', // req.user ? req.user.id : null,
+        userId: req.user ? req.user.id : null,
         sortby: params.sortKey,
+        orderby: params.sortOrder,
         type: 'cases',
         facets: ''
       }).catch(err => {
           console.log(err);
       });
-      console.log(results);
     res.status(200).json({
-        OK: true,
-        results,
+        cases: results.map(result => result.results),
     });
 })
 module.exports = api;
