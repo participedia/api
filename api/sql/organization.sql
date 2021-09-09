@@ -4,7 +4,6 @@ WITH full_thing AS (
     id,
     post_date,
     updated_date,
-    published,
     featured,
     completeness,
     -- user-contributed content

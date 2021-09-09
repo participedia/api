@@ -3,7 +3,6 @@ WITH full_thing AS (
     -- not user editable
     id,
     post_date,
-    published,
     updated_date,
     featured,
     completeness,
