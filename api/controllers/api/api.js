@@ -7,6 +7,7 @@ const {
     db,
     CASE,
     METHOD,
+    ORGANIZATION,
 } = require("../../helpers/db");
 
 
@@ -53,7 +54,6 @@ api.get("/cases", async function(req, res, next) {
         sortby: params.sortKey,
         orderby: params.sortOrder,
       }).catch(err => {
-          console.log(err);
           return next(err);
       });
     res.status(200).json({
@@ -77,11 +77,34 @@ api.get("/methods", async function(req, res, next) {
         sortby: params.sortKey,
         orderby: params.sortOrder,
       }).catch(err => {
-          console.log(err);
           return next(err);
       });
     res.status(200).json({
         methods: results.map(result => result.results),
+    });
+});
+
+api.get("/organizations", async function(req, res, next) {
+    const params = parseAPIGetParams(req);
+    if(params.error) {
+        return res.status(400).json({
+            error: params.error,
+        });
+    }
+    const results = await db.any(ORGANIZATION, {
+        query: '',
+        limit: params.limit,
+        offset: params.skip,
+        language: params.locale,
+        userId: req.user ? req.user.id : null,
+        sortby: params.sortKey,
+        orderby: params.sortOrder,
+      }).catch(err => {
+          console.log(err);
+          return next(err);
+      });
+    res.status(200).json({
+        organizations: results.map(result => result.results),
     });
 });
 

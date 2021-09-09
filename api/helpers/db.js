@@ -49,6 +49,7 @@ const CASES_LOCALE_BY_ID = sql("../sql/case_by_id_locale_array_2.sql");
 const METHOD_BY_ID = sql("../sql/method_by_id.sql");
 const METHODS_LOCALE_BY_ID = sql("../sql/method_by_id_locale.sql");
 const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
+const ORGANIZATION = sql("../sql/organization.sql");
 const ORGANIZATION_LOCALE_BY_ID = sql("../sql/organization_by_id_locale.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
@@ -563,6 +564,7 @@ module.exports = {
   METHOD,
   METHODS_LOCALE_BY_ID,
   ORGANIZATION_BY_ID,
+  ORGANIZATION,
   ORGANIZATION_LOCALE_BY_ID,
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,

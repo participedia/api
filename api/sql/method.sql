@@ -2,23 +2,16 @@ WITH full_thing AS (
   SELECT
     -- not user editable
     id,
-    type,
-    original_language,
     post_date,
     published,
     updated_date,
     featured,
-    hidden,
     completeness,
-    first_author(methods.id) AS creator,
-    last_author(methods.id) AS last_updated_by,
-    get_edit_authors(methods.id) as edit_history,
-    bookmarked('method', methods.id, ${userId}),
     -- user-contributed content
     texts.title,
     texts.description,
     texts.body,
-    -- media links
+ -- media links
     photos,
     files,
     videos,
