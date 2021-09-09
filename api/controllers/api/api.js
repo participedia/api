@@ -57,7 +57,10 @@ api.get("/cases", async function(req, res, next) {
         orderby: params.sortOrder,
         type: 'cases',
         facets: ''
-      }).catch(next);
+      }).catch(err => {
+          console.log(err);
+          return next(err);
+      });
     res.status(200).json({
         cases: results.map(result => result.results),
     });
