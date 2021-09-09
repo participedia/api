@@ -33,10 +33,6 @@ if (
   }
 
 api.use('/v1', api); 
-api.get("/", async function(req, res) {
-
-    res.status(404).json({});
-})
 
 api.get("/cases", async function(req, res, next) {
     const params = parseAPIGetParams(req);
