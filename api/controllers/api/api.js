@@ -36,6 +36,12 @@ api.use('/v1', api);
 
 api.get("/cases", async function(req, res, next) {
     const params = parseAPIGetParams(req);
+    var allowedKeys = JSON.parse(process.env.ALLOWED_API_KEYS);
+    if (!allowedKeys.includes(req.headers.api_key)) {
+        return res.status(400).json({
+            error: "Invalid Participedia API Key",
+        });
+    }
     if(params.error) {
         return res.status(400).json({
             error: params.error,
@@ -59,6 +65,12 @@ api.get("/cases", async function(req, res, next) {
 
 api.get("/methods", async function(req, res, next) {
     const params = parseAPIGetParams(req);
+    var allowedKeys = JSON.parse(process.env.ALLOWED_API_KEYS);
+    if (!allowedKeys.includes(req.headers.api_key)) {
+        return res.status(400).json({
+            error: "Invalid Participedia API Key",
+        });
+    }
     if(params.error) {
         return res.status(400).json({
             error: params.error,
@@ -82,6 +94,12 @@ api.get("/methods", async function(req, res, next) {
 
 api.get("/organizations", async function(req, res, next) {
     const params = parseAPIGetParams(req);
+    var allowedKeys = JSON.parse(process.env.ALLOWED_API_KEYS);
+    if (!allowedKeys.includes(req.headers.api_key)) {
+        return res.status(400).json({
+            error: "Invalid Participedia API Key",
+        });
+    }
     if(params.error) {
         return res.status(400).json({
             error: params.error,
