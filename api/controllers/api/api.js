@@ -5,11 +5,8 @@ const Sentry = require("@sentry/node");
 const api = app.Router();
 const {
     db,
-    listCases,
-    listMethods,
-    listOrganizations,
-    SEARCH,
-    CASE
+    CASE,
+    METHOD,
 } = require("../../helpers/db");
 
 
@@ -55,8 +52,6 @@ api.get("/cases", async function(req, res, next) {
         userId: req.user ? req.user.id : null,
         sortby: params.sortKey,
         orderby: params.sortOrder,
-        type: 'cases',
-        facets: ''
       }).catch(err => {
           console.log(err);
           return next(err);
@@ -64,7 +59,32 @@ api.get("/cases", async function(req, res, next) {
     res.status(200).json({
         cases: results.map(result => result.results),
     });
-})
+});
+
+api.get("/methods", async function(req, res, next) {
+    const params = parseAPIGetParams(req);
+    if(params.error) {
+        return res.status(400).json({
+            error: params.error,
+        });
+    }
+    const results = await db.any(METHOD, {
+        query: '',
+        limit: params.limit,
+        offset: params.skip,
+        language: params.locale,
+        userId: req.user ? req.user.id : null,
+        sortby: params.sortKey,
+        orderby: params.sortOrder,
+      }).catch(err => {
+          console.log(err);
+          return next(err);
+      });
+    res.status(200).json({
+        methods: results.map(result => result.results),
+    });
+});
+
 api.use((req, res, next) => {
     res.status(404).json({
         message: "Resource not found"

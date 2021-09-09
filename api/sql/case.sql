@@ -69,7 +69,6 @@ SELECT
   featured,
   get_user_names(${userId}) as authors,
   get_edit_authors(cases.id) as edit_history,
-  hidden,
   completeness,
   COALESCE(get_object_title_list(collections, 'en', cases.original_language), '{}') as collections
 FROM

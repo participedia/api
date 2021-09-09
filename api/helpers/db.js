@@ -60,6 +60,7 @@ const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
 const CREATE_COLLECTION = sql("../sql/create_collection.sql");
 const CREATE_CASE = sql("../sql/create_case.sql");
 const CASE = sql("../sql/case.sql");
+const METHOD = sql("../sql/method.sql");
 const CREATE_METHOD = sql("../sql/create_method.sql");
 const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
 const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
@@ -559,6 +560,7 @@ module.exports = {
   CASE,
   CASES_LOCALE_BY_ID,
   METHOD_BY_ID,
+  METHOD,
   METHODS_LOCALE_BY_ID,
   ORGANIZATION_BY_ID,
   ORGANIZATION_LOCALE_BY_ID,
