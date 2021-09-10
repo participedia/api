@@ -113,7 +113,6 @@ api.use((req, res, next) => {
 });
 
 api.use(Sentry.Handlers.errorHandler());
-// api.use(apiPromiseErrorHandler);
 
 if (process.env.NODE_ENV === "development") {
     api.use(apiErrorHandler);

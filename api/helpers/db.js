@@ -8,9 +8,6 @@ const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
   capSQL: true, // when building SQL queries dynamically, capitalize SQL keywords
-  query(e) {
-    console.log(e.query);
-  }
 };
 const fs = require("fs");
 
