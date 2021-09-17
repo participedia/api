@@ -1,7 +1,5 @@
 "use strict";
 const app = require("express");
-var cors = require('cors')
-
 const Sentry = require("@sentry/node");
 
 const api = app.Router();
@@ -23,8 +21,6 @@ const {
     apiPromiseErrorHandler,
 } = require("./api-helpers");  
 
-api.use(cors())
-// only instantiate sentry logging if we are on staging or prod
 if (
     process.env.NODE_ENV === "production" ||
     process.env.NODE_ENV === "staging"
