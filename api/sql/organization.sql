@@ -2,8 +2,8 @@ WITH full_thing AS (
   SELECT
     -- not user editable
     id,
-    post_date,
-    updated_date,
+    EXTRACT(EPOCH FROM post_date) AS post_date,
+    EXTRACT(EPOCH FROM updated_date) AS updated_date,
     featured,
     completeness,
     -- user-contributed content
