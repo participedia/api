@@ -143,8 +143,9 @@ async function postMethodNewHttp(req, res) {
     };
 
     const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
-    if(localesToNotTranslate.length > 0) {
+    if(filteredLocalesToTranslate.length) {
+      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
+    }    if(localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
     }
     res.status(200).json({
