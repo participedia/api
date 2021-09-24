@@ -95,13 +95,13 @@ const editForm = {
   },
 
   initOtherLangSelector() {
-    const userLocale = document.querySelector("input[name=locale]").value;
+    const userLocale = document.querySelector("input[name=locale]")?.value;
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
-    this.field = document.querySelector("input[name=locale]").value;
-    const articles = document.querySelector("input[name=article_data]").value || '{}' ;
+    this.field = document.querySelector("input[name=locale]")?.value;
+    const articles = document.querySelector("input[name=article_data]")?.value || '{}' ;
     this.articleData = JSON.parse(articles);
     try {
-      this.localePlaceholders = JSON.parse(document.querySelector("input[name=locale_placeholders]").value || '{}');
+      this.localePlaceholders = JSON.parse(document.querySelector("input[name=locale_placeholders]")?.value || '{}');
     } catch (error) {
       this.localePlaceholders = {};
     }
@@ -309,19 +309,30 @@ const editForm = {
     const formData = serialize(this.formEl);
     const originalEntry = Object.fromEntries(new URLSearchParams(formData));
     const formObject = Object.fromEntries(new URLSearchParams(formData));
-    const formsData = {};
-    const supportedLanguages =
-      JSON.parse(this.formEl.supportedLangs.value) || [];
+    let formsData = {};
+    let supportedLanguages;
+    try {
+      supportedLanguages =
+      JSON.parse(this.formEl.supportedLangs?.value) || [];
+    } catch (error) {
+      supportedLanguages =  [];
+    }
+    
 
-    supportedLanguages.forEach(lang => {
-      formsData[lang.key] = formObject;
-      formsData[lang.key]["title"] =
-        this.entryLocaleData["title"]?.[lang.key] || "";
-      formsData[lang.key]["description"] =
-        this.entryLocaleData["description"]?.[lang.key] || "";
-      formsData[lang.key]["body"] =
-        this.entryLocaleData["body"]?.[lang.key] || "";
-    });
+    if(supportedLanguages && supportedLanguages.length) {
+      supportedLanguages.forEach(lang => {
+        formsData[lang.key] = formObject;
+        formsData[lang.key]["title"] =
+          this.entryLocaleData["title"]?.[lang.key] || "";
+        formsData[lang.key]["description"] =
+          this.entryLocaleData["description"]?.[lang.key] || "";
+        formsData[lang.key]["body"] =
+          this.entryLocaleData["body"]?.[lang.key] || "";
+      });
+    } else {
+      formsData = originalEntry;
+    }
+    
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", this.formEl.getAttribute("action"), true);

@@ -21,7 +21,6 @@ const {
     apiPromiseErrorHandler,
 } = require("./api-helpers");  
 
-// only instantiate sentry logging if we are on staging or prod
 if (
     process.env.NODE_ENV === "production" ||
     process.env.NODE_ENV === "staging"

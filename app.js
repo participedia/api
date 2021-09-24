@@ -21,6 +21,8 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const Sentry = require("@sentry/node");
+const cors = require('cors')
+
 
 // only instantiate sentry logging if we are on staging or prod
 if (
@@ -57,6 +59,8 @@ const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
 
 const port = process.env.PORT || 3001;
+
+app.use("/api", cors(), api);
 
 app.use(errorhandler());
 // canonicalize url
@@ -294,7 +298,6 @@ app.use("/list", list);
 app.use("/user", user);
 app.use("/bookmark", bookmark);
 app.use("/blog-post", blogPost);
-app.use("/api", api);
 
 // endpoint to set new locale
 app.get("/set-locale", function(req, res) {
