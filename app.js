@@ -21,6 +21,8 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const Sentry = require("@sentry/node");
+const cors = require('cors')
+
 
 // only instantiate sentry logging if we are on staging or prod
 if (
@@ -46,6 +48,7 @@ const { method } = require("./api/controllers/method");
 const { organization } = require("./api/controllers/organization");
 const bookmark = require("./api/controllers/bookmark");
 const search = require("./api/controllers/search");
+const api = require("./api/controllers/api/api");
 const home = require("./api/controllers/home");
 const list = require("./api/controllers/list");
 const blogPost = require("./api/controllers/blog-post");
@@ -56,6 +59,8 @@ const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
 
 const port = process.env.PORT || 3001;
+
+app.use("/api", cors(), api);
 
 app.use(errorhandler());
 // canonicalize url

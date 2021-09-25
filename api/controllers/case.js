@@ -130,7 +130,9 @@ async function postCaseNewHttp(req, res) {
     };
 
     const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
+    if(filteredLocalesToTranslate.length) {
+      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
+    }
     if(localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
     }
@@ -352,13 +354,9 @@ async function caseUpdate(req, res, entry = undefined) {
 
   newCase.links = verifyOrUpdateUrl(newCase.links || []);
 
-  // if this is a new case, we don't have a post_date yet, so we set it here
+  // if this is a new case, we don't have a post_date and update_date yet, so we set it here
   if (isNewCase) {
     newCase.post_date = Date.now();
-  }
-
-  // if this is a new case, we don't have a updated_date yet, so we set it here
-  if (isNewCase) {
     newCase.updated_date = Date.now();
   }
 

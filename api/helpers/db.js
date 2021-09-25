@@ -46,6 +46,7 @@ const CASES_LOCALE_BY_ID = sql("../sql/case_by_id_locale_array_2.sql");
 const METHOD_BY_ID = sql("../sql/method_by_id.sql");
 const METHODS_LOCALE_BY_ID = sql("../sql/method_by_id_locale.sql");
 const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
+const ORGANIZATION = sql("../sql/organization.sql");
 const ORGANIZATION_LOCALE_BY_ID = sql("../sql/organization_by_id_locale.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
@@ -56,6 +57,8 @@ const CREATE_USER_ID = sql("../sql/create_user_id.sql");
 const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
 const CREATE_COLLECTION = sql("../sql/create_collection.sql");
 const CREATE_CASE = sql("../sql/create_case.sql");
+const CASE = sql("../sql/case.sql");
+const METHOD = sql("../sql/method.sql");
 const CREATE_METHOD = sql("../sql/create_method.sql");
 const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
 const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
@@ -552,10 +555,13 @@ module.exports = {
   COLLECTION_BY_ID,
   COLLECTIONS,
   CASE_BY_ID,
+  CASE,
   CASES_LOCALE_BY_ID,
   METHOD_BY_ID,
+  METHOD,
   METHODS_LOCALE_BY_ID,
   ORGANIZATION_BY_ID,
+  ORGANIZATION,
   ORGANIZATION_LOCALE_BY_ID,
   UPDATE_AUTHOR_FIRST,
   UPDATE_AUTHOR_LAST,
