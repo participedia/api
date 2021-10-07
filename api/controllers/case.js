@@ -254,87 +254,87 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   return [updatedCase, er];
 }
 
-async function caseUpdateHttp(req, res, entry = undefined) {
-  // cache.clear();
-  const params = parseGetParams(req, "case");
-  const user = req.user;
-  const { articleid, type, view, userid, lang, returns } = params;
-  const newCase = entry || req.body;
-  const errors = validateFields(newCase, "case");
-  const isNewCase = !newCase.article_id;
+// async function caseUpdateHttp(req, res, entry = undefined) {
+//   // cache.clear();
+//   const params = parseGetParams(req, "case");
+//   const user = req.user;
+//   const { articleid, type, view, userid, lang, returns } = params;
+//   const newCase = entry || req.body;
+//   const errors = validateFields(newCase, "case");
+//   const isNewCase = !newCase.article_id;
 
-  if (errors.length > 0) {
-    return res.status(400).json({
-      OK: false,
-      errors: errors,
-    });
-  }
+//   if (errors.length > 0) {
+//     return res.status(400).json({
+//       OK: false,
+//       errors: errors,
+//     });
+//   }
 
-  newCase.links = verifyOrUpdateUrl(newCase.links || []);
+//   newCase.links = verifyOrUpdateUrl(newCase.links || []);
 
-  // if this is a new case, we don't have a post_date yet, so we set it here
-  if (isNewCase) {
-    newCase.post_date = Date.now();
-  }
+//   // if this is a new case, we don't have a post_date yet, so we set it here
+//   if (isNewCase) {
+//     newCase.post_date = Date.now();
+//   }
 
-  // if this is a new case, we don't have a updated_date yet, so we set it here
-  if (isNewCase) {
-    newCase.updated_date = Date.now();
-  }
+//   // if this is a new case, we don't have a updated_date yet, so we set it here
+//   if (isNewCase) {
+//     newCase.updated_date = Date.now();
+//   }
 
-  // save any changes to the user-submitted text
-  const {
-    updatedText,
-    author,
-    oldArticle: oldCase,
-  } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
-  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+//   // save any changes to the user-submitted text
+//   const {
+//     updatedText,
+//     author,
+//     oldArticle: oldCase,
+//   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
+//   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
 
-  //get current date when user.isAdmin is false;
-  updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
+//   //get current date when user.isAdmin is false;
+//   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
 
-  if (!er.hasErrors()) {
-    if (updatedText) {
-      await db.tx("update-case", async t => {
-        if(!isNewCase) {
-          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-        } else {
-          await t.none(INSERT_AUTHOR, author);
-        }
-        await t.none(UPDATE_CASE, updatedCase);
-      });
-      //if this is a new case, set creator id to userid and isAdmin
-      if (user.isadmin) {
-        const creator = {
-          user_id: newCase.creator ? newCase.creator : params.userid,
-          thingid: params.articleid,
-        };
-        await db.tx("update-case", async t => {
-          await t.none(UPDATE_AUTHOR_LAST, creator);
-        });
-      }
-    } else {
-      await db.tx("update-case", async t => {
-        await t.none(INSERT_AUTHOR, author);
-        await t.none(UPDATE_CASE, updatedCase);
-      });
-    }
-    // the client expects this request to respond with json
-    // save successful response
-    const freshArticle = await getCase(params, res);
-    res.status(200).json({
-      OK: true,
-      article: freshArticle,
-    });
-    refreshSearch();
-  } else {
-    logError(`400 with errors: ${er.errors.join(", ")}`);
-    res.status(400).json({
-      OK: false,
-      errors: er.errors,
-    });
-  }
-}
+//   if (!er.hasErrors()) {
+//     if (updatedText) {
+//       await db.tx("update-case", async t => {
+//         if(!isNewCase) {
+//           await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+//         } else {
+//           await t.none(INSERT_AUTHOR, author);
+//         }
+//         await t.none(UPDATE_CASE, updatedCase);
+//       });
+//       //if this is a new case, set creator id to userid and isAdmin
+//       if (user.isadmin) {
+//         const creator = {
+//           user_id: newCase.creator ? newCase.creator : params.userid,
+//           thingid: params.articleid,
+//         };
+//         await db.tx("update-case", async t => {
+//           await t.none(UPDATE_AUTHOR_LAST, creator);
+//         });
+//       }
+//     } else {
+//       await db.tx("update-case", async t => {
+//         await t.none(INSERT_AUTHOR, author);
+//         await t.none(UPDATE_CASE, updatedCase);
+//       });
+//     }
+//     // the client expects this request to respond with json
+//     // save successful response
+//     const freshArticle = await getCase(params, res);
+//     res.status(200).json({
+//       OK: true,
+//       article: freshArticle,
+//     });
+//     refreshSearch();
+//   } else {
+//     logError(`400 with errors: ${er.errors.join(", ")}`);
+//     res.status(400).json({
+//       OK: false,
+//       errors: er.errors,
+//     });
+//   }
+// }
 
 async function caseUpdate(req, res, entry = undefined) {
   // cache.clear();
@@ -560,5 +560,5 @@ module.exports = {
   postCaseNewHttp,
   getCaseHttp,
   postCaseUpdateHttp,
-  caseUpdateHttp
+  // caseUpdateHttp
 };
