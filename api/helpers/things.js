@@ -261,7 +261,7 @@ async function maybeUpdateUserTextLocaleEntry(body, req, res, type) {
   }
 
   if (textModified) {
-    return { updatedText, author, oldArticle };
+    return { updatedText, author, newArticle };
   } else {
     return { updatedText: null, author, oldArticle };
   }
