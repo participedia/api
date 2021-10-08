@@ -366,7 +366,7 @@ async function caseUpdate(req, res, entry = undefined) {
     author,
     oldArticle: oldCase,
   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
-  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldCase);
+  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
