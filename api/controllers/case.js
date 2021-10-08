@@ -364,6 +364,7 @@ async function caseUpdate(req, res, entry = undefined) {
   const {
     updatedText,
     author,
+    oldArticle,
   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
 
@@ -559,5 +560,5 @@ module.exports = {
   postCaseNewHttp,
   getCaseHttp,
   postCaseUpdateHttp,
-  // caseUpdateHttp
+  caseUpdateHttp
 };
