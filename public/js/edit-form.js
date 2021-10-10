@@ -344,15 +344,13 @@ const editForm = {
           this.entryLocaleData["body"]?.[lang.key] || "";
 
         ["links", "videos", "audio", "evaluation_links"].map(key => {
-          let formKeys = Object.keys(formsData?.[lang.key]);
-          let formValues = formsData[lang.key];
-          debugger;
+          const formKeys = Object.keys(formsData?.[lang.key]);
+          const formValues = formsData[lang.key];
           if (!formKeys) return;
           const matcher = new RegExp(
             `(${key})\\[(\\d{1,})\\]\\[([a-zA-Z-0-9]{1,})\\]`
           );
-          let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
-          console.log(mediaThingsKeys);
+          const mediaThingsKeys = formKeys.filter(key => matcher.test(key));
           mediaThingsKeys.forEach(thingKey => {
             const thingValue = formValues[thingKey];
             let m = matcher.exec(thingKey);
@@ -367,27 +365,6 @@ const editForm = {
                 ? {}
                 : formValues[m[1]][m[2]];
             formValues[m[1]][m[2]][m[3]] = thingValue;
-            console.log(formValues[m[1]]);
-            // The result can be accessed through the `m`-variable.
-            m.forEach((match, groupIndex) => {
-              console.log(`Found match, group ${groupIndex}: ${match}`);
-            });
-
-            let formData = new FormData();
-            let mediaObjectData = {};
-
-            for (const key in formValues) {
-              if (formValues.hasOwnProperty(key)) {
-                formData.append(key, formValues[key]);
-              }
-            }
-            console.log(formData);
-            formsData[key] = formData;
-            // if(arrayValue) {
-            //   let fieldName = arrayValue.substr(0, arrayValue.indexOf('['));
-            //   debugger;
-            //   console.info('Fixing this', arrayValue);
-            // }
           });
         });
       });
