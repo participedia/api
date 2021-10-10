@@ -344,13 +344,15 @@ const editForm = {
           this.entryLocaleData["body"]?.[lang.key] || "";
 
         ["links", "videos", "audio", "evaluation_links"].map(key => {
-          const formKeys = Object.keys(formsData?.[lang.key]);
-          const formValues = formsData[lang.key];
+          let formKeys = Object.keys(formsData?.[lang.key]);
+          let formValues = formsData[lang.key];
+          debugger;
           if (!formKeys) return;
           const matcher = new RegExp(
-            `(${key})\\[(\\d{1,})\\]\\[([a-zA-Z-0-9]{1,})\\]`
+            `^(${key})\\[(\\d{1,})\\]\\[([a-zA-Z-0-9]{1,})\\]`
           );
-          const mediaThingsKeys = formKeys.filter(key => matcher.test(key));
+          let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
+          console.log(mediaThingsKeys);
           mediaThingsKeys.forEach(thingKey => {
             const thingValue = formValues[thingKey];
             let m = matcher.exec(thingKey);
@@ -365,6 +367,11 @@ const editForm = {
                 ? {}
                 : formValues[m[1]][m[2]];
             formValues[m[1]][m[2]][m[3]] = thingValue;
+            console.log(formValues[m[1]]);
+            // The result can be accessed through the `m`-variable.
+            m.forEach((match, groupIndex) => {
+              console.log(`Found match, group ${groupIndex}: ${match}`);
+            });
           });
         });
       });
