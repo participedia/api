@@ -98,10 +98,13 @@ const editForm = {
     const userLocale = document.querySelector("input[name=locale]")?.value;
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
     this.field = document.querySelector("input[name=locale]")?.value;
-    const articles = document.querySelector("input[name=article_data]")?.value || '{}' ;
+    const articles =
+      document.querySelector("input[name=article_data]")?.value || "{}";
     this.articleData = JSON.parse(articles);
     try {
-      this.localePlaceholders = JSON.parse(document.querySelector("input[name=locale_placeholders]")?.value || '{}');
+      this.localePlaceholders = JSON.parse(
+        document.querySelector("input[name=locale_placeholders]")?.value || "{}"
+      );
     } catch (error) {
       this.localePlaceholders = {};
     }
@@ -130,105 +133,118 @@ const editForm = {
         this.currentInputValue = evt.target.value;
         this.currentInput = evt.target.name;
 
-        if(Object.keys(this.entryLocaleData[this.currentInput]).length === 0) {
+        if (Object.keys(this.entryLocaleData[this.currentInput]).length === 0) {
           this.field = document.querySelector("input[name=locale]").value;
         }
-        
+
         if (this.field) {
-          this.entryLocaleData[this.currentInput][this.field] = this.currentInputValue;
+          this.entryLocaleData[this.currentInput][
+            this.field
+          ] = this.currentInputValue;
         }
       });
     });
 
     selectorLoaders.forEach(el => {
       const selectEl = el.nextElementSibling.children[1];
-      const inputEl  = el.nextElementSibling.nextElementSibling;
+      const inputEl = el.nextElementSibling.nextElementSibling;
 
-      const _disableSelectEl = (value) => {
+      const _disableSelectEl = value => {
         selectEl.disabled = true;
         selectEl.previousElementSibling.style.display = "initial";
 
-        if(value.trim().length) {
+        if (value.trim().length) {
           selectEl.disabled = false;
           selectEl.previousElementSibling.style.display = "none";
         }
-        if(this.currentInput) {
-          if(this.entryLocaleData[this.currentInput][userLocale]) {
+        if (this.currentInput) {
+          if (this.entryLocaleData[this.currentInput][userLocale]) {
             selectEl.disabled = false;
             selectEl.previousElementSibling.style.display = "none";
             return;
           }
-        
         }
       };
-        
-      const _disableBodySelectEl = (value) => {
+
+      const _disableBodySelectEl = value => {
         selectEl.disabled = true;
         selectEl.previousElementSibling.style.display = "initial";
 
-        const placeholderText = document.createElement('div');
+        const placeholderText = document.createElement("div");
         placeholderText.innerHTML = this.localePlaceholders[this.field].body;
-        if(placeholderText.innerText === value) {
+        if (placeholderText.innerText === value) {
           selectEl.disabled = true;
           selectEl.previousElementSibling.style.display = "initial";
           return;
         }
 
-        const localeBodyFieldValueEl = document.createElement('div');
-        localeBodyFieldValueEl.innerHTML = this.entryLocaleData['body'][userLocale] || '';
+        const localeBodyFieldValueEl = document.createElement("div");
+        localeBodyFieldValueEl.innerHTML =
+          this.entryLocaleData["body"][userLocale] || "";
 
-        if(this.entryLocaleData['body'][userLocale] || !value.trim().length) {
+        if (this.entryLocaleData["body"][userLocale] || !value.trim().length) {
           selectEl.disabled = false;
           selectEl.previousElementSibling.style.display = "none";
-          return
+          return;
         }
-       
-        if(localeBodyFieldValueEl.innerText.trim().length) {
+
+        if (localeBodyFieldValueEl.innerText.trim().length) {
           selectEl.disabled = false;
           selectEl.previousElementSibling.style.display = "none";
-          return;        
+          return;
         }
       };
 
-      if(["input", "textarea"].indexOf(inputEl.localName) >= 0) {
+      if (["input", "textarea"].indexOf(inputEl.localName) >= 0) {
         // Toggle select element disable state
         _disableSelectEl(inputEl.value);
-        
 
         // Listen to keyup event of input element
         inputEl.addEventListener("keyup", e => {
           _disableSelectEl(e.target.value);
         });
-      } else if(inputEl.className.includes("ql-toolbar")) {
+      } else if (inputEl.className.includes("ql-toolbar")) {
         _disableBodySelectEl(bodyField.innerText);
         bodyField.addEventListener("keyup", evt => {
-          this.currentInput = 'body';
+          this.currentInput = "body";
           console.log(evt.target.innerHTML);
           this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
-          bodyField.classList.add('dirty');
+          bodyField.classList.add("dirty");
           _disableBodySelectEl(bodyField.innerText);
         });
-        
       }
 
       el.addEventListener("click", e => {
         e.preventDefault();
-        e.target.parentElement.nextElementSibling.classList.toggle("is-visible");
+        e.target.parentElement.nextElementSibling.classList.toggle(
+          "is-visible"
+        );
       });
     });
 
     selectors.forEach(el => {
       el.addEventListener("change", evt => {
         evt.preventDefault();
-        const isBody = el.parentElement.nextElementSibling.className.includes("ql-toolbar");
-        const inputField = isBody ? bodyField : el.parentElement.nextElementSibling;
+        const isBody = el.parentElement.nextElementSibling.className.includes(
+          "ql-toolbar"
+        );
+        const inputField = isBody
+          ? bodyField
+          : el.parentElement.nextElementSibling;
 
         this.field = evt.target.value;
-        this.inputName = isBody ? "body" : el.parentElement.nextElementSibling.name;
-        if(isBody) {
-          this.entryLocaleData[this.inputName][this.field] = this.entryLocaleData[this.inputName][this.field] || this.localePlaceholders[this.field][this.inputName];
+        this.inputName = isBody
+          ? "body"
+          : el.parentElement.nextElementSibling.name;
+        if (isBody) {
+          this.entryLocaleData[this.inputName][this.field] =
+            this.entryLocaleData[this.inputName][this.field] ||
+            this.localePlaceholders[this.field][this.inputName];
         } else {
-          el.parentElement.nextElementSibling.setAttribute('placeholder', this.localePlaceholders[this.field][this.inputName] || '');
+          el.parentElement.nextElementSibling.setAttribute(
+            "placeholder",
+            this.localePlaceholders[this.field][this.inputName] || ""
+          );
         }
 
         if (
@@ -236,7 +252,9 @@ const editForm = {
           this.entryLocaleData[this.inputName][this.field]
         ) {
           if (isBody) {
-            inputField.innerHTML = this.entryLocaleData[this.inputName][this.field];
+            inputField.innerHTML = this.entryLocaleData[this.inputName][
+              this.field
+            ];
           } else {
             inputField.value = this.entryLocaleData[this.inputName][this.field];
           }
@@ -254,7 +272,7 @@ const editForm = {
       });
     });
 
-    if(this.isEditMode) {
+    if (this.isEditMode) {
       this.initOtherLangSelectorForEditMode();
     }
   },
@@ -277,10 +295,7 @@ const editForm = {
       selectors.forEach(el => {
         el.classList.add("is-visible");
       });
-      
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   },
 
   validateLocalForms() {},
@@ -309,17 +324,16 @@ const editForm = {
     const formData = serialize(this.formEl);
     const originalEntry = Object.fromEntries(new URLSearchParams(formData));
     const formObject = Object.fromEntries(new URLSearchParams(formData));
+
     let formsData = {};
     let supportedLanguages;
     try {
-      supportedLanguages =
-      JSON.parse(this.formEl.supportedLangs?.value) || [];
+      supportedLanguages = JSON.parse(this.formEl.supportedLangs?.value) || [];
     } catch (error) {
-      supportedLanguages =  [];
+      supportedLanguages = [];
     }
-    
 
-    if(supportedLanguages && supportedLanguages.length) {
+    if (supportedLanguages && supportedLanguages.length) {
       supportedLanguages.forEach(lang => {
         formsData[lang.key] = formObject;
         formsData[lang.key]["title"] =
@@ -328,11 +342,58 @@ const editForm = {
           this.entryLocaleData["description"]?.[lang.key] || "";
         formsData[lang.key]["body"] =
           this.entryLocaleData["body"]?.[lang.key] || "";
+
+        ["links", "videos", "audio", "evaluation_links"].map(key => {
+          let formKeys = Object.keys(formsData?.[lang.key]);
+          let formValues = formsData[lang.key];
+          debugger;
+          if (!formKeys) return;
+          const matcher = new RegExp(
+            `(${key})\\[(\\d{1,})\\]\\[([a-zA-Z-0-9]{1,})\\]`
+          );
+          let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
+          console.log(mediaThingsKeys);
+          mediaThingsKeys.forEach(thingKey => {
+            const thingValue = formValues[thingKey];
+            let m = matcher.exec(thingKey);
+            if (!m) return;
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (m.index === matcher.lastIndex) {
+              matcher.lastIndex++;
+            }
+            formValues[m[1]] = formValues[m[1]] || [];
+            formValues[m[1]][m[2]] =
+              formValues[m[1]][m[2]] === undefined
+                ? {}
+                : formValues[m[1]][m[2]];
+            formValues[m[1]][m[2]][m[3]] = thingValue;
+            console.log(formValues[m[1]]);
+            // The result can be accessed through the `m`-variable.
+            m.forEach((match, groupIndex) => {
+              console.log(`Found match, group ${groupIndex}: ${match}`);
+            });
+
+            let formData = new FormData();
+            let mediaObjectData = {};
+
+            for (const key in formValues) {
+              if (formValues.hasOwnProperty(key)) {
+                formData.append(key, formValues[key]);
+              }
+            }
+            console.log(formData);
+            formsData[key] = formData;
+            // if(arrayValue) {
+            //   let fieldName = arrayValue.substr(0, arrayValue.indexOf('['));
+            //   debugger;
+            //   console.info('Fixing this', arrayValue);
+            // }
+          });
+        });
       });
     } else {
       formsData = originalEntry;
     }
-    
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", this.formEl.getAttribute("action"), true);
@@ -435,9 +496,11 @@ const editForm = {
     if (!Array.isArray(errors)) {
       return `<h3>Sorry, something went wrong. Please try again.</h3>`;
     } else {
-      const errorsHtml = errors.map(error => {
-        return error.errors.map(err => `<li>${err}</li>`).join("");
-      }).join("");
+      const errorsHtml = errors
+        .map(error => {
+          return error.errors.map(err => `<li>${err}</li>`).join("");
+        })
+        .join("");
       return `
         <h3>Please fix the following issues</h3>
         <ul>
