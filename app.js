@@ -80,8 +80,8 @@ app.use(compression());
 app.set("port", port);
 app.use(express.static("public", { index: false }));
 app.use(methodOverride()); // Do we actually use/need this?
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb", extended: true, parameterLimit: 500000 }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 500000 }));
 app.use(cookieParser());
 
 i18n.configure({

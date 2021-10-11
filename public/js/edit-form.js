@@ -343,13 +343,13 @@ const editForm = {
         formsData[lang.key]["body"] =
           this.entryLocaleData["body"]?.[lang.key] || "";
 
-          debugger;
         [
             "links", "videos", "audio", "evaluation_links", "general_issues",
           "specific_topics", "purposes", "approaches", "targeted_participants",
           "method_types", "tools_techniques_types", "participants_interactions",
           "learning_resources", "learning_resources", "decision_methods", "if_voting",
-          "insights_outcomes", "organizer_types", "funder_types", "change_types"
+          "insights_outcomes", "organizer_types", "funder_types", "change_types", "files", "photos",
+          "implementers_of_change"
         ].map(key => {
           let formKeys = Object.keys(formsData?.[lang.key]);
           let formValues = formsData[lang.key];
@@ -359,6 +359,9 @@ const editForm = {
           );
           let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
           console.log(mediaThingsKeys);
+          if(mediaThingsKeys.length === 0) {
+            formsData[lang.key][key] = [];
+          }
           mediaThingsKeys.forEach(thingKey => {
             const thingValue = formValues[thingKey];
             let m = matcher.exec(thingKey);
@@ -384,7 +387,9 @@ const editForm = {
     } else {
       formsData = originalEntry;
     }
-
+    debugger;
+    debugger;
+    debugger;
     const xhr = new XMLHttpRequest();
     xhr.open("POST", this.formEl.getAttribute("action"), true);
     xhr.setRequestHeader("Content-Type", "application/json");
