@@ -216,7 +216,7 @@ async function postMethodUpdateHttp(req, res) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
       if(entryLocale === entry.original_language) {
-        originalLanguageEntry = req.body.originalEntry;
+        originalLanguageEntry = entry;
       }
       let errors = validateFields(entry, "method");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);

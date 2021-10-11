@@ -420,7 +420,7 @@ const editForm = {
       JSON.stringify({
         ...formsData,
         entryLocales: this.entryLocaleData,
-        originalEntry,
+        // originalEntry,
       })
     );
     // open publishing feedback modal as soon as we send the request

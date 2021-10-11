@@ -217,7 +217,7 @@ async function postOrganizationUpdateHttp(req, res) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
       if(entryLocale === entry.original_language) {
-        originalLanguageEntry = req.body.originalEntry;
+        originalLanguageEntry = entry;
       }
       let errors = validateFields(entry, "organization");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
