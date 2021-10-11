@@ -207,7 +207,6 @@ const editForm = {
         _disableBodySelectEl(bodyField.innerText);
         bodyField.addEventListener("keyup", evt => {
           this.currentInput = "body";
-          console.log(evt.target.innerHTML);
           this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
           bodyField.classList.add("dirty");
           _disableBodySelectEl(bodyField.innerText);
@@ -306,7 +305,6 @@ const editForm = {
       ".js-tab-select-container"
     );
     document.addEventListener("scroll", e => {
-      console.log(window.scrollY);
       if (window.scrollY > 25) {
         tabsContainer.classList.add("fixed-language-tab");
       } else {
@@ -358,7 +356,6 @@ const editForm = {
             `^(${key})\\[(\\d{1,})\\]\\[([a-zA-Z-0-9]{1,})\\]`
           );
           let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
-          console.log(mediaThingsKeys);
           if(mediaThingsKeys.length === 0) {
             formsData[lang.key][key] = [];
           }
@@ -376,20 +373,12 @@ const editForm = {
                 ? {}
                 : formValues[m[1]][m[2]];
             formValues[m[1]][m[2]][m[3]] = thingValue;
-            console.log(formValues[m[1]]);
-            // The result can be accessed through the `m`-variable.
-            m.forEach((match, groupIndex) => {
-              console.log(`Found match, group ${groupIndex}: ${match}`);
-            });
           });
         });
       });
     } else {
       formsData = originalEntry;
     }
-    debugger;
-    debugger;
-    debugger;
     const xhr = new XMLHttpRequest();
     xhr.open("POST", this.formEl.getAttribute("action"), true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -397,7 +386,6 @@ const editForm = {
     xhr.onreadystatechange = () => {
       // wait for request to be done
       if (xhr.readyState !== xhr.DONE) return;
-
       if (xhr.status === 0) {
         // if user is not logged in
         // this.openAuthWarning();
