@@ -356,6 +356,12 @@ app.get("/citizensvoicescovid", function(req, res) {
   );
 });
 
+app.get("/cafe1", function (req, res) {
+    return res.redirect(
+      "https://www.eventbrite.ca/e/teaching-cafe-1-participedia-in-the-classroom-tickets-172935754497"
+    );
+});
+
 // redirect old .net urls to their new urls
 app.use((req, res, next) => {
   const path = req.originalUrl;
