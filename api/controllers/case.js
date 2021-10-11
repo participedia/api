@@ -391,7 +391,12 @@ async function caseUpdate(req, res, entry = undefined) {
         };
         await db.tx("update-case", async t => {
           await t.none(UPDATE_AUTHOR_FIRST, creator);
-
+          
+          var userId = oldArticle.creator.user_id.toString();
+          var creatorTimestamp = new Date(oldArticle.creator.timestamp);
+          if (userId == creator.user_id && creatorTimestamp.getTime() === creator.timestamp.getTime()) {
+            await t.none(INSERT_AUTHOR, author);
+          }
         });
       }
     } else {
