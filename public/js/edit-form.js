@@ -343,10 +343,16 @@ const editForm = {
         formsData[lang.key]["body"] =
           this.entryLocaleData["body"]?.[lang.key] || "";
 
-        ["links", "videos", "audio", "evaluation_links"].map(key => {
+          debugger;
+        [
+            "links", "videos", "audio", "evaluation_links", "general_issues",
+          "specific_topics", "purposes", "approaches", "targeted_participants",
+          "method_types", "tools_techniques_types", "participants_interactions",
+          "learning_resources", "learning_resources", "decision_methods", "if_voting",
+          "insights_outcomes", "organizer_types", "funder_types", "change_types"
+        ].map(key => {
           let formKeys = Object.keys(formsData?.[lang.key]);
           let formValues = formsData[lang.key];
-          debugger;
           if (!formKeys) return;
           const matcher = new RegExp(
             `^(${key})\\[(\\d{1,})\\]\\[([a-zA-Z-0-9]{1,})\\]`

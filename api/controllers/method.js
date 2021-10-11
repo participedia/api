@@ -275,13 +275,13 @@ async function methodUpdateHttp(req, res, entry = undefined) {
   const {
     updatedText,
     author,
-    oldArticle: oldMethod,
+    oldArticle,
   } = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method");
   const [updatedMethod, er] = getUpdatedMethod(
     user,
     params,
     newMethod,
-    oldMethod
+    oldArticle
   );
 
   //get current date when user.isAdmin is false;

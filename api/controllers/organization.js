@@ -276,13 +276,13 @@ async function organizationUpdate(req, res, entry = undefined){
   const {
     updatedText,
     author,
-    oldArticle: oldOrganization,
+    oldArticle,
   } = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization"); //maybeUpdateUserText(req, res, "organization");
   const [updatedOrganization, er] = getUpdatedOrganization(
     user,
     params,
     newOrganization,
-    oldOrganization
+    oldArticle
   );
   //get current date when user.isAdmin is false;
   updatedOrganization.updated_date = !user.isadmin
