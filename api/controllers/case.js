@@ -400,6 +400,10 @@ async function caseUpdate(req, res, entry = undefined) {
           }
         }
       });
+      } else {
+        await db.tx("update-case", async t => {
+          await t.none(INSERT_AUTHOR, author);
+        });  
       }
     } else {
       await db.tx("update-case", async t => {
