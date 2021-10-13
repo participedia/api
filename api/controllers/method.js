@@ -288,7 +288,6 @@ async function methodUpdateHttp(req, res, entry = undefined) {
   updatedMethod.updated_date = !user.isadmin
     ? "now"
     : updatedMethod.updated_date;
-    author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
 
   if (!er.hasErrors()) {
     if (updatedText) {
@@ -308,7 +307,7 @@ async function methodUpdateHttp(req, res, entry = undefined) {
           timestamp: new Date(newMethod.post_date)
         };
         await db.tx("update-method", async t => {
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_AUTHOR_LAST, creator);
         });
       }
     } else {
@@ -399,7 +398,15 @@ async function methodUpdate(req, res, entry = undefined) {
           timestamp: new Date(newMethod.post_date)
         };
         await db.tx("update-method", async t => {
-          await t.none(UPDATE_AUTHOR_LAST, creator);
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          
+         if (!isNewMethod) {
+          var userId = oldMethod.creator.user_id.toString();
+        var creatorTimestamp = new Date(oldMethod.post_date);
+        if (userId == creator.user_id && creatorTimestamp.getTime() === creator.timestamp.getTime()) {
+          await t.none(INSERT_AUTHOR, author);
+        }
+      }
         });
       }
     } else {
