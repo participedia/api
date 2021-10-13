@@ -379,7 +379,6 @@ async function caseUpdate(req, res, entry = undefined) {
         } else {
           await t.none(INSERT_AUTHOR, author);
         }
-        await t.none(UPDATE_CASE, updatedCase); 
       });
       //if this is a new case, set creator id to userid and isAdmin
       if (user.isadmin) {
@@ -397,7 +396,9 @@ async function caseUpdate(req, res, entry = undefined) {
           var creatorTimestamp = new Date(oldArticle.post_date);
           if (userId == creator.user_id && creatorTimestamp.getTime() === creator.timestamp.getTime()) {
             await t.none(INSERT_AUTHOR, author);
+            updatedCase.updated_date = "now";
           }
+          await t.none(UPDATE_CASE, updatedCase); 
         }
       });
       } else {

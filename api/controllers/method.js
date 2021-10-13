@@ -388,7 +388,6 @@ async function methodUpdate(req, res, entry = undefined) {
         } else {
           await t.none(INSERT_AUTHOR, author);
         }
-        await t.none(UPDATE_METHOD, updatedMethod);
       });
       //if this is a new method, set creator id to userid and isAdmin
       if (user.isadmin) {
@@ -405,7 +404,9 @@ async function methodUpdate(req, res, entry = undefined) {
         var creatorTimestamp = new Date(oldMethod.post_date);
         if (userId == creator.user_id && creatorTimestamp.getTime() === creator.timestamp.getTime()) {
           await t.none(INSERT_AUTHOR, author);
+          updatedMethod.updated_date = "now";
         }
+        await t.none(UPDATE_METHOD, updatedMethod);
       }
         });
       } else {

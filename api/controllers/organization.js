@@ -297,7 +297,6 @@ async function organizationUpdate(req, res, entry = undefined){
         } else {
           await t.none(INSERT_AUTHOR, author);
         }
-        await t.none(UPDATE_ORGANIZATION, updatedOrganization);
       });
       //if this is a new organization, set creator id to userid and isAdmin
       if (user.isadmin) {
@@ -316,7 +315,9 @@ async function organizationUpdate(req, res, entry = undefined){
           var creatorTimestamp = new Date(oldArticle.post_date);
           if (userId == creator.user_id && creatorTimestamp.getTime() === creator.timestamp.getTime()) {
             await t.none(INSERT_AUTHOR, author);
+            updatedOrganization.updated_date = "now";
           }
+          await t.none(UPDATE_ORGANIZATION, updatedOrganization);
         }
         });
       } else {
