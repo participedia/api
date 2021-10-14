@@ -1,109 +1,95 @@
 [
   {
-    "name": "Principal Investigator",
+    "titleKey": "Principal Investigator",
     "members": [
       {
         "name": "Bonny Ibhawoh",
         "titleKey": "Director",
         "descriptors": [
-          " Participedia",
-          "Chair",
-          " Human & Political Rights Research Cluster"
+          "Centre for Human Rights and Restorative Justice",
+          "McMaster University"
         ]
       }
     ]
   },
   {
-    "name": "Executive Committee",
+    "titleKey": "Executive Committee",
     "members": [
       {
         "name": "Bonny Ibhawoh",
-        "titleKey": "Director",
         "descriptors": [
-          " Participedia",
-          "Chair",
-          " Human & Political Rights Research Cluster"
+          "Director, Participedia",
+          "Chair, Human & Political Rights Research Cluster"
         ]
       },
       {
         "name": "Mark Warren",
-        "titleKey": "Co-chair",
         "descriptors": [
-          " Research Committee ",
-          "Co-chair",
-          " Democratic Representation Research Cluster"
+          "Co-chair,  Research Committee ",
+          "Co-chair, Democratic Representation Research Cluster"
         ]
       },
       {
         "name": "Matt Ryan",
-        "titleKey": "Co-chair",
-        "descriptors": [" Research Committee "]
+        "descriptors": ["Co-chair, Research Committee "]
       },
       {
         "name": "Bettina von Lieres",
-        "titleKey": "Co-chair",
-        "descriptors": [" Teaching", " Training & Mentoring Committee"]
+        "descriptors": ["Co-chair, Teaching, Training & Mentoring Committee"]
       },
       {
         "name": "Julien Landry",
-        "titleKey": "Co-chair",
-        "descriptors": [" Teaching", " Training & Mentoring Committee"]
+        "descriptors": ["Co-chair, Teaching, Training & Mentoring Committee"]
       },
       {
         "name": "Jesi Carson",
-        "titleKey": "Co-chair",
-        "descriptors": [" Design Technology Team "]
+        "descriptors": ["Co-chair, Design Technology Team "]
       },
       {
         "name": "Amber Frid-Jimenez",
-        "titleKey": "Co-chair",
-        "descriptors": [" Design Technology Team"]
+        "descriptors": ["Co-chair, Design Technology Team"]
       },
       {
         "name": "Selen Ercan",
-        "titleKey": "Co-chair",
         "descriptors": [
-          " Participatory & Deliberative Governance Research Cluster"
+          "Co-chair, Participatory & Deliberative Governance Research Cluster"
         ]
       },
       {
         "name": "Andre B\\u00e4chtiger",
-        "titleKey": "Co-chair",
         "descriptors": [
-          " Participatory & Deliberative Governance Research Cluster"
+          "Co-chair, Participatory & Deliberative Governance Research Cluster"
         ]
       },
       {
         "name": "Sanjay Ruparelia",
-        "titleKey": "Chair",
-        "descriptors": [" Democratic Accountability Research Cluster"]
+        "descriptors": ["Chair, Democratic Accountability Research Cluster"]
       },
       {
         "name": "Fran\\u00e7oise Montambeault",
-        "titleKey": "Co-chair",
-        "descriptors": [" Democratic Representation Research Cluster"]
+        "descriptors": ["Co-chair, Democratic Representation Research Cluster"]
       },
       {
         "name": "Archon Fung",
-        "titleKey": "Chair",
-        "descriptors": [" Democracy Across Borders Research Cluster"]
+        "descriptors": ["Chair, Democracy Across Borders Research Cluster"]
       },
       {
         "name": "Edana Beauvais",
-        "titleKey": "Chair",
-        "descriptors": [" Democracy & Digital Communication Research Cluster"]
+        "descriptors": [
+          "Chair, Democracy & Digital Communication Research Cluster"
+        ]
       },
       {
         "name": "Joanna Ashworth",
-        "titleKey": "Ex Officio"
+        "descriptors": ["Ex Officio"]
       },
       {
         "name": "Patrick Scully",
-        "titleKey": "Ex Officio"
+        "descriptors": ["Ex Officio"]
       },
       {
         "name": "Paul Emiljanowicz",
-        "titleKey": "Ex Officio"
+        "descriptors": ["Ex Officio"]
       }
     ]
   },
@@ -112,278 +98,297 @@
     "members": [
       {
         "name": "Paul Emiljanowicz",
-        "titleKey": "Project Manager"
+        "descriptors": ["Project Manager"]
       },
       {
         "name": "Jesi Carson",
-        "titleKey": "Design Tech Lead"
+        "descriptors": ["Design Tech Lead"]
       },
       {
         "name": "Pan Khantidhara",
-        "titleKey": "Lead Developer"
+        "descriptors": ["Lead Developer"]
       },
       {
         "name": "Jennifer Wallace",
-        "titleKey": "Research Assistant"
+        "descriptors": ["Research Assistant"]
       },
       {
         "name": "Quinn Anderson",
-        "titleKey": "Research Assistant"
+        "descriptors": ["Research Assistant"]
       },
       {
         "name": "Adebisi Alade",
-        "titleKey": "Research Assistant"
+        "descriptors": ["Research Assistant"]
       }
     ]
   },
   {
-    "name": "Co-investigators",
+    "titleKey": "Co-investigators",
     "members": [
       {
         "name": "Fiona Anciano",
-        "titleKey": "University of the Western Cape  ",
-        "descriptors": [
-          " ",
-          "Laurence Bherer",
-          "Universit\\u00e9 de Montr\\u00e9al"
-        ]
+        "descriptors": ["University of the Western Cape"]
+      },
+      {
+        "name": "Laurence Bherer",
+        "descriptors": ["Universit\\u00e9 de Montr\\u00e9al"]
       },
       {
         "name": "Hans Asenbaum",
-        "titleKey": "University of Canberra",
-        "descriptors": [
-          " ",
-          "Chandrima Chakraborty ",
-          "McMaster University  ",
-          " ",
-          "Joanna Ashworth",
-          "Simon Fraser University ",
-          " ",
-          "Nancy Doubleday ",
-          "McMaster University  ",
-          " ",
-          "Leonardo Avritzer",
-          "Universidade Federal de Minas Gerais  ",
-          " ",
-          "Selen Ercan ",
-          "University of Canberra",
-          " ",
-          "Andre B\\u00e4chtiger ",
-          "Universit\\u00e4t Stuttgart",
-          " ",
-          "Amber Frid-Jimenez",
-          "Emily Carr University of Art + Design  ",
-          " ",
-          "Karen Balcom ",
-          "McMaster University  ",
-          " ",
-          "Archon Fung ",
-          "Harvard University",
-          " ",
-          "Edana Beauvais",
-          "Simon Fraser University",
-          " ",
-          "Nibaldo Galleguillos ",
-          "McMaster University",
-          " ",
-          "John Gaventa",
-          "Studies University of Sussex  "
-        ]
+        "descriptors": ["University of Canberra"]
+      },
+      {
+        "name": "Chandrima Chakraborty",
+        "descriptors": ["McMaster University"]
+      },
+
+      {
+        "name": "Joanna Ashworth",
+        "descriptors": ["Simon Fraser University "]
+      },
+
+      {
+        "name": "Nancy Doubleday ",
+        "descriptors": ["McMaster University"]
+      },
+
+      {
+        "name": "Leonardo Avritzer",
+        "descriptors": ["Universidade Federal de Minas Gerais"]
+      },
+
+      {
+        "name": "Selen Ercan ",
+        "descriptors": ["University of Canberra"]
+      },
+
+      {
+        "name": "Andre B\\u00e4chtiger ",
+        "descriptors": ["Universit\\u00e4t Stuttgart"]
+      },
+
+      {
+        "name": "Amber Frid-Jimenez",
+        "descriptors": ["Emily Carr University of Art + Design"]
+      },
+
+      {
+        "name": "Karen Balcom ",
+        "descriptors": ["McMaster University"]
+      },
+
+      {
+        "name": "Archon Fung ",
+        "descriptors": ["Harvard University"]
+      },
+
+      {
+        "name": "Edana Beauvais",
+        "descriptors": ["Simon Fraser University"]
+      },
+
+      {
+        "name": "Nibaldo Galleguillos ",
+        "descriptors": ["McMaster University"]
+      },
+
+      {
+        "name": "John Gaventa",
+        "descriptors": ["Studies University of Sussex"]
       },
       {
         "name": "Baogang He ",
-        "titleKey": "Deakin University "
+        "descriptors": ["Deakin University "]
       },
       {
         "name": "Ameil Joseph ",
-        "titleKey": "McMaster University  "
+        "descriptors": ["McMaster University  "]
       },
       {
         "name": "Paul Kingston",
-        "titleKey": "University of Toronto-Scarborough"
+        "descriptors": ["University of Toronto-Scarborough"]
       },
       {
         "name": "Julien Landry",
-        "titleKey": "St. Francis Xavier University "
+        "descriptors": ["St. Francis Xavier University "]
       },
       {
         "name": "Rosemary McGee",
-        "titleKey": "University of Sussex  "
+        "descriptors": ["University of Sussex  "]
       },
       {
         "name": "Fran\\u00e7oise Montambeault ",
-        "titleKey": "Universit\\u00e9 de Montr\\u00e9al"
+        "descriptors": ["Universit\\u00e9 de Montr\\u00e9al"]
       },
       {
         "name": "Tina Nabatchi ",
-        "titleKey": "Syracuse University"
+        "descriptors": ["Syracuse University"]
       },
       {
         "name": "Lucy Parry",
-        "titleKey": "University of Canberra "
+        "descriptors": ["University of Canberra "]
       },
       {
         "name": "Laurence Piper",
-        "titleKey": "University of the Western Cape ",
-        "descriptors": [
-          " ",
-          "Stuart Poyntz",
-          "Simon Fraser University  "
-        ]
+        "descriptors": ["University of the Western Cape"]
+      },
+      {
+          "name": "Stuart Poyntz",
+          "descriptors": ["Simon Fraser University"]
       },
       {
         "name": "Robert Richards ",
-        "titleKey": "University of Arkansas"
+        "descriptors": ["University of Arkansas"]
       },
       {
         "name": "Jonathan Rose ",
-        "titleKey": "Queen\\u2019s University"
+        "descriptors": ["Queen\\u2019s University"]
       },
       {
         "name": "Sanjay Ruparelia ",
-        "titleKey": "Ryerson University  "
+        "descriptors": ["Ryerson University  "]
       },
       {
         "name": "Matt Ryan",
-        "titleKey": "University of Southampton  "
+        "descriptors": ["University of Southampton  "]
       },
       {
         "name": "Vera Schattan P. Coelho",
-        "titleKey": "Brazilian Center of Analysis and Planning  "
+        "descriptors": ["Brazilian Center of Analysis and Planning  "]
       },
       {
         "name": "Alexander Shankland",
-        "titleKey": "University of Sussex  "
+        "descriptors": ["University of Sussex  "]
       },
       {
         "name": "Graham Smith",
-        "titleKey": "University of Westminster  "
+        "descriptors": ["University of Westminster  "]
       },
       {
         "name": "Paolo Spada",
-        "titleKey": "University of Southampton  "
+        "descriptors": ["University of Southampton  "]
       },
       {
         "name": "Anil Varughese ",
-        "titleKey": "Carleton University"
+        "descriptors": ["Carleton University"]
       },
       {
         "name": "Francesco Veri ",
-        "titleKey": "University of Canberra",
-        "descriptors": [
-          " ",
-          "Bettina von Lieres",
-          "University of Toronto-Scarborough  "
-        ]
+        "descriptors": ["University of Canberra"]
+      },
+      {
+        "name": "Bettina von Lieres",
+          "descriptors": ["University of Toronto-Scarborough"]
       },
       {
         "name": "Steven Weldon",
-        "titleKey": "Simon Fraser University  ",
-        "descriptors": [
-          " ",
-          "Mark Warren",
-          "University of British Columbia  ",
-          " ",
-          "Melissa Williams ",
-          "University of Toronto"
-        ]
+        "descriptors": ["Simon Fraser University"]
+      },
+        {
+          "name": "Mark Warren",
+        "descriptors": ["University of British Columbia  "]
+        },
+      {
+        "name": "Melissa Williams ",
+        "descriptors": ["University of Toronto"]
       }
     ]
   },
   {
-    "name": "Collaborators",
+    "titleKey": "Collaborators",
     "members": [
-      {
-        "name": "Yamini Aiyar",
-        "titleKey": "Centre for Policy Research ",
-        "descriptors": [
-          " ",
-          "Lanre Ikuteyijo",
-          "Obafemi Awolowo University ",
-          " ",
-          "Eileen Alma",
-          "St. Francis Xavier University  ",
-          " ",
-          "Katherine Knobloch ",
-          "Colorado State University  ",
-          " ",
-          "Mbongiseni Buthelezi",
-          "Public Affairs Research Institute  ",
-          " ",
-          "Melissa Levin",
-          "University of Toronto-Scarborough ",
-          " ",
-          "Leslie Chan",
-          "University of Toronto-Scarborough "
-        ]
+    {
+      "name": "Yamini Aiyar",
+      "descriptors": [ "Centre for Policy Research "]
+    },
+    {
+      "name": "Lanre Ikuteyijo",
+      "descriptors": ["Obafemi Awolowo University "]
+    },
+    {
+      "name": "Eileen Alma",
+      "descriptors": ["St. Francis Xavier University"]
       },
       {
-        "name": "Oluyemi Oyenike Fayomi ",
-        "titleKey": "Admiralty University of Nigeria  "
+        "name": "Katherine Knobloch ",
+        "descriptors": ["Colorado State University"]
       },
       {
-        "name": "Mark Gibney",
-        "titleKey": "University of North Carolina at Asheville  ",
-        "descriptors": [
-          " ",
-          "Lord Mawuko-Yevugah",
-          "Ghana Institute for Management and Public Administration"
-        ]
+        "name": "Mbongiseni Buthelezi",
+        "descriptors": ["Public Affairs Research Institute"]
       },
       {
-        "name": "Ricardo Mendon\\u00e7a",
-        "titleKey": "Universidade Federal de Minas Gerais "
+        "name": "Melissa Levin",
+        "descriptors": ["University of Toronto-Scarborough"]
       },
       {
-        "name": "Nidhi Nagabhatla",
-        "titleKey": "United Nations University \\/ McMaster University  ",
-        "descriptors": [
-          " ",
-          "Patricia Nanz",
-          "Institute for Advanced Sustainability Studies",
-          " Potsdam"
-        ]
-      },
-      {
-        "name": "Thamy Pogrebinschi",
-        "titleKey": "WZB Berlin Social Science Center  "
-      },
-      {
-        "name": "Jon Stever",
-        "titleKey": "Innovation for Policy Foundation  "
-      },
-      {
-        "name": "James Turk ",
-        "titleKey": "Ryerson University"
-      },
-      {
-        "name": "Dale Turner ",
-        "titleKey": "University of Toronto"
-      },
-      {
-        "name": "Nick Vlahos",
-        "titleKey": "University of Canberra"
-      },
-      {
-        "name": "Katherine Walker ",
-        "titleKey": "University of Saskatchewan  "
-      },
-      {
-        "name": "Matthew Wildcat ",
-        "titleKey": "University of Alberta  "
-      },
-      {
-        "name": "Melike Yilmaz ",
-        "titleKey": "McMaster University  "
-      },
-      {
-        "name": "Mesut Yilmaz ",
-        "titleKey": "McMaster University "
-      }
-    ]
+        "name": "Leslie Chan",
+        "descriptors": ["University of Toronto-Scarborough"]
+    },
+    {
+      "name": "Oluyemi Oyenike Fayomi ",
+      "descriptors": ["Admiralty University of Nigeria"]
+    },
+    {
+      "name": "Mark Gibney",
+      "descriptors": ["University of North Carolina at Asheville "]
+    },
+    {
+      "name": "Lord Mawuko-Yevugah",
+      "descriptors": ["Ghana Institute for Management and Public Administration"]
+    },
+    {
+      "name": "Ricardo Mendon\\u00e7a",
+      "descriptors": ["Universidade Federal de Minas Gerais "]
+    },
+    {
+      "name": "Nidhi Nagabhatla",
+      "descriptors": ["United Nations University \\/ McMaster University"]
+    },
+    {
+      "name": "Patricia Nanz",
+      "descriptors": ["Institute for Advanced Sustainability Studies, Potsdam"]
+    },
+    {
+      "name": "Thamy Pogrebinschi",
+      "descriptors": ["WZB Berlin Social Science Center"]
+    },
+    {
+      "name": "Jon Stever",
+      "descriptors": ["Innovation for Policy Foundation"]
+    },
+    {
+      "name": "James Turk ",
+      "descriptors": ["Ryerson University"]
+    },
+    {
+      "name": "Dale Turner ",
+      "descriptors": ["University of Toronto"]
+    },
+    {
+      "name": "Nick Vlahos",
+      "descriptors": ["University of Canberra"]
+    },
+    {
+      "name": "Katherine Walker ",
+      "descriptors": ["University of Saskatchewan  "]
+    },
+    {
+      "name": "Matthew Wildcat ",
+      "descriptors": ["University of Alberta  "]
+    },
+    {
+      "name": "Melike Yilmaz ",
+      "descriptors": ["McMaster University  "]
+    },
+    {
+      "name": "Mesut Yilmaz ",
+      "descriptors": ["McMaster University "]
   },
   {
-    "name": "Ming Zhuang,Social Equity and Participant Center",
-    "members": [{ "name": "", "titleKey": "", "descriptors": [] }]
+    "name": "Ming Zhuang",
+    "descriptors": ["Social Equity and Participant Center"]
+  }
+]
   }
 ]
