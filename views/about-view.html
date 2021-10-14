@@ -17,9 +17,29 @@
         "</a>"
       }}}
     </p>
+    <img src="/images/about/get-involved.png" class="static-view-section-illustration" />
+
 
     <h3>{{t "Explore"}}</h3>
-    <p>{{t "about.explore.p1"}}</p>
+    <p>
+        {{{__
+          "about.explore.p1"
+          "<a href='/research#data-dl'>"
+          "</a>"
+          "<a href='/#map'>"
+          "</a>"
+        }}}
+    </p>
+
+    <p>
+      {{{__
+        "about.explore.p2"
+        "<a href='/research'>"
+        "</a>"
+      }}}
+    </p>
+
+    <img src="/images/about/explore-research.png" class="static-view-section-illustration" />
 
     <h3>{{t "Contribute"}}</h3>
     <p>
@@ -30,10 +50,23 @@
       }}}
     </p>
 
-    <h3>{{t "Teach"}}</h3>
     <p>
       {{{__
-        "about.teach.p1"
+        "about.contribute.p2"
+        "<a href='/getting-started'>"
+        "</a>"
+      }}}
+    </p>
+    <img src="/images/about/contribute.png" class="static-view-section-illustration" />
+
+    <h3>{{t "Teach"}}</h3>
+    <p>
+      {{t "about.teach.p1"}}
+    </p>
+
+    <p>
+      {{{__
+        "about.teach.p2"
         "<a href='/teaching'>"
         "</a>"
       }}}
@@ -41,9 +74,11 @@
   </section>
 
   <section>
-    <h2>{{t "Community"}}</h2>
-    <p>{{t "about.community.p1"}}</p>
-    <p>{{t "about.community.p2"}}</p>
+    <h2>{{t "Participedia Phase 1"}}</h2>
+    <p>{{t "about.phase1.p1"}}</p>
+    <p>{{t "about.phase1.p2"}}</p>
+    <p>{{t "about.phase1.p3"}}</p>
+    <p>{{t "about.phase1.p4"}}</p>
   </section>
 
   <section>
@@ -222,6 +257,68 @@
       {{#each (getTeamMemberData)}}
         {{> about-section }}
       {{/each}}
+    {{/accordion}}
+
+    {{#> accordion title=(t "Committees")}}
+      <p>{{t "about.phase2.committees.p"}}</p>
+      <ul>
+        <li>
+          {{t "Executive Committee"}}
+        </li>
+        <li>
+          {{t "Research Committee"}}
+        </li>
+        <li>
+          {{t "Teaching Training & Mentoring Committee"}}
+        </li>
+        <li>
+          {{t "Design Technology Team"}}
+        </li>
+        <li>
+          {{t "Communications Team"}}
+        </li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t "Research Clusters")}}
+      <p>{{t "about.phase2.research.p"}}</p>
+      <ul>
+        <li>
+          {{t "Participatory & Deliberative Governance"}}
+        </li>
+        <li>
+          {{t "Human & Political Rights"}}
+        </li>
+        <li>
+          {{t "Democratic Accountability"}}
+        </li>
+        <li>
+          {{t "Democratic Representation"}}
+        </li>
+        <li>
+          {{t "Democracy Across Borders"}}
+        </li>
+        <li>
+          {{t "Democracy and digital communications"}}
+        </li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t "Supporters")}}
+      <p>
+        {{{__
+          "about.phase2.supporters.p1"
+          "<a target='__blank' href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx'>"
+          "</a>"
+        }}}
+      </p>
+      <p>
+        {{{__
+          "about.phase2.supporters.p2"
+          "<a target='__blank' href='https://phrase.com/'>"
+          "</a>"
+        }}}
+      </p>
     {{/accordion}}
   </section>
   
