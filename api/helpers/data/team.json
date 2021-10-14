@@ -94,7 +94,7 @@
     ]
   },
   {
-    "name": "Staff",
+    "titleKey": "Staff",
     "members": [
       {
         "name": "Paul Emiljanowicz",
