@@ -1314,6 +1314,10 @@ module.exports = {
     return aboutData.partners;
   },
 
+  getTeamMemberData() {
+    return aboutData.team;
+  },
+
   getCommitteesData() {
     return aboutData.committees;
   },

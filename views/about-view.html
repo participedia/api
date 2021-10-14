@@ -144,9 +144,14 @@
       <ul>
         <li>{{{__ "about.methods.example" "<a href='/method/145'>" "</a>"}}}</li>
       </ul>
+
+      <p>{{t "about.methods.p2"}}</p>
+      <ul>
+        <li>{{{__ "about.methods.example.2" "<a href='/method/147'>" "</a>" "<a href='/method/5505'>" "</a>" "<a href='/method/5309'>" "</a>"}}}</li>
+      </ul>
     {{/accordion}}
 
-    {{#> accordion title=(t "Tools/Techniques")}}
+    <!-- {{#> accordion title=(t "Tools/Techniques")}}
       <p>{{t "about.tools_techniques.p1"}}</p>
       <ul>
         <li>
@@ -163,7 +168,7 @@
           }}}
         </li>
       </ul>
-    {{/accordion}}
+    {{/accordion}} -->
 
     {{#> accordion title=(t "Organizations")}}
       <p>{{t "about.organizations.p1"}}</p>
@@ -205,6 +210,19 @@
     <p>{{t "mission.p1"}}</p>
     <p>{{t "mission.p2"}}</p>
     <p>{{t "mission.p3"}}</p>
+  </section>
+
+  <section>
+    <h2>{{t "Phase 2"}}</h2>
+    <p>{{t "about.phase2.p1"}}</p>
+    <h3>{{t "about.phase2.partners"}}</h3>
+    <img src="/images/getting-started/contribute-small.svg" class="static-view-section-illustration" />
+
+    {{#> accordion title=(t "Team Members")}}
+      {{#each (getTeamMemberData)}}
+        {{> about-section }}
+      {{/each}}
+    {{/accordion}}
   </section>
   
 {{/static-view-container}}

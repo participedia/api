@@ -985,8 +985,38 @@ const staff = {
   ],
 };
 
+const team = [
+  {
+    titleKey: "Principal Investigator",
+    members: [
+      {
+        name: "Bonny Ibhawoh",
+        titleKey: "Director",
+        descriptors: [
+          "Centre for Human Rights and Restorative Justice",
+          "McMaster University",
+        ],
+      },
+    ],
+  },
+  {
+    titleKey: "Executive Committee",
+    members: [
+      {
+        name: "Archon Fung",
+        titleKey: "Participedia Co-founder",
+        descriptors: [
+          "Ash Center for Democratic Governance and Innovation",
+          "Harvard University",
+        ],
+      },
+    ]
+  }
+];
+
 module.exports = {
   partners: partners,
+  team: team,
   committees: committees,
   staff: staff,
 };
