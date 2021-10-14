@@ -20,6 +20,10 @@ const LOCATION_FIELD_NAMES = [
   "longitude",
 ];
 
+const PARTNER_TEAM = JSON.parse(
+  fs.readFileSync("api/helpers/data/team.json", "utf8")
+);
+
 function setMomentLocale(context) {
   const req = context.data.root.req;
   const locale = req.cookies.locale;
@@ -1315,7 +1319,7 @@ module.exports = {
   },
 
   getTeamMemberData() {
-    return aboutData.team;
+    return PARTNER_TEAM;
   },
 
   getCommitteesData() {
