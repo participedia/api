@@ -1,0 +1,389 @@
+[
+  {
+    "name": "Principal Investigator",
+    "members": [
+      {
+        "name": "Bonny Ibhawoh",
+        "titleKey": "Director",
+        "descriptors": [
+          " Participedia",
+          "Chair",
+          " Human & Political Rights Research Cluster"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Executive Committee",
+    "members": [
+      {
+        "name": "Bonny Ibhawoh",
+        "titleKey": "Director",
+        "descriptors": [
+          " Participedia",
+          "Chair",
+          " Human & Political Rights Research Cluster"
+        ]
+      },
+      {
+        "name": "Mark Warren",
+        "titleKey": "Co-chair",
+        "descriptors": [
+          " Research Committee ",
+          "Co-chair",
+          " Democratic Representation Research Cluster"
+        ]
+      },
+      {
+        "name": "Matt Ryan",
+        "titleKey": "Co-chair",
+        "descriptors": [" Research Committee "]
+      },
+      {
+        "name": "Bettina von Lieres",
+        "titleKey": "Co-chair",
+        "descriptors": [" Teaching", " Training & Mentoring Committee"]
+      },
+      {
+        "name": "Julien Landry",
+        "titleKey": "Co-chair",
+        "descriptors": [" Teaching", " Training & Mentoring Committee"]
+      },
+      {
+        "name": "Jesi Carson",
+        "titleKey": "Co-chair",
+        "descriptors": [" Design Technology Team "]
+      },
+      {
+        "name": "Amber Frid-Jimenez",
+        "titleKey": "Co-chair",
+        "descriptors": [" Design Technology Team"]
+      },
+      {
+        "name": "Selen Ercan",
+        "titleKey": "Co-chair",
+        "descriptors": [
+          " Participatory & Deliberative Governance Research Cluster"
+        ]
+      },
+      {
+        "name": "Andre B\\u00e4chtiger",
+        "titleKey": "Co-chair",
+        "descriptors": [
+          " Participatory & Deliberative Governance Research Cluster"
+        ]
+      },
+      {
+        "name": "Sanjay Ruparelia",
+        "titleKey": "Chair",
+        "descriptors": [" Democratic Accountability Research Cluster"]
+      },
+      {
+        "name": "Fran\\u00e7oise Montambeault",
+        "titleKey": "Co-chair",
+        "descriptors": [" Democratic Representation Research Cluster"]
+      },
+      {
+        "name": "Archon Fung",
+        "titleKey": "Chair",
+        "descriptors": [" Democracy Across Borders Research Cluster"]
+      },
+      {
+        "name": "Edana Beauvais",
+        "titleKey": "Chair",
+        "descriptors": [" Democracy & Digital Communication Research Cluster"]
+      },
+      {
+        "name": "Joanna Ashworth",
+        "titleKey": "Ex Officio"
+      },
+      {
+        "name": "Patrick Scully",
+        "titleKey": "Ex Officio"
+      },
+      {
+        "name": "Paul Emiljanowicz",
+        "titleKey": "Ex Officio"
+      }
+    ]
+  },
+  {
+    "name": "Staff",
+    "members": [
+      {
+        "name": "Paul Emiljanowicz",
+        "titleKey": "Project Manager"
+      },
+      {
+        "name": "Jesi Carson",
+        "titleKey": "Design Tech Lead"
+      },
+      {
+        "name": "Pan Khantidhara",
+        "titleKey": "Lead Developer"
+      },
+      {
+        "name": "Jennifer Wallace",
+        "titleKey": "Research Assistant"
+      },
+      {
+        "name": "Quinn Anderson",
+        "titleKey": "Research Assistant"
+      },
+      {
+        "name": "Adebisi Alade",
+        "titleKey": "Research Assistant"
+      }
+    ]
+  },
+  {
+    "name": "Co-investigators",
+    "members": [
+      {
+        "name": "Fiona Anciano",
+        "titleKey": "University of the Western Cape  ",
+        "descriptors": [
+          " ",
+          "Laurence Bherer",
+          "Universit\\u00e9 de Montr\\u00e9al"
+        ]
+      },
+      {
+        "name": "Hans Asenbaum",
+        "titleKey": "University of Canberra",
+        "descriptors": [
+          " ",
+          "Chandrima Chakraborty ",
+          "McMaster University  ",
+          " ",
+          "Joanna Ashworth",
+          "Simon Fraser University ",
+          " ",
+          "Nancy Doubleday ",
+          "McMaster University  ",
+          " ",
+          "Leonardo Avritzer",
+          "Universidade Federal de Minas Gerais  ",
+          " ",
+          "Selen Ercan ",
+          "University of Canberra",
+          " ",
+          "Andre B\\u00e4chtiger ",
+          "Universit\\u00e4t Stuttgart",
+          " ",
+          "Amber Frid-Jimenez",
+          "Emily Carr University of Art + Design  ",
+          " ",
+          "Karen Balcom ",
+          "McMaster University  ",
+          " ",
+          "Archon Fung ",
+          "Harvard University",
+          " ",
+          "Edana Beauvais",
+          "Simon Fraser University",
+          " ",
+          "Nibaldo Galleguillos ",
+          "McMaster University",
+          " ",
+          "John Gaventa",
+          "Studies University of Sussex  "
+        ]
+      },
+      {
+        "name": "Baogang He ",
+        "titleKey": "Deakin University "
+      },
+      {
+        "name": "Ameil Joseph ",
+        "titleKey": "McMaster University  "
+      },
+      {
+        "name": "Paul Kingston",
+        "titleKey": "University of Toronto-Scarborough"
+      },
+      {
+        "name": "Julien Landry",
+        "titleKey": "St. Francis Xavier University "
+      },
+      {
+        "name": "Rosemary McGee",
+        "titleKey": "University of Sussex  "
+      },
+      {
+        "name": "Fran\\u00e7oise Montambeault ",
+        "titleKey": "Universit\\u00e9 de Montr\\u00e9al"
+      },
+      {
+        "name": "Tina Nabatchi ",
+        "titleKey": "Syracuse University"
+      },
+      {
+        "name": "Lucy Parry",
+        "titleKey": "University of Canberra "
+      },
+      {
+        "name": "Laurence Piper",
+        "titleKey": "University of the Western Cape ",
+        "descriptors": [
+          " ",
+          "Stuart Poyntz",
+          "Simon Fraser University  "
+        ]
+      },
+      {
+        "name": "Robert Richards ",
+        "titleKey": "University of Arkansas"
+      },
+      {
+        "name": "Jonathan Rose ",
+        "titleKey": "Queen\\u2019s University"
+      },
+      {
+        "name": "Sanjay Ruparelia ",
+        "titleKey": "Ryerson University  "
+      },
+      {
+        "name": "Matt Ryan",
+        "titleKey": "University of Southampton  "
+      },
+      {
+        "name": "Vera Schattan P. Coelho",
+        "titleKey": "Brazilian Center of Analysis and Planning  "
+      },
+      {
+        "name": "Alexander Shankland",
+        "titleKey": "University of Sussex  "
+      },
+      {
+        "name": "Graham Smith",
+        "titleKey": "University of Westminster  "
+      },
+      {
+        "name": "Paolo Spada",
+        "titleKey": "University of Southampton  "
+      },
+      {
+        "name": "Anil Varughese ",
+        "titleKey": "Carleton University"
+      },
+      {
+        "name": "Francesco Veri ",
+        "titleKey": "University of Canberra",
+        "descriptors": [
+          " ",
+          "Bettina von Lieres",
+          "University of Toronto-Scarborough  "
+        ]
+      },
+      {
+        "name": "Steven Weldon",
+        "titleKey": "Simon Fraser University  ",
+        "descriptors": [
+          " ",
+          "Mark Warren",
+          "University of British Columbia  ",
+          " ",
+          "Melissa Williams ",
+          "University of Toronto"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Collaborators",
+    "members": [
+      {
+        "name": "Yamini Aiyar",
+        "titleKey": "Centre for Policy Research ",
+        "descriptors": [
+          " ",
+          "Lanre Ikuteyijo",
+          "Obafemi Awolowo University ",
+          " ",
+          "Eileen Alma",
+          "St. Francis Xavier University  ",
+          " ",
+          "Katherine Knobloch ",
+          "Colorado State University  ",
+          " ",
+          "Mbongiseni Buthelezi",
+          "Public Affairs Research Institute  ",
+          " ",
+          "Melissa Levin",
+          "University of Toronto-Scarborough ",
+          " ",
+          "Leslie Chan",
+          "University of Toronto-Scarborough "
+        ]
+      },
+      {
+        "name": "Oluyemi Oyenike Fayomi ",
+        "titleKey": "Admiralty University of Nigeria  "
+      },
+      {
+        "name": "Mark Gibney",
+        "titleKey": "University of North Carolina at Asheville  ",
+        "descriptors": [
+          " ",
+          "Lord Mawuko-Yevugah",
+          "Ghana Institute for Management and Public Administration"
+        ]
+      },
+      {
+        "name": "Ricardo Mendon\\u00e7a",
+        "titleKey": "Universidade Federal de Minas Gerais "
+      },
+      {
+        "name": "Nidhi Nagabhatla",
+        "titleKey": "United Nations University \\/ McMaster University  ",
+        "descriptors": [
+          " ",
+          "Patricia Nanz",
+          "Institute for Advanced Sustainability Studies",
+          " Potsdam"
+        ]
+      },
+      {
+        "name": "Thamy Pogrebinschi",
+        "titleKey": "WZB Berlin Social Science Center  "
+      },
+      {
+        "name": "Jon Stever",
+        "titleKey": "Innovation for Policy Foundation  "
+      },
+      {
+        "name": "James Turk ",
+        "titleKey": "Ryerson University"
+      },
+      {
+        "name": "Dale Turner ",
+        "titleKey": "University of Toronto"
+      },
+      {
+        "name": "Nick Vlahos",
+        "titleKey": "University of Canberra"
+      },
+      {
+        "name": "Katherine Walker ",
+        "titleKey": "University of Saskatchewan  "
+      },
+      {
+        "name": "Matthew Wildcat ",
+        "titleKey": "University of Alberta  "
+      },
+      {
+        "name": "Melike Yilmaz ",
+        "titleKey": "McMaster University  "
+      },
+      {
+        "name": "Mesut Yilmaz ",
+        "titleKey": "McMaster University "
+      }
+    ]
+  },
+  {
+    "name": "Ming Zhuang,Social Equity and Participant Center",
+    "members": [{ "name": "", "titleKey": "", "descriptors": [] }]
+  }
+]
