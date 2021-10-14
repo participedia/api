@@ -109,7 +109,7 @@ async function postOrganizationNewHttp(req, res) {
     if (hasErrors) {
       return res.status(400).json({
         OK: false,
-        errors: langErrors,  
+        errors: langErrors,
       });
     }
 
@@ -127,15 +127,15 @@ async function postOrganizationNewHttp(req, res) {
     });
     req.params.thingid = thing.thingid;
     // await postOrganizationUpdateHttp(req, res);
-    const {article, errors } = await organizationUpdate(req, res, originalLanguageEntry);
-    if(errors) {
+    const { article, errors } = await organizationUpdate(req, res, originalLanguageEntry);
+    if (errors) {
       return res.status(400).json({
         OK: false,
         errors,
       });
     }
     localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
-    
+
     let localizedData = {
       body,
       description,
@@ -144,9 +144,9 @@ async function postOrganizationNewHttp(req, res) {
     };
 
     const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if(filteredLocalesToTranslate.length) {
+    if (filteredLocalesToTranslate.length) {
       await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
-    }    if(localesToNotTranslate.length > 0) {
+    } if (localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
     }
     res.status(200).json({
@@ -216,12 +216,12 @@ async function postOrganizationUpdateHttp(req, res) {
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
-      if(entryLocale === entry.original_language) {
+      if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
       let errors = validateFields(entry, "organization");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
-      langErrors.push({locale: entryLocale, errors});
+      langErrors.push({ locale: entryLocale, errors });
     }
   }
   const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
@@ -229,7 +229,7 @@ async function postOrganizationUpdateHttp(req, res) {
   if (hasErrors) {
     return res.status(400).json({
       OK: false,
-      errors: langErrors,  
+      errors: langErrors,
     });
   }
 
@@ -245,7 +245,7 @@ async function postOrganizationUpdateHttp(req, res) {
   refreshSearch();
 }
 
-async function organizationUpdate(req, res, entry = undefined){
+async function organizationUpdate(req, res, entry = undefined) {
   const params = parseGetParams(req, "organization");
   const user = req.user;
   const { articlesid, type, view, userid, lang, returns } = params;
@@ -288,11 +288,11 @@ async function organizationUpdate(req, res, entry = undefined){
   updatedOrganization.updated_date = !user.isadmin
     ? "now"
     : updatedOrganization.updated_date;
-    author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-organization", async t => {
-        if(!isNewOrganization) {
+        if (!isNewOrganization) {
           await t.none(INSERT_LOCALIZED_TEXT, updatedText);
         } else {
           await t.none(INSERT_AUTHOR, author);
@@ -308,23 +308,25 @@ async function organizationUpdate(req, res, entry = undefined){
           timestamp: new Date(newOrganization.post_date)
         };
         await db.tx("update-organization", async t => {
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
 
           if (!isNewOrganization) {
-            var userId = oldArticle.creator.user_id.toString();
-          var creatorTimestamp = new Date(oldArticle.post_date);
-          if (userId == creator.user_id && creatorTimestamp.getTime() === creator.timestamp.getTime()) {
-            await t.none(INSERT_AUTHOR, author);
-            updatedOrganization.updated_date = "now";
+            var userId = updatedOrganization.creator.user_id.toString();
+            var creatorTimestamp = new Date(oldArticle.post_date);
+
+            if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+              await t.none(INSERT_AUTHOR, author);
+              updatedOrganization.updated_date = "now";
+            }
           }
+
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
           await t.none(UPDATE_ORGANIZATION, updatedOrganization);
-        }
         });
       } else {
         await db.tx("update-organization", async t => {
           await t.none(INSERT_AUTHOR, author);
         });
-      } 
+      }
     } else {
       await db.tx("update-organization", async t => {
         await t.none(INSERT_AUTHOR, author);
@@ -332,11 +334,11 @@ async function organizationUpdate(req, res, entry = undefined){
       });
     }
     const freshArticle = await getOrganization(params, res);
-    return {article: freshArticle};
+    return { article: freshArticle };
     refreshSearch();
   } else {
     logError(`400 with errors: ${er.errors.join(", ")}`);
-    return {errors: er.errors};
+    return { errors: er.errors };
   }
 }
 

@@ -84,7 +84,7 @@ async function postCaseNewHttp(req, res) {
   // create new `case` in db
   try {
     cache.clear();
-    
+
 
     let {
       hasErrors,
@@ -93,11 +93,11 @@ async function postCaseNewHttp(req, res) {
       localesToNotTranslate,
       originalLanguageEntry
     } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), "case");
-    
+
     if (hasErrors) {
       return res.status(400).json({
         OK: false,
-        errors: langErrors,  
+        errors: langErrors,
       });
     }
 
@@ -105,7 +105,7 @@ async function postCaseNewHttp(req, res) {
     let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description || '';
     let original_language = originalLanguageEntry.original_language || "en";
-  
+
     const thing = await db.one(CREATE_CASE, {
       title,
       body,
@@ -114,8 +114,8 @@ async function postCaseNewHttp(req, res) {
     });
 
     req.params.thingid = thing.thingid;
-    const {article, errors } = await caseUpdate(req, res, originalLanguageEntry);
-    if(errors) {
+    const { article, errors } = await caseUpdate(req, res, originalLanguageEntry);
+    if (errors) {
       return res.status(400).json({
         OK: false,
         errors,
@@ -130,10 +130,10 @@ async function postCaseNewHttp(req, res) {
     };
 
     const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if(filteredLocalesToTranslate.length) {
+    if (filteredLocalesToTranslate.length) {
       await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
     }
-    if(localesToNotTranslate.length > 0) {
+    if (localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
     }
     res.status(200).json({
@@ -296,7 +296,7 @@ async function caseUpdateHttp(req, res, entry = undefined) {
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
-        if(!isNewCase) {
+        if (!isNewCase) {
           await t.none(INSERT_LOCALIZED_TEXT, updatedText);
         } else {
           await t.none(INSERT_AUTHOR, author);
@@ -374,7 +374,7 @@ async function caseUpdate(req, res, entry = undefined) {
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
-        if(!isNewCase) {
+        if (!isNewCase) {
           await t.none(INSERT_LOCALIZED_TEXT, updatedText);
         } else {
           await t.none(INSERT_AUTHOR, author);
@@ -389,22 +389,23 @@ async function caseUpdate(req, res, entry = undefined) {
 
         };
         await db.tx("update-case", async t => {
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
-          
+
           if (!isNewCase) {
             var userId = oldArticle.creator.user_id.toString();
-          var creatorTimestamp = new Date(oldArticle.post_date);
-          if (userId == creator.user_id && creatorTimestamp.getTime() === creator.timestamp.getTime()) {
-            await t.none(INSERT_AUTHOR, author);
-            updatedCase.updated_date = "now";
+            var creatorTimestamp = new Date(oldArticle.post_date);
+            if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+              await t.none(INSERT_AUTHOR, author);
+              updatedCase.updated_date = "now";
+            }
           }
-          await t.none(UPDATE_CASE, updatedCase); 
-        }
-      });
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          await t.none(UPDATE_CASE, updatedCase);
+
+        });
       } else {
         await db.tx("update-case", async t => {
           await t.none(INSERT_AUTHOR, author);
-        });  
+        });
       }
     } else {
       await db.tx("update-case", async t => {
@@ -415,10 +416,10 @@ async function caseUpdate(req, res, entry = undefined) {
     // the client expects this request to respond with json
     // save successful response
     const freshArticle = await getCase(params, res);
-    return {article: freshArticle};
+    return { article: freshArticle };
   } else {
     logError(`400 with errors: ${er.errors.join(", ")}`);
-    return {errors: er.errors};
+    return { errors: er.errors };
   }
 }
 
@@ -430,25 +431,25 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid } = params;
   const langErrors = [];
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
-  let originalLanguageEntry; 
+  let originalLanguageEntry;
 
 
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
-      if(entryLocale === entry.original_language) {
+      if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
       let errors = validateFields(entry, "case");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
-      langErrors.push({locale: entryLocale, errors});
+      langErrors.push({ locale: entryLocale, errors });
     }
   }
   const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
   if (hasErrors) {
     return res.status(400).json({
       OK: false,
-      errors: langErrors,  
+      errors: langErrors,
     });
   }
 
