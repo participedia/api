@@ -13,6 +13,10 @@
   width: 50%
 }
 
+.static-view-section-illustration-full {
+  width: 100%
+}
+
 .static-view section {
   margin-bottom: 30px;
 }
