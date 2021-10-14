@@ -396,9 +396,10 @@ async function caseUpdate(req, res, entry = undefined) {
             if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
               await t.none(INSERT_AUTHOR, author);
               updatedCase.updated_date = "now";
+            } else {
+              await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
-          }
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          } 
           await t.none(UPDATE_CASE, updatedCase);
 
         });

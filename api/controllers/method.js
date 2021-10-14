@@ -403,9 +403,10 @@ async function methodUpdate(req, res, entry = undefined) {
             if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
               await t.none(INSERT_AUTHOR, author);
               updatedMethod.updated_date = "now";
+            } else {
+              await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
-          }
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          } 
           await t.none(UPDATE_METHOD, updatedMethod);
         });
       } else {

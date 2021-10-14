@@ -316,10 +316,10 @@ async function organizationUpdate(req, res, entry = undefined) {
             if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
               await t.none(INSERT_AUTHOR, author);
               updatedOrganization.updated_date = "now";
+            } else {
+              await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
-          }
-
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
+          } 
           await t.none(UPDATE_ORGANIZATION, updatedOrganization);
         });
       } else {
