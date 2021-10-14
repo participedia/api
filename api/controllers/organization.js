@@ -325,6 +325,7 @@ async function organizationUpdate(req, res, entry = undefined) {
       } else {
         await db.tx("update-organization", async t => {
           await t.none(INSERT_AUTHOR, author);
+          await t.none(UPDATE_ORGANIZATION, updatedOrganization);
         });
       }
     } else {

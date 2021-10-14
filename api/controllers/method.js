@@ -412,6 +412,7 @@ async function methodUpdate(req, res, entry = undefined) {
       } else {
         await db.tx("update-method", async t => {
           await t.none(INSERT_AUTHOR, author);
+          await t.none(UPDATE_METHOD, updatedMethod);
         });
       }
     } else {
