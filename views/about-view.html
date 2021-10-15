@@ -168,14 +168,24 @@
     </p>
 
     {{#> accordion title=(t "Cases")}}
-      <p>{{t "about.cases.p1"}}</p>
+      <p>
+        {{{__ 
+          "about.cases.p1" 
+          "<a href='https://docs.google.com/document/d/1FuBBhVoKi-KzXQXDSU8DzoRFArLNsur40Q1NvnfmPrA/edit?usp=sharing' target='_blank'>"
+          "</a>"
+        }}}
+      </p>
       <ul>
         <li>{{{__ "about.cases.example" "<a href='/case/5008'>" "</a>"}}}</li>
       </ul>
     {{/accordion}}
 
     {{#> accordion title=(t "Methods")}}
-      <p>{{t "about.methods.p1"}}</p>
+    {{{__ 
+      "about.methods.p1" 
+      "<a href='https://docs.google.com/document/d/1Lgw_R5h5dsk-O4WYDBD7feLvRtwtq5wnXysJ6qp8veE/edit?usp=sharing' target='_blank'>"
+      "</a>"
+    }}}
       <ul>
         <li>{{{__ "about.methods.example" "<a href='/method/145'>" "</a>"}}}</li>
       </ul>
@@ -186,27 +196,13 @@
       </ul>
     {{/accordion}}
 
-    <!-- {{#> accordion title=(t "Tools/Techniques")}}
-      <p>{{t "about.tools_techniques.p1"}}</p>
-      <ul>
-        <li>
-          {{{__
-            "about.tools_techniques.example"
-            "<a href='/method/147'>"
-            "</a>"
-            "<a href='/method/5507'>"
-            "</a>"
-            "<a href='/method/565'>"
-            "</a>"
-            "<a href='/method/5309'>"
-            "</a>"
-          }}}
-        </li>
-      </ul>
-    {{/accordion}} -->
-
     {{#> accordion title=(t "Organizations")}}
       <p>{{t "about.organizations.p1"}}</p>
+      {{{__ 
+        "about.organizations.p1" 
+        "<a href='https://docs.google.com/document/d/12QmZZBupsm2F73RnKNOqTLnaSl3CdzlWEfvv-XW4U34/edit?usp=sharing' target='_blank'>"
+        "</a>"
+      }}}
       <ul>
         <li>
           {{{__
@@ -228,15 +224,6 @@
           "</a>"
         }}}
       </p>
-      <ul>
-        <li>
-          {{{__
-            "about.teaching_resources.example"
-            "<a href='https://docs.google.com/document/d/1qnDZmIukizEIU6SH9KWdkh1DnI-o17KoRMsi9Vz-QDo/edit?usp=sharing'>"
-            "</a>"
-          }}}
-        </li>
-      </ul>
     {{/accordion}}
   </section>
 
@@ -248,8 +235,14 @@
   </section>
 
   <section>
-    <h2>{{t "Phase 2"}}</h2>
-    <p>{{t "about.phase2.p1"}}</p>
+    <h2>{{t "Participedia Phase 2"}}</h2>
+    <p>
+      {{{__
+        "about.phase2.p1"
+        "<a href='https://participediaproject.medium.com/participedia-receives-2-5-million-to-expand-reach-and-impact-ae68f40967d3' target='__blank'>"
+        "</a>"
+      }}}
+    </p>
     <h3>{{t "about.phase2.partners"}}</h3>
     <img src="/images/about/partner-logos.jpeg" class="static-view-section-illustration-full" />
 
