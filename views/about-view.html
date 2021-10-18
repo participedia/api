@@ -74,6 +74,164 @@
   </section>
 
   <section>
+    <h2>{{t "Content"}}</h2>
+    <p>
+      {{{__
+        "about.content.p1"
+        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit?usp=sharing' target='_blank'>"
+        "</a>"
+      }}}
+    </p>
+
+    {{#> accordion title=(t "Cases")}}
+      <p>
+        {{{__ 
+          "about.cases.p1" 
+          "<a href='https://docs.google.com/document/d/1FuBBhVoKi-KzXQXDSU8DzoRFArLNsur40Q1NvnfmPrA/edit?usp=sharing' target='_blank'>"
+          "</a>"
+        }}}
+      </p>
+      <ul>
+        <li>{{{__ "about.cases.example" "<a href='/case/5008'>" "</a>"}}}</li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t "Methods")}}
+    {{{__ 
+      "about.methods.p1" 
+      "<a href='https://docs.google.com/document/d/1Lgw_R5h5dsk-O4WYDBD7feLvRtwtq5wnXysJ6qp8veE/edit?usp=sharing' target='_blank'>"
+      "</a>"
+    }}}
+      <ul>
+        <li>{{{__ "about.methods.example" "<a href='/method/145'>" "</a>"}}}</li>
+      </ul>
+
+      <p>{{t "about.methods.p2"}}</p>
+      <ul>
+        <li>{{{__ "about.methods.example.2" "<a href='/method/147'>" "</a>" "<a href='/method/5505'>" "</a>" "<a href='/method/5309'>" "</a>"}}}</li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t "Organizations")}}
+      <p>{{t "about.organizations.p1"}}</p>
+      {{{__ 
+        "about.organizations.p1" 
+        "<a href='https://docs.google.com/document/d/12QmZZBupsm2F73RnKNOqTLnaSl3CdzlWEfvv-XW4U34/edit?usp=sharing' target='_blank'>"
+        "</a>"
+      }}}
+      <ul>
+        <li>
+          {{{__
+            "about.organizations.example"
+            "<a href='/organization/4997'>"
+            "</a>"
+          }}}
+        </li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t "Teaching Resources")}}
+      <p>
+        {{{__
+          "about.teaching_resources.p1"
+          "<a href='/teaching'>"
+          "</a>"
+          "<a href='https://docs.google.com/forms/d/e/1FAIpQLSfw_F7g-99hUuBQ6k4Iak6kyVgyRVQJZgh_7aee77yIYVzbpQ/viewform?usp=sf_link'>"
+          "</a>"
+        }}}
+      </p>
+    {{/accordion}}
+  </section>
+
+  <section>
+    <h2>{{t "Mission"}}</h2>
+    <p>{{t "mission.p1"}}</p>
+    <p>{{t "mission.p2"}}</p>
+    <p>{{t "mission.p3"}}</p>
+  </section>
+
+  <section>
+    <h2>{{t "Participedia Phase 2"}}</h2>
+    <p>
+      {{{__
+        "about.phase2.p1"
+        "<a href='https://participediaproject.medium.com/participedia-receives-2-5-million-to-expand-reach-and-impact-ae68f40967d3' target='__blank'>"
+        "</a>"
+      }}}
+    </p>
+    <h3>{{t "about.phase2.partners"}}</h3>
+    <img src="/images/about/partner-logos.jpeg" class="static-view-section-illustration-full" />
+
+    {{#> accordion title=(t "Team Members")}}
+      {{#each (getTeamMemberData)}}
+        {{> about-section }}
+      {{/each}}
+    {{/accordion}}
+
+    {{#> accordion title=(t "Committees")}}
+      <p>{{t "about.phase2.committees.p"}}</p>
+      <ul>
+        <li>
+          {{t "Executive Committee"}}
+        </li>
+        <li>
+          {{t "Research Committee"}}
+        </li>
+        <li>
+          {{t "Teaching Training & Mentoring Committee"}}
+        </li>
+        <li>
+          {{t "Design Technology Team"}}
+        </li>
+        <li>
+          {{t "Communications Team"}}
+        </li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t "Research Clusters")}}
+      <p>{{t "about.phase2.research.p"}}</p>
+      <ul>
+        <li>
+          {{t "Participatory & Deliberative Governance"}}
+        </li>
+        <li>
+          {{t "Human & Political Rights"}}
+        </li>
+        <li>
+          {{t "Democratic Accountability"}}
+        </li>
+        <li>
+          {{t "Democratic Representation"}}
+        </li>
+        <li>
+          {{t "Democracy Across Borders"}}
+        </li>
+        <li>
+          {{t "Democracy and digital communications"}}
+        </li>
+      </ul>
+    {{/accordion}}
+
+    {{#> accordion title=(t "Supporters")}}
+      <p>
+        {{{__
+          "about.phase2.supporters.p1"
+          "<a target='__blank' href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx'>"
+          "</a>"
+        }}}
+      </p>
+      <p>
+        {{{__
+          "about.phase2.supporters.p2"
+          "<a target='__blank' href='https://phrase.com/'>"
+          "</a>"
+        }}}
+      </p>
+    {{/accordion}}
+  </section>
+
+  <section>
     <h2>{{t "Participedia Phase 1"}}</h2>
     <p>{{t "about.phase1.p1"}}</p>
     <p>{{t "about.phase1.p2"}}</p>
@@ -154,171 +312,6 @@
         </dl>
       {{/each}}
 
-    {{/accordion}}
-  </section>
-
-  <section>
-    <h2>{{t "Content"}}</h2>
-    <p>
-      {{{__
-        "about.content.p1"
-        "<a href='https://docs.google.com/document/d/19Pc9qL3H1SxSByuQY1HxLOgbbMQpnnxlicdMGuC78Wg/edit?usp=sharing' target='_blank'>"
-        "</a>"
-      }}}
-    </p>
-
-    {{#> accordion title=(t "Cases")}}
-      <p>{{t "about.cases.p1"}}</p>
-      <ul>
-        <li>{{{__ "about.cases.example" "<a href='/case/5008'>" "</a>"}}}</li>
-      </ul>
-    {{/accordion}}
-
-    {{#> accordion title=(t "Methods")}}
-      <p>{{t "about.methods.p1"}}</p>
-      <ul>
-        <li>{{{__ "about.methods.example" "<a href='/method/145'>" "</a>"}}}</li>
-      </ul>
-
-      <p>{{t "about.methods.p2"}}</p>
-      <ul>
-        <li>{{{__ "about.methods.example.2" "<a href='/method/147'>" "</a>" "<a href='/method/5505'>" "</a>" "<a href='/method/5309'>" "</a>"}}}</li>
-      </ul>
-    {{/accordion}}
-
-    <!-- {{#> accordion title=(t "Tools/Techniques")}}
-      <p>{{t "about.tools_techniques.p1"}}</p>
-      <ul>
-        <li>
-          {{{__
-            "about.tools_techniques.example"
-            "<a href='/method/147'>"
-            "</a>"
-            "<a href='/method/5507'>"
-            "</a>"
-            "<a href='/method/565'>"
-            "</a>"
-            "<a href='/method/5309'>"
-            "</a>"
-          }}}
-        </li>
-      </ul>
-    {{/accordion}} -->
-
-    {{#> accordion title=(t "Organizations")}}
-      <p>{{t "about.organizations.p1"}}</p>
-      <ul>
-        <li>
-          {{{__
-            "about.organizations.example"
-            "<a href='/organization/4997'>"
-            "</a>"
-          }}}
-        </li>
-      </ul>
-    {{/accordion}}
-
-    {{#> accordion title=(t "Teaching Resources")}}
-      <p>
-        {{{__
-          "about.teaching_resources.p1"
-          "<a href='/teaching'>"
-          "</a>"
-          "<a href='https://docs.google.com/forms/d/e/1FAIpQLSfw_F7g-99hUuBQ6k4Iak6kyVgyRVQJZgh_7aee77yIYVzbpQ/viewform?usp=sf_link'>"
-          "</a>"
-        }}}
-      </p>
-      <ul>
-        <li>
-          {{{__
-            "about.teaching_resources.example"
-            "<a href='https://docs.google.com/document/d/1qnDZmIukizEIU6SH9KWdkh1DnI-o17KoRMsi9Vz-QDo/edit?usp=sharing'>"
-            "</a>"
-          }}}
-        </li>
-      </ul>
-    {{/accordion}}
-  </section>
-
-  <section>
-    <h2>{{t "Mission"}}</h2>
-    <p>{{t "mission.p1"}}</p>
-    <p>{{t "mission.p2"}}</p>
-    <p>{{t "mission.p3"}}</p>
-  </section>
-
-  <section>
-    <h2>{{t "Phase 2"}}</h2>
-    <p>{{t "about.phase2.p1"}}</p>
-    <h3>{{t "about.phase2.partners"}}</h3>
-    <img src="/images/about/partner-logos.jpeg" class="static-view-section-illustration-full" />
-
-    {{#> accordion title=(t "Team Members")}}
-      {{#each (getTeamMemberData)}}
-        {{> about-section }}
-      {{/each}}
-    {{/accordion}}
-
-    {{#> accordion title=(t "Committees")}}
-      <p>{{t "about.phase2.committees.p"}}</p>
-      <ul>
-        <li>
-          {{t "Executive Committee"}}
-        </li>
-        <li>
-          {{t "Research Committee"}}
-        </li>
-        <li>
-          {{t "Teaching Training & Mentoring Committee"}}
-        </li>
-        <li>
-          {{t "Design Technology Team"}}
-        </li>
-        <li>
-          {{t "Communications Team"}}
-        </li>
-      </ul>
-    {{/accordion}}
-
-    {{#> accordion title=(t "Research Clusters")}}
-      <p>{{t "about.phase2.research.p"}}</p>
-      <ul>
-        <li>
-          {{t "Participatory & Deliberative Governance"}}
-        </li>
-        <li>
-          {{t "Human & Political Rights"}}
-        </li>
-        <li>
-          {{t "Democratic Accountability"}}
-        </li>
-        <li>
-          {{t "Democratic Representation"}}
-        </li>
-        <li>
-          {{t "Democracy Across Borders"}}
-        </li>
-        <li>
-          {{t "Democracy and digital communications"}}
-        </li>
-      </ul>
-    {{/accordion}}
-
-    {{#> accordion title=(t "Supporters")}}
-      <p>
-        {{{__
-          "about.phase2.supporters.p1"
-          "<a target='__blank' href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx'>"
-          "</a>"
-        }}}
-      </p>
-      <p>
-        {{{__
-          "about.phase2.supporters.p2"
-          "<a target='__blank' href='https://phrase.com/'>"
-          "</a>"
-        }}}
-      </p>
     {{/accordion}}
   </section>
   
