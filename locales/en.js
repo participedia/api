@@ -1682,6 +1682,7 @@
   "Teach": "Teach",
   "Teaching": "Teaching",
   "Teaching Resources": "Teaching Resources",
+  "Teaching resources": "Teaching resources",
   "Teaching Training & Mentoring Committee": "Teaching Training & Mentoring Committee",
   "teaching.Assignments": "Assignments",
   "teaching.Bibliographies": "Bibliographies",
