@@ -74,90 +74,6 @@
   </section>
 
   <section>
-    <h2>{{t "Participedia Phase 1"}}</h2>
-    <p>{{t "about.phase1.p1"}}</p>
-    <p>{{t "about.phase1.p2"}}</p>
-    <p>{{t "about.phase1.p3"}}</p>
-    <p>{{t "about.phase1.p4"}}</p>
-  </section>
-
-  <section>
-    {{#> accordion title=(t "Members")}}
-      <p>{{t "about.members.p1"}}</p>
-    {{/accordion}}
-
-    {{#> accordion title=(t "Partners")}}
-      <p>{{t "about.partners.p1"}}</p>
-
-      {{#each (getPartnersData)}}
-        {{> about-section }}
-      {{/each}}
-    {{/accordion}}
-
-    {{#> accordion title=(t "Committees")}}
-      <p>{{t "about.committees.p1"}}</p>
-
-      {{#each (getCommitteesData)}}
-        {{> about-section __=../__}}
-      {{/each}}
-    {{/accordion}}
-
-    <div class="js-supporters">
-    {{#> accordion title=(t "Supporters")}}
-      <p>
-        {{{__
-          "about.supporters.p1"
-          "<a href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx' target='_blank'>"
-          "</a>"
-        }}}
-      </p>
-
-      <p>
-        {{{__
-          "about.supporters.p2"
-          "<a href='https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology' target='_blank'>"
-          "</a>"
-          "<a href='http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx' target='_blank'>"
-          "</a>"
-          "<a href='https://www.innovation.ca/'>"
-          "</a>"
-        }}}
-      </p>
-
-      <p>
-        {{{__
-          "about.supporters.p3"
-          "<a href='https://phrase.com/?utm_campaign=phraseapp-homepage&utm_medium=partner-relations&utm_source=participedia' target='_blank'>"
-          "</a>"
-        }}}
-      </p>
-
-      <p>
-        {{{__
-           "about.supporters.p4"
-           "<a href='http://www.bfna.org/' target='_blank'>"
-           "</a>"
-         }}}
-      </p>
-    {{/accordion}}
-    </div>
-
-    {{#> accordion title=(t "Staff")}}
-      <p>{{t "about.staff.p1"}}</p>
-
-      {{#each (getStaffMembers)}}
-        <dl class="people">
-          <dt>{{name}}{{#if titleKey}}, {{t titleKey}}{{/if}}</dt>
-          {{# each descriptors}}
-            <dd>{{this}}</dd>
-          {{/each}}
-        </dl>
-      {{/each}}
-
-    {{/accordion}}
-  </section>
-
-  <section>
     <h2>{{t "Content"}}</h2>
     <p>
       {{{__
@@ -312,6 +228,90 @@
           "</a>"
         }}}
       </p>
+    {{/accordion}}
+  </section>
+
+  <section>
+    <h2>{{t "Participedia Phase 1"}}</h2>
+    <p>{{t "about.phase1.p1"}}</p>
+    <p>{{t "about.phase1.p2"}}</p>
+    <p>{{t "about.phase1.p3"}}</p>
+    <p>{{t "about.phase1.p4"}}</p>
+  </section>
+
+  <section>
+    {{#> accordion title=(t "Members")}}
+      <p>{{t "about.members.p1"}}</p>
+    {{/accordion}}
+
+    {{#> accordion title=(t "Partners")}}
+      <p>{{t "about.partners.p1"}}</p>
+
+      {{#each (getPartnersData)}}
+        {{> about-section }}
+      {{/each}}
+    {{/accordion}}
+
+    {{#> accordion title=(t "Committees")}}
+      <p>{{t "about.committees.p1"}}</p>
+
+      {{#each (getCommitteesData)}}
+        {{> about-section __=../__}}
+      {{/each}}
+    {{/accordion}}
+
+    <div class="js-supporters">
+    {{#> accordion title=(t "Supporters")}}
+      <p>
+        {{{__
+          "about.supporters.p1"
+          "<a href='http://www.sshrc-crsh.gc.ca/home-accueil-eng.aspx' target='_blank'>"
+          "</a>"
+        }}}
+      </p>
+
+      <p>
+        {{{__
+          "about.supporters.p2"
+          "<a href='https://www.ecuad.ca/academics/faculties-and-departments/research-area/chair-in-art-design-technology' target='_blank'>"
+          "</a>"
+          "<a href='http://www.chairs-chaires.gc.ca/home-accueil-eng.aspx' target='_blank'>"
+          "</a>"
+          "<a href='https://www.innovation.ca/'>"
+          "</a>"
+        }}}
+      </p>
+
+      <p>
+        {{{__
+          "about.supporters.p3"
+          "<a href='https://phrase.com/?utm_campaign=phraseapp-homepage&utm_medium=partner-relations&utm_source=participedia' target='_blank'>"
+          "</a>"
+        }}}
+      </p>
+
+      <p>
+        {{{__
+           "about.supporters.p4"
+           "<a href='http://www.bfna.org/' target='_blank'>"
+           "</a>"
+         }}}
+      </p>
+    {{/accordion}}
+    </div>
+
+    {{#> accordion title=(t "Staff")}}
+      <p>{{t "about.staff.p1"}}</p>
+
+      {{#each (getStaffMembers)}}
+        <dl class="people">
+          <dt>{{name}}{{#if titleKey}}, {{t titleKey}}{{/if}}</dt>
+          {{# each descriptors}}
+            <dd>{{this}}</dd>
+          {{/each}}
+        </dl>
+      {{/each}}
+
     {{/accordion}}
   </section>
   
