@@ -346,6 +346,13 @@ const partners = [
         ],
       },
       {
+        name: "Alessandro Mengozzi",
+        descriptors: [
+          "Department of Social and Political Sciences",
+          "University of Bologna",
+        ],
+      },
+      {
         name: "Tiago Peixoto",
         descriptors: ["ICT4Gov Program", "World Bank Institute"],
       },
