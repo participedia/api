@@ -24,7 +24,10 @@ try {
   if (process.env.NODE_ENV === "test" || config.host === "localhost") {
     config.ssl = false;
   } else {
-    config.ssl = { rejectUnauthorized: false };
+    config.ssl = { 
+      sslmode: 'require',
+      rejectUnauthorized: false
+    };
   }
 } catch (e) {
   console.error("# Error parsing DATABASE_URL environment variable");

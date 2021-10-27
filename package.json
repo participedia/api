@@ -4,7 +4,7 @@
   "private": true,
   "description": "API for Participedia v4",
   "keywords": [],
-  "author": "David Ascher <david.ascher@gmail.com>, Dethe Elza <dethe@livingcode.org",
+  "author": "Participedia Team",
   "license": "MIT",
   "main": "app.js",
   "engines": {
@@ -34,7 +34,6 @@
     "express-unless": "^0.3.1",
     "faucet": "^0.0.1",
     "fontfaceobserver": "^2.1.0",
-    "fsevents": "^1.2.13",
     "i18n": "0.8.3",
     "js-md5": "0.7.3",
     "json-pretty": "^0.0.1",
