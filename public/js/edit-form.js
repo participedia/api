@@ -319,6 +319,7 @@ const editForm = {
   },
 
   sendFormData() {
+    debugger;
     const formData = serialize(this.formEl);
     const originalEntry = Object.fromEntries(new URLSearchParams(formData));
     const formObject = Object.fromEntries(new URLSearchParams(formData));
@@ -353,7 +354,7 @@ const editForm = {
           let formValues = formsData[lang.key];
           if (!formKeys) return;
           const matcher = new RegExp(
-            `^(${key})\\[(\\d{1,})\\](\\[([a-zA-Z-0-9]{1,})\\])?`
+            `^(${key})\\[(\\d{1,})\\](\\[(\\S{1,})\\])?`
           );
           let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
           if(mediaThingsKeys.length === 0) {
