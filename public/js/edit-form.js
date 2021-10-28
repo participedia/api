@@ -342,7 +342,7 @@ const editForm = {
           this.entryLocaleData["body"]?.[lang.key] || "";
 
         [
-          "links", "videos", "audio", "evaluation_links", "general_issues",
+          "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
           "specific_topics", "purposes", "approaches", "targeted_participants",
           "method_types", "tools_techniques_types", "participants_interactions",
           "learning_resources", "learning_resources", "decision_methods", "if_voting",
@@ -353,11 +353,14 @@ const editForm = {
           let formValues = formsData[lang.key];
           if (!formKeys) return;
           const matcher = new RegExp(
-            `^(${key})\\[(\\d{1,})\\]\\[([a-zA-Z-0-9]{1,})\\]`
+            `^(${key})\\[(\\d{1,})\\](\\[([a-zA-Z-0-9]{1,})\\])?`
           );
           let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
           if(mediaThingsKeys.length === 0) {
             formsData[lang.key][key] = [];
+          }
+          if(key === 'collections') {
+            debugger;
           }
           mediaThingsKeys.forEach(thingKey => {
             const thingValue = formValues[thingKey];
@@ -367,12 +370,20 @@ const editForm = {
             if (m.index === matcher.lastIndex) {
               matcher.lastIndex++;
             }
-            formValues[m[1]] = formValues[m[1]] || [];
-            formValues[m[1]][m[2]] =
-              formValues[m[1]][m[2]] === undefined
-                ? {}
-                : formValues[m[1]][m[2]];
-            formValues[m[1]][m[2]][m[3]] = thingValue;
+
+            if(m[1] === 'collections') {
+              formValues[m[1]] = formValues[m[1]] || [];
+              formValues[m[1]].push(thingValue);
+              formValues[m[1]] = Array.from(new Set(formValues[m[1]]));
+            } else {
+              formValues[m[1]] = formValues[m[1]] || [];
+              formValues[m[1]][m[2]] =
+                formValues[m[1]][m[2]] === undefined
+                  ? {}
+                  : formValues[m[1]][m[2]];
+              formValues[m[1]][m[2]][m[4]] = thingValue;
+            }
+            
           });
         });
       });
