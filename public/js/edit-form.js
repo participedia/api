@@ -359,9 +359,6 @@ const editForm = {
           if(mediaThingsKeys.length === 0) {
             formsData[lang.key][key] = [];
           }
-          if(key === 'collections') {
-            debugger;
-          }
           mediaThingsKeys.forEach(thingKey => {
             const thingValue = formValues[thingKey];
             let m = matcher.exec(thingKey);
