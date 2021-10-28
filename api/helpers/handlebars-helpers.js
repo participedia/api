@@ -797,6 +797,10 @@ module.exports = {
   getLinkSetValue(article, name, index, attr) {
     if (!article[name]) return;
     if (!article[name][index]) return;
+    
+    if(attr === 'source_url') {
+      return article[name][index][attr].trim().includes('base64') ? '' : article[name][index][attr];
+    }
     return article[name][index][attr];
   },
 
@@ -861,7 +865,7 @@ module.exports = {
   },
 
   hasCaptionText(photo) {
-    return photo.title || photo.source_url || photo.attribution;
+    return (photo.title || (photo.source_url ? photo.source_url.trim().includes('base64') ? '' : photo.source_url : '') || photo.attribution) || '';
   },
 
   getFirstLargeImageForArticle(article) {
