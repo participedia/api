@@ -417,10 +417,7 @@ function aSourcedMedia(obj) {
   if (!obj.url.startsWith("http")) {
     obj.url = uploadToAWS(obj.url);
   }
-
-  if(!obj.source_url) {
-    obj['source_url'] = '';
-  }
+  
   return new FullFile(obj);
 }
 
