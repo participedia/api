@@ -332,58 +332,58 @@ const editForm = {
       supportedLanguages = [];
     }
 
+    [
+      "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
+      "specific_topics", "purposes", "approaches", "targeted_participants",
+      "method_types", "tools_techniques_types", "participants_interactions",
+      "learning_resources", "learning_resources", "decision_methods", "if_voting",
+      "insights_outcomes", "organizer_types", "funder_types", "change_types", "files", "photos",
+      "implementers_of_change", "evaluation_reports"
+    ].map(key => {
+      let formKeys = Object.keys(originalEntry);
+      let formValues = originalEntry;
+      if (!formKeys) return;
+      const matcher = new RegExp(
+        `^(${key})\\[(\\d{1,})\\](\\[(\\S{1,})\\])?`
+      );
+      let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
+      if(mediaThingsKeys.length === 0) {
+        originalEntry[key] = [];
+      }
+      mediaThingsKeys.forEach(thingKey => {
+        const thingValue = formValues[thingKey];
+        let m = matcher.exec(thingKey);
+        if (!m) return;
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === matcher.lastIndex) {
+          matcher.lastIndex++;
+        }
+
+        if(m[1] === 'collections') {
+          formValues[m[1]] = formValues[m[1]] || [];
+          formValues[m[1]].push(thingValue);
+          formValues[m[1]] = Array.from(new Set(formValues[m[1]]));
+        } else {
+          formValues[m[1]] = formValues[m[1]] || [];
+          formValues[m[1]][m[2]] =
+            formValues[m[1]][m[2]] === undefined
+              ? {}
+              : formValues[m[1]][m[2]];
+          formValues[m[1]][m[2]][m[4]] = thingValue;
+        }
+        
+      });
+    });
+
     if (supportedLanguages && supportedLanguages.length) {
       supportedLanguages.forEach(lang => {
-        formsData[lang.key] = formObject;
+        formsData[lang.key] = {}; // formObject;
         formsData[lang.key]["title"] =
           this.entryLocaleData["title"]?.[lang.key] || "";
         formsData[lang.key]["description"] =
           this.entryLocaleData["description"]?.[lang.key] || "";
         formsData[lang.key]["body"] =
-          this.entryLocaleData["body"]?.[lang.key] || "";
-
-        [
-          "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
-          "specific_topics", "purposes", "approaches", "targeted_participants",
-          "method_types", "tools_techniques_types", "participants_interactions",
-          "learning_resources", "learning_resources", "decision_methods", "if_voting",
-          "insights_outcomes", "organizer_types", "funder_types", "change_types", "files", "photos",
-          "implementers_of_change", "evaluation_reports"
-        ].map(key => {
-          let formKeys = Object.keys(formsData?.[lang.key]);
-          let formValues = formsData[lang.key];
-          if (!formKeys) return;
-          const matcher = new RegExp(
-            `^(${key})\\[(\\d{1,})\\](\\[(\\S{1,})\\])?`
-          );
-          let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
-          if(mediaThingsKeys.length === 0) {
-            formsData[lang.key][key] = [];
-          }
-          mediaThingsKeys.forEach(thingKey => {
-            const thingValue = formValues[thingKey];
-            let m = matcher.exec(thingKey);
-            if (!m) return;
-            // This is necessary to avoid infinite loops with zero-width matches
-            if (m.index === matcher.lastIndex) {
-              matcher.lastIndex++;
-            }
-
-            if(m[1] === 'collections') {
-              formValues[m[1]] = formValues[m[1]] || [];
-              formValues[m[1]].push(thingValue);
-              formValues[m[1]] = Array.from(new Set(formValues[m[1]]));
-            } else {
-              formValues[m[1]] = formValues[m[1]] || [];
-              formValues[m[1]][m[2]] =
-                formValues[m[1]][m[2]] === undefined
-                  ? {}
-                  : formValues[m[1]][m[2]];
-              formValues[m[1]][m[2]][m[4]] = thingValue;
-            }
-            
-          });
-        });
+          this.entryLocaleData["body"]?.[lang.key] || ""; 
       });
     } else {
       formsData = originalEntry;
@@ -423,7 +423,7 @@ const editForm = {
         }
       }
     };
-
+    formsData[originalEntry.locale] = originalEntry;
     xhr.send(
       JSON.stringify({
         ...formsData,
