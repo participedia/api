@@ -37,7 +37,7 @@ FROM
     methods,
     get_localized_texts_fallback(methods.id, 'en', methods.original_language) AS texts
 WHERE
-    methods.hidden = false ${facets:raw}
+    ${facets:raw}
 ORDER BY ${sortby:raw} ${orderby:raw}
 LIMIT ${limit}
 OFFSET ${offset}

@@ -382,29 +382,30 @@ const searchFilterKeyFromReq = (req, name) => {
   }
 };
 
-const searchFilterKeyListFromReq = (req, name) => {
+const searchFilterKeyListFromReq = (req, name, index, type) => {
   let value = req.query[name];
+  var prefix = type === "api" ? index === 0 ? '' : ' AND' : ' AND';
   if (!value) {
     return "";
   }
   if (name === "completeness") {
-    return ` AND ${name} = ANY ('{${value}}') `;
+    return `${prefix} ${name} = ANY ('{${value}}') `;
   }  
   else {
     value = as.array(value.split(","));
-    return ` AND ${name} && ${value} `;
+    return `${prefix} ${name} && ${value} `;
   }
 };
 
-const searchFiltersFromReq = req => {
+const searchFiltersFromReq = (req, type) => {
   const keys = searchFilterKeys(typeFromReq(req));
   const keyLists = searchFilterKeyLists(typeFromReq(req));
 
   let searchFilterKeysMapped = keys.map(key =>
     searchFilterKeyFromReq(req, key)
   );
-  let searchFilterKeyListMapped = keyLists.map(key =>
-    searchFilterKeyListFromReq(req, key)
+  let searchFilterKeyListMapped = keyLists.map((key, index) =>
+    searchFilterKeyListFromReq(req, key, index, type)
   );
   return searchFilterKeysMapped.join("") + searchFilterKeyListMapped.join("");
 };

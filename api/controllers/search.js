@@ -16,8 +16,8 @@ let { preparse_query } = require("../helpers/search");
 const {
   supportedTypes,
   parseGetParams,
-  searchFilterKeys,
-  searchFilterKeyLists,
+  searchFiltersFromReq,
+  typeFromReq,
   limitFromReq,
   offsetFromReq
 } = require("../helpers/things");
