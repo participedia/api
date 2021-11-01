@@ -10,13 +10,15 @@ const {
     ORGANIZATION,
 } = require("../../helpers/db");
 
+const {
+    searchFiltersFromReq
+} = require("../../helpers/things");
 
 const {
     parseAPIGetParams,
 } = require("./api-things");  
 
 const {
-    searchFiltersFromReq,
     apiErrorHandler,
     auth,
     apiPromiseErrorHandler,

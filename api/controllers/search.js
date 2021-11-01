@@ -24,7 +24,6 @@ const {
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
-const selectedCategoryValues = ['all', 'case', 'method', 'organization', 'collection'];
 
 function randomTexture() {
   let index = Math.floor(Math.random() * 6) + 1;
@@ -89,19 +88,6 @@ router.get("/getAllForType", async function getAllForType(req, res) {
   }
 });
 
-// strip off final character (assumed to be "s")
-const singularLowerCase = name =>
-  (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
-
-// just get the type, if specified
-const typeFromReq = req => {
-  var cat = singularLowerCase(req.query.selectedCategory || "Alls");
-  if (selectedCategoryValues.indexOf(cat) < 0) {
-    cat = 'all';
-  }
-  return cat === "all" ? "thing" : cat;
-};
-
 const queryFileFromReq = req => {
   const featuredOnly =
     !req.query.query || (req.query.query || "").toLowerCase() === "featured";
@@ -122,51 +108,6 @@ const sortbyFromReq = req => {
     return "post_date";
   }
   return "updated_date";
-};
-
-const searchFilterKeyFromReq = (req, name) => {
-  let value = req.query[name];
-  if (value) {
-    if (name === "country") {
-      return ` AND ${name} = ANY ('{${value}}') `;
-    } else {
-      const values = value.split(',');
-      let partial = values.length ? ' AND ' : '';
-      partial += values[0] ? ` ${name}='${values[0]}'` : '';
-      for (let i = 1; i < values.length; i++) {
-        const element = values[i];
-        partial += ` OR ${name}='${element}' `;
-      }
-      return partial;
-    } 
-  }
-};
-
-const searchFilterKeyListFromReq = (req, name) => {
-  let value = req.query[name];
-  if (!value) {
-    return "";
-  }
-  if (name === "completeness") {
-    return ` AND ${name} = ANY ('{${value}}') `;
-  }  
-  else {
-    value = as.array(value.split(","));
-    return ` AND ${name} && ${value} `;
-  }
-};
-
-const searchFiltersFromReq = req => {
-  const keys = searchFilterKeys(typeFromReq(req));
-  const keyLists = searchFilterKeyLists(typeFromReq(req));
-
-  let searchFilterKeysMapped = keys.map(key =>
-    searchFilterKeyFromReq(req, key)
-  );
-  let searchFilterKeyListMapped = keyLists.map(key =>
-    searchFilterKeyListFromReq(req, key)
-  );
-  return searchFilterKeysMapped.join("") + searchFilterKeyListMapped.join("");
 };
 
 const redirectToSearchPageIfHasCollectionsQueryParameter = (req, res, next) => {
