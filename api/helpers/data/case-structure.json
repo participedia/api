@@ -65,5 +65,6 @@
   "published": true,
   "updated_date": "",
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "verified": false
 }
