@@ -75,4 +75,6 @@
 \include 'migrations/migration_047.sql'
 \include 'migrations/migration_048.sql'
 \include 'migrations/migration_049.sql'
+\include 'migrations/migration_050.sql'
+\include 'migrations/migration_051.sql'
 
