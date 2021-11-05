@@ -1,2 +1,2 @@
 ALTER TABLE cases 
- ADD COLUMN collections text[] DEFAULT '{}'::text[]
+ ADD COLUMN collections integer[] DEFAULT '{}'::integer[]
