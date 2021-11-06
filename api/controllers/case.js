@@ -186,6 +186,8 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     cond("original_language", as.text);
     cond("post_date", as.date);
     cond("updated_date", as.date);
+    cond("reviewed_by", as.text);
+    cond("reviewed_at", as.date);
   }
 
   // media lists
@@ -392,6 +394,12 @@ async function caseUpdate(req, res, entry = undefined) {
         await db.tx("update-case", async t => {
 
           if (!isNewCase) {
+
+            if (updatedCase.verified) {
+              updatedCase.reviewed_by = creator.user_id;
+              updatedCase.reviewed_at = "now";
+            }
+
             var userId = oldArticle.creator.user_id.toString();
             var creatorTimestamp = new Date(oldArticle.post_date);
             if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {

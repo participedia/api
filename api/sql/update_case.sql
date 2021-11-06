@@ -6,6 +6,9 @@ SET
   featured = ${featured},
   hidden = ${hidden},
   completeness = ${completeness},
+  verified = ${verified},
+  reviewed_at = ${reviewed_at},
+  reviewed_by = ${reviewed_by},
 -- automatic
   updated_date = ${updated_date},
 -- media lists
