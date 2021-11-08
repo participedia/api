@@ -46,6 +46,13 @@
       </div>
     </article>
   </div>
+  {{#if article.verified}}
+<div class="show-verified-info-container js-show-verified-info-container">
+  <button type="submit" class="button floating-action-button show-verified-info-trigger js-show-verified-info-trigger">
+    {{> icon-verified }}
+  </button>
+</div>
+  {{else}}
   <div class="right-col">
     {{> view-socialmedia }}
     <a
@@ -57,4 +64,5 @@
       {{> icon-edit }}
     </a>
   </div>
+  {{/if}}
 </div>

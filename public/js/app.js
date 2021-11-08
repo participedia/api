@@ -5,6 +5,7 @@ import contactHelpFaqPopover from "./contact-help-faq-popover.js";
 import languageSelect from "./language-select.js";
 import header from "./header.js";
 import tracking from "./utils/tracking.js";
+import verifiedMessage from "./show-verified-info.js";
 
 function loadFonts() {
   const faktFont = new FontFaceObserver("Fakt", {
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   contactHelpFaqPopover.init(tracking);
   header.init();
   languageSelect.init(tracking);
+  verifiedMessage.init();
 
   // Listen to tab events to enable outlines (accessibility improvement)
   document.body.addEventListener("keyup", function(e) {
