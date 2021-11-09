@@ -124,9 +124,13 @@ function getUpdatedCollection(user, params, newCollection, oldCollection) {
   if (user.isadmin) {
     cond("featured", as.boolean);
     cond("hidden", as.boolean);
+    cond("verified", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
     cond("updated_date", as.date);
+    cond("updated_date", as.date);
+    cond("reviewed_by", as.text);
+    cond("reviewed_at", as.date);
   }
 
   // media lists

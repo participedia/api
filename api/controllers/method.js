@@ -398,6 +398,12 @@ async function methodUpdate(req, res, entry = undefined) {
         };
         await db.tx("update-method", async t => {
           if (!isNewMethod) {
+
+            if (updatedMethod.verified) {
+              updatedMethod.reviewed_by = creator.user_id;
+              updatedMethod.reviewed_at = "now";
+            }
+
             var userId = oldMethod.creator.user_id.toString();
             var creatorTimestamp = new Date(oldMethod.post_date);
             if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
@@ -441,10 +447,14 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
   if (user.isadmin) {
     cond("featured", as.boolean);
     cond("hidden", as.boolean);
+    cond("verified", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
     cond("completeness", as.text);
     cond("updated_date", as.date);
+    cond("updated_date", as.date);
+    cond("reviewed_by", as.text);
+    cond("reviewed_at", as.date);
   }
 
   // media lists

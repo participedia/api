@@ -18,6 +18,7 @@ SELECT
   tags,
   featured,
   hidden,
+  verified,
   files,
   links,
   photos,

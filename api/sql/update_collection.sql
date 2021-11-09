@@ -5,6 +5,9 @@ SET
   post_date = ${post_date},
   featured = ${featured},
   hidden = ${hidden},
+  verified = ${verified},
+  reviewed_at = ${reviewed_at},
+  reviewed_by = ${reviewed_by},
 -- automatic
   updated_date = ${updated_date},
 -- media lists

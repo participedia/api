@@ -310,6 +310,12 @@ async function organizationUpdate(req, res, entry = undefined) {
         await db.tx("update-organization", async t => {
 
           if (!isNewOrganization) {
+
+            if (updatedOrganization.verified) {
+              updatedOrganization.reviewed_by = creator.user_id;
+              updatedOrganization.reviewed_at = "now";
+            }
+
             var userId = updatedOrganization.creator.user_id.toString();
             var creatorTimestamp = new Date(oldArticle.post_date);
 
@@ -357,10 +363,14 @@ function getUpdatedOrganization(
   if (user.isadmin) {
     cond("featured", as.boolean);
     cond("hidden", as.boolean);
+    cond("verified", as.boolean);
     cond("original_language", as.text);
     cond("post_date", as.date);
     cond("completeness", as.text);
     cond("updated_date", as.date);
+    cond("updated_date", as.date);
+    cond("reviewed_by", as.text);
+    cond("reviewed_at", as.date);
   }
   // media lists
   ["links", "videos", "audio"].map(key => cond(key, as.media));

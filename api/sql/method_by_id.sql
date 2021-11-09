@@ -9,6 +9,7 @@ WITH full_thing AS (
     updated_date,
     featured,
     hidden,
+    verified,
     completeness,
     first_author(${articleid}) AS creator,
     last_author(${articleid}) AS last_updated_by,
