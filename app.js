@@ -98,8 +98,8 @@ app.use((req, res, next) => {
     const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
       req.path
     }`;
-    res.cookie("locale", "en", { path: "/" });
-    return res.redirect(currentUrl);
+    //res.cookie("locale", "en", { path: "/" });
+    //return res.redirect(currentUrl);
   }
   next();
 });
