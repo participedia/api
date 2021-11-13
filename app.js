@@ -99,7 +99,7 @@ app.use((req, res, next) => {
       req.path
     }`;
     res.cookie("locale", "en", { path: "/" });
-    return res.redirect(currentUrl);
+    //return res.redirect(currentUrl);
   }
   next();
 });
