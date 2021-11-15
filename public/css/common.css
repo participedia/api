@@ -316,10 +316,24 @@ pre {
   bottom: 60px;
   margin: 0;
   border-radius: 2em;
-  right: 32px;
   height: 80px;
   width: 80px;
   padding: 0;
+}
+
+.image-svg-action {
+  color: #222;
+  border-radius: 2px;
+  text-decoration: none;
+  min-width: 60px;
+  justify-content: center;
+  padding: 8px 15px;
+  display: inline-flex;
+  border-width: 0;
+  line-height: 1.5rem;
+  cursor: pointer;
+  flex-direction: row;
+  align-items: center;
 }
 
 footer .language-select {

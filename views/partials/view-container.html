@@ -46,13 +46,11 @@
       </div>
     </article>
   </div>
-  {{#if article.verified}}
-<div class="show-verified-info-container js-show-verified-info-container">
-  <img src="/images/icon-verified.svg" class="floating-action-image show-verified-info-trigger js-show-verified-info-trigger"/>
-</div>
-  {{else}}
-  <div class="right-col">
+  <div class="right-col show-verified-info-container js-show-verified-info-container">
     {{> view-socialmedia }}
+    {{#if article.verified}}
+    <img src="/images/icon-verified.svg" class="image-svg-action floating-action-image show-verified-info-trigger js-show-verified-info-trigger"/>
+    {{else}}
     <a
       href="/{{article.type}}/{{article.id}}/edit"
       class="button button-red floating-action-button"
@@ -61,6 +59,6 @@
       <span class="sr-only">{{t "Edit"}} {{t article.type}}</span>
       {{> icon-edit }}
     </a>
+    {{/if}}
   </div>
-  {{/if}}
 </div>
