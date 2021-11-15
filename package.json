@@ -148,7 +148,7 @@
     "resetprodfunctions": "psql -d \"${DATABASE_PROD_URL}\" -f migrations/functions.sql",
     "reset-i18n-staging-functions": "psql -d \"${DATABASE_I18N_STAGING_URL}\" -f migrations/functions.sql",
     "textdump": "pg_dump --format=p --file=one_schema.sql --clean --create --no-owner --if-exists --dbname=participedia",
-    "migratelatest": "f(){ psql -d \"${DATABASE_URL}\" -f \"migrations/migration_050.sql\"; };f",
+    "migratelatest": "f(){ psql -d \"${DATABASE_URL}\" -f \"migrations/migration_051.sql\"; };f",
     "migratetest": "f(){ psql -d \"${DATABASE_TEST_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
     "migrate-i18n-staging": "f(){ psql -d \"${DATABASE_I18N_STAGING_URL}\" -f \"migrations/migration_${item}.sql\"; };f",
     "aws:comprehend": "node scripts/language-detector.js"
