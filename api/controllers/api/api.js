@@ -10,6 +10,9 @@ const {
     ORGANIZATION,
 } = require("../../helpers/db");
 
+const {
+    searchFiltersFromReq
+} = require("../../helpers/things");
 
 const {
     parseAPIGetParams,
@@ -50,6 +53,7 @@ api.get("/cases", async function(req, res, next) {
         userId: req.user ? req.user.id : null,
         sortby: params.sortKey,
         orderby: params.sortOrder,
+        facets: searchFiltersFromReq(req, 'api'),
       }).catch(err => {
           return next(err);
       });
@@ -73,6 +77,7 @@ api.get("/methods", async function(req, res, next) {
         userId: req.user ? req.user.id : null,
         sortby: params.sortKey,
         orderby: params.sortOrder,
+        facets: searchFiltersFromReq(req, 'api'),
       }).catch(err => {
           return next(err);
       });
@@ -96,6 +101,7 @@ api.get("/organizations", async function(req, res, next) {
         userId: req.user ? req.user.id : null,
         sortby: params.sortKey,
         orderby: params.sortOrder,
+        facets: searchFiltersFromReq(req, 'api'),
       }).catch(err => {
           console.log(err);
           return next(err);
@@ -116,5 +122,6 @@ api.use(Sentry.Handlers.errorHandler());
 if (process.env.NODE_ENV === "development") {
     api.use(apiErrorHandler);
 }
+
 module.exports = api;
 

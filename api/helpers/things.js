@@ -4,6 +4,8 @@ if (!keysEnvVar) {
   throw new Error('The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!');
   return;
 }
+const selectedCategoryValues = ['all', 'case', 'method', 'organization', 'collection'];
+
 const { Translate } = require('@google-cloud/translate').v2;
 const authKeys = JSON.parse(keysEnvVar);
 authKeys['key'] = process.env.GOOGLE_API_KEY;
@@ -362,6 +364,65 @@ const searchFilterKeyLists = type => {
   }
 };
 
+const searchFilterKeyFromReq = (req, name) => {
+  let value = req.query[name];
+  if (value) {
+    if (name === "country") {
+      return ` AND ${name} = ANY ('{${value}}') `;
+    } else {
+      const values = value.split(',');
+      let partial = values.length ? ' AND ' : '';
+      partial += values[0] ? ` ${name}='${values[0]}'` : '';
+      for (let i = 1; i < values.length; i++) {
+        const element = values[i];
+        partial += ` OR ${name}='${element}' `;
+      }
+      return partial;
+    } 
+  }
+};
+
+const searchFilterKeyListFromReq = (req, name, index, type) => {
+  let value = req.query[name];
+  var prefix = type === "api" ? index === 0 ? '' : ' AND' : ' AND';
+  if (!value) {
+    return "";
+  }
+  if (name === "completeness") {
+    return `${prefix} ${name} = ANY ('{${value}}') `;
+  }  
+  else {
+    value = as.array(value.split(","));
+    return `${prefix} ${name} && ${value} `;
+  }
+};
+
+const searchFiltersFromReq = (req, type) => {
+  const keys = searchFilterKeys(typeFromReq(req));
+  const keyLists = searchFilterKeyLists(typeFromReq(req));
+
+  let searchFilterKeysMapped = keys.map(key =>
+    searchFilterKeyFromReq(req, key)
+  );
+  let searchFilterKeyListMapped = keyLists.map((key, index) =>
+    searchFilterKeyListFromReq(req, key, index, type)
+  );
+  return searchFilterKeysMapped.join("") + searchFilterKeyListMapped.join("");
+};
+
+// strip off final character (assumed to be "s")
+const singularLowerCase = name =>
+  (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
+
+// just get the type, if specified
+const typeFromReq = req => {
+  var cat = singularLowerCase(req.query.selectedCategory || "Alls");
+  if (selectedCategoryValues.indexOf(cat) < 0) {
+    cat = 'all';
+  }
+  return cat === "all" ? "thing" : cat;
+};
+
 //check if url is valid, if http or https is not detected append http
 const verifyOrUpdateUrl = links => {
   let arr = links.map(link => {
@@ -704,6 +765,8 @@ module.exports = {
   maybeUpdateUserTextLocaleEntry,
   searchFilterKeys,
   searchFilterKeyLists,
+  searchFiltersFromReq,
+  typeFromReq,
   placeHolderPhotos,
   createLocalizedRecord,
   createUntranslatedLocalizedRecords,
