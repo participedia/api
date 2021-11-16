@@ -321,6 +321,15 @@ pre {
   padding: 0;
 }
 
+.verified-image {
+  top: -10px;
+  left: 10px;
+  border-radius: 2em;
+  height: 15px;
+  width: 15px;
+  padding: 0;
+}
+
 .image-svg-action {
   cursor: pointer;
 }

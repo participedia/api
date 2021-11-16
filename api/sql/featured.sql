@@ -16,6 +16,7 @@ WITH all_featured  AS (
 		ELSE ''
      END as completeness,
     featured,
+    verified,
     texts.title,
     texts.description,
     substring(texts.body for 500) AS body,

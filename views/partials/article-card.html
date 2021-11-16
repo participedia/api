@@ -14,11 +14,19 @@
         {{#if featured}}
           <h5>
             {{req.__ "Featured [type]" (t type)}}
-         </h5>
+            {{#if verified}}
+            <img src="/images/icon-verified.svg" class="verified-image"/>
+            {{/if}}
+          </h5>
         {{else}}
-          <h5>{{t type}}</h5>
+          <h5>
+            {{t type}}
+            {{#if verified}}
+            <img src="/images/icon-verified.svg" class="verified-image"/>
+            {{/if}}
+          </h5>
         {{/if}}
-
+        
         <h3 class="article-card-title js-article-card-title">{{title}}</h3>
 
         {{#if description}}

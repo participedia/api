@@ -31,6 +31,7 @@ SELECT
 		ELSE ''
      END as completeness,
   ${type:name}.featured,
+  ${type:name}.verified,
   ${type:name}.location_name,
   ${type:name}.address1,
   ${type:name}.address2,

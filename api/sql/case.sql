@@ -19,6 +19,7 @@ SELECT
   photos,
   videos,
   audio,
+  verified,
   EXTRACT(EPOCH FROM start_date) as start_date,
   EXTRACT(EPOCH FROM end_date) as end_date,
   ongoing,
