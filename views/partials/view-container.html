@@ -49,7 +49,9 @@
   <div class="right-col show-verified-info-container js-show-verified-info-container">
     {{> view-socialmedia }}
     {{#if article.verified}}
-    <img src="/images/icon-verified.svg" class="image-svg-action floating-action-image show-verified-info-trigger js-show-verified-info-trigger"/>
+    <img src="/images/icon-verified.svg" class="image-svg-action floating-action-image show-verified-info-trigger js-show-verified-info-trigger">
+    
+  </img>
     {{else}}
     <a
       href="/{{article.type}}/{{article.id}}/edit"
@@ -61,4 +63,5 @@
     </a>
     {{/if}}
   </div>
+  <input type="hidden" name="isAdmin" id="isAdmin" class="js-is-admin" value="{{req.user.isadmin}}">
 </div>

@@ -1,15 +1,22 @@
+
 import modal from "./modal.js";
 
 const showMessageOnClick = {
     init() {
       const containerEl = document.querySelector(".js-show-verified-info-container");
-  
+      const isAdmin = JSON.parse(document.querySelector(".js-is-admin").value);
+      console.log(isAdmin);
       if (!containerEl) return;
   
       containerEl.addEventListener("click", e => {
         const button = e.target.closest(".js-show-verified-info-trigger");
+        
         if (button) {
+          if (isAdmin) {
+            window.open(window.location.href + "/edit", "_self");
+          } else {
           this.openPublishingFeedbackModal();
+          }
         }
       });
     },
