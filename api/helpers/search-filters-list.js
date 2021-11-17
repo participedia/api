@@ -58,6 +58,10 @@ const searchFiltersList = {
   ],
   case: [
     {
+      sectionKey: "verified_label",
+      fieldNameKeys: ["verified"],
+    },
+    {
       sectionKey: "issues",
       fieldNameKeys: ["general_issues"],
     },

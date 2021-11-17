@@ -1,4 +1,17 @@
 <form class="search-filter-list js-search-filter-list">
+
+  <div class="search-filter-list-item">
+      <div class="filter-label">
+        <label>
+          Reviewed entries
+          <img src="/images/icon-verified.svg" class="verified-image"/>
+        </label>
+      </div>
+      <div class="accordion-summary-content keys-list js-keys-list" data-field-name="verified">
+          {{> search-filter-key-list-item fieldName="verified" sectionKey="summary" key="true" value="Reviewed by Participedia Editorial Board"}}
+      </div>
+  </div>
+
   {{#if (showCountryAutoComplete type)}}
 	<div class="search-filter-list-item">
 		<div class="filter-label">

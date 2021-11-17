@@ -327,6 +327,7 @@ const searchFilterKeys = type => {
 const searchFilterKeyLists = type => {
   if (type === "case") {
     return [
+      "verified",
       "general_issues",
       "purposes",
       "approaches",
@@ -340,6 +341,7 @@ const searchFilterKeyLists = type => {
     ];
   } else if (type === "method") {
     return [
+      "verified",
       "method_types",
       "number_of_participants",
       "participants_interactions",
@@ -351,6 +353,7 @@ const searchFilterKeyLists = type => {
     ];
   } else if (type === "organization") {
     return [
+      "verified",
       "general_issues",
       "type_method",
       "level_polarization",
@@ -391,6 +394,9 @@ const searchFilterKeyListFromReq = (req, name, index, type) => {
   if (name === "completeness") {
     return `${prefix} ${name} = ANY ('{${value}}') `;
   }  
+  else if (name === "verified") {
+    return `${prefix} ${name} = ${value} `;
+  }
   else {
     value = as.array(value.split(","));
     return `${prefix} ${name} && ${value} `;

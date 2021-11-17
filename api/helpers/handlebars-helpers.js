@@ -1420,7 +1420,7 @@ module.exports = {
   },
 
   getOptionsForFilterKey(name, isInitialDisplay, context) {
-    if (name !== "country") {
+    if (name !== "country" && name !== "verified") {
       let items = sharedFieldOptions[name].map(key => {
         return {
           key: key,
@@ -1493,7 +1493,7 @@ module.exports = {
 
   // Helper to identify if filter key will display as checkbox;
   isSearchFilterCheckboxSelection(key) {
-    const excludedFilterKeys = ["country"];
+    const excludedFilterKeys = ["country", "verified"];
 
     if (excludedFilterKeys.indexOf(key) >= 0) {
       return false;
