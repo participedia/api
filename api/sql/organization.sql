@@ -37,8 +37,8 @@ WITH full_thing AS (
 FROM
     organizations,
     get_localized_texts_fallback(organizations.id, 'en', organizations.original_language) AS texts
-WHERE
-    ${facets:raw}
+
+${facets:raw}
 ORDER BY ${sortby:raw} ${orderby:raw}
 LIMIT ${limit}
 OFFSET ${offset}

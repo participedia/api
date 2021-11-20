@@ -385,12 +385,14 @@ const searchFilterKeyFromReq = (req, name) => {
   }
 };
 
+var isFirstFilter = true;
 const searchFilterKeyListFromReq = (req, name, index, type) => {
   let value = req.query[name];
-  var prefix = type === "api" ? index === 0 ? '' : ' AND' : ' AND';
+  var prefix = type === "api" ? isFirstFilter ? 'WHERE ' : ' AND' : ' AND';
   if (!value) {
-    return "";
+    return ``;
   }
+  isFirstFilter = false;
   if (name === "completeness") {
     return `${prefix} ${name} = ANY ('{${value}}') `;
   }  
@@ -404,6 +406,7 @@ const searchFilterKeyListFromReq = (req, name, index, type) => {
 };
 
 const searchFiltersFromReq = (req, type) => {
+  isFirstFilter = true;
   const keys = searchFilterKeys(typeFromReq(req));
   const keyLists = searchFilterKeyLists(typeFromReq(req));
 
