@@ -63,5 +63,7 @@
     </a>
     {{/if}}
   </div>
+  {{#if req.user}}
   <input type="hidden" name="isAdmin" id="isAdmin" class="js-is-admin" value="{{req.user.isadmin}}">
+  {{/if}}
 </div>

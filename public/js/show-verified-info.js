@@ -4,7 +4,7 @@ import modal from "./modal.js";
 const showMessageOnClick = {
     init() {
       const containerEl = document.querySelector(".js-show-verified-info-container");
-      const isAdmin = JSON.parse(document.querySelector(".js-is-admin").value);
+      const isAdmin = document.querySelector(".js-is-admin") ? JSON.parse(document.querySelector(".js-is-admin").value) : false;
       console.log(isAdmin);
       if (!containerEl) return;
   
