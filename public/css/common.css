@@ -322,11 +322,11 @@ pre {
 }
 
 .verified-image {
-  top: -10px;
-  left: 10px;
+  margin-bottom: -4px;
+  margin-left: 4px;
   border-radius: 2em;
-  height: 15px;
-  width: 15px;
+  height: 20px;
+  width: 20px;
   padding: 0;
 }
 
