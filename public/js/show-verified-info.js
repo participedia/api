@@ -23,9 +23,7 @@ const showMessageOnClick = {
 
     openPublishingFeedbackModal() {
       const content = `
-        <div class="loading-modal-content">
-          <h2>This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please contact us.</h3>
-        </div>
+      <p>This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please <a href="mailto:info@participedia.net">contact us</a>.</p>
       `;
       modal.updateModal(content);
       modal.openModal("aria-modal");
