@@ -186,7 +186,7 @@
   "case_edit_facilitator_training_placeholder": "Select the type of facilitators",
   "case_edit_featured_instructional": "Featured articles are displayed first on the home page",
   "case_edit_featured_label": "Featured",
-  "case_edit_verified_instructional": "Reviewed entries have been reviewed by Participedia's editorial board, and can only be edited by admins.",
+  "case_edit_verified_instructional": "Reviewed entries have been verified by Participedia's editorial board, and can only be edited by admins.",
   "case_edit_verified_label": "Reviewed",
   "case_edit_files_attribution_instructional": "Who is the original owner or creator of this file?",
   "case_edit_files_attribution_placeholder": "Owner or creator",
