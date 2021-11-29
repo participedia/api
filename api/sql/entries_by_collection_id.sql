@@ -30,6 +30,7 @@ SELECT
     WHEN type='organization' THEN bookmarked('organization', t.id, ${userId})
     END as bookmarked,
   featured,
+  verified,
   featured as searchmatched,
   texts.title,
   texts.description,

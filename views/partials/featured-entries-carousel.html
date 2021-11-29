@@ -20,7 +20,11 @@
       <div class="featured-entries-carousel__content-inner">
         <div>
           <div class="featured-entries-carousel__header u-margin-bottom--small">
-            <h2 class="u-extra-bold">{{t title}}</h2>
+            <h2 class="u-extra-bold">{{t title}}
+              {{#if entries.0.verified}}
+              <img src="/images/icon-verified-no-shadow.svg" class="verified-image"/>
+              {{/if}}
+            </h2>
             <a
               href="/search?selectedCategory={{entries.0.type}}"
               class="js-featured-entries-carousel__view-all-link"
