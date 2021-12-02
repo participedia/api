@@ -69,6 +69,10 @@ const featuredEntriesCarousel = {
       ".js-featured-entries-carousel__view-all-link"
     );
 
+    const viewVerifiedImageEl = carouselEl.querySelector(
+      ".js-featured-entries-carousel-verified-image"
+    );
+
     const viewEntryText = {
       case: this.i18n.View_Case,
       method: this.i18n.View_Method,
@@ -92,6 +96,7 @@ const featuredEntriesCarousel = {
     viewAllLinkEl.setAttribute("href", viewAllLink[entry.type]);
     entryLinkEl.innerText = viewEntryText[entry.type] + " ->";
     typeEl.innerText = entry.type;
+    viewVerifiedImageEl.style.visibility = entry.verified ? "visible" : "hidden";
     carouselEl.setAttribute("data-index", nextIndex);
   },
 };

@@ -37,6 +37,11 @@
   margin-bottom: 0;
 }
 
+.featured-entrues-carousel_verified-content {
+  display: flex;
+  flex-direction: row;
+}
+
 .featured-entries-carousel__type {
   margin: 0;
   font-weight: normal;
