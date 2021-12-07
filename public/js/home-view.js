@@ -58,7 +58,7 @@ function initTracking() {
       const link = e.target.href;
       const id = parseInt(link.substring(link.lastIndexOf('/') + 1));
 
-      if(!Number.isInteger(id)) return;
+      if(!Number.isInteger(id) && link.indexOf("map") === -1) return;
 
       tracking.sendWithCallback("home.hero", "hero_entry_title_click", id, () => {
         location.href = e.target.href;
