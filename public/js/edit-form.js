@@ -332,6 +332,7 @@ const editForm = {
       supportedLanguages = [];
     }
 
+    const captchaResponse = this.formEl.querySelector(".g-recaptcha-response");
     [
       "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
       "specific_topics", "purposes", "approaches", "targeted_participants",
@@ -416,8 +417,13 @@ const editForm = {
         }
       } else {
         const response = JSON.parse(xhr.response);
+        const body = xhr.response.body;
         if (response.OK) {
+          if (captchaResponse.value.trim() === '') {
+            this.handleErrors(["Please select the captcha"])
+          } else {
           this.handleSuccess(response);
+          }
         } else {
           this.handleErrors(response.errors);
         }
@@ -490,7 +496,11 @@ const editForm = {
     } else {
       const errorsHtml = errors
         .map(error => {
+          if (error.errors) {
           return error.errors.map(err => `<li>${err}</li>`).join("");
+          } else {
+            return error;
+          }
         })
         .join("");
       return `

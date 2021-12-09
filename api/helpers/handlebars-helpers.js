@@ -198,6 +198,10 @@ module.exports = {
     return `terms-of-use-${locale}`;
   },
 
+  getReCaptchaSiteKey: context => {
+    return process.env.GOOGLE_SITE_KEY;
+  },
+
   searchFilterLabel: (type, name, context) => {
     const view = context.data.root.params.view;
     return i18n(`${type}_${view}_${name}_label`, context);

@@ -50,7 +50,7 @@
 
             {{> original-language-alert article=article}}
             {{> @partial-block article=article __=__ static=static}}
-
+            <div class="g-recaptcha recaptcha" data-sitekey="{{getReCaptchaSiteKey}}"></div>
           </form>
       {{> edit-form-submit-button article=article}}
 

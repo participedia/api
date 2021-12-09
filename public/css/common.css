@@ -430,6 +430,10 @@ footer .language-select {
   text-align: center!important;
 }
 
+.recaptcha {
+  margin-bottom: 50px;
+}
+
 @media (max-width: 1200px) {
   .full-width-container .middle-col {
     width: 40%;
