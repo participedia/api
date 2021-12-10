@@ -29,9 +29,12 @@ const {
   returnByType,
   fixUpURLs,
   createLocalizedRecord,
+  parseAndValidateThingPostData,
+  generateLocaleArticle,
   validateFields,
   limitFromReq,
-  offsetFromReq
+  offsetFromReq,
+  createUntranslatedLocalizedRecords
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -78,36 +81,69 @@ async function postCollectionNewHttp(req, res) {
   // create new `collection` in db
   try {
     cache.clear();
-    let title = req.body.title;
-    let body = req.body.body || req.body.summary || "";
-    let description = req.body.description;
-    let original_language = req.body.original_language || "en";
-    const errors = validateFields(req.body, "collection");
+    // let title = req.body.title;
+    // let body = req.body.body || req.body.summary || "";
+    // let description = req.body.description;
+    // let original_language = req.body.original_language || "en";
+    // const errors = validateFields(req.body, "collection");
 
-    if (errors.length > 0) {
+    let {
+      hasErrors,
+      langErrors,
+      localesToTranslate,
+      localesToNotTranslate,
+      originalLanguageEntry
+    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), "collection");
+
+    if (hasErrors) {
       return res.status(400).json({
         OK: false,
-        errors: errors,  
+        errors: langErrors,  
       });
     }
 
-    const user_id = req.user.id;
+    let title = originalLanguageEntry.title;
+    let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    let description = originalLanguageEntry.description;
+    let original_language = originalLanguageEntry.original_language || "en";
+
     const thing = await db.one(CREATE_COLLECTION, {
       title,
       body,
       description,
       original_language,
     });
-    req.params.thingid = thing.thingid;
-    await postCollectionUpdateHttp(req, res);
 
+    req.params.thingid = thing.thingid;
+    const {article, errors} = await postCollectionUpdateHttp(req, res, originalLanguageEntry);
+
+    if (errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+
+    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
     let localizedData = {
       body: body,
       description: description,
       language: original_language,
       title: title
     };
-    createLocalizedRecord(localizedData, thing.thingid);
+
+    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+
+    if (filteredLocalesToTranslate.length)  {
+     await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
+    } if (localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+    }
+
+    res.status(200).json({
+      OK: true,
+      article,
+    });
 
   } catch (error) {
     logError(error);
@@ -142,13 +178,13 @@ function getUpdatedCollection(user, params, newCollection, oldCollection) {
   return [updatedCollection, er];
 }
 
-async function postCollectionUpdateHttp(req, res) {
-  cache.clear();
+async function postCollectionUpdateHttp(req, res, entry = undefined) {
   const params = parseGetParams(req, "collection");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
-  const newCollection = req.body;
+  const newCollection = entry || req.body;
   const errors = validateFields(newCollection, "collection");
+  // const isNewCollection = !newCollection.article_id;
 
   if (errors.length > 0) {
     return res.status(400).json({
@@ -157,7 +193,7 @@ async function postCollectionUpdateHttp(req, res) {
     });
   }
 
-  newCollection.links = verifyOrUpdateUrl(newCollection.links);
+  newCollection.links = verifyOrUpdateUrl(newCollection.links || []);
 
   // if this is a new collection, we don't have a post_date yet, so we set it here
   if (!newCollection.post_date) {
@@ -172,7 +208,7 @@ async function postCollectionUpdateHttp(req, res) {
     updatedText,
     author,
     oldArticle: oldCollection,
-  } = await maybeUpdateUserText(req, res, "collection");
+  } = await maybeUpdateUserText(newCollection, req, res, "collection");
   const [updatedCollection, er] = getUpdatedCollection(
     user,
     params,
@@ -190,7 +226,6 @@ async function postCollectionUpdateHttp(req, res) {
       await db.tx("update-collection", async t => {
         await t.none(INSERT_AUTHOR, author);
         await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-        await t.none(UPDATE_COLLECTION, updatedCollection);
       });
       //if this is a new collection, set creator id to userid and isAdmin
       if (user.isadmin) {
@@ -199,6 +234,7 @@ async function postCollectionUpdateHttp(req, res) {
             ? newCollection.creator
             : params.userid,
           thingid: params.articleid,
+          timestamp: new Date(newCollection.post_date)
         };
         const updatedBy = {
           user_id: newCollection.last_updated_by
@@ -210,6 +246,8 @@ async function postCollectionUpdateHttp(req, res) {
         await db.tx("update-collection", async t => {
           await t.none(UPDATE_AUTHOR_FIRST, creator);
           await t.none(UPDATE_AUTHOR_LAST, updatedBy);
+
+          await t.none(UPDATE_COLLECTION, updatedCollection);
         });
       }
     } else {
@@ -221,17 +259,10 @@ async function postCollectionUpdateHttp(req, res) {
     // the client expects this request to respond with json
     // save successful response
     const freshArticle = await getCollection(params, res);
-    res.status(200).json({
-      OK: true,
-      article: freshArticle,
-    });
-    refreshSearch();
+    return{ article: freshArticle};
   } else {
     logError(`400 with errors: ${er.errors.join(", ")}`);
-    res.status(400).json({
-      OK: false,
-      errors: er.errors,
-    });
+    return {errors: er.errors};
   }
 }
 
