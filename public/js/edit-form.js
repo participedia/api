@@ -333,6 +333,12 @@ const editForm = {
     }
 
     const captchaResponse = this.formEl.querySelector(".g-recaptcha-response");
+
+    if (captchaResponse.value.trim() === '') {
+      this.handleErrors([this.formEl.captcha_error.value]);
+      return;
+    } 
+
     [
       "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
       "specific_topics", "purposes", "approaches", "targeted_participants",
@@ -417,13 +423,8 @@ const editForm = {
         }
       } else {
         const response = JSON.parse(xhr.response);
-        const body = xhr.response.body;
         if (response.OK) {
-          if (captchaResponse.value.trim() === '') {
-            this.handleErrors([this.formEl.captcha_error.value]);
-          } else {
           this.handleSuccess(response);
-          }
         } else {
           this.handleErrors(response.errors);
         }
