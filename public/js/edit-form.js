@@ -420,7 +420,7 @@ const editForm = {
         const body = xhr.response.body;
         if (response.OK) {
           if (captchaResponse.value.trim() === '') {
-            this.handleErrors(["Please select the captcha"])
+            this.handleErrors([this.formEl.captcha_error.value]);
           } else {
           this.handleSuccess(response);
           }

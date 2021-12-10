@@ -1957,5 +1957,6 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Ingrandisci mappa",
-  "Zoom Map Out": "Allontana mappa"
+  "Zoom Map Out": "Allontana mappa",
+  "recaptcha_error": "Completa il captcha per confermare che non sei un robot"
 }

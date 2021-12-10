@@ -1961,5 +1961,6 @@
   "organization_edit_description_locale": "Any language that is not entered will be machine translated from English.",
   "case_edit_body_locale": "Any language that is not entered will be machine translated from English.",
   "method_edit_body_locale": "Any language that is not entered will be machine translated from English.",
-  "organization_edit_body_locale": "Any language that is not entered will be machine translated from English."
+  "organization_edit_body_locale": "Any language that is not entered will be machine translated from English.",
+  "recaptcha_error": "Please complete the captcha to confirm you are not a robot"
 }

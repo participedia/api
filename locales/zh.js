@@ -1957,5 +1957,6 @@
   "Zambia": "赞比亚",
   "Zimbabwe": "津巴布韦",
   "Zoom Map In": "放大缩小字体功能",
-  "Zoom Map Out": "缩放地图"
+  "Zoom Map Out": "缩放地图",
+  "recaptcha_error": "请填写验证码以确认您不是机器人"
 }
