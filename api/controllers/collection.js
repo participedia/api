@@ -34,7 +34,8 @@ const {
   validateFields,
   limitFromReq,
   offsetFromReq,
-  createUntranslatedLocalizedRecords
+  createUntranslatedLocalizedRecords,
+  maybeUpdateUserTextLocaleEntry
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -208,7 +209,7 @@ async function postCollectionUpdateHttp(req, res, entry = undefined) {
     updatedText,
     author,
     oldArticle: oldCollection,
-  } = await maybeUpdateUserText(newCollection, req, res, "collection");
+  } = await maybeUpdateUserTextLocaleEntry(newCollection, req, res, "collection");
   const [updatedCollection, er] = getUpdatedCollection(
     user,
     params,
