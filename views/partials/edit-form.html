@@ -26,6 +26,7 @@
             <input type="hidden" name="locale_placeholders" value="{{getTranslatedEntryPlaceholders article}}" />
             <input type="hidden" name="article_data" value="{{toJSON articles}}" />
             <input type="hidden" name="captcha_error" value="{{t 'recaptcha_error'}}" />
+            <input type="hidden" name="recaptcha_issues" value="{{t 'recaptcha_issues'}}" />
 
             {{#if (isEditView req)}}
               <input type="hidden" name="article_id" value="{{article.id}}" />

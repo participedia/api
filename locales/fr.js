@@ -1958,5 +1958,6 @@
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoomer sur la carte",
   "Zoom Map Out": "Dézoomer sur la carte",
-  "recaptcha_error": "Veuillez remplir le captcha pour confirmer que vous n'êtes pas un robot"
+  "recaptcha_error": "Veuillez remplir le captcha pour confirmer que vous n'êtes pas un robot",
+  "recaptcha_issues" : "Veuillez résoudre les problèmes suivants"
 }
