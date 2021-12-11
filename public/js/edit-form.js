@@ -505,7 +505,7 @@ const editForm = {
         })
         .join("");
       return `
-        <h3>${this.formEl.recaptcha_issues}</h3>
+        <h3>${this.formEl.recaptcha_issues.value}</h3>
         <ul>
           ${errorsHtml}
         </ul>
