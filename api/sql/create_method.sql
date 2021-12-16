@@ -1,10 +1,10 @@
 WITH insert_method as (
   INSERT into methods (
-    type, original_language, post_date, published, updated_date
+    id, type, original_language, post_date, published, updated_date
   )
   VALUES
     (
-      'method', ${original_language}, 'now', true, 'now'
+      (SELECT MAX(id)+1 FROM methods), 'method', ${original_language}, 'now', true, 'now'
     ) RETURNING id as thingid
 )
 
