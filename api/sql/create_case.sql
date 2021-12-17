@@ -1,10 +1,10 @@
 WITH insert_case as (
   INSERT into cases (
-    id, type, original_language, post_date, published, updated_date
+    type, original_language, post_date, published, updated_date
   )
   VALUES
     (
-     (SELECT MAX(id)+1 FROM cases), 'case', ${original_language}, 'now', true, 'now'
+     'case', ${original_language}, 'now', true, 'now'
     ) RETURNING id as thingid
 )
 

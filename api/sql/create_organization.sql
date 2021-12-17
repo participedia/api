@@ -1,10 +1,10 @@
 WITH insert_organization as (
   INSERT into organizations (
-    id, type, original_language, post_date, published, updated_date
+    type, original_language, post_date, published, updated_date
   )
   VALUES
     (
-      (SELECT MAX(id)+1 FROM collections), 'organization', ${original_language}, 'now', true, 'now'
+      'organization', ${original_language}, 'now', true, 'now'
     ) RETURNING id as thingid
 )
 
