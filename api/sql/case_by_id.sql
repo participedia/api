@@ -68,6 +68,8 @@ SELECT
   updated_date,
   featured,
   verified,
+  reviewed_at,
+  reviewed_by,
   get_user_names(${userid}) as authors,
   get_edit_authors(${articleid}) as edit_history,
   hidden,

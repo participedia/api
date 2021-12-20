@@ -10,6 +10,8 @@ WITH full_thing AS (
     featured,
     hidden,
     verified,
+    reviewed_at,
+    reviewed_by,
     completeness,
     first_author(${articleid}) AS creator,
     last_author(${articleid}) AS last_updated_by,

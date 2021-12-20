@@ -31,6 +31,9 @@ WITH full_thing AS (
     type_tool,
     specific_topics,
     general_issues,
+    verified,
+    reviewed_at,
+    reviewed_by,
     -- ids
     get_object_title_list(specific_methods_tools_techniques, 'en', organizations.original_language) as specific_methods_tools_techniques,
     COALESCE(get_object_title_list(collections, 'en', organizations.original_language), '{}') as collections

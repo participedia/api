@@ -32,6 +32,9 @@ WITH full_thing AS (
     decision_methods,
     if_voting,
     purpose_method,
+    verified,
+    reviewed_at,
+    reviewed_by,
     COALESCE(get_object_title_list(collections, 'en', methods.original_language), '{}') as collections
 FROM
     methods,

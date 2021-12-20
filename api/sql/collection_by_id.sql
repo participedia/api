@@ -20,6 +20,8 @@ SELECT
   featured,
   hidden,
   verified,
+  reviewed_at,
+  reviewed_by,
   files,
   links,
   photos,
