@@ -1760,6 +1760,8 @@
   "quick_submit_sectionlabel": "快速提交",
   "Read more": "阅读更多",
   "Read more about our research": "阅读更多与我们的研究相关的信息",
+  "recaptcha_error": "请填写验证码以确认您不是机器人",
+  "recaptcha_issues": "请修复以下问题",
   "Remove Bookmark": "删除书签",
   "Research": "研究",
   "Research Assistant": "研究助理",
@@ -1799,6 +1801,8 @@
   "Results CSV": "结果CSV",
   "results of": "结果",
   "Reunion": "团聚",
+  "reviewed_entries_label": "由 Participedia 编辑委员会审核",
+  "reviewed_entries_title": "已审核的条目",
   "Romania": "罗马尼亚",
   "Russian Federation": "俄罗斯联邦",
   "Rwanda": "卢旺达",
@@ -1957,7 +1961,5 @@
   "Zambia": "赞比亚",
   "Zimbabwe": "津巴布韦",
   "Zoom Map In": "放大缩小字体功能",
-  "Zoom Map Out": "缩放地图",
-  "recaptcha_error": "请填写验证码以确认您不是机器人",
-  "recaptcha_issues" : "请修复以下问题"
+  "Zoom Map Out": "缩放地图"
 }

@@ -1760,6 +1760,8 @@
   "quick_submit_sectionlabel": "Invio rapido",
   "Read more": "Per saperne di più",
   "Read more about our research": "Leggi di più sulla nostra ricerca",
+  "recaptcha_error": "Completa il captcha per confermare che non sei un robot",
+  "recaptcha_issues": "Si prega di risolvere i seguenti problemi",
   "Remove Bookmark": "Rimuovi segnalibro",
   "Research": "Ricerca",
   "Research Assistant": "Assistente di ricerca",
@@ -1799,6 +1801,8 @@
   "Results CSV": "Risultati CSV",
   "results of": "risultati di",
   "Reunion": "Réunion",
+  "reviewed_entries_label": "Recensito dalla redazione di Partipedia",
+  "reviewed_entries_title": "Voci recensite",
   "Romania": "Romania",
   "Russian Federation": "Federazione Russa",
   "Rwanda": "Ruanda",
@@ -1957,7 +1961,5 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Ingrandisci mappa",
-  "Zoom Map Out": "Allontana mappa",
-  "recaptcha_error": "Completa il captcha per confermare che non sei un robot",
-  "recaptcha_issues" : "Si prega di risolvere i seguenti problemi"
+  "Zoom Map Out": "Allontana mappa"
 }

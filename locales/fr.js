@@ -1760,6 +1760,8 @@
   "quick_submit_sectionlabel": "Soumission rapide",
   "Read more": "En savoir plus",
   "Read more about our research": "En savoir plus sur nos recherches",
+  "recaptcha_error": "Veuillez remplir le captcha pour confirmer que vous n'êtes pas un robot",
+  "recaptcha_issues": "Veuillez résoudre les problèmes suivants",
   "Remove Bookmark": "Supprimer un signet",
   "Research": "Recherche",
   "Research Assistant": "Assistant.e de recherche",
@@ -1799,6 +1801,8 @@
   "Results CSV": "CSV des résultats",
   "results of": "résultats de",
   "Reunion": "Réunion",
+  "reviewed_entries_label": "Révisé par le comité de rédaction de Participedia",
+  "reviewed_entries_title": "Entrées examinées",
   "Romania": "Roumanie",
   "Russian Federation": "Fédération de Russie",
   "Rwanda": "Rwanda",
@@ -1957,7 +1961,5 @@
   "Zambia": "Zambie",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoomer sur la carte",
-  "Zoom Map Out": "Dézoomer sur la carte",
-  "recaptcha_error": "Veuillez remplir le captcha pour confirmer que vous n'êtes pas un robot",
-  "recaptcha_issues" : "Veuillez résoudre les problèmes suivants"
+  "Zoom Map Out": "Dézoomer sur la carte"
 }
