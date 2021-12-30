@@ -27,6 +27,10 @@ const SUPPORTED_LANGUAGES = [
     twoLetterCode: "pt",
     name: "Portuguese",
   },
+  {
+    twoLetterCode: "nl",
+    name: "Dutch"
+}
 ];
 
 const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpg", "image/jpeg"];
