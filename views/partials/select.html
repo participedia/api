@@ -12,6 +12,7 @@
   <option {{#if (isEqual req.locale "zh" )}}selected{{/if}} value="zh">{{t 'name:zh'}}</option>
   <option {{#if (isEqual req.locale "de" )}}selected{{/if}} value="de">{{t 'name:de'}}</option>
   <option {{#if (isEqual req.locale "it" )}}selected{{/if}} value="it">{{t 'name:it'}}</option>
+  <option {{#if (isEqual req.locale "nl" )}}selected{{/if}} value="nl">{{t 'name:nl'}}</option>
   {{else}}
   {{#each options}}
   <option value="{{this}}" {{#if (isEqual ../selectedValue this)}}selected{{/if}}>
