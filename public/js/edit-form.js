@@ -334,7 +334,7 @@ const editForm = {
 
     const captchaResponse = this.formEl.querySelector(".g-recaptcha-response");
 
-    if (captchaResponse.value.trim() === '') {
+    if (captchaResponse && captchaResponse.value.trim() === '') {
       this.handleErrors([this.formEl.captcha_error.value]);
       return;
     } 
@@ -430,7 +430,9 @@ const editForm = {
         }
       }
     };
-    formsData[originalEntry.locale] = originalEntry;
+    if (originalEntry.locale) {
+      formsData[originalEntry.locale] = originalEntry;
+    }
     xhr.send(
       JSON.stringify({
         ...formsData,
