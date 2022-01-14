@@ -138,7 +138,7 @@ async function postCollectionNewHttp(req, res) {
     if (filteredLocalesToTranslate.length)  {
      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
     } if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
     }
 
     res.status(200).json({
