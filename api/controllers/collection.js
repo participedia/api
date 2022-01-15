@@ -7,6 +7,7 @@ const {
   db,
   as,
   CREATE_COLLECTION,
+  COLLECTION_BY_ID_LOCALE,
   COLLECTION_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
@@ -33,6 +34,7 @@ const {
   generateLocaleArticle,
   validateFields,
   limitFromReq,
+  getThingEdit,
   offsetFromReq,
   createUntranslatedLocalizedRecords,
   maybeUpdateUserTextLocaleEntry
@@ -44,6 +46,7 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 const COLLECTION_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/collection-structure.json", "utf8")
 );
+const { SUPPORTED_LANGUAGES } = require("../../constants");
 
 // strip off final character (assumed to be "s")
 const singularLowerCase = name =>
@@ -116,7 +119,7 @@ async function postCollectionNewHttp(req, res) {
     });
 
     req.params.thingid = thing.thingid;
-    const {article, errors} = await postCollectionUpdateHttp(req, res, originalLanguageEntry);
+    const {article, errors} = await collectionUpdate(req, res, originalLanguageEntry);
 
     if (errors) {
       return res.status(400).json({
@@ -178,8 +181,47 @@ function getUpdatedCollection(user, params, newCollection, oldCollection) {
   ["photos", "files"].map(key => cond(key, as.sourcedMedia));
   return [updatedCollection, er];
 }
+async function postCollectionUpdateHttp(req, res) {
+  // cache.clear();
+  const params = parseGetParams(req, "collection");
+  const { articleid } = params;
+  const langErrors = [];
+  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  let originalLanguageEntry;
 
-async function postCollectionUpdateHttp(req, res, entry = undefined) {
+
+  for (const entryLocale in localeEntries) {
+    if (req.body.hasOwnProperty(entryLocale)) {
+      const entry = localeEntries[entryLocale];
+      if (entryLocale === entry.original_language) {
+        originalLanguageEntry = entry;
+      }
+      let errors = validateFields(entry, "collection");
+      errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
+      langErrors.push({ locale: entryLocale, errors });
+    }
+  }
+  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+  if (hasErrors) {
+    return res.status(400).json({
+      OK: false,
+      errors: langErrors,
+    });
+  }
+
+  await collectionUpdate(req, res, originalLanguageEntry);
+  const localeEntriesArr = [].concat(...Object.values(localeEntries));
+
+  await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
+  const freshArticle = await getCollection(params, res);
+  res.status(200).json({
+    OK: true,
+    article: freshArticle,
+  });
+  refreshSearch();
+}
+
+async function collectionUpdate(req, res, entry = undefined) {
   const params = parseGetParams(req, "collection");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
@@ -290,7 +332,7 @@ async function getCollection(params, res) {
 async function getCollectionHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "collection");
-  const article = await getCollection(params, res, req);
+  const articles = await getCollection(params, res, req);
   const type = typeFromReq(req);
   const limit = limitFromReq(req);
   const offset = offsetFromReq(req);
@@ -336,7 +378,7 @@ async function getCollectionHttp(req, res) {
     });
   }
 
-  if (!article) {
+  if (!articles) {
     res.status(404).render("404");
     return null;
   }
@@ -344,7 +386,7 @@ async function getCollectionHttp(req, res) {
   returnByType(
     res,
     params,
-    article,
+    articles,
     staticText,
     req.user,
     results,
@@ -362,21 +404,21 @@ async function getEditStaticText(params) {
 async function getCollectionEditHttp(req, res) {
   const params = parseGetParams(req, "collection");
   params.view = "edit";
-  const article = await getCollection(params, res);
-  if (!article) {
+  const articles = await getThingEdit(params, COLLECTION_BY_ID_LOCALE, res);
+  if (!articles) {
     res.status(404).render("404");
     return null;
   }
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user);
+  returnByType(res, params, articles, staticText, req.user);
 }
 
 async function getCollectionNewHttp(req, res) {
   const params = parseGetParams(req, "collection");
   params.view = "edit";
-  const article = COLLECTION_STRUCTURE;
+  const articles = COLLECTION_STRUCTURE;
   const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user);
+  returnByType(res, params, articles, staticText, req.user);
 }
 
 const router = express.Router(); // eslint-disable-line new-cap

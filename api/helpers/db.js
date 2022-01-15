@@ -43,6 +43,7 @@ function sql(filename) {
 }
 
 const COLLECTION_BY_ID = sql("../sql/collection_by_id.sql");
+const COLLECTION_BY_ID_LOCALE = sql("../sql/collection_by_id_locale.sql");
 const COLLECTIONS = sql("../sql/collections.sql");
 const CASE_BY_ID = sql("../sql/case_by_id.sql");
 const CASES_LOCALE_BY_ID = sql("../sql/case_by_id_locale_array_2.sql");
@@ -556,6 +557,7 @@ module.exports = {
   UPDATE_COLLECTION,
   UPDATE_METHOD,
   UPDATE_ORGANIZATION,
+  COLLECTION_BY_ID_LOCALE,
   COLLECTION_BY_ID,
   COLLECTIONS,
   CASE_BY_ID,
