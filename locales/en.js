@@ -1967,5 +1967,6 @@
   "recaptcha_error": "Please complete the captcha to confirm you are not a robot",
   "recaptcha_issues" : "Please fix the following issues",
   "reviewed_entries_title": "Reviewed Entries",
-  "reviewed_entries_label": "Reviewed by Participedia Editorial Board"
+  "reviewed_entries_label": "Reviewed by Participedia Editorial Board",
+  "reviewed_popup_message": "This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please %scontact us.%s"
 }

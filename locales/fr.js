@@ -1805,6 +1805,8 @@
   "Reunion": "Réunion",
   "reviewed_entries_label": "Révisé par le comité de rédaction de Participedia",
   "reviewed_entries_title": "Entrées examinées",
+  "reviewed_popup_message": "Cette entrée a été examinée par notre comité de rédaction et ne peut plus être modifiée. Si vous souhaitez suggérer des modifications à cette entrée, veuillez %s nous contacter. %s",
+  "reviwed_popup_message": "Cette entrée a été examinée par notre comité de rédaction et ne peut plus être modifiée. Si vous souhaitez suggérer des modifications à cette entrée, veuillez %s nous contacter",
   "Romania": "Roumanie",
   "Russian Federation": "Fédération de Russie",
   "Rwanda": "Rwanda",

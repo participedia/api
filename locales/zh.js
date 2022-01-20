@@ -1805,6 +1805,8 @@
   "Reunion": "团聚",
   "reviewed_entries_label": "由 Participedia 编辑委员会审核",
   "reviewed_entries_title": "已审核的条目",
+  "reviewed_popup_message": "此条目已由我们的编辑委员会审核，无法再编辑。如果您想建议对此条目进行更改，请%s与我们联系。 %s",
+  "reviwed_popup_message": "此条目已由我们的编辑委员会审核，无法再编辑。如果您想建议对此条目进行更改，请%s联系我们",
   "Romania": "罗马尼亚",
   "Russian Federation": "俄罗斯联邦",
   "Rwanda": "卢旺达",

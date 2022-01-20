@@ -1805,6 +1805,8 @@
   "Reunion": "Réunion",
   "reviewed_entries_label": "Bewertet von der Participedia-Redaktion",
   "reviewed_entries_title": "Geprüfte Einträge",
+  "reviewed_popup_message": "Dieser Eintrag wurde von unserer Redaktion überprüft und kann nicht mehr bearbeitet werden. Wenn Sie Änderungen an diesem Eintrag vorschlagen möchten, %s kontaktieren Sie uns bitte. %s",
+  "reviwed_popup_message": "Dieser Eintrag wurde von unserer Redaktion überprüft und kann nicht mehr bearbeitet werden. Wenn Sie Änderungen an diesem Eintrag vorschlagen möchten, %s kontaktieren Sie uns bitte",
   "Romania": "Rumänien",
   "Russian Federation": "Russland",
   "Rwanda": "Ruanda",

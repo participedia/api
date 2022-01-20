@@ -1805,6 +1805,8 @@
   "Reunion": "Réunion",
   "reviewed_entries_label": "Recensito dalla redazione di Partipedia",
   "reviewed_entries_title": "Voci recensite",
+  "reviewed_popup_message": "Questa voce è stata esaminata dalla nostra redazione e non può più essere modificata. Se desideri suggerire modifiche a questa voce, %s contattaci. %s",
+  "reviwed_popup_message": "Questa voce è stata esaminata dalla nostra redazione e non può più essere modificata. Se desideri suggerire modifiche a questa voce, %s contattaci",
   "Romania": "Romania",
   "Russian Federation": "Federazione Russa",
   "Rwanda": "Ruanda",
