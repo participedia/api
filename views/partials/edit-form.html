@@ -40,8 +40,8 @@
                   <h2 class="fieldset-header">{{t "Admin Only"}}</h2>
                   {{> edit-boolean article=article name="featured" quick-submit=true}}
                   {{> edit-boolean article=article name="hidden" quick-submit=true}}
-                  {{> edit-boolean article=article name="verified" quick-submit=true}}
                   {{# if (isNotCollection article)}}
+                    {{> edit-boolean article=article name="verified" quick-submit=true}}
                     {{> article-edit-select article=article static=static name="completeness" quick-submit=true}}
                     {{> edit-autocomplete article=article static=static name="collections" multi=true }}
                   {{/if}}
