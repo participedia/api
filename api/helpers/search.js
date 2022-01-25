@@ -1,6 +1,6 @@
 const is_whitespace = str => /^\s+$/.test(str);
 
-const is_word = str => /^[a-z]+$/.test(str);
+const is_word = str => /^[a-z0-9]+$/.test(str);
 
 const pre_word_connector = (last_token, inside_quotes) => {
   if (last_token === "WORD") {
@@ -15,7 +15,7 @@ const pre_word_connector = (last_token, inside_quotes) => {
 };
 
 const tokenize = function*(query, inside_quotes = false) {
-  let re = /".*?"|[a-z]+|<->|&|\||\!|\(|\)/g;
+  let re = /".*?"|[a-z0-9]+|<->|&|\||\!|\(|\)/g;
   let last_token = null;
   let tokenObj = null;
   while ((tokenObj = re.exec(query)) !== null) {
