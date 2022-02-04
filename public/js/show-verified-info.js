@@ -5,6 +5,8 @@ const showMessageOnClick = {
     init() {
       const containerEl = document.querySelector(".js-show-verified-info-container");
       const isAdmin = document.querySelector(".js-is-admin") ? JSON.parse(document.querySelector(".js-is-admin").value) : false;
+      const reviewedMessage = document.querySelector(".js-verified-message");
+
       console.log(isAdmin);
       if (!containerEl) return;
   
@@ -15,15 +17,15 @@ const showMessageOnClick = {
           if (isAdmin) {
             window.open(window.location.href + "/edit", "_self");
           } else {
-          this.openPublishingFeedbackModal();
+          this.openPublishingFeedbackModal(reviewedMessage.value);
           }
         }
       });
     },
 
-    openPublishingFeedbackModal() {
+    openPublishingFeedbackModal(message) {
       const content = `
-      <p>This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please <a href="mailto:info@participedia.net">contact us</a>.</p>
+      <p>${message}</p>
       `;
       modal.updateModal(content);
       modal.openModal("aria-modal");

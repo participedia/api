@@ -185,6 +185,7 @@ module.exports = {
       { title: i18n("Chinese", context), key: "zh" },
       { title: i18n("Italian", context), key: "it" },
       { title: i18n("Portugese", context), key: "pt" },
+      { title: i18n("Dutch", context), key: "nl" },
     ];
   },
 
