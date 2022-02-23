@@ -95,9 +95,14 @@
   {{/if}}
 
   {{!-- initialize usersnap   --}}
-  <script type="text/javascript">
-  (function() { var s = document.createElement("script"); s.type = "text/javascript"; s.async = true; s.src = '//api.usersnap.com/load/80049ef3-8aba-45c2-9a72-88b56bb1b342.js';
-  var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); })();
+  <script>
+    window.onUsersnapCXLoad = function(api) {
+      api.init();
+    }
+    var script = document.createElement('script');
+    script.defer = 1;
+    script.src = 'https://widget.usersnap.com/global/load/4f3f25bd-811e-4d48-a50d-7332c052b5da?onload=onUsersnapCXLoad';
+    document.getElementsByTagName('head')[0].appendChild(script);
   </script>
 
   {{#if (useInspectlet)}}
