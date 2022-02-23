@@ -315,6 +315,9 @@ app.get("/about", function(req, res) {
 app.get("/legal", function(req, res) {
   res.status(200).render("legal-view");
 });
+app.get("/legal-english", function(req, res) {
+  res.status(200).render("legal-view-english");
+});
 app.get("/research", function(req, res) {
   res.status(200).render("research-view");
 });

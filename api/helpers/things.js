@@ -18,6 +18,7 @@ const moment = require("moment");
 const { SUPPORTED_LANGUAGES, RESPONSE_LIMIT } = require("./../../constants.js");
 const logError = require("./log-error.js");
 const createCSVDataDump = require("./create-csv-data-dump.js");
+const translateScript = require("./../../scripts/generate-entry-i18n.js");
 
 const {
   as,
@@ -469,7 +470,7 @@ const isValidDate = date => {
   return moment(date).isValid();
 };
 
-const validateFields = (entry, entryName) => {
+const validateFields = (entry, entryName, articleId) => {
   let links = entry.links;
   const title = entry.title;
   const startDate = entry.start_date;
@@ -478,7 +479,7 @@ const validateFields = (entry, entryName) => {
 
   // validate title
   if (!title) {
-    errors.push(`Cannot create a ${entryName} without at least a title.`);
+    translateScript.translateListOfEntries([{type: entryName, id: articleId}])
   }
 
   // validate url

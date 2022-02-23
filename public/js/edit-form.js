@@ -332,6 +332,12 @@ const editForm = {
       supportedLanguages = [];
     }
 
+    if (!originalEntry.title) {
+      let article_data = JSON.parse(formObject.article_data) ||[];
+      this.handleErrors([`Cannot create a ${article_data[formObject.locale].type} without at least a title.`]);
+      return;
+    }
+
     const captchaResponse = this.formEl.querySelector(".g-recaptcha-response");
 
     if (captchaResponse && captchaResponse.value.trim() === '') {

@@ -199,6 +199,9 @@ module.exports = {
     return `terms-of-use-${locale}`;
   },
 
+  getTermsOfUsePartialEnglish: context => {
+    return 'terms-of-use-en';
+  },
   getReCaptchaSiteKey: context => {
     return process.env.GOOGLE_SITE_KEY;
   },

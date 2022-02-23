@@ -451,7 +451,7 @@ async function postCaseUpdateHttp(req, res) {
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
-      let errors = validateFields(entry, "case");
+      let errors = validateFields(entry, "case", params.articleid);
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
     }
