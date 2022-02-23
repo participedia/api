@@ -9,10 +9,10 @@ WITH all_selections AS (SELECT
   title,
   description,
   substring(body for 500) AS body,
-  ts_rank_cd(search_index_${language:raw}.document, to_tsquery('english', ${query})) as rank
+  ts_rank_cd(search_index_${language:raw}.document, to_tsquery(${langQuery}, ${query})) as rank
 FROM search_index_${language:raw}
 WHERE
-  document @@ to_tsquery('english', ${query})
+  document @@ to_tsquery(${langQuery}, ${query})
 ORDER BY rank DESC
 ),
 total_selections AS (

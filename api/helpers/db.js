@@ -36,6 +36,10 @@ let db = pgp(config);
 
 const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
 
+function i10n(lang) {
+  return JSON.parse(fs.readFileSync(`locales/${lang}.js`))
+}
+
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {
     minify: true,
@@ -152,7 +156,12 @@ async function _listOrganizations(lang) {
 async function _refreshSearch() {
   if (_searchDirty) {
     _searchDirty = false;
-    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+      let lang = SUPPORTED_LANGUAGES[i];
+      if (lang !== "zh") {
+        await db.none(`REFRESH MATERIALIZED VIEW search_index_${lang};`);
+      }
+    }
   }
   setTimeout(_refreshSearch, randomDelay());
 }

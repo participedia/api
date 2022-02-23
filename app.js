@@ -280,9 +280,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const hasQuery = req.query && req.query.query;
   const isEnglish = req.cookies.locale && req.cookies.locale === "en";
-  if (hasQuery && !isEnglish) {
-    return res.status(200).render("search-error");
-  }
+
 
   next();
 });
