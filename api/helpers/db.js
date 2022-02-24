@@ -193,9 +193,13 @@ async function cacheTitlesRefreshSearch(done) {
   }
   // keep running these, but we can start the server now
   _refreshSearch().then(() => console.log("search refreshed"));
-  db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
-    keys: i18n_en,
-  }).then(() => console.log("i18n updated"));
+  
+  for(let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+    let lang = SUPPORTED_LANGUAGES[i];
+    db.none("UPDATE localizations SET keyvalues = ${keys}" + `WHERE language='${lang}'`, {
+      keys: i10n(lang),
+    }).then(() => console.log(`i18n ${lang} updated`));
+  }
   if (done) {
     done();
   }
