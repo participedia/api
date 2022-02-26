@@ -455,6 +455,8 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     cond("updated_date", as.date);
     cond("reviewed_by", as.text);
     cond("reviewed_at", as.date);
+  } else {
+    newMethod.collections = updatedMethod.collections;
   }
 
   // media lists
