@@ -371,6 +371,8 @@ function getUpdatedOrganization(
     cond("updated_date", as.date);
     cond("reviewed_by", as.text);
     cond("reviewed_at", as.date);
+  } {
+    newOrganization.collections = updatedOrganization.collections;
   }
   // media lists
   ["links", "videos", "audio"].map(key => cond(key, as.media));
