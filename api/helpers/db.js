@@ -36,6 +36,10 @@ let db = pgp(config);
 
 const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
 
+function i10n(lang) {
+  return JSON.parse(fs.readFileSync(`locales/${lang}.js`))
+}
+
 function sql(filename) {
   return new pgp.QueryFile(path.join(__dirname, filename), {
     minify: true,
@@ -152,7 +156,12 @@ async function _listOrganizations(lang) {
 async function _refreshSearch() {
   if (_searchDirty) {
     _searchDirty = false;
-    await db.none("REFRESH MATERIALIZED VIEW search_index_en;");
+    for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+      let lang = SUPPORTED_LANGUAGES[i];
+      if (lang !== "zh") {
+        await db.none(`REFRESH MATERIALIZED VIEW search_index_${lang};`);
+      }
+    }
   }
   setTimeout(_refreshSearch, randomDelay());
 }
@@ -184,9 +193,13 @@ async function cacheTitlesRefreshSearch(done) {
   }
   // keep running these, but we can start the server now
   _refreshSearch().then(() => console.log("search refreshed"));
-  db.none("UPDATE localizations SET keyvalues = ${keys} WHERE language='en'", {
-    keys: i18n_en,
-  }).then(() => console.log("i18n updated"));
+  
+  for(let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+    let lang = SUPPORTED_LANGUAGES[i];
+    db.none("UPDATE localizations SET keyvalues = ${keys}" + `WHERE language='${lang}'`, {
+      keys: i10n(lang),
+    }).then(() => console.log(`i18n ${lang} updated`));
+  }
   if (done) {
     done();
   }

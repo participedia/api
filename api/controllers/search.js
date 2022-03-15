@@ -24,6 +24,7 @@ const {
 const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
+const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES
 
 function randomTexture() {
   let index = Math.floor(Math.random() * 6) + 1;
@@ -157,6 +158,7 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
   const lang = as.value(getLanguage(req));
   const type = typeFromReq(req);
   const params = parseGetParams(req, type);
+  const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === lang).name.toLowerCase();
 
   try {
     let results = await db.any(queryFileFromReq(req), {
@@ -164,6 +166,7 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
       language: lang,
+      langQuery: langQuery,
       userId: req.user ? req.user.id : null,
       sortby: sortbyFromReq(req),
       type: type + "s",
