@@ -11,6 +11,7 @@ let {
   SEARCH_MAP,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
+  SEARCH_CHINESE,
 } = require("../helpers/db");
 let { preparse_query } = require("../helpers/search");
 const {
@@ -161,7 +162,21 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
   const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === lang).name.toLowerCase();
 
   try {
-    let results = await db.any(queryFileFromReq(req), {
+
+
+    let results = null;
+    
+    if (lang === "zh") {
+      results = await db.any(SEARCH_CHINESE, {
+        query: parsed_query + "%",
+        limit: limit ? limit : null,
+        langQuery: langQuery,
+        language: lang,
+        type: type + "s",
+      });
+    } else {
+    
+    results = await db.any(queryFileFromReq(req), {
       query: parsed_query,
       limit: limit ? limit : null, // null is no limit in SQL
       offset: offsetFromReq(req),
@@ -172,6 +187,8 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
       type: type + "s",
       facets: searchFiltersFromReq(req),
     });
+
+  }
 
     if (req.query.resultType === "map" && parsed_query) {
       results = results.filter(result => result.searchmatched);
@@ -184,7 +201,8 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
     const pages = Math.max(limit ? Math.ceil(total / limit) : 1, 1); // Don't divide by zero limit, don't return page 1 of 1
     results.forEach(obj => {
       // massage results for display
-      if (obj.photos.length) {
+      console.log(obj.photos);
+      if (obj.photos && obj.photos.length) {
         obj.photos.forEach(img => {
           if (!img.url.startsWith("http")) {
             img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url);
