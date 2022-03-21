@@ -166,9 +166,9 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
 
     let results = null;
     
-    if (lang === "zh") {
+    if (lang === "zh" && user_query) {
       results = await db.any(SEARCH_CHINESE, {
-        query: parsed_query + "%",
+        query: user_query + "%",
         limit: limit ? limit : null,
         langQuery: langQuery,
         language: lang,
@@ -201,7 +201,6 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
     const pages = Math.max(limit ? Math.ceil(total / limit) : 1, 1); // Don't divide by zero limit, don't return page 1 of 1
     results.forEach(obj => {
       // massage results for display
-      console.log(obj.photos);
       if (obj.photos && obj.photos.length) {
         obj.photos.forEach(img => {
           if (!img.url.startsWith("http")) {
