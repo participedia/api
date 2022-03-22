@@ -32,9 +32,9 @@ FROM
   things,
   get_localized_texts_fallback(id, ${language}, original_language) AS texts
 WHERE
-  texts.title LIKE ${query} OR
-  texts.description LIKE ${query} OR
-  texts.body LIKE ${query}
+  POSITION(${query} in texts.title) > 0 OR
+  POSITION(${query} in texts.description) > 0 OR
+  POSITION(${query} in texts.body) > 0
 
   LIMIT ${limit}
 ;

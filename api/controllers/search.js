@@ -168,7 +168,7 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
     
     if (lang === "zh" && user_query) {
       results = await db.any(SEARCH_CHINESE, {
-        query: user_query + "%",
+        query: user_query,
         limit: limit ? limit : null,
         langQuery: langQuery,
         language: lang,
