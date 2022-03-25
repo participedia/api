@@ -26,7 +26,7 @@
         <option value="{{key}}">{{title}}</option>
       {{/each}}
     </select>
-    {{#if (isCollectionView req)}}
+    {{#if (isNotCollectionView req)}}
       <div class="u-margin-top--small">
         <a href="/search?selectedCategory=collections">{{t "Collections"}}</a>
       </div>
