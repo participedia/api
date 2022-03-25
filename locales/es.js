@@ -25,7 +25,11 @@
   "about.get_involved.p1": "Cualquiera puede unirse a la comunidad Participedia y ayudar a recopilar, catalogar y comparar procesos políticos participativos en todo el mundo. Participedia se produce de forma colaborativa con una %slicencia Creative Commons%s, es de acceso libre y está abierta a ediciones. Para más información sobre cómo puedes contribuir al proyecto, chequea nuestras %sinstrucciones%s para añadir contenido.",
   "about.members.p1": "Participedia está abierto a cualquiera. Nuestros miembros incluyen personas de todos los orígenes, nacionalidades y profesiones. Desde analistas de políticas hasta profesores, activistas y profesores, Participedia es un lugar para cualquier persona interesada en la participación democrática. Nuestra comunidad está en el corazón de nuestro empeño: al unirse, usted también puede ayudar a construir este creciente recurso editando el contenido existente o publicando nuevos ejemplos de participación pública.",
   "about.methods.example": "Por ejemplo, el %s21ª reunión del siglo%s método permite a un gran número de personas deliberar simultáneamente en grupos pequeños utilizando la tecnología de respuesta de la audiencia.",
-  "about.methods.example.2": "Por ejemplo, %s Deliberative Polling® %s es un método que utiliza herramientas y técnicas como %s selección aleatoria %s , %s encuestas %s y %s debates en grupos pequeños facilitados por% s. %s",
+  
+  
+  "about.methods.example.2": "Por ejemplo, %sDeliberative Polling® %s es un método que utiliza herramientas y técnicas como %s selección aleatoria%s , %s encuestas %s y %s debates en grupos pequeños facilitados por. %s",
+  
+  
   "about.methods.p1": "Las entradas sobre métodos proporcionan información sobre los procesos generales utilizados para guiar la participación pública, como por ejemplo los jurados de ciudadanos, las encuestas deliberativas y el presupuesto participativo.",
   "about.methods.p2": "Las entradas de métodos también pueden proporcionar información sobre las técnicas, los mecanismos y los dispositivos utilizados para implementar, guiar o mejorar los métodos participativos.",
   "about.organizations.example": "Por ejemplo, %sLa apatía es aburrida%s es una ONG canadiense que utiliza métodos artísticos participativos y educación en la democracia para involucrar a jóvenes en la política.",
