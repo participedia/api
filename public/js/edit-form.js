@@ -71,6 +71,11 @@ const editForm = {
 
     this.formEl = document.querySelector(".js-edit-form");
 
+    this.formEl.addEventListener('change', function() {
+      console.log('changed');
+  });
+  
+
     if (this.localForms) {
       this.initLocalForms();
     }
@@ -224,6 +229,7 @@ const editForm = {
     selectors.forEach(el => {
       el.addEventListener("change", evt => {
         evt.preventDefault();
+        console.log("on change value");
         const isBody = el.parentElement.nextElementSibling.className.includes(
           "ql-toolbar"
         );
