@@ -8,6 +8,7 @@ import languageSelectTooltipForNewEntryInput from "./language-select-tooltip-for
 
 import submitFormLanguageSelector from "./submit-form-language-selector";
 import tabsWithCards from "./tabs-with-cards.js";
+//import thing from "../../api/helpers/things";
 
 const editForm = {
   init() {
@@ -72,7 +73,65 @@ const editForm = {
     this.formEl = document.querySelector(".js-edit-form");
 
     this.formEl.addEventListener('change', function() {
-      console.log('changed');
+      const updatedForm = document.querySelector(".js-edit-form");
+      var formsData = {};
+      const formData = serialize(updatedForm);
+      const originalEntry = Object.fromEntries(new URLSearchParams(formData));
+
+      [
+        "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
+        "specific_topics", "purposes", "approaches", "targeted_participants",
+        "method_types", "tools_techniques_types", "participants_interactions",
+        "learning_resources", "learning_resources", "decision_methods", "if_voting",
+        "insights_outcomes", "organizer_types", "funder_types", "change_types", "files", "photos",
+        "implementers_of_change", "evaluation_reports"
+      ].map(key => {
+        let formKeys = Object.keys(originalEntry);
+        let formValues = originalEntry;
+        if (!formKeys) return;
+        const matcher = new RegExp(
+          `^(${key})\\[(\\d{1,})\\](\\[(\\S{1,})\\])?`
+        );
+        let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
+        if(mediaThingsKeys.length === 0) {
+          originalEntry[key] = [];
+        }
+        mediaThingsKeys.forEach(thingKey => {
+          const thingValue = formValues[thingKey];
+          let m = matcher.exec(thingKey);
+          if (!m) return;
+          // This is necessary to avoid infinite loops with zero-width matches
+          if (m.index === matcher.lastIndex) {
+            matcher.lastIndex++;
+          }
+  
+          if(m[1] === 'collections') {
+            formValues[m[1]] = formValues[m[1]] || [];
+            formValues[m[1]].push(thingValue);
+            formValues[m[1]] = Array.from(new Set(formValues[m[1]]));
+          } else {
+            formValues[m[1]] = formValues[m[1]] || [];
+            formValues[m[1]][m[2]] =
+              formValues[m[1]][m[2]] === undefined
+                ? {}
+                : formValues[m[1]][m[2]];
+            formValues[m[1]][m[2]][m[4]] = thingValue;
+          }
+          
+        });
+      });
+
+      formsData = originalEntry;
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", updatedForm.getAttribute("action") + "/saveDraft", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(
+        JSON.stringify({
+        ...formsData,
+        // originalEntry,
+      })
+    );
   });
   
 

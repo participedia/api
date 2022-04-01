@@ -40,6 +40,7 @@ const {
   validateFields,
   parseAndValidateThingPostData,
   getThingEdit,
+  saveDraft,
   generateLocaleArticle
 } = require("../helpers/things");
 
@@ -572,12 +573,17 @@ async function getCaseNewHttp(req, res) {
   returnByType(res, params, article, staticText, req.user);
 }
 
+async function saveCaseDraft(req, res) {
+  saveDraft(null);
+}
+
 const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getCaseEditHttp);
 router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
 router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postCaseNewHttp);
 router.get("/:thingid/:language?", setAndValidateLanguage(), getCaseHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postCaseUpdateHttp);
+router.post("/new/saveDraft", requireAuthenticatedUser(), saveCaseDraft);
 
 module.exports = {
   case_: router,
@@ -586,5 +592,6 @@ module.exports = {
   postCaseNewHttp,
   getCaseHttp,
   postCaseUpdateHttp,
-  caseUpdateHttp
+  caseUpdateHttp,
+  saveCaseDraft
 };
