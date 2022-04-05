@@ -573,8 +573,75 @@ async function getCaseNewHttp(req, res) {
   returnByType(res, params, article, staticText, req.user);
 }
 
-async function saveCaseDraft(req, res) {
-  saveDraft(null);
+async function saveCaseDraft(req, res, entry = undefined) {
+
+    let title = req.body.title;
+    let body = req.body.body
+    let description = req.body.description || '';
+    let original_language = req.body.original_language || "en";
+
+    const thing = await db.one(CREATE_CASE, {
+      title,
+      body,
+      description,
+      original_language,
+    });
+  req.params.thingid = thing.thingid;
+  const params = parseGetParams(req, "case");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
+  const newCase = req.body;
+  const isNewCase = !newCase.article_id;
+
+  const {
+    updatedText,
+    author,
+    oldArticle,
+  } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
+  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
+
+  //get current date when user.isAdmin is false;
+
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  updatedCase.published = false;
+      await db.tx("update-case", async t => {
+        await t.none(INSERT_AUTHOR, author);
+      });
+      //if this is a new case, set creator id to userid and isAdmin
+      if (user.isadmin) {
+        const creator = {
+          user_id: newCase.creator ? newCase.creator : params.userid,
+          thingid: params.articleid,
+          timestamp: new Date(newCase.post_date)
+
+        };
+        await db.tx("update-case", async t => {
+
+          if (!isNewCase) {
+
+            if (updatedCase.verified) {
+              updatedCase.reviewed_by = creator.user_id;
+              updatedCase.reviewed_at = "now";
+            }
+
+            var userId = oldArticle.creator.user_id.toString();
+            var creatorTimestamp = new Date(oldArticle.post_date);
+            if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+              await t.none(INSERT_AUTHOR, author);
+              updatedCase.updated_date = "now";
+            } else {
+              await t.none(UPDATE_AUTHOR_FIRST, creator);
+            }
+          } 
+          await t.none(UPDATE_CASE, updatedCase);
+
+        });
+      } else {
+        await db.tx("update-case", async t => {
+          await t.none(INSERT_AUTHOR, author);
+          await t.none(UPDATE_CASE, updatedCase);
+        });
+      }
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
