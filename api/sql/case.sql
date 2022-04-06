@@ -20,6 +20,7 @@ SELECT
   videos,
   audio,
   verified,
+  published,
   reviewed_at,
   reviewed_by,
   EXTRACT(EPOCH FROM start_date) as start_date,

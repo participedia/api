@@ -8,6 +8,7 @@ WITH full_thing AS (
     published,
     updated_date,
     featured,
+    published,
     hidden,
     verified,
     reviewed_at,

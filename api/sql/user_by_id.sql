@@ -7,6 +7,7 @@ WITH user_bookmarks AS (
       things.photos,
       things.post_date,
       things.updated_date,
+      things.published,
       true as bookmarked
     FROM
       bookmarks,
@@ -22,7 +23,7 @@ WITH user_bookmarks AS (
 authored_things AS (
   SELECT DISTINCT
     authors.user_id author,
-    (authors.thingid, texts.title, things.type, things.photos, things.post_date, things.updated_date, bookmarked(things.type, things.id, ${userId}))::object_short thing,
+    (authors.thingid, texts.title, things.type, things.published, things.photos, things.post_date, things.updated_date, bookmarked(things.type, things.id, ${userId}))::object_short thing,
     authors.thingid,
     things.updated_date
   FROM
@@ -69,7 +70,7 @@ SELECT
 	COALESCE(authored_cases.cases, '{}') cases,
 	COALESCE(authored_methods.methods, '{}') methods,
 	COALESCE(authored_organizations.organizations, '{}') organizations,
-  COALESCE(ARRAY(SELECT ROW(id, title, type, photos, post_date, updated_date, bookmarked)::object_short FROM user_bookmarks), '{}') bookmarks
+  COALESCE(ARRAY(SELECT ROW(id, title, type, published, photos, post_date, updated_date, bookmarked)::object_short FROM user_bookmarks), '{}') bookmarks
 FROM
   users
   LEFT JOIN authored_cases ON users.id = authored_cases.author

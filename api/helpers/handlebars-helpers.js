@@ -1134,6 +1134,7 @@ module.exports = {
       return [
         { title: i18n("Contributions", context), key: "contributions" },
         { title: i18n("Bookmarks", context), key: "bookmarks" },
+        { title: i18n("Drafts", context), key: "drafts" },
       ];
     } else {
       return [{ title: i18n("Contributions", context), key: "contributions" }];
@@ -1222,6 +1223,16 @@ module.exports = {
       allContributions = allContributions.concat(profile[type]);
     });
     return allContributions;
+  },
+
+  getDraftsForProfile(profile) {
+    const draftsTypes = ["cases", "methods", "organizations"];
+    // merge all article types into 1 array
+    let allDrafts = [];
+    draftsTypes.forEach(type => {
+      allDrafts = allDrafts.concat(profile[type].filter(x => !x.published));
+    });
+    return allDrafts;
   },
 
   isNotLoggedIn(req) {
