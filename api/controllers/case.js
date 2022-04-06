@@ -50,6 +50,8 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 const setAndValidateLanguage = require("../middleware/setAndValidateLanguage.js");
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
 
+var thingCaseid = null;
+
 const CASE_STRUCTURE = JSON.parse(
   fs.readFileSync("api/helpers/data/case-structure.json", "utf8")
 );
@@ -569,6 +571,7 @@ async function getCaseNewHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
   const article = CASE_STRUCTURE;
+  thingCaseid = null;
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
@@ -580,13 +583,19 @@ async function saveCaseDraft(req, res, entry = undefined) {
     let description = req.body.description || '';
     let original_language = req.body.original_language || "en";
 
+
+    if (!thingCaseid) {
     const thing = await db.one(CREATE_CASE, {
       title,
       body,
       description,
       original_language,
     });
-  req.params.thingid = thing.thingid;
+  
+    thingCaseid = thing.thingid;
+    }
+    req.params.thingid = thingCaseid;
+  
   const params = parseGetParams(req, "case");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
