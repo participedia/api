@@ -49,6 +49,13 @@
         {{/if}}
       </div>
     {{/if}}
+    <div role="tabpanel" class="tab-drafts">
+      {{#if (isSelectedUserTab req "drafts")}}
+        {{> cards-container
+          cards=(getDraftsForProfile profile)
+        }}
+      {{/if}}
+    </div>
 
   {{/tabs-with-cards}}
 </div>
