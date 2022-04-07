@@ -40,15 +40,6 @@
       {{/if}}
     </div>
 
-    {{#if (isProfileOwner req.user profile)}}
-      <div role="tabpanel" class="tab-bookmarks">
-        {{#if (isSelectedUserTab req "bookmarks")}}
-          {{> cards-container
-            cards=profile.bookmarks
-          }}
-        {{/if}}
-      </div>
-    {{/if}}
     <div role="tabpanel" class="tab-drafts">
       {{#if (isSelectedUserTab req "drafts")}}
         {{> cards-container
@@ -57,5 +48,16 @@
       {{/if}}
     </div>
 
+    {{#if (isProfileOwner req.user profile)}}
+      <div role="tabpanel" class="tab-bookmarks">
+        {{#if (isSelectedUserTab req "bookmarks")}}
+          {{> cards-container
+            cards=profile.bookmarks
+          }}
+        {{/if}}
+      </div>
+
+    {{/if}}
+    
   {{/tabs-with-cards}}
 </div>

@@ -109,7 +109,7 @@
 .tab-container .tab-panels .tab-organizations,
 .tab-container .tab-panels .tab-contributions,
 .tab-container .tab-panels .tab-bookmarks,
-.tab-container .tab-panels .tab-drafts
+.tab-container .tab-panels .tab-drafts,
 .tab-container .tab-panels .tab-collections {
   display: block;
 }
