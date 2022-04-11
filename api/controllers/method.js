@@ -51,6 +51,8 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
 const { SUPPORTED_LANGUAGES } = require("../../constants");
 
+var thingMethodid = null;
+
 async function getEditStaticText(params) {
   let staticText = {};
   try {
@@ -518,8 +520,86 @@ async function getMethodNewHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
   const article = METHOD_STRUCTURE;
+  thingMethodid = null;
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
+}
+
+async function saveMethodDraft(req, res, entry = undefined) {
+
+  let title = req.body.title;
+  let body = req.body.body
+  let description = req.body.description || '';
+  let original_language = req.body.original_language || "en";
+
+
+  if (!thingMethodid) {
+  const thing = await db.one(CREATE_METHOD, {
+    title,
+    body,
+    description,
+    original_language,
+  });
+
+  thingMethodid = thing.thingid;
+  }
+  req.params.thingid = thingMethodid;
+
+const params = parseGetParams(req, "method");
+const user = req.user;
+const { articleid, type, view, userid, lang, returns } = params;
+const newMethod = req.body;
+const isNewMethod = !newMethod.article_id;
+
+const {
+  updatedText,
+  author,
+  oldArticle,
+} = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method");
+const [updatedMethod, er] = getUpdatedCase(user, params, newMethod, oldArticle);
+
+//get current date when user.isAdmin is false;
+
+author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+updatedMethod.published = false;
+    await db.tx("update-method", async t => {
+      await t.none(INSERT_AUTHOR, author);
+    });
+    //if this is a new method, set creator id to userid and isAdmin
+    if (user.isadmin) {
+      const creator = {
+        user_id: newMethod.creator ? newMethod.creator : params.userid,
+        thingid: params.articleid,
+        timestamp: new Date(newMethod.post_date)
+
+      };
+      await db.tx("update-method", async t => {
+
+        if (!isNewMethod) {
+
+          if (updatedMethod.verified) {
+            updatedMethod.reviewed_by = creator.user_id;
+            updatedMethod.reviewed_at = "now";
+          }
+
+          var userId = oldArticle.creator.user_id.toString();
+          var creatorTimestamp = new Date(oldArticle.post_date);
+          if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+            await t.none(INSERT_AUTHOR, author);
+            updatedMethod.updated_date = "now";
+          } else {
+            await t.none(UPDATE_AUTHOR_FIRST, creator);
+          }
+        } 
+        await t.none(UPDATE_METHOD, updatedMethod);
+
+      });
+    } else {
+      await db.tx("update-method", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_METHOD, updatedMethod);
+      });
+    }
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -529,6 +609,7 @@ router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postMethodNew
 // these have to come *after* /new or BAD THINGS HAPPEN
 router.get("/:thingid/:language?", setAndValidateLanguage(), getMethodHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postMethodUpdateHttp);
+router.post("/new/saveDraft", requireAuthenticatedUser(), saveMethodDraft);
 
 module.exports = {
   method: router,

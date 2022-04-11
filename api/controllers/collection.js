@@ -48,6 +48,8 @@ const COLLECTION_STRUCTURE = JSON.parse(
 );
 const { SUPPORTED_LANGUAGES } = require("../../constants");
 
+var thingCollectionid = null;
+
 // strip off final character (assumed to be "s")
 const singularLowerCase = name =>
   (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
@@ -413,10 +415,88 @@ async function getCollectionEditHttp(req, res) {
   returnByType(res, params, articles, staticText, req.user);
 }
 
+async function saveCollectionDraft(req, res, entry = undefined) {
+
+  let title = req.body.title;
+  let body = req.body.body
+  let description = req.body.description || '';
+  let original_language = req.body.original_language || "en";
+
+
+  if (!thingCollectionid) {
+  const thing = await db.one(CREATE_COLLECTION, {
+    title,
+    body,
+    description,
+    original_language,
+  });
+
+  thingCollectionid = thing.thingid;
+  }
+  req.params.thingid = thingCollectionid;
+
+const params = parseGetParams(req, "collection");
+const user = req.user;
+const { articleid, type, view, userid, lang, returns } = params;
+const newCollection = req.body;
+const isNewCollection = !newCollection.article_id;
+
+const {
+  updatedText,
+  author,
+  oldArticle,
+} = await maybeUpdateUserTextLocaleEntry(newCollection, req, res, "collection");
+const [updatedCollection, er] = getUpdatedCase(user, params, newCollection, oldArticle);
+
+//get current date when user.isAdmin is false;
+
+author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+updatedCollection.published = false;
+    await db.tx("update-collection", async t => {
+      await t.none(INSERT_AUTHOR, author);
+    });
+    //if this is a new method, set creator id to userid and isAdmin
+    if (user.isadmin) {
+      const creator = {
+        user_id: newCollection.creator ? newCollection.creator : params.userid,
+        thingid: params.articleid,
+        timestamp: new Date(newCollection.post_date)
+
+      };
+      await db.tx("update-collection", async t => {
+
+        if (!isNewCollection) {
+
+          if (updatedCollection.verified) {
+            updatedCollection.reviewed_by = creator.user_id;
+            updatedCollection.reviewed_at = "now";
+          }
+
+          var userId = oldArticle.creator.user_id.toString();
+          var creatorTimestamp = new Date(oldArticle.post_date);
+          if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+            await t.none(INSERT_AUTHOR, author);
+            updatedCollection.updated_date = "now";
+          } else {
+            await t.none(UPDATE_AUTHOR_FIRST, creator);
+          }
+        } 
+        await t.none(UPDATE_COLLECTION, updatedCollection);
+
+      });
+    } else {
+      await db.tx("update-collection", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_COLLECTION, updatedCollection);
+      });
+    }
+}
+
 async function getCollectionNewHttp(req, res) {
   const params = parseGetParams(req, "collection");
   params.view = "edit";
   const articles = COLLECTION_STRUCTURE;
+  thingCollectionid = null;
   const staticText = await getEditStaticText(params);
   returnByType(res, params, articles, staticText, req.user);
 }
@@ -427,6 +507,7 @@ router.get("/new", requireAuthenticatedUser(), getCollectionNewHttp);
 router.post("/new", requireAuthenticatedUser(), postCollectionNewHttp);
 router.get("/:thingid", getCollectionHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
+router.post("/new/saveDraft", requireAuthenticatedUser(), saveCollectionDraft);
 
 module.exports = {
   collection_: router,

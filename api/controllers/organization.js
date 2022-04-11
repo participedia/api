@@ -50,6 +50,7 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
 const { SUPPORTED_LANGUAGES } = require("../../constants");
 
+var thingOOrganizationid = null;
 
 async function getEditStaticText(params) {
   let staticText = {};
@@ -419,6 +420,83 @@ async function getOrganizationHttp(req, res) {
   returnByType(res, params, article, staticText, req.user);
 }
 
+async function saveOrganizationDraft(req, res, entry = undefined) {
+
+  let title = req.body.title;
+  let body = req.body.body
+  let description = req.body.description || '';
+  let original_language = req.body.original_language || "en";
+
+
+  if (!thingOOrganizationid) {
+  const thing = await db.one(CREATE_ORGANIZATION, {
+    title,
+    body,
+    description,
+    original_language,
+  });
+
+  thingOOrganizationid = thing.thingid;
+  }
+  req.params.thingid = thingOOrganizationid;
+
+const params = parseGetParams(req, "organization");
+const user = req.user;
+const { articleid, type, view, userid, lang, returns } = params;
+const newOrganization = req.body;
+const isNewOrganization = !newOrganization.article_id;
+
+const {
+  updatedText,
+  author,
+  oldArticle,
+} = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization");
+const [updatedOrganization, er] = getUpdatedCase(user, params, newOrganization, oldArticle);
+
+//get current date when user.isAdmin is false;
+
+author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+updatedOrganization.published = false;
+    await db.tx("update-organization", async t => {
+      await t.none(INSERT_AUTHOR, author);
+    });
+    //if this is a new method, set creator id to userid and isAdmin
+    if (user.isadmin) {
+      const creator = {
+        user_id: newOrganization.creator ? newOrganization.creator : params.userid,
+        thingid: params.articleid,
+        timestamp: new Date(newOrganization.post_date)
+
+      };
+      await db.tx("update-organization", async t => {
+
+        if (!isNewOrganization) {
+
+          if (updatedOrganization.verified) {
+            updatedOrganization.reviewed_by = creator.user_id;
+            updatedOrganization.reviewed_at = "now";
+          }
+
+          var userId = oldArticle.creator.user_id.toString();
+          var creatorTimestamp = new Date(oldArticle.post_date);
+          if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+            await t.none(INSERT_AUTHOR, author);
+            updatedOrganization.updated_date = "now";
+          } else {
+            await t.none(UPDATE_AUTHOR_FIRST, creator);
+          }
+        } 
+        await t.none(UPDATE_ORGANIZATION, updatedOrganization);
+
+      });
+    } else {
+      await db.tx("update-organization", async t => {
+        await t.none(INSERT_AUTHOR, author);
+        await t.none(UPDATE_ORGANIZATION, updatedOrganization);
+      });
+    }
+}
+
 async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
@@ -435,6 +513,7 @@ async function getOrganizationNewHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
   const article = ORGANIZATION_STRUCTURE;
+  thingOOrganizationid = null;
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
@@ -445,6 +524,7 @@ router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
 router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizationNewHttp);
 router.get("/:thingid/:language?", setAndValidateLanguage(), getOrganizationHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizationUpdateHttp);
+router.post("/new/saveDraft", requireAuthenticatedUser(), saveOrganizationDraft);
 
 module.exports = {
   organization: router,
