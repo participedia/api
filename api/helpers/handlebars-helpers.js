@@ -1124,6 +1124,12 @@ module.exports = {
     ];
   },
 
+  getContentChooserTabs(context) {
+    return [
+      { title: i18n("Drafts", context), key: "drafts" },
+    ];
+  },
+
   getUserTabs(context) {
     // if it's the profile owner making the request, return contributions and bookmarks.
     // otherwise return contributions only
@@ -1143,6 +1149,15 @@ module.exports = {
 
   isSelectedUserTab(req, category) {
     const defaultTab = "contributions";
+    if (req.query.selectedCategory) {
+      return req.query.selectedCategory === category;
+    } else if (category === defaultTab) {
+      return true;
+    }
+  },
+
+  isSelectedContentChooserTab(req, category) {
+    const defaultTab = "drafts";
     if (req.query.selectedCategory) {
       return req.query.selectedCategory === category;
     } else if (category === defaultTab) {
