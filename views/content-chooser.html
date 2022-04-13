@@ -40,15 +40,12 @@
     </div> 
   {{/if}}
 
-  {{#> tabs-with-cards req=req getTabs=(getContentChooserTabs)}}
- 
     <div role="tabpanel" class="tab-drafts">
       {{#if (isSelectedContentChooserTab req "drafts")}}
-        {{> cards-container
-          cards=(getDraftsForProfile req.user)
+        {{> cards-container-draft
+          cardsDraft=(getDraftsForProfile req.user)
         }}
       {{/if}}
     </div>
-  {{/tabs-with-cards}}
   
 {{/static-view-container}}

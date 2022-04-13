@@ -1,0 +1,67 @@
+<li
+  class="article-card"
+  data-type="{{type}}"
+>
+  {{#if published}}
+    <a href="/{{type}}/{{id}}" class="js-article-link">
+    {{else}}
+    <a href="/{{type}}/{{id}}/edit" class="js-article-link">
+  {{/if}}
+      <div
+      class="article-card-img js-article-card-img lazyload"
+      data-bg="{{getFirstThumbnailImageForArticle this}}"
+      style="background-image: url('/images/1x1-transparent.png');"
+    ></div>
+
+    <div class="article-card-content">
+      <div class="article-card-meta js-article-card-meta">
+        {{#if featured}}
+          <h5>
+            {{req.__ "Featured [type]" (t type)}}
+            {{#if verified}}
+            <img src="/images/icon-verified-no-shadow.svg" class="verified-image"/>
+            {{/if}}
+          </h5>
+        {{else}}
+          <h5>
+            {{t type}}
+            {{#if verified}}
+            <img src="/images/icon-verified-no-shadow.svg" class="verified-image"/>
+            {{/if}}
+          </h5>
+        {{/if}}
+        
+        <h3 class="article-card-title js-article-card-title">{{title}}</h3>
+
+        {{#if description}}
+          <p class="article-card-description">{{description}}</p>
+        {{/if}}
+        <p class="small">
+          {{t "Updated"}}
+          <span class="js-article-date">{{formatArticleDate this "updated_date" "MMMM D, YYYY"}}</span>
+        </p>
+      </div>
+      <a
+        href="#"
+        class="bookmark-btn js-bookmark-button"
+        data-bookmarked="{{bookmarked}}"
+        data-type="{{type}}"
+        data-thing-id="{{id}}"
+      >
+        <span class="is-bookmarked">
+          <span class="sr-only">{{t "Remove Bookmark"}}</span>
+          {{> icon-bookmark-fill}}
+        </span>
+        <span class="is-not-bookmarked">
+          <span class="sr-only">{{t "Add Bookmark"}}</span>
+          {{> icon-bookmark}}
+        </span>
+      </a>
+    </div>
+
+    <button type="button" class="icon-only close-card-btn js-close-card-btn">
+      <span class="sr-only">{{t "Close Card"}}</span>
+      {{> icon-close}}
+    </button>
+  </a>
+</li>

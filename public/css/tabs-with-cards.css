@@ -117,13 +117,21 @@
 .tab-select-container {
   display: none;
 }
+.draft-container {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
 
  /* cards and card layout */
-.cards-container {
+ .cards-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 30px;
   grid-column-gap: 30px;
+}
+
+.cards-container-draft {
+  display: list-item;
 }
 
 .article-card {

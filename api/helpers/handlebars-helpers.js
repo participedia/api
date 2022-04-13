@@ -61,6 +61,11 @@ function getFirstLargeImageForArticle(article) {
   }
 }
 
+function randomTexture() {
+  let index = Math.floor(Math.random() * 6) + 1;
+  return `/public/images/texture_${index}.svg`;
+}
+
 function getFirstThumbnailImageForArticle(article) {
   let url = getFirstLargeImageForArticle(article);
 
@@ -76,6 +81,8 @@ function getFirstThumbnailImageForArticle(article) {
       process.env.AWS_UPLOADS_URL,
       `${process.env.AWS_UPLOADS_URL}${imagePath}/`
     );
+  } else {
+    return randomTexture();
   }
 }
 
