@@ -30,6 +30,7 @@ SELECT
 		WHEN ${type:name}.type='organization' THEN get_completeness_organizations(${type:name}.id)
 		ELSE ''
      END as completeness,
+  ${type:name}.published,
   ${type:name}.featured,
   ${type:name}.verified,
   ${type:name}.location_name,

@@ -583,8 +583,11 @@ async function saveCaseDraft(req, res, entry = undefined) {
     let description = req.body.description || '';
     let original_language = req.body.original_language || "en";
 
+    const params = parseGetParams(req, "case");
+    const user = req.user;
+    const { articleid, type, view, userid, lang, returns } = params;
 
-    if (!thingCaseid) {
+    if (!thingCaseid && !articleid) {
     const thing = await db.one(CREATE_CASE, {
       title,
       body,
@@ -596,12 +599,14 @@ async function saveCaseDraft(req, res, entry = undefined) {
     }
     req.params.thingid = thingCaseid;
   
-  const params = parseGetParams(req, "case");
-  const user = req.user;
-  const { articleid, type, view, userid, lang, returns } = params;
   const newCase = req.body;
   const isNewCase = !newCase.article_id;
 
+  if (isNewCase) {
+    newCase.post_date = Date.now();
+    newCase.updated_date = Date.now();
+  }
+  
   const {
     updatedText,
     author,
@@ -660,6 +665,7 @@ router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postCaseNewHt
 router.get("/:thingid/:language?", setAndValidateLanguage(), getCaseHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postCaseUpdateHttp);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveCaseDraft);
+router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveCaseDraft);
 
 module.exports = {
   case_: router,

@@ -8,6 +8,7 @@
 SELECT 
  id,
  type,
+ published,
  featured,
  verified,
  location_name,
