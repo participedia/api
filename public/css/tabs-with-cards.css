@@ -134,7 +134,7 @@
   display: list-item;
 }
 
-.article-card {
+.article-card .article-card-draft{
   margin-bottom: 30px;
   overflow: hidden;
 }
@@ -143,8 +143,21 @@
   text-decoration: none;
 }
 
+.article-draft-content {
+  display: flex;
+  flex-direction: row;
+}
+
 .article-card-img {
   width: 100%;
+  height: 200px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.article-card-img-draft {
+  width: 200px;
   height: 200px;
   background-repeat: no-repeat;
   background-position: center center;
@@ -187,6 +200,27 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.article-card-content-draft {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  margin-left: 20px;
+}
+
+.article-card-draft-updated {
+  width: 200px;
+  position: absolute;
+  bottom: 0px;
+}
+
+hr.solid {
+  height: 0; 
+  border: 0; 
+  border-top: 1px solid #B6B6B6; 
 }
 
 [data-card-layout="list"] .cards-container {
