@@ -195,6 +195,8 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     newCase.collections = updatedCase.collections;
   }
 
+  cond("published", as.boolean);
+
   // media lists
   ["links", "videos", "audio", "evaluation_links"].map(key =>
     cond(key, as.media)
@@ -597,7 +599,7 @@ async function saveCaseDraft(req, res, entry = undefined) {
   
     thingCaseid = thing.thingid;
     }
-    req.params.thingid = thingCaseid;
+    req.params.thingid = thingCaseid ?? articleid;
   
   const newCase = req.body;
   const isNewCase = !newCase.article_id;
@@ -613,13 +615,19 @@ async function saveCaseDraft(req, res, entry = undefined) {
     oldArticle,
   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
-
   //get current date when user.isAdmin is false;
+
+  updatedCase.title = newCase.title;
+  updatedCase.description = newCase.description;
 
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedCase.published = false;
       await db.tx("update-case", async t => {
+        if (!isNewCase) {
+          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+        } else {
         await t.none(INSERT_AUTHOR, author);
+        }
       });
       //if this is a new case, set creator id to userid and isAdmin
       if (user.isadmin) {
