@@ -664,6 +664,13 @@ async function saveCaseDraft(req, res, entry = undefined) {
           await t.none(UPDATE_CASE, updatedCase);
         });
       }
+
+      const freshArticle = await getCase(params, res);
+  res.status(200).json({
+    OK: true,
+    article: freshArticle,
+  });
+  refreshSearch();
 }
 
 const router = express.Router(); // eslint-disable-line new-cap

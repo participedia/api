@@ -14,10 +14,15 @@
         <h1>{{article.title}}</h1>
       </hgroup>
       
+      {{# if (isPublished article)}}
       {{> view-socialmedia }}
+      {{/if}}
 
       {{> view-slideshow }}
+
+      {{# if (isPublished article)}}
       {{> view-authors }}
+      {{/if}}
 
       <div class="article-data-accordion">
         {{#> accordion title=(articleDataTitle article)}}
@@ -44,10 +49,16 @@
         {{/if}}
         {{{ article.body }}}
       </div>
+
+      <div class="g-recaptcha recaptcha-reader" data-sitekey="{{getReCaptchaSiteKey}}"></div>
+      {{> edit-form-submit-button-draft article=article}}
     </article>
   </div>
   <div class="right-col show-verified-info-container js-show-verified-info-container">
+
+    {{# if (isPublished article)}}
     {{> view-socialmedia }}
+    {{/if}}
     {{#if article.verified}}
     <img src="/images/icon-verified.svg" class="image-svg-action floating-action-image show-verified-info-trigger js-show-verified-info-trigger">
     

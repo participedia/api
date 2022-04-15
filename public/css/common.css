@@ -180,6 +180,21 @@ button {
   color: #222;
 }
 
+.button-white-border {
+  background-color: #fff;
+  color: #222;
+  border: solid;
+  border-color: #000;
+}
+
+.button-reader-white-border {
+  margin-right: 30px;
+  background-color: #fff;
+  color: #222;
+  border: solid;
+  border-color: #000;
+}
+
 .button-white .icon-fill {
   fill: #222;
 }
@@ -442,6 +457,11 @@ footer .language-select {
 }
 
 .recaptcha {
+  margin-bottom: 50px;
+}
+
+.recaptcha-reader {
+  margin-top: 60px;
   margin-bottom: 50px;
 }
 

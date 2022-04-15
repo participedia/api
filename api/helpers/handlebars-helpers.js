@@ -1143,13 +1143,26 @@ module.exports = {
     const profile = context.data.root.profile;
     const user = context.data.root.req.user;
 
-    if ((user && user.id) === (profile && profile.id)) {
+    const draftsTypes = ["cases", "methods", "organizations"];
+    // merge all article types into 1 array
+    let allDrafts = [];
+    draftsTypes.forEach(type => {
+      allDrafts = allDrafts.concat(user[type].filter(x => !x.published));
+    });
+
+    if ((user && user.id) === (profile && profile.id) && allDrafts.length > 0) {
       return [
         { title: i18n("Contributions", context), key: "contributions" },
         { title: i18n("Bookmarks", context), key: "bookmarks" },
         { title: i18n("Drafts", context), key: "drafts" },
       ];
-    } else {
+    } else if ((user && user.id) === (profile && profile.id)) {
+      return [
+        { title: i18n("Contributions", context), key: "contributions" },
+        { title: i18n("Bookmarks", context), key: "bookmarks" },
+      ];
+    }
+     else {
       return [{ title: i18n("Contributions", context), key: "contributions" }];
     }
   },
@@ -1314,6 +1327,14 @@ module.exports = {
 
   isNotCollectionView(req) {
     return req.baseUrl !== "/collection";
+  },
+
+  isNotPublished(req) {
+    return !req.published;
+  },
+
+  isPublished(req) {
+    return req.published;
   },
 
   isUserView(req) {
