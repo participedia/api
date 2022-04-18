@@ -290,6 +290,7 @@ async function organizationUpdate(req, res, entry = undefined) {
     ? "now"
     : updatedOrganization.updated_date;
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  updatedOrganization.published = true;
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-organization", async t => {

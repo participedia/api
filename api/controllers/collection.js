@@ -266,6 +266,7 @@ async function collectionUpdate(req, res, entry = undefined) {
     ? "now"
     : updatedCollection.updated_date;
 
+    updatedCollection = true;
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-collection", async t => {

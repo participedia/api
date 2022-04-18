@@ -384,7 +384,7 @@ async function methodUpdate(req, res, entry = undefined) {
     ? "now"
     : updatedMethod.updated_date;
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
-
+  updatedMethod.published = true;
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-method", async t => {
