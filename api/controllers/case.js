@@ -448,6 +448,12 @@ async function postCaseUpdateHttp(req, res) {
   const params = parseGetParams(req, "case");
   const { articleid } = params;
   const langErrors = [];
+
+  if(!Object.keys(req.body).length) {
+    const articleRow = await (await db.one(CASE_BY_ID, params));
+    req.body = articleRow.results;
+  }
+
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let originalLanguageEntry;
 
@@ -589,6 +595,22 @@ async function saveCaseDraft(req, res, entry = undefined) {
     const user = req.user;
     const { articleid, type, view, userid, lang, returns } = params;
 
+    const newCase = req.body;
+    const isNewCase = !newCase.article_id;
+
+    const {
+      updatedText,
+      author,
+      oldArticle,
+    } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
+    const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
+    //get current date when user.isAdmin is false;
+  
+    updatedCase.title = newCase.title;
+    updatedCase.description = newCase.description;
+
+    if (updatedCase.published) return;
+
     if (!thingCaseid && !articleid) {
     const thing = await db.one(CREATE_CASE, {
       title,
@@ -601,25 +623,11 @@ async function saveCaseDraft(req, res, entry = undefined) {
     }
     req.params.thingid = thingCaseid ?? articleid;
   
-  const newCase = req.body;
-  const isNewCase = !newCase.article_id;
-
   if (isNewCase) {
     newCase.post_date = Date.now();
     newCase.updated_date = Date.now();
   }
-  
-  const {
-    updatedText,
-    author,
-    oldArticle,
-  } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
-  const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
-  //get current date when user.isAdmin is false;
-
-  updatedCase.title = newCase.title;
-  updatedCase.description = newCase.description;
-
+ 
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedCase.published = false;
       await db.tx("update-case", async t => {
@@ -665,12 +673,14 @@ async function saveCaseDraft(req, res, entry = undefined) {
         });
       }
 
+    if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
       const freshArticle = await getCase(params, res);
-  res.status(200).json({
-    OK: true,
-    article: freshArticle,
-  });
-  refreshSearch();
+      res.status(200).json({
+        OK: true,
+        article: freshArticle,
+      });
+      refreshSearch();
+    }
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -681,6 +691,7 @@ router.get("/:thingid/:language?", setAndValidateLanguage(), getCaseHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postCaseUpdateHttp);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveCaseDraft);
 router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveCaseDraft);
+router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveCaseDraft);
 
 module.exports = {
   case_: router,

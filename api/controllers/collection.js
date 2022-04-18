@@ -422,8 +422,27 @@ async function saveCollectionDraft(req, res, entry = undefined) {
   let description = req.body.description || '';
   let original_language = req.body.original_language || "en";
 
+  const params = parseGetParams(req, "collection");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
 
-  if (!thingCollectionid) {
+  const newCollection = req.body;
+  const isNewCollection = !newCollection.article_id;
+
+  const {
+    updatedText,
+    author,
+    oldArticle,
+  } = await maybeUpdateUserTextLocaleEntry(newCollection, req, res, "collection");
+  const [updatedCollection, er] = getUpdatedCollection(user, params, newCollection, oldArticle);
+  //get current date when user.isAdmin is false;
+
+  updatedCollection.title = newCollection.title;
+  updatedCollection.description = newCollection.description;
+
+  if (updatedCollection.published) return;
+
+  if (!thingCollectionid && !articleid) {
   const thing = await db.one(CREATE_COLLECTION, {
     title,
     body,
@@ -433,29 +452,23 @@ async function saveCollectionDraft(req, res, entry = undefined) {
 
   thingCollectionid = thing.thingid;
   }
-  req.params.thingid = thingCollectionid;
+  req.params.thingid = thingCollectionid ?? articleid;
 
-const params = parseGetParams(req, "collection");
-const user = req.user;
-const { articleid, type, view, userid, lang, returns } = params;
-const newCollection = req.body;
-const isNewCollection = !newCollection.article_id;
-
-const {
-  updatedText,
-  author,
-  oldArticle,
-} = await maybeUpdateUserTextLocaleEntry(newCollection, req, res, "collection");
-const [updatedCollection, er] = getUpdatedCase(user, params, newCollection, oldArticle);
-
-//get current date when user.isAdmin is false;
+if (isNewCollection) {
+  newCollection.post_date = Date.now();
+  newCollection.updated_date = Date.now();
+}
 
 author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
 updatedCollection.published = false;
     await db.tx("update-collection", async t => {
+      if (!isNewCollection) {
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+      } else {
       await t.none(INSERT_AUTHOR, author);
+      }
     });
-    //if this is a new method, set creator id to userid and isAdmin
+    //if this is a new collection, set creator id to userid and isAdmin
     if (user.isadmin) {
       const creator = {
         user_id: newCollection.creator ? newCollection.creator : params.userid,
@@ -490,6 +503,15 @@ updatedCollection.published = false;
         await t.none(UPDATE_COLLECTION, updatedCollection);
       });
     }
+
+  if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
+    const freshArticle = await getCollection(params, res);
+    res.status(200).json({
+      OK: true,
+      article: freshArticle,
+    });
+    refreshSearch();
+  }
 }
 
 async function getCollectionNewHttp(req, res) {
@@ -508,6 +530,7 @@ router.post("/new", requireAuthenticatedUser(), postCollectionNewHttp);
 router.get("/:thingid", getCollectionHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveCollectionDraft);
+router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveCollectionDraft);
 
 module.exports = {
   collection_: router,

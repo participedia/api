@@ -382,7 +382,8 @@ const editForm = {
     formsData = originalEntry;
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", updatedForm.getAttribute("action") + "/saveDraft", true);
+    const endpoint = isNeedToPreview ? "/saveDraftPreview" : "/saveDraft";
+    xhr.open("POST", updatedForm.getAttribute("action") + endpoint, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
       // wait for request to be done

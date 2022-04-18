@@ -50,6 +50,9 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
 const { SUPPORTED_LANGUAGES } = require("../../constants");
+const { updateMethod } = require("../../test/data/helpers");
+const { t } = require("../helpers/handlebars-helpers");
+const i = require("rss-to-json");
 
 var thingMethodid = null;
 
@@ -461,6 +464,8 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     newMethod.collections = updatedMethod.collections;
   }
 
+  cond("published", as.boolean);
+
   // media lists
   ["links", "videos", "audio"].map(key => cond(key, as.media));
   // photos and files are slightly different from other media as they have a source url too
@@ -532,8 +537,27 @@ async function saveMethodDraft(req, res, entry = undefined) {
   let description = req.body.description || '';
   let original_language = req.body.original_language || "en";
 
+  const params = parseGetParams(req, "method");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
 
-  if (!thingMethodid) {
+  const newMethod= req.body;
+  const isNewMethod = !newMethod.article_id;
+
+  const {
+    updatedText,
+    author,
+    oldArticle,
+  } = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method");
+  const [updatedMethod, er] = getUpdatedMethod(user, params, newMethod, oldArticle);
+  //get current date when user.isAdmin is false;
+
+  updatedMethod.title = newMethod.title;
+  updatedMethod.description = newMethod.description;
+
+  if (updatedMethod.published) return;
+
+  if (!thingMethodid && !articleid) {
   const thing = await db.one(CREATE_METHOD, {
     title,
     body,
@@ -543,27 +567,21 @@ async function saveMethodDraft(req, res, entry = undefined) {
 
   thingMethodid = thing.thingid;
   }
-  req.params.thingid = thingMethodid;
+  req.params.thingid = thingMethodid ?? articleid;
 
-const params = parseGetParams(req, "method");
-const user = req.user;
-const { articleid, type, view, userid, lang, returns } = params;
-const newMethod = req.body;
-const isNewMethod = !newMethod.article_id;
-
-const {
-  updatedText,
-  author,
-  oldArticle,
-} = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method");
-const [updatedMethod, er] = getUpdatedCase(user, params, newMethod, oldArticle);
-
-//get current date when user.isAdmin is false;
+if (isNewMethod) {
+  newMethod.post_date = Date.now();
+  newMethod.updated_date = Date.now();
+}
 
 author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
 updatedMethod.published = false;
     await db.tx("update-method", async t => {
+      if (!isNewMethod) {
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+      } else {
       await t.none(INSERT_AUTHOR, author);
+      }
     });
     //if this is a new method, set creator id to userid and isAdmin
     if (user.isadmin) {
@@ -600,6 +618,15 @@ updatedMethod.published = false;
         await t.none(UPDATE_METHOD, updatedMethod);
       });
     }
+
+  if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
+    const freshArticle = await getMethod(params, res);
+    res.status(200).json({
+      OK: true,
+      article: freshArticle,
+    });
+    refreshSearch();
+  }
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -610,6 +637,7 @@ router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postMethodNew
 router.get("/:thingid/:language?", setAndValidateLanguage(), getMethodHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postMethodUpdateHttp);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveMethodDraft);
+router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveMethodDraft);
 
 module.exports = {
   method: router,

@@ -269,7 +269,7 @@ async function organizationUpdate(req, res, entry = undefined) {
     newOrganization.post_date = Date.now();
   }
 
-  // if this is a new method, we don't have a updated_date yet, so we set it here
+  // if this is a new organization, we don't have a updated_date yet, so we set it here
   if (isNewOrganization) {
     newOrganization.updated_date = Date.now();
   }
@@ -375,6 +375,7 @@ function getUpdatedOrganization(
   } else {
     newOrganization.collections = updatedOrganization.collections;
   }
+  cond("published", as.boolean);
   // media lists
   ["links", "videos", "audio"].map(key => cond(key, as.media));
   // photos and files are slightly different from other media as they have a source url too
@@ -427,8 +428,27 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
   let description = req.body.description || '';
   let original_language = req.body.original_language || "en";
 
+  const params = parseGetParams(req, "organization");
+  const user = req.user;
+  const { articleid, type, view, userid, lang, returns } = params;
 
-  if (!thingOOrganizationid) {
+  const newOrganization = req.body;
+  const isNewOrganization = !newOrganization.article_id;
+
+  const {
+    updatedText,
+    author,
+    oldArticle,
+  } = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization");
+  const [updatedOrganization, er] = getUpdatedOrganization(user, params, newOrganization, oldArticle);
+  //get current date when user.isAdmin is false;
+
+  updatedOrganization.title = newOrganization.title;
+  updatedOrganization.description = newOrganization.description;
+
+  if (updatedOrganization.published) return;
+
+  if (!thingOOrganizationid && !articleid) {
   const thing = await db.one(CREATE_ORGANIZATION, {
     title,
     body,
@@ -438,29 +458,23 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
 
   thingOOrganizationid = thing.thingid;
   }
-  req.params.thingid = thingOOrganizationid;
+  req.params.thingid = thingOOrganizationid ?? articleid;
 
-const params = parseGetParams(req, "organization");
-const user = req.user;
-const { articleid, type, view, userid, lang, returns } = params;
-const newOrganization = req.body;
-const isNewOrganization = !newOrganization.article_id;
-
-const {
-  updatedText,
-  author,
-  oldArticle,
-} = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization");
-const [updatedOrganization, er] = getUpdatedCase(user, params, newOrganization, oldArticle);
-
-//get current date when user.isAdmin is false;
+if (isNewOrganization) {
+  newOrganization.post_date = Date.now();
+  newOrganization.updated_date = Date.now();
+}
 
 author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
 updatedOrganization.published = false;
     await db.tx("update-organization", async t => {
+      if (!isNewOrganization) {
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+      } else {
       await t.none(INSERT_AUTHOR, author);
+      }
     });
-    //if this is a new method, set creator id to userid and isAdmin
+    //if this is a new organization, set creator id to userid and isAdmin
     if (user.isadmin) {
       const creator = {
         user_id: newOrganization.creator ? newOrganization.creator : params.userid,
@@ -495,6 +509,15 @@ updatedOrganization.published = false;
         await t.none(UPDATE_ORGANIZATION, updatedOrganization);
       });
     }
+
+  if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
+    const freshArticle = await getOrganization(params, res);
+    res.status(200).json({
+      OK: true,
+      article: freshArticle,
+    });
+    refreshSearch();
+  }
 }
 
 async function getOrganizationEditHttp(req, res) {
@@ -525,6 +548,7 @@ router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizat
 router.get("/:thingid/:language?", setAndValidateLanguage(), getOrganizationHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizationUpdateHttp);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveOrganizationDraft);
+router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveOrganizationDraft);
 
 module.exports = {
   organization: router,
