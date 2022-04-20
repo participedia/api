@@ -75,6 +75,8 @@
     {{/if}}
   </div>
   <input type="hidden" name="verifiedInfoMessage" id="verifiedInfoMessage" class="js-verified-message" value="{{{__ 'reviwed_popup_message' '&lt;a href=\'mailto:info@participedia.net\'&gt;' '&lt;/a &gt;'}}}" />
+  <input type="hidden" name="captcha_error" class="js-captcha-error" value="{{t 'recaptcha_error'}}" />
+  <input type="hidden" name="recaptcha_issues" class="js-captcha-issue" value="{{t 'recaptcha_issues'}}" />
   {{#if req.user}}
   <input type="hidden" name="isAdmin" id="isAdmin" class="js-is-admin" value="{{req.user.isadmin}}">
   {{/if}}
