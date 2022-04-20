@@ -335,6 +335,13 @@ const editForm = {
     var formsData = {};
     const formData = serialize(updatedForm);
     const originalEntry = Object.fromEntries(new URLSearchParams(formData));
+    
+    let supportedLanguages;
+    try {
+      supportedLanguages = JSON.parse(this.formEl.supportedLangs?.value) || [];
+    } catch (error) {
+      supportedLanguages = [];
+    }
 
     [
       "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
@@ -379,7 +386,19 @@ const editForm = {
       });
     });
 
-    formsData = originalEntry;
+    if (supportedLanguages && supportedLanguages.length) {
+      supportedLanguages.forEach(lang => {
+        formsData[lang.key] = {}; // formObject;
+        formsData[lang.key]["title"] =
+          this.entryLocaleData["title"]?.[lang.key] || "";
+        formsData[lang.key]["description"] =
+          this.entryLocaleData["description"]?.[lang.key] || "";
+        formsData[lang.key]["body"] =
+          this.entryLocaleData["body"]?.[lang.key] || "";
+      });
+    } else {
+      formsData = originalEntry;
+    }
 
     const xhr = new XMLHttpRequest();
     const endpoint = isNeedToPreview ? "/saveDraftPreview" : "/saveDraft";
@@ -405,10 +424,15 @@ const editForm = {
         }
       }
     };
+
+    if (originalEntry.locale) {
+      formsData[originalEntry.locale] = originalEntry;
+    }
+
     xhr.send(
       JSON.stringify({
       ...formsData,
-      // originalEntry,
+        entryLocales: this.entryLocaleData,
     })
   );
   },

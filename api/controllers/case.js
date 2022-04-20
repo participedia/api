@@ -22,6 +22,7 @@ const {
   listOrganizations,
   refreshSearch,
   ErrorReporter,
+  LOCALIZED_TEXT_BY_ID_LOCALE,
 } = require("../helpers/db");
 
 const {
@@ -380,7 +381,7 @@ async function caseUpdate(req, res, entry = undefined) {
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-  updatedCase.published = true;
+  //updatedCase.published = true;
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   if (!er.hasErrors()) {
     if (updatedText) {
@@ -452,7 +453,8 @@ async function postCaseUpdateHttp(req, res) {
 
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(CASE_BY_ID, params));
-    req.body = articleRow.results;
+    const article = articleRow.results;
+
   }
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
@@ -587,17 +589,44 @@ async function getCaseNewHttp(req, res) {
 
 async function saveCaseDraft(req, res, entry = undefined) {
 
-    let title = req.body.title;
-    let body = req.body.body
-    let description = req.body.description || '';
-    let original_language = req.body.original_language || "en";
 
-    const params = parseGetParams(req, "case");
+  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  let originalLanguageEntry;
+
+  const params = parseGetParams(req, "case");
     const user = req.user;
     const { articleid, type, view, userid, lang, returns } = params;
 
-    const newCase = req.body;
-    const isNewCase = !newCase.article_id;
+  for (const entryLocale in localeEntries) {
+    if (req.body.hasOwnProperty(entryLocale)) {
+      const entry = localeEntries[entryLocale];
+      if (entryLocale === entry.original_language) {
+        originalLanguageEntry = entry;
+      } else {
+        if (entry.title) {
+          const articeLocale = {
+            title : entry.title,
+            description: entry.description,
+            body: entry.body,
+            id: articleid,
+            language: entryLocale
+             };
+       
+             await db.tx("update-case", async t => {
+               await t.none(INSERT_LOCALIZED_TEXT, articeLocale);
+             });  
+      }
+      }
+    }
+  }
+
+  const newCase = originalLanguageEntry;
+  const isNewCase = !newCase.article_id;
+
+    let title = newCase.title;
+    let body = newCase.body
+    let description = newCase.description || '';
+    let original_language = newCase.original_language || "en";
 
     const {
       updatedText,
