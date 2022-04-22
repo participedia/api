@@ -489,7 +489,7 @@ async function getOrganizationHttp(req, res) {
   returnByType(res, params, article, staticText, req.user);
 }
 
-async function saveorganizationDraft(req, res, entry = undefined) {
+async function saveOrganizationDraft(req, res, entry = undefined) {
 
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);

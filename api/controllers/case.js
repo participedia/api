@@ -381,7 +381,7 @@ async function caseUpdate(req, res, entry = undefined) {
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-  //updatedCase.published = true;
+  updatedCase.published = true;
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   if (!er.hasErrors()) {
     if (updatedText) {
@@ -683,10 +683,29 @@ async function saveCaseDraft(req, res, entry = undefined) {
   const newCase = originalLanguageEntry;
   const isNewCase = !newCase.article_id;
 
+  
+  if (isNewCase) {
+    newCase.post_date = Date.now();
+    newCase.updated_date = Date.now();
+  }
+
     let title = newCase.title;
     let body = newCase.body
     let description = newCase.description || '';
     let original_language = newCase.original_language || "en";
+
+    if (!thingCaseid && !articleid) {
+      const thing = await db.one(CREATE_CASE, {
+        title,
+        body,
+        description,
+        original_language,
+      });
+    
+      thingCaseid = thing.thingid;
+      }
+      req.params.thingid = thingCaseid ?? articleid;
+
 
     const {
       updatedText,
@@ -699,32 +718,14 @@ async function saveCaseDraft(req, res, entry = undefined) {
     updatedCase.title = newCase.title;
     updatedCase.description = newCase.description;
 
-    if (updatedCase.published) return;
-
-    if (!thingCaseid && !articleid) {
-    const thing = await db.one(CREATE_CASE, {
-      title,
-      body,
-      description,
-      original_language,
-    });
-  
-    thingCaseid = thing.thingid;
-    }
-    req.params.thingid = thingCaseid ?? articleid;
-  
-  if (isNewCase) {
-    newCase.post_date = Date.now();
-    newCase.updated_date = Date.now();
-  }
+    if (updatedCase.published && !isNewCase) return;
  
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedCase.published = false;
       await db.tx("update-case", async t => {
-        if (!isNewCase) {
+        if (isNewCase) {
           await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-        } else {
-        await t.none(INSERT_AUTHOR, author);
+          await t.none(INSERT_AUTHOR, author);
         }
       });
       //if this is a new case, set creator id to userid and isAdmin
@@ -753,7 +754,7 @@ async function saveCaseDraft(req, res, entry = undefined) {
               await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
           } 
-          await t.none(UPDATE_CASE, updatedCase);
+          await none(UPDATE_CASE, updatedCase);
 
         });
       } else {
