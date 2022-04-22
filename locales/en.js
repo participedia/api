@@ -428,6 +428,7 @@
   "content_types.organization.description": "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance.",
   "Contribute": "Contribute",
   "Contributions": "Contributions",
+  "Drafts": "Drafts",
   "Cook Islands": "Cook Islands",
   "Costa Rica": "Costa Rica",
   "country_label": "Country",
@@ -1601,6 +1602,8 @@
   "Project Manager": "Project Manager",
   "public_profile": "Public Profile",
   "Publish": "Publish",
+  "Continue Editing": "Continue Editing",
+  "Preview": "Preview",
   "Puerto Rico": "Puerto Rico",
   "purpose_and_approach": "Purpose & Approach",
   "purpose_sectionlabel": "Purpose & Approach",
@@ -1968,5 +1971,6 @@
   "recaptcha_issues" : "Please fix the following issues",
   "reviewed_entries_title": "Reviewed Entries",
   "reviewed_entries_label": "Reviewed by Participedia Editorial Board",
-  "reviewed_popup_message": "This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please %scontact us.%s"
+  "reviewed_popup_message": "This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please %scontact us.%s",
+  "draft_container_description": "Continue edting your draft entries that are not yet published."
 }
