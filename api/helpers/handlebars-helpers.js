@@ -63,7 +63,7 @@ function getFirstLargeImageForArticle(article) {
 
 function randomTexture() {
   let index = Math.floor(Math.random() * 6) + 1;
-  return `/public/images/texture_${index}.svg`;
+  return `/images/texture_${index}.svg`;
 }
 
 function getFirstThumbnailImageForArticle(article) {
@@ -82,7 +82,9 @@ function getFirstThumbnailImageForArticle(article) {
       `${process.env.AWS_UPLOADS_URL}${imagePath}/`
     );
   } else {
-    return randomTexture();
+    article.photos = [{ url: randomTexture() }];
+
+    return article.photos[0].url;
   }
 }
 
@@ -1267,6 +1269,7 @@ module.exports = {
     draftsTypes.forEach(type => {
       allDrafts = allDrafts.concat(profile[type].filter(x => !x.published));
     });
+    allDrafts.sort((a,b) => Date.parse(b.updated_date) - Date.parse(a.updated_date))
     return allDrafts;
   },
 
