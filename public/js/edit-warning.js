@@ -14,13 +14,7 @@ const editWarning = {
         sessionStorage.getItem("submitButtonClick") === "true";
 
       if (!isSubmitClick) {
-        const currentFormData = serialize(formEl);
-        // check if form data changed and if it was show default confirmation dialog
-        if (initialFormData !== currentFormData) {
-          e.preventDefault();
-          e.returnValue = ""; // Gecko and Trident
-          return ""; // Gecko and WebKit
-        }
+        return null;
       } else {
         // it was a submit click, so we can reset the flag before the request continues
         try {
