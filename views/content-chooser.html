@@ -39,5 +39,13 @@
       <p>{{t "content_types.collection.description"}}</p>
     </div> 
   {{/if}}
+
+    <div role="tabpanel" class="tab-drafts">
+      {{#if (isSelectedContentChooserTab req "drafts")}}
+        {{> cards-container-draft
+          cardsDraft=(getDraftsForProfile req.user)
+        }}
+      {{/if}}
+    </div>
   
 {{/static-view-container}}

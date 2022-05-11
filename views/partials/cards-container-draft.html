@@ -1,0 +1,17 @@
+{{#if cardsDraft}}
+
+<div class="draft-container">
+  <h2>{{t "Drafts"}}</h2>
+  <p>{{t "draft_container_description"}}</p>
+  <ul class="unstyled-list cards-container-draft js-cards-container">
+    {{#each cardsDraft }}
+      {{> article-card-draft req=../req}}
+    {{/each}}
+  </ul>
+</div> 
+
+{{#if totalResults}}
+    {{> pagination-tab }}
+  {{/if}}
+
+{{/if}}

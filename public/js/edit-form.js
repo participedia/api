@@ -8,6 +8,7 @@ import languageSelectTooltipForNewEntryInput from "./language-select-tooltip-for
 
 import submitFormLanguageSelector from "./submit-form-language-selector";
 import tabsWithCards from "./tabs-with-cards.js";
+//import thing from "../../api/helpers/things";
 
 const editForm = {
   init() {
@@ -28,15 +29,20 @@ const editForm = {
 
     for (let i = 0; i < submitButtonEls.length; i++) {
       submitButtonEls[i].addEventListener("click", event => {
-        event.preventDefault();
+
         // set flag so we can check in the unload event if the user is actually trying to submit the form
         try {
           window.sessionStorage.setItem("submitButtonClick", "true");
         } catch (err) {
           console.warn(err);
         }
-
-        this.sendFormData();
+        event.preventDefault();
+        if (event.target.classList.contains("button-preview")) {
+          this.saveDataAndPreview(true);
+        }
+        else {
+          this.sendFormData();
+        }
       });
     }
 
@@ -70,6 +76,11 @@ const editForm = {
     // this.initPinTabs();
 
     this.formEl = document.querySelector(".js-edit-form");
+
+    this.formEl.addEventListener('change', ev => {
+      this.saveDataAndPreview(false);
+    });
+
 
     if (this.localForms) {
       this.initLocalForms();
@@ -224,6 +235,7 @@ const editForm = {
     selectors.forEach(el => {
       el.addEventListener("change", evt => {
         evt.preventDefault();
+        console.log("on change value");
         const isBody = el.parentElement.nextElementSibling.className.includes(
           "ql-toolbar"
         );
@@ -294,10 +306,10 @@ const editForm = {
       selectors.forEach(el => {
         el.classList.add("is-visible");
       });
-    } catch (error) {}
+    } catch (error) { }
   },
 
-  validateLocalForms() {},
+  validateLocalForms() { },
 
   initPinTabs() {
     const tabsContainer = document.querySelector(".js-tab-items");
@@ -318,32 +330,18 @@ const editForm = {
     });
   },
 
-  sendFormData() {
-    debugger;
-    const formData = serialize(this.formEl);
+  saveDataAndPreview(isNeedToPreview = false) {
+    const updatedForm = document.querySelector(".js-edit-form");
+    var formsData = {};
+    const formData = serialize(updatedForm);
     const originalEntry = Object.fromEntries(new URLSearchParams(formData));
-    const formObject = Object.fromEntries(new URLSearchParams(formData));
-
-    let formsData = {};
+    
     let supportedLanguages;
     try {
       supportedLanguages = JSON.parse(this.formEl.supportedLangs?.value) || [];
     } catch (error) {
       supportedLanguages = [];
     }
-
-    if (!originalEntry.title) {
-      let article_data = JSON.parse(formObject.article_data) ||[];
-      this.handleErrors([`Cannot create a ${article_data[formObject.locale].type} without at least a title.`]);
-      return;
-    }
-
-    const captchaResponse = this.formEl.querySelector(".g-recaptcha-response");
-
-    if (captchaResponse && captchaResponse.value.trim() === '') {
-      this.handleErrors([this.formEl.captcha_error.value]);
-      return;
-    } 
 
     [
       "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
@@ -396,7 +394,132 @@ const editForm = {
         formsData[lang.key]["description"] =
           this.entryLocaleData["description"]?.[lang.key] || "";
         formsData[lang.key]["body"] =
-          this.entryLocaleData["body"]?.[lang.key] || ""; 
+          this.entryLocaleData["body"]?.[lang.key] || "";
+      });
+    } else {
+      formsData = originalEntry;
+    }
+
+    const xhr = new XMLHttpRequest();
+    const endpoint = isNeedToPreview ? "/saveDraftPreview" : "/saveDraft";
+    xhr.open("POST", updatedForm.getAttribute("action") + endpoint, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+      // wait for request to be done
+      if (xhr.readyState !== xhr.DONE) return;
+      if (xhr.status === 0) {
+        // if user is not logged in
+        // this.openAuthWarning();
+      } else if (xhr.status === 413) {
+        // if file uploads are too large
+        this.handleErrors([
+          "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total).",
+        ]);
+      } else {
+        const response = JSON.parse(xhr.response);
+        if (response.OK) {
+          if (response.isPreview) {
+          this.handleSuccess(response);
+          }
+          const saveDraftMessage = this.formEl.querySelector(".js-draft-info-saved");
+          saveDraftMessage.style.visibility = 'visible';
+        } else {
+          this.handleErrors(response.errors);
+        }
+      }
+    };
+
+    if (originalEntry.locale) {
+      formsData[originalEntry.locale] = originalEntry;
+    }
+
+    xhr.send(
+      JSON.stringify({
+      ...formsData,
+        entryLocales: this.entryLocaleData,
+    })
+  );
+  },
+
+  sendFormData() {
+    debugger;
+    const formData = serialize(this.formEl);
+    const originalEntry = Object.fromEntries(new URLSearchParams(formData));
+    const formObject = Object.fromEntries(new URLSearchParams(formData));
+
+    let formsData = {};
+    let supportedLanguages;
+    try {
+      supportedLanguages = JSON.parse(this.formEl.supportedLangs?.value) || [];
+    } catch (error) {
+      supportedLanguages = [];
+    }
+
+    if (!originalEntry.title) {
+      let article_data = JSON.parse(formObject.article_data) || [];
+      this.handleErrors([`Cannot create a ${this.formEl.article_type.value} without at least a title.`]);
+      return;
+    }
+
+    const captchaResponse = this.formEl.querySelector(".g-recaptcha-response");
+
+    if (captchaResponse && captchaResponse.value.trim() === '') {
+      this.handleErrors([this.formEl.captcha_error.value]);
+      return;
+    }
+
+    [
+      "links", "videos", "audio", "evaluation_links", "general_issues", "collections",
+      "specific_topics", "purposes", "approaches", "targeted_participants",
+      "method_types", "tools_techniques_types", "participants_interactions",
+      "learning_resources", "learning_resources", "decision_methods", "if_voting",
+      "insights_outcomes", "organizer_types", "funder_types", "change_types", "files", "photos",
+      "implementers_of_change", "evaluation_reports"
+    ].map(key => {
+      let formKeys = Object.keys(originalEntry);
+      let formValues = originalEntry;
+      if (!formKeys) return;
+      const matcher = new RegExp(
+        `^(${key})\\[(\\d{1,})\\](\\[(\\S{1,})\\])?`
+      );
+      let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
+      if (mediaThingsKeys.length === 0) {
+        originalEntry[key] = [];
+      }
+      mediaThingsKeys.forEach(thingKey => {
+        const thingValue = formValues[thingKey];
+        let m = matcher.exec(thingKey);
+        if (!m) return;
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === matcher.lastIndex) {
+          matcher.lastIndex++;
+        }
+
+        if (m[1] === 'collections') {
+          formValues[m[1]] = formValues[m[1]] || [];
+          formValues[m[1]].push(thingValue);
+          formValues[m[1]] = Array.from(new Set(formValues[m[1]]));
+        } else {
+          formValues[m[1]] = formValues[m[1]] || [];
+          formValues[m[1]][m[2]] =
+            formValues[m[1]][m[2]] === undefined
+              ? {}
+              : formValues[m[1]][m[2]];
+          formValues[m[1]][m[2]][m[4]] = thingValue;
+        }
+
+      });
+    });
+
+    if (supportedLanguages && supportedLanguages.length) {
+      supportedLanguages.forEach(lang => {
+        formsData[lang.key] = {}; // formObject;
+        formsData[lang.key]["title"] =
+          this.entryLocaleData["title"]?.[lang.key] || "";
+        formsData[lang.key]["description"] =
+          this.entryLocaleData["description"]?.[lang.key] || "";
+        formsData[lang.key]["body"] =
+          this.entryLocaleData["body"]?.[lang.key] || "";
       });
     } else {
       formsData = originalEntry;
@@ -506,7 +629,7 @@ const editForm = {
       const errorsHtml = errors
         .map(error => {
           if (error.errors) {
-          return error.errors.map(err => `<li>${err}</li>`).join("");
+            return error.errors.map(err => `<li>${err}</li>`).join("");
           } else {
             return error;
           }

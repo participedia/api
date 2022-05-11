@@ -50,6 +50,11 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
 const { SUPPORTED_LANGUAGES } = require("../../constants");
+const { updateMethod } = require("../../test/data/helpers");
+const { t } = require("../helpers/handlebars-helpers");
+const i = require("rss-to-json");
+
+var thingMethodid = null;
 
 async function getEditStaticText(params) {
   let staticText = {};
@@ -209,6 +214,77 @@ async function postMethodUpdateHttp(req, res) {
   // const user = req.user;
   const { articleid } = params;
   const langErrors = [];
+
+  if(!Object.keys(req.body).length) {
+    const articleRow = await (await db.one(METHOD_BY_ID, params));
+    const article = articleRow.results;
+
+    if (!article.latitude && !article.longitude) {
+      article.latitude = '';
+      article.longitude = '';
+    }
+
+    let supportedLanguages;
+    try {
+      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+    } catch (error) {
+      supportedLanguages = [];
+    }
+
+    var entryLocaleData = {
+      title: {},
+      description: {},
+      body: {},
+    };
+    var title = {};
+    var desc = {};
+    var body = {};
+
+    for (let i = 0; i < supportedLanguages.length; i++) {
+      const lang = supportedLanguages[i];
+      let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
+        language: lang,
+        thingid: article.id
+      });
+
+      if (lang === article.original_language) {
+        req.body[lang] = article;
+
+        title[lang] = results[0].title;
+        desc[lang] = results[0].description;
+        body[lang] = results[0].body;
+
+      } else {
+        const otherLangArticle = {
+          title: (results[0]?.title) ?? '',
+          description: results[0]?.description ?? '',
+          body: results[0]?.body ?? ''
+        };
+
+        if (results[0]?.title) {
+          title[lang] = results[0].title;
+        }
+
+        if (results[0]?.desc) {
+          desc[lang] = results[0].description;
+        }
+
+        if (results[0]?.body) {
+          body[lang] = results[0].body;
+        }
+        req.body[lang] = otherLangArticle;
+      }
+
+      entryLocaleData = {
+        title: title,
+        description: desc,
+        body: body
+      };
+    }
+      req.body['entryLocales'] = entryLocaleData;
+
+  }
+
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let originalLanguageEntry;
 
@@ -249,7 +325,7 @@ async function methodUpdateHttp(req, res, entry = undefined) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = entry || req.body;
-  const errors = validateFields(newMethod, "method");
+  const errors = validateFields(newMethod, "method", articleid);
   const isNewMethod = !newMethod.article_id;
 
   if (errors.length > 0) {
@@ -283,6 +359,10 @@ async function methodUpdateHttp(req, res, entry = undefined) {
     newMethod,
     oldArticle
   );
+
+  if (isNaN(updatedMethod.number_of_participants)) {
+    updatedMethod.number_of_participants = null;
+  }
 
   //get current date when user.isAdmin is false;
   updatedMethod.updated_date = !user.isadmin
@@ -359,6 +439,7 @@ async function methodUpdate(req, res, entry = undefined) {
   if (isNewMethod) {
     newMethod.updated_date = Date.now();
   }
+  
 
   // save any changes to the user-submitted text
   const {
@@ -374,12 +455,16 @@ async function methodUpdate(req, res, entry = undefined) {
     oldMethod
   );
 
+  if (isNaN(updatedMethod.number_of_participants)) {
+    updatedMethod.number_of_participants = null;
+  }
+
   //get current date when user.isAdmin is false;
   updatedMethod.updated_date = !user.isadmin
     ? "now"
     : updatedMethod.updated_date;
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
-
+  updatedMethod.published = true;
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-method", async t => {
@@ -459,6 +544,8 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     newMethod.collections = updatedMethod.collections;
   }
 
+  cond("published", as.boolean);
+
   // media lists
   ["links", "videos", "audio"].map(key => cond(key, as.media));
   // photos and files are slightly different from other media as they have a source url too
@@ -518,8 +605,145 @@ async function getMethodNewHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
   const article = METHOD_STRUCTURE;
+  thingMethodid = null;
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
+}
+
+async function saveMethodDraft(req, res, entry = undefined) {
+
+
+  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  let entryData;
+
+  const params = parseGetParams(req, "method");
+    const user = req.user;
+    const { articleid, type, view, userid, lang, returns } = params;
+
+    for (const entryLocale in req.body) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = req.body[entryLocale];
+        if(entryLocale === entry.original_language) {
+          entryData = entry;
+        }
+      }
+    }
+
+    let title = entryData.title || '';
+    let body = entryData.body || '';
+    let description = entryData.description || '';
+    let original_language = entryData.original_language || "en";
+
+    if (!thingMethodid && !articleid) {
+      const thing = await db.one(CREATE_METHOD, {
+        title,
+        body,
+        description,
+        original_language,
+      });
+    
+      thingMethodid = thing.thingid;
+      }
+      req.params.thingid = thingMethodid ?? articleid;
+      params.articleid = req.params.thingid;
+
+      const newMethod = entryData;
+      const isNewMethod = !newMethod.article_id;
+    
+
+    const {
+      updatedText,
+      author,
+      oldArticle,
+    } = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method");
+    const [updatedMethod, er] = getUpdatedMethod(user, params, newMethod, oldArticle);
+    //get current date when user.isAdmin is false;
+  
+    for (const entryLocale in localeEntries) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = localeEntries[entryLocale];
+          if (entry.title) {
+            const articeLocale = {
+              title : entry.title,
+              description: entry.description,
+              body: entry.body,
+              id: params.articleid,
+              language: entryLocale
+               };
+         
+               await db.tx("update-method", async t => {
+                 await t.none(INSERT_LOCALIZED_TEXT, articeLocale);
+               });  
+        }
+      }
+    }
+
+ 
+    newMethod.post_date = Date.now();
+    newMethod.updated_date = Date.now();
+  
+    updatedMethod.title = newMethod.title;
+    updatedMethod.description = newMethod.description;
+
+    if (updatedMethod.published && !isNewMethod) return;
+
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  updatedMethod.published = false;
+      await db.tx("update-method", async t => {
+        
+        if (isNewMethod) {
+          await t.none(INSERT_AUTHOR, author);
+        }
+      });
+      //if this is a new Method, set creator id to userid and isAdmin
+      if (user.isadmin) {
+        const creator = {
+          user_id: newMethod.creator ? newMethod.creator : params.userid,
+          thingid: params.articleid,
+          timestamp: new Date(newMethod.post_date)
+
+        };
+        await db.tx("update-method", async t => {
+            if (updatedMethod.verified) {
+              updatedMethod.reviewed_by = creator.user_id;
+              updatedMethod.reviewed_at = "now";
+            }
+
+            if (!isNewMethod) {
+              var userId = oldArticle.creator.user_id.toString();
+              var creatorTimestamp = new Date(oldArticle.post_date);
+              if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+                await t.none(INSERT_AUTHOR, author);
+                updatedMethod.updated_date = "now";
+              } else {
+                await t.none(UPDATE_AUTHOR_FIRST, creator);
+              }
+            }
+            
+          await t.none(UPDATE_METHOD, updatedMethod);
+
+        });
+      } else {
+        await db.tx("update-method", async t => {
+          await t.none(INSERT_AUTHOR, author);
+          await t.none(UPDATE_METHOD, updatedMethod);
+        });
+      }
+
+    if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
+      const freshArticle = await getMethod(params, res);
+      res.status(200).json({
+        OK: true,
+        article: freshArticle,
+        isPreview: true
+      });
+      refreshSearch();
+    } else {
+      res.status(200).json({
+        OK: true,
+        isPreview: false
+      })
+    }
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -529,6 +753,8 @@ router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postMethodNew
 // these have to come *after* /new or BAD THINGS HAPPEN
 router.get("/:thingid/:language?", setAndValidateLanguage(), getMethodHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postMethodUpdateHttp);
+router.post("/new/saveDraft", requireAuthenticatedUser(), saveMethodDraft);
+router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveMethodDraft);
 
 module.exports = {
   method: router,

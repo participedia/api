@@ -14,10 +14,15 @@
         <h1>{{article.title}}</h1>
       </hgroup>
       
+      {{# if (isPublished article)}}
       {{> view-socialmedia }}
+      {{/if}}
 
       {{> view-slideshow }}
+
+      {{# if (isPublished article)}}
       {{> view-authors }}
+      {{/if}}
 
       <div class="article-data-accordion">
         {{#> accordion title=(articleDataTitle article)}}
@@ -44,10 +49,18 @@
         {{/if}}
         {{{ article.body }}}
       </div>
+
+      {{# if (isNotPublished article)}}
+      <div class="g-recaptcha recaptcha-reader" data-sitekey="{{getReCaptchaSiteKey}}"></div>
+      {{/if}}
+      {{> edit-form-submit-button-draft article=article}}
     </article>
   </div>
   <div class="right-col show-verified-info-container js-show-verified-info-container">
+
+    {{# if (isPublished article)}}
     {{> view-socialmedia }}
+    {{/if}}
     {{#if article.verified}}
     <img src="/images/icon-verified.svg" class="image-svg-action floating-action-image show-verified-info-trigger js-show-verified-info-trigger">
     
@@ -64,6 +77,8 @@
     {{/if}}
   </div>
   <input type="hidden" name="verifiedInfoMessage" id="verifiedInfoMessage" class="js-verified-message" value="{{{__ 'reviwed_popup_message' '&lt;a href=\'mailto:info@participedia.net\'&gt;' '&lt;/a &gt;'}}}" />
+  <input type="hidden" name="captcha_error" class="js-captcha-error" value="{{t 'recaptcha_error'}}" />
+  <input type="hidden" name="recaptcha_issues" class="js-captcha-issue" value="{{t 'recaptcha_issues'}}" />
   {{#if req.user}}
   <input type="hidden" name="isAdmin" id="isAdmin" class="js-is-admin" value="{{req.user.isadmin}}">
   {{/if}}

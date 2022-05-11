@@ -66,6 +66,10 @@ function encodeURL(url) {
   }
 }
 
+function saveDraft(article) {
+  console.log('changed');
+}
+
 const fixUpURLs = function(article) {
   // FIXME: need to handle all media objects and source_urls for sourced media
   if (article.photos && article.photos.length) {
@@ -787,5 +791,6 @@ module.exports = {
   offsetFromReq,
   parseAndValidateThingPostData,
   getThingEdit,
+  saveDraft,
   generateLocaleArticle
 };

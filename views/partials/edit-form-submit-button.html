@@ -1,5 +1,12 @@
 <div class="edit-buttons">
-    <button type="submit" class="button button-light-grey" data-cy="main-form-submit">
+    
+  {{# if (isNotPublished article)}}
+  <button type="submit" class="button button-preview button-white-border" data-cy="main-form-preview">
+    {{> icon-preview }} {{t "Preview"}}
+  </button>
+  {{/if}}
+
+  <button type="submit" class="button button-light-grey" data-cy="main-form-submit">
       {{> icon-submit }} {{t "Publish"}}
     </button>
 

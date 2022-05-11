@@ -18,6 +18,7 @@ SELECT
   country,
   tags,
   featured,
+  published,
   hidden,
   verified,
   reviewed_at,

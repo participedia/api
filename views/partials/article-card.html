@@ -2,8 +2,12 @@
   class="article-card"
   data-type="{{type}}"
 >
-  <a href="/{{type}}/{{id}}" class="js-article-link">
-    <div
+  {{#if published}}
+    <a href="/{{type}}/{{id}}" class="js-article-link">
+    {{else}}
+    <a href="/{{type}}/{{id}}/edit" class="js-article-link">
+  {{/if}}
+      <div
       class="article-card-img js-article-card-img lazyload"
       data-bg="{{getFirstThumbnailImageForArticle this}}"
       style="background-image: url('/images/1x1-transparent.png');"

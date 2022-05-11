@@ -3,6 +3,7 @@ SELECT
   id,
   type,
   title,
+  published,
   COALESCE(general_issues, '{}') as general_issues,
   COALESCE(specific_topics, '{}') as specific_topics,
   COALESCE(description, '') as description,

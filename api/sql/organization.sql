@@ -31,6 +31,7 @@ WITH full_thing AS (
     type_tool,
     specific_topics,
     general_issues,
+    published,
     verified,
     reviewed_at,
     reviewed_by,
