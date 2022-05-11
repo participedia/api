@@ -465,6 +465,10 @@ footer .language-select {
   margin-bottom: 50px;
 }
 
+.draft-info-saved{
+  visibility: hidden;
+}
+
 @media (max-width: 1200px) {
   .full-width-container .middle-col {
     width: 40%;

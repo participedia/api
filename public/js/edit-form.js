@@ -418,7 +418,11 @@ const editForm = {
       } else {
         const response = JSON.parse(xhr.response);
         if (response.OK) {
+          if (response.isPreview) {
           this.handleSuccess(response);
+          }
+          const saveDraftMessage = this.formEl.querySelector(".js-draft-info-saved");
+          saveDraftMessage.style.visibility = 'visible';
         } else {
           this.handleErrors(response.errors);
         }

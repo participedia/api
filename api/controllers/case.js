@@ -271,7 +271,7 @@ async function caseUpdateHttp(req, res, entry = undefined) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = entry || req.body;
-  const errors = validateFields(newCase, "case");
+  const errors = validateFields(newCase, "case", articleid);
   const isNewCase = !newCase.article_id;
 
   if (errors.length > 0) {
@@ -353,7 +353,7 @@ async function caseUpdate(req, res, entry = undefined) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = entry || req.body;
-  const errors = validateFields(newCase, "case");
+  const errors = validateFields(newCase, "case", articleid);
   const isNewCase = !newCase.article_id;
 
   if (errors.length > 0) {
@@ -378,6 +378,10 @@ async function caseUpdate(req, res, entry = undefined) {
     oldArticle,
   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
+
+  if (isNaN(updatedCase.number_of_participants)) {
+    updatedCase.number_of_participants = null;
+  }
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
@@ -455,6 +459,11 @@ async function postCaseUpdateHttp(req, res) {
     const articleRow = await (await db.one(CASE_BY_ID, params));
     const article = articleRow.results;
 
+    if (!article.latitude && !article.longitude) {
+      article.latitude = '';
+      article.longitude = '';
+    }
+
     let supportedLanguages;
     try {
       supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
@@ -511,9 +520,8 @@ async function postCaseUpdateHttp(req, res) {
         description: desc,
         body: body
       };
-
-      req.body['entryLocales'] = entryLocaleData;
     }
+      req.body['entryLocales'] = entryLocaleData;
 
   }
 
@@ -651,48 +659,25 @@ async function saveCaseDraft(req, res, entry = undefined) {
 
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
-  let originalLanguageEntry;
+  let entryData;
 
   const params = parseGetParams(req, "case");
     const user = req.user;
     const { articleid, type, view, userid, lang, returns } = params;
 
-  for (const entryLocale in localeEntries) {
-    if (req.body.hasOwnProperty(entryLocale)) {
-      const entry = localeEntries[entryLocale];
-      if (entryLocale === entry.original_language) {
-        originalLanguageEntry = entry;
-      } else {
-        if (entry.title) {
-          const articeLocale = {
-            title : entry.title,
-            description: entry.description,
-            body: entry.body,
-            id: articleid,
-            language: entryLocale
-             };
-       
-             await db.tx("update-case", async t => {
-               await t.none(INSERT_LOCALIZED_TEXT, articeLocale);
-             });  
-      }
+    for (const entryLocale in req.body) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = req.body[entryLocale];
+        if(entryLocale === entry.original_language) {
+          entryData = entry;
+        }
       }
     }
-  }
 
-  const newCase = originalLanguageEntry;
-  const isNewCase = !newCase.article_id;
-
-  
-  if (isNewCase) {
-    newCase.post_date = Date.now();
-    newCase.updated_date = Date.now();
-  }
-
-    let title = newCase.title;
-    let body = newCase.body
-    let description = newCase.description || '';
-    let original_language = newCase.original_language || "en";
+    let title = entryData.title || '';
+    let body = entryData.body || '';
+    let description = entryData.description || '';
+    let original_language = entryData.original_language || "en";
 
     if (!thingCaseid && !articleid) {
       const thing = await db.one(CREATE_CASE, {
@@ -705,7 +690,11 @@ async function saveCaseDraft(req, res, entry = undefined) {
       thingCaseid = thing.thingid;
       }
       req.params.thingid = thingCaseid ?? articleid;
+      params.articleid = req.params.thingid;
 
+      const newCase = entryData;
+      const isNewCase = !newCase.article_id;
+    
 
     const {
       updatedText,
@@ -715,16 +704,39 @@ async function saveCaseDraft(req, res, entry = undefined) {
     const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
     //get current date when user.isAdmin is false;
   
+    for (const entryLocale in localeEntries) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = localeEntries[entryLocale];
+          if (entry.title) {
+            const articeLocale = {
+              title : entry.title,
+              description: entry.description,
+              body: entry.body,
+              id: params.articleid,
+              language: entryLocale
+               };
+         
+               await db.tx("update-case", async t => {
+                 await t.none(INSERT_LOCALIZED_TEXT, articeLocale);
+               });  
+        }
+      }
+    }
+
+ 
+    newCase.post_date = Date.now();
+    newCase.updated_date = Date.now();
+  
     updatedCase.title = newCase.title;
     updatedCase.description = newCase.description;
 
     if (updatedCase.published && !isNewCase) return;
- 
+
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedCase.published = false;
       await db.tx("update-case", async t => {
+        
         if (isNewCase) {
-          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
           await t.none(INSERT_AUTHOR, author);
         }
       });
@@ -737,24 +749,23 @@ async function saveCaseDraft(req, res, entry = undefined) {
 
         };
         await db.tx("update-case", async t => {
-
-          if (!isNewCase) {
-
             if (updatedCase.verified) {
               updatedCase.reviewed_by = creator.user_id;
               updatedCase.reviewed_at = "now";
             }
 
-            var userId = oldArticle.creator.user_id.toString();
-            var creatorTimestamp = new Date(oldArticle.post_date);
-            if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
-              await t.none(INSERT_AUTHOR, author);
-              updatedCase.updated_date = "now";
-            } else {
-              await t.none(UPDATE_AUTHOR_FIRST, creator);
+            if (!isNewCase) {
+              var userId = oldArticle.creator.user_id.toString();
+              var creatorTimestamp = new Date(oldArticle.post_date);
+              if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+                await t.none(INSERT_AUTHOR, author);
+                updatedCase.updated_date = "now";
+              } else {
+                await t.none(UPDATE_AUTHOR_FIRST, creator);
+              }
             }
-          } 
-          await none(UPDATE_CASE, updatedCase);
+            
+          await t.none(UPDATE_CASE, updatedCase);
 
         });
       } else {
@@ -769,8 +780,14 @@ async function saveCaseDraft(req, res, entry = undefined) {
       res.status(200).json({
         OK: true,
         article: freshArticle,
+        isPreview: true
       });
       refreshSearch();
+    } else {
+      res.status(200).json({
+        OK: true,
+        isPreview: false
+      })
     }
 }
 

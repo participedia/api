@@ -50,7 +50,9 @@
         {{{ article.body }}}
       </div>
 
+      {{# if (isNotPublished article)}}
       <div class="g-recaptcha recaptcha-reader" data-sitekey="{{getReCaptchaSiteKey}}"></div>
+      {{/if}}
       {{> edit-form-submit-button-draft article=article}}
     </article>
   </div>

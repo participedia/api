@@ -216,6 +216,11 @@ async function postOrganizationUpdateHttp(req, res) {
     const articleRow = await (await db.one(ORGANIZATION_BY_ID, params));
     const article = articleRow.results;
 
+    if (!article.latitude && !article.longitude) {
+      article.latitude = '';
+      article.longitude = '';
+    }
+
     let supportedLanguages;
     try {
       supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
@@ -318,7 +323,7 @@ async function organizationUpdate(req, res, entry = undefined) {
   const user = req.user;
   const { articlesid, type, view, userid, lang, returns } = params;
   const newOrganization = entry || req.body;
-  const errors = validateFields(newOrganization, "organization");
+  const errors = validateFields(newOrganization, "organization", articlesid);
   const isNewOrganization = !newOrganization.article_id;
 
   if (errors.length > 0) {
@@ -352,6 +357,11 @@ async function organizationUpdate(req, res, entry = undefined) {
     newOrganization,
     oldArticle
   );
+
+  if (isNaN(updatedOrganization.number_of_participants)) {
+    updatedOrganization.number_of_participants = null;
+  }
+
   //get current date when user.isAdmin is false;
   updatedOrganization.updated_date = !user.isadmin
     ? "now"
@@ -493,42 +503,42 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
 
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
-  let originalLanguageEntry;
+  let entryData;
 
   const params = parseGetParams(req, "organization");
     const user = req.user;
     const { articleid, type, view, userid, lang, returns } = params;
 
-  for (const entryLocale in localeEntries) {
-    if (req.body.hasOwnProperty(entryLocale)) {
-      const entry = localeEntries[entryLocale];
-      if (entryLocale === entry.original_language) {
-        originalLanguageEntry = entry;
-      } else {
-        if (entry.title) {
-          const articeLocale = {
-            title : entry.title,
-            description: entry.description,
-            body: entry.body,
-            id: articleid,
-            language: entryLocale
-             };
-       
-             await db.tx("update-organization", async t => {
-               await t.none(INSERT_LOCALIZED_TEXT, articeLocale);
-             });  
-      }
+    for (const entryLocale in req.body) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = req.body[entryLocale];
+        if(entryLocale === entry.original_language) {
+          entryData = entry;
+        }
       }
     }
-  }
 
-  const newOrganization = originalLanguageEntry;
-  const isNewOrganization = !newOrganization.article_id;
+    let title = entryData.title || '';
+    let body = entryData.body || '';
+    let description = entryData.description || '';
+    let original_language = entryData.original_language || "en";
 
-    let title = newOrganization.title;
-    let body = newOrganization.body
-    let description = newOrganization.description || '';
-    let original_language = newOrganization.original_language || "en";
+    if (!thingOrganizationid && !articleid) {
+      const thing = await db.one(CREATE_ORGANIZATION, {
+        title,
+        body,
+        description,
+        original_language,
+      });
+    
+      thingOrganizationid = thing.thingid;
+      }
+      req.params.thingid = thingOrganizationid ?? articleid;
+      params.articleid = req.params.thingid;
+
+      const newOrganization = entryData;
+      const isNewOrganization = !newOrganization.article_id;
+    
 
     const {
       updatedText,
@@ -538,38 +548,43 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
     const [updatedOrganization, er] = getUpdatedOrganization(user, params, newOrganization, oldArticle);
     //get current date when user.isAdmin is false;
   
+    for (const entryLocale in localeEntries) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = localeEntries[entryLocale];
+          if (entry.title) {
+            const articeLocale = {
+              title : entry.title,
+              description: entry.description,
+              body: entry.body,
+              id: params.articleid,
+              language: entryLocale
+               };
+         
+               await db.tx("update-organization", async t => {
+                 await t.none(INSERT_LOCALIZED_TEXT, articeLocale);
+               });  
+        }
+      }
+    }
+
+ 
+    newOrganization.post_date = Date.now();
+    newOrganization.updated_date = Date.now();
+  
     updatedOrganization.title = newOrganization.title;
     updatedOrganization.description = newOrganization.description;
 
-    if (updatedOrganization.published) return;
+    if (updatedOrganization.published && !isNewOrganization) return;
 
-    if (!thingOrganizationid && !articleid) {
-    const thing = await db.one(CREATE_ORGANIZATION, {
-      title,
-      body,
-      description,
-      original_language,
-    });
-  
-    thingOrganizationid = thing.thingid;
-    }
-    req.params.thingid = thingOrganizationid ?? articleid;
-  
-  if (isNewOrganization) {
-    newOrganization.post_date = Date.now();
-    newOrganization.updated_date = Date.now();
-  }
- 
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedOrganization.published = false;
-      await db.tx("update-organization", async t => {
-        if (!isNewOrganization) {
-          await t.none(INSERT_LOCALIZED_TEXT, updatedText);
-        } else {
-        await t.none(INSERT_AUTHOR, author);
+      await db.tx("update-Organization", async t => {
+        
+        if (isNewOrganization) {
+          await t.none(INSERT_AUTHOR, author);
         }
       });
-      //if this is a new organization, set creator id to userid and isAdmin
+      //if this is a new Organization, set creator id to userid and isAdmin
       if (user.isadmin) {
         const creator = {
           user_id: newOrganization.creator ? newOrganization.creator : params.userid,
@@ -578,23 +593,22 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
 
         };
         await db.tx("update-organization", async t => {
-
-          if (!isNewOrganization) {
-
             if (updatedOrganization.verified) {
               updatedOrganization.reviewed_by = creator.user_id;
               updatedOrganization.reviewed_at = "now";
             }
 
-            var userId = oldArticle.creator.user_id.toString();
-            var creatorTimestamp = new Date(oldArticle.post_date);
-            if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
-              await t.none(INSERT_AUTHOR, author);
-              updatedOrganization.updated_date = "now";
-            } else {
-              await t.none(UPDATE_AUTHOR_FIRST, creator);
+            if (!isNewOrganization) {
+              var userId = oldArticle.creator.user_id.toString();
+              var creatorTimestamp = new Date(oldArticle.post_date);
+              if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+                await t.none(INSERT_AUTHOR, author);
+                updatedOrganization.updated_date = "now";
+              } else {
+                await t.none(UPDATE_AUTHOR_FIRST, creator);
+              }
             }
-          } 
+            
           await t.none(UPDATE_ORGANIZATION, updatedOrganization);
 
         });
@@ -610,8 +624,14 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
       res.status(200).json({
         OK: true,
         article: freshArticle,
+        isPreview: true
       });
       refreshSearch();
+    } else {
+      res.status(200).json({
+        OK: true,
+        isPreview: false
+      })
     }
 }
 

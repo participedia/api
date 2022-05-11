@@ -4,7 +4,7 @@ import lazyLoadImages from "./lazy-load-images.js";
 import infoIconToModal from "./info-icon-to-modal.js";
 import modal from "./modal.js";
 import loadingGifBase64 from "./loading-gif-base64.js";
-import editForm from "./edit-form.js";
+import tracking from "./utils/tracking.js";
 
 var MAX_PUBLISH_ATTEMPTS = 10;
 var publishAttempts = 0;
@@ -103,14 +103,12 @@ function handleSuccess(response) {
       location.href = `/user/${response.user.id}`;
     });
   } else if (response.article) {
-    const isNew = document.getAttribute("action").indexOf("new") > 0;
-    const eventAction = isNew ? "create_new_article" : "update_article";
+    const eventAction = "save_draft_article";
     const eventLabel = response.article.type;
-
     // track publish action then redirect to reader page
     tracking.sendWithCallback("articles", eventAction, eventLabel, () => {
       // redirect to article reader page
-      location.href = `/${response.article.type}/${response.article.id}`;
+      location.reload();
     });
   }
 };
