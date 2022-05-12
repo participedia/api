@@ -637,6 +637,7 @@ async function getEditStaticText(params) {
 async function getCaseEditHttp(req, res) {
   const params = parseGetParams(req, "case");
   params.view = "edit";
+  thingCaseid = null;
   const articles = await getThingEdit(params, CASES_LOCALE_BY_ID, res);
   if (!articles) {
     res.status(404).render("404");

@@ -592,6 +592,7 @@ async function getMethodHttp(req, res) {
 async function getMethodEditHttp(req, res) {
   const params = parseGetParams(req, "method");
   params.view = "edit";
+  thingMethodid = null;
   const articles = await getThingEdit(params, METHODS_LOCALE_BY_ID, res);
   if (!articles) {
     res.status(404).render("404");

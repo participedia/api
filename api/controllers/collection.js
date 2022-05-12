@@ -483,6 +483,7 @@ async function getEditStaticText(params) {
 async function getCollectionEditHttp(req, res) {
   const params = parseGetParams(req, "collection");
   params.view = "edit";
+  thingCollectionid = null;
   const articles = await getThingEdit(params, COLLECTION_BY_ID_LOCALE, res);
   if (!articles) {
     res.status(404).render("404");

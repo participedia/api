@@ -638,6 +638,7 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
 async function getOrganizationEditHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
+  thingOrganizationid = null;
   const articles = await getThingEdit(params, ORGANIZATION_LOCALE_BY_ID, res);
   if (!articles) {
     res.status(404).render("404");
