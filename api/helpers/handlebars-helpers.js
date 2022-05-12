@@ -1266,10 +1266,13 @@ module.exports = {
     const draftsTypes = ["cases", "methods", "organizations"];
     // merge all article types into 1 array
     let allDrafts = [];
-    draftsTypes.forEach(type => {
-      allDrafts = allDrafts.concat(profile[type].filter(x => !x.published));
-    });
-    allDrafts.sort((a,b) => Date.parse(b.updated_date) - Date.parse(a.updated_date))
+    if (profile) {
+      draftsTypes.forEach(type => {
+        allDrafts = allDrafts.concat(profile[type].filter(x => !x.published));
+      });
+      allDrafts.sort((a,b) => Date.parse(b.updated_date) - Date.parse(a.updated_date))
+    }
+    
     return allDrafts;
   },
 
