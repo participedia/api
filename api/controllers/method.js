@@ -463,6 +463,8 @@ async function methodUpdate(req, res, entry = undefined) {
   updatedMethod.updated_date = !user.isadmin
     ? "now"
     : updatedMethod.updated_date;
+    updatedMethod.post_date = !updatedCase.published ? "now" : updatedCase.post_date;
+    newMethod.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date; 
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedMethod.published = true;
   if (!er.hasErrors()) {

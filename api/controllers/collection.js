@@ -341,6 +341,8 @@ async function collectionUpdate(req, res, entry = undefined) {
   updatedCollection.updated_date = !user.isadmin
     ? "now"
     : updatedCollection.updated_date;
+  updatedCollection.post_date = !updatedCase.published ? "now" : updatedCase.post_date;
+  newCollection.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date;
 
     updatedCollection = true;
   if (!er.hasErrors()) {

@@ -366,6 +366,8 @@ async function organizationUpdate(req, res, entry = undefined) {
   updatedOrganization.updated_date = !user.isadmin
     ? "now"
     : updatedOrganization.updated_date;
+    updatedOrganization.post_date = !updatedCase.published ? "now" : updatedCase.post_date;
+  newOrganization.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date;
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedOrganization.published = true;
   if (!er.hasErrors()) {
