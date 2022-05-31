@@ -654,7 +654,7 @@ async function getOrganizationNewHttp(req, res) {
   const params = parseGetParams(req, "organization");
   params.view = "edit";
   const article = ORGANIZATION_STRUCTURE;
-  thingOOrganizationid = null;
+  thingOrganizationid = null;
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
