@@ -294,7 +294,7 @@ async function postMethodUpdateHttp(req, res) {
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
-      let errors = validateFields(entry, "method");
+      let errors = validateFields(entry, "method", params.articleid);
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
     }
@@ -463,8 +463,8 @@ async function methodUpdate(req, res, entry = undefined) {
   updatedMethod.updated_date = !user.isadmin
     ? "now"
     : updatedMethod.updated_date;
-    updatedMethod.post_date = !updatedCase.published ? "now" : updatedCase.post_date;
-    newMethod.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date; 
+    updatedMethod.post_date = !updatedMethod.published ? "now" : updatedMethod.post_date;
+    newMethod.post_date = !updatedMethod.published ? Date.now() : updatedMethod.post_date; 
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedMethod.published = true;
   if (!er.hasErrors()) {
