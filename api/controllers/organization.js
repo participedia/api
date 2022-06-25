@@ -666,6 +666,7 @@ router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizat
 router.get("/:thingid/:language?", setAndValidateLanguage(), getOrganizationHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizationUpdateHttp);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveOrganizationDraft);
+router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveOrganizationDraft);
 router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveOrganizationDraft);
 
 module.exports = {

@@ -647,6 +647,7 @@ router.post("/new", requireAuthenticatedUser(), postCollectionNewHttp);
 router.get("/:thingid", getCollectionHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveCollectionDraft);
+router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveCollectionDraft);
 router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveCollectionDraft);
 
 module.exports = {

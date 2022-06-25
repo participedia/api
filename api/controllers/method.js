@@ -757,6 +757,7 @@ router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postMethodNew
 router.get("/:thingid/:language?", setAndValidateLanguage(), getMethodHttp);
 router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postMethodUpdateHttp);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveMethodDraft);
+router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveMethodDraft);
 router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveMethodDraft);
 
 module.exports = {
