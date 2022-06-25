@@ -1795,7 +1795,7 @@
   "research.data_repository.feature.8": "允许其他 Web 服务使用数据和元数据的开放式 API。",
   "research.data_repository.p1": "关于世界各地发生的民主创新和参与进程的研究多数尚未公开。这些材料包括数据集、代码簿、统计软件语法或脚本、学位论文、会议论文以及实践者评估和报告。 %Participedia 数据库%s 通过可访问且有组织的数据存储形式，为这些材料提供存储空间，对材料存档作长期保存。同时生成了标准化的描述和标识符,以方便发现和引用这些材料。",
   "research.data_repository.p2": "研究人员和从业人员可以通过免费存放他们的研究材料,为Participedia数据空间做出贡献。Participedia数据存储库的特征包括:",
-  "research.data_repository.questions": "对贡献Participedia数据空间有任何问题请联系%s data@participedia.net %s",
+  "research.data_repository.questions": "对贡献Participedia数据空间有任何问题请联系%s info@participedia.net %s",
   "research.methodology.p1": "策略很简单:将世界各地民主创新的信息集中起来,并聚合到公共数据库中,不断更新并产生新贡献。Participedia 平台在‪%s‬创意公用授权条款（Creative Commons License‪）%s‬下发布，所有人都可以获取并且进行编辑。",
   "research.methodology.p2": "有关Participedia的历史、愿望、理论和分析方法的深入解释,请参阅由两位项目创始人阿肯·冯和马克 E.沃伦发表的%s'%sTParticipedia项目：导论%s。对于您如何补充本项目的指导信息，请参阅我们的条目写作%s指南%s。",
   "research.surveys.p1": "调查是对particippedia现有数据和叙述性描述的补充，目的是进一步了解案件的结果和影响。",
