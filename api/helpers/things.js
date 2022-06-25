@@ -110,6 +110,12 @@ const returnByType = async (res, params, article, static, user, results = {}, to
       articles[e.language] = e;
     });
     article = articles[currentLocale];
+
+    // If current locale has no data structure. Then generate from the template;
+    if(!article) {
+      article = getStructure(type, articleid);
+      articles[currentLocale] = article;
+    }
   } else {
     if (article.hidden && (!user || (user && !user.isadmin))) {
       return res.status(404).render("404");
@@ -144,6 +150,11 @@ const returnByType = async (res, params, article, static, user, results = {}, to
         .status(200)
         .render(type + "-" + view, { articles, article, results, static, user, params, total, pages, numArticlesByType });
   }
+};
+
+const getStructure = (type, id) => {
+  const structure = require(`${require.main.path}/api/helpers/data/${type}-structure.json`);
+  return {id, ...structure, ...{articleId: id}};
 };
 
 const parseGetParams = function(req, type) {
