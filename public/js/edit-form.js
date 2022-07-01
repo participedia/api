@@ -455,10 +455,12 @@ const editForm = {
       supportedLanguages = [];
     }
 
-    if (!originalEntry.title) {
-      let article_data = JSON.parse(formObject.article_data) || [];
-      this.handleErrors([`Cannot create a ${this.formEl.article_type.value} without at least a title.`]);
-      return;
+    if('article_type' in this.formEl) {
+      if (!originalEntry.title) {
+        let article_data = JSON.parse(formObject.article_data) || [];
+        this.handleErrors([`Cannot create a ${this.formEl.article_type.value} without at least a title.`]);
+        return;
+      }
     }
 
     const captchaResponse = this.formEl.querySelector(".g-recaptcha-response");
