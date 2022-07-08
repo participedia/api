@@ -18,6 +18,7 @@
             {{/if}}
             method="post"
             enctype="application/x-www-form-urlencoded"
+            data-datatype="{{getFormDataType article}}"
             class="js-edit-form"
           >
             <input type="hidden" name="user" value="{{req.user.id}}" />

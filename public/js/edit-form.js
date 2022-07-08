@@ -527,7 +527,9 @@ const editForm = {
       formsData = originalEntry;
     }
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", this.formEl.getAttribute("action"), true);
+    const datatype = this.formEl.dataset.datatype;
+    const formAction =  this.formEl.getAttribute("action");
+    xhr.open("POST", `${formAction}?datatype=${datatype}`, true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = () => {

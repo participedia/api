@@ -454,9 +454,15 @@ async function caseUpdate(req, res, entry = undefined) {
 async function postCaseUpdateHttp(req, res) {
   // cache.clear();
   const params = parseGetParams(req, "case");
-  const { articleid } = params;
-  const langErrors = [];
+  const { articleid, datatype } = params;
+  
+  if(datatype == 'draft') {
+    publishDraft(req, res);
+    return;
+  }
 
+  const langErrors = [];
+  
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(CASE_BY_ID, params));
     const article = articleRow.results;
@@ -792,6 +798,10 @@ async function saveCaseDraft(req, res, entry = undefined) {
         isPreview: false
       })
     }
+}
+
+async function publishDraft(req, res) {
+  res.status(200).json({});
 }
 
 const router = express.Router(); // eslint-disable-line new-cap

@@ -1310,6 +1310,10 @@ module.exports = {
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
+  getFormDataType(article) {
+    return !article.published ? 'draft' : '';
+  },
+
   isReaderView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
     return (
