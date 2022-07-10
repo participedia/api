@@ -271,7 +271,7 @@ async function caseUpdateHttp(req, res, entry = undefined) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = entry || req.body;
-  const errors = validateFields(newCase, "case", articleid);
+  const errors = validateFields(newCase, "case");
   const isNewCase = !newCase.article_id;
 
   if (errors.length > 0) {
@@ -353,7 +353,7 @@ async function caseUpdate(req, res, entry = undefined) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCase = entry || req.body;
-  const errors = validateFields(newCase, "case", articleid);
+  const errors = validateFields(newCase, "case");
   const isNewCase = !newCase.article_id;
 
   if (errors.length > 0) {
@@ -543,7 +543,7 @@ async function postCaseUpdateHttp(req, res) {
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
-      let errors = validateFields(entry, "case", params.articleid);
+      let errors = validateFields(entry, "case");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
     }

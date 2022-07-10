@@ -300,7 +300,7 @@ async function collectionUpdate(req, res, entry = undefined) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newCollection = entry || req.body;
-  const errors = validateFields(newCollection, "collection", articleid);
+  const errors = validateFields(newCollection, "collection");
   // const isNewCollection = !newCollection.article_id;
 
   if (errors.length > 0) {

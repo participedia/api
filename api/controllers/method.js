@@ -294,7 +294,7 @@ async function postMethodUpdateHttp(req, res) {
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
-      let errors = validateFields(entry, "method", params.articleid);
+      let errors = validateFields(entry, "method");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
     }
@@ -325,7 +325,7 @@ async function methodUpdateHttp(req, res, entry = undefined) {
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
   const newMethod = entry || req.body;
-  const errors = validateFields(newMethod, "method", articleid);
+  const errors = validateFields(newMethod, "method");
   const isNewMethod = !newMethod.article_id;
 
   if (errors.length > 0) {

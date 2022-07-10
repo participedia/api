@@ -292,7 +292,7 @@ async function postOrganizationUpdateHttp(req, res) {
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
-      let errors = validateFields(entry, "organization", params.articleid);
+      let errors = validateFields(entry, "organization");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
     }
@@ -323,7 +323,7 @@ async function organizationUpdate(req, res, entry = undefined) {
   const user = req.user;
   const { articlesid, type, view, userid, lang, returns } = params;
   const newOrganization = entry || req.body;
-  const errors = validateFields(newOrganization, "organization", articlesid);
+  const errors = validateFields(newOrganization, "organization");
   const isNewOrganization = !newOrganization.article_id;
 
   if (errors.length > 0) {
