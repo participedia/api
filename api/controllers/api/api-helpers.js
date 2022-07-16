@@ -29,7 +29,18 @@ const auth = async (req, res, next) => {
     next();
 }
 
+const getOriginalLanguageEntry = (request) => {
+  try {
+    const arr = Object.values(request).filter(x => x.original_language);
+    const origLang = arr.length ? arr[0].original_language : 'en';
+    return origLang;
+  } catch (error) {
+    return 'en';
+  }
+}
+
 module.exports = {
-    apiErrorHandler,
-    auth
+  apiErrorHandler,
+  getOriginalLanguageEntry,
+  auth
 }
