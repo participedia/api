@@ -774,9 +774,9 @@ async function getThingEdit(params, sqlFile, res) {
 
 /**
  * 
- * @param {*} req - Express HTTP request
- * @param {*} res - Express HTTP response
- * @param {*} entryUpdate Update Method of the entry from it's controller
+ * @param {Object} req - Express HTTP request
+ * @param {Object} res - Express HTTP response
+ * @param {Function} entryUpdate Update Method of the entry from it's controller
  * @returns 
  */
 async function publishDraft(req, res, entryUpdate) {
