@@ -43,7 +43,8 @@ const {
   parseAndValidateThingPostData,
   getThingEdit,
   saveDraft,
-  generateLocaleArticle
+  generateLocaleArticle,
+  publishDraft
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -459,7 +460,7 @@ async function postCaseUpdateHttp(req, res) {
   const { articleid, datatype } = params;
   
   if(datatype == 'draft') {
-    publishDraft(req, res);
+    publishDraft(req, res, caseUpdate);
     return;
   }
 
@@ -783,60 +784,6 @@ async function saveCaseDraft(req, res, entry = undefined) {
   }
   
   res.status(200).json(payload);
-}
-
-async function publishDraft(req, res) {
-  try {
-    let {
-      hasErrors,
-      langErrors,
-      localesToTranslate,
-      localesToNotTranslate,
-      originalLanguageEntry
-    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), "case");
-
-    if (hasErrors) {
-      return res.status(400).json({
-        OK: false,
-        errors: langErrors,
-      });
-    }
-
-    const title = originalLanguageEntry.title;
-    const body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
-    const description = originalLanguageEntry.description || "";
-    const original_language = originalLanguageEntry.original_language || "en";
-    const { article, errors } = await caseUpdate(req, res, originalLanguageEntry);
-
-    if (errors) {
-      return res.status(400).json({
-        OK: false,
-        errors,
-      });
-    }
-    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
-    const localizedData = {
-      body,
-      description,
-      language: original_language,
-      title
-    };
-
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate);
-    }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);
-    }
-    res.status(200).json({
-      OK: true,
-      article,
-    });
-  } catch (error) {
-    logError(error);
-    res.status(400).json({ OK: false, error: error });
-  }
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
