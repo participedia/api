@@ -824,10 +824,10 @@ async function publishDraft(req, res) {
 
     const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
     if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
+      await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate);
     }
     if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);
     }
     res.status(200).json({
       OK: true,
