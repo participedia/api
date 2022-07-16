@@ -35,7 +35,8 @@ const {
   parseAndValidateThingPostData,
   maybeUpdateUserTextLocaleEntry,
   getThingEdit,
-  generateLocaleArticle
+  generateLocaleArticle,
+  publishDraft
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -214,6 +215,11 @@ async function postMethodUpdateHttp(req, res) {
   // const user = req.user;
   const { articleid } = params;
   const langErrors = [];
+
+  if(datatype == 'draft') {
+    publishDraft(req, res, caseUpdate);
+    return;
+  }
 
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(METHOD_BY_ID, params));

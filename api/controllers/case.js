@@ -458,13 +458,12 @@ async function postCaseUpdateHttp(req, res) {
   // cache.clear();
   const params = parseGetParams(req, "case");
   const { articleid, datatype } = params;
-  
+  const langErrors = [];
+
   if(datatype == 'draft') {
     publishDraft(req, res, caseUpdate);
     return;
   }
-
-  const langErrors = [];
   
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(CASE_BY_ID, params));
