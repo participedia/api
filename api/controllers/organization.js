@@ -36,6 +36,7 @@ const {
   parseAndValidateThingPostData,
   maybeUpdateUserTextLocaleEntry,
   getThingEdit,
+  saveDraft,
   generateLocaleArticle,
   publishDraft
 } = require("../helpers/things");
@@ -508,7 +509,21 @@ async function getOrganizationHttp(req, res) {
 }
 
 async function saveOrganizationDraft(req, res, entry = undefined) {
-
+  const args = {
+    LOCALIZED_TEXT_BY_ID_LOCALE,
+    UPDATE_DRAFT_LOCALIZED_TEXT,
+    INSERT_LOCALIZED_TEXT,
+    INSERT_AUTHOR,
+    UPDATE_AUTHOR_FIRST,
+    UPDATE_ENTRY: UPDATE_ORGANIZATION,
+    CREATE_ENTRY_QUERY: CREATE_ORGANIZATION,
+    refreshSearch,
+    thingId: thingCaseid,
+    getUpdatedEntry: getUpdatedCase,
+    getEntry: getCase,
+    entryType: "organization"
+  };
+  saveDraft(req, res, args);
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let entryData;

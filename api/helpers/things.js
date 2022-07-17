@@ -838,7 +838,7 @@ async function publishDraft(req, res, entryUpdate) {
  * @returns 
  */
 async function saveDraft(req, res, args) {
-  const {
+  let {
     LOCALIZED_TEXT_BY_ID_LOCALE,
     UPDATE_DRAFT_LOCALIZED_TEXT,
     INSERT_LOCALIZED_TEXT,
@@ -967,7 +967,7 @@ async function saveDraft(req, res, args) {
     refreshSearch();
   }
   
-  res.status(200).json(payload);
+  return {payload, thingId: params.articleid};
 }
 
 module.exports = {

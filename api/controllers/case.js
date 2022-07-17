@@ -680,7 +680,9 @@ async function saveCaseDraft(req, res, entry = undefined) {
     getEntry: getCase,
     entryType: "case"
   };
-  saveDraft(req, res, args);
+  const {payload, thingId} = await saveDraft(req, res, args);
+  thingCaseid = thingId;
+  res.status(200).json(payload);
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
