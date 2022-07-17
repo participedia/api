@@ -211,11 +211,11 @@ async function postOrganizationUpdateHttp(req, res) {
   cache.clear();
   const params = parseGetParams(req, "organization");
   // const user = req.user;
-  const { articleid } = params;
+  const { articleid, datatype } = params;
   const langErrors = [];
 
   if(datatype == 'draft') {
-    publishDraft(req, res, caseUpdate);
+    publishDraft(req, res, organizationUpdate);
     return;
   }
 
@@ -518,144 +518,14 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
     UPDATE_ENTRY: UPDATE_ORGANIZATION,
     CREATE_ENTRY_QUERY: CREATE_ORGANIZATION,
     refreshSearch,
-    thingId: thingCaseid,
-    getUpdatedEntry: getUpdatedCase,
-    getEntry: getCase,
+    thingId: thingOrganizationid,
+    getUpdatedEntry: getUpdatedOrganization,
+    getEntry: getOrganization,
     entryType: "organization"
   };
-  saveDraft(req, res, args);
-
-  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
-  let entryData;
-
-  const params = parseGetParams(req, "organization");
-    const user = req.user;
-    const { articleid, type, view, userid, lang, returns } = params;
-
-    for (const entryLocale in req.body) {
-      if (req.body.hasOwnProperty(entryLocale)) {
-        const entry = req.body[entryLocale];
-        if(entryLocale === entry.original_language) {
-          entryData = entry;
-        }
-      }
-    }
-
-    let title = entryData.title || '';
-    let body = entryData.body || '';
-    let description = entryData.description || '';
-    let original_language = entryData.original_language || "en";
-
-    if (!thingOrganizationid && !articleid) {
-      const thing = await db.one(CREATE_ORGANIZATION, {
-        title,
-        body,
-        description,
-        original_language,
-      });
-    
-      thingOrganizationid = thing.thingid;
-      }
-      req.params.thingid = thingOrganizationid ?? articleid;
-      params.articleid = req.params.thingid;
-
-      const newOrganization = entryData;
-      const isNewOrganization = !newOrganization.article_id;
-    
-
-    const {
-      updatedText,
-      author,
-      oldArticle,
-    } = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization");
-    const [updatedOrganization, er] = getUpdatedOrganization(user, params, newOrganization, oldArticle);
-    //get current date when user.isAdmin is false;
-  
-    for (const entryLocale in localeEntries) {
-      if (req.body.hasOwnProperty(entryLocale)) {
-        const entry = localeEntries[entryLocale];
-          if (entry.title) {
-            const articeLocale = {
-              title : entry.title,
-              description: entry.description,
-              body: entry.body,
-              id: params.articleid,
-              language: entryLocale
-               };
-         
-               await db.tx("update-organization", async t => {
-                 await t.none(INSERT_LOCALIZED_TEXT, articeLocale);
-               });  
-        }
-      }
-    }
-
- 
-    newOrganization.post_date = Date.now();
-    newOrganization.updated_date = Date.now();
-  
-    updatedOrganization.title = newOrganization.title;
-    updatedOrganization.description = newOrganization.description;
-
-    if (updatedOrganization.published && !isNewOrganization) return;
-
-  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
-  updatedOrganization.published = false;
-      await db.tx("update-Organization", async t => {
-        
-        if (isNewOrganization) {
-          await t.none(INSERT_AUTHOR, author);
-        }
-      });
-      //if this is a new Organization, set creator id to userid and isAdmin
-      if (user.isadmin) {
-        const creator = {
-          user_id: newOrganization.creator ? newOrganization.creator : params.userid,
-          thingid: params.articleid,
-          timestamp: new Date(newOrganization.post_date)
-
-        };
-        await db.tx("update-organization", async t => {
-            if (updatedOrganization.verified) {
-              updatedOrganization.reviewed_by = creator.user_id;
-              updatedOrganization.reviewed_at = "now";
-            }
-
-            if (!isNewOrganization) {
-              var userId = oldArticle.creator.user_id.toString();
-              var creatorTimestamp = new Date(oldArticle.post_date);
-              if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
-                await t.none(INSERT_AUTHOR, author);
-                updatedOrganization.updated_date = "now";
-              } else {
-                await t.none(UPDATE_AUTHOR_FIRST, creator);
-              }
-            }
-            
-          await t.none(UPDATE_ORGANIZATION, updatedOrganization);
-
-        });
-      } else {
-        await db.tx("update-organization", async t => {
-          await t.none(INSERT_AUTHOR, author);
-          await t.none(UPDATE_ORGANIZATION, updatedOrganization);
-        });
-      }
-
-    if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
-      const freshArticle = await getOrganization(params, res);
-      res.status(200).json({
-        OK: true,
-        article: freshArticle,
-        isPreview: true
-      });
-      refreshSearch();
-    } else {
-      res.status(200).json({
-        OK: true,
-        isPreview: false
-      })
-    }
+  const {payload, thingId} = await saveDraft(req, res, args);
+  thingOrganizationid = thingId;
+  res.status(200).json(payload);
 }
 
 async function getOrganizationEditHttp(req, res) {
