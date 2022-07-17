@@ -773,7 +773,7 @@ async function getThingEdit(params, sqlFile, res) {
  * 
  * @param {Object} req - Express HTTP request
  * @param {Object} res - Express HTTP response
- * @param {Function} entryUpdate Update Method of the entry from it's controller
+ * @param {Function} entryUpdate -s Update Method of the entry from it's controller
  * @returns 
  */
 async function publishDraft(req, res, entryUpdate) {
@@ -830,6 +830,13 @@ async function publishDraft(req, res, entryUpdate) {
   }
 }
 
+/**
+ * 
+ * @param {Object} req - Express HTTP request
+ * @param {Object} res - Express HTTP response
+ * @param {Object} args - Object and functions from it's controller
+ * @returns 
+ */
 async function saveDraft(req, res, args) {
   const {
     LOCALIZED_TEXT_BY_ID_LOCALE,
