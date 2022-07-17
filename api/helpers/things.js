@@ -18,6 +18,7 @@ const moment = require("moment");
 const { SUPPORTED_LANGUAGES, RESPONSE_LIMIT } = require("./../../constants.js");
 const logError = require("./log-error.js");
 const createCSVDataDump = require("./create-csv-data-dump.js");
+const { getOriginalLanguageEntry } = require('../controllers/api/api-helpers');
 
 const {
   as,
@@ -63,10 +64,6 @@ function encodeURL(url) {
   } else {
     return process.env.AWS_UPLOADS_URL + fixedEncodeURIComponent(url);
   }
-}
-
-function saveDraft(article) {
-  console.log('changed');
 }
 
 const fixUpURLs = function(article) {
@@ -831,6 +828,139 @@ async function publishDraft(req, res, entryUpdate) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
   }
+}
+
+async function saveDraft(req, res, args) {
+  const {
+    LOCALIZED_TEXT_BY_ID_LOCALE,
+    UPDATE_DRAFT_LOCALIZED_TEXT,
+    INSERT_LOCALIZED_TEXT,
+    INSERT_AUTHOR,
+    UPDATE_AUTHOR_FIRST,
+    UPDATE_ENTRY,
+    CREATE_ENTRY_QUERY,
+    refreshSearch,
+    thingId,
+    getUpdatedEntry,
+    getEntry,
+    entryType
+  } = args;
+  const params = parseGetParams(req, entryType);
+  const user = req.user;
+  const { articleid } = params;
+  const originalLanguageEntry = getOriginalLanguageEntry(req.body);
+  const entryData = req.body[originalLanguageEntry];
+
+  // Save draft
+  if (!thingId && !articleid) {
+    const thing = await db.one(CREATE_ENTRY_QUERY, {
+      title: entryData.title || '',
+      body: entryData.body || '',
+      description: entryData.description || '',
+      original_language: entryData.original_language || "en"
+    });
+  
+    thingId = thing.thingid;
+  }
+
+  req.params.thingid = thingId ?? articleid;
+  params.articleid = req.params.thingid;
+  const newEntry = entryData;
+  const isNewEntry = !newEntry.article_id;
+  
+  const {
+    updatedText,
+    author,
+    oldArticle,
+  } = await maybeUpdateUserTextLocaleEntry(newEntry, req, res, entryType);
+  const [updatedEntry, er] = getUpdatedEntry(user, params, newEntry, oldArticle);
+  //get current date when user.isAdmin is false;
+
+  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  for (const entryLocale in localeEntries) {
+    if (req.body.hasOwnProperty(entryLocale)) {
+      const entry = localeEntries[entryLocale];
+      const localizedData = {
+        title : entry.title ?? '',
+        description: entry.description,
+        body: entry.body,
+        id: params.articleid,
+        language: entryLocale
+      };
+    
+      let hasLocaleData = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
+        language: entryLocale,
+        thingid: params.articleid
+      });
+
+      if (hasLocaleData.length) {
+        await db.tx(`update-${entryType}`, async t => {
+          await t.none(UPDATE_DRAFT_LOCALIZED_TEXT, localizedData);
+        });
+      } else {
+        await db.tx(`update-${entryType}`, async t => {
+          await t.none(INSERT_LOCALIZED_TEXT, localizedData);
+        }); 
+      }
+    }
+  }
+
+  newEntry.post_date = Date.now();
+  newEntry.updated_date = Date.now();
+  updatedEntry.title = newEntry.title;
+  updatedEntry.description = newEntry.description;
+
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  updatedEntry.published = false;
+  await db.tx(`update-${entryType}`, async t => {
+    if (isNewEntry) {
+      await t.none(INSERT_AUTHOR, author);
+    }
+  });
+
+  //if this is a new entry, set creator id to userid and isAdmin
+  if (user.isadmin) {
+    const creator = {
+      user_id: newEntry.creator ? newEntry.creator : params.userid,
+      thingid: params.articleid,
+      timestamp: new Date(newEntry.post_date)
+    };
+    await db.tx(`update-${entryType}`, async t => {
+      if (updatedEntry.verified) {
+        updatedEntry.reviewed_by = creator.user_id;
+        updatedEntry.reviewed_at = "now";
+      }
+
+      if (!isNewEntry) {
+        var userId = oldArticle.creator.user_id.toString();
+        var creatorTimestamp = new Date(oldArticle.post_date);
+        if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+          await t.none(INSERT_AUTHOR, author);
+          updatedEntry.updated_date = "now";
+        } else {
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+        }
+      }
+      
+      await t.none(UPDATE_ENTRY, updatedEntry);
+    });
+  } else {
+    await db.tx(`update-${entryType}`, async t => {
+      await t.none(INSERT_AUTHOR, author);
+      await t.none(UPDATE_ENTRY, updatedEntry);
+    });
+  }
+
+  // Prepare response
+  let payload = {OK: true, isPreview: false};
+
+  if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
+    payload["isPreview"] = true;
+    payload["article"] = await getEntry(params, res);
+    refreshSearch();
+  }
+  
+  res.status(200).json(payload);
 }
 
 module.exports = {
