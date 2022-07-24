@@ -135,6 +135,18 @@ const editForm = {
       ".js-language-select-container+input, .js-language-select-container+textarea"
     );
     const bodyField = document.querySelector(".ql-editor");
+
+    const getFormLanguage = (childNodes) => {
+      var formLanguage = 'en';
+      for (const [index, item] of childNodes.entries()) {
+        if(('className' in item) && item.className.includes('js-edit-select')) {
+          formLanguage = item.value;
+        }
+      }
+
+      return formLanguage;
+    }
+
     inputFields.forEach(input => {
       input.addEventListener("focus", evt => {
         this.currentInputValue = evt.target.value;
@@ -143,16 +155,13 @@ const editForm = {
       input.addEventListener("keyup", evt => {
         this.currentInputValue = evt.target.value;
         this.currentInput = evt.target.name;
+        const formLanguage = getFormLanguage(evt.target.previousElementSibling.childNodes);
 
         if (Object.keys(this.entryLocaleData[this.currentInput]).length === 0) {
           this.field = document.querySelector("input[name=locale]").value;
         }
 
-        if (this.field) {
-          this.entryLocaleData[this.currentInput][
-            this.field
-          ] = this.currentInputValue;
-        }
+        this.entryLocaleData[this.currentInput][formLanguage] = this.currentInputValue;
       });
     });
 
