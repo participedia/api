@@ -216,11 +216,6 @@ async function postOrganizationUpdateHttp(req, res) {
   const { articleid, datatype } = params;
   const langErrors = [];
 
-  if(datatype == 'draft') {
-    publishDraft(req, res, organizationUpdate);
-    return;
-  }
-
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(ORGANIZATION_BY_ID, params));
     const article = articleRow.results;
@@ -290,6 +285,11 @@ async function postOrganizationUpdateHttp(req, res) {
       req.body['entryLocales'] = entryLocaleData;
     }
 
+  }
+
+  if(datatype == 'draft') {
+    publishDraft(req, res, organizationUpdate, 'organization');
+    return;
   }
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);

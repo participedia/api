@@ -25,13 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         console.warn(err);
       }
-   
-        sendFormData();
+      sendFormData(event.target.dataset);
     });
   }
   
 
-function sendFormData() {
+function sendFormData(_args = {}) {
   debugger;
   
   const captchaResponse = document.querySelector(".g-recaptcha-response");
@@ -43,7 +42,10 @@ function sendFormData() {
   }
 
   const xhr = new XMLHttpRequest();
-  xhr.open("POST", document.URL, true);
+  const actionUrl = (('datatype' in _args) && (_args.datatype == 'draft'))
+  ? `${document.URL}?datatype=draft`
+  : document.URL;
+  xhr.open("POST", actionUrl, true);
   xhr.setRequestHeader("Content-Type", "application/json");
 
   xhr.onreadystatechange = () => {

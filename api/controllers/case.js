@@ -458,11 +458,6 @@ async function postCaseUpdateHttp(req, res) {
   const params = parseGetParams(req, "case");
   const { articleid, datatype } = params;
   const langErrors = [];
-
-  if(datatype == 'draft') {
-    publishDraft(req, res, caseUpdate);
-    return;
-  }
   
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(CASE_BY_ID, params));
@@ -532,6 +527,11 @@ async function postCaseUpdateHttp(req, res) {
     }
       req.body['entryLocales'] = entryLocaleData;
 
+  }
+
+  if(datatype == 'draft') {
+    publishDraft(req, res, caseUpdate, 'case');
+    return;
   }
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);

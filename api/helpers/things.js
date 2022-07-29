@@ -776,7 +776,7 @@ async function getThingEdit(params, sqlFile, res) {
  * @param {Function} entryUpdate -s Update Method of the entry from it's controller
  * @returns 
  */
-async function publishDraft(req, res, entryUpdate) {
+async function publishDraft(req, res, entryUpdate, entryType) {
   try {
     let {
       hasErrors,
@@ -784,7 +784,7 @@ async function publishDraft(req, res, entryUpdate) {
       localesToTranslate,
       localesToNotTranslate,
       originalLanguageEntry
-    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), "case");
+    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), entryType);
 
     if (hasErrors) {
       return res.status(400).json({

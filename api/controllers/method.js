@@ -219,11 +219,6 @@ async function postMethodUpdateHttp(req, res) {
   const { articleid, datatype } = params;
   const langErrors = [];
 
-  if(datatype == 'draft') {
-    publishDraft(req, res, methodUpdate);
-    return;
-  }
-
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(METHOD_BY_ID, params));
     const article = articleRow.results;
@@ -292,6 +287,11 @@ async function postMethodUpdateHttp(req, res) {
     }
       req.body['entryLocales'] = entryLocaleData;
 
+  }
+
+  if(datatype == 'draft') {
+    publishDraft(req, res, methodUpdate, 'method');
+    return;
   }
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
