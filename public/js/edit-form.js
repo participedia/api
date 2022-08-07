@@ -231,6 +231,10 @@ const editForm = {
           bodyField.classList.add("dirty");
           _disableBodySelectEl(bodyField.innerText);
         });
+        
+        bodyField.addEventListener("blur", evt => {
+          this.saveDataAndPreview(false);
+        });
       }
 
       el.addEventListener("click", e => {
