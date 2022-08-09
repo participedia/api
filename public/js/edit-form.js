@@ -224,13 +224,12 @@ const editForm = {
           _disableSelectEl(e.target.value);
         });
       } else if (inputEl.className.includes("ql-toolbar")) {
-        this.entryLocaleData["body"][this.field] = bodyField.innerHTML;
-        _disableBodySelectEl(bodyField.innerHTML);
+        _disableBodySelectEl(bodyField.innerText);
         bodyField.addEventListener("keyup", evt => {
           this.currentInput = "body";
           this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
           bodyField.classList.add("dirty");
-          _disableBodySelectEl(bodyField.innerHTML);
+          _disableBodySelectEl(bodyField.innerText);
         });
         
         bodyField.addEventListener("blur", evt => {
