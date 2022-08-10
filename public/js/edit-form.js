@@ -186,10 +186,12 @@ const editForm = {
         }
       };
 
-      const _disableBodySelectEl = value => {
+      const _disableBodySelectEl = innerText => {
+        const value = innerText.replace(/[\r\n]/gm, '');
         selectEl.disabled = true;
         selectEl.previousElementSibling.style.display = "initial";
 
+        // Validate if value is the same as placeholder from localization
         const placeholderText = document.createElement("div");
         placeholderText.innerHTML = this.localePlaceholders[this.field].body;
         if (placeholderText.innerText === value) {
@@ -224,6 +226,7 @@ const editForm = {
           _disableSelectEl(e.target.value);
         });
       } else if (inputEl.className.includes("ql-toolbar")) {
+        this.entryLocaleData["body"][this.field] = bodyField.innerHTML;
         _disableBodySelectEl(bodyField.innerText);
         bodyField.addEventListener("keyup", evt => {
           this.currentInput = "body";
