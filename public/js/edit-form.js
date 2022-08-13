@@ -11,7 +11,12 @@ import tabsWithCards from "./tabs-with-cards.js";
 //import thing from "../../api/helpers/things";
 
 const editForm = {
-  init() {
+  init(args = {}) {
+
+    if(typeof args == 'object' && 'richTextEditorList' in args) {
+      this.richTextEditorList = args.richTextEditorList;
+    }
+    
     // bind event listener for publish buttons clicks
     const submitButtonEls = document.querySelectorAll("[type=submit]");
 
@@ -90,6 +95,7 @@ const editForm = {
     languageSelectTooltipForNewEntryInput.init();
     submitFormLanguageSelector.init();
   },
+  richTextEditorList: {},
 
   initLocalForms() {
     // reference to all forms
@@ -193,7 +199,7 @@ const editForm = {
 
         // Validate if value is the same as placeholder from localization
         const placeholderText = document.createElement("div");
-        placeholderText.innerHTML = this.localePlaceholders[this.field].body;
+        placeholderText.innerHTML = this.localePlaceholders['en'].body;
         if (placeholderText.innerText === value) {
           selectEl.disabled = true;
           selectEl.previousElementSibling.style.display = "initial";
@@ -238,6 +244,20 @@ const editForm = {
         bodyField.addEventListener("blur", evt => {
           this.saveDataAndPreview(false);
         });
+
+        /**
+         * Handle rich editor's text change because the current listener only trigger keyup
+         */
+        if('body' in this.richTextEditorList) {
+          this.richTextEditorList.body.on('editor-change', (event) => {
+            if (event === 'text-change') {
+              this.currentInput = "body";
+              this.entryLocaleData["body"][this.field] = bodyField.innerHTML;
+              bodyField.classList.add("dirty");
+              _disableBodySelectEl(bodyField.innerText);
+            }
+          });
+        }
       }
 
       el.addEventListener("click", e => {

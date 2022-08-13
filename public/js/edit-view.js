@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   editWarning.init();
   editSubmissionDetails.init();
   editTextarea.init();
-  editForm.init();
+  editForm.init({richTextEditorList: editRichText.editors});
   editAutocomplete.init();
   editSelect.init();
 });
