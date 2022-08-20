@@ -114,7 +114,7 @@ const editForm = {
   initOtherLangSelector() {
     const userLocale = document.querySelector("input[name=locale]")?.value;
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
-    this.field = document.querySelector("input[name=locale]")?.value;
+    this.userLocale = document.querySelector("input[name=locale]")?.value;
     const articles =
       document.querySelector("input[name=article_data]")?.value || "{}";
     this.articleData = JSON.parse(articles);
@@ -132,11 +132,15 @@ const editForm = {
       body: {},
     };
 
-    const selectors = document.querySelectorAll(
+    if (this.isEditMode) {
+      this.initOtherLangSelectorForEditMode();
+    }
+
+    const selectInputArr = document.querySelectorAll(
       "select.js-edit-select[name=languages]"
     );
     // const selectorLoaders = document.querySelectorAll(".js-language-select-container");
-    const selectorLoaders = document.querySelectorAll(".js-other-lang-select");
+    const otherLanguageselectorLabel = document.querySelectorAll(".js-other-lang-select");
     const inputFields = document.querySelectorAll(
       ".js-language-select-container+input, .js-language-select-container+textarea"
     );
@@ -164,22 +168,26 @@ const editForm = {
         const formLanguage = getFormLanguage(evt.target.previousElementSibling.childNodes);
 
         if (Object.keys(this.entryLocaleData[this.currentInput]).length === 0) {
-          this.field = document.querySelector("input[name=locale]").value;
+          this.userLocale = document.querySelector("input[name=locale]").value;
         }
 
         this.entryLocaleData[this.currentInput][formLanguage] = this.currentInputValue;
       });
     });
-
-    selectorLoaders.forEach(el => {
+    
+    otherLanguageselectorLabel.forEach(el => {
       const selectEl = el.nextElementSibling.children[1];
       const inputEl = el.nextElementSibling.nextElementSibling;
 
       const _disableSelectEl = value => {
+        const inputFormLanguage = selectEl.value;
         selectEl.disabled = true;
         selectEl.previousElementSibling.style.display = "initial";
 
-        if (value.trim().length) {
+        if(inputFormLanguage !== userLocale) {
+          selectEl.disabled = false;
+          selectEl.previousElementSibling.style.display = "none";
+        } else if (value.trim().length) {
           selectEl.disabled = false;
           selectEl.previousElementSibling.style.display = "none";
         }
@@ -187,12 +195,12 @@ const editForm = {
           if (this.entryLocaleData[this.currentInput][userLocale]) {
             selectEl.disabled = false;
             selectEl.previousElementSibling.style.display = "none";
-            return;
           }
         }
       };
 
       const _disableBodySelectEl = innerText => {
+        const inputFormLanguage = selectEl.value;
         const value = innerText.replace(/[\r\n]/gm, '');
         selectEl.disabled = true;
         selectEl.previousElementSibling.style.display = "initial";
@@ -200,6 +208,14 @@ const editForm = {
         // Validate if value is the same as placeholder from localization
         const placeholderText = document.createElement("div");
         placeholderText.innerHTML = this.localePlaceholders['en'].body;
+
+        // If user locale is different in form input language. Then stop the validation
+        if(inputFormLanguage !== userLocale) {
+          selectEl.disabled = false;
+          selectEl.previousElementSibling.style.display = "none";
+          return;
+        }
+
         if (placeholderText.innerText === value) {
           selectEl.disabled = true;
           selectEl.previousElementSibling.style.display = "initial";
@@ -232,11 +248,12 @@ const editForm = {
           _disableSelectEl(e.target.value);
         });
       } else if (inputEl.className.includes("ql-toolbar")) {
-        this.entryLocaleData["body"][this.field] = bodyField.innerHTML;
+        // bodyField.innerHTML = this.entryLocaleData.body[selectEl.value];
+        this.entryLocaleData["body"][this.userLocale] = bodyField.innerHTML;
         _disableBodySelectEl(bodyField.innerText);
         bodyField.addEventListener("keyup", evt => {
           this.currentInput = "body";
-          this.entryLocaleData["body"][this.field] = evt.target.innerHTML;
+          this.entryLocaleData["body"][this.userLocale] = evt.target.innerHTML;
           bodyField.classList.add("dirty");
           _disableBodySelectEl(bodyField.innerText);
         });
@@ -252,7 +269,7 @@ const editForm = {
           this.richTextEditorList.body.on('editor-change', (event) => {
             if (event === 'text-change') {
               this.currentInput = "body";
-              this.entryLocaleData["body"][this.field] = bodyField.innerHTML;
+              this.entryLocaleData["body"][this.userLocale] = bodyField.innerHTML;
               bodyField.classList.add("dirty");
               _disableBodySelectEl(bodyField.innerText);
             }
@@ -268,7 +285,7 @@ const editForm = {
       });
     });
 
-    selectors.forEach(el => {
+    selectInputArr.forEach(el => {
       el.addEventListener("change", evt => {
         evt.preventDefault();
         console.log("on change value");
@@ -279,56 +296,50 @@ const editForm = {
           ? bodyField
           : el.parentElement.nextElementSibling;
 
-        this.field = evt.target.value;
+        this.userLocale = evt.target.value;
         this.inputName = isBody
           ? "body"
           : el.parentElement.nextElementSibling.name;
         if (isBody) {
-          this.entryLocaleData[this.inputName][this.field] =
-            this.entryLocaleData[this.inputName][this.field] ||
-            this.localePlaceholders[this.field][this.inputName];
+          this.entryLocaleData[this.inputName][this.userLocale] =
+            this.entryLocaleData[this.inputName][this.userLocale] ||
+            this.localePlaceholders[this.userLocale][this.inputName];
         } else {
           el.parentElement.nextElementSibling.setAttribute(
             "placeholder",
-            this.localePlaceholders[this.field][this.inputName] || ""
+            this.localePlaceholders[this.userLocale][this.inputName] || ""
           );
         }
 
         if (
           this.entryLocaleData[this.inputName] &&
-          this.entryLocaleData[this.inputName][this.field]
+          this.entryLocaleData[this.inputName][this.userLocale]
         ) {
           if (isBody) {
             inputField.innerHTML = this.entryLocaleData[this.inputName][
-              this.field
+              this.userLocale
             ];
           } else {
-            inputField.value = this.entryLocaleData[this.inputName][this.field];
+            inputField.value = this.entryLocaleData[this.inputName][this.userLocale];
           }
           // }
         } else {
-          this.entryLocaleData[this.inputName][this.field] = "";
+          this.entryLocaleData[this.inputName][this.userLocale] = "";
           if (isBody) {
             inputField.innerHTML = this.entryLocaleData[this.inputName][
-              this.field
+              this.userLocale
             ];
           } else {
-            inputField.value = this.entryLocaleData[this.inputName][this.field];
+            inputField.value = this.entryLocaleData[this.inputName][this.userLocale];
           }
         }
       });
     });
-
-    if (this.isEditMode) {
-      this.initOtherLangSelectorForEditMode();
-    }
   },
 
   initOtherLangSelectorForEditMode() {
     try {
-      const selectors = document.querySelectorAll("select[name=languages");
-      const bodyField = document.querySelector(".ql-editor");
-      const currentLocale = document.querySelector("input[name=locale").value;
+      const selectInputArr = document.querySelectorAll("select[name=languages");
 
       for (const locale in this.articleData) {
         if (this.articleData.hasOwnProperty(locale)) {
@@ -339,7 +350,7 @@ const editForm = {
         }
       }
 
-      selectors.forEach(el => {
+      selectInputArr.forEach(el => {
         el.classList.add("is-visible");
       });
     } catch (error) { }
@@ -438,7 +449,8 @@ const editForm = {
 
     const xhr = new XMLHttpRequest();
     const endpoint = isNeedToPreview ? "/saveDraftPreview" : "/saveDraft";
-    xhr.open("POST", updatedForm.getAttribute("action") + endpoint, true);
+    const apiUrl = `${updatedForm.getAttribute("action")}${endpoint}`;
+    xhr.open("POST", apiUrl, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {
       // wait for request to be done
@@ -469,12 +481,9 @@ const editForm = {
       formsData[originalEntry.locale] = originalEntry;
     }
 
-    xhr.send(
-      JSON.stringify({
-      ...formsData,
-        entryLocales: this.entryLocaleData,
-    })
-  );
+    const requestPayload = {...formsData, entryLocales: this.entryLocaleData};
+    console.log(requestPayload)
+    xhr.send(JSON.stringify(requestPayload));
   },
 
   sendFormData() {
@@ -602,13 +611,11 @@ const editForm = {
     if (originalEntry.locale) {
       formsData[originalEntry.locale] = originalEntry;
     }
-    xhr.send(
-      JSON.stringify({
-        ...formsData,
-        entryLocales: this.entryLocaleData,
-        // originalEntry,
-      })
-    );
+
+    const requestPayload = {...formsData, entryLocales: this.entryLocaleData};
+    console.log(requestPayload)
+    xhr.send(JSON.stringify(requestPayload));
+
     // open publishing feedback modal as soon as we send the request
     this.openPublishingFeedbackModal();
   },
