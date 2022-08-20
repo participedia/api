@@ -20,6 +20,7 @@
             enctype="application/x-www-form-urlencoded"
             data-datatype="{{getFormDataType article}}"
             class="js-edit-form"
+            autocomplete="off"
           >
             <input type="hidden" name="user" value="{{req.user.id}}" />
             <input type="hidden" name="locale" value="{{req.locale}}" />
