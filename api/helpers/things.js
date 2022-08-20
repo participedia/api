@@ -555,32 +555,41 @@ const requireTranslation = (entry, entryName) => {
   return requiresTranslation;
 };
 
-async function createLocalizedRecord(data, thingid, localesToTranslate = undefined) {
+async function createLocalizedRecord(data, thingid, localesToTranslate = undefined, entryLocales) {
   let records = [];
   let languagesToTranslate = localesToTranslate || SUPPORTED_LANGUAGES || [];
+
+  const getEntryData = (field, language) => {
+    try {
+      return entryLocales[field][language];
+    } catch (error) {
+      return '';
+    }
+  };
+
   for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     const language = SUPPORTED_LANGUAGES[i];
 
     if (languagesToTranslate.includes(language.twoLetterCode) && language.twoLetterCode !== data.language) {
       const item = {
-        body: '',
-        title: '',
-        description: '',
+        body: getEntryData('body', language.twoLetterCode),
+        title: getEntryData('title', language.twoLetterCode),
+        description: getEntryData('description', language.twoLetterCode),
         language: language.twoLetterCode,
         thingid: thingid,
         // TODO: Admin check here
         timestamp: 'now'
       };
 
-      if (data.body) {
+      if (data.body && !item.body) {
         item.body = await translateText(data.body, language.twoLetterCode);
       }
 
-      if (data.title) {
+      if (data.title && !item.title) {
         item.title = await translateText(data.title, language.twoLetterCode);
       }
 
-      if (data.description) {
+      if (data.description && !item.description) {
         item.description = await translateText(data.description, language.twoLetterCode);
       }
 
@@ -815,7 +824,7 @@ async function publishDraft(req, res, entryUpdate, entryType) {
 
     const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
     if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate);
+      await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate, req.body.entryLocales);
     }
     if (localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);

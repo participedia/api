@@ -43,7 +43,7 @@ const editForm = {
         }
         event.preventDefault();
         if (event.target.classList.contains("button-preview")) {
-          this.saveDataAndPreview(true);
+          this.saveDraft(true);
         }
         else {
           this.sendFormData();
@@ -83,7 +83,7 @@ const editForm = {
     this.formEl = document.querySelector(".js-edit-form");
 
     this.formEl.addEventListener('change', ev => {
-      this.saveDataAndPreview(false);
+      this.saveDraft(false);
     });
 
 
@@ -259,7 +259,7 @@ const editForm = {
         });
         
         bodyField.addEventListener("blur", evt => {
-          this.saveDataAndPreview(false);
+          this.saveDraft(false);
         });
 
         /**
@@ -377,7 +377,7 @@ const editForm = {
     });
   },
 
-  saveDataAndPreview(isNeedToPreview = false) {
+  saveDraft(isNeedToPreview = false) {
     const updatedForm = document.querySelector(".js-edit-form");
     var formsData = {};
     const formData = serialize(updatedForm);
@@ -463,6 +463,15 @@ const editForm = {
         this.handleErrors([
           "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total).",
         ]);
+      } else if (xhr.status === 408 || xhr.status === 503) {
+        // handle server unavailable/request timeout errors
+        // rather than showing
+        if (this.publishAttempts < this.MAX_PUBLISH_ATTEMPTS) {
+          this.saveDraft(isNeedToPreview);
+          this.publishAttempts++;
+        } else {
+          this.handleErrors(null);
+        }
       } else {
         const response = JSON.parse(xhr.response);
         if (response.OK) {
