@@ -403,7 +403,6 @@ if (process.env.NODE_ENV === "development") {
 // Better logging of "unhandled" promise exceptions
 process.on("unhandledRejection", function(reason, p) {
   logError(`Possibly Unhandled Rejection at: Promise for reason ${reason}`);
-  console.log(reason)
 });
 
 module.exports = app;
