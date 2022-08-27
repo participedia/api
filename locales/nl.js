@@ -501,7 +501,7 @@
   "Designer": "Ontwerper",
   "Designer & Developer": "Ontwerper en ontwikkelaar",
   "Developer": "Ontwikkelaar",
-  "disabled_language_selector_note": "Zodra u tekst in het Engels invoert, kunt u andere talen toevoegen.",
+  "disabled_language_selector_note": "Zodra u tekst in het Nederlands invoert, kunt u andere talen toevoegen.",
   "Djibouti": "Djibouti",
   "Do Full Version": "Volledige versie doen",
   "Dominica": "Dominica",

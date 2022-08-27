@@ -501,7 +501,7 @@
   "Designer": "设计师",
   "Designer & Developer": "设计师和开发人员",
   "Developer": "开发人员",
-  "disabled_language_selector_note": "输入英文文本后，您可以添加其他语言。",
+  "disabled_language_selector_note": "输入中文文本后，您可以添加其他语言。",
   "Djibouti": "吉布提",
   "Do Full Version": "做完整版",
   "Dominica": "多米尼加",

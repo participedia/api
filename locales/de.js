@@ -501,7 +501,7 @@
   "Designer": "Designer",
   "Designer & Developer": "Designer*innen & Entwickler*innen",
   "Developer": "Entwickler",
-  "disabled_language_selector_note": "Nachdem Sie Text in Englisch eingegeben haben, können Sie weitere Sprachen hinzufügen.",
+  "disabled_language_selector_note": "Nachdem Sie Text in Deutsch eingegeben haben, können Sie weitere Sprachen hinzufügen.",
   "Djibouti": "Dschibuti",
   "Do Full Version": "Vollversion",
   "Dominica": "Dominica",

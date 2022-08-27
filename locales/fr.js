@@ -501,7 +501,7 @@
   "Designer": "Concepteur.rice",
   "Designer & Developer": "Concepteur.rice et développeur.e",
   "Developer": "Développeur.e",
-  "disabled_language_selector_note": "Une fois que vous avez saisi du texte en anglais, vous pouvez ajouter d'autres langues.",
+  "disabled_language_selector_note": "Une fois que vous avez saisi du texte en français, vous pouvez ajouter d'autres langues.",
   "Djibouti": "Djibouti",
   "Do Full Version": "Faire la version complète",
   "Dominica": "Dominique",

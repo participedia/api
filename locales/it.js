@@ -501,7 +501,7 @@
   "Designer": "progettista",
   "Designer & Developer": "Progettista e Sviluppatore",
   "Developer": "Sviluppatore",
-  "disabled_language_selector_note": "Una volta inserito il testo in inglese, puoi aggiungere altre lingue.",
+  "disabled_language_selector_note": "Una volta inserito il testo in italien, puoi aggiungere altre lingue.",
   "Djibouti": "Gibuti",
   "Do Full Version": "Esegui versione completa",
   "Dominica": "Dominica",
