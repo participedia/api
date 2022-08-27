@@ -12,6 +12,7 @@ import tabsWithCards from "./tabs-with-cards.js";
 
 const editForm = {
   init(args = {}) {
+    this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
 
     if(typeof args == 'object' && 'richTextEditorList' in args) {
       this.richTextEditorList = args.richTextEditorList;
@@ -113,7 +114,6 @@ const editForm = {
 
   initOtherLangSelector() {
     const userLocale = document.querySelector("input[name=locale]")?.value;
-    this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
     this.userLocale = document.querySelector("input[name=locale]")?.value;
     const articles =
       document.querySelector("input[name=article_data]")?.value || "{}";
@@ -378,6 +378,8 @@ const editForm = {
   },
 
   saveDraft(isNeedToPreview = false) {
+    if(this.isEditMode) return;
+    
     const updatedForm = document.querySelector(".js-edit-form");
     var formsData = {};
     const formData = serialize(updatedForm);
