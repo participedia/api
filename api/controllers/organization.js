@@ -266,7 +266,7 @@ async function postOrganizationUpdateHttp(req, res) {
           title[lang] = results[0].title;
         }
 
-        if (results[0]?.desc) {
+        if (results[0]?.description) {
           desc[lang] = results[0].description;
         }
 
