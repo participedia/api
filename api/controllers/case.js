@@ -509,7 +509,7 @@ async function postCaseUpdateHttp(req, res) {
           title[lang] = results[0].title;
         }
 
-        if (results[0]?.desc) {
+        if (results[0]?.description) {
           desc[lang] = results[0].description;
         }
 
@@ -525,7 +525,8 @@ async function postCaseUpdateHttp(req, res) {
         body: body
       };
     }
-      req.body['entryLocales'] = entryLocaleData;
+    
+    req.body['entryLocales'] = entryLocaleData;
 
   }
 

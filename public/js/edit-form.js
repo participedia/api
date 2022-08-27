@@ -379,7 +379,7 @@ const editForm = {
 
   saveDraft(isNeedToPreview = false) {
     if(this.isEditMode) return;
-    
+
     const updatedForm = document.querySelector(".js-edit-form");
     var formsData = {};
     const formData = serialize(updatedForm);
