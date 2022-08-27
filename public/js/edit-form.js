@@ -98,6 +98,13 @@ const editForm = {
   },
   richTextEditorList: {},
 
+  isDraftEntry () {
+    try {
+      return (this.formEl.dataset.datatype === 'draft');
+    } catch (error) {
+      return false;
+    }
+  },
   initLocalForms() {
     // reference to all forms
     // bind event listener for publish buttons clicks
@@ -378,6 +385,8 @@ const editForm = {
   },
 
   saveDraft(isNeedToPreview = false) {
+    if(!this.isDraftEntry()) return;
+
     const updatedForm = document.querySelector(".js-edit-form");
     var formsData = {};
     const formData = serialize(updatedForm);
