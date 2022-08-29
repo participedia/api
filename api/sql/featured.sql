@@ -17,6 +17,7 @@ WITH all_featured  AS (
      END as completeness,
     featured,
     verified,
+    published,
     texts.title,
     texts.description,
     substring(texts.body for 500) AS body,

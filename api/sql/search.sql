@@ -18,7 +18,7 @@ ORDER BY rank DESC
 total_selections AS (
   SELECT count(all_selections.id) AS total
   FROM all_selections, ${type:name}
-  WHERE all_selections.id = ${type:name}.id AND ${type:name}.hidden = false ${facets:raw}
+  WHERE all_selections.id = ${type:name}.id AND ${type:name}.published = true AND ${type:name}.hidden = false ${facets:raw}
 )
 
 SELECT
@@ -30,6 +30,7 @@ SELECT
 		WHEN ${type:name}.type='organization' THEN get_completeness_organizations(${type:name}.id)
 		ELSE ''
      END as completeness,
+  ${type:name}.published,
   ${type:name}.featured,
   ${type:name}.verified,
   ${type:name}.location_name,
@@ -59,6 +60,7 @@ FROM
   get_localized_texts_fallback(${type:name}.id, ${language}, ${type:name}.original_language) AS texts
 WHERE
   all_selections.id = ${type:name}.id AND
+  all_selections.published = true AND
   ${type:name}.hidden = false
   ${facets:raw}
 ORDER BY all_selections.rank DESC

@@ -428,6 +428,7 @@
   "content_types.organization.description": "Organizations are profiles of formal and informal groups that design, implement, or support innovations in participatory politics and governance.",
   "Contribute": "Contribute",
   "Contributions": "Contributions",
+  "Drafts": "Drafts",
   "Cook Islands": "Cook Islands",
   "Costa Rica": "Costa Rica",
   "country_label": "Country",
@@ -1601,6 +1602,8 @@
   "Project Manager": "Project Manager",
   "public_profile": "Public Profile",
   "Publish": "Publish",
+  "Continue Editing": "Continue Editing",
+  "Preview": "Preview",
   "Puerto Rico": "Puerto Rico",
   "purpose_and_approach": "Purpose & Approach",
   "purpose_sectionlabel": "Purpose & Approach",
@@ -1623,7 +1626,7 @@
   "research.data_repository.feature.8": "an open API that allows data and metadata to be used by other web services.",
   "research.data_repository.p1": "The majority of research on democratic innovations and participatory processes that takes place around the world is not publicly available. These materials include datasets, codebooks, statistical software syntax or scripts, dissertations, conference papers, and practitioner evaluations and reports. The %sParticipedia Dataverse%s provides a home for these materials in an accessible and organized data repository, archives the materials for long-term preservation, and generates standardized descriptions and identifiers to ease discovery and citation of the materials.\n",
   "research.data_repository.p2": "Researchers and practitioners can contribute to the Participedia Dataverse by depositing their research materials free of charge. Features of the Participedia data repository include:",
-  "research.data_repository.questions": "Please direct any questions about contributing to Participedia Dataverse to %sdata@participedia.net%s.",
+  "research.data_repository.questions": "Please direct any questions about contributing to Participedia Dataverse to %sinfo@participedia.net%s.",
   "research.methodology.p1": "The strategy is simple: crowdsource information on democratic innovations from around the world and aggregate it into a public database that continually updates with new contributions. The Participedia platform is published under %sCreative Commons License%s and is accessible and editable by anyone.",
   "research.methodology.p2": "For an in-depth explanation of the history, aspirations, theory, and analytical approach of Participedia, see '%sThe Participedia Project: An Introduction%s', by project founders, Archon Fung and Mark E. Warren. For information on how you can contribute to the project, please see our entry-writing %sguidelines%s.",
   "research.surveys.p1": "Surveys are supplementary to Participedia’s current data and narrative descriptions and are intended to gain further insight on the outcomes and effects of cases.",
@@ -1968,5 +1971,6 @@
   "recaptcha_issues" : "Please fix the following issues",
   "reviewed_entries_title": "Reviewed Entries",
   "reviewed_entries_label": "Reviewed by Participedia Editorial Board",
-  "reviewed_popup_message": "This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please %scontact us.%s"
+  "reviewed_popup_message": "This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please %scontact us.%s",
+  "draft_container_description": "Continue edting your draft entries that are not yet published."
 }

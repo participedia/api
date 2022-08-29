@@ -61,6 +61,11 @@ function getFirstLargeImageForArticle(article) {
   }
 }
 
+function randomTexture() {
+  let index = Math.floor(Math.random() * 6) + 1;
+  return `/images/texture_${index}.svg`;
+}
+
 function getFirstThumbnailImageForArticle(article) {
   let url = getFirstLargeImageForArticle(article);
 
@@ -76,6 +81,10 @@ function getFirstThumbnailImageForArticle(article) {
       process.env.AWS_UPLOADS_URL,
       `${process.env.AWS_UPLOADS_URL}${imagePath}/`
     );
+  } else {
+    article.photos = [{ url: randomTexture() }];
+
+    return article.photos[0].url;
   }
 }
 
@@ -1124,24 +1133,53 @@ module.exports = {
     ];
   },
 
+  getContentChooserTabs(context) {
+    return [
+      { title: i18n("Drafts", context), key: "drafts" },
+    ];
+  },
+
   getUserTabs(context) {
     // if it's the profile owner making the request, return contributions and bookmarks.
     // otherwise return contributions only
     const profile = context.data.root.profile;
     const user = context.data.root.req.user;
 
-    if ((user && user.id) === (profile && profile.id)) {
+    const draftsTypes = ["cases", "methods", "organizations"];
+    // merge all article types into 1 array
+    let allDrafts = [];
+    draftsTypes.forEach(type => {
+      allDrafts = allDrafts.concat(user[type].filter(x => !x.published));
+    });
+
+    if ((user && user.id) === (profile && profile.id) && allDrafts.length > 0) {
+      return [
+        { title: i18n("Contributions", context), key: "contributions" },
+        { title: i18n("Bookmarks", context), key: "bookmarks" },
+        { title: i18n("Drafts", context), key: "drafts" },
+      ];
+    } else if ((user && user.id) === (profile && profile.id)) {
       return [
         { title: i18n("Contributions", context), key: "contributions" },
         { title: i18n("Bookmarks", context), key: "bookmarks" },
       ];
-    } else {
+    }
+     else {
       return [{ title: i18n("Contributions", context), key: "contributions" }];
     }
   },
 
   isSelectedUserTab(req, category) {
     const defaultTab = "contributions";
+    if (req.query.selectedCategory) {
+      return req.query.selectedCategory === category;
+    } else if (category === defaultTab) {
+      return true;
+    }
+  },
+
+  isSelectedContentChooserTab(req, category) {
+    const defaultTab = "drafts";
     if (req.query.selectedCategory) {
       return req.query.selectedCategory === category;
     } else if (category === defaultTab) {
@@ -1224,6 +1262,20 @@ module.exports = {
     return allContributions;
   },
 
+  getDraftsForProfile(profile) {
+    const draftsTypes = ["cases", "methods", "organizations"];
+    // merge all article types into 1 array
+    let allDrafts = [];
+    if (profile) {
+      draftsTypes.forEach(type => {
+        allDrafts = allDrafts.concat(profile[type].filter(x => !x.published));
+      });
+      allDrafts.sort((a,b) => Date.parse(b.updated_date) - Date.parse(a.updated_date))
+    }
+    
+    return allDrafts;
+  },
+
   isNotLoggedIn(req) {
     const user = req.user;
     if (!user) {
@@ -1258,6 +1310,10 @@ module.exports = {
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
+  getFormDataType(article) {
+    return !article.published ? 'draft' : '';
+  },
+
   isReaderView(req) {
     const baseUrls = ["/case", "/method", "/organization"];
     return (
@@ -1281,6 +1337,14 @@ module.exports = {
 
   isNotCollectionView(req) {
     return req.baseUrl !== "/collection";
+  },
+
+  isNotPublished(req) {
+    return !req.published;
+  },
+
+  isPublished(req) {
+    return req.published;
   },
 
   isUserView(req) {

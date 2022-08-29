@@ -32,6 +32,7 @@ WITH full_thing AS (
     decision_methods,
     if_voting,
     purpose_method,
+    published,
     verified,
     reviewed_at,
     reviewed_by,

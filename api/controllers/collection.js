@@ -48,6 +48,8 @@ const COLLECTION_STRUCTURE = JSON.parse(
 );
 const { SUPPORTED_LANGUAGES } = require("../../constants");
 
+var thingCollectionid = null;
+
 // strip off final character (assumed to be "s")
 const singularLowerCase = name =>
   (name.slice(-1) === "s" ? name.slice(0, -1) : name).toLowerCase();
@@ -139,7 +141,7 @@ async function postCollectionNewHttp(req, res) {
     const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
 
     if (filteredLocalesToTranslate.length)  {
-     await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate);
+     await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
     } if (localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
     }
@@ -186,6 +188,78 @@ async function postCollectionUpdateHttp(req, res) {
   const params = parseGetParams(req, "collection");
   const { articleid } = params;
   const langErrors = [];
+
+  if(!Object.keys(req.body).length) {
+    const articleRow = await (await db.one(COLLECTION_BY_ID, params));
+    const article = articleRow.results;
+
+    if (!article.latitude && !article.longitude) {
+      article.latitude = '';
+      article.longitude = '';
+    }
+
+    let supportedLanguages;
+    try {
+      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+    } catch (error) {
+      supportedLanguages = [];
+    }
+
+    var entryLocaleData = {
+      title: {},
+      description: {},
+      body: {},
+    };
+    var title = {};
+    var desc = {};
+    var body = {};
+
+    for (let i = 0; i < supportedLanguages.length; i++) {
+      const lang = supportedLanguages[i];
+      let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
+        language: lang,
+        thingid: article.id
+      });
+
+      if (lang === article.original_language) {
+        req.body[lang] = article;
+
+        title[lang] = results[0].title;
+        desc[lang] = results[0].description;
+        body[lang] = results[0].body;
+
+      } else {
+        const otherLangArticle = {
+          title: (results[0]?.title) ?? '',
+          description: results[0]?.description ?? '',
+          body: results[0]?.body ?? ''
+        };
+
+        if (results[0]?.title) {
+          title[lang] = results[0].title;
+        }
+
+        if (results[0]?.description) {
+          desc[lang] = results[0].description;
+        }
+
+        if (results[0]?.body) {
+          body[lang] = results[0].body;
+        }
+        req.body[lang] = otherLangArticle;
+      }
+
+      entryLocaleData = {
+        title: title,
+        description: desc,
+        body: body
+      };
+
+      req.body['entryLocales'] = entryLocaleData;
+    }
+
+  }
+
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let originalLanguageEntry;
 
@@ -259,11 +333,18 @@ async function collectionUpdate(req, res, entry = undefined) {
     oldCollection
   );
 
+  if (isNaN(updatedCollection.number_of_participants)) {
+    updatedCollection.number_of_participants = null;
+  }
+
   //get current date when user.isAdmin is false;
   updatedCollection.updated_date = !user.isadmin
     ? "now"
     : updatedCollection.updated_date;
+  updatedCollection.post_date = !updatedCase.published ? "now" : updatedCase.post_date;
+  newCollection.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date;
 
+    updatedCollection = true;
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-collection", async t => {
@@ -404,6 +485,7 @@ async function getEditStaticText(params) {
 async function getCollectionEditHttp(req, res) {
   const params = parseGetParams(req, "collection");
   params.view = "edit";
+  thingCollectionid = null;
   const articles = await getThingEdit(params, COLLECTION_BY_ID_LOCALE, res);
   if (!articles) {
     res.status(404).render("404");
@@ -413,10 +495,147 @@ async function getCollectionEditHttp(req, res) {
   returnByType(res, params, articles, staticText, req.user);
 }
 
+async function saveCollectionDraft(req, res, entry = undefined) {
+
+
+  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  let entryData;
+
+  const params = parseGetParams(req, "collection");
+    const user = req.user;
+    const { articleid, type, view, userid, lang, returns } = params;
+
+    for (const entryLocale in req.body) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = req.body[entryLocale];
+        if(entryLocale === entry.original_language) {
+          entryData = entry;
+        }
+      }
+    }
+
+    let title = entryData.title || '';
+    let body = entryData.body || '';
+    let description = entryData.description || '';
+    let original_language = entryData.original_language || "en";
+
+    if (!thingCollectionid && !articleid) {
+      const thing = await db.one(CREATE_COLLECTION, {
+        title,
+        body,
+        description,
+        original_language,
+      });
+    
+      thingCollectionid = thing.thingid;
+      }
+      req.params.thingid = thingCollectionid ?? articleid;
+      params.articleid = req.params.thingid;
+
+      const newCollection = entryData;
+      const isNewCollection = !newCollection.article_id;
+    
+
+    const {
+      updatedText,
+      author,
+      oldArticle,
+    } = await maybeUpdateUserTextLocaleEntry(newCollection, req, res, "collection");
+    const [updatedCollection, er] = getUpdatedCollection(user, params, newCollection, oldArticle);
+    //get current date when user.isAdmin is false;
+  
+    for (const entryLocale in localeEntries) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = localeEntries[entryLocale];
+          if (entry.title) {
+            const articeLocale = {
+              title : entry.title,
+              description: entry.description,
+              body: entry.body,
+              id: params.articleid,
+              language: entryLocale
+               };
+         
+               await db.tx("update-collection", async t => {
+                 await t.none(INSERT_LOCALIZED_TEXT, articeLocale);
+               });  
+        }
+      }
+    }
+
+ 
+    newCollection.post_date = Date.now();
+    newCollection.updated_date = Date.now();
+  
+    updatedCollection.title = newCollection.title;
+    updatedCollection.description = newCollection.description;
+
+    if (updatedCollection.published && !isNewCollection) return;
+
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  updatedCollection.published = false;
+      await db.tx("update-collection", async t => {
+        
+        if (isNewCollection) {
+          await t.none(INSERT_AUTHOR, author);
+        }
+      });
+      //if this is a new Collection, set creator id to userid and isAdmin
+      if (user.isadmin) {
+        const creator = {
+          user_id: newCollection.creator ? newCollection.creator : params.userid,
+          thingid: params.articleid,
+          timestamp: new Date(newCollection.post_date)
+
+        };
+        await db.tx("update-collection", async t => {
+            if (updatedCollection.verified) {
+              updatedCollection.reviewed_by = creator.user_id;
+              updatedCollection.reviewed_at = "now";
+            }
+
+            if (!isNewCollection) {
+              var userId = oldArticle.creator.user_id.toString();
+              var creatorTimestamp = new Date(oldArticle.post_date);
+              if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+                await t.none(INSERT_AUTHOR, author);
+                updatedCollection.updated_date = "now";
+              } else {
+                await t.none(UPDATE_AUTHOR_FIRST, creator);
+              }
+            }
+            
+          await t.none(UPDATE_COLLECTION, updatedCollection);
+
+        });
+      } else {
+        await db.tx("update-collection", async t => {
+          await t.none(INSERT_AUTHOR, author);
+          await t.none(UPDATE_COLLECTION, updatedCollection);
+        });
+      }
+
+    if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
+      const freshArticle = await getCollection(params, res);
+      res.status(200).json({
+        OK: true,
+        article: freshArticle,
+        isPreview: true
+      });
+      refreshSearch();
+    } else {
+      res.status(200).json({
+        OK: true,
+        isPreview: false
+      })
+    }
+}
+
 async function getCollectionNewHttp(req, res) {
   const params = parseGetParams(req, "collection");
   params.view = "edit";
   const articles = COLLECTION_STRUCTURE;
+  thingCollectionid = null;
   const staticText = await getEditStaticText(params);
   returnByType(res, params, articles, staticText, req.user);
 }
@@ -427,6 +646,9 @@ router.get("/new", requireAuthenticatedUser(), getCollectionNewHttp);
 router.post("/new", requireAuthenticatedUser(), postCollectionNewHttp);
 router.get("/:thingid", getCollectionHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
+router.post("/new/saveDraft", requireAuthenticatedUser(), saveCollectionDraft);
+router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveCollectionDraft);
+router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveCollectionDraft);
 
 module.exports = {
   collection_: router,

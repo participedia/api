@@ -87,6 +87,7 @@
   {{#if (isReaderView req)}}
     <script type="text/javascript" src="/js/vendor/flickity@2.2.0-flickity.pkgd.js"></script>
     <script type="text/javascript" src="/js/vendor/flickity-fullscreen@1.1.1-fullscreen.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?hl={{getLocale}}" async defer></script>
     {{> script-tag-with-cache-key filepath="/build/js/reader-view.bundle.js"}}
   {{/if}}
 

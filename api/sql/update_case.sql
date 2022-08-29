@@ -5,6 +5,7 @@ SET
   post_date = ${post_date},
   featured = ${featured},
   hidden = ${hidden},
+  published = ${published},
   completeness = ${completeness},
   verified = ${verified},
   reviewed_at = ${reviewed_at},

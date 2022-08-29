@@ -28,9 +28,13 @@ const editRichText = {
       // setting to block after it's initialized so we don't
       // get a flash of unstyled content (FOUC)
       editorEl.style.display = "block";
+
+      const field = editorEl.dataset.name.replace('richtext-', '');
+      this.editors[field] = quill;
     });
     
   },
+  editors: {}
 };
 
 export default editRichText;

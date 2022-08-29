@@ -1,3 +1,6 @@
+
+var formDataInputPreview = null;
+
 function getValueForParam(paramName) {
   const params = window.location.search;
   const newParams = {};
@@ -76,4 +79,12 @@ function xhrReq(action, url, data = {}, successCB = null, errorCB = null) {
   request.send(data);
 }
 
-export { removeUrlParams, getValueForParam, updateUrlParams, xhrReq };
+function setInputDataPreview(data) {
+  formDataInputPreview = data;
+}
+
+function getInputPreviewData() {
+  return formDataInputPreview;
+}
+
+export { removeUrlParams, getValueForParam, updateUrlParams, xhrReq, setInputDataPreview, getInputPreviewData };

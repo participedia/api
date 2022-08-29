@@ -18,7 +18,9 @@
             {{/if}}
             method="post"
             enctype="application/x-www-form-urlencoded"
+            data-datatype="{{getFormDataType article}}"
             class="js-edit-form"
+            autocomplete="off"
           >
             <input type="hidden" name="user" value="{{req.user.id}}" />
             <input type="hidden" name="locale" value="{{req.locale}}" />
@@ -27,6 +29,7 @@
             <input type="hidden" name="article_data" value="{{toJSON articles}}" />
             <input type="hidden" name="captcha_error" value="{{t 'recaptcha_error'}}" />
             <input type="hidden" name="recaptcha_issues" value="{{t 'recaptcha_issues'}}" />
+            <input type="hidden" name="article_type" value="{{article.type}}" />
 
             {{#if (isEditView req)}}
               <input type="hidden" name="article_id" value="{{article.id}}" />
@@ -53,6 +56,9 @@
             {{> original-language-alert article=article}}
             {{> @partial-block article=article __=__ static=static}}
             <div class="g-recaptcha recaptcha" data-sitekey="{{getReCaptchaSiteKey}}"></div>
+            <div class="draft-info-saved js-draft-info-saved" >
+              <p>Draft saved</p>
+            </div>
           </form>
       {{> edit-form-submit-button article=article}}
 

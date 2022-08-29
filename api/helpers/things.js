@@ -18,7 +18,7 @@ const moment = require("moment");
 const { SUPPORTED_LANGUAGES, RESPONSE_LIMIT } = require("./../../constants.js");
 const logError = require("./log-error.js");
 const createCSVDataDump = require("./create-csv-data-dump.js");
-const translateScript = require("./../../scripts/generate-entry-i18n.js");
+const { getOriginalLanguageEntry } = require('../controllers/api/api-helpers');
 
 const {
   as,
@@ -106,6 +106,12 @@ const returnByType = async (res, params, article, static, user, results = {}, to
       articles[e.language] = e;
     });
     article = articles[currentLocale];
+
+    // If current locale has no data structure. Then generate from the template;
+    if(!article) {
+      article = getStructure(type, articleid);
+      articles[currentLocale] = article;
+    }
   } else {
     if (article.hidden && (!user || (user && !user.isadmin))) {
       return res.status(404).render("404");
@@ -140,6 +146,11 @@ const returnByType = async (res, params, article, static, user, results = {}, to
         .status(200)
         .render(type + "-" + view, { articles, article, results, static, user, params, total, pages, numArticlesByType });
   }
+};
+
+const getStructure = (type, id) => {
+  const structure = require(`${require.main.path}/api/helpers/data/${type}-structure.json`);
+  return {id, ...structure, ...{articleId: id}};
 };
 
 const parseGetParams = function(req, type) {
@@ -470,7 +481,7 @@ const isValidDate = date => {
   return moment(date).isValid();
 };
 
-const validateFields = (entry, entryName, articleId) => {
+const validateFields = (entry, entryName) => {
   let links = entry.links;
   const title = entry.title;
   const startDate = entry.start_date;
@@ -479,7 +490,7 @@ const validateFields = (entry, entryName, articleId) => {
 
   // validate title
   if (!title) {
-    translateScript.translateListOfEntries([{type: entryName, id: articleId}])
+    errors.push(`Cannot create a ${entryName} without at least a title.`);
   }
 
   // validate url
@@ -544,32 +555,41 @@ const requireTranslation = (entry, entryName) => {
   return requiresTranslation;
 };
 
-async function createLocalizedRecord(data, thingid, localesToTranslate = undefined) {
+async function createLocalizedRecord(data, thingid, localesToTranslate = undefined, entryLocales) {
   let records = [];
   let languagesToTranslate = localesToTranslate || SUPPORTED_LANGUAGES || [];
+
+  const getEntryData = (field, language) => {
+    try {
+      return entryLocales[field][language];
+    } catch (error) {
+      return '';
+    }
+  };
+
   for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     const language = SUPPORTED_LANGUAGES[i];
 
     if (languagesToTranslate.includes(language.twoLetterCode) && language.twoLetterCode !== data.language) {
       const item = {
-        body: '',
-        title: '',
-        description: '',
+        body: getEntryData('body', language.twoLetterCode),
+        title: getEntryData('title', language.twoLetterCode),
+        description: getEntryData('description', language.twoLetterCode),
         language: language.twoLetterCode,
         thingid: thingid,
         // TODO: Admin check here
         timestamp: 'now'
       };
 
-      if (data.body) {
+      if (data.body && !item.body) {
         item.body = await translateText(data.body, language.twoLetterCode);
       }
 
-      if (data.title) {
+      if (data.title && !item.title) {
         item.title = await translateText(data.title, language.twoLetterCode);
       }
 
-      if (data.description) {
+      if (data.description && !item.description) {
         item.description = await translateText(data.description, language.twoLetterCode);
       }
 
@@ -758,6 +778,207 @@ async function getThingEdit(params, sqlFile, res) {
   }
 }
 
+/**
+ * 
+ * @param {Object} req - Express HTTP request
+ * @param {Object} res - Express HTTP response
+ * @param {Function} entryUpdate -s Update Method of the entry from it's controller
+ * @returns 
+ */
+async function publishDraft(req, res, entryUpdate, entryType) {
+  try {
+    let {
+      hasErrors,
+      langErrors,
+      localesToTranslate,
+      localesToNotTranslate,
+      originalLanguageEntry
+    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), entryType);
+
+    if (hasErrors) {
+      return res.status(400).json({
+        OK: false,
+        errors: langErrors,
+      });
+    }
+
+    const title = originalLanguageEntry.title;
+    const body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    const description = originalLanguageEntry.description || "";
+    const original_language = originalLanguageEntry.original_language || "en";
+    const { article, errors } = await entryUpdate(req, res, originalLanguageEntry);
+
+    if (errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
+    const localizedData = {
+      body,
+      description,
+      language: original_language,
+      title
+    };
+
+    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+    if (filteredLocalesToTranslate.length) {
+      await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate, req.body.entryLocales);
+    }
+    if (localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);
+    }
+    res.status(200).json({
+      OK: true,
+      article,
+    });
+  } catch (error) {
+    logError(error);
+    res.status(400).json({ OK: false, error: error });
+  }
+}
+
+/**
+ * 
+ * @param {Object} req - Express HTTP request
+ * @param {Object} res - Express HTTP response
+ * @param {Object} args - Object and functions from it's controller
+ * @returns 
+ */
+async function saveDraft(req, res, args) {
+  let {
+    LOCALIZED_TEXT_BY_ID_LOCALE,
+    UPDATE_DRAFT_LOCALIZED_TEXT,
+    INSERT_LOCALIZED_TEXT,
+    INSERT_AUTHOR,
+    UPDATE_AUTHOR_FIRST,
+    UPDATE_ENTRY,
+    CREATE_ENTRY_QUERY,
+    refreshSearch,
+    thingId,
+    getUpdatedEntry,
+    getEntry,
+    entryType
+  } = args;
+  const params = parseGetParams(req, entryType);
+  const user = req.user;
+  const { articleid } = params;
+  const originalLanguageEntry = getOriginalLanguageEntry(req.body);
+  const entryData = req.body[originalLanguageEntry];
+
+  // Save draft
+  if (!thingId && !articleid) {
+    const thing = await db.one(CREATE_ENTRY_QUERY, {
+      title: entryData.title || '',
+      body: entryData.body || '',
+      description: entryData.description || '',
+      original_language: entryData.original_language || "en"
+    });
+  
+    thingId = thing.thingid;
+  }
+
+  req.params.thingid = thingId ?? articleid;
+  params.articleid = req.params.thingid;
+  const newEntry = entryData;
+  const isNewEntry = !newEntry.article_id;
+  
+  const {
+    updatedText,
+    author,
+    oldArticle,
+  } = await maybeUpdateUserTextLocaleEntry(newEntry, req, res, entryType);
+  const [updatedEntry, er] = getUpdatedEntry(user, params, newEntry, oldArticle);
+  //get current date when user.isAdmin is false;
+
+  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  for (const entryLocale in localeEntries) {
+    if (req.body.hasOwnProperty(entryLocale)) {
+      const entry = localeEntries[entryLocale];
+      const localizedData = {
+        title : entry.title ?? '',
+        description: entry.description,
+        body: entry.body,
+        id: params.articleid,
+        language: entryLocale
+      };
+    
+      let hasLocaleData = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
+        language: entryLocale,
+        thingid: params.articleid
+      });
+
+      if (hasLocaleData.length) {
+        await db.tx(`update-${entryType}`, async t => {
+          await t.none(UPDATE_DRAFT_LOCALIZED_TEXT, localizedData);
+        });
+      } else {
+        await db.tx(`update-${entryType}`, async t => {
+          await t.none(INSERT_LOCALIZED_TEXT, localizedData);
+        }); 
+      }
+    }
+  }
+
+  newEntry.post_date = Date.now();
+  newEntry.updated_date = Date.now();
+  updatedEntry.title = newEntry.title;
+  updatedEntry.description = newEntry.description;
+
+  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  updatedEntry.published = false;
+  await db.tx(`update-${entryType}`, async t => {
+    if (isNewEntry) {
+      await t.none(INSERT_AUTHOR, author);
+    }
+  });
+
+  //if this is a new entry, set creator id to userid and isAdmin
+  if (user.isadmin) {
+    const creator = {
+      user_id: newEntry.creator ? newEntry.creator : params.userid,
+      thingid: params.articleid,
+      timestamp: new Date(newEntry.post_date)
+    };
+    await db.tx(`update-${entryType}`, async t => {
+      if (updatedEntry.verified) {
+        updatedEntry.reviewed_by = creator.user_id;
+        updatedEntry.reviewed_at = "now";
+      }
+
+      if (!isNewEntry) {
+        var userId = oldArticle.creator.user_id.toString();
+        var creatorTimestamp = new Date(oldArticle.post_date);
+        if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+          await t.none(INSERT_AUTHOR, author);
+          updatedEntry.updated_date = "now";
+        } else {
+          await t.none(UPDATE_AUTHOR_FIRST, creator);
+        }
+      }
+      
+      await t.none(UPDATE_ENTRY, updatedEntry);
+    });
+  } else {
+    await db.tx(`update-${entryType}`, async t => {
+      await t.none(INSERT_AUTHOR, author);
+      await t.none(UPDATE_ENTRY, updatedEntry);
+    });
+  }
+
+  // Prepare response
+  let payload = {OK: true, isPreview: false};
+
+  if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
+    payload["isPreview"] = true;
+    payload["article"] = await getEntry(params, res);
+    refreshSearch();
+  }
+  
+  return {payload, thingId: params.articleid};
+}
+
 module.exports = {
   supportedTypes,
   titleKeys,
@@ -787,5 +1008,7 @@ module.exports = {
   offsetFromReq,
   parseAndValidateThingPostData,
   getThingEdit,
-  generateLocaleArticle
+  saveDraft,
+  generateLocaleArticle,
+  publishDraft
 };

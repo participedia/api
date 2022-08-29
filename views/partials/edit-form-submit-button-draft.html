@@ -1,0 +1,13 @@
+<div class="edit-buttons">
+    
+  {{# if (isNotPublished article)}}
+  <a href="/{{article.type}}/{{article.id}}/edit" class="button button-reader-preview button-reader-white-border" data-cy="main-form-preview">
+     {{t "Continue Editing"}}
+  </a>
+  
+
+  <button type="submit" class="button button-light-grey" data-datatype="draft" data-cy="main-form-submit">
+      {{> icon-submit }} {{t "Publish"}}
+    </button>
+  {{/if}}
+  </div>
