@@ -48,7 +48,7 @@ total_featured AS (
   FROM all_featured WHERE hidden = false
 )
 SELECT all_featured.*, total_featured.total
-FROM all_featured, total_featured WHERE hidden = false
+FROM all_featured, total_featured WHERE hidden = false AND published = true
 ORDER BY featured DESC, ${sortby:name} DESC
 OFFSET ${offset}
 LIMIT ${limit}
