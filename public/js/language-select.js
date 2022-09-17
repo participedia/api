@@ -30,7 +30,7 @@ const languageSelect = {
   generateRedirectPath() {
     this.redirectUrl = window.location.pathname;
     let urlPathMeta = window.location.pathname.split('/');
-    if (urlPathMeta[1] && things.indexOf(urlPathMeta[1]) >= 0 && urlPathMeta[3] && urlPathMeta[3] !== 'edit') {
+    if (urlPathMeta[1] && things.indexOf(urlPathMeta[1]) >= 0 && urlPathMeta[3] && (urlPathMeta[3] !== 'edit')) {
       this.redirectUrl = `/${urlPathMeta[1]}/${urlPathMeta[2]}`;
       this.isThingDetailsPageWithLanguageParam = true;
     }
