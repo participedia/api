@@ -61,6 +61,14 @@ article .reader-view-social-links {
   padding-left: 10px;
 }
 
+.reader-view .st0 {
+  fill: #808080;
+}
+
+.reader-view .st1 {
+  fill: #ffffff;
+}
+
 /* bookmark link */
 .reader-view .bookmark-link {
   display: none;
