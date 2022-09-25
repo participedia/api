@@ -873,6 +873,7 @@ module.exports = {
       linkedIn:
         `https://www.linkedin.com/shareArticle?mini=true` +
         `&url=${url}&title=${article.title}`,
+      instagram: `https://instagram.com/participedia`,
     };
     return shareUrls[type];
   },

@@ -721,7 +721,8 @@ function parseAndValidateThingPostData(body, entryName) {
   const langErrors = [];
   const localesToTranslate = [];
   const localesToNotTranslate = [];
-  let originalLanguageEntry;
+  const entryPlaceholder = Object.values(body).filter(x => x.original_language)[0];
+  const originalLanguageEntry = {...entryPlaceholder, ...body[entryPlaceholder.original_language]};
 
   // Get locales to translate
   for (const entryLocale in body) {
@@ -729,9 +730,6 @@ function parseAndValidateThingPostData(body, entryName) {
       const entry = body[entryLocale];
       if(!entry.title || requireTranslation(entry)) {
         localesToTranslate.push(entryLocale);
-      }
-      if(entryLocale === entry.original_language) {
-        originalLanguageEntry = entry;
       }
     }
   }

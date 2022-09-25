@@ -13,6 +13,7 @@ import tabsWithCards from "./tabs-with-cards.js";
 const editForm = {
   init(args = {}) {
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
+    this.originalLanguage = document.querySelector("input[name=original_language]")?.value;
 
     if(typeof args == 'object' && 'richTextEditorList' in args) {
       this.richTextEditorList = args.richTextEditorList;
@@ -191,7 +192,7 @@ const editForm = {
         selectEl.disabled = true;
         selectEl.previousElementSibling.style.display = "initial";
 
-        if(inputFormLanguage !== userLocale) {
+        if(inputFormLanguage !== this.originalLanguage) {
           selectEl.disabled = false;
           selectEl.previousElementSibling.style.display = "none";
         } else if (value.trim().length) {
@@ -199,7 +200,7 @@ const editForm = {
           selectEl.previousElementSibling.style.display = "none";
         }
         if (this.currentInput) {
-          if (this.entryLocaleData[this.currentInput][userLocale]) {
+          if (this.entryLocaleData[this.currentInput][this.originalLanguage]) {
             selectEl.disabled = false;
             selectEl.previousElementSibling.style.display = "none";
           }
@@ -507,7 +508,7 @@ const editForm = {
   sendFormData() {
     debugger;
     const formData = serialize(this.formEl);
-    const originalEntry = Object.fromEntries(new URLSearchParams(formData));
+    const formValue = Object.fromEntries(new URLSearchParams(formData));
     const formObject = Object.fromEntries(new URLSearchParams(formData));
 
     let formsData = {};
@@ -519,8 +520,7 @@ const editForm = {
     }
 
     if('article_type' in this.formEl) {
-      if (!originalEntry.title) {
-        let article_data = JSON.parse(formObject.article_data) || [];
+      if (!this.entryLocaleData.title[formValue.original_language]) {
         this.handleErrors([`Cannot create a ${this.formEl.article_type.value} without at least a title.`]);
         return;
       }
@@ -541,15 +541,15 @@ const editForm = {
       "insights_outcomes", "organizer_types", "funder_types", "change_types", "files", "photos",
       "implementers_of_change", "evaluation_reports"
     ].map(key => {
-      let formKeys = Object.keys(originalEntry);
-      let formValues = originalEntry;
+      let formKeys = Object.keys(formValue);
+      let formValues = formValue;
       if (!formKeys) return;
       const matcher = new RegExp(
         `^(${key})\\[(\\d{1,})\\](\\[(\\S{1,})\\])?`
       );
       let mediaThingsKeys = formKeys.filter(key => matcher.test(key));
       if (mediaThingsKeys.length === 0) {
-        originalEntry[key] = [];
+        formValue[key] = [];
       }
       mediaThingsKeys.forEach(thingKey => {
         const thingValue = formValues[thingKey];
@@ -587,7 +587,7 @@ const editForm = {
           this.entryLocaleData["body"]?.[lang.key] || "";
       });
     } else {
-      formsData = originalEntry;
+      formsData = formValue;
     }
     const xhr = new XMLHttpRequest();
     const datatype = this.formEl.dataset.datatype;
@@ -626,8 +626,9 @@ const editForm = {
         }
       }
     };
-    if (originalEntry.locale) {
-      formsData[originalEntry.locale] = originalEntry;
+
+    if (formValue.locale) {
+      formsData[formValue.locale] = formValue;
     }
 
     const requestPayload = {...formsData, entryLocales: this.entryLocaleData};
