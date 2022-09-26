@@ -927,43 +927,9 @@ async function saveDraft(req, res, args) {
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedEntry.published = false;
   await db.tx(`update-${entryType}`, async t => {
-    if (isNewEntry) {
-      await t.none(INSERT_AUTHOR, author);
-    }
+    await t.none(INSERT_AUTHOR, author);
+    await t.none(UPDATE_ENTRY, updatedEntry);
   });
-
-  //if this is a new entry, set creator id to userid and isAdmin
-  if (user.isadmin) {
-    const creator = {
-      user_id: newEntry.creator ? newEntry.creator : params.userid,
-      thingid: params.articleid,
-      timestamp: new Date(newEntry.post_date)
-    };
-    await db.tx(`update-${entryType}`, async t => {
-      if (updatedEntry.verified) {
-        updatedEntry.reviewed_by = creator.user_id;
-        updatedEntry.reviewed_at = "now";
-      }
-
-      if (!isNewEntry) {
-        var userId = oldArticle.creator.user_id.toString();
-        var creatorTimestamp = new Date(oldArticle.post_date);
-        if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
-          await t.none(INSERT_AUTHOR, author);
-          updatedEntry.updated_date = "now";
-        } else {
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
-        }
-      }
-      
-      await t.none(UPDATE_ENTRY, updatedEntry);
-    });
-  } else {
-    await db.tx(`update-${entryType}`, async t => {
-      await t.none(INSERT_AUTHOR, author);
-      await t.none(UPDATE_ENTRY, updatedEntry);
-    });
-  }
 
   // Prepare response
   let payload = {OK: true, isPreview: false};
