@@ -537,14 +537,19 @@ async function postCaseUpdateHttp(req, res) {
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let originalLanguageEntry;
-
+  let entryOriginalLanguage;
 
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
-      if (entryLocale === entry.original_language) {
+      
+      if (req.body.hasOwnProperty(entry.original_language)){
+        entryOriginalLanguage = entry.original_language;
+      }
+      if (entryLocale === entryOriginalLanguage) {
         originalLanguageEntry = entry;
       }
+      
       let errors = validateFields(entry, "case");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
@@ -557,10 +562,11 @@ async function postCaseUpdateHttp(req, res) {
       errors: langErrors,
     });
   }
-
-  await caseUpdate(req, res, originalLanguageEntry);
+  
+  if(originalLanguageEntry){
+    await caseUpdate(req, res, originalLanguageEntry);
+  }
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
-
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
   const freshArticle = await getCase(params, res);
   res.status(200).json({
