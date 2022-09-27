@@ -296,10 +296,14 @@ async function postMethodUpdateHttp(req, res) {
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let originalLanguageEntry;
+  let entryOriginalLanguage;
 
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
+      if (req.body.hasOwnProperty(entry.original_language)){
+        entryOriginalLanguage = entry.original_language;
+      }
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
@@ -317,7 +321,9 @@ async function postMethodUpdateHttp(req, res) {
     });
   }
 
-  await methodUpdate(req, res, originalLanguageEntry);
+  if(originalLanguageEntry){
+    await methodUpdate(req, res, originalLanguageEntry);
+  }
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
