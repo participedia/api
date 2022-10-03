@@ -123,6 +123,17 @@ const editForm = {
   initOtherLangSelector() {
     const userLocale = document.querySelector("input[name=locale]")?.value;
     this.userLocale = document.querySelector("input[name=locale]")?.value;
+    let articleId = sessionStorage.getItem("articleId");
+    let article_type = sessionStorage.getItem("article_type");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const sourcePage = urlParams.get('source')
+
+    if(articleId && article_type && sourcePage != "new"){
+      location.href = `/${article_type}/${articleId}/edit`;
+      sessionStorage.removeItem("articleId");
+      sessionStorage.removeItem("article_type");
+    }
     const articles =
       document.querySelector("input[name=article_data]")?.value || "{}";
     this.articleData = JSON.parse(articles);
@@ -485,6 +496,11 @@ const editForm = {
       } else {
         const response = JSON.parse(xhr.response);
         if (response.OK) {
+          if (!this.isEditMode){
+            sessionStorage.setItem("articleId", response.articleId);
+            sessionStorage.setItem("article_type", response.article_type);
+          }
+          
           if (response.isPreview) {
           this.handleSuccess(response);
           }

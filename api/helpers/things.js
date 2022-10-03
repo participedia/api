@@ -891,6 +891,7 @@ async function saveDraft(req, res, args) {
   //get current date when user.isAdmin is false;
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  // console.log("newEntry " + JSON.stringify(newEntry.article_type))
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
@@ -932,7 +933,7 @@ async function saveDraft(req, res, args) {
   });
 
   // Prepare response
-  let payload = {OK: true, isPreview: false};
+  let payload = {OK: true, isPreview: false, articleId: params.articleid, article_type: newEntry.article_type};
 
   if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
     payload["isPreview"] = true;
