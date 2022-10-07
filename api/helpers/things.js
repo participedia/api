@@ -927,6 +927,13 @@ async function saveDraft(req, res, args) {
 
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
   updatedEntry.published = false;
+  if(isNaN(updatedEntry.is_component_of)){updatedEntry.is_component_of = 0}
+  if(isNaN(updatedEntry.number_of_participants)){updatedEntry.number_of_participants = 0}
+  if(isNaN(updatedEntry.primary_organizer)){updatedEntry.primary_organizer = 0} 
+  if(isNaN(updatedEntry.collections)){updatedEntry.collections = 0} 
+  if(isNaN(updatedEntry.latitude)){updatedEntry.latitude = 0} 
+  if(isNaN(updatedEntry.longitude)){updatedEntry.longitude = 0} 
+  
   await db.tx(`update-${entryType}`, async t => {
     await t.none(INSERT_AUTHOR, author);
     await t.none(UPDATE_ENTRY, updatedEntry);
