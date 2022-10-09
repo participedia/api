@@ -1768,6 +1768,8 @@
   "Read more about our research": "Lees meer over ons onderzoek",
   "recaptcha_error": "Vul de captcha in om te bevestigen dat u geen robot bent",
   "recaptcha_issues": "Los de volgende problemen op:",
+  "error_message_no_title" : "Kan niet maken zonder ten minste een titel.",
+  "error_message_file_to_large" : "Sorry, uw bestanden zijn te groot. Probeer een voor een te uploaden of kleinere bestanden te uploaden (in totaal 50 MB).",
   "Remove Bookmark": "Bladwijzer verwijderen",
   "Research": "Onderzoek",
   "Research Assistant": "Onderzoeksassistent",

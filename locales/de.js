@@ -1767,6 +1767,8 @@
   "Read more": "Weiterlesen",
   "Read more about our research": "Lesen Sie mehr über unsere Forschung",
   "recaptcha_error": "Bitte füllen Sie das Captcha aus, um zu bestätigen, dass Sie kein Roboter sind",
+  "error_message_no_title" : "Kann nicht ohne mindestens einen Titel erstellt werden.",
+  "error_message_file_to_large" : "Entschuldigung, Ihre Dateien sind zu groß. Versuchen Sie, eine Datei nach der anderen hochzuladen oder kleinere Dateien (insgesamt 50 MB) hochzuladen.",
   "recaptcha_issues": "Bitte beheben Sie die folgenden Probleme",
   "Remove Bookmark": "Lesezeichen entfernen",
   "Research": "Forschung",

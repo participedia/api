@@ -1768,6 +1768,8 @@
   "Read more about our research": "En savoir plus sur nos recherches",
   "recaptcha_error": "Veuillez remplir le captcha pour confirmer que vous n'êtes pas un robot",
   "recaptcha_issues": "Veuillez résoudre les problèmes suivants",
+  "error_message_no_title" : "Impossible de créer sans au moins un titre.",
+  "error_message_file_to_large" : "Désolé vos fichiers sont trop volumineux. Essayez d'en télécharger un à la fois ou de télécharger des fichiers plus petits (50 Mo au total).",
   "Remove Bookmark": "Supprimer un signet",
   "Research": "Recherche",
   "Research Assistant": "Assistant.e de recherche",

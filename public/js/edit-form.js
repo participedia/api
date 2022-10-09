@@ -481,9 +481,7 @@ const editForm = {
         // this.openAuthWarning();
       } else if (xhr.status === 413) {
         // if file uploads are too large
-        this.handleErrors([
-          "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total).",
-        ]);
+        this.handleErrors([this.formEl.file_to_large_error.value]);
       } else if (xhr.status === 408 || xhr.status === 503) {
         // handle server unavailable/request timeout errors
         // rather than showing
@@ -522,7 +520,6 @@ const editForm = {
   },
 
   sendFormData() {
-    debugger;
     const formData = serialize(this.formEl);
     const formValue = Object.fromEntries(new URLSearchParams(formData));
     const formObject = Object.fromEntries(new URLSearchParams(formData));
@@ -537,7 +534,7 @@ const editForm = {
 
     if('article_type' in this.formEl) {
       if (!this.entryLocaleData.title[formValue.original_language]) {
-        this.handleErrors([`Cannot create a ${this.formEl.article_type.value} without at least a title.`]);
+        this.handleErrors([this.formEl.no_title_error.value]);
         return;
       }
     }
@@ -621,9 +618,7 @@ const editForm = {
         window.location.href = "/logout";
       } else if (xhr.status === 413) {
         // if file uploads are too large
-        this.handleErrors([
-          "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total).",
-        ]);
+        this.handleErrors([this.formEl.file_to_large_error.value]);
       } else if (xhr.status === 408 || xhr.status === 503) {
         // handle server unavailable/request timeout errors
         // rather than showing

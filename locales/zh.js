@@ -1768,6 +1768,8 @@
   "Read more about our research": "阅读更多与我们的研究相关的信息",
   "recaptcha_error": "请填写验证码以确认您不是机器人",
   "recaptcha_issues": "请修复以下问题",
+  "error_message_no_title" : "至少没有标题就无法创建。",
+  "error_message_file_to_large" : "抱歉，您的文件太大。 尝试一次上传一个或上传较小的文件（总共 50mb）。",
   "Remove Bookmark": "删除书签",
   "Research": "研究",
   "Research Assistant": "研究助理",
