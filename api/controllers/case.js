@@ -456,8 +456,9 @@ async function caseUpdate(req, res, entry = undefined) {
 async function postCaseUpdateHttp(req, res) {
   // cache.clear();
   const params = parseGetParams(req, "case");
-  const { articleid, datatype } = params;
-  const langErrors = [];
+  const { articleid, datatype, lang } = params;
+  const langErrors = []; 
+  const originLang = lang;
   
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(CASE_BY_ID, params));
@@ -534,10 +535,11 @@ async function postCaseUpdateHttp(req, res) {
     publishDraft(req, res, caseUpdate, 'case');
     return;
   }
-
+  
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let originalLanguageEntry;
   let entryOriginalLanguage;
+  const localeEntriesArr = [];
 
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
@@ -553,7 +555,12 @@ async function postCaseUpdateHttp(req, res) {
       let errors = validateFields(entry, "case");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
+
+      if(originLang == entryLocale){
+        localeEntriesArr.push(entry)
+      }
     }
+      
   }
   const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
   if (hasErrors) {
@@ -566,7 +573,7 @@ async function postCaseUpdateHttp(req, res) {
   if(originalLanguageEntry){
     await caseUpdate(req, res, originalLanguageEntry);
   }
-  const localeEntriesArr = [].concat(...Object.values(localeEntries));
+  // const localeEntriesArr = [].concat(...Object.values(localeEntries));
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
   const freshArticle = await getCase(params, res);
   res.status(200).json({
