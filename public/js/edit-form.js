@@ -44,7 +44,7 @@ const editForm = {
           console.warn(err);
         }
         event.preventDefault();
-        if (event.target.classList.contains("button-preview")) {
+        if (Array.from(event.target.classList).indexOf("button-preview") > -1) {
           this.saveDraft(true);
         }
         else {
