@@ -36,6 +36,7 @@ SELECT
   texts.description,
   substring(texts.body for 500) AS body,
   location_name,
+  published,
   address1,
   address2,
   city,
