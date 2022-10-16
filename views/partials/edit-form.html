@@ -59,6 +59,9 @@
             {{> original-language-alert article=article}}
             {{> @partial-block article=article __=__ static=static}}
             <div class="g-recaptcha recaptcha" data-sitekey="{{getReCaptchaSiteKey}}" data-callback="enableBtn"></div>
+            <div id="captcha-placeholder" class="captcha-placeholder">
+              <p>Please complete the captcha to confirm you are not a robot</p>
+            </div>
             <div class="draft-info-saved js-draft-info-saved" >
               <p>Draft saved. Find your drafts on profile and quick submit pages.</p>
             </div>
@@ -85,6 +88,8 @@
 </script>
 <script>
   function enableBtn(){
+    const captchaPlaceholder = document.getElementById('captcha-placeholder');
+    captchaPlaceholder.style.display = 'none';
     document.getElementById("submitButton").disabled = false;
   }
 </script>
