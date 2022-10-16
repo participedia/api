@@ -659,27 +659,27 @@ async function translateText(data, targetLanguage) {
   // The text to translate
   let allTranslation = '';
 
-  // The target language
-  const target = targetLanguage;
-  let length = data.length;
-  if (length > 5000) {
-    // Get text chunks
-    let textParts = data.match(/.{1,5000}/g);
-    for(let text of textParts){
-      let [translation] = await translate
-        .translate(text, target)
-        .catch(function(error) {
-          logError(error);
-        });
-      allTranslation += translation;
-    }
-  } else {
-    [allTranslation] = await translate
-      .translate(data, target)
-      .catch(function(error) {
-        logError(error);
-      });
-  }
+  // // The target language
+  // const target = targetLanguage;
+  // let length = data.length;
+  // if (length > 5000) {
+  //   // Get text chunks
+  //   let textParts = data.match(/.{1,5000}/g);
+  //   for(let text of textParts){
+  //     let [translation] = await translate
+  //       .translate(text, target)
+  //       .catch(function(error) {
+  //         logError(error);
+  //       });
+  //     allTranslation += translation;
+  //   }
+  // } else {
+  //   [allTranslation] = await translate
+  //     .translate(data, target)
+  //     .catch(function(error) {
+  //       logError(error);
+  //     });
+  // }
   return allTranslation;
 }
 
