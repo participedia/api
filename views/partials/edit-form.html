@@ -21,6 +21,7 @@
             data-datatype="{{getFormDataType article}}"
             class="js-edit-form"
             autocomplete="off"
+            id="editForm"
           >
             <input type="hidden" name="user" value="{{req.user.id}}" />
             <input type="hidden" name="locale" value="{{req.locale}}" />
@@ -57,7 +58,7 @@
 
             {{> original-language-alert article=article}}
             {{> @partial-block article=article __=__ static=static}}
-            <div class="g-recaptcha recaptcha" data-sitekey="{{getReCaptchaSiteKey}}"></div>
+            <div class="g-recaptcha recaptcha" data-sitekey="{{getReCaptchaSiteKey}}" data-callback="enableBtn"></div>
             <div class="draft-info-saved js-draft-info-saved" >
               <p>Draft saved. Find your drafts on profile and quick submit pages.</p>
             </div>
@@ -82,5 +83,8 @@
     <a href="#" class="js-input-language-select-tooltip__got-it-link">{{t "Got it"}}</a>
   </div>
 </script>
-
-
+<script>
+  function enableBtn(){
+    document.getElementById("submitButton").disabled = false;
+  }
+</script>
