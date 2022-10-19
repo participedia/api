@@ -103,6 +103,7 @@ async function validateCaptcha(url) {
     })
     .then((response) => response.json())
     .then((google_response) => {
+      console.log("google_response " + JSON.stringify(google_response));
       if (google_response.success == true) {
         captchaValidationResult = true;
       }
