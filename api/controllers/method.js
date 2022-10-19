@@ -3,7 +3,7 @@
 const express = require("express");
 const cache = require("apicache");
 const fs = require("fs");
-const fetch = require('isomorphic-fetch')
+const fetch = require('isomorphic-fetch');
 
 const {
   db,
