@@ -90,6 +90,29 @@ const placeHolderPhotos = article => {
   }
 };
 
+async function validateCaptcha(url) {
+  let captchaValidationResult = false;
+    let res = await fetch(url, {
+      method: 'post',
+      mode: 'no-cors',
+      headers: {
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Origin": "*",
+      "Accept": "application/json"
+      }
+    })
+    .then((response) => response.json())
+    .then((google_response) => {
+      if (google_response.success == true) {
+        captchaValidationResult = true;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  return captchaValidationResult;
+}
+
 const returnByType = async (res, params, article, static, user, results = {}, total = null, pages = null, numArticlesByType = null) => {
   const { returns, type, view, articleid} = params;
   const articles = {};
@@ -981,6 +1004,7 @@ module.exports = {
   parseAndValidateThingPostData,
   getThingEdit,
   saveDraft,
+  validateCaptcha,
   generateLocaleArticle,
   publishDraft
 };
