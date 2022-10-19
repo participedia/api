@@ -3,6 +3,7 @@
 const express = require("express");
 const cache = require("apicache");
 const fs = require("fs");
+const fetch = require('isomorphic-fetch')
 
 const {
   db,
@@ -39,6 +40,7 @@ const {
   maybeUpdateUserTextLocaleEntry,
   getThingEdit,
   saveDraft,
+  validateCaptcha,
   generateLocaleArticle,
   publishDraft
 } = require("../helpers/things");
@@ -215,6 +217,9 @@ async function postOrganizationUpdateHttp(req, res) {
   // const user = req.user;
   const { articleid, datatype } = params;
   const langErrors = [];
+  let urlCaptcha = ``;
+  let captcha_error_message = "";
+  let supportedLanguages;
 
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(ORGANIZATION_BY_ID, params));
@@ -225,7 +230,6 @@ async function postOrganizationUpdateHttp(req, res) {
       article.longitude = '';
     }
 
-    let supportedLanguages;
     try {
       supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
     } catch (error) {
@@ -286,6 +290,30 @@ async function postOrganizationUpdateHttp(req, res) {
     }
 
   }
+
+  //validate captcha start
+  try {
+    supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+  } catch (error) {
+    supportedLanguages = [];
+  }
+  for (let i = 0; i < supportedLanguages.length; i++) {
+    const lang = supportedLanguages[i];
+    if (req.body[lang]["g-recaptcha-response"]){
+      let resKey = req.body[lang]["g-recaptcha-response"];
+      captcha_error_message = req.body[lang].captcha_error;
+      urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+    }
+  }
+
+  let checkReCaptcha = await validateCaptcha(urlCaptcha);
+  if (!checkReCaptcha) {
+    return res.status(400).json({
+      OK: false,
+      errors: captcha_error_message,
+    });
+  }
+  //validate captcha end
 
   if(datatype == 'draft') {
     publishDraft(req, res, organizationUpdate, 'organization');
