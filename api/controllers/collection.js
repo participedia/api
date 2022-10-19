@@ -87,8 +87,34 @@ function randomTexture() {
 
 async function postCollectionNewHttp(req, res) {
   // create new `collection` in db
+  let urlCaptcha = ``;
+  let captcha_error_message = "";
+  let supportedLanguages;
   try {
     cache.clear();
+    //validate captcha start
+    try {
+      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+    } catch (error) {
+      supportedLanguages = [];
+    }
+    for (let i = 0; i < supportedLanguages.length; i++) {
+      const lang = supportedLanguages[i];
+      if (req.body[lang]["g-recaptcha-response"]){
+        let resKey = req.body[lang]["g-recaptcha-response"];
+        captcha_error_message = req.body[lang].captcha_error;
+        urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+      }
+    }
+
+    let checkReCaptcha = await validateCaptcha(urlCaptcha);
+    if (!checkReCaptcha) {
+      return res.status(400).json({
+        OK: false,
+        errors: captcha_error_message,
+      });
+    }
+    //validate captcha end
     // let title = req.body.title;
     // let body = req.body.body || req.body.summary || "";
     // let description = req.body.description;
