@@ -214,6 +214,7 @@ function getUpdatedCollection(user, params, newCollection, oldCollection) {
 }
 async function postCollectionUpdateHttp(req, res) {
   // cache.clear();
+  return false; //Disable Publish Button for awhile
   const params = parseGetParams(req, "collection");
   const { articleid } = params;
   const langErrors = [];

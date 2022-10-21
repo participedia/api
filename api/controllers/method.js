@@ -243,6 +243,7 @@ async function getMethod(params, res) {
 
 async function postMethodUpdateHttp(req, res) {
   cache.clear();
+  return false; //Disable Publish Button for awhile
   const params = parseGetParams(req, "method");
   // const user = req.user;
   const { articleid, datatype } = params;

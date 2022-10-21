@@ -483,6 +483,7 @@ async function caseUpdate(req, res, entry = undefined) {
 
 async function postCaseUpdateHttp(req, res) {
   // cache.clear();
+  return false; //Disable Publish Button for awhile
   const params = parseGetParams(req, "case");
   const { articleid, datatype, lang } = params;
   const langErrors = []; 

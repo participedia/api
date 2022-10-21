@@ -240,6 +240,7 @@ async function getOrganization(params, res) {
 
 async function postOrganizationUpdateHttp(req, res) {
   cache.clear();
+  return false; //Disable Publish Button for awhile
   const params = parseGetParams(req, "organization");
   // const user = req.user;
   const { articleid, datatype } = params;
