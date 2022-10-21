@@ -97,6 +97,7 @@ async function getEditStaticText(params) {
  */
 async function postOrganizationNewHttp(req, res) {
   // create new `organization` in db
+  return false; //Disable Publish Button for awhile
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;

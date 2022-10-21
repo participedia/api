@@ -102,6 +102,7 @@ async function getEditStaticText(params) {
  */
 async function postMethodNewHttp(req, res) {
   // create new `method` in db
+  return false; //Disable Publish Button for awhile
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;

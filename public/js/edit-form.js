@@ -520,6 +520,7 @@ const editForm = {
   },
 
   sendFormData() {
+    return false; //Disable Publish Button for awhile
     const formData = serialize(this.formEl);
     const formValue = Object.fromEntries(new URLSearchParams(formData));
     const formObject = Object.fromEntries(new URLSearchParams(formData));

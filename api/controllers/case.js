@@ -90,6 +90,7 @@ const { SUPPORTED_LANGUAGES } = require("../../constants");
 
 async function postCaseNewHttp(req, res) {
   // create new `case` in db
+  return false; //Disable Publish Button for awhile
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;
