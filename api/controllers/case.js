@@ -625,9 +625,10 @@ async function postCaseUpdateHttp(req, res) {
     });
   }
   
-  if(originalLanguageEntry){
-    await caseUpdate(req, res, originalLanguageEntry);
-  }
+  await caseUpdate(req, res, originalLanguageEntry);
+  // if(originalLanguageEntry){
+  //   await caseUpdate(req, res, originalLanguageEntry);
+  // }
   // const localeEntriesArr = [].concat(...Object.values(localeEntries));
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
   const freshArticle = await getCase(params, res);

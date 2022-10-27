@@ -513,9 +513,9 @@ const validateFields = (entry, entryName) => {
   let errors = [];
 
   // validate title
-  if (!title) {
-    errors.push(`Cannot create a ${entryName} without at least a title.`);
-  }
+  // if (!title) {
+  //   errors.push(`Cannot create a ${entryName} without at least a title.`);
+  // }
 
   // validate url
   if (links) {
