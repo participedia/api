@@ -614,6 +614,7 @@ async function postCaseUpdateHttp(req, res) {
       if(originLang == entryLocale){
         localeEntriesArr.push(entry)
       }
+      await caseUpdate(req, res, entry);
     }
       
   }
@@ -625,7 +626,6 @@ async function postCaseUpdateHttp(req, res) {
     });
   }
   
-  await caseUpdate(req, res, originalLanguageEntry);
   // if(originalLanguageEntry){
   //   await caseUpdate(req, res, originalLanguageEntry);
   // }
