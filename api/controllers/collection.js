@@ -333,6 +333,7 @@ async function postCollectionUpdateHttp(req, res) {
       let errors = validateFields(entry, "collection");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
+      await collectionUpdate(req, res, entry);
     }
   }
   const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
@@ -343,9 +344,9 @@ async function postCollectionUpdateHttp(req, res) {
     });
   }
 
-  if(originalLanguageEntry){
-    await collectionUpdate(req, res, originalLanguageEntry);
-  }
+  // if(originalLanguageEntry){
+  //   await collectionUpdate(req, res, originalLanguageEntry);
+  // }
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);

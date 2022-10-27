@@ -366,6 +366,7 @@ async function postMethodUpdateHttp(req, res) {
       let errors = validateFields(entry, "method");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
+      await methodUpdate(req, res, entry);
     }
   }
   const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
@@ -377,9 +378,9 @@ async function postMethodUpdateHttp(req, res) {
     });
   }
 
-  if(originalLanguageEntry){
-    await methodUpdate(req, res, originalLanguageEntry);
-  }
+  // if(originalLanguageEntry){
+  //   await methodUpdate(req, res, originalLanguageEntry);
+  // }
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);

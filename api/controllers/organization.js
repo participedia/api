@@ -364,6 +364,7 @@ async function postOrganizationUpdateHttp(req, res) {
       let errors = validateFields(entry, "organization");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
+      await organizationUpdate(req, res, originalLanguageEntry);
     }
   }
   const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
@@ -375,9 +376,9 @@ async function postOrganizationUpdateHttp(req, res) {
     });
   }
 
-  if(originalLanguageEntry){
-    await organizationUpdate(req, res, originalLanguageEntry);
-  }
+  // if(originalLanguageEntry){
+  //   await organizationUpdate(req, res, originalLanguageEntry);
+  // }
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
