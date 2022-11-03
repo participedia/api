@@ -102,7 +102,7 @@ async function getEditStaticText(params) {
  */
 async function postMethodNewHttp(req, res) {
   // create new `method` in db
-  return false; //Disable Publish Button for awhile
+  
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;
@@ -243,7 +243,7 @@ async function getMethod(params, res) {
 
 async function postMethodUpdateHttp(req, res) {
   cache.clear();
-  return false; //Disable Publish Button for awhile
+  
   const params = parseGetParams(req, "method");
   // const user = req.user;
   const { articleid, datatype } = params;

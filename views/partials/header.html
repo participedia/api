@@ -14,11 +14,11 @@
       </ul>
 
       <ul class="nav-list sidebar-menu-additional-nav">
-<!--        <li>-->
-<!--          <a href="/content-chooser" class="button button-red">-->
-<!--            {{> icon-add }} {{t "Quick Submit"}}-->
-<!--          </a>-->
-<!--        </li>-->
+       <li>
+         <a href="/content-chooser" class="button button-red">
+           {{> icon-add }} {{t "Quick Submit"}}
+         </a>
+       </li>
         <li>
           {{#if req.user}}
             <a href="/user/{{req.user.id}}" class="button button-dark-grey">
@@ -66,9 +66,9 @@
     <div class="right-col">
       <div class="header-buttons">
         {{> language-select showTwoLetterCode=true showBoth=true}}
-<!--        <a href="/content-chooser" class="button button-white quick-submit-button">-->
-<!--          {{> icon-add }} {{t "Quick Submit"}}-->
-<!--        </a>-->
+       <a href="/content-chooser" class="button button-white quick-submit-button">
+         {{> icon-add }} {{t "Quick Submit"}}
+       </a>
         {{#if req.user}}
           <div class="profile-dropdown-button-container js-profile-dropdown-button-container">
             <button class="button button-with-icon profile-dropdown-button-trigger js-profile-dropdown-button-trigger">
