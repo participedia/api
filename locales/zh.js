@@ -518,6 +518,7 @@
   "edit_form.view the full form...": "您可以在%s这里查看完整表格%s 。",
   "edit_media_not_supported_file_type_error": "对不起，文件 %s 无法上传，因为它不是受支持的文件类型。我们支持 .jpg 和 .png 图像类型。",
   "edit_profile": "编辑配置文件",
+  "review_entries": "审查条目",
   "Egypt": "埃及",
   "El Salvador": "萨尔瓦多",
   "Email Support Team": "电子邮件支持团队",

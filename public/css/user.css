@@ -88,6 +88,10 @@
   float: right;
 }
 
+.user-view-review-entries {
+  margin-top: 20px;
+}
+
 @media (max-width: 1000px) {
   .user-container {
     flex-direction: column;
@@ -108,4 +112,5 @@
     float: none;
     margin-bottom: 30px;
   }
+
 }

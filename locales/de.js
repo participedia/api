@@ -518,6 +518,7 @@
   "edit_form.view the full form...": "Sie können das vollständige Formular %s hier %s betrachten.",
   "edit_media_not_supported_file_type_error": "Entschuldigung, die Datei %s kann nicht hochgeladen werden, da dieser Dateityp nicht unterstützt wird. Wir unterstützen .jpg- und .png-Bildtypen.",
   "edit_profile": "Profil bearbeiten",
+  "review_entries": "Einträge überprüfen",
   "Egypt": "Ägypten",
   "El Salvador": "El Salvador",
   "Email Support Team": "E-Mail-Support-Team",

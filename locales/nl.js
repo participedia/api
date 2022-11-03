@@ -518,6 +518,7 @@
   "edit_form.view the full form...": "U kunt het volledige formulier %s hier %s  bekijken.",
   "edit_media_not_supported_file_type_error": "Sorry, het bestand %s kan niet worden geüpload omdat het geen ondersteund bestandstype is. We ondersteunen .jpg en .png voor afbeeldingen.",
   "edit_profile": "Bewerk profiel",
+  "review_entries": "Inzendingen beoordelen",
   "Egypt": "Egypte",
   "El Salvador": "El Salvador",
   "Email Support Team": "E-mail ondersteuningsteam",

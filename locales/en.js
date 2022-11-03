@@ -461,6 +461,7 @@
   "Edit": "Edit",
   "Edit Submission Details": "Edit Submission Details",
   "edit_profile": "Edit Profile",
+  "review_entries": "Review Entries",
   "Egypt": "Egypt",
   "El Salvador": "El Salvador",
   "Email Support Team": "Email Support Team",

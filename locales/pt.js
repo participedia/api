@@ -518,6 +518,7 @@
   "edit_form.view the full form...": "Você pode ver o formulário completo %s aqui %s .",
   "edit_media_not_supported_file_type_error": "Desculpe, o arquivo %s não pode ser carregado porque não é um tipo de arquivo suppported. Nós suportamos tipos de imagem .jpg e .png.",
   "edit_profile": "Editar perfil",
+  "review_entries": "Revisar entradas",
   "Egypt": "Egito",
   "El Salvador": "El Salvador",
   "Email Support Team": "E-mail da Equipe de Suporte",
