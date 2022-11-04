@@ -1,40 +1,26 @@
 <div class="entries-container">
     <div class="entries-main-content">
-
-          <!-- <h2>{{t "public_profile"}}</h2> -->
           <h2>{{t "review_entries"}}</h2>
-
-          <div>
-            <table id="table_entries" class="display">
-              <thead>
-                  <tr>
-                      <th>Updated on</th>
-                      <th>Title</th>
-                      <th>Type</th>
-                      <th>Author</th>
-                      <th>Action</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td>Row 1 Data 1</td>
-                      <td>Row 1 Data 2</td>
-                      <td>Row 1 Data 3</td>
-                      <td>Row 1 Data 4</td>
-                      <td>
-                        <span class="entries-action">
-                          <i data-feather="check"></i>
-                        </span> 
-                        <span class="entries-action">
-                          <i data-feather="x-circle"></i>
-                        </span>
-                      </td>
-                  </tr>
-
-              </tbody>
-          </table>
-          </div>
-          
+          {{#if results}}
+            <div>
+              <table id="table_entries" class="display">
+                <thead>
+                    <tr>
+                        <th class="min-width-100">Updated on</th>
+                        <th>Title</th>
+                        <th>Type</th>
+                        <th class="min-width-200">Author</th>
+                        <th class="min-width-100">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each results}}
+                      {{> review-entries-row req=../req}}
+                    {{/each}}
+                </tbody>
+            </table>
+            </div>
+          {{/if}}
     </div>
   </div>
   
