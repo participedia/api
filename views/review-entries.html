@@ -1,9 +1,50 @@
-<div class="user-container">
-    <div class="user-main-content">
+<div class="entries-container">
+    <div class="entries-main-content">
 
           <!-- <h2>{{t "public_profile"}}</h2> -->
           <h2>{{t "review_entries"}}</h2>
+
+          <div>
+            <table id="table_entries" class="display">
+              <thead>
+                  <tr>
+                      <th>Updated on</th>
+                      <th>Title</th>
+                      <th>Type</th>
+                      <th>Author</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Row 1 Data 1</td>
+                      <td>Row 1 Data 2</td>
+                      <td>Row 1 Data 3</td>
+                      <td>Row 1 Data 4</td>
+                      <td>
+                        <span class="entries-action">
+                          <i data-feather="check"></i>
+                        </span> 
+                        <span class="entries-action">
+                          <i data-feather="x-circle"></i>
+                        </span>
+                      </td>
+                  </tr>
+
+              </tbody>
+          </table>
+          </div>
           
     </div>
   </div>
   
+  <script>
+    $(document).ready( function () {
+        $('#table_entries').DataTable({
+          "pageLength": 100,
+          "pagingType": "full_numbers",
+          "lengthChange": false,
+          "searching": false,
+        });
+    } );
+  </script>

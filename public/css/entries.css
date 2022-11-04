@@ -1,0 +1,16 @@
+.entries-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 30px 60px 30px;
+  }
+
+.entries-main-content {
+    margin: auto;
+    width: 100%;
+    max-width: 80%;
+    margin-bottom: 120px;
+}
+
+.entries-action {
+    margin-left: 30px;
+}
