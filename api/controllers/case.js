@@ -425,6 +425,9 @@ async function caseUpdate(req, res, entry = undefined) {
   newCase.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date;
   updatedCase.published = true;
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  if (req.user.accepted_date === NULL || req.user.accepted_date === ""){
+    updatedCase.hidden = true;
+  }
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
