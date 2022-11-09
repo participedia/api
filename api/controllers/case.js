@@ -134,6 +134,11 @@ async function postCaseNewHttp(req, res) {
         errors: langErrors,
       });
     }
+    
+    let hidden = false;
+    if (req.user.accepted_date === NULL || req.user.accepted_date === ""){
+      hidden = true;
+    }
 
     let title = originalLanguageEntry.title;
     let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
@@ -145,6 +150,7 @@ async function postCaseNewHttp(req, res) {
       body,
       description,
       original_language,
+      hidden
     });
 
     req.params.thingid = thing.thingid;

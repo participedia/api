@@ -888,6 +888,11 @@ async function saveDraft(req, res, args) {
   const { articleid } = params;
   const originalLanguageEntry = getOriginalLanguageEntry(req.body);
   const entryData = req.body[originalLanguageEntry];
+  let hidden = false;
+
+  if (req.user.accepted_date === NULL || req.user.accepted_date === ""){
+    hidden = true;
+  }
 
   // Save draft
   if (!thingId && !articleid) {
@@ -895,7 +900,8 @@ async function saveDraft(req, res, args) {
       title: entryData.title || '',
       body: entryData.body || '',
       description: entryData.description || '',
-      original_language: entryData.original_language || "en"
+      original_language: entryData.original_language || "en",
+      hidden
     });
   
     thingId = thing.thingid;
