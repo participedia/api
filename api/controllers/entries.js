@@ -11,6 +11,7 @@ let {
   FEATURED_MAP,
   FEATURED,
   SEARCH_MAP,
+  ENTRIES_REVIEW_LIST,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
   SEARCH_CHINESE,
@@ -83,7 +84,7 @@ const sortbyFromReq = req => {
     }
 
     try {
-      let results = await db.any(queryFileFromReq(req), {
+      let results = await db.any(ENTRIES_REVIEW_LIST, {
         query: user_query,
         limit: null, // null is no limit in SQL
         offset: offsetFromReq(req),
