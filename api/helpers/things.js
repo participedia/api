@@ -823,6 +823,10 @@ async function publishDraft(req, res, entryUpdate, entryType) {
         errors: langErrors,
       });
     }
+    let hidden = false;
+    if (req.user.accepted_date === null || req.user.accepted_date === ""){
+      hidden = true;
+    }
 
     const title = originalLanguageEntry.title;
     const body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
@@ -836,20 +840,23 @@ async function publishDraft(req, res, entryUpdate, entryType) {
         errors,
       });
     }
-    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
-    const localizedData = {
-      body,
-      description,
-      language: original_language,
-      title
-    };
 
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate, req.body.entryLocales);
-    }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);
+    if(hidden === false){
+      localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
+      const localizedData = {
+        body,
+        description,
+        language: original_language,
+        title
+      };
+
+      const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+      if (filteredLocalesToTranslate.length) {
+        await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate, req.body.entryLocales);
+      }
+      if (localesToNotTranslate.length > 0) {
+        await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);
+      }
     }
     res.status(200).json({
       OK: true,

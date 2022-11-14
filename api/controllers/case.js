@@ -136,7 +136,6 @@ async function postCaseNewHttp(req, res) {
     }
     
     let hidden = false;
-    let published = true;
     if (req.user.accepted_date === null || req.user.accepted_date === ""){
       hidden = true;
     }
@@ -170,13 +169,16 @@ async function postCaseNewHttp(req, res) {
       title
     };
 
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
+    if(hidden === false){
+      const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+      if (filteredLocalesToTranslate.length) {
+        await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
+      }
+      if (localesToNotTranslate.length > 0) {
+        await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
+      }
     }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
-    }
+    
     res.status(200).json({
       OK: true,
       article,
