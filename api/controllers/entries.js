@@ -117,4 +117,23 @@ const sortbyFromReq = req => {
       }
   });
 
+  router.get("/reject-review", async function(req, res) {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ error: "You must be logged in to perform this action." });
+    }
+    
+  });
+
+  router.get("/approve-review", async function(req, res) {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ error: "You must be logged in to perform this action." });
+    }
+    
+  });
+
+
 module.exports = router;
