@@ -785,5 +785,7 @@ module.exports = {
   getCaseHttp,
   postCaseUpdateHttp,
   caseUpdateHttp,
+  caseUpdate,
+  getCase,
   saveCaseDraft
 };
