@@ -72,16 +72,10 @@ const sortbyFromReq = req => {
  * @apiError NotAuthorized The user doesn't have permission to perform this operation.
  *
  */
- router.get("/review", async function(req, res) {
+ router.get("/review", requireAuthenticatedUser(), async function(req, res) {
     const user_query = req.query.query || "";
     const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === "en").name.toLowerCase();
     const type = typeFromReq(req);
-    // make sure we have a logged in user
-    if (!req.user) {
-      return res
-        .status(401)
-        .json({ error: "You must be logged in to perform this action." });
-    }
 
     try {
       let results = await db.any(ENTRIES_REVIEW_LIST, {
@@ -123,6 +117,7 @@ const sortbyFromReq = req => {
         .status(401)
         .json({ error: "You must be logged in to perform this action." });
     }
+
     
   });
 
@@ -132,6 +127,8 @@ const sortbyFromReq = req => {
         .status(401)
         .json({ error: "You must be logged in to perform this action." });
     }
+
+
     
   });
 
