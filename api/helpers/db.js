@@ -93,6 +93,7 @@ const UPDATE_AUTHOR_LAST = sql("../sql/update_author_last.sql");
 const ENTRIES_BY_COLLECTION_ID = sql("../sql/entries_by_collection_id.sql");
 const ENTRIES_SUMMARY_BY_COLLECTION_ID = sql("../sql/entries_summary_by_collection_id.sql");
 const ENTRIES_REVIEW_LIST = sql("../sql/entries_review_list.sql");
+const ENTRIES_BY_USER = sql("../sql/entries_by_user.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -594,5 +595,6 @@ module.exports = {
   ENTRIES_BY_COLLECTION_ID,
   ENTRIES_SUMMARY_BY_COLLECTION_ID,
   ENTRIES_REVIEW_LIST,
+  ENTRIES_BY_USER,
   ErrorReporter,
 };

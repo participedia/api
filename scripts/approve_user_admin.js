@@ -7,7 +7,7 @@ async function updateUser(id, currentDate) {
       "UPDATE users SET accepted_date = ${currentDate} WHERE id = ${id}",
       {
         id: id,
-        accepted_date: accepted_date,
+        accepted_date: currentDate,
       }
     );
   } catch (err) {
@@ -17,7 +17,7 @@ async function updateUser(id, currentDate) {
 
 async function approveAdmin() {
   const usersToUpdate = await db.many(
-    `SELECT * from USERS where isadmin = true ORDER BY id desc LIMIT 1`
+    `SELECT * from USERS where isadmin = true ORDER BY id desc`
   );
   const currentDate = new Date();
   await Promise.all(
