@@ -14,6 +14,7 @@ const editForm = {
   init(args = {}) {
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
     this.originalLanguage = document.querySelector("input[name=original_language]")?.value;
+    this.entryId = null;
 
     if(typeof args == 'object' && 'richTextEditorList' in args) {
       this.richTextEditorList = args.richTextEditorList;
@@ -498,6 +499,8 @@ const editForm = {
             sessionStorage.setItem("articleId", response.articleId);
             sessionStorage.setItem("article_type", response.article_type);
           }
+
+          this.entryId = response.articleId;
           
           if (response.isPreview) {
           this.handleSuccess(response);
@@ -514,7 +517,7 @@ const editForm = {
       formsData[originalEntry.locale] = originalEntry;
     }
 
-    const requestPayload = {...formsData, entryLocales: this.entryLocaleData};
+    const requestPayload = {...formsData, entryLocales: this.entryLocaleData, entryId: this.entryId};
     console.log(requestPayload)
     xhr.send(JSON.stringify(requestPayload));
   },

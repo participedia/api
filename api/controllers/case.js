@@ -745,13 +745,13 @@ async function saveCaseDraft(req, res, entry = undefined) {
     UPDATE_ENTRY: UPDATE_CASE,
     CREATE_ENTRY_QUERY: CREATE_CASE,
     refreshSearch,
-    thingId: thingCaseid,
+    thingId: req.body.entryId,
     getUpdatedEntry: getUpdatedCase,
     getEntry: getCase,
     entryType: "case"
   };
   const {payload, thingId} = await saveDraft(req, res, args);
-  thingCaseid = thingId;
+  thingCaseid = req.body.entryId;
   res.status(200).json(payload);
 }
 
