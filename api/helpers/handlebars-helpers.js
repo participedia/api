@@ -1311,6 +1311,13 @@ module.exports = {
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
+  isReviewView(req) {
+    const baseUrls = [
+      "/entries",
+    ];
+    return baseUrls.includes(req.baseUrl) && req.path.indexOf("review") >= 0;
+  },
+
   getFormDataType(article) {
     return !article.published ? 'draft' : '';
   },

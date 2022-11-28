@@ -147,176 +147,29 @@ const sortbyFromReq = req => {
     }
   }
 
-  router.get("/reject-review", async function(req, res) {
+  router.post("/reject-review", async function(req, res) {
     if (!req.user) {
       return res
         .status(401)
         .json({ error: "You must be logged in to perform this action." });
     }
-
+    console.log("reject start");
     
   });
 
-  router.get("/approve-review", async function(req, res) {
+  router.post("/approve-review", async function(req, res) {
     if (!req.user) {
       return res
         .status(401)
         .json({ error: "You must be logged in to perform this action." });
     }
-    const currentDate = new Date();
-    await updateUser(user.id, currentDate);
+    console.log("approve start");
+    // const currentDate = new Date();
+    // await updateUser(user.id, currentDate);
 
-    const params = parseGetParams(req, "case");
-    const { articleid, datatype, lang } = params;
-    const langErrors = []; 
-    const originLang = lang;
-    let urlCaptcha = ``;
-    let captcha_error_message = "";
-    let supportedLanguages;
     
-    if(!Object.keys(req.body).length) {
-      const articleRow = await (await db.one(CASE_BY_ID, params));
-      const article = articleRow.results;
-
-      if (!article.latitude && !article.longitude) {
-        article.latitude = '';
-        article.longitude = '';
-      }
-
-      try {
-        supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
-      } catch (error) {
-        supportedLanguages = [];
-      }
-
-      var entryLocaleData = {
-        title: {},
-        description: {},
-        body: {},
-      };
-      var title = {};
-      var desc = {};
-      var body = {};
-
-      for (let i = 0; i < supportedLanguages.length; i++) {
-        const lang = supportedLanguages[i];
-        let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
-          language: lang,
-          thingid: article.id
-        });
-
-        if (lang === article.original_language) {
-          req.body[lang] = article;
-
-          title[lang] = results[0].title;
-          desc[lang] = results[0].description;
-          body[lang] = results[0].body;
-
-        } else {
-          const otherLangArticle = {
-            title: (results[0]?.title) ?? '',
-            description: results[0]?.description ?? '',
-            body: results[0]?.body ?? ''
-          };
-
-          if (results[0]?.title) {
-            title[lang] = results[0].title;
-          }
-
-          if (results[0]?.description) {
-            desc[lang] = results[0].description;
-          }
-
-          if (results[0]?.body) {
-            body[lang] = results[0].body;
-          }
-          req.body[lang] = otherLangArticle;
-        }
-
-        entryLocaleData = {
-          title: title,
-          description: desc,
-          body: body
-        };
-      }
-      
-      req.body['entryLocales'] = entryLocaleData;
-
-    }
-
-    //validate captcha start
-    try {
-      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
-    } catch (error) {
-      supportedLanguages = [];
-    }
-    for (let i = 0; i < supportedLanguages.length; i++) {
-      const lang = supportedLanguages[i];
-      if (req.body[lang]["g-recaptcha-response"]){
-        let resKey = req.body[lang]["g-recaptcha-response"];
-        captcha_error_message = req.body[lang].captcha_error;
-        urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
-      }
-    }
-
-    let checkReCaptcha = await validateCaptcha(urlCaptcha);
-    if (!checkReCaptcha) {
-      return res.status(400).json({
-        OK: false,
-        errors: captcha_error_message,
-      });
-    }
-    //validate captcha end
-
-    if(datatype == 'draft') {
-      publishDraft(req, res, caseUpdate, 'case');
-      return;
-    }
-    
-    const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
-    let originalLanguageEntry;
-    let entryOriginalLanguage;
-    const localeEntriesArr = [];
-
-    for (const entryLocale in localeEntries) {
-      if (req.body.hasOwnProperty(entryLocale)) {
-        const entry = localeEntries[entryLocale];
-        
-        if (req.body.hasOwnProperty(entry.original_language)){
-          entryOriginalLanguage = entry.original_language;
-        }
-        if (entryLocale === entryOriginalLanguage) {
-          originalLanguageEntry = entry;
-        }
-        
-        let errors = validateFields(entry, "case");
-        errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
-        langErrors.push({ locale: entryLocale, errors });
-
-        if(originLang == entryLocale){
-          localeEntriesArr.push(entry)
-        }
-        await caseUpdate(req, res, entry);
-      }
-        
-    }
-    const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
-    if (hasErrors) {
-      return res.status(400).json({
-        OK: false,
-        errors: langErrors,
-      });
-    }
-    
-    // if(originalLanguageEntry){
-    //   await caseUpdate(req, res, originalLanguageEntry);
-    // }
-    // const localeEntriesArr = [].concat(...Object.values(localeEntries));
-    await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
-    const freshArticle = await getCase(params, res);
     res.status(200).json({
       OK: true,
-      article: freshArticle,
     });
     refreshSearch();
 

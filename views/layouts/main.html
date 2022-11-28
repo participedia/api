@@ -73,6 +73,14 @@
     {{> script-tag-with-cache-key filepath="/build/js/collection-view.bundle.js"}}
   {{/if}}
 
+  {{#if (isReviewView req)}}
+    {{!-- import google api for the autocomplete widget --}}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{getLocale}}"></script>
+    <script type="text/javascript" src="/js/polyfills/DragDropTouch.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?hl={{getLocale}}" async defer></script>
+    {{> script-tag-with-cache-key filepath="/build/js/review-entries.bundle.js"}}
+  {{/if}}
+
   {{#if (isEditView req)}}
     {{!-- import google api for the autocomplete widget --}}
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&language={{getLocale}}"></script>
