@@ -12,6 +12,7 @@ let {
   FEATURED,
   SEARCH_MAP,
   ENTRIES_REVIEW_LIST,
+  AUTHOR_BY_ENTRY,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
   SEARCH_CHINESE,
@@ -99,18 +100,18 @@ const sortbyFromReq = req => {
     const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === "en").name.toLowerCase();
     const type = typeFromReq(req);
 
-    try {
-      let results = await db.any(ENTRIES_REVIEW_LIST, {
-        query: user_query,
-        limit: null, // null is no limit in SQL
-        offset: offsetFromReq(req),
-        language: "en",
-        langQuery: langQuery,
-        userId: req.user ? req.user.id : null,
-        sortby: sortbyFromReq(req),
-        type: type + "s",
-        facets: searchFiltersFromReq(req),
-      });
+      try {
+        let results = await db.any(ENTRIES_REVIEW_LIST, {
+          query: user_query,
+          limit: null, // null is no limit in SQL
+          offset: offsetFromReq(req),
+          language: "en",
+          langQuery: langQuery,
+          userId: req.user ? req.user.id : null,
+          sortby: sortbyFromReq(req),
+          type: type + "s",
+          facets: searchFiltersFromReq(req),
+        });
     
         // const data = await getUserById(userId, req, res, "view");
     
@@ -147,6 +148,17 @@ const sortbyFromReq = req => {
     }
   }
 
+  const getAuthorByEntry = async (entryId) => {
+    try {
+      let results = await db.one(AUTHOR_BY_ENTRY, {
+        entry_id: entryId,
+      });
+      return results.user_id;
+    } catch (err) {
+      console.log("updateUser error - ", err);
+    }
+  }
+
   router.post("/reject-entry", async function(req, res) {
     if (!req.user) {
       return res
@@ -168,11 +180,9 @@ const sortbyFromReq = req => {
         .json({ error: "You must be logged in to perform this action." });
     }
     console.log("approve start");
+    let authorId = await getAuthorByEntry(req.body.entryId);
     const currentDate = new Date();
-    await updateUser(user.id, currentDate);
-    
-    // const currentDate = new Date();
-    // await updateUser(user.id, currentDate);
+    await updateUser(authorId, currentDate);
 
     
     res.status(200).json({
