@@ -140,7 +140,7 @@ const sortbyFromReq = req => {
         "UPDATE users SET accepted_date = ${currentDate} WHERE id = ${id}",
         {
           id: id,
-          accepted_date: currentDate,
+          currentDate: currentDate,
         }
       );
     } catch (err) {
