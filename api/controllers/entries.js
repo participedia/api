@@ -147,7 +147,7 @@ const sortbyFromReq = req => {
     }
   }
 
-  router.post("/reject-review", async function(req, res) {
+  router.post("/reject-entry", async function(req, res) {
     if (!req.user) {
       return res
         .status(401)
@@ -157,7 +157,7 @@ const sortbyFromReq = req => {
     
   });
 
-  router.post("/approve-review", async function(req, res) {
+  router.post("/approve-entry", async function(req, res) {
     if (!req.user) {
       return res
         .status(401)
