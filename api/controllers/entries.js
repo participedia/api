@@ -154,6 +154,10 @@ const sortbyFromReq = req => {
         .json({ error: "You must be logged in to perform this action." });
     }
     console.log("reject start");
+
+    res.status(200).json({
+      OK: true,
+    });
     
   });
 
@@ -164,6 +168,9 @@ const sortbyFromReq = req => {
         .json({ error: "You must be logged in to perform this action." });
     }
     console.log("approve start");
+    const currentDate = new Date();
+    await updateUser(user.id, currentDate);
+    
     // const currentDate = new Date();
     // await updateUser(user.id, currentDate);
 
@@ -171,7 +178,6 @@ const sortbyFromReq = req => {
     res.status(200).json({
       OK: true,
     });
-    refreshSearch();
 
     
   });

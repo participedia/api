@@ -6,16 +6,23 @@ const reviewEntries = {
         const approveEntry = document.querySelectorAll(".entry-approve");
         const rejectEntry = document.querySelectorAll(".entry-reject");
         approveEntry.forEach(el => {
-            console.log("clicked");
-            el.addEventListener("click", this.entryApproval);
+            el.addEventListener("click", e => {
+                e.preventDefault();
+                let entryId = el.getAttribute("entry-id");
+                console.log("entryId " + entryId);
+                this.entryApproval(entryId);
+              });
         });
         rejectEntry.forEach(el => {
-            console.log("clicked");
-            el.addEventListener("click", this.entryRejection);
+            el.addEventListener("click", e => {
+                e.preventDefault();
+                let entryId = el.getAttribute("entry-id");
+                console.log("entryId " + entryId);
+                this.entryRejection(entryId);
+              });
         });
     },
-    entryApproval(e) {
-        console.log("masuk entry approval");
+    entryApproval(entryId) {
         const xhr = new XMLHttpRequest();
         const apiUrl = "/entries/approve-entry";    
         xhr.open("POST", apiUrl, true);
@@ -29,17 +36,16 @@ const reviewEntries = {
             } else {
                 const response = JSON.parse(xhr.response);
                 if (response.OK) {
-                console.log("OK");
+                    console.log("OK");
                 } else {
                     console.log("Not OK");
                 }
             }
         };
-        const requestPayload = {aaa: "ssss", bbbb: "cccc" };
+        const requestPayload = {entryId: entryId};
         xhr.send(JSON.stringify(requestPayload));
     },
-    entryRejection(e) {
-        console.log("masuk entry rejection");
+    entryRejection(entryId) {
         const xhr = new XMLHttpRequest();
         const apiUrl = "/entries/reject-entry";    
         xhr.open("POST", apiUrl, true);
@@ -53,13 +59,13 @@ const reviewEntries = {
             } else {
                 const response = JSON.parse(xhr.response);
                 if (response.OK) {
-                console.log("OK");
+                    console.log("OK");
                 } else {
                     console.log("Not OK");
                 }
             }
         };
-        const requestPayload = {aaa: "ssss", bbbb: "cccc" };
+        const requestPayload = {entryId: entryId};
         xhr.send(JSON.stringify(requestPayload));
     }
 }
