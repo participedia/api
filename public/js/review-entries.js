@@ -9,7 +9,6 @@ const reviewEntries = {
             el.addEventListener("click", e => {
                 e.preventDefault();
                 let entryId = el.getAttribute("entry-id");
-                console.log("entryId " + entryId);
                 this.entryApproval(entryId);
               });
         });
@@ -17,7 +16,6 @@ const reviewEntries = {
             el.addEventListener("click", e => {
                 e.preventDefault();
                 let entryId = el.getAttribute("entry-id");
-                console.log("entryId " + entryId);
                 this.entryRejection(entryId);
               });
         });
@@ -37,6 +35,7 @@ const reviewEntries = {
                 const response = JSON.parse(xhr.response);
                 if (response.OK) {
                     console.log("OK");
+                    location.reload();
                 } else {
                     console.log("Not OK");
                 }
@@ -60,6 +59,8 @@ const reviewEntries = {
                 const response = JSON.parse(xhr.response);
                 if (response.OK) {
                     console.log("OK");
+                    location.reload();
+
                 } else {
                     console.log("Not OK");
                 }

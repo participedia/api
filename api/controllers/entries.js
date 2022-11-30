@@ -192,7 +192,6 @@ const sortbyFromReq = req => {
         .status(401)
         .json({ error: "You must be logged in to perform this action." });
     }
-    console.log("approve start");
     let authorId = await getAuthorByEntry(req.body.entryId);
     const currentDate = new Date();
     await updateUser(authorId, currentDate);
