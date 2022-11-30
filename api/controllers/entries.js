@@ -148,6 +148,19 @@ const sortbyFromReq = req => {
     }
   }
 
+  const removeHiddenEntry = async (entryId) => {
+    try {
+      return await db.none(
+        "UPDATE things SET hidden = false WHERE id = ${entryId}",
+        {
+          entryId: entryId
+        }
+      );
+    } catch (err) {
+      console.log("removeHiddenEntry error - ", err);
+    }
+  }
+
   const getAuthorByEntry = async (entryId) => {
     try {
       let results = await db.one(AUTHOR_BY_ENTRY, {
@@ -183,6 +196,7 @@ const sortbyFromReq = req => {
     let authorId = await getAuthorByEntry(req.body.entryId);
     const currentDate = new Date();
     await updateUser(authorId, currentDate);
+    await removeHiddenEntry(req.body.entryId);
 
     
     res.status(200).json({
