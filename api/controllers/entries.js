@@ -178,7 +178,7 @@ const sortbyFromReq = req => {
       let results = await db.one(AUTHOR_BY_ENTRY, {
         entry_id: entryId,
       });
-      return results.user_id;
+      return results;
     } catch (err) {
       console.log("updateUser error - ", err);
     }
@@ -204,19 +204,17 @@ const sortbyFromReq = req => {
         .status(401)
         .json({ error: "You must be logged in to perform this action." });
     }
-    let authorId = await getAuthorByEntry(req.body.entryId);
+    let author = await getAuthorByEntry(req.body.entryId);
     const currentDate = new Date();
-    await updateUser(authorId, currentDate);
-    let allUserPosts = await getAllUserPost(authorId);
+    await updateUser(author.user_id, currentDate);
+    let allUserPosts = await getAllUserPost(author.user_id);
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];
       if (thingsByUser.published) {
         await removeHiddenEntry(thingsByUser.id);
       }
-      
     };
 
-    
     res.status(200).json({
       OK: true,
     });
