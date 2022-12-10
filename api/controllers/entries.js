@@ -149,10 +149,23 @@ const sortbyFromReq = req => {
     }
   }
 
-  const removeHiddenEntry = async (entryId) => {
+  const publishHiddenEntry = async (entryId) => {
     try {
       return await db.none(
         "UPDATE things SET hidden = false WHERE id = ${entryId}",
+        {
+          entryId: entryId
+        }
+      );
+    } catch (err) {
+      console.log("publishHiddenEntry error - ", err);
+    }
+  }
+
+  const removeHiddenEntry = async (entryId) => {
+    try {
+      return await db.none(
+        "DELETE FROM things WHERE id = ${entryId}",
         {
           entryId: entryId
         }
@@ -190,7 +203,14 @@ const sortbyFromReq = req => {
         .status(401)
         .json({ error: "You must be logged in to perform this action." });
     }
-    console.log("reject start");
+    let author = await getAuthorByEntry(req.body.entryId);
+    let allUserPosts = await getAllUserPost(author.user_id);
+    for (const allUserPost in allUserPosts) {
+      let thingsByUser = allUserPosts[allUserPost];
+      if (thingsByUser.published) {
+        await removeHiddenEntry(thingsByUser.id);
+      }
+    };
 
     res.status(200).json({
       OK: true,
@@ -211,7 +231,7 @@ const sortbyFromReq = req => {
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];
       if (thingsByUser.published) {
-        await removeHiddenEntry(thingsByUser.id);
+        await publishHiddenEntry(thingsByUser.id);
       }
     };
 
