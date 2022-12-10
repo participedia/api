@@ -13,6 +13,7 @@ let {
   SEARCH_MAP,
   ENTRIES_REVIEW_LIST,
   AUTHOR_BY_ENTRY,
+  ENTRIES_BY_USER,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
   SEARCH_CHINESE,
@@ -161,6 +162,17 @@ const sortbyFromReq = req => {
     }
   }
 
+  const getAllUserPost = async (user_id) => {
+    try {
+      let results = await db.any(ENTRIES_BY_USER, {
+        user_id: user_id,
+      });
+      return results;
+    } catch (err) {
+      console.log("getAllUserPost error - ", err);
+    }
+  }
+
   const getAuthorByEntry = async (entryId) => {
     try {
       let results = await db.one(AUTHOR_BY_ENTRY, {
@@ -195,7 +207,14 @@ const sortbyFromReq = req => {
     let authorId = await getAuthorByEntry(req.body.entryId);
     const currentDate = new Date();
     await updateUser(authorId, currentDate);
-    await removeHiddenEntry(req.body.entryId);
+    let allUserPosts = await getAllUserPost(authorId);
+    for (const allUserPost in allUserPosts) {
+      let thingsByUser = allUserPosts[allUserPost];
+      if (thingsByUser.published) {
+        await removeHiddenEntry(thingsByUser.id);
+      }
+      
+    };
 
     
     res.status(200).json({
