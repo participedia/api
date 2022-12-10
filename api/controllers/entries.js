@@ -207,9 +207,7 @@ const sortbyFromReq = req => {
     let allUserPosts = await getAllUserPost(author.user_id);
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];
-      if (thingsByUser.published) {
-        await removeHiddenEntry(thingsByUser.id);
-      }
+      await removeHiddenEntry(thingsByUser.id);
     };
 
     res.status(200).json({
