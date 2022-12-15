@@ -3,8 +3,21 @@ let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
 const caseList = require("./case");
+
+// Get google translate credentials
+const keysEnvVar = process.env['GOOGLE_TRANSLATE_CREDENTIALS'];
+if (!keysEnvVar) {
+  throw new Error('The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!');
+  return;
+}
+const { Translate } = require('@google-cloud/translate').v2;
+const authKeys = JSON.parse(keysEnvVar);
+authKeys['key'] = process.env.GOOGLE_API_KEY;
+const translate = new Translate(authKeys);
+
 let {
   db,
+  pgp,
   as,
   TITLES_FOR_THINGS,
   SEARCH,
@@ -14,6 +27,7 @@ let {
   ENTRIES_REVIEW_LIST,
   AUTHOR_BY_ENTRY,
   ENTRIES_BY_USER,
+  LOCALIZED_TEXT_BY_THING_ID,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
   SEARCH_CHINESE,
@@ -49,9 +63,20 @@ const {
   getCase
 } = require("./case");
 
+const ManagementClient = require("auth0").ManagementClient;
+
+const auth0Client = new ManagementClient({
+    domain: process.env.AUTH0_DOMAIN,
+    clientId: process.env.AUTH0_CLIENT_ID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    scope: 'read:users update:users'
+});
+
+
 const logError = require("../helpers/log-error.js");
 const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
+const { getOriginalLanguageEntry } = require("./api/api-helpers");
 
 const queryFileFromReq = req => {
   const featuredOnly =
@@ -197,6 +222,80 @@ const sortbyFromReq = req => {
     }
   }
 
+  const getOriginLanguageEntry = async (thingid) => {
+    try {
+      let results = await db.one(LOCALIZED_TEXT_BY_THING_ID, {
+        thingid: thingid,
+      });
+      return results;
+    } catch (err) {
+      console.log("getOriginLanguageEntry error - ", err);
+    }
+  }
+
+  const translateText = async (data, targetLanguage) => {
+    // The text to translate
+    let allTranslation = '';
+
+    // The target language
+    const target = targetLanguage;
+    let length = data.length;
+    if (length > 5000) {
+      // Get text chunks
+      let textParts = data.match(/.{1,5000}/g);
+      for(let text of textParts){
+        let [translation] = await translate
+          .translate(text, target)
+          .catch(function(error) {
+            logError(error);
+          });
+        allTranslation += translation;
+      }
+    } else {
+      [allTranslation] = await translate
+        .translate(data, target)
+        .catch(function(error) {
+          logError(error);
+        });
+    }
+    return allTranslation;
+  }
+
+  const translateEntry = async (entryId) => {
+    let languageList = ["en", "fr", "de", "es", "zh", "it", "pt", "nl"];
+    let originEntry = await getOriginLanguageEntry(entryId);
+    languageList = languageList.filter(el => el !== originEntry.language);
+    let records = [];
+
+    for (let i = 0; i < languageList.length; i++) {
+      const item = {
+        body: "",
+        title: "",
+        description: "",
+        language: languageList[i],
+        thingid: entryId,
+        timestamp: 'now'
+      };
+      item.body = await translateText(originEntry.body, languageList[i]);
+      item.title = await translateText(originEntry.title, languageList[i]);
+      item.description = await translateText(originEntry.description, languageList[i]);
+
+      records.push(item);
+    }
+
+    const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid', 'timestamp'], 'localized_texts');
+
+    db.none(insert)
+      .then(function(data) {
+        console.log(data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    return originEntry;
+  }
+
   router.post("/reject-entry", async function(req, res) {
     if (!req.user) {
       return res
@@ -224,7 +323,8 @@ const sortbyFromReq = req => {
     }
     let author = await getAuthorByEntry(req.body.entryId);
     const currentDate = new Date();
-    await updateUser(author.user_id, currentDate);
+    let setAcceptedUser = await updateUser(author.user_id, currentDate);
+    let translateEntryText = await translateEntry(req.body.entryId);
     let allUserPosts = await getAllUserPost(author.user_id);
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];

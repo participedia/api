@@ -59,6 +59,7 @@ const ORGANIZATION_LOCALE_BY_ID = sql("../sql/organization_by_id_locale.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
 const UPDATE_DRAFT_LOCALIZED_TEXT = sql("../sql/update_draft_localized_text.sql");
 const LOCALIZED_TEXT_BY_ID_LOCALE = sql("../sql/localized_text_by_id_locale.sql");
+const LOCALIZED_TEXT_BY_THING_ID = sql("../sql/localized_text_by_thing_id.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
 const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
@@ -552,6 +553,7 @@ module.exports = {
   INSERT_LOCALIZED_TEXT,
   UPDATE_DRAFT_LOCALIZED_TEXT,
   LOCALIZED_TEXT_BY_ID_LOCALE,
+  LOCALIZED_TEXT_BY_THING_ID,
   UPDATE_NOUN,
   INSERT_AUTHOR,
   USER_BY_EMAIL,
