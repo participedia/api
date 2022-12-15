@@ -145,7 +145,6 @@ const sortbyFromReq = req => {
         //   return res.status(404).render("404");
         // }
         let data = results;
-        // console.log("data review - " + JSON.stringify(results))
     
         // return html template
         const returnType = req.query.returns || "html";
@@ -233,6 +232,16 @@ const sortbyFromReq = req => {
     }
   }
 
+  const blockUserAuth0 = async (user_id) => {
+    auth0Client.updateUser({id: `${user_id}`}, {blocked: false}, (err, auth0User) => {
+      if(err){
+          return console.log(" blockUserAuth0 error " + err);
+      } else {
+        return auth0User;
+      }
+    });
+  }
+
   const translateText = async (data, targetLanguage) => {
     // The text to translate
     let allTranslation = '';
@@ -308,6 +317,8 @@ const sortbyFromReq = req => {
       let thingsByUser = allUserPosts[allUserPost];
       await removeEntry(thingsByUser.id);
     };
+    let userData = await auth0Client.getUsersByEmail(author.email);
+    await blockUserAuth0(userData[0].user_id);
 
     res.status(200).json({
       OK: true,
