@@ -187,7 +187,7 @@ const sortbyFromReq = req => {
     }
   }
 
-  const removeHiddenEntry = async (entryId) => {
+  const removeEntry = async (entryId) => {
     try {
       return await db.none(
         "DELETE FROM things WHERE id = ${entryId}",
@@ -196,7 +196,7 @@ const sortbyFromReq = req => {
         }
       );
     } catch (err) {
-      console.log("removeHiddenEntry error - ", err);
+      console.log("removeEntry error - ", err);
     }
   }
 
@@ -306,7 +306,7 @@ const sortbyFromReq = req => {
     let allUserPosts = await getAllUserPost(author.user_id);
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];
-      await removeHiddenEntry(thingsByUser.id);
+      await removeEntry(thingsByUser.id);
     };
 
     res.status(200).json({
