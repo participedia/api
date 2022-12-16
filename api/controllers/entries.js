@@ -199,6 +199,32 @@ const sortbyFromReq = req => {
     }
   }
 
+  const removeAuthor = async (entryId) => {
+    try {
+      return await db.none(
+        "DELETE FROM authors WHERE thingid = ${entryId}",
+        {
+          entryId: entryId
+        }
+      );
+    } catch (err) {
+      console.log("removeAuthor error - ", err);
+    }
+  }
+
+  const removeLocalizedText = async (entryId) => {
+    try {
+      return await db.none(
+        "DELETE FROM localized_texts WHERE thingid = ${entryId}",
+        {
+          entryId: entryId
+        }
+      );
+    } catch (err) {
+      console.log("removeLocalizedText error - ", err);
+    }
+  }
+
   const getAllUserPost = async (user_id) => {
     try {
       let results = await db.any(ENTRIES_BY_USER, {
@@ -316,6 +342,8 @@ const sortbyFromReq = req => {
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];
       await removeEntry(thingsByUser.id);
+      await removeAuthor(thingsByUser.id);
+      await removeLocalizedText(thingsByUser.id);
     };
     let userData = await auth0Client.getUsersByEmail(author.email);
     await blockUserAuth0(userData[0].user_id);
