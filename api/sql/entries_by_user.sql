@@ -1,6 +1,6 @@
 WITH all_hidden_things  AS (
     SELECT * FROM things
-    WHERE "type" != 'collection' ORDER BY updated_date desc
+    WHERE "type" != 'collection' and hidden = true ORDER BY updated_date desc
 ),
 all_authors as (
     SELECT DISTINCT ON (thingid) *
