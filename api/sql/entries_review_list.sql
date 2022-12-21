@@ -1,7 +1,7 @@
 WITH all_hidden_things  AS (
     select * from things, 
     get_localized_texts_fallback(things.id, 'en', things.original_language) AS texts
-    where hidden = true and "type" != 'collection' order by updated_date 
+    where hidden = true and "type" != 'collection' and post_date >= '2022-12-01' order by updated_date 
 ),
 all_authors as (
     SELECT DISTINCT ON (thingid) *
