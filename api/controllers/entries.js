@@ -172,6 +172,7 @@ const sortbyFromReq = req => {
     try {
       let results = await db.any(ENTRIES_BY_USER, {
         user_id: user_id,
+        post_date: '2022-12-01',
       });
       return results;
     } catch (err) {
