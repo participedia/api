@@ -524,6 +524,8 @@
   "edit_media_not_supported_file_type_error": "Lo siento, el archivo %s no se puede cargar porque no es un tipo de archivo suppported. Admitimos tipos de imagen .jpg y .png.",
   "edit_profile": "Editar perfil",
   "review_entries": "Aprobar/Bloquear Nuevas Entradas",
+  "approve_entry": "Aprobar entrada",
+  "block_entry": "Entrada de bloque",
   "Egypt": "Egipto",
   "El Salvador": "El Salvador",
   "Email Support Team": "Equipo de asistencia por correo electrónico",
