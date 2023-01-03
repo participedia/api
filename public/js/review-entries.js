@@ -1,4 +1,4 @@
-import serialize from "./utils/serialize.js";
+import modal from "./modal.js";
 
 const reviewEntries = {
     init(args = {}) {
@@ -44,7 +44,7 @@ const reviewEntries = {
         const requestPayload = {entryId: entryId};
         xhr.send(JSON.stringify(requestPayload));
     },
-    entryRejection(entryId) {
+    blockEntry(entryId) {
         const xhr = new XMLHttpRequest();
         const apiUrl = "/entries/reject-entry";    
         xhr.open("POST", apiUrl, true);
@@ -68,6 +68,25 @@ const reviewEntries = {
         };
         const requestPayload = {entryId: entryId};
         xhr.send(JSON.stringify(requestPayload));
+        console.log("ENd");
+    },
+    entryRejection(entryId) {
+        const content = `
+        <h3>Confirm Block User and Entry</h3>
+        <p>Are you sure you would like to block this entry? <br /> Blocking an entry will block that user and permanently delete all of their entries from the database.</p>
+        <a href="#" class="button button-red js-block-btn">Block Entry</a>
+        `;
+        modal.updateModal(content);
+        modal.openModal("aria-modal");
+        document.querySelector(".js-block-btn").addEventListener("click", () => {
+        try {
+            this.blockEntry(entryId);
+        } catch (err) {
+            console.warn(err);
+        }
+        
+        modal.closeModal();
+        });
     }
 }
 

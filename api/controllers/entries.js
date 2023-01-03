@@ -168,7 +168,7 @@ const sortbyFromReq = req => {
     }
   }
 
-  const getAllUserPost = async (user_id) => {
+  const getApprovalUserPost = async (user_id) => {
     try {
       let results = await db.any(ENTRIES_BY_USER, {
         user_id: user_id,
@@ -176,7 +176,19 @@ const sortbyFromReq = req => {
       });
       return results;
     } catch (err) {
-      console.log("getAllUserPost error - ", err);
+      console.log("getApprovalUserPost error - ", err);
+    }
+  }
+
+  const getRejectionUserPost = async (user_id) => {
+    try {
+      let results = await db.any(ENTRIES_BY_USER, {
+        user_id: user_id,
+        post_date: '2000-01-01',
+      });
+      return results;
+    } catch (err) {
+      console.log("getRejectionUserPost error - ", err);
     }
   }
 
@@ -283,10 +295,11 @@ const sortbyFromReq = req => {
     }
     let author = await getAuthorByEntry(req.body.entryId);
     if (Object.keys(author).length > 0) {
-      let allUserPosts = await getAllUserPost(author.user_id);
+      let allUserPosts = await getRejectionUserPost(author.user_id);
 
       for (const allUserPost in allUserPosts) {
         let thingsByUser = allUserPosts[allUserPost];
+        console.log("thingsByUser.id ", thingsByUser.id);
         await removeEntry(thingsByUser.id);
         await removeAuthor(thingsByUser.id);
         await removeLocalizedText(thingsByUser.id);
@@ -315,7 +328,7 @@ const sortbyFromReq = req => {
       const currentDate = new Date();
       let setAcceptedUser = await setUserAcceptedDate(author.user_id, currentDate);
       let translateEntryText = await translateEntry(req.body.entryId);
-      let allUserPosts = await getAllUserPost(author.user_id);
+      let allUserPosts = await getApprovalUserPost(author.user_id);
 
       for (const allUserPost in allUserPosts) {
         let thingsByUser = allUserPosts[allUserPost];
