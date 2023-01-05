@@ -2,7 +2,7 @@ import modal from "./modal.js";
 
 const reviewEntries = {
     init(args = {}) {
-        console.log("init works");
+        // console.log("init works");
         const approveEntry = document.querySelectorAll(".entry-approve");
         const rejectEntry = document.querySelectorAll(".entry-reject");
         approveEntry.forEach(el => {
@@ -21,6 +21,12 @@ const reviewEntries = {
         });
     },
     entryApproval(entryId) {
+        const content = `
+        <h3>Approving User & Entries</h3>
+        <p>Please wait. We are approving the user and all user's entries now....</p>
+        `;
+        modal.updateModal(content);
+        modal.openModal("aria-modal");
         const xhr = new XMLHttpRequest();
         const apiUrl = "/entries/approve-entry";    
         xhr.open("POST", apiUrl, true);
@@ -33,10 +39,13 @@ const reviewEntries = {
                 // this.openAuthWarning();
             } else {
                 const response = JSON.parse(xhr.response);
+                // console.log("response", JSON.stringify(response));
                 if (response.OK) {
-                    console.log("OK");
+                    // console.log("OK");
                     location.reload();
+                    modal.closeModal();
                 } else {
+                    modal.closeModal();
                     console.log("Not OK");
                 }
             }
