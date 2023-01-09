@@ -327,7 +327,7 @@ const sortbyFromReq = req => {
     if (Object.keys(author).length > 0) {
       const currentDate = new Date();
       let setAcceptedUser = await setUserAcceptedDate(author.user_id, currentDate);
-      let translateEntryText = await translateEntry(req.body.entryId);
+      let translateEntryText = translateEntry(req.body.entryId);
       let allUserPosts = await getApprovalUserPost(author.user_id);
 
       for (const allUserPost in allUserPosts) {
