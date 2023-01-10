@@ -69,9 +69,11 @@ const reviewEntries = {
                 if (response.OK) {
                     console.log("OK");
                     location.reload();
+                    modal.closeModal();
 
                 } else {
                     console.log("Not OK");
+                    modal.closeModal();
                 }
             }
         };
@@ -89,6 +91,13 @@ const reviewEntries = {
         modal.openModal("aria-modal");
         document.querySelector(".js-block-btn").addEventListener("click", () => {
         try {
+            modal.closeModal();
+            const content = `
+            <h3>Blocking User & Entries</h3>
+            <p>Please wait. We are blocking the user and delete all user's entries now....</p>
+            `;
+            modal.updateModal(content);
+            modal.openModal("aria-modal");
             this.blockEntry(entryId);
         } catch (err) {
             console.warn(err);
