@@ -25,8 +25,8 @@ const reviewEntries = {
         <h3>Approving User & Entries</h3>
         <p>Please wait. We are approving the user and all user's entries now....</p>
         `;
-        modal.updateModal(content);
-        modal.openModal("aria-modal");
+        modal.updateModalReview(content);
+        modal.openModal("review-entry-modal");
         const xhr = new XMLHttpRequest();
         const apiUrl = "/entries/approve-entry";    
         xhr.open("POST", apiUrl, true);
@@ -79,7 +79,6 @@ const reviewEntries = {
         };
         const requestPayload = {entryId: entryId};
         xhr.send(JSON.stringify(requestPayload));
-        console.log("ENd");
     },
     entryRejection(entryId) {
         const content = `
@@ -96,8 +95,8 @@ const reviewEntries = {
             <h3>Blocking User & Entries</h3>
             <p>Please wait. We are blocking the user and delete all user's entries now....</p>
             `;
-            modal.updateModal(content);
-            modal.openModal("aria-modal");
+            modal.updateModalReview(content);
+            modal.openModal("review-entry-modal");
             this.blockEntry(entryId);
         } catch (err) {
             console.warn(err);
