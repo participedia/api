@@ -46,11 +46,9 @@ const editForm = {
         event.preventDefault();
         if (Array.from(event.target.classList).indexOf("button-preview") > -1) {
           this.saveDraft(true);
-          console.log("masuk if");
         }
         else {
           this.sendFormData();
-          console.log("masuk else");
         }
       });
     }
@@ -517,7 +515,7 @@ const editForm = {
     }
 
     const requestPayload = {...formsData, entryLocales: this.entryLocaleData};
-    console.log(requestPayload)
+    // console.log(requestPayload)
     xhr.send(JSON.stringify(requestPayload));
   },
 
