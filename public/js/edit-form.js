@@ -46,9 +46,11 @@ const editForm = {
         event.preventDefault();
         if (Array.from(event.target.classList).indexOf("button-preview") > -1) {
           this.saveDraft(true);
+          console.log("masuk if");
         }
         else {
           this.sendFormData();
+          console.log("masuk else");
         }
       });
     }
