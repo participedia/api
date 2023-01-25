@@ -43,9 +43,13 @@ const reviewEntries = {
                 if (response.OK) {
                     // console.log("OK");
                     location.reload();
-                    modal.closeModal();
+                    setTimeout(() => {
+                        modal.closeModal()
+                    }, 4000);
                 } else {
-                    modal.closeModal();
+                    setTimeout(() => {
+                        modal.closeModal()
+                    }, 4000);
                     console.log("Not OK");
                 }
             }
@@ -69,11 +73,15 @@ const reviewEntries = {
                 if (response.OK) {
                     console.log("OK");
                     location.reload();
-                    modal.closeModal();
+                    setTimeout(() => {
+                        modal.closeModal()
+                    }, 4000);
 
                 } else {
                     console.log("Not OK");
-                    modal.closeModal();
+                    setTimeout(() => {
+                        modal.closeModal()
+                    }, 4000);
                 }
             }
         };
@@ -102,7 +110,9 @@ const reviewEntries = {
             console.warn(err);
         }
         
-        modal.closeModal();
+        setTimeout(() => {
+            modal.closeModal()
+        }, 4000);
         });
     }
 }
