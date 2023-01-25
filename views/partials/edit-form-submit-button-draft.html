@@ -7,7 +7,12 @@
   
 
   <button type="submit" class="button button-light-grey"  id="submitButton" data-datatype="draft" data-cy="main-form-submit" disabled="disabled">
-      {{> icon-submit }} {{t "Publish"}}
+      {{> icon-submit }} 
+      {{#if req.user.accepted_date}}
+        {{t "Publish"}}
+      {{else}}
+        {{t "Request For Approval"}}
+      {{/if}}
     </button>
   {{/if}}
   </div>

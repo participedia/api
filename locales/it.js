@@ -471,6 +471,7 @@
   "content_types.method.description": "I metodi sono i processi e le procedure utilizzati per guidare la politica e la governance partecipativa.",
   "content_types.organization.description": "Le organizzazioni sono profili di gruppi formali e informali che progettano, implementano o supportano innovazioni nella politica e nella governance partecipativa.",
   "Continue Editing": "Continua a modificare",
+  "Request For Approval": "Richiesta di approvazione",
   "Contribute": "Contribuisci",
   "Contributions": "Contributi",
   "contributors": "collaboratori",

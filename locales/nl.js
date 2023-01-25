@@ -471,6 +471,7 @@
   "content_types.method.description": "Methoden zijn de processen en procedures die worden gebruikt om participatieve politiek en bestuur te begeleiden.",
   "content_types.organization.description": "Bijdragen over organisaties bieden profielen van formele en informele groepen die innovaties in participatieve politiek en participatief bestuur ontwerpen, implementeren of ondersteunen.",
   "Continue Editing": "Doorgaan met bewerken",
+  "Request For Approval": "Verzoek om goedkeuring",
   "Contribute": "Bijdrage leveren",
   "Contributions": "Bijdragen",
   "contributors": "bijdragers",

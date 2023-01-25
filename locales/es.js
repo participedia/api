@@ -475,6 +475,7 @@
   "content_types.method.description": "Los métodos son los procesos y procedimientos utilizados para guiar la política participativa y la gobernanza.",
   "content_types.organization.description": "Las organizaciones son perfiles de grupos formales e informales que diseñan, implementan o apoyan innovaciones en política participativa y gobernanza.",
   "Continue Editing": "Continua editando",
+  "Request For Approval": "Solicitud de aprobación",
   "Contribute": "Contribuir",
   "Contributions": "Contribuciones",
   "contributors": "contribuyentes",

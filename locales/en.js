@@ -1607,6 +1607,7 @@
   "public_profile": "Public Profile",
   "Publish": "Publish",
   "Continue Editing": "Continue Editing",
+  "Request For Approval": "Request For Approval",
   "Preview": "Preview",
   "Puerto Rico": "Puerto Rico",
   "purpose_and_approach": "Purpose & Approach",

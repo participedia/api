@@ -471,6 +471,7 @@
   "content_types.method.description": "Methoden sind die Prozesse und Verfahren, die verwendet werden, um partizipative Politik und Governance zu leiten.",
   "content_types.organization.description": "Organisationen sind Profile formeller und informeller Gruppen, die Innovationen in partizipativer Politik und Governance entwerfen, implementieren oder unterstützen.",
   "Continue Editing": "Weiter bearbeiten",
+  "Request For Approval": "Antrag auf Genehmigung",
   "Contribute": "Beitragen",
   "Contributions": "Beiträge",
   "contributors": "Mitwirkende",

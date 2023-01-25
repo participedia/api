@@ -471,6 +471,7 @@
   "content_types.method.description": "Les méthodes sont les processus et les procédures utilisés pour guider la politique et la gouvernance participative.",
   "content_types.organization.description": "Les organisations sont des profils de groupes formels et informels qui conçoivent, mettent en œuvre ou appuient les innovations en matière de politique participative et de gouvernance.",
   "Continue Editing": "Continuer l'édition",
+  "Request For Approval": "Demande d'approbation",
   "Contribute": "Contribuer",
   "Contributions": "Contributions",
   "contributors": "contributeur.rices",

@@ -471,6 +471,7 @@
   "content_types.method.description": "方法是指导参与性政治和治理的过程和程序。",
   "content_types.organization.description": "组织是设计、实施或支持参与性政治和治理创新的正式和非正式团体的概况。",
   "Continue Editing": "继续编辑",
+  "Request For Approval": "请求批准",
   "Contribute": "贡献",
   "Contributions": "贡献",
   "contributors": "内容贡献人",
