@@ -138,7 +138,11 @@ const returnByType = async (res, params, article, static, user, results = {}, to
     }
   } else {
     if (article.hidden && (!user || (user && !user.isadmin))) {
-      return res.status(404).render("404");
+      if(article.published){
+        return res.status(404).render("waiting-for-approval");
+      }else{
+        return res.status(404).render("404");
+      }
     }
   }
 
