@@ -900,10 +900,6 @@ async function saveDraft(req, res, args) {
   const originalLanguageEntry = getOriginalLanguageEntry(req.body);
   const entryData = req.body[originalLanguageEntry];
   let hidden = false;
-  
-  if (req.user.accepted_date == null || req.user.accepted_date == ""){
-    hidden = true;
-  }
 
   // Save draft
   if (!thingId && !articleid) {
