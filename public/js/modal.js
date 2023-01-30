@@ -6,6 +6,10 @@ const modal = {
     document.querySelector("[data-modal-content]").innerHTML = content;
   },
 
+  updateModalReview(content) {
+    document.querySelector("[data-modal-content-review]").innerHTML = content;
+  },
+
   openModal(id, options = {}) {
     // open the modal
     // using setTimeout with 1 ms delay to simulate the _.defer function,

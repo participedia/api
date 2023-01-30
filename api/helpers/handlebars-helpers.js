@@ -1145,12 +1145,15 @@ module.exports = {
     // otherwise return contributions only
     const profile = context.data.root.profile;
     const user = context.data.root.req.user;
-
+    console.log("profile-handlebars", JSON.stringify(profile));
+    console.log("user-handlebars", JSON.stringify(user));
     const draftsTypes = ["cases", "methods", "organizations"];
     // merge all article types into 1 array
     let allDrafts = [];
     draftsTypes.forEach(type => {
-      allDrafts = allDrafts.concat(user[type].filter(x => !x.published));
+      if(user[type]){
+        allDrafts = allDrafts.concat(user[type].filter(x => !x.published));
+      }
     });
 
     if ((user && user.id) === (profile && profile.id) && allDrafts.length > 0) {
@@ -1309,6 +1312,13 @@ module.exports = {
       "/collection",
     ];
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
+  },
+
+  isReviewView(req) {
+    const baseUrls = [
+      "/entries",
+    ];
+    return baseUrls.includes(req.baseUrl) && req.path.indexOf("review") >= 0;
   },
 
   getFormDataType(article) {

@@ -6,10 +6,14 @@
   </button>
   {{/if}}
 
-  <!-- <button type="submit" class="button button-light-grey" id="submitButton" data-cy="main-form-submit" disabled="disabled">
-      {{> icon-submit }} {{t "Publish"}}
-    </button> -->
-    <!-- Disable Publish Button for awhile  -->
+  <button type="submit" class="button button-light-grey" id="submitButton" data-cy="main-form-submit">
+      {{> icon-submit }} 
+      {{#if req.user.accepted_date}}
+        {{t "Publish"}}
+      {{else}}
+        {{t "Request For Approval"}}
+      {{/if}}
+    </button>
 
     {{# if (isNotCollection article)}}
       <a href="?full=1" class="button button-dark-grey quickonly js-do-full-version">{{t "Do Full Version"}}</a>

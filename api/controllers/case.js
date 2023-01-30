@@ -90,7 +90,7 @@ const { SUPPORTED_LANGUAGES } = require("../../constants");
 
 async function postCaseNewHttp(req, res) {
   // create new `case` in db
-  return false; //Disable Publish Button for awhile
+  
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;
@@ -134,6 +134,11 @@ async function postCaseNewHttp(req, res) {
         errors: langErrors,
       });
     }
+    
+    let hidden = false;
+    if (req.user.accepted_date === null || req.user.accepted_date === ""){
+      hidden = true;
+    }
 
     let title = originalLanguageEntry.title;
     let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
@@ -145,6 +150,7 @@ async function postCaseNewHttp(req, res) {
       body,
       description,
       original_language,
+      hidden
     });
 
     req.params.thingid = thing.thingid;
@@ -163,13 +169,16 @@ async function postCaseNewHttp(req, res) {
       title
     };
 
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
+    if(hidden === false){
+      const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+      if (filteredLocalesToTranslate.length) {
+        await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
+      }
+      if (localesToNotTranslate.length > 0) {
+        await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
+      }
     }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
-    }
+    
     res.status(200).json({
       OK: true,
       article,
@@ -419,6 +428,9 @@ async function caseUpdate(req, res, entry = undefined) {
   newCase.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date;
   updatedCase.published = true;
   author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  if (req.user.accepted_date === null || req.user.accepted_date === ""){
+    updatedCase.hidden = true;
+  }
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
@@ -483,7 +495,7 @@ async function caseUpdate(req, res, entry = undefined) {
 
 async function postCaseUpdateHttp(req, res) {
   // cache.clear();
-  return false; //Disable Publish Button for awhile
+  
   const params = parseGetParams(req, "case");
   const { articleid, datatype, lang } = params;
   const langErrors = []; 
@@ -688,6 +700,7 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params, res);
+  console.log("article ", JSON.stringify(article));
   if (!article) {
     res.status(404).render("404");
     return null;
@@ -773,5 +786,7 @@ module.exports = {
   getCaseHttp,
   postCaseUpdateHttp,
   caseUpdateHttp,
+  caseUpdate,
+  getCase,
   saveCaseDraft
 };

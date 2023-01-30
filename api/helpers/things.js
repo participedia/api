@@ -138,7 +138,11 @@ const returnByType = async (res, params, article, static, user, results = {}, to
     }
   } else {
     if (article.hidden && (!user || (user && !user.isadmin))) {
-      return res.status(404).render("404");
+      if(article.published){
+        return res.status(404).render("waiting-for-approval");
+      }else{
+        return res.status(404).render("404");
+      }
     }
   }
 
@@ -683,27 +687,27 @@ async function translateText(data, targetLanguage) {
   // The text to translate
   let allTranslation = '';
 
-  // // The target language
-  // const target = targetLanguage;
-  // let length = data.length;
-  // if (length > 5000) {
-  //   // Get text chunks
-  //   let textParts = data.match(/.{1,5000}/g);
-  //   for(let text of textParts){
-  //     let [translation] = await translate
-  //       .translate(text, target)
-  //       .catch(function(error) {
-  //         logError(error);
-  //       });
-  //     allTranslation += translation;
-  //   }
-  // } else {
-  //   [allTranslation] = await translate
-  //     .translate(data, target)
-  //     .catch(function(error) {
-  //       logError(error);
-  //     });
-  // }
+  // The target language
+  const target = targetLanguage;
+  let length = data.length;
+  if (length > 5000) {
+    // Get text chunks
+    let textParts = data.match(/.{1,5000}/g);
+    for(let text of textParts){
+      let [translation] = await translate
+        .translate(text, target)
+        .catch(function(error) {
+          logError(error);
+        });
+      allTranslation += translation;
+    }
+  } else {
+    [allTranslation] = await translate
+      .translate(data, target)
+      .catch(function(error) {
+        logError(error);
+      });
+  }
   return allTranslation;
 }
 
@@ -823,6 +827,10 @@ async function publishDraft(req, res, entryUpdate, entryType) {
         errors: langErrors,
       });
     }
+    let hidden = false;
+    if (req.user.accepted_date === null || req.user.accepted_date === ""){
+      hidden = true;
+    }
 
     const title = originalLanguageEntry.title;
     const body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
@@ -836,20 +844,23 @@ async function publishDraft(req, res, entryUpdate, entryType) {
         errors,
       });
     }
-    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
-    const localizedData = {
-      body,
-      description,
-      language: original_language,
-      title
-    };
 
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate, req.body.entryLocales);
-    }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);
+    if(hidden === false){
+      localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
+      const localizedData = {
+        body,
+        description,
+        language: original_language,
+        title
+      };
+
+      const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+      if (filteredLocalesToTranslate.length) {
+        await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate, req.body.entryLocales);
+      }
+      if (localesToNotTranslate.length > 0) {
+        await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);
+      }
     }
     res.status(200).json({
       OK: true,
@@ -888,6 +899,7 @@ async function saveDraft(req, res, args) {
   const { articleid } = params;
   const originalLanguageEntry = getOriginalLanguageEntry(req.body);
   const entryData = req.body[originalLanguageEntry];
+  let hidden = false;
 
   // Save draft
   if (!thingId && !articleid) {
@@ -895,7 +907,8 @@ async function saveDraft(req, res, args) {
       title: entryData.title || '',
       body: entryData.body || '',
       description: entryData.description || '',
-      original_language: entryData.original_language || "en"
+      original_language: entryData.original_language || "en",
+      hidden
     });
   
     thingId = thing.thingid;

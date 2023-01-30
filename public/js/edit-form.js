@@ -517,13 +517,12 @@ const editForm = {
       formsData[originalEntry.locale] = originalEntry;
     }
 
-    const requestPayload = {...formsData, entryLocales: this.entryLocaleData, entryId: this.entryId};
-    console.log(requestPayload)
+    const requestPayload = {...formsData, entryLocales: this.entryLocaleData};
     xhr.send(JSON.stringify(requestPayload));
   },
 
   sendFormData() {
-    return false; //Disable Publish Button for awhile
+    
     const formData = serialize(this.formEl);
     const formValue = Object.fromEntries(new URLSearchParams(formData));
     const formObject = Object.fromEntries(new URLSearchParams(formData));
