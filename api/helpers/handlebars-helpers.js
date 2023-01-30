@@ -1145,8 +1145,6 @@ module.exports = {
     // otherwise return contributions only
     const profile = context.data.root.profile;
     const user = context.data.root.req.user;
-    console.log("profile-handlebars", JSON.stringify(profile));
-    console.log("user-handlebars", JSON.stringify(user));
     const draftsTypes = ["cases", "methods", "organizations"];
     // merge all article types into 1 array
     let allDrafts = [];
@@ -1261,7 +1259,7 @@ module.exports = {
     // merge all article types into 1 array
     let allContributions = [];
     contributionTypes.forEach(type => {
-      allContributions = allContributions.concat(profile[type]);
+      allContributions = allContributions.concat(profile[type].filter(x => x.published));
     });
     return allContributions;
   },
