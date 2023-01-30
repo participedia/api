@@ -700,7 +700,6 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
   const article = await getCase(params, res);
-  console.log("article ", JSON.stringify(article));
   if (!article) {
     res.status(404).render("404");
     return null;
