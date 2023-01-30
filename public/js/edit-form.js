@@ -517,7 +517,7 @@ const editForm = {
       formsData[originalEntry.locale] = originalEntry;
     }
 
-    const requestPayload = {...formsData, entryLocales: this.entryLocaleData};
+    const requestPayload = {...formsData, entryLocales: this.entryLocaleData, entryId: this.entryId};
     xhr.send(JSON.stringify(requestPayload));
   },
 
@@ -645,7 +645,7 @@ const editForm = {
       formsData[formValue.locale] = formValue;
     }
 
-    const requestPayload = {...formsData, entryLocales: this.entryLocaleData};
+    const requestPayload = {...formsData, entryLocales: this.entryLocaleData, entryId: this.entryId};
     console.log(requestPayload)
     xhr.send(JSON.stringify(requestPayload));
 
