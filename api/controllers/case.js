@@ -466,6 +466,12 @@ async function caseUpdate(req, res, entry = undefined) {
               await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
           } 
+          if(isNaN(updatedCase.is_component_of)){updatedCase.is_component_of = 0}
+          if(isNaN(updatedCase.number_of_participants)){updatedCase.number_of_participants = 0}
+          if(isNaN(updatedCase.primary_organizer)){updatedCase.primary_organizer = 0} 
+          if(isNaN(updatedCase.collections)){updatedCase.collections = 0} 
+          if(isNaN(updatedCase.latitude)){updatedCase.latitude = 0} 
+          if(isNaN(updatedCase.longitude)){updatedCase.longitude = 0} 
           await t.none(UPDATE_CASE, updatedCase);
 
         });
