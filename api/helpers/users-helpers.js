@@ -6,6 +6,15 @@ const {
   CREATE_USER_ID,
 } = require("../helpers/db");
 
+const ManagementClient = require("auth0").ManagementClient;
+
+const auth0Client = new ManagementClient({
+  domain: process.env.AUTH0_DOMAIN,
+  clientId: process.env.AUTH0_CLIENT_ID,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  scope: "read:users update:users",
+});
+
 async function getUserOrCreateUser(auth0User) {
   // check if we have a user in our db
   const userByEmail = await db.oneOrNone(USER_BY_EMAIL, {
@@ -61,7 +70,37 @@ function okToEdit(user) {
   return true;
 }
 
+const setUserAcceptedDate = async (id, currentDate) => {
+  try {
+    return await db.none(
+      "UPDATE users SET accepted_date = ${currentDate} WHERE id = ${id}",
+      {
+        id: id,
+        currentDate: currentDate,
+      }
+    );
+  } catch (err) {
+    console.log("setUserAcceptedDate error - ", err);
+  }
+};
+
+const blockUserAuth0 = async user_id => {
+  auth0Client.updateUser(
+    { id: `${user_id}` },
+    { blocked: true },
+    (err, auth0User) => {
+      if (err) {
+        return console.log(" blockUserAuth0 error " + err);
+      } else {
+        return auth0User;
+      }
+    }
+  );
+};
+
 module.exports = exports = {
   okToEdit,
   getUserOrCreateUser,
+  setUserAcceptedDate,
+  blockUserAuth0,
 };
