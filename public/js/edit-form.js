@@ -693,7 +693,7 @@ const editForm = {
       entryLocales: this.entryLocaleData,
       entryId: this.entryId,
     };
-    console.log(requestPayload);
+    // console.log(requestPayload);
     xhr.send(JSON.stringify(requestPayload));
 
     // open publishing feedback modal as soon as we send the request

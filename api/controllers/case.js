@@ -25,6 +25,7 @@ const {
   ErrorReporter,
   LOCALIZED_TEXT_BY_ID_LOCALE,
   UPDATE_DRAFT_LOCALIZED_TEXT,
+  ENTRY_REVIEW,
 } = require("../helpers/db");
 
 const {
@@ -721,6 +722,40 @@ async function postCaseUpdateHttp(req, res) {
   refreshSearch();
 }
 
+// Only changes to title, description, and/or body trigger a new author and version
+
+async function postCaseUpdatePreview(req, res) {
+  const params = parseGetParams(req, "case");
+  let hidden = false;
+  let published = true;
+  let thingid = req.body.thingid;
+  console.log("thingid ", thingid);
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    hidden = true;
+  }
+
+  try {
+    const paramsEntryReview = {
+      hidden: hidden,
+      published: published,
+      id: thingid,
+    };
+    const entryReview = await db.none(ENTRY_REVIEW, paramsEntryReview);
+    const articleRow = await await db.one(CASE_BY_ID, params);
+    const article = articleRow.results;
+
+    res.status(200).json({
+      OK: true,
+      article: article,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      OK: false,
+      errors: error.message,
+    });
+  }
+}
+
 /**
  * @api {get} /case/:thingid Get the last version of a case
  * @apiGroup Cases
@@ -856,6 +891,12 @@ router.post(
   requireAuthenticatedUser(),
   isPostOrPutUser(),
   postCaseUpdateHttp
+);
+router.post(
+  "/:thingid/preview",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postCaseUpdatePreview
 );
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveCaseDraft);
 router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveCaseDraft);

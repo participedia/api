@@ -11,7 +11,7 @@
     <article>
       <hgroup>
         <h2>{{toUpperCase (t article.type)}}</h2>
-        <h1>{{article.title}}</h1>
+        <h1 id="entry-title">{{article.title}}</h1>
       </hgroup>
       
       {{# if (isPublished article)}}
@@ -45,14 +45,14 @@
 
 
         {{# if article.description}}
-          <p>{{ article.description }}</p>
+          <p id="entry-title">{{ article.description }}</p>
         {{/if}}
-        {{{ article.body }}}
+        <div id="entry-body">{{{ article.body }}}</div>
       </div>
 
-      <!-- {{# if (isNotPublished article)}}
+      {{# if (isNotPublished article)}}
       <div class="g-recaptcha recaptcha-reader" data-sitekey="{{getReCaptchaSiteKey}}"></div>
-      {{/if}} -->
+      {{/if}}
       <div class="u-margin-top--med"></div>
       {{> edit-form-submit-button-draft article=article}}
     </article>
