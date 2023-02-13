@@ -197,7 +197,7 @@ async function postCaseNewHttp(req, res) {
       if (filteredLocalesToTranslate.length) {
         await createLocalizedRecord(
           localizedData,
-          thing.thingid,
+          req.params.thingid,
           filteredLocalesToTranslate,
           req.body.entryLocales
         );
@@ -205,7 +205,7 @@ async function postCaseNewHttp(req, res) {
       if (localesToNotTranslate.length > 0) {
         await createUntranslatedLocalizedRecords(
           localesToNotTranslate,
-          thing.thingid,
+          req.params.thingid,
           localizedData
         );
       }
@@ -377,6 +377,10 @@ async function caseUpdateHttp(req, res, entry = undefined) {
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
 
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    updatedCase.hidden = true;
+  }
+
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
@@ -469,9 +473,11 @@ async function caseUpdate(req, res, entry = undefined) {
     .toJSON()
     .slice(0, 19)
     .replace("T", " ");
+
   if (req.user.accepted_date === null || req.user.accepted_date === "") {
     updatedCase.hidden = true;
   }
+
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
