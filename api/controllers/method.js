@@ -3,7 +3,7 @@
 const express = require("express");
 const cache = require("apicache");
 const fs = require("fs");
-const fetch = require('isomorphic-fetch');
+const fetch = require("isomorphic-fetch");
 
 const {
   db,
@@ -20,7 +20,7 @@ const {
   refreshSearch,
   ErrorReporter,
   LOCALIZED_TEXT_BY_ID_LOCALE,
-  UPDATE_DRAFT_LOCALIZED_TEXT
+  UPDATE_DRAFT_LOCALIZED_TEXT,
 } = require("../helpers/db");
 
 const {
@@ -41,7 +41,7 @@ const {
   saveDraft,
   validateCaptcha,
   generateLocaleArticle,
-  publishDraft
+  publishDraft,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -102,7 +102,7 @@ async function getEditStaticText(params) {
  */
 async function postMethodNewHttp(req, res) {
   // create new `method` in db
-  
+
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;
@@ -110,13 +110,14 @@ async function postMethodNewHttp(req, res) {
     cache.clear();
     //validate captcha start
     try {
-      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+      supportedLanguages =
+        SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
     } catch (error) {
       supportedLanguages = [];
     }
     for (let i = 0; i < supportedLanguages.length; i++) {
       const lang = supportedLanguages[i];
-      if (req.body[lang]["g-recaptcha-response"]){
+      if (req.body[lang]["g-recaptcha-response"]) {
         let resKey = req.body[lang]["g-recaptcha-response"];
         captcha_error_message = req.body[lang].captcha_error;
         urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
@@ -142,8 +143,11 @@ async function postMethodNewHttp(req, res) {
       langErrors,
       localesToTranslate,
       localesToNotTranslate,
-      originalLanguageEntry
-    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), "method");
+      originalLanguageEntry,
+    } = parseAndValidateThingPostData(
+      generateLocaleArticle(req.body, req.body.entryLocales),
+      "method"
+    );
 
     if (hasErrors) {
       return res.status(400).json({
@@ -152,39 +156,73 @@ async function postMethodNewHttp(req, res) {
       });
     }
 
+    let hidden = false;
+    if (req.user.accepted_date === null || req.user.accepted_date === "") {
+      hidden = true;
+    }
+
     let title = originalLanguageEntry.title;
-    let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    let body =
+      originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description;
     let original_language = originalLanguageEntry.original_language || "en";
 
-    const thing = await db.one(CREATE_METHOD, {
-      title,
-      body,
-      description,
-      original_language,
-    });
+    if (!req.body.entryId) {
+      const thing = await db.one(CREATE_METHOD, {
+        title,
+        body,
+        description,
+        original_language,
+        hidden,
+      });
+      req.params.thingid = thing.thingid;
+    } else {
+      req.params.thingid = req.body.entryId;
+    }
 
-    req.params.thingid = thing.thingid;
-    const { article, errors } = await methodUpdate(req, res, originalLanguageEntry);
+    const { article, errors } = await methodUpdate(
+      req,
+      res,
+      originalLanguageEntry
+    );
     if (errors) {
       return res.status(400).json({
         OK: false,
         errors,
       });
     }
-    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
+    localesToNotTranslate = localesToNotTranslate.filter(
+      el => el.language !== originalLanguageEntry.language
+    );
     let localizedData = {
       body,
       description,
       language: original_language,
-      title
+      title,
     };
 
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+    const filteredLocalesToTranslate = localesToTranslate.filter(
+      locale =>
+        !(
+          locale === "entryLocales" ||
+          locale === "originalEntry" ||
+          locale === originalLanguageEntry.language
+        )
+    );
+
     if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
-    } if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+      await createLocalizedRecord(
+        localizedData,
+        req.params.thingid,
+        filteredLocalesToTranslate,
+        req.body.entryLocales
+      );
+    }
+    if (localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(
+        localesToNotTranslate,
+        req.params.thingid
+      );
     }
     res.status(200).json({
       OK: true,
@@ -243,26 +281,28 @@ async function getMethod(params, res) {
 
 async function postMethodUpdateHttp(req, res) {
   cache.clear();
-  
+
   const params = parseGetParams(req, "method");
   // const user = req.user;
-  const { articleid, datatype } = params;
+  const { articleid, datatype, lang } = params;
   const langErrors = [];
+  const originLang = lang;
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;
 
-  if(!Object.keys(req.body).length) {
-    const articleRow = await (await db.one(METHOD_BY_ID, params));
+  if (!Object.keys(req.body).length) {
+    const articleRow = await await db.one(METHOD_BY_ID, params);
     const article = articleRow.results;
 
     if (!article.latitude && !article.longitude) {
-      article.latitude = '';
-      article.longitude = '';
+      article.latitude = "";
+      article.longitude = "";
     }
 
     try {
-      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+      supportedLanguages =
+        SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
     } catch (error) {
       supportedLanguages = [];
     }
@@ -280,7 +320,7 @@ async function postMethodUpdateHttp(req, res) {
       const lang = supportedLanguages[i];
       let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
         language: lang,
-        thingid: article.id
+        thingid: article.id,
       });
 
       if (lang === article.original_language) {
@@ -289,12 +329,11 @@ async function postMethodUpdateHttp(req, res) {
         title[lang] = results[0].title;
         desc[lang] = results[0].description;
         body[lang] = results[0].body;
-
       } else {
         const otherLangArticle = {
-          title: (results[0]?.title) ?? '',
-          description: results[0]?.description ?? '',
-          body: results[0]?.body ?? ''
+          title: results[0]?.title ?? "",
+          description: results[0]?.description ?? "",
+          body: results[0]?.body ?? "",
         };
 
         if (results[0]?.title) {
@@ -314,22 +353,22 @@ async function postMethodUpdateHttp(req, res) {
       entryLocaleData = {
         title: title,
         description: desc,
-        body: body
+        body: body,
       };
     }
-      req.body['entryLocales'] = entryLocaleData;
-
+    req.body["entryLocales"] = entryLocaleData;
   }
 
   //validate captcha start
   try {
-    supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+    supportedLanguages =
+      SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
   } catch (error) {
     supportedLanguages = [];
   }
   for (let i = 0; i < supportedLanguages.length; i++) {
     const lang = supportedLanguages[i];
-    if (req.body[lang]["g-recaptcha-response"]){
+    if (req.body[lang]["g-recaptcha-response"]) {
       let resKey = req.body[lang]["g-recaptcha-response"];
       captcha_error_message = req.body[lang].captcha_error;
       urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
@@ -345,31 +384,49 @@ async function postMethodUpdateHttp(req, res) {
   }
   //validate captcha end
 
-  if(datatype == 'draft') {
-    publishDraft(req, res, methodUpdate, 'method');
+  if (datatype == "draft") {
+    publishDraft(req, res, methodUpdate, "method");
     return;
   }
 
-  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  const localeEntries = generateLocaleArticle(
+    req.body,
+    req.body.entryLocales,
+    true
+  );
   let originalLanguageEntry;
   let entryOriginalLanguage;
+  const localeEntriesArr = [];
 
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
-      if (req.body.hasOwnProperty(entry.original_language)){
+      if (req.body.hasOwnProperty(entry.original_language)) {
         entryOriginalLanguage = entry.original_language;
       }
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
       let errors = validateFields(entry, "method");
-      errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
+      errors = errors.map(
+        e =>
+          `${
+            SUPPORTED_LANGUAGES.find(
+              locale => locale.twoLetterCode === entryLocale
+            ).name
+          }: ${e}`
+      );
       langErrors.push({ locale: entryLocale, errors });
+
+      if (originLang == entryLocale) {
+        localeEntriesArr.push(entry);
+      }
       await methodUpdate(req, res, entry);
     }
   }
-  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+  const hasErrors = !!langErrors.find(
+    errorEntry => errorEntry.errors.length > 0
+  );
 
   if (hasErrors) {
     return res.status(400).json({
@@ -381,7 +438,7 @@ async function postMethodUpdateHttp(req, res) {
   // if(originalLanguageEntry){
   //   await methodUpdate(req, res, originalLanguageEntry);
   // }
-  const localeEntriesArr = [].concat(...Object.values(localeEntries));
+  // const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
   const freshArticle = await getMethod(params, res);
@@ -456,7 +513,7 @@ async function methodUpdateHttp(req, res, entry = undefined) {
         const creator = {
           user_id: newMethod.creator ? newMethod.creator : params.userid,
           thingid: params.articleid,
-          timestamp: new Date(newMethod.post_date)
+          timestamp: new Date(newMethod.post_date),
         };
         await db.tx("update-method", async t => {
           await t.none(UPDATE_AUTHOR_LAST, creator);
@@ -481,6 +538,38 @@ async function methodUpdateHttp(req, res, entry = undefined) {
     res.status(400).json({
       OK: false,
       errors: er.errors,
+    });
+  }
+}
+
+async function postMethodUpdatePreview(req, res) {
+  const params = parseGetParams(req, "method");
+  let hidden = false;
+  let published = true;
+  let thingid = req.body.thingid;
+  console.log("thingid ", thingid);
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    hidden = true;
+  }
+
+  try {
+    const paramsEntryReview = {
+      hidden: hidden,
+      published: published,
+      id: thingid,
+    };
+    const entryReview = await db.none(ENTRY_REVIEW, paramsEntryReview);
+    const articleRow = await await db.one(CASE_BY_ID, params);
+    const article = articleRow.results;
+
+    res.status(200).json({
+      OK: true,
+      article: article,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      OK: false,
+      errors: error.message,
     });
   }
 }
@@ -511,7 +600,6 @@ async function methodUpdate(req, res, entry = undefined) {
   if (isNewMethod) {
     newMethod.updated_date = Date.now();
   }
-  
 
   // save any changes to the user-submitted text
   const {
@@ -535,10 +623,22 @@ async function methodUpdate(req, res, entry = undefined) {
   updatedMethod.updated_date = !user.isadmin
     ? "now"
     : updatedMethod.updated_date;
-    updatedMethod.post_date = !updatedMethod.published ? "now" : updatedMethod.post_date;
-    newMethod.post_date = !updatedMethod.published ? Date.now() : updatedMethod.post_date; 
-  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  updatedMethod.post_date = !updatedMethod.published
+    ? "now"
+    : updatedMethod.post_date;
+  newMethod.post_date = !updatedMethod.published
+    ? Date.now()
+    : updatedMethod.post_date;
+  author.timestamp = new Date()
+    .toJSON()
+    .slice(0, 19)
+    .replace("T", " ");
   updatedMethod.published = true;
+
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    updatedMethod.hidden = true;
+  }
+
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-method", async t => {
@@ -553,11 +653,10 @@ async function methodUpdate(req, res, entry = undefined) {
         const creator = {
           user_id: newMethod.creator ? newMethod.creator : params.userid,
           thingid: params.articleid,
-          timestamp: new Date(newMethod.post_date)
+          timestamp: new Date(newMethod.post_date),
         };
         await db.tx("update-method", async t => {
           if (!isNewMethod) {
-
             if (updatedMethod.verified) {
               updatedMethod.reviewed_by = creator.user_id;
               updatedMethod.reviewed_at = "now";
@@ -565,13 +664,17 @@ async function methodUpdate(req, res, entry = undefined) {
 
             var userId = oldMethod.creator.user_id.toString();
             var creatorTimestamp = new Date(oldMethod.post_date);
-            if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+            if (
+              userId == creator.user_id &&
+              creatorTimestamp.toDateString() ===
+                creator.timestamp.toDateString()
+            ) {
               await t.none(INSERT_AUTHOR, author);
               updatedMethod.updated_date = "now";
             } else {
               await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
-          } 
+          }
           await t.none(UPDATE_METHOD, updatedMethod);
         });
       } else {
@@ -595,7 +698,6 @@ async function methodUpdate(req, res, entry = undefined) {
     return { errors: er.errors };
   }
 }
-
 
 function getUpdatedMethod(user, params, newMethod, oldMethod) {
   const updatedMethod = Object.assign({}, oldMethod);
@@ -643,10 +745,12 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
     "decision_methods",
     "if_voting",
     "number_of_participants",
-    "purpose_method"
+    "purpose_method",
   ].map(key => cond(key, as.methodkeys));
   // list of {id, type, title}
-  ["specific_methods_tools_techniques", "collections"].map(key => cond(key, as.ids));
+  ["specific_methods_tools_techniques", "collections"].map(key =>
+    cond(key, as.ids)
+  );
   return [updatedMethod, er];
 }
 
@@ -695,26 +799,46 @@ async function saveMethodDraft(req, res, entry = undefined) {
     UPDATE_ENTRY: UPDATE_METHOD,
     CREATE_ENTRY_QUERY: CREATE_METHOD,
     refreshSearch,
-    thingId: thingMethodid,
+    thingId: req.body.entryId,
     getUpdatedEntry: getUpdatedMethod,
     getEntry: getMethod,
-    entryType: "method"
+    entryType: "method",
   };
-  const {payload, thingId} = await saveDraft(req, res, args);
-  thingMethodid = thingId;
+  const { payload, thingId } = await saveDraft(req, res, args);
+  thingMethodid = req.body.entryId;
   res.status(200).json(payload);
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getMethodEditHttp);
 router.get("/new", requireAuthenticatedUser(), getMethodNewHttp);
-router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postMethodNewHttp);
+router.post(
+  "/new",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postMethodNewHttp
+);
 // these have to come *after* /new or BAD THINGS HAPPEN
 router.get("/:thingid/:language?", setAndValidateLanguage(), getMethodHttp);
-router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postMethodUpdateHttp);
+router.post(
+  "/:thingid",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postMethodUpdateHttp
+);
+router.post(
+  "/:thingid/preview",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postMethodUpdatePreview
+);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveMethodDraft);
 router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveMethodDraft);
-router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveMethodDraft);
+router.post(
+  "/:thingid/saveDraftPreview",
+  requireAuthenticatedUser(),
+  saveMethodDraft
+);
 
 module.exports = {
   method: router,
@@ -723,5 +847,6 @@ module.exports = {
   getMethodNewHttp,
   postMethodNewHttp,
   postMethodUpdateHttp,
-  methodUpdateHttp
+  postMethodUpdatePreview,
+  methodUpdateHttp,
 };
