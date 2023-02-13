@@ -916,5 +916,6 @@ module.exports = {
   caseUpdateHttp,
   caseUpdate,
   getCase,
+  postCaseUpdatePreview,
   saveCaseDraft,
 };
