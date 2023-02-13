@@ -112,6 +112,13 @@ router.post("/reject-entry", async function(req, res) {
       .status(401)
       .json({ error: "You must be logged in to perform this action." });
   }
+
+  if (!user.isadmin) {
+    return res
+      .status(403)
+      .json({ error: "You must be an admin to perform this action." });
+  }
+
   let author = await getAuthorByEntry(req.body.entryId);
   if (Object.keys(author).length > 0) {
     let allUserPosts = await getRejectionUserPost(author.user_id);
@@ -155,6 +162,13 @@ router.post("/approve-entry", async function(req, res) {
       .status(401)
       .json({ error: "You must be logged in to perform this action." });
   }
+
+  if (!user.isadmin) {
+    return res
+      .status(403)
+      .json({ error: "You must be an admin to perform this action." });
+  }
+
   let author = await getAuthorByEntry(req.body.entryId);
   if (Object.keys(author).length > 0) {
     const currentDate = new Date();
