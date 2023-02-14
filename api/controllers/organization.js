@@ -384,7 +384,7 @@ async function postOrganizationUpdateHttp(req, res) {
   }
   //validate captcha end
 
-  if (datatype == "draft") {
+  if (!article.published && !article.hidden) {
     publishDraft(req, res, organizationUpdate, "organization");
     return;
   }

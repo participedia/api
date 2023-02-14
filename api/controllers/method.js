@@ -384,7 +384,7 @@ async function postMethodUpdateHttp(req, res) {
   }
   //validate captcha end
 
-  if (datatype == "draft") {
+  if (!article.published && !article.hidden) {
     publishDraft(req, res, methodUpdate, "method");
     return;
   }

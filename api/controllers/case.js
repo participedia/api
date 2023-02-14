@@ -562,7 +562,7 @@ async function postCaseUpdateHttp(req, res) {
   // cache.clear();
 
   const params = parseGetParams(req, "case");
-  const { articleid, datatype, lang } = params;
+  const { articleid, lang } = params;
   const langErrors = [];
   const originLang = lang;
   let urlCaptcha = ``;
@@ -663,7 +663,7 @@ async function postCaseUpdateHttp(req, res) {
   }
   //validate captcha end
 
-  if (datatype == "draft") {
+  if (!article.published && !article.hidden) {
     publishDraft(req, res, caseUpdate, "case");
     return;
   }
