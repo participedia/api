@@ -570,7 +570,7 @@ async function postCaseUpdateHttp(req, res) {
   let supportedLanguages;
 
   if (!Object.keys(req.body).length) {
-    const articleRow = await await db.one(CASE_BY_ID, params);
+    const articleRow = await db.one(CASE_BY_ID, params);
     const article = articleRow.results;
 
     if (!article.latitude && !article.longitude) {
@@ -747,7 +747,7 @@ async function postCaseUpdatePreview(req, res) {
       id: thingid,
     };
     const entryReview = await db.none(ENTRY_REVIEW, paramsEntryReview);
-    const articleRow = await await db.one(CASE_BY_ID, params);
+    const articleRow = await db.one(CASE_BY_ID, params);
     const article = articleRow.results;
 
     res.status(200).json({
@@ -793,7 +793,7 @@ async function getCase(params, res) {
     if (Number.isNaN(params.articleid)) {
       return null;
     }
-    const articleRow = await await db.one(CASE_BY_ID, params);
+    const articleRow = await db.one(CASE_BY_ID, params);
     const article = articleRow.results;
     fixUpURLs(article);
     return article;
