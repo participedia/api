@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
       thingid: thingId,
       entryId: thingId,
     };
-    // console.log(requestPayload);
+
     xhr.send(JSON.stringify(requestPayload));
     // open publishing feedback modal as soon as we send the request
     openPublishingFeedbackModal();

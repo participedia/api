@@ -314,7 +314,6 @@ const editForm = {
     selectInputArr.forEach(el => {
       el.addEventListener("change", evt => {
         evt.preventDefault();
-        console.log("on change value");
         const isBody = el.parentElement.nextElementSibling.className.includes(
           "ql-toolbar"
         );
@@ -693,7 +692,7 @@ const editForm = {
       entryLocales: this.entryLocaleData,
       entryId: this.entryId,
     };
-    // console.log(requestPayload);
+
     xhr.send(JSON.stringify(requestPayload));
 
     // open publishing feedback modal as soon as we send the request

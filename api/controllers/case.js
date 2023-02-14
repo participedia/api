@@ -735,7 +735,6 @@ async function postCaseUpdatePreview(req, res) {
   let hidden = false;
   let published = true;
   let thingid = req.body.thingid;
-  console.log("thingid ", thingid);
   if (req.user.accepted_date === null || req.user.accepted_date === "") {
     hidden = true;
   }

@@ -125,7 +125,6 @@ router.post("/reject-entry", async function(req, res) {
 
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];
-      // console.log("thingsByUser.id ", JSON.stringify(thingsByUser));
       await removeEntryThings(thingsByUser.id);
       switch (thingsByUser.type) {
         case "case":
