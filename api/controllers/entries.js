@@ -113,7 +113,7 @@ router.post("/reject-entry", async function(req, res) {
       .json({ error: "You must be logged in to perform this action." });
   }
 
-  if (!user.isadmin) {
+  if (!req.user.isadmin) {
     return res
       .status(403)
       .json({ error: "You must be an admin to perform this action." });
@@ -162,7 +162,7 @@ router.post("/approve-entry", async function(req, res) {
       .json({ error: "You must be logged in to perform this action." });
   }
 
-  if (!user.isadmin) {
+  if (!req.user.isadmin) {
     return res
       .status(403)
       .json({ error: "You must be an admin to perform this action." });
