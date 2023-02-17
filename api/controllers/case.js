@@ -568,10 +568,11 @@ async function postCaseUpdateHttp(req, res) {
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;
+  let article = "";
 
   if (!Object.keys(req.body).length) {
     const articleRow = await db.one(CASE_BY_ID, params);
-    const article = articleRow.results;
+    article = articleRow.results;
 
     if (!article.latitude && !article.longitude) {
       article.latitude = "";
