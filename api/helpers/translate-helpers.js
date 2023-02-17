@@ -21,7 +21,11 @@ const translateText = async (data, targetLanguage) => {
 
   // The target language
   const target = targetLanguage;
-  let length = data.length;
+
+  let length = 0;
+  if (data != null || data != "") {
+    length = data.length;
+  }
   if (length > 5000) {
     // Get text chunks
     let textParts = data.match(/.{1,5000}/g);
