@@ -101,10 +101,6 @@ async function getUserById(userId, req, res, view = "view") {
  *
  */
 router.get("/:userId", async function(req, res) {
-  if (!req.user) {
-    return res.redirect("/login?redirectTo=/profile");
-  }
-
   try {
     const userId = parseInt(req.params.userId, 10);
     if (Number.isNaN(userId)) {
