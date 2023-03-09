@@ -6,7 +6,7 @@ WITH all_hidden_things  AS (
 all_authors as (
     SELECT DISTINCT ON (thingid) *
     FROM  authors 
-    ORDER  BY thingid  DESC NULLS LAST
+    ORDER  BY thingid, timestamp  DESC
 ),
 all_users as (
  select name, id, accepted_date from users where accepted_date is null order by id desc
