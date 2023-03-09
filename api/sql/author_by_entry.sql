@@ -5,7 +5,7 @@ WITH all_users  AS (
 all_authors as (
     SELECT DISTINCT ON (thingid) *
     FROM  authors where thingid = ${entry_id}
-    ORDER  BY thingid, timestamp DESC NULLS limit 1
+    ORDER  BY thingid, timestamp DESC limit 1
 )
 SELECT all_authors.*, all_users.*
 FROM all_users, all_authors
