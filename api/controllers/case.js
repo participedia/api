@@ -456,10 +456,14 @@ async function caseUpdate(req, res, entry = undefined) {
   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
 
-  if (isNaN(updatedCase.number_of_participants)) {
-    updatedCase.number_of_participants = null;
+  for (const key in updatedCase) {
+    if (updatedCase.hasOwnProperty(key)) {
+      if (isNaN(updatedCase[key])) {
+        updatedCase[key] = null;
+      }
+    }
   }
-
+  
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
   updatedCase.post_date = !updatedCase.published
@@ -513,25 +517,7 @@ async function caseUpdate(req, res, entry = undefined) {
             } else {
               await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
-          }
-          if (isNaN(updatedCase.is_component_of)) {
-            updatedCase.is_component_of = 0;
-          }
-          if (isNaN(updatedCase.number_of_participants)) {
-            updatedCase.number_of_participants = 0;
-          }
-          if (isNaN(updatedCase.primary_organizer)) {
-            updatedCase.primary_organizer = 0;
-          }
-          if (isNaN(updatedCase.collections)) {
-            updatedCase.collections = 0;
-          }
-          if (isNaN(updatedCase.latitude)) {
-            updatedCase.latitude = 0;
-          }
-          if (isNaN(updatedCase.longitude)) {
-            updatedCase.longitude = 0;
-          }
+          }          
           await t.none(UPDATE_CASE, updatedCase);
         });
       } else {
@@ -570,10 +556,11 @@ async function postCaseUpdateHttp(req, res) {
   let supportedLanguages;
   let article = "";
 
-  if (!Object.keys(req.body).length) {
-    const articleRow = await db.one(CASE_BY_ID, params);
-    article = articleRow.results;
+  const articleRow = await db.one(CASE_BY_ID, params);
+  article = articleRow.results;
 
+  if (!Object.keys(req.body).length) {
+    
     if (!article.latitude && !article.longitude) {
       article.latitude = "";
       article.longitude = "";
@@ -637,8 +624,8 @@ async function postCaseUpdateHttp(req, res) {
     }
 
     req.body["entryLocales"] = entryLocaleData;
-  }
-
+  } 
+  
   //validate captcha start
   try {
     supportedLanguages =
@@ -654,7 +641,7 @@ async function postCaseUpdateHttp(req, res) {
       urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
     }
   }
-
+  
   let checkReCaptcha = await validateCaptcha(urlCaptcha);
   if (!checkReCaptcha) {
     return res.status(400).json({
@@ -663,7 +650,6 @@ async function postCaseUpdateHttp(req, res) {
     });
   }
   //validate captcha end
-
   if (!article.published && !article.hidden) {
     publishDraft(req, res, caseUpdate, "case");
     return;
@@ -677,7 +663,7 @@ async function postCaseUpdateHttp(req, res) {
   let originalLanguageEntry;
   let entryOriginalLanguage;
   const localeEntriesArr = [];
-
+  
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
@@ -706,6 +692,7 @@ async function postCaseUpdateHttp(req, res) {
       await caseUpdate(req, res, entry);
     }
   }
+  
   const hasErrors = !!langErrors.find(
     errorEntry => errorEntry.errors.length > 0
   );
