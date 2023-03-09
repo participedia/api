@@ -165,13 +165,14 @@ function concactArr(arr) {
 }
 
 const i18n = (key, context, locale = undefined) => {
-  if(locale && typeof locale === "string") {
-    return context && context.data && context.data.root.__({phrase: key, locale});
+  if (locale && typeof locale === "string") {
+    return (
+      context && context.data && context.data.root.__({ phrase: key, locale })
+    );
   } else {
     return context && context.data && context.data.root.__(key);
   }
-  
-}
+};
 
 module.exports = {
   toJSON: obj => {
@@ -185,7 +186,7 @@ module.exports = {
     );
   },
 
-  getLanguageSelectorTabs: (context) => {
+  getLanguageSelectorTabs: context => {
     return [
       { title: i18n("English", context), key: "en" },
       { title: i18n("French", context), key: "fr" },
@@ -209,7 +210,7 @@ module.exports = {
   },
 
   getTermsOfUsePartialEnglish: context => {
-    return 'terms-of-use-en';
+    return "terms-of-use-en";
   },
   getReCaptchaSiteKey: context => {
     return process.env.GOOGLE_SITE_KEY;
@@ -284,7 +285,7 @@ module.exports = {
     return i18n(`${article.type}_${view}_${name}_placeholder`, context);
   },
 
-  languageSelectorPlaceholder: (context) => {
+  languageSelectorPlaceholder: context => {
     return i18n(`language_select_placeholder`, context);
   },
 
@@ -299,10 +300,22 @@ module.exports = {
     const placeholders = {};
     SUPPORTED_LANGUAGES.forEach(lang => {
       placeholders[lang.twoLetterCode] = {
-        title: i18n(`${type}_edit_title_placeholder`, context, lang.twoLetterCode),
-        description: i18n(`${type}_edit_description_placeholder`, context, lang.twoLetterCode),
-        body: i18n(`${type}_edit_body_placeholder`, context, lang.twoLetterCode),
-      }
+        title: i18n(
+          `${type}_edit_title_placeholder`,
+          context,
+          lang.twoLetterCode
+        ),
+        description: i18n(
+          `${type}_edit_description_placeholder`,
+          context,
+          lang.twoLetterCode
+        ),
+        body: i18n(
+          `${type}_edit_body_placeholder`,
+          context,
+          lang.twoLetterCode
+        ),
+      };
     });
     return JSON.stringify(placeholders);
   },
@@ -327,20 +340,20 @@ module.exports = {
       return i18n(language[0].name, context);
     } else {
       return "missing language";
-    };
+    }
   },
 
   getLanguageOptions: () => {
     return SUPPORTED_LANGUAGES;
   },
 
-  booleanCheck: (value) => {
+  booleanCheck: value => {
     return !!value;
   },
 
   getOriginalLanguageValueForEditForm: (article, context) => {
     const req = context.data.root.req;
-    return article.original_language || req.cookies.locale || "en"
+    return article.original_language || req.cookies.locale || "en";
   },
 
   shouldShowOriginalLanguageAlert: (article, context) => {
@@ -367,7 +380,7 @@ module.exports = {
       return mapIdTitleToKeyValue(staticText["organizations"]);
     } else if (name === "collections") {
       return mapIdTitleToKeyValue(staticText["collections"]);
-    } else if(['title', 'description', 'body'].includes(name)) {
+    } else if (["title", "description", "body"].includes(name)) {
       return SUPPORTED_LANGUAGES.map(item => {
         return item.twoLetterCode;
         // };
@@ -400,17 +413,25 @@ module.exports = {
     );
   },
 
-  i18nEditFieldValue: (name, option, locale = null, useNoKey = false, context) => {
-    const defaultKey = !useNoKey ? `name:${name}-key:${option}` : `name:${option}`;
+  i18nEditFieldValue: (
+    name,
+    option,
+    locale = null,
+    useNoKey = false,
+    context
+  ) => {
+    const defaultKey = !useNoKey
+      ? `name:${name}-key:${option}`
+      : `name:${option}`;
     const longKey = `${defaultKey}-longValue`;
     let i18nValue;
     let i18nLongValue;
-    if(locale) {
-        i18nValue = i18n(defaultKey, context, locale);
-        i18nLongValue = i18n(longKey, context, locale);
+    if (locale) {
+      i18nValue = i18n(defaultKey, context, locale);
+      i18nLongValue = i18n(longKey, context, locale);
     } else {
-        i18nValue = i18n(defaultKey, context);
-        i18nLongValue = i18n(longKey, context);
+      i18nValue = i18n(defaultKey, context);
+      i18nLongValue = i18n(longKey, context);
     }
 
     const fieldNamesMappedToListOfArticles = {
@@ -469,10 +490,12 @@ module.exports = {
   },
 
   shouldShowVerifyEmail: emailNotVerified => {
-    if(!emailNotVerified) {
+    if (!emailNotVerified) {
       return false;
     }
-    return "<a href='/resend-verification/" + emailNotVerified + "' target='_blank'>";
+    return (
+      "<a href='/resend-verification/" + emailNotVerified + "' target='_blank'>"
+    );
   },
 
   getCompletenessPrompt: (article, context) => {
@@ -736,7 +759,7 @@ module.exports = {
     }
   },
 
-  getvalue: (article, name, locale = 'en') => {
+  getvalue: (article, name, locale = "en") => {
     const item = article[name];
     if (!item) return;
 
@@ -814,9 +837,11 @@ module.exports = {
   getLinkSetValue(article, name, index, attr) {
     if (!article[name]) return;
     if (!article[name][index]) return;
-    
-    if(attr === 'source_url') {
-      return article[name][index][attr].trim().includes('base64') ? '' : article[name][index][attr];
+
+    if (attr === "source_url") {
+      return article[name][index][attr].trim().includes("base64")
+        ? ""
+        : article[name][index][attr];
     }
     return article[name][index][attr];
   },
@@ -873,6 +898,7 @@ module.exports = {
       linkedIn:
         `https://www.linkedin.com/shareArticle?mini=true` +
         `&url=${url}&title=${article.title}`,
+      instagram: `https://instagram.com/participedia`,
     };
     return shareUrls[type];
   },
@@ -882,7 +908,16 @@ module.exports = {
   },
 
   hasCaptionText(photo) {
-    return (photo.title || (photo.source_url ? photo.source_url.trim().includes('base64') ? '' : photo.source_url : '') || photo.attribution) || '';
+    return (
+      photo.title ||
+      (photo.source_url
+        ? photo.source_url.trim().includes("base64")
+          ? ""
+          : photo.source_url
+        : "") ||
+      photo.attribution ||
+      ""
+    );
   },
 
   getFirstLargeImageForArticle(article) {
@@ -898,9 +933,7 @@ module.exports = {
   },
 
   socialTagsTemplate(article, req, context) {
-    const defaultPhotoUrl = `https://${
-      req.headers.host
-    }/images/participedia-social-img.jpg`;
+    const defaultPhotoUrl = `https://${req.headers.host}/images/participedia-social-img.jpg`;
     const url = currentUrl(req);
     // replace double quotes in title and description with single quotes
     let title = getPageTitle(req, article, context).replace(/"/g, "'");
@@ -919,9 +952,11 @@ module.exports = {
   sortedEditHistory(article) {
     let editHistory = article.edit_history;
     const isSameDate = (list, timestamp) => {
-      return list.find(entry => moment(entry.timestamp).isSame(timestamp, "day"));
-    }
-    
+      return list.find(entry =>
+        moment(entry.timestamp).isSame(timestamp, "day")
+      );
+    };
+
     // Filter and sort edit history to show one edit per user, per day
     // in the order of most recent edits first.
     // (do not show multiple edits by the same author on the same day)
@@ -932,7 +967,10 @@ module.exports = {
 
     let editsByUser = {};
     editHistory.forEach(edit => {
-      if (editsByUser[edit.user_id] && !isSameDate(editsByUser[edit.user_id], edit.timestamp)) {
+      if (
+        editsByUser[edit.user_id] &&
+        !isSameDate(editsByUser[edit.user_id], edit.timestamp)
+      ) {
         // only add this edit if we don't already have an edit entry for this user on this day
         editsByUser[edit.user_id] = editsByUser[edit.user_id].concat([edit]);
       } else if (!editsByUser[edit.user_id]) {
@@ -956,14 +994,14 @@ module.exports = {
     const postDateIsInHistory = () => {
       const userIsIn = history.find(entry => entry.user_id === creator.user_id);
       const dateIsIn = isSameDate(history, postDate);
-      return (userIsIn && dateIsIn);
-    }
+      return userIsIn && dateIsIn;
+    };
 
     if (!postDateIsInHistory()) {
       history.push({
-        "user_id": creator ? creator.user_id : null,
-        "timestamp": postDate,
-        "name": creator ? creator.name : null
+        user_id: creator ? creator.user_id : null,
+        timestamp: postDate,
+        name: creator ? creator.name : null,
       });
     }
 
@@ -1110,8 +1148,8 @@ module.exports = {
   },
 
   isLocalNav(tabName) {
-      const localTabs = ['en', 'fr', 'de', 'es', 'zh', 'pt', 'it'];
-      return localTabs.includes(tabName) ? "local" : "server";
+    const localTabs = ["en", "fr", "de", "es", "zh", "pt", "it"];
+    return localTabs.includes(tabName) ? "local" : "server";
   },
 
   getHomeTabs(context) {
@@ -1134,9 +1172,7 @@ module.exports = {
   },
 
   getContentChooserTabs(context) {
-    return [
-      { title: i18n("Drafts", context), key: "drafts" },
-    ];
+    return [{ title: i18n("Drafts", context), key: "drafts" }];
   },
 
   getUserTabs(context) {
@@ -1144,27 +1180,34 @@ module.exports = {
     // otherwise return contributions only
     const profile = context.data.root.profile;
     const user = context.data.root.req.user;
-
     const draftsTypes = ["cases", "methods", "organizations"];
+    console.log("user ", JSON.stringify(user));
     // merge all article types into 1 array
     let allDrafts = [];
-    draftsTypes.forEach(type => {
-      allDrafts = allDrafts.concat(user[type].filter(x => !x.published));
-    });
 
-    if ((user && user.id) === (profile && profile.id) && allDrafts.length > 0) {
-      return [
-        { title: i18n("Contributions", context), key: "contributions" },
-        { title: i18n("Bookmarks", context), key: "bookmarks" },
-        { title: i18n("Drafts", context), key: "drafts" },
-      ];
-    } else if ((user && user.id) === (profile && profile.id)) {
-      return [
-        { title: i18n("Contributions", context), key: "contributions" },
-        { title: i18n("Bookmarks", context), key: "bookmarks" },
-      ];
-    }
-     else {
+    if (user) {
+      draftsTypes.forEach(type => {
+        if (user[type]) {
+          allDrafts = allDrafts.concat(user[type].filter(x => !x.published));
+        }
+      });
+
+      if (
+        (user && user.id) === (profile && profile.id) &&
+        allDrafts.length > 0
+      ) {
+        return [
+          { title: i18n("Contributions", context), key: "contributions" },
+          { title: i18n("Bookmarks", context), key: "bookmarks" },
+          { title: i18n("Drafts", context), key: "drafts" },
+        ];
+      } else if ((user && user.id) === (profile && profile.id)) {
+        return [
+          { title: i18n("Contributions", context), key: "contributions" },
+          { title: i18n("Bookmarks", context), key: "bookmarks" },
+        ];
+      }
+    } else {
       return [{ title: i18n("Contributions", context), key: "contributions" }];
     }
   },
@@ -1257,7 +1300,9 @@ module.exports = {
     // merge all article types into 1 array
     let allContributions = [];
     contributionTypes.forEach(type => {
-      allContributions = allContributions.concat(profile[type]);
+      allContributions = allContributions.concat(
+        profile[type].filter(x => x.published)
+      );
     });
     return allContributions;
   },
@@ -1270,9 +1315,11 @@ module.exports = {
       draftsTypes.forEach(type => {
         allDrafts = allDrafts.concat(profile[type].filter(x => !x.published));
       });
-      allDrafts.sort((a,b) => Date.parse(b.updated_date) - Date.parse(a.updated_date))
+      allDrafts.sort(
+        (a, b) => Date.parse(b.updated_date) - Date.parse(a.updated_date)
+      );
     }
-    
+
     return allDrafts;
   },
 
@@ -1296,7 +1343,7 @@ module.exports = {
   },
 
   isTranslatable(article, name, context) {
-    return ['title', 'description', 'body'].includes(name);
+    return ["title", "description", "body"].includes(name);
   },
 
   isEditView(req) {
@@ -1310,8 +1357,13 @@ module.exports = {
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("edit") >= 0;
   },
 
+  isReviewView(req) {
+    const baseUrls = ["/entries"];
+    return baseUrls.includes(req.baseUrl) && req.path.indexOf("review") >= 0;
+  },
+
   getFormDataType(article) {
-    return !article.published ? 'draft' : '';
+    return !article.published ? "draft" : "";
   },
 
   isReaderView(req) {
@@ -1582,7 +1634,7 @@ module.exports = {
 
   showCsvButton(req) {
     if (["/search", "/collection", "/new"].indexOf(req.baseUrl) >= 0) {
-      return req.query.selectedCategory != 'collections';
+      return req.query.selectedCategory != "collections";
     }
     return false;
   },
@@ -1596,29 +1648,33 @@ module.exports = {
 
   includeSearchFilters(req) {
     // do not show search filters on new case, organization, method and collection as well as on collection and user pages
-    return req.baseUrl.indexOf("collection") > 0 || req.baseUrl.indexOf("user") > 0 || ["/case", "/method", "/organization"].includes(req.baseUrl) ? false : true;
+    return req.baseUrl.indexOf("collection") > 0 ||
+      req.baseUrl.indexOf("user") > 0 ||
+      ["/case", "/method", "/organization"].includes(req.baseUrl)
+      ? false
+      : true;
   },
 
-  withItem (object, options) {
+  withItem(object, options) {
     return options.fn(object[options.hash.key]);
   },
 
-  eachIncludeParent ( context, options ) {
+  eachIncludeParent(context, options) {
     var fn = options.fn,
-        inverse = options.inverse,
-        ret = "",
-        _context = [];
-        $.each(context, function (index, object) {
-            var _object = $.extend({}, object);
-            _context.push(_object);
-        });
-    if ( _context && _context.length > 0 ) {
-        for ( var i = 0, j = _context.length; i < j; i++ ) {
-            _context[i]["parentContext"] = options.hash.parent;
-            ret = ret + fn(_context[i]);
-        }
+      inverse = options.inverse,
+      ret = "",
+      _context = [];
+    $.each(context, function(index, object) {
+      var _object = $.extend({}, object);
+      _context.push(_object);
+    });
+    if (_context && _context.length > 0) {
+      for (var i = 0, j = _context.length; i < j; i++) {
+        _context[i]["parentContext"] = options.hash.parent;
+        ret = ret + fn(_context[i]);
+      }
     } else {
-        ret = inverse(this);
+      ret = inverse(this);
     }
     return ret;
   },

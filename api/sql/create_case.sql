@@ -1,10 +1,10 @@
 WITH insert_case as (
   INSERT into cases (
-    type, original_language, post_date, published, updated_date
+    type, original_language, post_date, published, updated_date, hidden
   )
   VALUES
     (
-     'case', ${original_language}, 'now', true, 'now'
+     'case', ${original_language}, 'now', true, 'now', ${hidden}
     ) RETURNING id as thingid
 )
 

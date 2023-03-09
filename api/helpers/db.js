@@ -24,9 +24,9 @@ try {
   if (process.env.NODE_ENV === "test" || config.host === "localhost") {
     config.ssl = false;
   } else {
-    config.ssl = { 
-      sslmode: 'require',
-      rejectUnauthorized: false
+    config.ssl = {
+      sslmode: "require",
+      rejectUnauthorized: false,
     };
   }
 } catch (e) {
@@ -37,7 +37,7 @@ let db = pgp(config);
 const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
 
 function i10n(lang) {
-  return JSON.parse(fs.readFileSync(`locales/${lang}.js`))
+  return JSON.parse(fs.readFileSync(`locales/${lang}.js`));
 }
 
 function sql(filename) {
@@ -57,8 +57,13 @@ const ORGANIZATION_BY_ID = sql("../sql/organization_by_id.sql");
 const ORGANIZATION = sql("../sql/organization.sql");
 const ORGANIZATION_LOCALE_BY_ID = sql("../sql/organization_by_id_locale.sql");
 const INSERT_LOCALIZED_TEXT = sql("../sql/insert_localized_text.sql");
-const UPDATE_DRAFT_LOCALIZED_TEXT = sql("../sql/update_draft_localized_text.sql");
-const LOCALIZED_TEXT_BY_ID_LOCALE = sql("../sql/localized_text_by_id_locale.sql");
+const UPDATE_DRAFT_LOCALIZED_TEXT = sql(
+  "../sql/update_draft_localized_text.sql"
+);
+const LOCALIZED_TEXT_BY_ID_LOCALE = sql(
+  "../sql/localized_text_by_id_locale.sql"
+);
+const LOCALIZED_TEXT_BY_THING_ID = sql("../sql/localized_text_by_thing_id.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
 const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
@@ -85,13 +90,19 @@ const LIST_TITLES = sql("../sql/list_titles.sql");
 const LIST_SHORT = sql("../sql/list_short.sql");
 const UPDATE_USER = sql("../sql/update_user.sql");
 const UPDATE_CASE = sql("../sql/update_case.sql");
-const UPDATE_COLLECTION= sql("../sql/update_collection.sql");
+const UPDATE_COLLECTION = sql("../sql/update_collection.sql");
 const UPDATE_METHOD = sql("../sql/update_method.sql");
 const UPDATE_ORGANIZATION = sql("../sql/update_organization.sql");
 const UPDATE_AUTHOR_FIRST = sql("../sql/update_author_first.sql");
 const UPDATE_AUTHOR_LAST = sql("../sql/update_author_last.sql");
 const ENTRIES_BY_COLLECTION_ID = sql("../sql/entries_by_collection_id.sql");
-const ENTRIES_SUMMARY_BY_COLLECTION_ID = sql("../sql/entries_summary_by_collection_id.sql");
+const ENTRIES_SUMMARY_BY_COLLECTION_ID = sql(
+  "../sql/entries_summary_by_collection_id.sql"
+);
+const ENTRIES_REVIEW_LIST = sql("../sql/entries_review_list.sql");
+const ENTRIES_BY_USER = sql("../sql/entries_by_user.sql");
+const AUTHOR_BY_ENTRY = sql("../sql/author_by_entry.sql");
+const ENTRY_REVIEW = sql("../sql/entries-review.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -125,9 +136,11 @@ let _organizations = {};
 let _searchDirty = true;
 
 async function _listUsers() {
-  _users = (await db.one(
-    "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
-  )).authors;
+  _users = (
+    await db.one(
+      "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
+    )
+  ).authors;
   setTimeout(_listUsers, randomDelay());
 }
 
@@ -196,12 +209,16 @@ async function cacheTitlesRefreshSearch(done) {
   }
   // keep running these, but we can start the server now
   _refreshSearch().then(() => console.log("search refreshed"));
-  
-  for(let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+
+  for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     let lang = SUPPORTED_LANGUAGES[i];
-    db.none("UPDATE localizations SET keyvalues = ${keys}" + `WHERE language='${lang}'`, {
-      keys: i10n(lang),
-    }).then(() => console.log(`i18n ${lang} updated`));
+    db.none(
+      "UPDATE localizations SET keyvalues = ${keys}" +
+        `WHERE language='${lang}'`,
+      {
+        keys: i10n(lang),
+      }
+    ).then(() => console.log(`i18n ${lang} updated`));
   }
   if (done) {
     done();
@@ -434,7 +451,7 @@ function aSourcedMedia(obj) {
   if (!obj.url.startsWith("http")) {
     obj.url = uploadToAWS(obj.url);
   }
-  
+
   return new FullFile(obj);
 }
 
@@ -549,6 +566,7 @@ module.exports = {
   INSERT_LOCALIZED_TEXT,
   UPDATE_DRAFT_LOCALIZED_TEXT,
   LOCALIZED_TEXT_BY_ID_LOCALE,
+  LOCALIZED_TEXT_BY_THING_ID,
   UPDATE_NOUN,
   INSERT_AUTHOR,
   USER_BY_EMAIL,
@@ -592,5 +610,9 @@ module.exports = {
   UPDATE_AUTHOR_LAST,
   ENTRIES_BY_COLLECTION_ID,
   ENTRIES_SUMMARY_BY_COLLECTION_ID,
+  ENTRIES_REVIEW_LIST,
+  ENTRIES_BY_USER,
+  AUTHOR_BY_ENTRY,
+  ENTRY_REVIEW,
   ErrorReporter,
 };

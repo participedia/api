@@ -2,6 +2,7 @@
 const express = require("express");
 const cache = require("apicache");
 const fs = require("fs");
+const fetch = require('isomorphic-fetch');
 
 const {
   db,
@@ -36,6 +37,7 @@ const {
   limitFromReq,
   getThingEdit,
   offsetFromReq,
+  validateCaptcha,
   createUntranslatedLocalizedRecords,
   maybeUpdateUserTextLocaleEntry
 } = require("../helpers/things");
@@ -85,8 +87,35 @@ function randomTexture() {
 
 async function postCollectionNewHttp(req, res) {
   // create new `collection` in db
+  
+  let urlCaptcha = ``;
+  let captcha_error_message = "";
+  let supportedLanguages;
   try {
     cache.clear();
+    //validate captcha start
+    try {
+      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+    } catch (error) {
+      supportedLanguages = [];
+    }
+    for (let i = 0; i < supportedLanguages.length; i++) {
+      const lang = supportedLanguages[i];
+      if (req.body[lang]["g-recaptcha-response"]){
+        let resKey = req.body[lang]["g-recaptcha-response"];
+        captcha_error_message = req.body[lang].captcha_error;
+        urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+      }
+    }
+
+    let checkReCaptcha = await validateCaptcha(urlCaptcha);
+    if (!checkReCaptcha) {
+      return res.status(400).json({
+        OK: false,
+        errors: captcha_error_message,
+      });
+    }
+    //validate captcha end
     // let title = req.body.title;
     // let body = req.body.body || req.body.summary || "";
     // let description = req.body.description;
@@ -185,9 +214,13 @@ function getUpdatedCollection(user, params, newCollection, oldCollection) {
 }
 async function postCollectionUpdateHttp(req, res) {
   // cache.clear();
+  
   const params = parseGetParams(req, "collection");
   const { articleid } = params;
   const langErrors = [];
+  let urlCaptcha = ``;
+  let captcha_error_message = "";
+  let supportedLanguages;
 
   if(!Object.keys(req.body).length) {
     const articleRow = await (await db.one(COLLECTION_BY_ID, params));
@@ -198,7 +231,6 @@ async function postCollectionUpdateHttp(req, res) {
       article.longitude = '';
     }
 
-    let supportedLanguages;
     try {
       supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
     } catch (error) {
@@ -260,19 +292,48 @@ async function postCollectionUpdateHttp(req, res) {
 
   }
 
+  //validate captcha start
+  try {
+    supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+  } catch (error) {
+    supportedLanguages = [];
+  }
+  for (let i = 0; i < supportedLanguages.length; i++) {
+    const lang = supportedLanguages[i];
+    if (req.body[lang]["g-recaptcha-response"]){
+      let resKey = req.body[lang]["g-recaptcha-response"];
+      captcha_error_message = req.body[lang].captcha_error;
+      urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+    }
+  }
+
+  let checkReCaptcha = await validateCaptcha(urlCaptcha);
+  if (!checkReCaptcha) {
+    return res.status(400).json({
+      OK: false,
+      errors: captcha_error_message,
+    });
+  }
+  //validate captcha end
+
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let originalLanguageEntry;
-
+  let entryOriginalLanguage;
 
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
+
+      if (req.body.hasOwnProperty(entry.original_language)){
+        entryOriginalLanguage = entry.original_language;
+      }
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
       let errors = validateFields(entry, "collection");
       errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
       langErrors.push({ locale: entryLocale, errors });
+      await collectionUpdate(req, res, entry);
     }
   }
   const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
@@ -283,7 +344,9 @@ async function postCollectionUpdateHttp(req, res) {
     });
   }
 
-  await collectionUpdate(req, res, originalLanguageEntry);
+  // if(originalLanguageEntry){
+  //   await collectionUpdate(req, res, originalLanguageEntry);
+  // }
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);

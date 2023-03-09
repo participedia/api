@@ -1,14 +1,22 @@
 // Get google translate credentials
-const keysEnvVar = process.env['GOOGLE_TRANSLATE_CREDENTIALS'];
+const keysEnvVar = process.env["GOOGLE_TRANSLATE_CREDENTIALS"];
 if (!keysEnvVar) {
-  throw new Error('The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!');
+  throw new Error(
+    "The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!"
+  );
   return;
 }
-const selectedCategoryValues = ['all', 'case', 'method', 'organization', 'collection'];
+const selectedCategoryValues = [
+  "all",
+  "case",
+  "method",
+  "organization",
+  "collection",
+];
 
-const { Translate } = require('@google-cloud/translate').v2;
+const { Translate } = require("@google-cloud/translate").v2;
 const authKeys = JSON.parse(keysEnvVar);
-authKeys['key'] = process.env.GOOGLE_API_KEY;
+authKeys["key"] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
 
 let { remove } = require("lodash");
@@ -18,7 +26,7 @@ const moment = require("moment");
 const { SUPPORTED_LANGUAGES, RESPONSE_LIMIT } = require("./../../constants.js");
 const logError = require("./log-error.js");
 const createCSVDataDump = require("./create-csv-data-dump.js");
-const { getOriginalLanguageEntry } = require('../controllers/api/api-helpers');
+const { getOriginalLanguageEntry } = require("../controllers/api/api-helpers");
 
 const {
   as,
@@ -32,7 +40,7 @@ const {
   ORGANIZATION_BY_ID,
   COLLECTION_BY_ID,
   COLLECTIONS,
-  FEATURED
+  FEATURED,
 } = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
@@ -90,16 +98,52 @@ const placeHolderPhotos = article => {
   }
 };
 
-const returnByType = async (res, params, article, static, user, results = {}, total = null, pages = null, numArticlesByType = null) => {
-  const { returns, type, view, articleid} = params;
+async function validateCaptcha(url) {
+  let captchaValidationResult = false;
+  let res = await fetch(url, {
+    method: "post",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      Accept: "application/json",
+    },
+  })
+    .then(response => response.json())
+    .then(google_response => {
+      if (google_response.success == true) {
+        captchaValidationResult = true;
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  return captchaValidationResult;
+}
+
+const returnByType = async (
+  res,
+  params,
+  article,
+  static,
+  user,
+  results = {},
+  total = null,
+  pages = null,
+  numArticlesByType = null
+) => {
+  const { returns, type, view, articleid } = params;
   const articles = {};
   const currentLocale = res.locale || "en";
 
   if (!article) return;
 
   // if article is hidden and user is not admin, return 404
-  if(Array.isArray(article)) {
-    if (article[0] && article[0].hidden && (!user || (user && !user.isadmin))|| article.length === 0) {
+  if (Array.isArray(article)) {
+    if (
+      (article[0] && article[0].hidden && (!user || (user && !user.isadmin))) ||
+      article.length === 0
+    ) {
       return res.status(404).render("404");
     }
     article.forEach(e => {
@@ -108,13 +152,17 @@ const returnByType = async (res, params, article, static, user, results = {}, to
     article = articles[currentLocale];
 
     // If current locale has no data structure. Then generate from the template;
-    if(!article) {
+    if (!article) {
       article = getStructure(type, articleid);
       articles[currentLocale] = article;
     }
   } else {
     if (article.hidden && (!user || (user && !user.isadmin))) {
-      return res.status(404).render("404");
+      if (article.published) {
+        return res.status(404).render("waiting-for-approval");
+      } else {
+        return res.status(404).render("404");
+      }
     }
   }
 
@@ -128,11 +176,19 @@ const returnByType = async (res, params, article, static, user, results = {}, to
         layout: false,
       });
     case "json":
-      return res.status(200).json({ OK: true, article, results, total, pages, numArticlesByType });
+      return res
+        .status(200)
+        .json({ OK: true, article, results, total, pages, numArticlesByType });
     case "csv":
       // TODO: implement CSV
-      let category = params.selectedCategory == "organizations" ? "organization" : params.selectedCategory;
-      if(params.type === "collection" && supportedTypes.indexOf(category) >= 0) {
+      let category =
+        params.selectedCategory == "organizations"
+          ? "organization"
+          : params.selectedCategory;
+      if (
+        params.type === "collection" &&
+        supportedTypes.indexOf(category) >= 0
+      ) {
         let file = await createCSVDataDump(category, results);
         return res.download(file);
       }
@@ -144,13 +200,23 @@ const returnByType = async (res, params, article, static, user, results = {}, to
     default:
       return res
         .status(200)
-        .render(type + "-" + view, { articles, article, results, static, user, params, total, pages, numArticlesByType });
+        .render(type + "-" + view, {
+          articles,
+          article,
+          results,
+          static,
+          user,
+          params,
+          total,
+          pages,
+          numArticlesByType,
+        });
   }
 };
 
 const getStructure = (type, id) => {
   const structure = require(`${require.main.path}/api/helpers/data/${type}-structure.json`);
-  return {id, ...structure, ...{articleId: id}};
+  return { id, ...structure, ...{ articleId: id } };
 };
 
 const parseGetParams = function(req, type) {
@@ -192,7 +258,7 @@ const limitFromReq = req => {
   const returns = (req.query.returns || "").toLowerCase();
   if (resultType === "map") {
     limit = 0; // return all
-  } else if(returns === "csv") {
+  } else if (returns === "csv") {
     limit = 0;
   }
   return limit;
@@ -208,7 +274,7 @@ let queries = {
   case: CASE_BY_ID,
   method: METHOD_BY_ID,
   organization: ORGANIZATION_BY_ID,
-  collection: COLLECTION_BY_ID
+  collection: COLLECTION_BY_ID,
 };
 
 async function maybeUpdateUserText(req, res, type) {
@@ -264,13 +330,16 @@ async function maybeUpdateUserTextLocaleEntry(body, req, res, type) {
   };
 
   if (newArticle.updated_date) {
-    if (typeof newArticle.updated_date === 'string') {
+    if (typeof newArticle.updated_date === "string") {
       // Means the value entered by the user.
-      author['timestamp'] = moment(newArticle.updated_date, moment.ISO_8601).format();
+      author["timestamp"] = moment(
+        newArticle.updated_date,
+        moment.ISO_8601
+      ).format();
     } else {
       // Means the value is set using Date.now();
       // And overwrite using moment().format();
-      author['timestamp'] = moment().format();
+      author["timestamp"] = moment().format();
     }
   }
 
@@ -302,7 +371,7 @@ function setConditional(
 
 async function getCollections(lang) {
   const results = await db.any(COLLECTIONS, {
-    language: lang
+    language: lang,
   });
   return results;
 }
@@ -385,33 +454,31 @@ const searchFilterKeyFromReq = (req, name) => {
     if (name === "country") {
       return ` AND ${name} = ANY ('{${value}}') `;
     } else {
-      const values = value.split(',');
-      let partial = values.length ? ' AND ' : '';
-      partial += values[0] ? ` ${name}='${values[0]}'` : '';
+      const values = value.split(",");
+      let partial = values.length ? " AND " : "";
+      partial += values[0] ? ` ${name}='${values[0]}'` : "";
       for (let i = 1; i < values.length; i++) {
         const element = values[i];
         partial += ` OR ${name}='${element}' `;
       }
       return partial;
-    } 
+    }
   }
 };
 
 var isFirstFilter = true;
 const searchFilterKeyListFromReq = (req, name, index, type) => {
   let value = req.query[name];
-  var prefix = type === "api" ? isFirstFilter ? 'WHERE ' : ' AND' : ' AND';
+  var prefix = type === "api" ? (isFirstFilter ? "WHERE " : " AND") : " AND";
   if (!value) {
     return ``;
   }
   isFirstFilter = false;
   if (name === "completeness") {
     return `${prefix} ${name} = ANY ('{${value}}') `;
-  }  
-  else if (name === "verified") {
+  } else if (name === "verified") {
     return `${prefix} ${name} = ${value} `;
-  }
-  else {
+  } else {
     value = as.array(value.split(","));
     return `${prefix} ${name} && ${value} `;
   }
@@ -439,7 +506,7 @@ const singularLowerCase = name =>
 const typeFromReq = req => {
   var cat = singularLowerCase(req.query.selectedCategory || "Alls");
   if (selectedCategoryValues.indexOf(cat) < 0) {
-    cat = 'all';
+    cat = "all";
   }
   return cat === "all" ? "thing" : cat;
 };
@@ -467,7 +534,7 @@ const validateUrl = links => {
 };
 
 const isValidURL = string => {
-  if (typeof string !== 'string') {
+  if (typeof string !== "string") {
     return false;
   }
 
@@ -489,9 +556,9 @@ const validateFields = (entry, entryName) => {
   let errors = [];
 
   // validate title
-  if (!title) {
-    errors.push(`Cannot create a ${entryName} without at least a title.`);
-  }
+  // if (!title) {
+  //   errors.push(`Cannot create a ${entryName} without at least a title.`);
+  // }
 
   // validate url
   if (links) {
@@ -555,7 +622,12 @@ const requireTranslation = (entry, entryName) => {
   return requiresTranslation;
 };
 
-async function createLocalizedRecord(data, thingid, localesToTranslate = undefined, entryLocales) {
+async function createLocalizedRecord(
+  data,
+  thingid,
+  localesToTranslate = undefined,
+  entryLocales
+) {
   let records = [];
   let languagesToTranslate = localesToTranslate || SUPPORTED_LANGUAGES || [];
 
@@ -563,22 +635,25 @@ async function createLocalizedRecord(data, thingid, localesToTranslate = undefin
     try {
       return entryLocales[field][language];
     } catch (error) {
-      return '';
+      return "";
     }
   };
 
   for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     const language = SUPPORTED_LANGUAGES[i];
 
-    if (languagesToTranslate.includes(language.twoLetterCode) && language.twoLetterCode !== data.language) {
+    if (
+      languagesToTranslate.includes(language.twoLetterCode) &&
+      language.twoLetterCode !== data.language
+    ) {
       const item = {
-        body: getEntryData('body', language.twoLetterCode),
-        title: getEntryData('title', language.twoLetterCode),
-        description: getEntryData('description', language.twoLetterCode),
+        body: getEntryData("body", language.twoLetterCode),
+        title: getEntryData("title", language.twoLetterCode),
+        description: getEntryData("description", language.twoLetterCode),
         language: language.twoLetterCode,
         thingid: thingid,
         // TODO: Admin check here
-        timestamp: 'now'
+        timestamp: "now",
       };
 
       if (data.body && !item.body) {
@@ -590,14 +665,21 @@ async function createLocalizedRecord(data, thingid, localesToTranslate = undefin
       }
 
       if (data.description && !item.description) {
-        item.description = await translateText(data.description, language.twoLetterCode);
+        item.description = await translateText(
+          data.description,
+          language.twoLetterCode
+        );
       }
 
       records.push(item);
     }
   }
 
-  const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid', 'timestamp'], 'localized_texts');
+  const insert = pgp.helpers.insert(
+    records,
+    ["body", "title", "description", "language", "thingid", "timestamp"],
+    "localized_texts"
+  );
 
   db.none(insert)
     .then(function(data) {
@@ -611,23 +693,25 @@ async function createLocalizedRecord(data, thingid, localesToTranslate = undefin
 async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
   let records = [];
 
-  if(!Array.isArray(data)) return;
-  const supportedTwoLetterCodes = SUPPORTED_LANGUAGES.map(lang => lang.twoLetterCode);
+  if (!Array.isArray(data)) return;
+  const supportedTwoLetterCodes = SUPPORTED_LANGUAGES.map(
+    lang => lang.twoLetterCode
+  );
 
   for (let i = 0; i < data.length; i++) {
     const entry = data[i];
-    if(supportedTwoLetterCodes.includes(entry.language)) {
+    if (supportedTwoLetterCodes.includes(entry.language)) {
       const item = {
-        body: entry.body || '',
-        title: entry.title || '',
-        description: entry.description || '',
+        body: entry.body || "",
+        title: entry.title || "",
+        description: entry.description || "",
         language: entry.language,
         thingid: thingid,
         // TODO: Admin check here
-        timestamp: 'now'
+        timestamp: "now",
       };
 
-      if(mainEntry) {
+      if (mainEntry) {
         if (!entry.title && mainEntry.title) {
           item.title = await translateText(mainEntry.title, entry.language);
         }
@@ -637,14 +721,21 @@ async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
         }
 
         if (!entry.description && mainEntry.description) {
-          item.description = await translateText(mainEntry.description, entry.language);
+          item.description = await translateText(
+            mainEntry.description,
+            entry.language
+          );
         }
       }
 
       records.push(item);
     }
   }
-  const insert = pgp.helpers.insert(records, ['body', 'title', 'description', 'language', 'thingid', 'timestamp'], 'localized_texts');
+  const insert = pgp.helpers.insert(
+    records,
+    ["body", "title", "description", "language", "thingid", "timestamp"],
+    "localized_texts"
+  );
 
   db.none(insert)
     .then(function(data) {
@@ -657,7 +748,7 @@ async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
 
 async function translateText(data, targetLanguage) {
   // The text to translate
-  let allTranslation = '';
+  let allTranslation = "";
 
   // The target language
   const target = targetLanguage;
@@ -665,7 +756,7 @@ async function translateText(data, targetLanguage) {
   if (length > 5000) {
     // Get text chunks
     let textParts = data.match(/.{1,5000}/g);
-    for(let text of textParts){
+    for (let text of textParts) {
       let [translation] = await translate
         .translate(text, target)
         .catch(function(error) {
@@ -686,29 +777,31 @@ async function translateText(data, targetLanguage) {
 function generateLocaleArticle(article, uniqueTranslateData, isEdit = false) {
   const articles = {};
 
-  if(!isEdit) {
-    SUPPORTED_LANGUAGES.forEach((language) => {
-      const translatedData = {...article};
+  if (!isEdit) {
+    SUPPORTED_LANGUAGES.forEach(language => {
+      const translatedData = { ...article };
       if (translatedData) {
         articles[language.twoLetterCode] = {
           ...article[language.twoLetterCode],
-          body: uniqueTranslateData.body[language.twoLetterCode] ||  null,
+          body: uniqueTranslateData.body[language.twoLetterCode] || null,
           title: uniqueTranslateData.title[language.twoLetterCode] || null,
-          description: uniqueTranslateData.description[language.twoLetterCode] || null,
-          language: language.twoLetterCode
+          description:
+            uniqueTranslateData.description[language.twoLetterCode] || null,
+          language: language.twoLetterCode,
         };
       }
     });
   } else {
-    SUPPORTED_LANGUAGES.forEach((language) => {
-      const translatedData = {...article[language.twoLetterCode]};
+    SUPPORTED_LANGUAGES.forEach(language => {
+      const translatedData = { ...article[language.twoLetterCode] };
       if (translatedData) {
         articles[language.twoLetterCode] = {
           ...article[language.twoLetterCode],
-          body: uniqueTranslateData.body[language.twoLetterCode] ||  null,
+          body: uniqueTranslateData.body[language.twoLetterCode] || null,
           title: uniqueTranslateData.title[language.twoLetterCode] || null,
-          description: uniqueTranslateData.description[language.twoLetterCode] || null,
-          language: language.twoLetterCode
+          description:
+            uniqueTranslateData.description[language.twoLetterCode] || null,
+          language: language.twoLetterCode,
         };
       }
     });
@@ -721,43 +814,54 @@ function parseAndValidateThingPostData(body, entryName) {
   const langErrors = [];
   const localesToTranslate = [];
   const localesToNotTranslate = [];
-  let originalLanguageEntry;
+  const entryPlaceholder = Object.values(body).filter(
+    x => x.original_language
+  )[0];
+  const originalLanguageEntry = {
+    ...entryPlaceholder,
+    ...body[entryPlaceholder.original_language],
+  };
 
   // Get locales to translate
   for (const entryLocale in body) {
     if (body.hasOwnProperty(entryLocale)) {
       const entry = body[entryLocale];
-      if(!entry.title || requireTranslation(entry)) {
+      if (!entry.title || requireTranslation(entry)) {
         localesToTranslate.push(entryLocale);
-      }
-      if(entryLocale === entry.original_language) {
-        originalLanguageEntry = entry;
       }
     }
   }
 
   // Validate the rest
   for (const entryLocale in body) {
-    if (body.hasOwnProperty(entryLocale) && !localesToTranslate.includes(entryLocale)) {
+    if (
+      body.hasOwnProperty(entryLocale) &&
+      !localesToTranslate.includes(entryLocale)
+    ) {
       const entry = body[entryLocale];
       const errors = validateFields(entry, entryName);
-      langErrors.push({locale: entryLocale, errors});
+      langErrors.push({ locale: entryLocale, errors });
       localesToNotTranslate.push(entry);
     }
   }
 
   const originalEntryErrors = validateFields(originalLanguageEntry, entryName);
-  langErrors.push({locale: originalLanguageEntry.original_language, errors: originalEntryErrors});
+  langErrors.push({
+    locale: originalLanguageEntry.original_language,
+    errors: originalEntryErrors,
+  });
 
-  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+  const hasErrors = !!langErrors.find(
+    errorEntry => errorEntry.errors.length > 0
+  );
 
   return {
     hasErrors,
     langErrors,
     localesToTranslate,
     localesToNotTranslate,
-    originalLanguageEntry
-  }
+    originalLanguageEntry,
+  };
 }
 
 async function getThingEdit(params, sqlFile, res) {
@@ -765,7 +869,9 @@ async function getThingEdit(params, sqlFile, res) {
     if (Number.isNaN(params.articleid)) {
       return null;
     }
-    const articleRows = await (await db.any(sqlFile, params)).map(el => el.row_to_json ? el.row_to_json : el.results);
+    const articleRows = await (await db.any(sqlFile, params)).map(el =>
+      el.row_to_json ? el.row_to_json : el.results
+    );
     articleRows.forEach(article => fixUpURLs(article));
     return articleRows;
   } catch (error) {
@@ -779,11 +885,11 @@ async function getThingEdit(params, sqlFile, res) {
 }
 
 /**
- * 
+ *
  * @param {Object} req - Express HTTP request
  * @param {Object} res - Express HTTP response
  * @param {Function} entryUpdate -s Update Method of the entry from it's controller
- * @returns 
+ * @returns
  */
 async function publishDraft(req, res, entryUpdate, entryType) {
   try {
@@ -792,8 +898,11 @@ async function publishDraft(req, res, entryUpdate, entryType) {
       langErrors,
       localesToTranslate,
       localesToNotTranslate,
-      originalLanguageEntry
-    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), entryType);
+      originalLanguageEntry,
+    } = parseAndValidateThingPostData(
+      generateLocaleArticle(req.body, req.body.entryLocales),
+      entryType
+    );
 
     if (hasErrors) {
       return res.status(400).json({
@@ -801,12 +910,21 @@ async function publishDraft(req, res, entryUpdate, entryType) {
         errors: langErrors,
       });
     }
+    let hidden = false;
+    if (req.user.accepted_date === null || req.user.accepted_date === "") {
+      hidden = true;
+    }
 
     const title = originalLanguageEntry.title;
-    const body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    const body =
+      originalLanguageEntry.body || originalLanguageEntry.summary || "";
     const description = originalLanguageEntry.description || "";
     const original_language = originalLanguageEntry.original_language || "en";
-    const { article, errors } = await entryUpdate(req, res, originalLanguageEntry);
+    const { article, errors } = await entryUpdate(
+      req,
+      res,
+      originalLanguageEntry
+    );
 
     if (errors) {
       return res.status(400).json({
@@ -814,20 +932,41 @@ async function publishDraft(req, res, entryUpdate, entryType) {
         errors,
       });
     }
-    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
-    const localizedData = {
-      body,
-      description,
-      language: original_language,
-      title
-    };
 
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, article.id, filteredLocalesToTranslate, req.body.entryLocales);
-    }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, article.id, localizedData);
+    if (hidden === false) {
+      localesToNotTranslate = localesToNotTranslate.filter(
+        el => el.language !== originalLanguageEntry.language
+      );
+      const localizedData = {
+        body,
+        description,
+        language: original_language,
+        title,
+      };
+
+      const filteredLocalesToTranslate = localesToTranslate.filter(
+        locale =>
+          !(
+            locale === "entryLocales" ||
+            locale === "originalEntry" ||
+            locale === originalLanguageEntry.language
+          )
+      );
+      if (filteredLocalesToTranslate.length) {
+        await createLocalizedRecord(
+          localizedData,
+          article.id,
+          filteredLocalesToTranslate,
+          req.body.entryLocales
+        );
+      }
+      if (localesToNotTranslate.length > 0) {
+        await createUntranslatedLocalizedRecords(
+          localesToNotTranslate,
+          article.id,
+          localizedData
+        );
+      }
     }
     res.status(200).json({
       OK: true,
@@ -840,11 +979,11 @@ async function publishDraft(req, res, entryUpdate, entryType) {
 }
 
 /**
- * 
+ *
  * @param {Object} req - Express HTTP request
  * @param {Object} res - Express HTTP response
  * @param {Object} args - Object and functions from it's controller
- * @returns 
+ * @returns
  */
 async function saveDraft(req, res, args) {
   let {
@@ -859,23 +998,25 @@ async function saveDraft(req, res, args) {
     thingId,
     getUpdatedEntry,
     getEntry,
-    entryType
+    entryType,
   } = args;
   const params = parseGetParams(req, entryType);
   const user = req.user;
   const { articleid } = params;
   const originalLanguageEntry = getOriginalLanguageEntry(req.body);
   const entryData = req.body[originalLanguageEntry];
+  let hidden = false;
 
   // Save draft
   if (!thingId && !articleid) {
     const thing = await db.one(CREATE_ENTRY_QUERY, {
-      title: entryData.title || '',
-      body: entryData.body || '',
-      description: entryData.description || '',
-      original_language: entryData.original_language || "en"
+      title: entryData.title || "",
+      body: entryData.body || "",
+      description: entryData.description || "",
+      original_language: entryData.original_language || "en",
+      hidden,
     });
-  
+
     thingId = thing.thingid;
   }
 
@@ -883,30 +1024,40 @@ async function saveDraft(req, res, args) {
   params.articleid = req.params.thingid;
   const newEntry = entryData;
   const isNewEntry = !newEntry.article_id;
-  
+
   const {
     updatedText,
     author,
     oldArticle,
   } = await maybeUpdateUserTextLocaleEntry(newEntry, req, res, entryType);
-  const [updatedEntry, er] = getUpdatedEntry(user, params, newEntry, oldArticle);
+  const [updatedEntry, er] = getUpdatedEntry(
+    user,
+    params,
+    newEntry,
+    oldArticle
+  );
   //get current date when user.isAdmin is false;
 
-  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  const localeEntries = generateLocaleArticle(
+    req.body,
+    req.body.entryLocales,
+    true
+  );
+
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
       const localizedData = {
-        title : entry.title ?? '',
+        title: entry.title ?? "",
         description: entry.description,
         body: entry.body,
         id: params.articleid,
-        language: entryLocale
+        language: entryLocale,
       };
-    
+
       let hasLocaleData = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
         language: entryLocale,
-        thingid: params.articleid
+        thingid: params.articleid,
       });
 
       if (hasLocaleData.length) {
@@ -916,7 +1067,7 @@ async function saveDraft(req, res, args) {
       } else {
         await db.tx(`update-${entryType}`, async t => {
           await t.none(INSERT_LOCALIZED_TEXT, localizedData);
-        }); 
+        });
       }
     }
   }
@@ -926,57 +1077,50 @@ async function saveDraft(req, res, args) {
   updatedEntry.title = newEntry.title;
   updatedEntry.description = newEntry.description;
 
-  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  author.timestamp = new Date()
+    .toJSON()
+    .slice(0, 19)
+    .replace("T", " ");
   updatedEntry.published = false;
-  await db.tx(`update-${entryType}`, async t => {
-    if (isNewEntry) {
-      await t.none(INSERT_AUTHOR, author);
-    }
-  });
-
-  //if this is a new entry, set creator id to userid and isAdmin
-  if (user.isadmin) {
-    const creator = {
-      user_id: newEntry.creator ? newEntry.creator : params.userid,
-      thingid: params.articleid,
-      timestamp: new Date(newEntry.post_date)
-    };
-    await db.tx(`update-${entryType}`, async t => {
-      if (updatedEntry.verified) {
-        updatedEntry.reviewed_by = creator.user_id;
-        updatedEntry.reviewed_at = "now";
-      }
-
-      if (!isNewEntry) {
-        var userId = oldArticle.creator.user_id.toString();
-        var creatorTimestamp = new Date(oldArticle.post_date);
-        if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
-          await t.none(INSERT_AUTHOR, author);
-          updatedEntry.updated_date = "now";
-        } else {
-          await t.none(UPDATE_AUTHOR_FIRST, creator);
-        }
-      }
-      
-      await t.none(UPDATE_ENTRY, updatedEntry);
-    });
-  } else {
-    await db.tx(`update-${entryType}`, async t => {
-      await t.none(INSERT_AUTHOR, author);
-      await t.none(UPDATE_ENTRY, updatedEntry);
-    });
+  if (isNaN(updatedEntry.is_component_of)) {
+    updatedEntry.is_component_of = 0;
+  }
+  if (isNaN(updatedEntry.number_of_participants)) {
+    updatedEntry.number_of_participants = 0;
+  }
+  if (isNaN(updatedEntry.primary_organizer)) {
+    updatedEntry.primary_organizer = 0;
+  }
+  if (isNaN(updatedEntry.collections)) {
+    updatedEntry.collections = 0;
+  }
+  if (isNaN(updatedEntry.latitude)) {
+    updatedEntry.latitude = 0;
+  }
+  if (isNaN(updatedEntry.longitude)) {
+    updatedEntry.longitude = 0;
   }
 
+  await db.tx(`update-${entryType}`, async t => {
+    await t.none(INSERT_AUTHOR, author);
+    await t.none(UPDATE_ENTRY, updatedEntry);
+  });
+
   // Prepare response
-  let payload = {OK: true, isPreview: false};
+  let payload = {
+    OK: true,
+    isPreview: false,
+    articleId: params.articleid,
+    article_type: newEntry.article_type,
+  };
 
   if (req.originalUrl.indexOf("saveDraftPreview") >= 0) {
     payload["isPreview"] = true;
     payload["article"] = await getEntry(params, res);
     refreshSearch();
   }
-  
-  return {payload, thingId: params.articleid};
+
+  return { payload, thingId: params.articleid };
 }
 
 module.exports = {
@@ -1009,6 +1153,7 @@ module.exports = {
   parseAndValidateThingPostData,
   getThingEdit,
   saveDraft,
+  validateCaptcha,
   generateLocaleArticle,
-  publishDraft
+  publishDraft,
 };

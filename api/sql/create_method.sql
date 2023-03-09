@@ -1,10 +1,10 @@
 WITH insert_method as (
   INSERT into methods (
-    type, original_language, post_date, published, updated_date
+    type, original_language, post_date, published, updated_date, hidden
   )
   VALUES
     (
-      'method', ${original_language}, 'now', true, 'now'
+      'method', ${original_language}, 'now', true, 'now', ${hidden}
     ) RETURNING id as thingid
 )
 

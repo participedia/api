@@ -3,7 +3,7 @@
 
   <ul class="unstyled-list">
     <li>
-      <a href="/case/new" class="button button-red button-block">
+      <a href="/case/new?source=new" class="button button-red button-block">
         {{> icon-add}}
         {{t "Case"}}
 
@@ -37,6 +37,11 @@
 
       </a>
       <p>{{t "content_types.collection.description"}}</p>
+
+      <div class="user-view-review-entries">
+        <a href="/entries/review" class="button button-red button-block">{{t "review_entries"}}</a>
+        <p>{{t "content_types.review_entries.description"}}</p>
+      </div>
     </div> 
   {{/if}}
 

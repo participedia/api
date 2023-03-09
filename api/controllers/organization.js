@@ -3,6 +3,7 @@
 const express = require("express");
 const cache = require("apicache");
 const fs = require("fs");
+const fetch = require("isomorphic-fetch");
 
 const {
   db,
@@ -20,7 +21,7 @@ const {
   listMethods,
   ErrorReporter,
   LOCALIZED_TEXT_BY_ID_LOCALE,
-  UPDATE_DRAFT_LOCALIZED_TEXT
+  UPDATE_DRAFT_LOCALIZED_TEXT,
 } = require("../helpers/db");
 
 const {
@@ -39,8 +40,9 @@ const {
   maybeUpdateUserTextLocaleEntry,
   getThingEdit,
   saveDraft,
+  validateCaptcha,
   generateLocaleArticle,
-  publishDraft
+  publishDraft,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -95,8 +97,36 @@ async function getEditStaticText(params) {
  */
 async function postOrganizationNewHttp(req, res) {
   // create new `organization` in db
+
+  let urlCaptcha = ``;
+  let captcha_error_message = "";
+  let supportedLanguages;
   try {
     cache.clear();
+    //validate captcha start
+    try {
+      supportedLanguages =
+        SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+    } catch (error) {
+      supportedLanguages = [];
+    }
+    for (let i = 0; i < supportedLanguages.length; i++) {
+      const lang = supportedLanguages[i];
+      if (req.body[lang]["g-recaptcha-response"]) {
+        let resKey = req.body[lang]["g-recaptcha-response"];
+        captcha_error_message = req.body[lang].captcha_error;
+        urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+      }
+    }
+
+    let checkReCaptcha = await validateCaptcha(urlCaptcha);
+    if (!checkReCaptcha) {
+      return res.status(400).json({
+        OK: false,
+        errors: captcha_error_message,
+      });
+    }
+    //validate captcha end
     // let title = req.body.title;
     // let body = req.body.body || req.body.summary || "";
     // let description = req.body.description;
@@ -108,8 +138,11 @@ async function postOrganizationNewHttp(req, res) {
       langErrors,
       localesToTranslate,
       localesToNotTranslate,
-      originalLanguageEntry
-    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), "organization");
+      originalLanguageEntry,
+    } = parseAndValidateThingPostData(
+      generateLocaleArticle(req.body, req.body.entryLocales),
+      "organization"
+    );
 
     if (hasErrors) {
       return res.status(400).json({
@@ -118,41 +151,77 @@ async function postOrganizationNewHttp(req, res) {
       });
     }
 
+    let hidden = false;
+    if (req.user.accepted_date === null || req.user.accepted_date === "") {
+      hidden = true;
+    }
+
     let title = originalLanguageEntry.title;
-    let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    let body =
+      originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description;
     let original_language = originalLanguageEntry.original_language || "en";
 
     // const user_id = req.user.id;
-    const thing = await db.one(CREATE_ORGANIZATION, {
-      title,
-      body,
-      description,
-      original_language,
-    });
-    req.params.thingid = thing.thingid;
+
+    if (!req.body.entryId) {
+      const thing = await db.one(CREATE_ORGANIZATION, {
+        title,
+        body,
+        description,
+        original_language,
+        hidden,
+      });
+      req.params.thingid = thing.thingid;
+    } else {
+      req.params.thingid = req.body.entryId;
+    }
+
     // await postOrganizationUpdateHttp(req, res);
-    const { article, errors } = await organizationUpdate(req, res, originalLanguageEntry);
+    const { article, errors } = await organizationUpdate(
+      req,
+      res,
+      originalLanguageEntry
+    );
     if (errors) {
       return res.status(400).json({
         OK: false,
         errors,
       });
     }
-    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
+    localesToNotTranslate = localesToNotTranslate.filter(
+      el => el.language !== originalLanguageEntry.language
+    );
 
     let localizedData = {
       body,
       description,
       language: original_language,
-      title
+      title,
     };
 
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
+    const filteredLocalesToTranslate = localesToTranslate.filter(
+      locale =>
+        !(
+          locale === "entryLocales" ||
+          locale === "originalEntry" ||
+          locale === originalLanguageEntry.language
+        )
+    );
+
     if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
-    } if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid);
+      await createLocalizedRecord(
+        localizedData,
+        req.params.thingid,
+        filteredLocalesToTranslate,
+        req.body.entryLocales
+      );
+    }
+    if (localesToNotTranslate.length > 0) {
+      await createUntranslatedLocalizedRecords(
+        localesToNotTranslate,
+        req.params.thingid
+      );
     }
     res.status(200).json({
       OK: true,
@@ -211,23 +280,29 @@ async function getOrganization(params, res) {
 
 async function postOrganizationUpdateHttp(req, res) {
   cache.clear();
+
   const params = parseGetParams(req, "organization");
   // const user = req.user;
-  const { articleid, datatype } = params;
+  const { articleid, datatype, lang } = params;
   const langErrors = [];
+  const originLang = lang;
+  let urlCaptcha = ``;
+  let captcha_error_message = "";
+  let supportedLanguages;
+  let article = "";
 
-  if(!Object.keys(req.body).length) {
-    const articleRow = await (await db.one(ORGANIZATION_BY_ID, params));
-    const article = articleRow.results;
+  if (!Object.keys(req.body).length) {
+    const articleRow = await db.one(ORGANIZATION_BY_ID, params);
+    article = articleRow.results;
 
     if (!article.latitude && !article.longitude) {
-      article.latitude = '';
-      article.longitude = '';
+      article.latitude = "";
+      article.longitude = "";
     }
 
-    let supportedLanguages;
     try {
-      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+      supportedLanguages =
+        SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
     } catch (error) {
       supportedLanguages = [];
     }
@@ -245,7 +320,7 @@ async function postOrganizationUpdateHttp(req, res) {
       const lang = supportedLanguages[i];
       let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
         language: lang,
-        thingid: article.id
+        thingid: article.id,
       });
 
       if (lang === article.original_language) {
@@ -254,12 +329,11 @@ async function postOrganizationUpdateHttp(req, res) {
         title[lang] = results[0].title;
         desc[lang] = results[0].description;
         body[lang] = results[0].body;
-
       } else {
         const otherLangArticle = {
-          title: (results[0]?.title) ?? '',
-          description: results[0]?.description ?? '',
-          body: results[0]?.body ?? ''
+          title: results[0]?.title ?? "",
+          description: results[0]?.description ?? "",
+          body: results[0]?.body ?? "",
         };
 
         if (results[0]?.title) {
@@ -279,34 +353,80 @@ async function postOrganizationUpdateHttp(req, res) {
       entryLocaleData = {
         title: title,
         description: desc,
-        body: body
+        body: body,
       };
 
-      req.body['entryLocales'] = entryLocaleData;
+      req.body["entryLocales"] = entryLocaleData;
     }
-
   }
 
-  if(datatype == 'draft') {
-    publishDraft(req, res, organizationUpdate, 'organization');
+  //validate captcha start
+  try {
+    supportedLanguages =
+      SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+  } catch (error) {
+    supportedLanguages = [];
+  }
+  for (let i = 0; i < supportedLanguages.length; i++) {
+    const lang = supportedLanguages[i];
+    if (req.body[lang]["g-recaptcha-response"]) {
+      let resKey = req.body[lang]["g-recaptcha-response"];
+      captcha_error_message = req.body[lang].captcha_error;
+      urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+    }
+  }
+
+  let checkReCaptcha = await validateCaptcha(urlCaptcha);
+  if (!checkReCaptcha) {
+    return res.status(400).json({
+      OK: false,
+      errors: captcha_error_message,
+    });
+  }
+  //validate captcha end
+
+  if (!article.published && !article.hidden) {
+    publishDraft(req, res, organizationUpdate, "organization");
     return;
   }
 
-  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  const localeEntries = generateLocaleArticle(
+    req.body,
+    req.body.entryLocales,
+    true
+  );
   let originalLanguageEntry;
+  let entryOriginalLanguage;
+  const localeEntriesArr = [];
 
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
+      if (req.body.hasOwnProperty(entry.original_language)) {
+        entryOriginalLanguage = entry.original_language;
+      }
       if (entryLocale === entry.original_language) {
         originalLanguageEntry = entry;
       }
       let errors = validateFields(entry, "organization");
-      errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
+      errors = errors.map(
+        e =>
+          `${
+            SUPPORTED_LANGUAGES.find(
+              locale => locale.twoLetterCode === entryLocale
+            ).name
+          }: ${e}`
+      );
       langErrors.push({ locale: entryLocale, errors });
+      if (originLang == entryLocale) {
+        localeEntriesArr.push(entry);
+      }
+      await organizationUpdate(req, res, originalLanguageEntry);
     }
   }
-  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+  const hasErrors = !!langErrors.find(
+    errorEntry => errorEntry.errors.length > 0
+  );
 
   if (hasErrors) {
     return res.status(400).json({
@@ -315,8 +435,9 @@ async function postOrganizationUpdateHttp(req, res) {
     });
   }
 
-  await organizationUpdate(req, res, originalLanguageEntry);
-  const localeEntriesArr = [].concat(...Object.values(localeEntries));
+  // if(originalLanguageEntry){
+  //   await organizationUpdate(req, res, originalLanguageEntry);
+  // }
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
   const freshArticle = await getOrganization(params, res);
@@ -325,6 +446,37 @@ async function postOrganizationUpdateHttp(req, res) {
     article: freshArticle,
   });
   refreshSearch();
+}
+
+async function postOrganizationUpdatePreview(req, res) {
+  const params = parseGetParams(req, "organization");
+  let hidden = false;
+  let published = true;
+  let thingid = req.body.thingid;
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    hidden = true;
+  }
+
+  try {
+    const paramsEntryReview = {
+      hidden: hidden,
+      published: published,
+      id: thingid,
+    };
+    const entryReview = await db.none(ENTRY_REVIEW, paramsEntryReview);
+    const articleRow = await db.one(CASE_BY_ID, params);
+    const article = articleRow.results;
+
+    res.status(200).json({
+      OK: true,
+      article: article,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      OK: false,
+      errors: error.message,
+    });
+  }
 }
 
 async function organizationUpdate(req, res, entry = undefined) {
@@ -359,7 +511,12 @@ async function organizationUpdate(req, res, entry = undefined) {
     updatedText,
     author,
     oldArticle,
-  } = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization"); //maybeUpdateUserText(req, res, "organization");
+  } = await maybeUpdateUserTextLocaleEntry(
+    newOrganization,
+    req,
+    res,
+    "organization"
+  ); //maybeUpdateUserText(req, res, "organization");
   const [updatedOrganization, er] = getUpdatedOrganization(
     user,
     params,
@@ -375,10 +532,22 @@ async function organizationUpdate(req, res, entry = undefined) {
   updatedOrganization.updated_date = !user.isadmin
     ? "now"
     : updatedOrganization.updated_date;
-    updatedOrganization.post_date = !updatedOrganization.published ? "now" : updatedOrganization.post_date;
-  newOrganization.post_date = !updatedOrganization.published ? Date.now() : updatedOrganization.post_date;
-  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  updatedOrganization.post_date = !updatedOrganization.published
+    ? "now"
+    : updatedOrganization.post_date;
+  newOrganization.post_date = !updatedOrganization.published
+    ? Date.now()
+    : updatedOrganization.post_date;
+  author.timestamp = new Date()
+    .toJSON()
+    .slice(0, 19)
+    .replace("T", " ");
   updatedOrganization.published = true;
+
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    updatedOrganization.hidden = true;
+  }
+
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-organization", async t => {
@@ -395,12 +564,10 @@ async function organizationUpdate(req, res, entry = undefined) {
             ? newOrganization.creator
             : params.userid,
           thingid: params.articleid,
-          timestamp: new Date(newOrganization.post_date)
+          timestamp: new Date(newOrganization.post_date),
         };
         await db.tx("update-organization", async t => {
-
           if (!isNewOrganization) {
-
             if (updatedOrganization.verified) {
               updatedOrganization.reviewed_by = creator.user_id;
               updatedOrganization.reviewed_at = "now";
@@ -409,13 +576,17 @@ async function organizationUpdate(req, res, entry = undefined) {
             var userId = updatedOrganization.creator.user_id.toString();
             var creatorTimestamp = new Date(oldArticle.post_date);
 
-            if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+            if (
+              userId == creator.user_id &&
+              creatorTimestamp.toDateString() ===
+                creator.timestamp.toDateString()
+            ) {
               await t.none(INSERT_AUTHOR, author);
               updatedOrganization.updated_date = "now";
             } else {
               await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
-          } 
+          }
           await t.none(UPDATE_ORGANIZATION, updatedOrganization);
         });
       } else {
@@ -490,10 +661,12 @@ function getUpdatedOrganization(
     "type_method",
     "type_tool",
     "specific_topics",
-    "general_issues"
+    "general_issues",
   ].map(key => cond(key, as.organizationkeys));
   // list of {id, type, title}
-  ["specific_methods_tools_techniques", "collections"].map(key => cond(key, as.ids));
+  ["specific_methods_tools_techniques", "collections"].map(key =>
+    cond(key, as.ids)
+  );
   return [updatedOrganization, er];
 }
 
@@ -520,13 +693,13 @@ async function saveOrganizationDraft(req, res, entry = undefined) {
     UPDATE_ENTRY: UPDATE_ORGANIZATION,
     CREATE_ENTRY_QUERY: CREATE_ORGANIZATION,
     refreshSearch,
-    thingId: thingOrganizationid,
+    thingId: req.body.entryId,
     getUpdatedEntry: getUpdatedOrganization,
     getEntry: getOrganization,
-    entryType: "organization"
+    entryType: "organization",
   };
-  const {payload, thingId} = await saveDraft(req, res, args);
-  thingOrganizationid = thingId;
+  const { payload, thingId } = await saveDraft(req, res, args);
+  thingOrganizationid = req.body.entryId;
   res.status(200).json(payload);
 }
 
@@ -553,14 +726,50 @@ async function getOrganizationNewHttp(req, res) {
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
-router.get("/:thingid/edit", requireAuthenticatedUser(), getOrganizationEditHttp);
+router.get(
+  "/:thingid/edit",
+  requireAuthenticatedUser(),
+  getOrganizationEditHttp
+);
 router.get("/new", requireAuthenticatedUser(), getOrganizationNewHttp);
-router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizationNewHttp);
-router.get("/:thingid/:language?", setAndValidateLanguage(), getOrganizationHttp);
-router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postOrganizationUpdateHttp);
-router.post("/new/saveDraft", requireAuthenticatedUser(), saveOrganizationDraft);
-router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveOrganizationDraft);
-router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveOrganizationDraft);
+router.post(
+  "/new",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postOrganizationNewHttp
+);
+router.get(
+  "/:thingid/:language?",
+  setAndValidateLanguage(),
+  getOrganizationHttp
+);
+router.post(
+  "/:thingid",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postOrganizationUpdateHttp
+);
+router.post(
+  "/:thingid/preview",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postOrganizationUpdatePreview
+);
+router.post(
+  "/new/saveDraft",
+  requireAuthenticatedUser(),
+  saveOrganizationDraft
+);
+router.post(
+  "/:thingid/saveDraft",
+  requireAuthenticatedUser(),
+  saveOrganizationDraft
+);
+router.post(
+  "/:thingid/saveDraftPreview",
+  requireAuthenticatedUser(),
+  saveOrganizationDraft
+);
 
 module.exports = {
   organization: router,
@@ -569,4 +778,5 @@ module.exports = {
   getOrganizationHttp,
   getOrganizationEditHttp,
   getOrganizationNewHttp,
+  postOrganizationUpdatePreview,
 };

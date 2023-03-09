@@ -1,0 +1,15 @@
+<tr>
+    <td>{{formatArticleDate this "updated_date" "MMMM DD, YYYY"}}</td>
+    <td class="hidden">{{formatArticleDate this "updated_date" "YYYYMMDD"}}</td>
+    <td class="word-wrap"><a class="" href="/{{type}}/{{thingid}}" target="_blank"> {{title}} </a></td>
+    <td>{{type}}</td>
+    <td>{{name}}</td>
+    <td>
+      <a class="entries-action entry-approve button button-red" href="#" entry-id="{{thingid}}">
+        {{t "approve_entry"}}
+      </a> 
+      <a class="entries-action entry-reject button button-dark-grey" href="#" entry-id="{{thingid}}">
+        {{t "block_entry"}}
+      </a>
+    </td>
+</tr>

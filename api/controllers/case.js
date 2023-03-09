@@ -3,6 +3,7 @@ const express = require("express");
 const cache = require("apicache");
 const equals = require("deep-equal");
 const fs = require("fs");
+const fetch = require("isomorphic-fetch");
 
 const {
   db,
@@ -23,7 +24,8 @@ const {
   refreshSearch,
   ErrorReporter,
   LOCALIZED_TEXT_BY_ID_LOCALE,
-  UPDATE_DRAFT_LOCALIZED_TEXT
+  UPDATE_DRAFT_LOCALIZED_TEXT,
+  ENTRY_REVIEW,
 } = require("../helpers/db");
 
 const {
@@ -42,9 +44,10 @@ const {
   validateFields,
   parseAndValidateThingPostData,
   getThingEdit,
+  validateCaptcha,
   saveDraft,
   generateLocaleArticle,
-  publishDraft
+  publishDraft,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -88,17 +91,47 @@ const { SUPPORTED_LANGUAGES } = require("../../constants");
 
 async function postCaseNewHttp(req, res) {
   // create new `case` in db
+
+  let urlCaptcha = ``;
+  let captcha_error_message = "";
+  let supportedLanguages;
   try {
     cache.clear();
+    //validate captcha start
+    try {
+      supportedLanguages =
+        SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+    } catch (error) {
+      supportedLanguages = [];
+    }
+    for (let i = 0; i < supportedLanguages.length; i++) {
+      const lang = supportedLanguages[i];
+      if (req.body[lang]["g-recaptcha-response"]) {
+        let resKey = req.body[lang]["g-recaptcha-response"];
+        captcha_error_message = req.body[lang].captcha_error;
+        urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+      }
+    }
 
+    let checkReCaptcha = await validateCaptcha(urlCaptcha);
+    if (!checkReCaptcha) {
+      return res.status(400).json({
+        OK: false,
+        errors: captcha_error_message,
+      });
+    }
+    //validate captcha end
 
     let {
       hasErrors,
       langErrors,
       localesToTranslate,
       localesToNotTranslate,
-      originalLanguageEntry
-    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), "case");
+      originalLanguageEntry,
+    } = parseAndValidateThingPostData(
+      generateLocaleArticle(req.body, req.body.entryLocales),
+      "case"
+    );
 
     if (hasErrors) {
       return res.status(400).json({
@@ -107,41 +140,77 @@ async function postCaseNewHttp(req, res) {
       });
     }
 
+    let hidden = false;
+    if (req.user.accepted_date === null || req.user.accepted_date === "") {
+      hidden = true;
+    }
+
     let title = originalLanguageEntry.title;
-    let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
-    let description = originalLanguageEntry.description || '';
+    let body =
+      originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    let description = originalLanguageEntry.description || "";
     let original_language = originalLanguageEntry.original_language || "en";
 
-    const thing = await db.one(CREATE_CASE, {
-      title,
-      body,
-      description,
-      original_language,
-    });
+    if (!req.body.entryId) {
+      const thing = await db.one(CREATE_CASE, {
+        title,
+        body,
+        description,
+        original_language,
+        hidden,
+      });
+      req.params.thingid = thing.thingid;
+    } else {
+      req.params.thingid = req.body.entryId;
+    }
 
-    req.params.thingid = thing.thingid;
-    const { article, errors } = await caseUpdate(req, res, originalLanguageEntry);
+    const { article, errors } = await caseUpdate(
+      req,
+      res,
+      originalLanguageEntry
+    );
     if (errors) {
       return res.status(400).json({
         OK: false,
         errors,
       });
     }
-    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
+    localesToNotTranslate = localesToNotTranslate.filter(
+      el => el.language !== originalLanguageEntry.language
+    );
     let localizedData = {
       body,
       description,
       language: original_language,
-      title
+      title,
     };
 
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
+    if (hidden === false) {
+      const filteredLocalesToTranslate = localesToTranslate.filter(
+        locale =>
+          !(
+            locale === "entryLocales" ||
+            locale === "originalEntry" ||
+            locale === originalLanguageEntry.language
+          )
+      );
+      if (filteredLocalesToTranslate.length) {
+        await createLocalizedRecord(
+          localizedData,
+          req.params.thingid,
+          filteredLocalesToTranslate,
+          req.body.entryLocales
+        );
+      }
+      if (localesToNotTranslate.length > 0) {
+        await createUntranslatedLocalizedRecords(
+          localesToNotTranslate,
+          req.params.thingid,
+          localizedData
+        );
+      }
     }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
-    }
+
     res.status(200).json({
       OK: true,
       article,
@@ -232,7 +301,9 @@ function getUpdatedCase(user, params, newCase, oldCase) {
   // id
   ["is_component_of", "primary_organizer"].map(key => cond(key, as.id));
   // list of {id, type, title}
-  ["specific_methods_tools_techniques", "collections"].map(key => cond(key, as.ids));
+  ["specific_methods_tools_techniques", "collections"].map(key =>
+    cond(key, as.ids)
+  );
   // key
   [
     "scope_of_influence",
@@ -306,6 +377,10 @@ async function caseUpdateHttp(req, res, entry = undefined) {
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
 
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    updatedCase.hidden = true;
+  }
+
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
@@ -368,7 +443,7 @@ async function caseUpdate(req, res, entry = undefined) {
   newCase.links = verifyOrUpdateUrl(newCase.links || []);
 
   // if this is a new case, we don't have a post_date and update_date yet, so we set it here
-  if (isNewCase ) {
+  if (isNewCase) {
     newCase.post_date = Date.now();
     newCase.updated_date = Date.now();
   }
@@ -381,16 +456,32 @@ async function caseUpdate(req, res, entry = undefined) {
   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
 
-  if (isNaN(updatedCase.number_of_participants)) {
-    updatedCase.number_of_participants = null;
+  for (const key in updatedCase) {
+    if (updatedCase.hasOwnProperty(key)) {
+      if (isNaN(updatedCase[key])) {
+        updatedCase[key] = null;
+      }
+    }
   }
-
+  
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-  updatedCase.post_date = !updatedCase.published ? "now" : updatedCase.post_date;
-  newCase.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date;
+  updatedCase.post_date = !updatedCase.published
+    ? "now"
+    : updatedCase.post_date;
+  newCase.post_date = !updatedCase.published
+    ? Date.now()
+    : updatedCase.post_date;
   updatedCase.published = true;
-  author.timestamp = new Date().toJSON().slice(0, 19).replace('T', ' ');
+  author.timestamp = new Date()
+    .toJSON()
+    .slice(0, 19)
+    .replace("T", " ");
+
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    updatedCase.hidden = true;
+  }
+
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-case", async t => {
@@ -405,13 +496,10 @@ async function caseUpdate(req, res, entry = undefined) {
         const creator = {
           user_id: newCase.creator ? newCase.creator : params.userid,
           thingid: params.articleid,
-          timestamp: new Date(newCase.post_date)
-
+          timestamp: new Date(newCase.post_date),
         };
         await db.tx("update-case", async t => {
-
           if (!isNewCase) {
-
             if (updatedCase.verified) {
               updatedCase.reviewed_by = creator.user_id;
               updatedCase.reviewed_at = "now";
@@ -419,15 +507,18 @@ async function caseUpdate(req, res, entry = undefined) {
 
             var userId = oldArticle.creator.user_id.toString();
             var creatorTimestamp = new Date(oldArticle.post_date);
-            if (userId == creator.user_id && creatorTimestamp.toDateString() === creator.timestamp.toDateString()) {
+            if (
+              userId == creator.user_id &&
+              creatorTimestamp.toDateString() ===
+                creator.timestamp.toDateString()
+            ) {
               await t.none(INSERT_AUTHOR, author);
               updatedCase.updated_date = "now";
             } else {
               await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
-          } 
+          }          
           await t.none(UPDATE_CASE, updatedCase);
-
         });
       } else {
         await db.tx("update-case", async t => {
@@ -455,22 +546,29 @@ async function caseUpdate(req, res, entry = undefined) {
 
 async function postCaseUpdateHttp(req, res) {
   // cache.clear();
-  const params = parseGetParams(req, "case");
-  const { articleid, datatype } = params;
-  const langErrors = [];
-  
-  if(!Object.keys(req.body).length) {
-    const articleRow = await (await db.one(CASE_BY_ID, params));
-    const article = articleRow.results;
 
+  const params = parseGetParams(req, "case");
+  const { articleid, lang } = params;
+  const langErrors = [];
+  const originLang = lang;
+  let urlCaptcha = ``;
+  let captcha_error_message = "";
+  let supportedLanguages;
+  let article = "";
+
+  const articleRow = await db.one(CASE_BY_ID, params);
+  article = articleRow.results;
+
+  if (!Object.keys(req.body).length) {
+    
     if (!article.latitude && !article.longitude) {
-      article.latitude = '';
-      article.longitude = '';
+      article.latitude = "";
+      article.longitude = "";
     }
 
-    let supportedLanguages;
     try {
-      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+      supportedLanguages =
+        SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
     } catch (error) {
       supportedLanguages = [];
     }
@@ -488,7 +586,7 @@ async function postCaseUpdateHttp(req, res) {
       const lang = supportedLanguages[i];
       let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
         language: lang,
-        thingid: article.id
+        thingid: article.id,
       });
 
       if (lang === article.original_language) {
@@ -497,12 +595,11 @@ async function postCaseUpdateHttp(req, res) {
         title[lang] = results[0].title;
         desc[lang] = results[0].description;
         body[lang] = results[0].body;
-
       } else {
         const otherLangArticle = {
-          title: (results[0]?.title) ?? '',
-          description: results[0]?.description ?? '',
-          body: results[0]?.body ?? ''
+          title: results[0]?.title ?? "",
+          description: results[0]?.description ?? "",
+          body: results[0]?.body ?? "",
         };
 
         if (results[0]?.title) {
@@ -522,35 +619,83 @@ async function postCaseUpdateHttp(req, res) {
       entryLocaleData = {
         title: title,
         description: desc,
-        body: body
+        body: body,
       };
     }
-    
-    req.body['entryLocales'] = entryLocaleData;
 
+    req.body["entryLocales"] = entryLocaleData;
+  } 
+  
+  //validate captcha start
+  try {
+    supportedLanguages =
+      SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+  } catch (error) {
+    supportedLanguages = [];
   }
-
-  if(datatype == 'draft') {
-    publishDraft(req, res, caseUpdate, 'case');
+  for (let i = 0; i < supportedLanguages.length; i++) {
+    const lang = supportedLanguages[i];
+    if (req.body[lang]["g-recaptcha-response"]) {
+      let resKey = req.body[lang]["g-recaptcha-response"];
+      captcha_error_message = req.body[lang].captcha_error;
+      urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+    }
+  }
+  
+  let checkReCaptcha = await validateCaptcha(urlCaptcha);
+  if (!checkReCaptcha) {
+    return res.status(400).json({
+      OK: false,
+      errors: captcha_error_message,
+    });
+  }
+  //validate captcha end
+  if (!article.published && !article.hidden) {
+    publishDraft(req, res, caseUpdate, "case");
     return;
   }
 
-  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
+  const localeEntries = generateLocaleArticle(
+    req.body,
+    req.body.entryLocales,
+    true
+  );
   let originalLanguageEntry;
-
-
+  let entryOriginalLanguage;
+  const localeEntriesArr = [];
+  
   for (const entryLocale in localeEntries) {
     if (req.body.hasOwnProperty(entryLocale)) {
       const entry = localeEntries[entryLocale];
-      if (entryLocale === entry.original_language) {
+
+      if (req.body.hasOwnProperty(entry.original_language)) {
+        entryOriginalLanguage = entry.original_language;
+      }
+      if (entryLocale === entryOriginalLanguage) {
         originalLanguageEntry = entry;
       }
+
       let errors = validateFields(entry, "case");
-      errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
+      errors = errors.map(
+        e =>
+          `${
+            SUPPORTED_LANGUAGES.find(
+              locale => locale.twoLetterCode === entryLocale
+            ).name
+          }: ${e}`
+      );
       langErrors.push({ locale: entryLocale, errors });
+
+      if (originLang == entryLocale) {
+        localeEntriesArr.push(entry);
+      }
+      await caseUpdate(req, res, entry);
     }
   }
-  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
+  
+  const hasErrors = !!langErrors.find(
+    errorEntry => errorEntry.errors.length > 0
+  );
   if (hasErrors) {
     return res.status(400).json({
       OK: false,
@@ -558,9 +703,10 @@ async function postCaseUpdateHttp(req, res) {
     });
   }
 
-  await caseUpdate(req, res, originalLanguageEntry);
-  const localeEntriesArr = [].concat(...Object.values(localeEntries));
-
+  // if(originalLanguageEntry){
+  //   await caseUpdate(req, res, originalLanguageEntry);
+  // }
+  // const localeEntriesArr = [].concat(...Object.values(localeEntries));
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
   const freshArticle = await getCase(params, res);
   res.status(200).json({
@@ -568,6 +714,39 @@ async function postCaseUpdateHttp(req, res) {
     article: freshArticle,
   });
   refreshSearch();
+}
+
+// Only changes to title, description, and/or body trigger a new author and version
+
+async function postCaseUpdatePreview(req, res) {
+  const params = parseGetParams(req, "case");
+  let hidden = false;
+  let published = true;
+  let thingid = req.body.thingid;
+  if (req.user.accepted_date === null || req.user.accepted_date === "") {
+    hidden = true;
+  }
+
+  try {
+    const paramsEntryReview = {
+      hidden: hidden,
+      published: published,
+      id: thingid,
+    };
+    const entryReview = await db.none(ENTRY_REVIEW, paramsEntryReview);
+    const articleRow = await db.one(CASE_BY_ID, params);
+    const article = articleRow.results;
+
+    res.status(200).json({
+      OK: true,
+      article: article,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      OK: false,
+      errors: error.message,
+    });
+  }
 }
 
 /**
@@ -601,7 +780,7 @@ async function getCase(params, res) {
     if (Number.isNaN(params.articleid)) {
       return null;
     }
-    const articleRow = await (await db.one(CASE_BY_ID, params));
+    const articleRow = await db.one(CASE_BY_ID, params);
     const article = articleRow.results;
     fixUpURLs(article);
     return article;
@@ -636,11 +815,15 @@ async function getEditStaticText(params) {
 
   staticText.collections = await getCollections(lang);
   staticText.authors = listUsers();
-  staticText.cases = Array.isArray(cases) ? cases.filter(article => !article.hidden) : [];
-  staticText.methods = Array.isArray(methods) ? methods.filter(article => !article.hidden) : [];
-  staticText.organizations = Array.isArray(organizations) ? organizations.filter(
-    article => !article.hidden
-  ) : [];
+  staticText.cases = Array.isArray(cases)
+    ? cases.filter(article => !article.hidden)
+    : [];
+  staticText.methods = Array.isArray(methods)
+    ? methods.filter(article => !article.hidden)
+    : [];
+  staticText.organizations = Array.isArray(organizations)
+    ? organizations.filter(article => !article.hidden)
+    : [];
   return staticText;
 }
 
@@ -676,25 +859,45 @@ async function saveCaseDraft(req, res, entry = undefined) {
     UPDATE_ENTRY: UPDATE_CASE,
     CREATE_ENTRY_QUERY: CREATE_CASE,
     refreshSearch,
-    thingId: thingCaseid,
+    thingId: req.body.entryId,
     getUpdatedEntry: getUpdatedCase,
     getEntry: getCase,
-    entryType: "case"
+    entryType: "case",
   };
-  const {payload, thingId} = await saveDraft(req, res, args);
-  thingCaseid = thingId;
+  const { payload, thingId } = await saveDraft(req, res, args);
+  thingCaseid = req.body.entryId;
   res.status(200).json(payload);
 }
 
 const router = express.Router(); // eslint-disable-line new-cap
 router.get("/:thingid/edit", requireAuthenticatedUser(), getCaseEditHttp);
 router.get("/new", requireAuthenticatedUser(), getCaseNewHttp);
-router.post("/new", requireAuthenticatedUser(), isPostOrPutUser(), postCaseNewHttp);
+router.post(
+  "/new",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postCaseNewHttp
+);
 router.get("/:thingid/:language?", setAndValidateLanguage(), getCaseHttp);
-router.post("/:thingid", requireAuthenticatedUser(), isPostOrPutUser(), postCaseUpdateHttp);
+router.post(
+  "/:thingid",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postCaseUpdateHttp
+);
+router.post(
+  "/:thingid/preview",
+  requireAuthenticatedUser(),
+  isPostOrPutUser(),
+  postCaseUpdatePreview
+);
 router.post("/new/saveDraft", requireAuthenticatedUser(), saveCaseDraft);
 router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveCaseDraft);
-router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveCaseDraft);
+router.post(
+  "/:thingid/saveDraftPreview",
+  requireAuthenticatedUser(),
+  saveCaseDraft
+);
 
 module.exports = {
   case_: router,
@@ -704,5 +907,8 @@ module.exports = {
   getCaseHttp,
   postCaseUpdateHttp,
   caseUpdateHttp,
-  saveCaseDraft
+  caseUpdate,
+  getCase,
+  postCaseUpdatePreview,
+  saveCaseDraft,
 };

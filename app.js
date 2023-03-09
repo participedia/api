@@ -53,7 +53,8 @@ const home = require("./api/controllers/home");
 const list = require("./api/controllers/list");
 const blogPost = require("./api/controllers/blog-post");
 const user = require("./api/controllers/user");
-const { getUserOrCreateUser } = require("./api/helpers/user.js");
+const entries = require("./api/controllers/entries");
+const { getUserOrCreateUser } = require("./api/helpers/users-helpers");
 const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
 const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
@@ -294,6 +295,7 @@ app.use("/organization", organization);
 app.use("/method", method);
 app.use("/list", list);
 app.use("/user", user);
+app.use("/entries", entries);
 app.use("/bookmark", bookmark);
 app.use("/blog-post", blogPost);
 
