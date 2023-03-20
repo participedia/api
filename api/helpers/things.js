@@ -90,11 +90,13 @@ const fixUpURLs = function(article) {
 };
 
 const placeHolderPhotos = article => {
-  if (article.photos || article.photos.length <= 0) {
-    article.photos.push({
-      url: "/images/texture_1.svg",
-    });
-    return article.photos;
+  if(article.photos){
+    if (article.photos.length <= 0) {
+      article.photos.push({
+        url: "/images/texture_1.svg",
+      });
+      return article.photos;
+    }
   }
 };
 
