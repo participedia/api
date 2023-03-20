@@ -1299,11 +1299,13 @@ module.exports = {
     const contributionTypes = ["cases", "methods", "organizations"];
     // merge all article types into 1 array
     let allContributions = [];
-    contributionTypes.forEach(type => {
-      allContributions = allContributions.concat(
-        profile[type].filter(x => x.published)
-      );
-    });
+    if(profile){
+      contributionTypes.forEach(type => {
+        allContributions = allContributions.concat(
+          profile[type].filter(x => x.published)
+        );
+      });
+    }
     return allContributions;
   },
 
