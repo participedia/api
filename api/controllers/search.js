@@ -236,14 +236,16 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
           user: req.user || null,
         });
       case "csv":
+        let entryId = []
         const entries = results.map(article => {
+          entryId.push(article.id);
           return {
             "id": article.id,
             "title": article.title,
             "type": article.type
           }
         });
-        const file = await createCSVDataDump(type, entries);
+        const file = await createCSVDataDump(type, entries, entryId);
         return res.download(file);
       case "xml":
         return res.status(500, "XML not implemented yet").render();
