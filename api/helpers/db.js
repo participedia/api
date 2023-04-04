@@ -103,6 +103,9 @@ const ENTRIES_REVIEW_LIST = sql("../sql/entries_review_list.sql");
 const ENTRIES_BY_USER = sql("../sql/entries_by_user.sql");
 const AUTHOR_BY_ENTRY = sql("../sql/author_by_entry.sql");
 const ENTRY_REVIEW = sql("../sql/entries-review.sql");
+const SEARCH_CASES = sql("../sql/search_cases.sql");
+const SEARCH_METHODS = sql("../sql/search_methods.sql");
+const SEARCH_ORGANIZATIONS = sql("../sql/search_organizations.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -614,5 +617,8 @@ module.exports = {
   ENTRIES_BY_USER,
   AUTHOR_BY_ENTRY,
   ENTRY_REVIEW,
+  SEARCH_CASES,
+  SEARCH_METHODS,
+  SEARCH_ORGANIZATIONS,
   ErrorReporter,
 };

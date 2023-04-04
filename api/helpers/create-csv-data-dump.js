@@ -8,6 +8,9 @@ const {
   CASE_BY_ID,
   METHOD_BY_ID,
   ORGANIZATION_BY_ID,
+  SEARCH_CASES,
+  SEARCH_METHODS,
+  SEARCH_ORGANIZATIONS
 } = require("./db.js");
 
 function sanitizeUserName(name) {
@@ -258,177 +261,179 @@ function convertToIdTitleUrlFields(entry, field) {
   return entry;
 }
 
-async function createCSVDataDump(type, results = []) {
+async function createCSVDataDump(type, results = [], entryId) {
   var entries = results;
   var csvFields = Object.create({});
+  let articleTypes = ["case", "method", "organization"];
 
   const sqlForType = {
-    case: CASE_BY_ID,
-    method: METHOD_BY_ID,
-    organization: ORGANIZATION_BY_ID,
+    case: SEARCH_CASES,
+    method: SEARCH_METHODS,
+    organization: SEARCH_ORGANIZATIONS,
   };
-
+  let combinedResults = [];
   const fullEntries = await Promise.all(
-    entries.filter(article => {
-      return article.type !== 'collection';
-    })
-    .map(async article => {
-      let articleType =  type == 'thing' ? article.type : type;
+    articleTypes.map(async article => {
       const params = {
-        type: articleType,
+        type: article,
         view: "view",
-        articleid: article.id,
+        articles: entryId,
         lang: "en",
         userid: null,
       };
-      const articleRow = await db.one(sqlForType[articleType], params);
-
-      return articleRow.results;
+      const articleRow = await db.any(sqlForType[article], params);
+      articleRow.map((entry) => {
+        combinedResults = combinedResults.concat(entry.results);
+      });
+      return combinedResults;
     })
   );
-
-  const editedEntries = fullEntries.map(entry => {
-    let editedEntry = Object.assign({}, entry);
-    // add article url
-    editedEntry.url = `https://participedia.net/${editedEntry.type}/${
-      editedEntry.id
-    }`;
-
-    // strip html from body
-    editedEntry.body = editedEntry.body.replace(/<\/?[^>]+(>|$)/g, " ");
-
-    // max characters for an excel cell is 32766 so trimming
-    // the body length so excel doesn't throw errors
-    // https://support.office.com/en-us/article/excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3
-    const MAX_CHAR_LENGTH = 32766;
-    if (editedEntry.body && editedEntry.body.length > MAX_CHAR_LENGTH) {
-      editedEntry.body = editedEntry.body.substring(0, MAX_CHAR_LENGTH);
-    }
-
-    editedEntry.body = removeNBSP(removeWhiteSpaces(editedEntry.body));
-    editedEntry.description = removeNBSP(removeWhiteSpaces(editedEntry.description));
-
-    // add creator and last_updated_by name and profile url
-    if (editedEntry.creator) {
-      editedEntry.creator_id = editedEntry.creator.user_id;
-      editedEntry.creator_name = sanitizeUserName(editedEntry.creator.name);
-      editedEntry.creator_profile_url = `https://participedia.net/user/${
-        editedEntry.creator.user_id
+  
+  const editedEntries = combinedResults.map(entry => {
+    // console.log(JSON.stringify(entry));
+    if(entry != undefined){
+      let editedEntry = Object.assign({}, entry);
+      // add article url
+      editedEntry.url = `https://participedia.net/${editedEntry.type}/${
+        editedEntry.id
       }`;
-    }
 
-    if (editedEntry.last_updated_by) {
-      editedEntry.last_updated_by_id = editedEntry.last_updated_by.user_id;
-      editedEntry.last_updated_by_name = sanitizeUserName(
-        editedEntry.last_updated_by.name
-      );
-      editedEntry.last_updated_by_profile_url = `https://participedia.net/user/${
-        editedEntry.last_updated_by.user_id
-      }`;
-    }
+      // strip html from body
+      editedEntry.body = editedEntry.body.replace(/<\/?[^>]+(>|$)/g, " ");
 
-    // make sure all date fields are in the same format, ISO 8601
-    const dateFields = ["post_date", "updated_date", "start_date", "end_date"];
-    dateFields.forEach(field => {
-      editedEntry[field] = moment(editedEntry[field]).isValid() ? moment(editedEntry[field]).format("YYYY-MM-DD") : "";
-    });
-
-    const booleanFields = ["featured", "ongoing", "staff", "volunteers"];
-    booleanFields.forEach(field => {
-      if (editedEntry[field] !== undefined) {
-        editedEntry[field] = editedEntry[field] ? 1 : 0;
+      // max characters for an excel cell is 32766 so trimming
+      // the body length so excel doesn't throw errors
+      // https://support.office.com/en-us/article/excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3
+      const MAX_CHAR_LENGTH = 32766;
+      if (editedEntry.body && editedEntry.body.length > MAX_CHAR_LENGTH) {
+        editedEntry.body = editedEntry.body.substring(0, MAX_CHAR_LENGTH);
       }
-    });
 
-    const yesOrNoFields = ["legality", "facilitators", "impact_evidence", "formal_evaluation"];
-    yesOrNoFields.forEach(field => {
-      if (editedEntry[field] !== undefined) {
-        if (editedEntry[field] == "yes" || editedEntry[field] == "no") {
-          editedEntry[field] = editedEntry[field] == "yes" ? 1 : 0;
-        }
+      editedEntry.body = removeNBSP(removeWhiteSpaces(editedEntry.body));
+      editedEntry.description = removeNBSP(removeWhiteSpaces(editedEntry.description));
+
+      // add creator and last_updated_by name and profile url
+      if (editedEntry.creator) {
+        editedEntry.creator_id = editedEntry.creator.user_id;
+        editedEntry.creator_name = sanitizeUserName(editedEntry.creator.name);
+        editedEntry.creator_profile_url = `https://participedia.net/user/${
+          editedEntry.creator.user_id
+        }`;
       }
-    });
 
-    // convert primary_organizer and is_component_of into three new fields (id, title, url)
-    if (editedEntry.type === "case") {
-      editedEntry = convertToIdTitleUrlFields(editedEntry, "is_component_of");
-      editedEntry = convertToIdTitleUrlFields(editedEntry, "primary_organizer");
-    }
-
-    // convert specific_methods_tools_techniques into three new fields (id, title, url)
-    if (editedEntry.type === "organization") {
-      editedEntry = convertToIdTitleUrlFields(
-        editedEntry,
-        "specific_methods_tools_techniques"
-      );
-    }
-
-    // add counts for media, links and other detailed list fields
-    const countFields = [
-      "files",
-      "links",
-      "photos",
-      "videos",
-      "audio",
-      "evaluation_reports",
-      "evaluation_links",
-    ];
-    countFields.forEach(field => {
-      if (editedEntry[field]) {
-        editedEntry[`${field}_count`] = editedEntry[field].length;
-      } else {
-        editedEntry[`${field}_count`] = 0;
+      if (editedEntry.last_updated_by) {
+        editedEntry.last_updated_by_id = editedEntry.last_updated_by.user_id;
+        editedEntry.last_updated_by_name = sanitizeUserName(
+          editedEntry.last_updated_by.name
+        );
+        editedEntry.last_updated_by_profile_url = `https://participedia.net/user/${
+          editedEntry.last_updated_by.user_id
+        }`;
       }
-    });
 
-    // convert specific_methods_tools_techniques, has_components to list of titles
-    const articlesToListOfTitles = [
-      "has_components",
-      "specific_methods_tools_techniques",
-    ];
-    articlesToListOfTitles.forEach(field => {
-      if (editedEntry[field]) {
-        editedEntry[`${field}_titles`] = editedEntry[field]
-          .map(item => item.title)
-          .join(", ");
-      }
-    });
-
-    simpleArrayFields.forEach(field => {
-      if (editedEntry[field]) {
-        editedEntry[field] = editedEntry[field].toString().replace(/,/g, ", ");
-      }
-    });
-
-    // Add "Collections" column
-    if (editedEntry.collections) {
-      let collections = editedEntry.collections.map(collection => {
-        return collection.title;
+      // make sure all date fields are in the same format, ISO 8601
+      const dateFields = ["post_date", "updated_date", "start_date", "end_date"];
+      dateFields.forEach(field => {
+        editedEntry[field] = moment(editedEntry[field]).isValid() ? moment(editedEntry[field]).format("YYYY-MM-DD") : "";
       });
 
-      editedEntry.collections = collections.toString();
-    }
-    
-    // reorder fields
-    const orderOfFields = orderedFieldsByType[editedEntry.type];
-
-    const orderedEntry = {};
-    orderOfFields.forEach(field => {
-      if (simpleArrayFields.indexOf(field) >= 0) {
-        if (editedEntry[field]) {
-          let object = generateMultiSelectFieldColumn(field, editedEntry[field]);
-          Object.keys(object).forEach(key => {
-            orderedEntry[key] = object[key];
-            csvFields[key] = true;
-          });
+      const booleanFields = ["featured", "ongoing", "staff", "volunteers"];
+      booleanFields.forEach(field => {
+        if (editedEntry[field] !== undefined) {
+          editedEntry[field] = editedEntry[field] ? 1 : 0;
         }
-      } else {
-        orderedEntry[field] = editedEntry[field];
-        csvFields[field] = true;
-      }
-    });
+      });
 
-    return orderedEntry;
+      const yesOrNoFields = ["legality", "facilitators", "impact_evidence", "formal_evaluation"];
+      yesOrNoFields.forEach(field => {
+        if (editedEntry[field] !== undefined) {
+          if (editedEntry[field] == "yes" || editedEntry[field] == "no") {
+            editedEntry[field] = editedEntry[field] == "yes" ? 1 : 0;
+          }
+        }
+      });
+
+      // convert primary_organizer and is_component_of into three new fields (id, title, url)
+      if (editedEntry.type === "case") {
+        editedEntry = convertToIdTitleUrlFields(editedEntry, "is_component_of");
+        editedEntry = convertToIdTitleUrlFields(editedEntry, "primary_organizer");
+      }
+
+      // convert specific_methods_tools_techniques into three new fields (id, title, url)
+      if (editedEntry.type === "organization") {
+        editedEntry = convertToIdTitleUrlFields(
+          editedEntry,
+          "specific_methods_tools_techniques"
+        );
+      }
+
+      // add counts for media, links and other detailed list fields
+      const countFields = [
+        "files",
+        "links",
+        "photos",
+        "videos",
+        "audio",
+        "evaluation_reports",
+        "evaluation_links",
+      ];
+      countFields.forEach(field => {
+        if (editedEntry[field]) {
+          editedEntry[`${field}_count`] = editedEntry[field].length;
+        } else {
+          editedEntry[`${field}_count`] = 0;
+        }
+      });
+
+      // convert specific_methods_tools_techniques, has_components to list of titles
+      const articlesToListOfTitles = [
+        "has_components",
+        "specific_methods_tools_techniques",
+      ];
+      articlesToListOfTitles.forEach(field => {
+        if (editedEntry[field]) {
+          editedEntry[`${field}_titles`] = editedEntry[field]
+            .map(item => item.title)
+            .join(", ");
+        }
+      });
+
+      simpleArrayFields.forEach(field => {
+        if (editedEntry[field]) {
+          editedEntry[field] = editedEntry[field].toString().replace(/,/g, ", ");
+        }
+      });
+
+      // Add "Collections" column
+      if (editedEntry.collections) {
+        let collections = editedEntry.collections.map(collection => {
+          return collection.title;
+        });
+
+        editedEntry.collections = collections.toString();
+      }
+      
+      // reorder fields
+      const orderOfFields = orderedFieldsByType[editedEntry.type];
+
+      const orderedEntry = {};
+      orderOfFields.forEach(field => {
+        if (simpleArrayFields.indexOf(field) >= 0) {
+          if (editedEntry[field]) {
+            let object = generateMultiSelectFieldColumn(field, editedEntry[field]);
+            Object.keys(object).forEach(key => {
+              orderedEntry[key] = object[key];
+              csvFields[key] = true;
+            });
+          }
+        } else {
+          orderedEntry[field] = editedEntry[field];
+          csvFields[field] = true;
+        }
+      });
+
+      return orderedEntry;
+    }
   });
   
   if (type === "thing") {
