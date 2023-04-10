@@ -52,8 +52,6 @@ WITH full_thing AS (
 FROM
     organizations,
     get_localized_texts_fallback(organizations.id, ${lang}, organizations.original_language) AS texts
-WHERE
-    organizations.id = ANY(ARRAY[${articles}])
 )
-SELECT to_json(full_thing.*) results FROM full_thing
+SELECT to_json(results.*) results FROM full_thing
 ;

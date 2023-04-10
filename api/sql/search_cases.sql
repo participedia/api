@@ -79,7 +79,5 @@ SELECT
 FROM
   cases,
   get_localized_texts_fallback(cases.id, ${lang}, cases.original_language) as localized_texts
-WHERE
-  cases.id = ANY(ARRAY[${articles}])
 
 ) AS results ;
