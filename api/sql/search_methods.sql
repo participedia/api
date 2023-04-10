@@ -48,8 +48,6 @@ WITH full_thing AS (
 FROM
     methods,
     get_localized_texts_fallback(methods.id, ${lang}, methods.original_language) AS texts
-WHERE
-    methods.id = ANY(ARRAY[${articles}])
 )
-SELECT to_json(full_thing.*) results FROM full_thing
+SELECT to_json(results.*) results FROM full_thing
 ;
