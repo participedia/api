@@ -23,7 +23,7 @@ const translateText = async (data, targetLanguage) => {
   const target = targetLanguage;
 
   let length = 0;
-  if (data != null || data != "") {
+  if (data.length > 0 && data !== null) {
     length = data.length;
   }
   if (length > 5000) {
