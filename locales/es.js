@@ -587,6 +587,8 @@
   "faq_q12": "¿Cómo accedo a mis favoritos?",
   "faq_q13": "¿Qué es una colección?",
   "faq_q14": "¿Cómo funciona la traducción?",
+  "faq_q15": "¿Cómo funcionan los borradores?",
+  "faq_q16": "¿Por qué mi trabajo “esperando aprobacion”?",
   "faq_q2": "¿Qué es un método?",
   "faq_q3": "¿Qué es una organización?",
   "faq_q4": "¿Qué es una encuesta?",

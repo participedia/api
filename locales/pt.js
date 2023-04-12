@@ -583,6 +583,8 @@
   "faq_q12": "Como acesso meu conteúdo marcado?",
   "faq_q13": "O que é uma coleção?",
   "faq_q14": "Como funciona a tradução?",
+  "faq_q15": "Como funcionam os rascunhos?",
+  "faq_q16": "Por que meu trabalho está “aguardando aprovação”?",
   "faq_q2": "O que é um método?",
   "faq_q3": "O que é uma organização?",
   "faq_q4": "O que é uma pesquisa?",

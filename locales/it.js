@@ -583,6 +583,8 @@
   "faq_q12": "Come faccio ad accedere ai miei contenuti preferiti?",
   "faq_q13": "Che cos'è una collezione?",
   "faq_q14": "Come funziona la traduzione?",
+  "faq_q15": "Come funzionano le bozze?",
+  "faq_q16": "Perché il mio lavoro è “in attesa di approvazione”?",
   "faq_q2": "Che cos'è un metodo?",
   "faq_q3": "Che cos'è un'organizzazione?",
   "faq_q4": "Che cos'è un'indagine (o un rilevamento)?",

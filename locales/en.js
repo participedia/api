@@ -524,6 +524,8 @@
   "faq_q7": "What is Quick Submit?",
   "faq_q8": "How do I edit content?",
   "faq_q9": "How do I create content in another language?",
+  "faq_q15": "How do drafts work?",
+  "faq_q16": "Why is my work “awaiting approval”?",
   "Faroe Islands": "Faroe Islands",
   "Featured Collections": "Featured Collections",
   "Featured Entries": "Featured Entries",
