@@ -583,6 +583,8 @@
   "faq_q12": "Wie kann ich auf meine mit Lesezeichen versehenen Inhalte zugreifen?",
   "faq_q13": "Was ist eine Sammlung?",
   "faq_q14": "Wie funktioniert die Übersetzung?",
+  "faq_q15": "Wie funktionieren Entwürfe?",
+  "faq_q16": "Warum ist meine Arbeit “Warten auf Genehmigung”?",
   "faq_q2": "Was ist eine Methode?",
   "faq_q3": "Was ist eine Organisation?",
   "faq_q4": "Was ist eine Umfrage?",

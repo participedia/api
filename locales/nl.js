@@ -583,6 +583,8 @@
   "faq_q12": "Hoe krijg ik toegang tot mijn bladwijzers?",
   "faq_q13": "Wat is een collectie?",
   "faq_q14": "Hoe werkt het vertalen?",
+  "faq_q15": "Hoe werken concepten?",
+  "faq_q16": "Waarom wacht mijn werk op goedkeuring?",
   "faq_q2": "Wat is een methode?",
   "faq_q3": "Wat is een organisatie?",
   "faq_q4": "Wat is een enquête?",

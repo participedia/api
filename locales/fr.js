@@ -583,6 +583,8 @@
   "faq_q12": "Comment puis-je accéder au contenu de mes signets?",
   "faq_q13": "Qu’est-ce qu’une collection?",
   "faq_q14": "Comment fonctionne la traduction?",
+  "faq_q15": "¿Cómo funcionan los borradores?",
+  "faq_q16": "¿Por qué mi trabajo está “esperando aprobación”?",
   "faq_q2": "Qu’est-ce qu’une méthode?",
   "faq_q3": "Qu’est-ce qu’une organisation?",
   "faq_q4": "Qu’est-ce qu’un questionnaire?",
