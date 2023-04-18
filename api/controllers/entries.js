@@ -181,7 +181,7 @@ router.post("/approve-entry", async function(req, res) {
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];
       if (thingsByUser.published) {
-        await publishHiddenEntry(thingsByUser.id);
+        publishHiddenEntry(thingsByUser.id);
       }
     }
 
