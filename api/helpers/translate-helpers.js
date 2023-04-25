@@ -16,37 +16,30 @@ authKeys["key"] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
 
 const translateText = async (data, targetLanguage) => {
-  const ArrayVal = data || [];
   // The text to translate
   let allTranslation = "";
 
   // The target language
   const target = targetLanguage;
-
-  let length = 0;
-  if (ArrayVal?.length > 0 && ArrayVal !== null) {
-    length = ArrayVal?.length;
-
-    if (length > 5000) {
-      // Get text chunks
-      let textParts = ArrayVal.match(/.{1,5000}/g);
-      for (let text of textParts) {
-        let [translation] = await translate
-          .translate(text, target)
-          .catch(function(error) {
-            logError(error);
-          });
-        allTranslation += translation;
-      }
-    } else {
-      [allTranslation] = await translate
-        .translate(data, target)
+  let length = data.length;
+  if (length > 5000) {
+    // Get text chunks
+    let textParts = data.match(/.{1,5000}/g);
+    for (let text of textParts) {
+      let [translation] = await translate
+        .translate(text, target)
         .catch(function(error) {
           logError(error);
         });
+      allTranslation += translation;
     }
+  } else {
+    [allTranslation] = await translate
+      .translate(data, target)
+      .catch(function(error) {
+        logError(error);
+      });
   }
-  
   return allTranslation;
 };
 
