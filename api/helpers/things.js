@@ -1025,7 +1025,6 @@ async function saveDraft(req, res, args) {
   req.params.thingid = thingId ?? articleid;
   params.articleid = req.params.thingid;
   const newEntry = entryData;
-  const isNewEntry = !newEntry.article_id;
 
   const {
     updatedText,
