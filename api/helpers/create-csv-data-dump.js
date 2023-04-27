@@ -261,7 +261,22 @@ function convertToIdTitleUrlFields(entry, field) {
   return entry;
 }
 
-async function createCSVDataDump(type, results = [], entryId) {
+async function downloadCSV(type) {
+  const casesDownloadLink = "https://s3.amazonaws.com/participedia.prod/CSV/cases_downloads.csv";
+  const methodsDownloadLink = "https://s3.amazonaws.com/participedia.prod/CSV/methods_downloads.csv";
+  const organizationsDownloadLink = "https://s3.amazonaws.com/participedia.prod/CSV/organizations_downloads.csv";
+
+  switch (type) {
+    case "case":
+      return casesDownloadLink;
+    case "method":
+      return methodsDownloadLink;
+    case "organization":
+      return organizationsDownloadLink;
+  }
+}
+
+async function createCSVDataDump(type, results = []) {
   var entries = results;
   var csvFields = Object.create({});
   let articleTypes = ["case", "method", "organization"];
@@ -458,4 +473,4 @@ async function createCSVDataDump(type, results = [], entryId) {
   return filePath;
 }
 
-module.exports = createCSVDataDump;
+module.exports = {createCSVDataDump, downloadCSV};
