@@ -79,5 +79,5 @@ SELECT
 FROM
   cases,
   get_localized_texts_fallback(cases.id, ${lang}, cases.original_language) as localized_texts
-
+where cases.published = true and cases.hidden = false
 ) AS results ;

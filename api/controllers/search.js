@@ -22,7 +22,7 @@ const {
   limitFromReq,
   offsetFromReq
 } = require("../helpers/things");
-const createCSVDataDump = require("../helpers/create-csv-data-dump.js");
+const {createCSVDataDump, downloadCSV} = require("../helpers/create-csv-data-dump.js");
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
 const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES
@@ -236,17 +236,15 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
           user: req.user || null,
         });
       case "csv":
-        let entryId = []
         const entries = results.map(article => {
-          entryId.push(article.id);
           return {
             "id": article.id,
             "title": article.title,
             "type": article.type
           }
         });
-        const file = await createCSVDataDump(type, entries, entryId);
-        return res.download(file);
+        const file = await downloadCSV(type);
+        return res.status(200).redirect(file);
       case "xml":
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through

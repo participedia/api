@@ -48,6 +48,7 @@ WITH full_thing AS (
 FROM
     methods,
     get_localized_texts_fallback(methods.id, ${lang}, methods.original_language) AS texts
+where methods.published = true and methods.hidden = false
 )
 SELECT to_json(results.*) results FROM full_thing
 ;
