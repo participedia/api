@@ -443,6 +443,7 @@ function aMedium(obj) {
 }
 
 function aSourcedMedia(obj) {
+  console.log("aSourceMedia");
   if (isString(obj)) {
     obj = { url: obj, source_url: "", attribution: "", title: "" };
   }
@@ -463,6 +464,7 @@ function media(mediaList) {
 }
 
 function sourcedMedia(mediaList) {
+  console.log("sourcedMedia");
   return (mediaList || []).map(aSourcedMedia).filter(x => !!x); // remove nulls
 }
 
