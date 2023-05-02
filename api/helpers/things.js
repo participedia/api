@@ -309,17 +309,15 @@ async function maybeUpdateUserTextLocaleEntry(body, req, res, type) {
   ["body", "title", "description"].forEach(key => {
     let value;
     if (key === "body") {
-      if(newArticle[key] !== undefined){
-        value = as.richtext(newArticle[key] || null);
-      } else if(oldArticle[key]) {
-        value = oldArticle[key];
-      }
+      value =
+        newArticle[key] !== undefined
+          ? as.richtext(newArticle[key] || null)
+          : oldArticle[key];
     } else {
-      if(newArticle[key] !== undefined){
-        value = as.text(newArticle[key] || null);
-      } else if(oldArticle[key]) {
-        value = oldArticle[key];
-      }
+      value =
+        newArticle[key] !== undefined
+          ? as.text(newArticle[key] || null)
+          : oldArticle[key];
     }
 
     if (newArticle[key] || oldArticle[key] !== newArticle[key]) {

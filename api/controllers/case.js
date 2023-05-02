@@ -456,14 +456,16 @@ async function caseUpdate(req, res, entry = undefined) {
   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case");
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle);
 
+  const isIntegerList = ["is_component_of", "number_of_participants", "primary_organizer", "collections", "latitude", "longitude"];
+
   for (const key in updatedCase) {
-    if (updatedCase.hasOwnProperty(key)) {
+    if (isIntegerList.includes(key)) {
       if (isNaN(updatedCase[key])) {
         updatedCase[key] = null;
       }
     }
   }
-  
+
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
   updatedCase.post_date = !updatedCase.published

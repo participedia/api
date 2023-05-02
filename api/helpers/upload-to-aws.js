@@ -34,17 +34,14 @@ function uploadObject(buffer, contentType, filename, cb) {
 }
 
 function uploadToAWS(base64String) {
-  console.log("uploadToAWS");
   const newFileName = uuidv4();
   const base64Buffer = createBufferFromBase64(base64String);
 
   const contentType = base64String.split(":")[1].split(";")[0];
   uploadObject(base64Buffer, contentType, newFileName, (err, data) => {
     if (err) {
-      console.log("error upload - ", err);
       logError(err);
     }
-    console.log("data ", data);
   });
 
   return `${process.env.AWS_UPLOADS_URL}${newFileName}`;
