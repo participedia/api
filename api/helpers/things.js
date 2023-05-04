@@ -1006,7 +1006,12 @@ async function saveDraft(req, res, args) {
   const user = req.user;
   const { articleid } = params;
   const originalLanguageEntry = getOriginalLanguageEntry(req.body);
-  const entryData = req.body[originalLanguageEntry];
+  let entryData = "";
+  if(req.body[originalLanguageEntry] !== undefined && req.body[originalLanguageEntry] !== null){
+    entryData = req.body[originalLanguageEntry];
+  } else {
+    entryData = req.body;
+  }
   let hidden = false;
 
   // Save draft
@@ -1037,38 +1042,39 @@ async function saveDraft(req, res, args) {
     newEntry,
     oldArticle
   );
-  //get current date when user.isAdmin is false;
 
-  const localeEntries = generateLocaleArticle(
-    req.body,
-    req.body.entryLocales,
-    true
-  );
+  if(req.body.entryLocales !== undefined && req.body.entryLocales !== null){
+    const localeEntries = generateLocaleArticle(
+      req.body,
+      req.body.entryLocales,
+      true
+    );
 
-  for (const entryLocale in localeEntries) {
-    if (req.body.hasOwnProperty(entryLocale)) {
-      const entry = localeEntries[entryLocale];
-      const localizedData = {
-        title: entry.title ?? "",
-        description: entry.description,
-        body: entry.body,
-        id: params.articleid,
-        language: entryLocale,
-      };
+    for (const entryLocale in localeEntries) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = localeEntries[entryLocale];
+        const localizedData = {
+          title: entry.title ?? "",
+          description: entry.description,
+          body: entry.body,
+          id: params.articleid,
+          language: entryLocale,
+        };
 
-      let hasLocaleData = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
-        language: entryLocale,
-        thingid: params.articleid,
-      });
-
-      if (hasLocaleData.length) {
-        await db.tx(`update-${entryType}`, async t => {
-          await t.none(UPDATE_DRAFT_LOCALIZED_TEXT, localizedData);
+        let hasLocaleData = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
+          language: entryLocale,
+          thingid: params.articleid,
         });
-      } else {
-        await db.tx(`update-${entryType}`, async t => {
-          await t.none(INSERT_LOCALIZED_TEXT, localizedData);
-        });
+
+        if (hasLocaleData.length) {
+          await db.tx(`update-${entryType}`, async t => {
+            await t.none(UPDATE_DRAFT_LOCALIZED_TEXT, localizedData);
+          });
+        } else {
+          await db.tx(`update-${entryType}`, async t => {
+            await t.none(INSERT_LOCALIZED_TEXT, localizedData);
+          });
+        }
       }
     }
   }
