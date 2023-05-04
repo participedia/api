@@ -134,11 +134,13 @@ const editMedia = {
             formsData = originalEntry;
       
             const xhr = new XMLHttpRequest();
+            let articleId = sessionStorage.getItem("articleId");
             xhr.open("POST", updatedForm.getAttribute("action") + "/saveDraft", true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send(
               JSON.stringify({
               ...formsData,
+              entryId: articleId,
               // originalEntry,
             })
           );
