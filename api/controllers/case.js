@@ -517,7 +517,17 @@ async function caseUpdate(req, res, entry = undefined) {
               await t.none(INSERT_AUTHOR, author);
               updatedCase.updated_date = "now";
             } else {
-              await t.none(UPDATE_AUTHOR_FIRST, creator);
+              try {
+                return await db.none(
+                  UPDATE_AUTHOR_FIRST,
+                  {
+                    user_id: creator.user_id,
+                    thingid: creator.thingid,
+                  }
+                );
+              } catch (err) {
+                console.log("UPDATE_AUTHOR_FIRST error - ", err);
+              }
             }
           }          
           await t.none(UPDATE_CASE, updatedCase);

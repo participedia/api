@@ -1,5 +1,5 @@
 UPDATE authors
-SET user_id = ${user_id}, timestamp = ${timestamp}
+SET user_id = ${user_id}
 WHERE 
 thingid = ${thingid} AND
 ctid = (SELECT ctid
