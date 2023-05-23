@@ -468,12 +468,12 @@ async function caseUpdate(req, res, entry = undefined) {
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-  updatedCase.post_date = !updatedCase.published
-    ? "now"
-    : updatedCase.post_date;
-  newCase.post_date = !updatedCase.published
-    ? Date.now()
-    : updatedCase.post_date;
+  // updatedCase.post_date = !updatedCase.published
+  //   ? "now"
+  //   : updatedCase.post_date;
+  // newCase.post_date = !updatedCase.published
+  //   ? Date.now()
+  //   : updatedCase.post_date;
   updatedCase.published = true;
   author.timestamp = new Date()
     .toJSON()
