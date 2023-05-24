@@ -443,7 +443,7 @@ async function caseUpdate(req, res, entry = undefined) {
   newCase.links = verifyOrUpdateUrl(newCase.links || []);
 
   // if this is a new case, we don't have a post_date and update_date yet, so we set it here
-  if (isNewCase) {
+  if (isNewCase && newCase.title != null) {
     newCase.post_date = Date.now();
     newCase.updated_date = Date.now();
   }
@@ -529,7 +529,7 @@ async function caseUpdate(req, res, entry = undefined) {
                 console.log("UPDATE_AUTHOR_FIRST error - ", err);
               }
             }
-          }          
+          }     
           await t.none(UPDATE_CASE, updatedCase);
         });
       } else {
