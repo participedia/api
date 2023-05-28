@@ -1,6 +1,6 @@
 WITH all_hidden_things  AS (
     select * from things, 
-    get_localized_texts_fallback(things.id, 'en', things.original_language) AS texts
+    get_localized_texts_fallback(things.id, things.original_language, things.original_language) AS texts
     where hidden = true and "type" != 'collection' order by updated_date 
 ),
 all_authors as (
