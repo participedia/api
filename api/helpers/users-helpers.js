@@ -15,7 +15,7 @@ const auth0Client = new ManagementClient({
   scope: "read:users update:users",
 });
 
-async function getUserOrCreateUser(auth0User) {
+async function getUserOrCreateUser(auth0User, localeLang) {
   // check if we have a user in our db
   const userByEmail = await db.oneOrNone(USER_BY_EMAIL, {
     userEmail: auth0User.email,
@@ -44,7 +44,7 @@ async function getUserOrCreateUser(auth0User) {
   // get full user object by id
   result = await db.oneOrNone(USER_BY_ID, {
     userId: userId,
-    language: "en",
+    language: localeLang,
   });
   result.user.auth0_user_id = auth0User.user_id;
   return result.user;

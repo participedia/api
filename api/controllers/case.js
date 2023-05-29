@@ -443,7 +443,7 @@ async function caseUpdate(req, res, entry = undefined) {
   newCase.links = verifyOrUpdateUrl(newCase.links || []);
 
   // if this is a new case, we don't have a post_date and update_date yet, so we set it here
-  if (isNewCase) {
+  if (isNewCase && newCase.title != null) {
     newCase.post_date = Date.now();
     newCase.updated_date = Date.now();
   }
@@ -468,12 +468,12 @@ async function caseUpdate(req, res, entry = undefined) {
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-  updatedCase.post_date = !updatedCase.published
-    ? "now"
-    : updatedCase.post_date;
-  newCase.post_date = !updatedCase.published
-    ? Date.now()
-    : updatedCase.post_date;
+  // updatedCase.post_date = !updatedCase.published
+  //   ? "now"
+  //   : updatedCase.post_date;
+  // newCase.post_date = !updatedCase.published
+  //   ? Date.now()
+  //   : updatedCase.post_date;
   updatedCase.published = true;
   author.timestamp = new Date()
     .toJSON()
@@ -517,9 +517,19 @@ async function caseUpdate(req, res, entry = undefined) {
               await t.none(INSERT_AUTHOR, author);
               updatedCase.updated_date = "now";
             } else {
-              await t.none(UPDATE_AUTHOR_FIRST, creator);
+              try {
+                return await db.none(
+                  UPDATE_AUTHOR_FIRST,
+                  {
+                    user_id: creator.user_id,
+                    thingid: creator.thingid,
+                  }
+                );
+              } catch (err) {
+                console.log("UPDATE_AUTHOR_FIRST error - ", err);
+              }
             }
-          }          
+          }     
           await t.none(UPDATE_CASE, updatedCase);
         });
       } else {

@@ -1020,7 +1020,7 @@ async function saveDraft(req, res, args) {
       title: entryData.title || "",
       body: entryData.body || "",
       description: entryData.description || "",
-      original_language: entryData.original_language || "en",
+      original_language: req.body.entryLocales.originalLanguage || "en",
       hidden,
     });
 

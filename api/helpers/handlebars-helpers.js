@@ -353,7 +353,7 @@ module.exports = {
 
   getOriginalLanguageValueForEditForm: (article, context) => {
     const req = context.data.root.req;
-    return article.original_language || req.cookies.locale || "en";
+    return req.cookies.locale|| article.original_language || "en";
   },
 
   shouldShowOriginalLanguageAlert: (article, context) => {

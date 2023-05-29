@@ -58,6 +58,7 @@ const { getUserOrCreateUser } = require("./api/helpers/users-helpers");
 const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
 const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
+let localeLang = "en";
 
 const port = process.env.PORT || 3001;
 
@@ -109,6 +110,7 @@ app.use((req, res, next) => {
   // if the lang query param is present and it's not the same as the locale coookie,
   // redirect to set-locale route with the redirect param set to the current page
   const lang = req.query && req.query.lang;
+  localeLang = req.cookies.locale;
   if (lang && lang !== req.cookies.locale) {
     const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
       req.path
@@ -165,7 +167,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(async function(user, done) {
   // get db user from auth0 user data
-  const dbUser = await getUserOrCreateUser(user._json);
+  const dbUser = await getUserOrCreateUser(user._json, localeLang);
   done(null, dbUser);
 });
 
