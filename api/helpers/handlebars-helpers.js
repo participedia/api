@@ -1181,7 +1181,6 @@ module.exports = {
     const profile = context.data.root.profile;
     const user = context.data.root.req.user;
     const draftsTypes = ["cases", "methods", "organizations"];
-    console.log("user ", JSON.stringify(user));
     // merge all article types into 1 array
     let allDrafts = [];
 
