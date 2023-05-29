@@ -43,9 +43,9 @@ const translateText = async (data, targetLanguage) => {
   return allTranslation;
 };
 
-const translateEntry = async entryId => {
+const translateEntry = async (entryId, originLang) => {
   let languageList = ["en", "fr", "de", "es", "zh", "it", "pt", "nl"];
-  let originEntry = await getOriginLanguageEntry(entryId);
+  let originEntry = await getOriginLanguageEntry(entryId, originLang);
   languageList = languageList.filter(el => el !== originEntry.language);
   let records = [];
 
@@ -58,6 +58,7 @@ const translateEntry = async entryId => {
       thingid: entryId,
       timestamp: "now",
     };
+    
     item.body = await translateText(originEntry.body, languageList[i]);
     item.title = await translateText(originEntry.title, languageList[i]);
     item.description = await translateText(

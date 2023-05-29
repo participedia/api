@@ -6,6 +6,7 @@ let {
   AUTHOR_BY_ENTRY,
   ENTRIES_BY_USER,
   LOCALIZED_TEXT_BY_THING_ID,
+  LOCALIZED_TEXT_BY_ID_LOCALE
 } = require("../helpers/db");
 
 const publishHiddenEntry = async entryId => {
@@ -24,6 +25,16 @@ const publishHiddenEntry = async entryId => {
 const removeEntryThings = async entryId => {
   try {
     return await db.none("DELETE FROM things WHERE id = ${entryId}", {
+      entryId: entryId,
+    });
+  } catch (err) {
+    console.log("removeEntryThings error - ", err);
+  }
+};
+
+const getEntryOriginLang = async entryId => {
+  try {
+    return await db.one("SELECT original_language FROM things WHERE id = ${entryId}", {
       entryId: entryId,
     });
   } catch (err) {
@@ -129,10 +140,11 @@ const getAuthorByEntry = async entryId => {
   }
 };
 
-const getOriginLanguageEntry = async thingid => {
+const getOriginLanguageEntry = async (thingid, originLang) => {
   try {
-    let results = await db.one(LOCALIZED_TEXT_BY_THING_ID, {
+    let results = await db.one(LOCALIZED_TEXT_BY_ID_LOCALE, {
       thingid: thingid,
+      language: originLang,
     });
     return results;
   } catch (err) {
@@ -153,4 +165,5 @@ module.exports = {
   getRejectionUserPost,
   getAuthorByEntry,
   getOriginLanguageEntry,
+  getEntryOriginLang,
 };
