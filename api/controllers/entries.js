@@ -24,6 +24,7 @@ const {
   getApprovalUserPost,
   getRejectionUserPost,
   getAuthorByEntry,
+  getEntryOriginLang,
 } = require("../helpers/entries-helpers");
 
 const {
@@ -169,13 +170,15 @@ router.post("/approve-entry", async function(req, res) {
   }
 
   let author = await getAuthorByEntry(req.body.entryId);
+  let originLang = await getEntryOriginLang(req.body.entryId);
+
   if (Object.keys(author).length > 0) {
     const currentDate = new Date();
     let setAcceptedUser = await setUserAcceptedDate(
       author.user_id,
       currentDate
     );
-    let translateEntryText = translateEntry(req.body.entryId);
+    let translateEntryText = translateEntry(req.body.entryId, originLang.original_language);
     let allUserPosts = await getApprovalUserPost(author.user_id);
 
     for (const allUserPost in allUserPosts) {

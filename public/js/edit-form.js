@@ -548,7 +548,7 @@ const editForm = {
       entryLocales: this.entryLocaleData,
       entryId: this.entryId,
     };
-    console.log("requestPayload ", JSON.stringify(requestPayload));
+    
     xhr.send(JSON.stringify(requestPayload));
   },
 

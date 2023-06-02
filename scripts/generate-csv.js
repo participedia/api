@@ -286,8 +286,6 @@ async function createCSVDataDump() {
   );
 
   const editedEntries = combinedResults.map(entry => {
-    // console.log(JSON.stringify(entry));
-
     let editedEntry = Object.assign({}, entry);
     // add article url
     editedEntry.url = `https://participedia.net/${editedEntry.type}/${editedEntry.id}`;
