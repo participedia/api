@@ -97,7 +97,6 @@ async function getEditStaticText(params) {
  */
 async function postOrganizationNewHttp(req, res) {
   // create new `organization` in db
-
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;
@@ -220,7 +219,7 @@ async function postOrganizationNewHttp(req, res) {
     if (localesToNotTranslate.length > 0) {
       await createUntranslatedLocalizedRecords(
         localesToNotTranslate,
-        req.params.thingid
+        articleid
       );
     }
     res.status(200).json({
@@ -279,11 +278,9 @@ async function getOrganization(params, res) {
 }
 
 async function postOrganizationUpdateHttp(req, res) {
-  cache.clear();
 
   const params = parseGetParams(req, "organization");
-  // const user = req.user;
-  const { articleid, datatype, lang } = params;
+  const { articleid, lang } = params;
   const langErrors = [];
   const originLang = lang;
   let urlCaptcha = ``;
@@ -291,9 +288,10 @@ async function postOrganizationUpdateHttp(req, res) {
   let supportedLanguages;
   let article = "";
 
+  const articleRow = await db.one(ORGANIZATION_BY_ID, params);
+  article = articleRow.results;
+
   if (!Object.keys(req.body).length) {
-    const articleRow = await db.one(ORGANIZATION_BY_ID, params);
-    article = articleRow.results;
 
     if (!article.latitude && !article.longitude) {
       article.latitude = "";
@@ -498,12 +496,8 @@ async function organizationUpdate(req, res, entry = undefined) {
   newOrganization.links = verifyOrUpdateUrl(newOrganization.links || []);
 
   // if this is a new organization, we don't have a post_date yet, so we set it here
-  if (isNewOrganization) {
+  if (isNewOrganization && newCase.title != null) {
     newOrganization.post_date = Date.now();
-  }
-
-  // if this is a new organization, we don't have a updated_date yet, so we set it here
-  if (isNewOrganization) {
     newOrganization.updated_date = Date.now();
   }
 
@@ -516,14 +510,15 @@ async function organizationUpdate(req, res, entry = undefined) {
     req,
     res,
     "organization"
-  ); //maybeUpdateUserText(req, res, "organization");
+  ); 
+
   const [updatedOrganization, er] = getUpdatedOrganization(
     user,
     params,
     newOrganization,
     oldArticle
   );
-
+ 
   if (isNaN(updatedOrganization.number_of_participants)) {
     updatedOrganization.number_of_participants = null;
   }
@@ -587,15 +582,18 @@ async function organizationUpdate(req, res, entry = undefined) {
               await t.none(UPDATE_AUTHOR_FIRST, creator);
             }
           }
+          
           await t.none(UPDATE_ORGANIZATION, updatedOrganization);
         });
       } else {
+        
         await db.tx("update-organization", async t => {
           await t.none(INSERT_AUTHOR, author);
           await t.none(UPDATE_ORGANIZATION, updatedOrganization);
         });
       }
     } else {
+      
       await db.tx("update-organization", async t => {
         await t.none(INSERT_AUTHOR, author);
         await t.none(UPDATE_ORGANIZATION, updatedOrganization);

@@ -430,6 +430,9 @@ const editForm = {
       "general_issues",
       "collections",
       "specific_topics",
+      "type_method",
+      "type_tool",
+      "specific_methods_tools_techniques",
       "purposes",
       "approaches",
       "targeted_participants",
@@ -466,7 +469,7 @@ const editForm = {
           matcher.lastIndex++;
         }
 
-        if (m[1] === "collections") {
+        if (m[1] === "collections" || m[1] === "specific_methods_tools_techniques") {
           formValues[m[1]] = formValues[m[1]] || [];
           formValues[m[1]].push(thingValue);
           formValues[m[1]] = Array.from(new Set(formValues[m[1]]));
@@ -585,6 +588,9 @@ const editForm = {
       "audio",
       "evaluation_links",
       "general_issues",
+      "type_method",
+      "type_tool",
+      "specific_methods_tools_techniques",
       "collections",
       "specific_topics",
       "purposes",
@@ -623,7 +629,7 @@ const editForm = {
           matcher.lastIndex++;
         }
 
-        if (m[1] === "collections") {
+        if (m[1] === "collections" || m[1] === "specific_methods_tools_techniques") {
           formValues[m[1]] = formValues[m[1]] || [];
           formValues[m[1]].push(thingValue);
           formValues[m[1]] = Array.from(new Set(formValues[m[1]]));
