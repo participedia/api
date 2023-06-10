@@ -305,7 +305,6 @@ async function createCSVDataDump(type, results = []) {
   );
   
   const editedEntries = combinedResults.map(entry => {
-    // console.log(JSON.stringify(entry));
     if(entry != undefined){
       let editedEntry = Object.assign({}, entry);
       // add article url
