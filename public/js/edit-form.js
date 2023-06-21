@@ -47,6 +47,7 @@ const editForm = {
         }
         event.preventDefault();
         if (Array.from(event.target.classList).indexOf("button-preview") > -1) {
+          tracking.send("draft", "draft_preview", this.entryId);
           this.saveDraft(true);
         } else {
           this.sendFormData();
