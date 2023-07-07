@@ -5,7 +5,7 @@ WITH all_hidden_things  AS (
 all_authors as (
     SELECT DISTINCT ON (thingid) *
     FROM  authors 
-    ORDER  BY thingid DESC NULLS LAST
+    ORDER  BY thingid, timestamp DESC NULLS LAST
 )
 SELECT all_authors.*, all_hidden_things.*
 FROM all_hidden_things, all_authors
