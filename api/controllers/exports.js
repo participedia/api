@@ -1,6 +1,6 @@
 "use strict";
 let express = require("express");
-let router = express.Router(); // eslint-disable-line new-cap
+let router = express.Router();
 
 let { db } = require("../helpers/db");
 
@@ -15,7 +15,7 @@ const auth0Client = new ManagementClient({
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
-router.get("/export/csv", requireAuthenticatedUser(), async function(req, res) {
+router.get("/csv", requireAuthenticatedUser(), async function(req, res) {
     const user_query = req.query.query || "";
     
     const returnType = req.query.returns || "html";
