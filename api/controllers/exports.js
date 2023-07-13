@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 
-let { db, ENTRIES_REVIEW_LIST } = require("../helpers/db");
+let { db } = require("../helpers/db");
 
 const ManagementClient = require("auth0").ManagementClient;
 
