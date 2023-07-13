@@ -1980,5 +1980,8 @@
   "Zambia": "Zambie",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Zoomer sur la carte",
-  "Zoom Map Out": "Dézoomer sur la carte"
+  "Zoom Map Out": "Dézoomer sur la carte",
+  "download": "Télécharger",
+  "delete": "Supprimer",
+  "csv_exports": "Exporter CSV"
 }

@@ -463,6 +463,7 @@
   "Edit Submission Details": "Edit Submission Details",
   "edit_profile": "Edit Profile",
   "review_entries": "Approve / Block New Entries",
+  "review_entries": "Approve / Block New Entries",
   "approve_entry": "Approve",
   "block_entry": "Block",
   "Egypt": "Egypt",
@@ -1983,5 +1984,8 @@
   "reviewed_entries_title": "Reviewed Entries",
   "reviewed_entries_label": "Reviewed by Participedia Editorial Board",
   "reviewed_popup_message": "This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please %scontact us.%s",
-  "draft_container_description": "Continue edting your draft entries that are not yet published."
+  "draft_container_description": "Continue edting your draft entries that are not yet published.",
+  "download": "Download",
+  "delete": "Delete",
+  "csv_exports": "Export CSV"
 }

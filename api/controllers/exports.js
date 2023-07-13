@@ -20,7 +20,8 @@ router.get("/csv", requireAuthenticatedUser(), async function(req, res) {
     
     const returnType = req.query.returns || "html";
     if (returnType === "html") {
-    return res.status(200).render(`csv-exports`, { results });
+    return res.status(200).render(`csv-exports`);
+    // return res.status(200).render(`csv-exports`, { results });
     } else if (returnType === "json") {
     return res.status(200).json(data);
     }
