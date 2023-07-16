@@ -5,6 +5,7 @@ let {
   db,
   CREATE_CSV_EXPORT,
   UPDATE_CSV_EXPORT,
+  REMOVE_CSV_EXPORT,
   CSV_EXPORT
 } = require("../helpers/db");
 
@@ -58,8 +59,20 @@ const getCSVEntry = async (userId) => {
     }
 };
 
+const removeCSVEntry = async csvExportId => {
+  try {
+    let results = await db.none(REMOVE_CSV_EXPORT, {
+      csvExportId: csvExportId.csv_export_id
+    });
+    return results;
+  } catch (err) {
+    console.log("removeCSVEntry error - ", err);
+  }
+};
+
 module.exports = {
     createCSVEntry,
     getCSVEntry,
     updateCSVEntry,
+    removeCSVEntry,
   };

@@ -10,5 +10,6 @@ CREATE TABLE csv_export (
     created_at timestamp,
     created_by text DEFAULT ''::text,
     updated_at timestamp,
-    updated_by text DEFAULT ''::text
+    updated_by text DEFAULT ''::text,
+    is_deleted boolean
 );

@@ -5,7 +5,8 @@ INSERT into csv_export (
   created_at,
   created_by,
   updated_at,
-  updated_by
+  updated_by,
+  is_deleted
 )
 VALUES
   (
@@ -15,6 +16,7 @@ VALUES
     'now',
     ${userId},
     'now',
-    ${userId}
+    ${userId},
+    false
   )
 RETURNING csvid as csv_export_id;
