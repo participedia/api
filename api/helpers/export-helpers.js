@@ -3,8 +3,9 @@ let express = require("express");
 
 let {
   db,
-  CREATE_CSV_REPORT,
-  UPDATE_CSV_REPORT
+  CREATE_CSV_EXPORT,
+  UPDATE_CSV_EXPORT,
+  CSV_EXPORT
 } = require("../helpers/db");
 
 
@@ -22,7 +23,7 @@ const generateCsvExportId = (userId) => {
 const createCSVEntry = async (userId, type) => {
   let csvExportId = generateCsvExportId(userId);
     try {
-      let results = await db.one(CREATE_CSV_REPORT, {
+      let results = await db.one(CREATE_CSV_EXPORT, {
         csvExportId: csvExportId,
         type: type,
         userId: userId,
@@ -35,7 +36,7 @@ const createCSVEntry = async (userId, type) => {
 
 const updateCSVEntry = async (userId, downloadUrl, csvExportId) => {
     try {
-      let results = await db.none(UPDATE_CSV_REPORT, {
+      let results = await db.none(UPDATE_CSV_EXPORT, {
         csvExportId: csvExportId.csv_export_id,
         userId: userId,
         downloadUrl: downloadUrl,
@@ -46,16 +47,19 @@ const updateCSVEntry = async (userId, downloadUrl, csvExportId) => {
     }
 };
 
-const getCSVFile = async () => {
+const getCSVEntry = async (userId) => {
     try {
-      return "";
+      let results = await db.any(CSV_EXPORT, {
+        userId: userId,
+      });
+      return results;
     } catch (err) {
-      console.log("getCSVFile error - ", err);
+      console.log("getCSVEntry error - ", err);
     }
 };
 
 module.exports = {
     createCSVEntry,
-    getCSVFile,
+    getCSVEntry,
     updateCSVEntry,
   };
