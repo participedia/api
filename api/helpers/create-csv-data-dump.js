@@ -261,50 +261,11 @@ function convertToIdTitleUrlFields(entry, field) {
   return entry;
 }
 
-async function downloadCSV(type) {
-  const casesDownloadLink = "https://s3.amazonaws.com/participedia.prod/CSV/cases_downloads.csv";
-  const methodsDownloadLink = "https://s3.amazonaws.com/participedia.prod/CSV/methods_downloads.csv";
-  const organizationsDownloadLink = "https://s3.amazonaws.com/participedia.prod/CSV/organizations_downloads.csv";
-
-  switch (type) {
-    case "case":
-      return casesDownloadLink;
-    case "method":
-      return methodsDownloadLink;
-    case "organization":
-      return organizationsDownloadLink;
-  }
-}
-
 async function createCSVDataDump(type, results = []) {
   var entries = results;
   var csvFields = Object.create({});
-  let articleTypes = ["case", "method", "organization"];
-
-  const sqlForType = {
-    case: SEARCH_CASES,
-    method: SEARCH_METHODS,
-    organization: SEARCH_ORGANIZATIONS,
-  };
-  let combinedResults = [];
-  const fullEntries = await Promise.all(
-    articleTypes.map(async article => {
-      const params = {
-        type: article,
-        view: "view",
-        articles: entryId,
-        lang: "en",
-        userid: null,
-      };
-      const articleRow = await db.any(sqlForType[article], params);
-      articleRow.map((entry) => {
-        combinedResults = combinedResults.concat(entry.results);
-      });
-      return combinedResults;
-    })
-  );
   
-  const editedEntries = combinedResults.map(entry => {
+  const editedEntries = entries.map(entry => {
     if(entry != undefined){
       let editedEntry = Object.assign({}, entry);
       // add article url
@@ -472,4 +433,4 @@ async function createCSVDataDump(type, results = []) {
   return filePath;
 }
 
-module.exports = {createCSVDataDump, downloadCSV};
+module.exports = {createCSVDataDump};
