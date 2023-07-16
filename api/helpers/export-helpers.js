@@ -3,7 +3,8 @@ let express = require("express");
 
 let {
   db,
-  CREATE_CSV_REPORT
+  CREATE_CSV_REPORT,
+  UPDATE_CSV_REPORT
 } = require("../helpers/db");
 
 
@@ -32,6 +33,19 @@ const createCSVEntry = async (userId, type) => {
     }
 };
 
+const updateCSVEntry = async (userId, downloadUrl, csvExportId) => {
+    try {
+      let results = await db.none(UPDATE_CSV_REPORT, {
+        csvExportId: csvExportId.csv_export_id,
+        userId: userId,
+        downloadUrl: downloadUrl,
+      });
+      return results;
+    } catch (err) {
+      console.log("updatecreateCSVEntry error - ", err);
+    }
+};
+
 const getCSVFile = async () => {
     try {
       return "";
@@ -43,4 +57,5 @@ const getCSVFile = async () => {
 module.exports = {
     createCSVEntry,
     getCSVFile,
+    updateCSVEntry,
   };

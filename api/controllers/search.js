@@ -23,7 +23,10 @@ const {
   offsetFromReq
 } = require("../helpers/things");
 const {createCSVDataDump} = require("../helpers/create-csv-data-dump.js");
-const {createCSVEntry} = require("../helpers/export-helpers");
+const {
+  createCSVEntry,
+  updateCSVEntry
+} = require("../helpers/export-helpers");
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
 const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES
@@ -246,6 +249,9 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
         });
         let csv_export_id = await createCSVEntry(req.user.id, type);
         const file = await createCSVDataDump(type, results);
+        if(csv_export_id){
+          let updateExportEntry = await updateCSVEntry(req.user.id, "download-url-later", csv_export_id);
+        }
         return res.download(file);
         // return res.status(200);
       case "xml":
