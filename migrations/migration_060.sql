@@ -2,6 +2,7 @@ DROP TABLE csv_export;
 
 CREATE TABLE csv_export (
     id SERIAL PRIMARY KEY,
+    csvId text DEFAULT ''::text,
     requested_timestamp timestamp,
     finished_timestamp timestamp,
     download_url text DEFAULT ''::text,
