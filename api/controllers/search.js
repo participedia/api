@@ -23,6 +23,7 @@ const {
   offsetFromReq
 } = require("../helpers/things");
 const {createCSVDataDump} = require("../helpers/create-csv-data-dump.js");
+const {createCSVEntry} = require("../helpers/export-helpers");
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
 const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES
@@ -243,8 +244,10 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
             "type": article.type
           }
         });
+        let csv_export_id = await createCSVEntry(req.user.id, type);
         const file = await createCSVDataDump(type, results);
         return res.download(file);
+        // return res.status(200);
       case "xml":
         return res.status(500, "XML not implemented yet").render();
       case "html": // fall through
