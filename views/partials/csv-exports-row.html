@@ -11,10 +11,10 @@
     </td>
     <td>
       {{#if finished_timestamp}}
-        <a class="entries-action entry-approve button button-red" href="{{download_url}}">
+        <a class="entries-action button button-red" href="{{download_url}}" target="_blank">
           {{t "download"}}
         </a> 
-        <a class="entries-action entry-reject button button-dark-grey" href="#">
+        <a class="entries-action delete-export button button-dark-grey" href="#" entry-id="{{csvid}}">
           {{t "delete"}}
         </a>
       {{/if}}
