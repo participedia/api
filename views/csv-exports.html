@@ -1,33 +1,7 @@
-<!-- <div class="entries-container">
+<div class="entries-container">
     <div class="entries-main-content">
           <h2>{{t "csv_exports"}}</h2>
           {{#if results}}
-            <div>
-              <table id="table_entries" class="display">
-                <thead>
-                    <tr>
-                        <th class="min-width-100">ID</th>
-                        <th class="min-width-200">Requested Time</th>
-                        <th class="min-width-200">Finished Time</th>
-                        <th class="word-wrap">Download URL</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each results}}
-                      {{> csv-exports-row req=../req}}
-                    {{/each}} 
-                </tbody>
-            </table>
-            </div>
-          {{/if}}
-    </div>
-  </div> -->
-
-  <div class="entries-container">
-    <div class="entries-main-content">
-          <h2>{{t "csv_exports"}}</h2>
             <div>
               <table id="table_entries" class="display">
                 <thead>
@@ -41,10 +15,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                      {{> csv-exports-row}}
+                    {{#each results}}
+                      {{> csv-exports-row req=../req}}
+                    {{/each}} 
                 </tbody>
             </table>
             </div>
+          {{/if}}
     </div>
   </div>
   

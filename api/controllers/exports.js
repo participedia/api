@@ -2,7 +2,10 @@
 let express = require("express");
 let router = express.Router();
 
-let { db } = require("../helpers/db");
+const {
+  getCSVEntry,
+  removeCSVEntry
+} = require("../helpers/export-helpers");
 
 const ManagementClient = require("auth0").ManagementClient;
 
@@ -16,15 +19,11 @@ const auth0Client = new ManagementClient({
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
 router.get("/csv", requireAuthenticatedUser(), async function(req, res) {
-    const user_query = req.query.query || "";
-    
-    const returnType = req.query.returns || "html";
-    if (returnType === "html") {
-    return res.status(200).render(`csv-exports`);
-    // return res.status(200).render(`csv-exports`, { results });
-    } else if (returnType === "json") {
-    return res.status(200).json(data);
-    }
+  let results = await getCSVEntry(req.user.id.toString());
+  return res.status(200).render(`csv-exports`,{
+    results
   });
+
+});
 
 module.exports = router;

@@ -1,20 +1,17 @@
-<!-- <tr>
-    <td>{{id}}</td>
-    <td>{{formatArticleDate this "requested_timestamp" "MMMM DD, YYYY"}}</td>
-    <td>{{formatArticleDate this "finished_timestamp" "MMMM DD, YYYY"}}</td>
-    <td class="word-wrap"><a class="" href="{{download_url}}" target="_blank"> Download Here </a></td>
-    <td>{{type}}</td>
-    <td>{{status}}</td>
-</tr> -->
-
 <tr>
-    <td>24324234</td>
-    <td>234234234234234</td>
-    <td>234234234234234234</td>
-    <td>WEEW234233234234</td>
-    <td>23452fdwfdf24r2fddsf222r</td>
+    <td>{{csvid}}</td>
+    <td>{{formatArticleDate this "requested_timestamp" "MMMM DD, YYYY HH:mm:ss"}}</td>
+    <td>{{formatArticleDate this "finished_timestamp" "MMMM DD, YYYY HH:mm:ss"}}</td>
+    <td>{{type}}</td>
     <td>
-        <a class="entries-action entry-approve button button-red" href="#">
+      {{#if finished_timestamp}}
+        <span>Completed</span>
+      {{else}}
+        <span>Processing</span>
+      {{/if}}
+    </td>
+    <td>
+        <a class="entries-action entry-approve button button-red" href="{{download_url}}">
           {{t "download"}}
         </a> 
         <a class="entries-action entry-reject button button-dark-grey" href="#">
