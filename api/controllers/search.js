@@ -205,9 +205,7 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
   if(req.query.returns == "csv"){
     let csv_export_id = await createCSVEntry(req.user.id, type);
     let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
-    //lanjut integrasi dengan frontendnya untuk get list dan delete setelah ini ya. Filenya ada di csv-export
-    // return res.download(file);
-    return res.status(200).render("csv-exports", {});
+    return res.status(200).redirect("/exports/csv")
   } else {
     try {
       let results = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
