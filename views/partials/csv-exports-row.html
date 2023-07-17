@@ -1,21 +1,22 @@
 <tr>
     <td>{{csvid}}</td>
-    <td>{{formatArticleDate this "requested_timestamp" "MMMM DD, YYYY HH:mm:ss"}}</td>
-    <td>{{formatArticleDate this "finished_timestamp" "MMMM DD, YYYY HH:mm:ss"}}</td>
     <td>{{type}}</td>
+    <td>{{formatArticleDate this "requested_timestamp" "MMMM DD, YYYY HH:mm:ss"}}</td>
     <td>
       {{#if finished_timestamp}}
-        <span>Completed</span>
+        {{formatArticleDate this "finished_timestamp" "MMMM DD, YYYY HH:mm:ss"}}
       {{else}}
         <span>Processing</span>
       {{/if}}
     </td>
     <td>
+      {{#if finished_timestamp}}
         <a class="entries-action entry-approve button button-red" href="{{download_url}}">
           {{t "download"}}
         </a> 
         <a class="entries-action entry-reject button button-dark-grey" href="#">
           {{t "delete"}}
         </a>
+      {{/if}}
     </td>
 </tr>
