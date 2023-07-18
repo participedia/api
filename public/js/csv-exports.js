@@ -42,7 +42,7 @@ const csvExport = {
   deleteCSVExport(entryId) {
     const content = `
         <h3>Confirm Delete CSV File</h3>
-        <p>Are you sure you would like to delete this CSV File?
+        <p>Are you sure you would like to delete this CSV File?</p>
         <a href="#" class="button button-red js-delete-btn">Delete CSV File</a>
         `;
     modal.updateModal(content);
