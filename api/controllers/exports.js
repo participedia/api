@@ -27,7 +27,7 @@ router.get("/csv", requireAuthenticatedUser(), async function(req, res) {
 });
 
 router.delete("/csv", requireAuthenticatedUser(), async function(req, res) {
-  let results = await removeCSVEntry(req.body.entryId);
+  let results = await removeCSVEntry(req.body.entryId, req.user.id);
   res.status(200).json({
     OK: true,
   });

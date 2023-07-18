@@ -59,11 +59,13 @@ const getCSVEntry = async (userId) => {
     }
 };
 
-const removeCSVEntry = async csvExportId => {
+const removeCSVEntry = async (csvExportId, userId) => {
   try {
-    let results = await db.none(REMOVE_CSV_EXPORT, {
-      csvExportId: csvExportId.csv_export_id
+    let results = await db.any(REMOVE_CSV_EXPORT, {
+      csvExportId: csvExportId,
+      user_id: userId
     });
+    console.log("results ", JSON.stringify(results));
     return results;
   } catch (err) {
     console.log("removeCSVEntry error - ", err);
