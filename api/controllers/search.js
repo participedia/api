@@ -29,6 +29,7 @@ const {
 } = require("../helpers/export-helpers");
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
+const {uploadCSVToAWS} = require("../helpers/upload-to-aws");
 const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES
 
 function randomTexture() {
@@ -189,8 +190,10 @@ const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed
 
 const uploadCSVFile = async (user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id) => {
   let queryResults = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
-  // const file = await createCSVDataDump(type, results);
-  let updateExportEntry = await updateCSVEntry(req.user.id, "download-url-later", csv_export_id);
+  const fileUpload = await createCSVDataDump(type, queryResults);
+  let filename = csv_export_id.csv_export_id + ".csv";
+  let uploadData = await uploadCSVToAWS(fileUpload, filename);
+  let updateExportEntry = await updateCSVEntry(req.user.id, uploadData, csv_export_id);
 }
 
 router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async function(req, res) {
