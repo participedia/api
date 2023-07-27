@@ -170,9 +170,9 @@ async function postCollectionNewHttp(req, res) {
     const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
 
     if (filteredLocalesToTranslate.length)  {
-     await createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
+      createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
     } if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
+      createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
     }
 
     res.status(200).json({
@@ -404,10 +404,10 @@ async function collectionUpdate(req, res, entry = undefined) {
   updatedCollection.updated_date = !user.isadmin
     ? "now"
     : updatedCollection.updated_date;
-  updatedCollection.post_date = !updatedCase.published ? "now" : updatedCase.post_date;
-  newCollection.post_date = !updatedCase.published ? Date.now() : updatedCase.post_date;
+  updatedCollection.post_date = !updatedCollection.published ? "now" : updatedCollection.post_date;
+  newCollection.post_date = !updatedCollection.published ? Date.now() : updatedCollection.post_date;
 
-    updatedCollection = true;
+  updatedCollection.published = true;
   if (!er.hasErrors()) {
     if (updatedText) {
       await db.tx("update-collection", async t => {
@@ -558,17 +558,71 @@ async function getCollectionEditHttp(req, res) {
   returnByType(res, params, articles, staticText, req.user);
 }
 
+function getUpdatedCollection(user, params, newCollection, oldCollection) {
+  const updatedCollection = Object.assign({}, oldCollection);
+  const er = new ErrorReporter();
+  const cond = (key, fn) =>
+    setConditional(updatedCollection, newCollection, er, fn, key);
+  // admin-only
+  if (user.isadmin) {
+    cond("featured", as.boolean);
+    cond("hidden", as.boolean);
+    cond("verified", as.boolean);
+    cond("original_language", as.text);
+    cond("post_date", as.date);
+    cond("completeness", as.text);
+    cond("updated_date", as.date);
+    cond("updated_date", as.date);
+    cond("reviewed_by", as.text);
+    cond("reviewed_at", as.date);
+  } else {
+    newCollection.collections = updatedCollection.collections;
+  }
+
+  cond("published", as.boolean);
+
+  // media lists
+  ["links", "videos", "audio"].map(key => cond(key, as.media));
+  // photos and files are slightly different from other media as they have a source url too
+  ["photos", "files"].map(key => cond(key, as.sourcedMedia));
+
+  return [updatedCollection, er];
+}
+
+async function saveCltnDraft(req, res, entry = undefined) {
+  const args = {
+    LOCALIZED_TEXT_BY_ID_LOCALE,
+    UPDATE_DRAFT_LOCALIZED_TEXT,
+    INSERT_LOCALIZED_TEXT,
+    INSERT_AUTHOR,
+    UPDATE_AUTHOR_FIRST,
+    UPDATE_ENTRY: UPDATE_METHOD,
+    CREATE_ENTRY_QUERY: CREATE_METHOD,
+    refreshSearch,
+    thingId: req.body.entryId,
+    getUpdatedEntry: getUpdatedCollection,
+    getEntry: getCollection,
+    entryType: "method",
+  };
+  const { payload, thingId } = await saveDraft(req, res, args);
+  thingCollectionid = req.body.entryId;
+  res.status(200).json(payload);
+}
+
 async function saveCollectionDraft(req, res, entry = undefined) {
 
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let entryData;
 
+  console.log("req.body ", JSON.stringify(req.body));
+  console.log("entry ", JSON.stringify(req.body[entryLocales]));
+
   const params = parseGetParams(req, "collection");
     const user = req.user;
     const { articleid, type, view, userid, lang, returns } = params;
 
-    for (const entryLocale in req.body) {
+    for (const entryLocale in req.body.entryLocales) {
       if (req.body.hasOwnProperty(entryLocale)) {
         const entry = req.body[entryLocale];
         if(entryLocale === entry.original_language) {
@@ -709,9 +763,9 @@ router.get("/new", requireAuthenticatedUser(), getCollectionNewHttp);
 router.post("/new", requireAuthenticatedUser(), postCollectionNewHttp);
 router.get("/:thingid", getCollectionHttp);
 router.post("/:thingid", requireAuthenticatedUser(), postCollectionUpdateHttp);
-router.post("/new/saveDraft", requireAuthenticatedUser(), saveCollectionDraft);
-router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveCollectionDraft);
-router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveCollectionDraft);
+router.post("/new/saveDraft", requireAuthenticatedUser(), saveCltnDraft);
+router.post("/:thingid/saveDraft", requireAuthenticatedUser(), saveCltnDraft);
+router.post("/:thingid/saveDraftPreview", requireAuthenticatedUser(), saveCltnDraft);
 
 module.exports = {
   collection_: router,
