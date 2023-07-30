@@ -117,7 +117,7 @@ router.get("/", async function(req, res) {
     type: "things",
     userId: req.user ? req.user.id : null,
     facets: "",
-    offset: 1,
+    offset: 0,
   });
   featuredEntries = addTextureImageIfNeeded(featuredEntries);
   const featuredCollections = featuredEntries.filter(
