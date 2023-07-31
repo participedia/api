@@ -1,6 +1,7 @@
 const AWS = require("aws-sdk");
 const uuidv4 = require("uuid/v4");
 const logError = require("./log-error.js");
+const fs = require('fs');
 const s3 = new AWS.S3({
   apiVersion: "2006-03-01",
   region: process.env.AWS_REGION,
@@ -47,4 +48,28 @@ function uploadToAWS(base64String) {
   return `${process.env.AWS_UPLOADS_URL}${newFileName}`;
 }
 
-module.exports = uploadToAWS;
+const uploadCSVToAWS = async (files, filename) => {
+  const fileContent = fs.readFileSync(files);
+  let uploadedLocation = "";
+
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: filename, 
+    Body: fileContent,
+    ACL: "public-read"
+  };
+
+  try {
+    const stored = await s3.upload(params).promise();
+    uploadedLocation = stored.Location;
+    console.log("stored ", stored);
+  } catch (err) {
+    console.log(err)
+  }
+
+  
+
+  return uploadedLocation;
+}
+
+module.exports = {uploadToAWS, uploadCSVToAWS};

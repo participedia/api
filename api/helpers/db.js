@@ -106,6 +106,10 @@ const ENTRY_REVIEW = sql("../sql/entries-review.sql");
 const SEARCH_CASES = sql("../sql/search_cases.sql");
 const SEARCH_METHODS = sql("../sql/search_methods.sql");
 const SEARCH_ORGANIZATIONS = sql("../sql/search_organizations.sql");
+const CREATE_CSV_EXPORT = sql("../sql/create_csv_export.sql");
+const UPDATE_CSV_EXPORT = sql("../sql/update_csv_export.sql");
+const REMOVE_CSV_EXPORT = sql("../sql/remove_csv_export.sql");
+const CSV_EXPORT = sql("../sql/csv_export.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -620,5 +624,9 @@ module.exports = {
   SEARCH_CASES,
   SEARCH_METHODS,
   SEARCH_ORGANIZATIONS,
+  CREATE_CSV_EXPORT,
+  UPDATE_CSV_EXPORT,
+  REMOVE_CSV_EXPORT,
+  CSV_EXPORT,
   ErrorReporter,
 };

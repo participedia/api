@@ -1980,5 +1980,8 @@
   "Zambia": "赞比亚",
   "Zimbabwe": "津巴布韦",
   "Zoom Map In": "放大缩小字体功能",
-  "Zoom Map Out": "缩放地图"
+  "Zoom Map Out": "缩放地图",
+  "download": "下载",
+  "delete": "删除",
+  "csv_exports": "导出 CSV"
 }

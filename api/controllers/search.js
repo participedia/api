@@ -22,9 +22,14 @@ const {
   limitFromReq,
   offsetFromReq
 } = require("../helpers/things");
-const {createCSVDataDump, downloadCSV} = require("../helpers/create-csv-data-dump.js");
+const {createCSVDataDump} = require("../helpers/create-csv-data-dump.js");
+const {
+  createCSVEntry,
+  updateCSVEntry
+} = require("../helpers/export-helpers");
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
+const {uploadCSVToAWS} = require("../helpers/upload-to-aws");
 const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES
 
 function randomTexture() {
@@ -152,18 +157,8 @@ const redirectToSearchPageIfHasCollectionsQueryParameter = (req, res, next) => {
 // if there is no query OR the query is "featured" then return all featured items
 // One further item: need an alternative search which returns only map-level items and has no pagination
 
-router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async function(req, res) {
-  const user_query = req.query.query || "";
-  const parsed_query = preparse_query(user_query);
-  const limit = limitFromReq(req);
-  const lang = as.value(getLanguage(req));
-  const type = typeFromReq(req);
-  const params = parseGetParams(req, type);
-  const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === lang).name.toLowerCase();
-
+const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed_query, req) => {
   try {
-
-
     let results = null;
     
     if (lang === "zh" && user_query) {
@@ -175,95 +170,113 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
         type: type + "s",
       });
     } else {
-    
-    results = await db.any(queryFileFromReq(req), {
-      query: parsed_query,
-      limit: limit ? limit : null, // null is no limit in SQL
-      offset: offsetFromReq(req),
-      language: lang,
-      langQuery: langQuery,
-      userId: req.user ? req.user.id : null,
-      sortby: sortbyFromReq(req),
-      type: type + "s",
-      facets: searchFiltersFromReq(req),
-    });
-
+      results = await db.any(queryFileFromReq(req), {
+        query: parsed_query,
+        limit: limit ? limit : null, // null is no limit in SQL
+        offset: offsetFromReq(req),
+        language: lang,
+        langQuery: langQuery,
+        userId: req.user ? req.user.id : null,
+        sortby: sortbyFromReq(req),
+        type: type + "s",
+        facets: searchFiltersFromReq(req),
+      });
+    }
+    return results;
+  } catch (err) {
+    console.log("getSearchResults error - ", err);
   }
+}
 
-    if (req.query.resultType === "map" && parsed_query) {
-      results = results.filter(result => result.searchmatched);
-    }
+const uploadCSVFile = async (user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id) => {
+  let queryResults = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
+  const fileUpload = await createCSVDataDump(type, queryResults);
+  let filename = csv_export_id.csv_export_id + ".csv";
+  let uploadData = await uploadCSVToAWS(fileUpload, filename);
+  let updateExportEntry = await updateCSVEntry(req.user.id, uploadData, csv_export_id);
+}
 
-    const total = Number(
-      results.length ? results[0].total || results.length : 0
-    );
-    const searchhits = results.filter(result => result.searchmatched).length;
-    const pages = Math.max(limit ? Math.ceil(total / limit) : 1, 1); // Don't divide by zero limit, don't return page 1 of 1
-    results.forEach(obj => {
-      // massage results for display
-      if (obj.photos && obj.photos.length) {
-        obj.photos.forEach(img => {
-          if (!img.url.startsWith("http")) {
-            img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url);
-          }
-        });
-      } else {
-        obj.photos = [{ url: randomTexture() }];
+router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async function(req, res) {
+  const user_query = req.query.query || "";
+  const parsed_query = preparse_query(user_query);
+  const limit = limitFromReq(req);
+  const lang = as.value(getLanguage(req));
+  const type = typeFromReq(req);
+  const params = parseGetParams(req, type);
+  const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === lang).name.toLowerCase();
+
+  if(req.query.returns == "csv"){
+    let csv_export_id = await createCSVEntry(req.user.id, type);
+    let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
+    return res.status(200).redirect("/exports/csv")
+  } else {
+    try {
+      let results = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
+      if (req.query.resultType === "map" && parsed_query) {
+        results = results.filter(result => result.searchmatched);
       }
-      delete obj.total;
-    });
-    let OK = true;
-    let returnType = req.query.returns;
-    switch (returnType) {
-      case "json":
-        return res.status(200).json({
-          total,
-          pages,
-          searchhits,
-          results,
-          user_query,
-          parsed_query,
-          params,
-          user: req.user || null,
-        });
-      case "htmlfrag":
-        return res.status(200).render("search", {
-          total,
-          pages,
-          searchhits,
-          results,
-          params,
-          user: req.user || null,
-        });
-      case "csv":
-        const entries = results.map(article => {
-          return {
-            "id": article.id,
-            "title": article.title,
-            "type": article.type
-          }
-        });
-        const file = await downloadCSV(type);
-        return res.status(200).redirect(file);
-      case "xml":
-        return res.status(500, "XML not implemented yet").render();
-      case "html": // fall through
-      default:
-        return res.status(200).render("search", {
-          OK,
-          total,
-          pages,
-          searchhits,
-          results,
-          params,
-          user: req.user || null,
-        });
+  
+      const total = Number(
+        results.length ? results[0].total || results.length : 0
+      );
+      const searchhits = results.filter(result => result.searchmatched).length;
+      const pages = Math.max(limit ? Math.ceil(total / limit) : 1, 1); // Don't divide by zero limit, don't return page 1 of 1
+      results.forEach(obj => {
+        // massage results for display
+        if (obj.photos && obj.photos.length) {
+          obj.photos.forEach(img => {
+            if (!img.url.startsWith("http")) {
+              img.url = process.env.AWS_UPLOADS_URL + encodeURIComponent(img.url);
+            }
+          });
+        } else {
+          obj.photos = [{ url: randomTexture() }];
+        }
+        delete obj.total;
+      });
+      let OK = true;
+      let returnType = req.query.returns;
+      switch (returnType) {
+        case "json":
+          return res.status(200).json({
+            total,
+            pages,
+            searchhits,
+            results,
+            user_query,
+            parsed_query,
+            params,
+            user: req.user || null,
+          });
+        case "htmlfrag":
+          return res.status(200).render("search", {
+            total,
+            pages,
+            searchhits,
+            results,
+            params,
+            user: req.user || null,
+          });
+        case "xml":
+          return res.status(500, "XML not implemented yet").render();
+        case "html": // fall through
+        default:
+          return res.status(200).render("search", {
+            OK,
+            total,
+            pages,
+            searchhits,
+            results,
+            params,
+            user: req.user || null,
+          });
+      }
+    } catch (error) {
+      console.error("Error in /search: %s", error.message);
+      logError(error);
+      let OK = false;
+      res.status(500).json({ OK, error });
     }
-  } catch (error) {
-    console.error("Error in /search: %s", error.message);
-    logError(error);
-    let OK = false;
-    res.status(500).json({ OK, error });
   }
 });
 

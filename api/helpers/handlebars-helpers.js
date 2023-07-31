@@ -1363,6 +1363,11 @@ module.exports = {
     return baseUrls.includes(req.baseUrl) && req.path.indexOf("review") >= 0;
   },
 
+  isExportCSVView(req) {
+    const baseUrls = ["/exports"];
+    return baseUrls.includes(req.baseUrl) && req.path.indexOf("csv") >= 0;
+  },
+
   getFormDataType(article) {
     return !article.published ? "draft" : "";
   },
