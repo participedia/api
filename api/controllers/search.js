@@ -30,7 +30,7 @@ const {
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
 const {uploadCSVToAWS} = require("../helpers/upload-to-aws");
-const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES
+const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES;
 
 function randomTexture() {
   let index = Math.floor(Math.random() * 6) + 1;
@@ -206,9 +206,13 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async functi
   const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === lang).name.toLowerCase();
 
   if(req.query.returns == "csv"){
-    let csv_export_id = await createCSVEntry(req.user.id, type);
-    let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
-    return res.status(200).redirect("/exports/csv")
+    if (!req.user){
+      req.session.returnTo = req.originalUrl;
+      res.redirect("/login");
+    }
+      let csv_export_id = await createCSVEntry(req.user.id, type);
+      let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
+      return res.status(200).redirect("/exports/csv")
   } else {
     try {
       let results = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
