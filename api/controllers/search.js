@@ -18,14 +18,12 @@ const {
   typeFromReq,
   limitFromReq,
 } = require("../helpers/things");
-const {createCSVDataDump} = require("../helpers/create-csv-data-dump.js");
 const {
   createCSVEntry,
-  updateCSVEntry
+  uploadCSVFile
 } = require("../helpers/export-helpers");
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
-const {uploadCSVToAWS} = require("../helpers/upload-to-aws");
 const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES;
 
 function randomTexture() {
@@ -130,14 +128,6 @@ const redirectToSearchPageIfHasCollectionsQueryParameter = (req, res, next) => {
 // two factors for search: if there is a selectedCategory then filter by it, always
 // if there is no query OR the query is "featured" then return all featured items
 // One further item: need an alternative search which returns only map-level items and has no pagination
-
-const uploadCSVFile = async (user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id) => {
-  let queryResults = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
-  const fileUpload = await createCSVDataDump(type, queryResults);
-  let filename = csv_export_id.csv_export_id + ".csv";
-  let uploadData = await uploadCSVToAWS(fileUpload, filename);
-  let updateExportEntry = await updateCSVEntry(req.user.id, uploadData, csv_export_id);
-}
 
 router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async function(req, res) {
   const user_query = req.query.query || "";

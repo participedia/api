@@ -8,7 +8,11 @@ let {
   REMOVE_CSV_EXPORT,
   CSV_EXPORT
 } = require("../helpers/db");
-
+const {createCSVDataDump} = require("./create-csv-data-dump.js");
+const {uploadCSVToAWS} = require("./upload-to-aws");
+let {
+  getSearchResults,
+} = require("./search");
 
 const unixTimestampGeneration = () => {
   return Math.floor(Date.now() / 1000)
@@ -72,9 +76,18 @@ const removeCSVEntry = async (csvExportId, userId) => {
   }
 };
 
+const uploadCSVFile = async (user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id) => {
+  let queryResults = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
+  const fileUpload = await createCSVDataDump(type, queryResults);
+  let filename = csv_export_id.csv_export_id + ".csv";
+  let uploadData = await uploadCSVToAWS(fileUpload, filename);
+  let updateExportEntry = await updateCSVEntry(req.user.id, uploadData, csv_export_id);
+}
+
 module.exports = {
     createCSVEntry,
     getCSVEntry,
     updateCSVEntry,
     removeCSVEntry,
+    uploadCSVFile,
   };
