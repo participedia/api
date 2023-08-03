@@ -5,22 +5,18 @@ let {
   db,
   as,
   TITLES_FOR_THINGS,
-  SEARCH,
-  FEATURED_MAP,
-  FEATURED,
-  SEARCH_MAP,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
-  SEARCH_CHINESE,
 } = require("../helpers/db");
-let { preparse_query } = require("../helpers/search");
+let { 
+  preparse_query,
+  getSearchResults,
+} = require("../helpers/search");
 const {
   supportedTypes,
   parseGetParams,
-  searchFiltersFromReq,
   typeFromReq,
   limitFromReq,
-  offsetFromReq
 } = require("../helpers/things");
 const {createCSVDataDump} = require("../helpers/create-csv-data-dump.js");
 const {
@@ -95,28 +91,6 @@ router.get("/getAllForType", async function getAllForType(req, res) {
   }
 });
 
-const queryFileFromReq = req => {
-  const featuredOnly =
-    !req.query.query || (req.query.query || "").toLowerCase() === "featured";
-  const resultType = (req.query.resultType || "").toLowerCase();
-  let queryfile = SEARCH;
-  if (featuredOnly && resultType === "map") {
-    queryfile = FEATURED_MAP;
-  } else if (featuredOnly) {
-    queryfile = FEATURED;
-  } else if (resultType == "map") {
-    queryfile = SEARCH_MAP;
-  }
-  return queryfile;
-};
-
-const sortbyFromReq = req => {
-  if (req.query.sortby === "post_date") {
-    return "post_date";
-  }
-  return "updated_date";
-};
-
 const redirectToSearchPageIfHasCollectionsQueryParameter = (req, res, next) => {
   if (req.query.hasOwnProperty('collections')) {
     res.redirect('/search?selectedCategory=collections');
@@ -156,37 +130,6 @@ const redirectToSearchPageIfHasCollectionsQueryParameter = (req, res, next) => {
 // two factors for search: if there is a selectedCategory then filter by it, always
 // if there is no query OR the query is "featured" then return all featured items
 // One further item: need an alternative search which returns only map-level items and has no pagination
-
-const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed_query, req) => {
-  try {
-    let results = null;
-    
-    if (lang === "zh" && user_query) {
-      results = await db.any(SEARCH_CHINESE, {
-        query: user_query,
-        limit: limit ? limit : null,
-        langQuery: langQuery,
-        language: lang,
-        type: type + "s",
-      });
-    } else {
-      results = await db.any(queryFileFromReq(req), {
-        query: parsed_query,
-        limit: limit ? limit : null, // null is no limit in SQL
-        offset: offsetFromReq(req),
-        language: lang,
-        langQuery: langQuery,
-        userId: req.user ? req.user.id : null,
-        sortby: sortbyFromReq(req),
-        type: type + "s",
-        facets: searchFiltersFromReq(req),
-      });
-    }
-    return results;
-  } catch (err) {
-    console.log("getSearchResults error - ", err);
-  }
-}
 
 const uploadCSVFile = async (user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id) => {
   let queryResults = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
