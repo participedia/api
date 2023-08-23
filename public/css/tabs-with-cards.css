@@ -18,10 +18,10 @@
 }
 
 .tab-panel-header .tab-buttons-button-filter,
+.tab-panel-header .download-csv-btn,
 .no-result-container .tab-buttons-button-filter {
   margin-right: 0;
   display: none;
-  flex: 0 0 95px;
 }
 
 .tab-panel-header .tab-panel-header-content .pagination {
@@ -459,6 +459,7 @@ hr.solid {
   }
 
   .tab-panel-header .tab-buttons-button-filter,
+  .tab-panel-header .download-csv-btn,
   .no-result-container .tab-buttons-button-filter {
     display: block;
   }
