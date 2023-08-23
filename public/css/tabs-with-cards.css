@@ -14,6 +14,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  flex-direction: column;
 }
 
 .tab-panel-header .tab-buttons-button-filter,
@@ -23,8 +24,17 @@
   flex: 0 0 95px;
 }
 
-.tab-panel-header .pagination {
+.tab-panel-header .tab-panel-header-content .pagination {
   padding-right: 4px;
+}
+
+.tab-panel-header .tab-panel-header-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row;
+  margin-bottom: 10px;
 }
 
 .tab-buttons-container {
