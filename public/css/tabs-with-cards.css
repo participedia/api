@@ -14,17 +14,27 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  flex-direction: column;
 }
 
 .tab-panel-header .tab-buttons-button-filter,
+.tab-panel-header .download-csv-btn,
 .no-result-container .tab-buttons-button-filter {
   margin-right: 0;
   display: none;
-  flex: 0 0 95px;
 }
 
-.tab-panel-header .pagination {
+.tab-panel-header .tab-panel-header-content .pagination {
   padding-right: 4px;
+}
+
+.tab-panel-header .tab-panel-header-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: row;
+  margin-bottom: 10px;
 }
 
 .tab-buttons-container {
@@ -449,6 +459,7 @@ hr.solid {
   }
 
   .tab-panel-header .tab-buttons-button-filter,
+  .tab-panel-header .download-csv-btn,
   .no-result-container .tab-buttons-button-filter {
     display: block;
   }
