@@ -1,0 +1,38 @@
+{{> user-list-modal }}
+
+<div class="entries-container">
+    <div class="entries-main-content">
+          <h2>{{t "user_list"}}</h2>
+          {{#if results}}
+            <div>
+              <table id="table_users" class="display">
+                <thead>
+                    <tr>
+                        <th class="min-width-250">Name</th>
+                        <th class="hidden">Name 2</th>
+                        <th class="min-width-250 word-wrap">Email</th>
+                        <th class="min-width-250">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each results}}
+                      {{> user-list-row req=../req}}
+                    {{/each}} 
+                </tbody>
+            </table>
+            </div>
+          {{/if}}
+    </div>
+  </div>
+  
+  <script>
+    $(document).ready( function () {
+        $('#table_users').DataTable({
+          "pageLength": 100,
+          "pagingType": "full_numbers",
+          "lengthChange": false,
+          "searching": false,
+          order: [[1, 'desc']],
+        });
+    } );
+  </script>
