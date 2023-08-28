@@ -75,6 +75,23 @@ const tabsWithCards = {
       });
     }
 
+    const downloadCsvBtnElMobile = document.querySelector(".js-download-csv-btn-mobile");
+    if (downloadCsvBtnElMobile) {
+      downloadCsvBtnElMobile.addEventListener("click", e => {
+        // Custom logic for CSV download button if category is all.
+        if (!this.isCsvGenerator()) {
+          // Update selectedCategory to case and reload the page.
+          updateUrlParams("selectedCategory", "case");
+          window.location.href = window.location.href;
+
+          // Download CSV cases
+          let url = `${window.location.href}&returns=csv`;
+      	  window.open(url, '_blank');
+        }
+        tracking.send("search", "results_csv_button_click");
+      });
+    }
+
     const openFilter = getValueForParam("openFilters");
     if (openFilter == "1") {
       this.openSearchFilterModal();
