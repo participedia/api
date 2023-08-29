@@ -7,11 +7,39 @@ const userList = {
       el.addEventListener("click", e => {
         e.preventDefault();
         let userId = el.getAttribute("user-id");
-        this.blockUser(userId);
+        this.deleteUser(userId);
       });
     });
   },
-  blockUser(userId) {
+  confirmDeleteUser(userId) {
+    const xhr = new XMLHttpRequest();
+    const apiUrl = "/user/delete-user";
+    xhr.open("POST", apiUrl, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+      // wait for request to be done
+      if (xhr.readyState !== xhr.DONE) return;
+      if (xhr.status === 0) {
+        // if user is not logged in
+        // this.openAuthWarning();
+      } else {
+        const response = JSON.parse(xhr.response);
+        if (response.OK) {
+          location.reload();
+          setTimeout(() => {
+            modal.closeModal();
+          }, 4000);
+        } else {
+          setTimeout(() => {
+            modal.closeModal();
+          }, 4000);
+        }
+      }
+    };
+    const requestPayload = { userId: userId };
+    xhr.send(JSON.stringify(requestPayload));
+  },
+  deleteUser(userId) {
     const content = `
         <h3>Confirm Delete User and Entry</h3>
         <p>Are you sure you would like to delete this user? <br /> Deleting a user will delete that user and permanently delete all of their entries from the database.</p>
@@ -28,7 +56,7 @@ const userList = {
             `;
         modal.updateModalReview(content);
         modal.openModal("review-entry-modal");
-        // this.blockEntry(userId);
+        this.confirmDeleteUser(userId);
       } catch (err) {
         console.warn(err);
       }
