@@ -1,0 +1,1 @@
+SELECT * FROM users order by id desc
