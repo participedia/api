@@ -113,6 +113,7 @@
 
   {{#if (isUserView req)}}
     {{> script-tag-with-cache-key filepath="/build/js/user-view.bundle.js"}}
+    {{> script-tag-with-cache-key filepath="/build/js/user-list.bundle.js"}}
   {{/if}}
 
   {{!-- initialize usersnap   --}}

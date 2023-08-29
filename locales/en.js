@@ -464,6 +464,7 @@
   "edit_profile": "Edit Profile",
   "review_entries": "Approve / Block New Entries",
   "user_list": "List Users",
+  "delete_user": "Delete User",
   "approve_entry": "Approve",
   "block_entry": "Block",
   "Egypt": "Egypt",
