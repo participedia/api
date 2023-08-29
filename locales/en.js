@@ -463,7 +463,7 @@
   "Edit Submission Details": "Edit Submission Details",
   "edit_profile": "Edit Profile",
   "review_entries": "Approve / Block New Entries",
-  "review_entries": "Approve / Block New Entries",
+  "user_list": "List Users",
   "approve_entry": "Approve",
   "block_entry": "Block",
   "Egypt": "Egypt",
