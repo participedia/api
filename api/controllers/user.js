@@ -2,14 +2,14 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
-let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
+let { db, as, USER_BY_ID, UPDATE_USER, LIST_USER } = require("../helpers/db");
 let { fixUpURLs, placeHolderPhotos } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
-async function getUserById(userId, req, res, view = "view") {
+const getUserById = async (userId, req, res, view = "view") => {
   try {
     const language = req.cookies.locale || "en";
     if (Number.isNaN(userId)) {
@@ -77,7 +77,27 @@ async function getUserById(userId, req, res, view = "view") {
       return res.status(500).json({ OK: false, error: error });
     }
   }
-}
+};
+
+router.get("/review", requireAuthenticatedUser(), async function(req, res) {
+  // try {
+    let results = await db.any(LIST_USER);
+
+    let data = results;
+
+    // return html template
+    const returnType = req.query.returns || "html";
+    if (returnType === "html") {
+      // return res.status(200).render(`user-list`);
+      return res.status(200).render(`user-list`, { results });
+    } else if (returnType === "json") {
+      return res.status(200).json(data);
+    }
+  // } catch (error) {
+  //   console.error("Exception in ", error.message);
+  //   logError(error);
+  // }
+});
 
 /**
  * @api {get} /user/:userId Retrieve a user
