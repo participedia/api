@@ -26,10 +26,23 @@ const userList = {
       } else {
         const response = JSON.parse(xhr.response);
         if (response.OK) {
-          location.reload();
+        Toastify({
+            text: "User " + userEmail + " has been deleted.",
+            duration: 3000,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "#2f3e46",
+            },
+          }).showToast();
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
           setTimeout(() => {
             modal.closeModal();
-          }, 4000);
+          }, 6000);
         } else {
           setTimeout(() => {
             modal.closeModal();
