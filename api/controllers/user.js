@@ -22,6 +22,7 @@ const {
 
 const {
   blockUserAuth0,
+  deleteUser,
 } = require("../helpers/users-helpers");
 
 const ManagementClient = require("auth0").ManagementClient;
@@ -129,19 +130,21 @@ router.post("/delete-user", async function(req, res) {
       .json({ error: "You must be logged in to perform this action." });
   }
 
-  if (!req.user.isadmin) {
-    return res
-      .status(403)
-      .json({ error: "You must be an admin to perform this action." });
-  }
+  // if (!req.user.isadmin) {
+  //   return res
+  //     .status(403)
+  //     .json({ error: "You must be an admin to perform this action." });
+  // }
 
   let author = req.body.userId;
-
-  if (Object.keys(author).length > 0) {
-    let allUserPosts = await getRejectionUserPost(author.user_id);
-
+  let userEmail = req.body.userEmail;
+  console.log("author - ", author);
+  let allUserPosts = await getRejectionUserPost(author);
+  console.log("Object.keys(allUserPosts).length - ", Object.keys(allUserPosts).length);
+  if (Object.keys(allUserPosts).length > 0) {
     for (const allUserPost in allUserPosts) {
       let thingsByUser = allUserPosts[allUserPost];
+      console.log("thingsByUser.id - ", thingsByUser.id);
       await removeEntryThings(thingsByUser.id);
       switch (thingsByUser.type) {
         case "case":
@@ -161,7 +164,8 @@ router.post("/delete-user", async function(req, res) {
       await removeLocalizedText(thingsByUser.id);
     }
 
-    let userData = await auth0Client.getUsersByEmail(author.email);
+    await deleteUser(author);
+    let userData = await auth0Client.getUsersByEmail(userEmail);
     let blockUserAccess = await blockUserAuth0(userData[0].user_id);
 
     res.status(200).json({

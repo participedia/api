@@ -7,11 +7,12 @@ const userList = {
       el.addEventListener("click", e => {
         e.preventDefault();
         let userId = el.getAttribute("user-id");
-        this.deleteUser(userId);
+        let userEmail = el.getAttribute("user-email");
+        this.deleteUser(userId, userEmail);
       });
     });
   },
-  confirmDeleteUser(userId) {
+  confirmDeleteUser(userId, userEmail) {
     const xhr = new XMLHttpRequest();
     const apiUrl = "/user/delete-user";
     xhr.open("POST", apiUrl, true);
@@ -36,10 +37,10 @@ const userList = {
         }
       }
     };
-    const requestPayload = { userId: userId };
+    const requestPayload = { userId: userId, userEmail: userEmail};
     xhr.send(JSON.stringify(requestPayload));
   },
-  deleteUser(userId) {
+  deleteUser(userId, userEmail) {
     const content = `
         <h3>Confirm Delete User and Entry</h3>
         <p>Are you sure you would like to delete this user? <br /> Deleting a user will delete that user and permanently delete all of their entries from the database.</p>
@@ -56,7 +57,7 @@ const userList = {
             `;
         modal.updateModalReview(content);
         modal.openModal("review-entry-modal");
-        this.confirmDeleteUser(userId);
+        this.confirmDeleteUser(userId, userEmail);
       } catch (err) {
         console.warn(err);
       }
