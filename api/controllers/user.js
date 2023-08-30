@@ -130,38 +130,38 @@ router.post("/delete-user", async function(req, res) {
       .json({ error: "You must be logged in to perform this action." });
   }
 
-  // if (!req.user.isadmin) {
-  //   return res
-  //     .status(403)
-  //     .json({ error: "You must be an admin to perform this action." });
-  // }
+  if (!req.user.isadmin) {
+    return res
+      .status(403)
+      .json({ error: "You must be an admin to perform this action." });
+  }
 
   let author = req.body.userId;
   let userEmail = req.body.userEmail;
-  console.log("author - ", author);
-  let allUserPosts = await getRejectionUserPost(author);
-  console.log("Object.keys(allUserPosts).length - ", Object.keys(allUserPosts).length);
-  if (Object.keys(allUserPosts).length > 0) {
-    for (const allUserPost in allUserPosts) {
-      let thingsByUser = allUserPosts[allUserPost];
-      console.log("thingsByUser.id - ", thingsByUser.id);
-      await removeEntryThings(thingsByUser.id);
-      switch (thingsByUser.type) {
-        case "case":
-          await removeEntryCases(thingsByUser.id);
-          break;
-        case "method":
-          await removeEntryMethods(thingsByUser.id);
-          break;
-        case "collection":
-          await removeEntryCollections(thingsByUser.id);
-          break;
-        case "organization":
-          await removeEntryOrganizations(thingsByUser.id);
-          break;
+
+  try {
+    let allUserPosts = await getRejectionUserPost(author);
+    if (Object.keys(allUserPosts).length > 0) {
+      for (const allUserPost in allUserPosts) {
+        let thingsByUser = allUserPosts[allUserPost];
+        await removeEntryThings(thingsByUser.id);
+        switch (thingsByUser.type) {
+          case "case":
+            await removeEntryCases(thingsByUser.id);
+            break;
+          case "method":
+            await removeEntryMethods(thingsByUser.id);
+            break;
+          case "collection":
+            await removeEntryCollections(thingsByUser.id);
+            break;
+          case "organization":
+            await removeEntryOrganizations(thingsByUser.id);
+            break;
+        }
+        await removeAuthor(thingsByUser.id);
+        await removeLocalizedText(thingsByUser.id);
       }
-      await removeAuthor(thingsByUser.id);
-      await removeLocalizedText(thingsByUser.id);
     }
 
     await deleteUser(author);
@@ -171,8 +171,9 @@ router.post("/delete-user", async function(req, res) {
     res.status(200).json({
       OK: true,
     });
-  } else {
-    res.status(403).json({ error: "No entry found for this user" });
+  } catch (error) {
+    console.log("delete-user error - ", error);
+    res.status(403).json({ error: "Delete user is failed" });
   }
 });
 
