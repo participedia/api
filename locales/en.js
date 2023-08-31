@@ -464,7 +464,7 @@
   "Edit Submission Details": "Edit Submission Details",
   "edit_profile": "Edit Profile",
   "review_entries": "Approve / Block New Entries",
-  "user_list": "List Users",
+  "user_list": "Review / Block Spam Users",
   "delete_user": "Delete User",
   "approve_entry": "Approve",
   "block_entry": "Block",

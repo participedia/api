@@ -526,7 +526,7 @@
   "edit_media_not_supported_file_type_error": "Lo siento, el archivo %s no se puede cargar porque no es un tipo de archivo suppported. Admitimos tipos de imagen .jpg y .png.",
   "edit_profile": "Editar perfil",
   "review_entries": "Aprobar/Bloquear Nuevas Entradas",
-  "user_list": "Listar usuarios",
+  "user_list": "Revisar / bloquear usuarios de spam",
   "delete_user": "Borrar usuario",
   "approve_entry": "Aprobar",
   "block_entry": "Cuadra",

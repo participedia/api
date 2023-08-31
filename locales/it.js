@@ -522,7 +522,7 @@
   "edit_media_not_supported_file_type_error": "Spiacenti, il file %s non può essere caricato perché non è un tipo di file suppported. Supportiamo i tipi di immagine .jpg e .png.",
   "edit_profile": "Modifica profilo",
   "review_entries": "Approva/Blocca nuove voci",
-  "user_list": "Elenca utenti",
+  "user_list": "Controlla/Blocca gli utenti spam",
   "delete_user": "Elimina utente",
   "approve_entry": "Approvare",
   "block_entry": "Bloccare",

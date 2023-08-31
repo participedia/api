@@ -522,7 +522,7 @@
   "edit_media_not_supported_file_type_error": "Entschuldigung, die Datei %s kann nicht hochgeladen werden, da dieser Dateityp nicht unterstützt wird. Wir unterstützen .jpg- und .png-Bildtypen.",
   "edit_profile": "Profil bearbeiten",
   "review_entries": "Neue Einträge genehmigen / blockieren",
-  "user_list": "Benutzer auflisten",
+  "user_list": "Spam-Benutzer überprüfen/blockieren",
   "delete_user": "Benutzer löschen",
   "approve_entry": "Genehmigen",
   "block_entry": "Block",

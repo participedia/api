@@ -522,7 +522,7 @@
   "edit_media_not_supported_file_type_error": "Sorry, het bestand %s kan niet worden geüpload omdat het geen ondersteund bestandstype is. We ondersteunen .jpg en .png voor afbeeldingen.",
   "edit_profile": "Bewerk profiel",
   "review_entries": "Nieuwe invoer goedkeuren/blokkeren",
-  "user_list": "Lijst gebruikers",
+  "user_list": "Controleer / blokkeer spamgebruikers",
   "delete_user": "Verwijder gebruiker",
   "approve_entry": "Goedkeuren",
   "block_entry": "Blok",

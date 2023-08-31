@@ -522,7 +522,7 @@
   "edit_media_not_supported_file_type_error": "Désolé, le fichier %s ne peut pas être téléchargé parce qu’il ne s’agit pas d’un type de fichier suppported. Nous soutenons les types d’images .jpg et .png.",
   "edit_profile": "Modifier le profil",
   "review_entries": "Approuver / Bloquer les nouvelles entrées",
-  "user_list": "Liste des utilisateurs",
+  "user_list": "Examiner/bloquer les utilisateurs indésirables",
   "delete_user": "Supprimer l'utilisateur",
   "approve_entry": "Approuver",
   "block_entry": "Bloquer",

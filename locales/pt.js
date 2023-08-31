@@ -522,7 +522,7 @@
   "edit_media_not_supported_file_type_error": "Desculpe, o arquivo %s não pode ser carregado porque não é um tipo de arquivo suppported. Nós suportamos tipos de imagem .jpg e .png.",
   "edit_profile": "Editar perfil",
   "review_entries": "Aprovar / Bloquear Novas Entradas",
-  "user_list": "Listar usuários",
+  "user_list": "Rever/bloquear usuários de spam",
   "delete_user": "Deletar usuário",
   "approve_entry": "Aprovar",
   "block_entry": "Bloquear",

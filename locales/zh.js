@@ -522,7 +522,7 @@
   "edit_media_not_supported_file_type_error": "对不起，文件 %s 无法上传，因为它不是受支持的文件类型。我们支持 .jpg 和 .png 图像类型。",
   "edit_profile": "编辑配置文件",
   "review_entries": "批准/阻止新条目",
-  "user_list": "列出用户",
+  "user_list": "审查/阻止垃圾邮件用户",
   "delete_user": "删除用户",
   "approve_entry": "批准",
   "block_entry": "堵塞",
