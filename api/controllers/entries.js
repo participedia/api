@@ -73,6 +73,12 @@ const sortbyFromReq = req => {
  *
  */
 router.get("/review", requireAuthenticatedUser(), async function(req, res) {
+
+  if (!req.user.isadmin) {
+    res.status(404).render("404");
+    return null;
+  }
+  
   const user_query = req.query.query || "";
   const langQuery = SUPPORTED_LANGUAGES.find(
     element => element.twoLetterCode === "en"
