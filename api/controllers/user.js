@@ -105,6 +105,12 @@ const getUserById = async (userId, req, res, view = "view") => {
 };
 
 router.get("/review", requireAuthenticatedUser(), async function(req, res) {
+
+  if (!req.user.isadmin) {
+    res.status(404).render("404");
+    return null;
+  }
+
   try {
     let results = await db.any(LIST_USER);
 
