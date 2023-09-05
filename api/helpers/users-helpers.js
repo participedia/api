@@ -4,6 +4,7 @@ const {
   USER_BY_EMAIL,
   USER_BY_ID,
   CREATE_USER_ID,
+  USER_DELETE,
 } = require("../helpers/db");
 
 const ManagementClient = require("auth0").ManagementClient;
@@ -84,6 +85,18 @@ const setUserAcceptedDate = async (id, currentDate) => {
   }
 };
 
+const deleteUser = async (id) => {
+  try {
+    return await db.none(USER_DELETE,
+      {
+        id: id,
+      }
+    );
+  } catch (err) {
+    console.log("deleteUser error - ", err);
+  }
+};
+
 const blockUserAuth0 = async user_id => {
   auth0Client.updateUser(
     { id: `${user_id}` },
@@ -103,4 +116,5 @@ module.exports = exports = {
   getUserOrCreateUser,
   setUserAcceptedDate,
   blockUserAuth0,
+  deleteUser,
 };

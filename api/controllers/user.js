@@ -2,14 +2,39 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 let cache = require("apicache");
-let { db, as, USER_BY_ID, UPDATE_USER } = require("../helpers/db");
+let { db, as, USER_BY_ID, UPDATE_USER, LIST_USER } = require("../helpers/db");
 let { fixUpURLs, placeHolderPhotos } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
 
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
 
-async function getUserById(userId, req, res, view = "view") {
+const {
+  removeEntryThings,
+  removeEntryCases,
+  removeEntryMethods,
+  removeEntryCollections,
+  removeEntryOrganizations,
+  removeAuthor,
+  removeLocalizedText,
+  getRejectionUserPost,
+} = require("../helpers/entries-helpers");
+
+const {
+  blockUserAuth0,
+  deleteUser,
+} = require("../helpers/users-helpers");
+
+const ManagementClient = require("auth0").ManagementClient;
+
+const auth0Client = new ManagementClient({
+  domain: process.env.AUTH0_DOMAIN,
+  clientId: process.env.AUTH0_CLIENT_ID,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  scope: "read:users update:users",
+});
+
+const getUserById = async (userId, req, res, view = "view") => {
   try {
     const language = req.cookies.locale || "en";
     if (Number.isNaN(userId)) {
@@ -77,7 +102,86 @@ async function getUserById(userId, req, res, view = "view") {
       return res.status(500).json({ OK: false, error: error });
     }
   }
-}
+};
+
+router.get("/review", requireAuthenticatedUser(), async function(req, res) {
+
+  if (!req.user.isadmin) {
+    res.status(404).render("404");
+    return null;
+  }
+
+  try {
+    let results = await db.any(LIST_USER);
+
+    let data = results;
+
+    // return html template
+    const returnType = req.query.returns || "html";
+    if (returnType === "html") {
+      return res.status(200).render(`user-list`, { results });
+    } else if (returnType === "json") {
+      return res.status(200).json(data);
+    }
+  } catch (error) {
+    console.error("Exception in ", error.message);
+    logError(error);
+  }
+});
+
+router.post("/delete-user", async function(req, res) {
+  if (!req.user) {
+    return res
+      .status(401)
+      .json({ error: "You must be logged in to perform this action." });
+  }
+
+  if (!req.user.isadmin) {
+    return res
+      .status(403)
+      .json({ error: "You must be an admin to perform this action." });
+  }
+
+  let author = req.body.userId;
+  let userEmail = req.body.userEmail;
+
+  try {
+    let allUserPosts = await getRejectionUserPost(author);
+    if (Object.keys(allUserPosts).length > 0) {
+      for (const allUserPost in allUserPosts) {
+        let thingsByUser = allUserPosts[allUserPost];
+        await removeEntryThings(thingsByUser.id);
+        switch (thingsByUser.type) {
+          case "case":
+            await removeEntryCases(thingsByUser.id);
+            break;
+          case "method":
+            await removeEntryMethods(thingsByUser.id);
+            break;
+          case "collection":
+            await removeEntryCollections(thingsByUser.id);
+            break;
+          case "organization":
+            await removeEntryOrganizations(thingsByUser.id);
+            break;
+        }
+        await removeAuthor(thingsByUser.id);
+        await removeLocalizedText(thingsByUser.id);
+      }
+    }
+
+    await deleteUser(author);
+    let userData = await auth0Client.getUsersByEmail(userEmail);
+    let blockUserAccess = await blockUserAuth0(userData[0].user_id);
+
+    res.status(200).json({
+      OK: true,
+    });
+  } catch (error) {
+    console.log("delete-user error - ", error);
+    res.status(403).json({ error: "Delete user is failed" });
+  }
+});
 
 /**
  * @api {get} /user/:userId Retrieve a user

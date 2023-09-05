@@ -68,6 +68,8 @@ const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
 const USER_BY_EMAIL = sql("../sql/user_by_email.sql");
 const USER_BY_ID = sql("../sql/user_by_id.sql");
+const USER_DELETE = sql("../sql/user_delete.sql");
+const LIST_USER = sql("../sql/user.sql");
 const CREATE_USER_ID = sql("../sql/create_user_id.sql");
 const CASES_BY_COUNTRY = sql("../sql/cases_by_country.sql");
 const CREATE_COLLECTION = sql("../sql/create_collection.sql");
@@ -578,6 +580,8 @@ module.exports = {
   INSERT_AUTHOR,
   USER_BY_EMAIL,
   USER_BY_ID,
+  USER_DELETE,
+  LIST_USER,
   CREATE_USER_ID,
   CASES_BY_COUNTRY,
   CREATE_COLLECTION,

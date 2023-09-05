@@ -19,6 +19,7 @@
 
 .tab-panel-header .tab-buttons-button-filter,
 .tab-panel-header .download-csv-btn,
+.no-result-container .download-csv-btn,
 .no-result-container .tab-buttons-button-filter {
   margin-right: 0;
   display: none;
@@ -460,6 +461,7 @@ hr.solid {
 
   .tab-panel-header .tab-buttons-button-filter,
   .tab-panel-header .download-csv-btn,
+  .no-result-container .download-csv-btn,
   .no-result-container .tab-buttons-button-filter {
     display: block;
   }
