@@ -16,7 +16,7 @@ const path = require("path");
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 let config;
-const uploadToAWS = require("./upload-to-aws.js");
+const {uploadToAWS} = require("./upload-to-aws.js");
 const logError = require("./log-error.js");
 
 try {
@@ -449,6 +449,7 @@ function aMedium(obj) {
 }
 
 function aSourcedMedia(obj) {
+  console.log("obj 1 ", JSON.stringify(obj));
   if (isString(obj)) {
     obj = { url: obj, source_url: "", attribution: "", title: "" };
   }
@@ -456,6 +457,7 @@ function aSourcedMedia(obj) {
 
   // if url is not already an amazon url, upload the file
   let url = obj.url;
+  console.log("obj url ", JSON.stringify(obj.url));
   // some types of sourced media are links, anything already a link does not need to be uploaded
   if (!obj.url.startsWith("http")) {
     obj.url = uploadToAWS(obj.url);

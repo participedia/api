@@ -34,7 +34,7 @@ function uploadObject(buffer, contentType, filename, cb) {
   s3.upload(uploadParams, cb);
 }
 
-function uploadToAWS(base64String) {
+const uploadToAWS = async (base64String) => {
   const newFileName = uuidv4();
   const base64Buffer = createBufferFromBase64(base64String);
 
