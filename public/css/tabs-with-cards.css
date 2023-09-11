@@ -51,6 +51,10 @@
   padding: 0 10px;
 }
 
+.tab-buttons-container a .button {
+  padding: 0 10px;
+}
+
 .tab-buttons-button-filter {
   margin-right: 15px;
   position: relative;
@@ -323,12 +327,16 @@ hr.solid {
 }
 
 .download-csv-btn {
-  margin-right: 20px;
+  margin-right: 15px;
 }
 
 .tab-maps-button {
   margin-right: 30px;
   position: relative;
+}
+
+.tab-maps-button a {
+  text-decoration: none;
 }
 
 .download-csv-btn .icon-fill,

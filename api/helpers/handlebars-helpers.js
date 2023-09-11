@@ -1645,6 +1645,18 @@ module.exports = {
     return false;
   },
 
+  isNotMapView(req, tabName) {
+    const tabParam = req.query && req.query.selectedCategory;
+    if (
+      (tabName === "collections" || tabName === "method") &&
+      tabParam === "maps"
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+
   hideGridToggle(req) {
     if (["/case", "/method", "/organization"].includes(req.baseUrl)) {
       return false;
