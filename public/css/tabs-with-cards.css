@@ -20,6 +20,8 @@
 .tab-panel-header .tab-buttons-button-filter,
 .tab-panel-header .download-csv-btn,
 .no-result-container .download-csv-btn,
+.tab-panel-header .tab-maps-button,
+.no-result-container .tab-maps-button,
 .no-result-container .tab-buttons-button-filter {
   margin-right: 0;
   display: none;
@@ -56,7 +58,8 @@
 .tab-buttons-button-filter .icon-fill {
   fill: #000;
 }
-.tab-buttons-button-filter svg {
+.tab-buttons-button-filter svg,
+.tab-maps-button svg {
   height: 12px;
   padding-right: 0;
   margin-bottom: -1px;
@@ -318,10 +321,18 @@ hr.solid {
 [data-card-layout="list"] .toggle-list-layout-btn .icon-fill {
   fill: #EC2024;
 }
+
 .download-csv-btn {
-  margin-right: 30px;
+  margin-right: 20px;
 }
-.download-csv-btn .icon-fill {
+
+.tab-maps-button {
+  margin-right: 30px;
+  position: relative;
+}
+
+.download-csv-btn .icon-fill,
+.tab-maps-button .icon-fill {
   fill: #000;
 }
 
@@ -462,6 +473,8 @@ hr.solid {
   .tab-panel-header .tab-buttons-button-filter,
   .tab-panel-header .download-csv-btn,
   .no-result-container .download-csv-btn,
+  .tab-panel-header .tab-maps-button,
+  .no-result-container .tab-maps-button,
   .no-result-container .tab-buttons-button-filter {
     display: block;
   }

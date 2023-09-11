@@ -6,6 +6,7 @@
     {{#if (showCsvButton req)}}
       {{> download-csv-button }}
     {{/if}}
+    {{> search-map-button }}
     {{#if (hideGridToggle req)}}
       <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
         <span class="sr-only">{{t "list view"}}</span>

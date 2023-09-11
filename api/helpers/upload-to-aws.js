@@ -52,7 +52,6 @@ const uploadToAWS = (base64String) => {
   try {
     const stored = s3.upload(params).promise();
     uploadedLocation = stored.Location;
-    console.log("stored ", stored);
   } catch (err) {
     console.log(err)
   }
@@ -74,7 +73,6 @@ const uploadCSVToAWS = async (files, filename) => {
   try {
     const stored = await s3.upload(params).promise();
     uploadedLocation = stored.Location;
-    console.log("stored ", stored);
   } catch (err) {
     console.log(err)
   }
