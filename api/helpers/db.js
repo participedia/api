@@ -16,7 +16,7 @@ const path = require("path");
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 let config;
-const uploadToAWS = require("./upload-to-aws.js");
+const {uploadToAWS} = require("./upload-to-aws.js");
 const logError = require("./log-error.js");
 
 try {
@@ -460,7 +460,6 @@ function aSourcedMedia(obj) {
   if (!obj.url.startsWith("http")) {
     obj.url = uploadToAWS(obj.url);
   }
-
   return new FullFile(obj);
 }
 

@@ -34,16 +34,28 @@ function uploadObject(buffer, contentType, filename, cb) {
   s3.upload(uploadParams, cb);
 }
 
-function uploadToAWS(base64String) {
-  const newFileName = uuidv4();
+const uploadToAWS = (base64String) => {
+  const contentType = base64String.split(":")[1].split(";")[0];
+  const contentExtension = base64String.substring("data:image/".length, base64String.indexOf(";base64"));
+  const newFileName = uuidv4() + "." + contentExtension;
   const base64Buffer = createBufferFromBase64(base64String);
 
-  const contentType = base64String.split(":")[1].split(";")[0];
-  uploadObject(base64Buffer, contentType, newFileName, (err, data) => {
-    if (err) {
-      logError(err);
-    }
-  });
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: newFileName, 
+    Body: base64Buffer,
+    ContentEncoding: "base64",
+    ContentType: contentType,
+    ACL: "public-read"
+  };
+
+  try {
+    const stored = s3.upload(params).promise();
+    uploadedLocation = stored.Location;
+    console.log("stored ", stored);
+  } catch (err) {
+    console.log(err)
+  }
 
   return `${process.env.AWS_UPLOADS_URL}${newFileName}`;
 }
@@ -66,8 +78,6 @@ const uploadCSVToAWS = async (files, filename) => {
   } catch (err) {
     console.log(err)
   }
-
-  
 
   return uploadedLocation;
 }
