@@ -3,10 +3,14 @@
     {{#if (includeSearchFilters req)}}
       {{> search-filter-button }}
     {{/if}}
+
     {{#if (showCsvButton req)}}
       {{> download-csv-button }}
     {{/if}}
-    {{> search-map-button }}
+
+    {{#if (includeMapsView req)}}
+      {{> search-map-button }}
+    {{/if}}
     {{#if (hideGridToggle req)}}
       <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
         <span class="sr-only">{{t "list view"}}</span>

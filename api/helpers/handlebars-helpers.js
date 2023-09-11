@@ -1661,6 +1661,15 @@ module.exports = {
       : true;
   },
 
+  includeMapsView(req) {
+    // do not show search filters on new case, organization, method and collection as well as on collection and user pages
+    return req.baseUrl.indexOf("collection") > 0 ||
+      req.baseUrl.indexOf("user") > 0 ||
+      ["/case", "/method", "/organization"].includes(req.baseUrl)
+      ? false
+      : true;
+  },
+
   withItem(object, options) {
     return options.fn(object[options.hash.key]);
   },
