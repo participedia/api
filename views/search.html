@@ -49,6 +49,12 @@
         }}
       {{/if}}
     </div>
+    <div role="tabpanel" class="tab-collections">
+      {{#if (isSelectedHomeTab req "maps")}}
+        {{> search-map
+        }}
+      {{/if}}
+    </div>
   {{/tabs-with-cards}}
 
  <a href="/content-chooser" class="button button-red floating-action-button floating-quick-submit-button" title='{{t "Quick Submit"}}'>

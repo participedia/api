@@ -3,8 +3,17 @@
   background-color: #C2CACC;
 }
 
+.search-map-container {
+  min-height: calc(100VH - 30px - 90px - 120px);
+  background-color: #C2CACC;
+}
+
 .map-inner {
   height: 600px;
+}
+
+.search-map-inner {
+  min-height: calc(100VH - 30px - 120px - 120px);
 }
 
 .map-controls {
