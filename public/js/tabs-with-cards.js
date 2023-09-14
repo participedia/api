@@ -186,18 +186,21 @@ const tabsWithCards = {
     const optionEls = Array.prototype.slice.call(
       selectEl.querySelectorAll("option")
     );
-    const currentTab = this.tabInputEls.find(el => el.checked);
-    optionEls.forEach(el => (el.selected = el.value === currentTab.id));
 
-    // event listener for select change
-    selectEl.addEventListener("change", event => {
-      // change tab to selected type
-      const newTabId = event.target.value;
-      // toggle checked attr on inputs
-      this.tabInputEls.forEach(el => (el.checked = el.id === newTabId));
-      // go to new tab
-      this.navigateToTab(newTabId);
-    });
+    const currentTab = this.tabInputEls.find(el => el.checked);
+    if(currentTab){
+      optionEls.forEach(el => (el.selected = el.value === currentTab.id));
+
+      // event listener for select change
+      selectEl.addEventListener("change", event => {
+        // change tab to selected type
+        const newTabId = event.target.value;
+        // toggle checked attr on inputs
+        this.tabInputEls.forEach(el => (el.checked = el.id === newTabId));
+        // go to new tab
+        this.navigateToTab(newTabId);
+      });
+    }
   },
 
   initPagination() {
