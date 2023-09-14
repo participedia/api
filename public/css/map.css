@@ -176,6 +176,63 @@
   padding: 0;
 }
 
+.fullscreen-control {
+  display: block;
+  font-size: 1em;
+  height: 25px;
+  width: 25px;
+  top: 75px !important;
+  right: 15px !important;
+}
+
+.fullscreen-control .fullscreen-control-icon {
+  border-style: solid;
+  height: 0.25em;
+  position: absolute;
+  width: 0.25em;
+}
+
+.fullscreen-control .fullscreen-control-icon.fullscreen-control-top-left {
+  border-width: 2px 0 0 2px;
+  left: 0.1em;
+  top: 0.1em;
+}
+
+.fullscreen-control.is-fullscreen .fullscreen-control-icon.fullscreen-control-top-left {
+  border-width: 0 2px 2px 0;
+}
+
+.fullscreen-control .fullscreen-control-icon.fullscreen-control-top-right {
+  border-width: 2px 2px 0 0;
+  right: 0.1em;
+  top: 0.1em;
+}
+
+.fullscreen-control.is-fullscreen .fullscreen-control-icon.fullscreen-control-top-right {
+  border-width: 0 0 2px 2px;
+}
+
+.fullscreen-control .fullscreen-control-icon.fullscreen-control-bottom-left {
+  border-width: 0 0 2px 2px;
+  left: 0.1em;
+  bottom: 0.1em;
+}
+
+.fullscreen-control.is-fullscreen .fullscreen-control-icon.fullscreen-control-bottom-left {
+  border-width: 2px 2px 0 0;
+}
+
+.fullscreen-control .fullscreen-control-icon.fullscreen-control-bottom-right {
+  border-width: 0 2px 2px 0;
+  right: 0.1em;
+  bottom: 0.1em;
+}
+
+.fullscreen-control.is-fullscreen .fullscreen-control-icon.fullscreen-control-bottom-right {
+  border-width: 2px 0 0 2px;
+}
+
+
 @media (max-width: 1280px) {
   .map-overlay-tagline {
     width: calc(75% - 60px);

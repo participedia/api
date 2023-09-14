@@ -84,7 +84,7 @@ const searchMap = {
     this.mapEl = document.querySelector(".js-map-inner");
 
     if (!this.mapEl) return;
-    
+
     this.headerEl = document.querySelector(".js-header");
     this.mapLegendEl = document.querySelector(".js-map-legend");
 
@@ -99,7 +99,8 @@ const searchMap = {
     this.initZoomControls();
     this.fetchMapResults();
     this.setMapHeight();
-    window.addEventListener('resize', () => {
+    this.initFullscreenControl();
+    window.addEventListener("resize", () => {
       this.setMapHeight();
     });
 
@@ -250,63 +251,63 @@ const searchMap = {
       this.cardEl = document.getElementById("js-map-article-card-template");
     }
 
-    let cardTemplate =  document.createElement("div");
+    let cardTemplate = document.createElement("div");
     cardTemplate.innerHTML = this.cardEl.innerHTML;
     cardTemplate = cardTemplate.querySelector("li").innerHTML;
-    
+
     const popOverContentEl = document.createElement("div");
-      // get card content from marker and set on content element
-      popOverContentEl.classList = "article-card";
-      popOverContentEl.innerHTML = cardTemplate;
+    // get card content from marker and set on content element
+    popOverContentEl.classList = "article-card";
+    popOverContentEl.innerHTML = cardTemplate;
 
-      // update type
-      const articleTypeEl = popOverContentEl.querySelector(
-        ".js-article-card-meta h5"
-      );
-      if (marker.featured) {
-        articleTypeEl.innerHTML = {
-          case: this.i18n["Featured_Case"],
-          method: this.i18n["Featured_Method"],
-        }[marker.type];
-      } else {
-        articleTypeEl.innerHTML = this.i18n[marker.type];
-      }
+    // update type
+    const articleTypeEl = popOverContentEl.querySelector(
+      ".js-article-card-meta h5"
+    );
+    if (marker.featured) {
+      articleTypeEl.innerHTML = {
+        case: this.i18n["Featured_Case"],
+        method: this.i18n["Featured_Method"],
+      }[marker.type];
+    } else {
+      articleTypeEl.innerHTML = this.i18n[marker.type];
+    }
 
-      // update image
-      const articleImageEl = popOverContentEl.querySelector(
-        ".js-article-card-img"
-      );
-      articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
+    // update image
+    const articleImageEl = popOverContentEl.querySelector(
+      ".js-article-card-img"
+    );
+    articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
 
-      // update title & truncate to 45 chars
-      const articleTitleEl = popOverContentEl.querySelector(
-        ".js-article-card-title"
-      );
-      if (marker.title.length < 50) {
-        articleTitleEl.innerText = marker.title;
-      } else {
-        articleTitleEl.innerText = marker.title.substring(0, 40) + "...";
-      }
+    // update title & truncate to 45 chars
+    const articleTitleEl = popOverContentEl.querySelector(
+      ".js-article-card-title"
+    );
+    if (marker.title.length < 50) {
+      articleTitleEl.innerText = marker.title;
+    } else {
+      articleTitleEl.innerText = marker.title.substring(0, 40) + "...";
+    }
 
-      // update submitted at
-      const articleSubmittedDate = popOverContentEl.querySelector(
-        ".js-article-date"
-      );
-      articleSubmittedDate.innerHTML = moment(marker.submittedDate).format(
-        "MMMM M, YYYY"
-      );
+    // update submitted at
+    const articleSubmittedDate = popOverContentEl.querySelector(
+      ".js-article-date"
+    );
+    articleSubmittedDate.innerHTML = moment(marker.submittedDate).format(
+      "MMMM M, YYYY"
+    );
 
-      // update links
-      const articleLinks = Array.prototype.slice.call(
-        popOverContentEl.querySelectorAll(".js-article-link")
-      );
-      articleLinks.forEach(el => {
-        el.setAttribute("href", `/${marker.type}/${marker.id}`);
-      });
-      return popOverContentEl;
+    // update links
+    const articleLinks = Array.prototype.slice.call(
+      popOverContentEl.querySelectorAll(".js-article-link")
+    );
+    articleLinks.forEach(el => {
+      el.setAttribute("href", `/${marker.type}/${marker.id}`);
+    });
+    return popOverContentEl;
   },
 
-  bindClickEventForMarker(markerEl, marker) {    
+  bindClickEventForMarker(markerEl, marker) {
     // on marker click, show article card in popover on map
     markerEl.addListener("click", event => {
       // if there is already a current pop over, remove it
@@ -338,6 +339,61 @@ const searchMap = {
       tracking.send("home.map", "marker_click", marker.id);
     });
   },
+
+  isFullscreen(element) {
+    return (
+      (document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement) == element
+    );
+  },
+
+  requestFullscreen(element) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.webkitRequestFullScreen) {
+      element.webkitRequestFullScreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.msRequestFullScreen) {
+      element.msRequestFullScreen();
+    }
+  },
+
+  exitFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  },
+
+  initFullscreenControl() {
+    const elementToSendFullscreen = this.map.getDiv().firstChild;
+    const fullscreenControl = document.querySelector(".js-fullscreen-control");
+
+    this.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenControl);
+    fullscreenControl.onclick = () => {
+      if (this.isFullscreen(elementToSendFullscreen)) {
+        this.exitFullscreen();
+      } else {
+        this.requestFullscreen(elementToSendFullscreen);
+      }
+    };
+
+    document.onwebkitfullscreenchange = document.onmsfullscreenchange = document.onmozfullscreenchange = document.onfullscreenchange = () => {
+      if (this.isFullscreen(elementToSendFullscreen)) {
+        fullscreenControl.classList.add("is-fullscreen");
+      } else {
+        fullscreenControl.classList.remove("is-fullscreen");
+      }
+    };
+  }
 };
 
 export default searchMap;
