@@ -1,4 +1,5 @@
 import map from "./map.js";
+import searchMap from "./search-map.js";
 import bannerNotice from "./banner-notice.js";
 import editSelect from "./edit-select.js";
 import blogPosts from "./blog-posts.js";
@@ -14,6 +15,7 @@ const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
 document.addEventListener("DOMContentLoaded", () => {
   map.init();
+  searchMap.init();
   editSelect.init();
   blogPosts.init(tracking);
   featuredEntriesCarousel.init();

@@ -6,14 +6,9 @@ import {
 import modal from "./modal.js";
 import tracking from "./utils/tracking.js";
 import csvGenerator from "./csv-generator.js";
-import map from "./map.js";
 
 const tabsWithCards = {
   init() {
-    document.addEventListener("DOMContentLoaded", () => {
-      map.init();
-    });
-
     this.tabInputEls = Array.prototype.slice.call(
       document.querySelectorAll(".js-tab-container input[name='tabs']")
     );
