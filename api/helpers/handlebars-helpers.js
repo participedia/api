@@ -1666,7 +1666,10 @@ module.exports = {
   },
 
   hideGridToggle(req) {
+    const tabParam = req.query && req.query.view;
     if (["/case", "/method", "/organization"].includes(req.baseUrl)) {
+      return false;
+    } else if (tabParam === "maps"){
       return false;
     }
     return true;
