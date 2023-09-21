@@ -1952,6 +1952,7 @@
   "guidelines_info_link": "For more information about this form, please review our %sguidelines%s.",
   "Results CSV": "Results CSV",
   "maps_button": "Maps View",
+  "entries_button": "Entries View",
   "new-entry-language-select-tooltip__text": "To ensure accurate translation, please enter text in %s%s%s, or change selected language here.",
   "Tell me more...": "Tell me more...",
   "Got it": "Got it",

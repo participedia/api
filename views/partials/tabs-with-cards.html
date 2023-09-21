@@ -10,6 +10,8 @@
 
     {{#if (includeMapsView req)}}
       {{> search-map-button }}
+    {{else}}
+      {{> search-entries-button }}
     {{/if}}
     {{#if (hideGridToggle req)}}
       <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
