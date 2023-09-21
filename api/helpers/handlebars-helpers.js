@@ -1238,6 +1238,14 @@ module.exports = {
     }
   },
 
+  isMapView(req, maps) {
+    if (req.query.view) {
+      return req.query.view === maps;
+    } else {
+      return false;
+    }
+  },
+
   // location helpers
   hasLocationData(article) {
     let hasLocationData = false;
