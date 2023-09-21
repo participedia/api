@@ -1654,7 +1654,7 @@ module.exports = {
   },
 
   isNotMapView(req, tabName) {
-    const tabParam = req.query && req.query.selectedCategory;
+    const tabParam = req.query && req.query.view;
     if (
       (tabName === "collections" || tabName === "method") &&
       tabParam === "maps"
