@@ -350,47 +350,40 @@ const searchMap = {
   },
 
   requestFullscreen(element) {
-    if (element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if (element.webkitRequestFullScreen) {
-      element.webkitRequestFullScreen();
-    } else if (element.mozRequestFullScreen) {
-      element.mozRequestFullScreen();
-    } else if (element.msRequestFullScreen) {
-      element.msRequestFullScreen();
-    }
+    var tabsButtonsContainer = document.querySelector('.tab-buttons-container');
+    var jsTabItems = document.querySelector('.js-tab-items');
+    var searchMapContainer = document.querySelector('.search-map-container');
+    var jsFullscreenControl = document.querySelector('.js-fullscreen-control');
+
+    tabsButtonsContainer.style.display = 'none';
+    jsTabItems.style.display = 'none';
+    searchMapContainer.classList.add("search-map-fullwidth");
+    jsFullscreenControl.classList.add("is-fullscreen");
   },
 
   exitFullscreen() {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    }
+    var tabsButtonsContainer = document.querySelector('.tab-buttons-container');
+    var jsTabItems = document.querySelector('.js-tab-items');
+    var searchMapContainer = document.querySelector('.search-map-container');
+    var jsFullscreenControl = document.querySelector('.js-fullscreen-control');
+
+    tabsButtonsContainer.style.display = 'flex';
+    jsTabItems.style.display = 'block';
+    searchMapContainer.classList.remove("search-map-fullwidth");
+    jsFullscreenControl.classList.remove("is-fullscreen");
   },
 
   initFullscreenControl() {
     const elementToSendFullscreen = this.map.getDiv().firstChild;
     const fullscreenControl = document.querySelector(".js-fullscreen-control");
+    const tabsButtonsContainer = document.querySelector('.tab-buttons-container');
 
     this.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenControl);
     fullscreenControl.onclick = () => {
-      if (this.isFullscreen(elementToSendFullscreen)) {
+      if (tabsButtonsContainer.style.display == 'none') {
         this.exitFullscreen();
       } else {
         this.requestFullscreen(elementToSendFullscreen);
-      }
-    };
-
-    document.onwebkitfullscreenchange = document.onmsfullscreenchange = document.onmozfullscreenchange = document.onfullscreenchange = () => {
-      if (this.isFullscreen(elementToSendFullscreen)) {
-        fullscreenControl.classList.add("is-fullscreen");
-      } else {
-        fullscreenControl.classList.remove("is-fullscreen");
       }
     };
   }

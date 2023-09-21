@@ -232,6 +232,15 @@
   border-width: 2px 0 0 2px;
 }
 
+.search-map-fullwidth {
+  min-width: 100vw;
+  min-height: calc(100vh - 60px);
+  height: calc(100vh - 60px) !important;
+  margin-left: -30px;
+  margin-top: -60px;
+  margin-bottom: -120px;
+}
+
 
 @media (max-width: 1280px) {
   .map-overlay-tagline {
