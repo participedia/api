@@ -115,11 +115,19 @@ const tabsWithCards = {
 
   navigateToTab(category) {
     const query = getValueForParam("query");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const view = urlParams.get('view');
+    
     let url = `${window.location.origin +
       window.location.pathname}?selectedCategory=${category}`;
 
     if (query) {
       url = `${url}&query=${query}`;
+    }
+
+    if (view === 'maps'){
+      url = url + '&view=maps';
     }
 
     window.location.href = url;
