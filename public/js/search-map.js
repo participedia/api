@@ -131,14 +131,9 @@ const searchMap = {
 
   fetchMapResults() {
     const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const selectedCategory = urlParams.get('selectedCategory');
 
-    let url = `/search?resultType=map&returns=json`;
-    if (selectedCategory && selectedCategory !== 'all'){
-      url = url + `&selectedCategory=` + selectedCategory;
-    }
-
+    let url = `/search` + queryString + `&resultType=map&returns=json`;
+ 
     const successCB = response => {
       const results = JSON.parse(response.response).results;
       this.cacheResults(response.responseURL, results);
