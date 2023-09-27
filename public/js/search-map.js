@@ -369,7 +369,14 @@ const searchMap = {
     var searchMapContainer = document.querySelector('.search-map-container');
     var jsFullscreenControl = document.querySelector('.js-fullscreen-control');
 
-    tabsButtonsContainer.style.display = 'flex';
+    var screenWidth = window.innerWidth;
+
+    if (screenWidth < 650){
+      tabsButtonsContainer.style.display = 'none';
+    }else{
+      tabsButtonsContainer.style.display = 'flex';
+    }
+  
     jsTabItems.style.display = 'block';
     searchMapContainer.classList.remove("search-map-fullwidth");
     jsFullscreenControl.classList.remove("is-fullscreen");
