@@ -371,6 +371,8 @@ const searchMap = {
 
     if (screenWidth < 1000){
       mainContent.style.marginTop = '85px';
+    } else {
+      mainContent.style.marginTop = '9px';
     }
 
     tabsButtonsContainer.style.display = 'none';
@@ -400,6 +402,8 @@ const searchMap = {
 
     if (screenWidth < 1000){
       mainContent.style.marginTop = '115px';
+    } else {
+      mainContent.style.marginTop = '60px';
     }
   
     jsTabItems.style.display = 'block';
@@ -413,13 +417,25 @@ const searchMap = {
     const tabsButtonsContainer = document.querySelector('.tab-buttons-container');
     var tabSelectContainer = document.querySelector('.tab-select-container');
 
+    var screenWidth = window.innerWidth;
+
     this.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenControl);
     fullscreenControl.onclick = () => {
-      if (tabsButtonsContainer.style.display == 'none' && tabSelectContainer.style.display == 'none') {
-        this.exitFullscreen();
+
+      if (screenWidth < 650){
+        if (tabSelectContainer.style.display == 'none') {
+          this.exitFullscreen();
+        } else {
+          this.requestFullscreen(elementToSendFullscreen);
+        }
       } else {
-        this.requestFullscreen(elementToSendFullscreen);
+        if (tabsButtonsContainer.style.display == 'none') {
+          this.exitFullscreen();
+        } else {
+          this.requestFullscreen(elementToSendFullscreen);
+        }
       }
+
     };
   }
 };

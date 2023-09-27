@@ -253,6 +253,9 @@
     font-size: 24px;
     line-height: 35px;
   }
+  .search-map-fullwidth {
+    margin-bottom: -175px;
+  }
 }
 
 @media (max-width: 500px) {
