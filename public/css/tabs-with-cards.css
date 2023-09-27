@@ -485,6 +485,7 @@ hr.solid {
   .no-result-container .tab-maps-button,
   .no-result-container .tab-buttons-button-filter {
     display: block;
+    padding: 8px 10px;
   }
 }
 

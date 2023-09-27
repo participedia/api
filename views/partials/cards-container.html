@@ -11,6 +11,11 @@
       <div class="tab-panel-header-content"> 
         {{> download-csv-button-mobile }}
         {{> search-filter-button }}
+        {{#if (includeMapsView req)}}
+          {{> search-map-button }}
+        {{else}}
+          {{> search-entries-button }}
+        {{/if}}
       </div>
       <div class="tab-panel-header-content">
         {{#if totalResults}}
