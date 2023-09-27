@@ -356,6 +356,22 @@ const searchMap = {
     var jsTabItems = document.querySelector('.js-tab-items');
     var searchMapContainer = document.querySelector('.search-map-container');
     var jsFullscreenControl = document.querySelector('.js-fullscreen-control');
+    var tabPanelHeader = document.querySelector('.tab-panel-header');
+    var tabSelectContainer = document.querySelector('.tab-select-container');
+    var mainContent = document.querySelector('.main-content');
+
+    var screenWidth = window.innerWidth;
+
+    if (screenWidth < 650){
+      tabPanelHeader.style.display = 'none';
+      tabSelectContainer.style.display = 'none';
+    }else{
+      
+    }
+
+    if (screenWidth < 1000){
+      mainContent.style.marginTop = '85px';
+    }
 
     tabsButtonsContainer.style.display = 'none';
     jsTabItems.style.display = 'none';
@@ -368,13 +384,22 @@ const searchMap = {
     var jsTabItems = document.querySelector('.js-tab-items');
     var searchMapContainer = document.querySelector('.search-map-container');
     var jsFullscreenControl = document.querySelector('.js-fullscreen-control');
+    var tabPanelHeader = document.querySelector('.tab-panel-header');
+    var tabSelectContainer = document.querySelector('.tab-select-container');
+    var mainContent = document.querySelector('.main-content');
 
     var screenWidth = window.innerWidth;
 
     if (screenWidth < 650){
       tabsButtonsContainer.style.display = 'none';
+      tabPanelHeader.style.display = 'block';
+      tabSelectContainer.style.display = 'block';
     }else{
       tabsButtonsContainer.style.display = 'flex';
+    }
+
+    if (screenWidth < 1000){
+      mainContent.style.marginTop = '115px';
     }
   
     jsTabItems.style.display = 'block';
