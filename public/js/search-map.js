@@ -411,10 +411,11 @@ const searchMap = {
     const elementToSendFullscreen = this.map.getDiv().firstChild;
     const fullscreenControl = document.querySelector(".js-fullscreen-control");
     const tabsButtonsContainer = document.querySelector('.tab-buttons-container');
+    var tabSelectContainer = document.querySelector('.tab-select-container');
 
     this.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenControl);
     fullscreenControl.onclick = () => {
-      if (tabsButtonsContainer.style.display == 'none') {
+      if (tabsButtonsContainer.style.display == 'none' && tabSelectContainer.style.display == 'none') {
         this.exitFullscreen();
       } else {
         this.requestFullscreen(elementToSendFullscreen);
