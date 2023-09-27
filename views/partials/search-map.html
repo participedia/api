@@ -1,3 +1,20 @@
+<div class="tab-panel-header">
+  <div class="tab-panel-header-content"> 
+    {{> download-csv-button-mobile }}
+    {{> search-filter-button }}
+    {{#if (includeMapsView req)}}
+      {{> search-map-button }}
+    {{else}}
+      {{> search-entries-button }}
+    {{/if}}
+  </div>
+  <div class="tab-panel-header-content">
+    {{#if totalResults}}
+        {{> pagination-string }}
+      {{/if}}
+  </div>
+</div>
+
 <div class="search-map-container">
   <div
     class="search-map-inner js-map-inner"
