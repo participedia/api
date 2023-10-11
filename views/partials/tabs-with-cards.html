@@ -8,21 +8,22 @@
       {{> download-csv-button }}
     {{/if}}
 
-    {{#if (includeMapsView req)}}
-      {{> search-map-button }}
-    {{else}}
-      {{> search-entries-button }}
-    {{/if}}
-    {{#if (hideGridToggle req)}}
-      <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
-        <span class="sr-only">{{t "list view"}}</span>
-        {{> icon-list}}
+    {{> search-entries-button }}
+    
+    <a href="/search?selectedCategory=all&view=maps" class="js-stats-link" data-stats-tracking-name="maps">
+      <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="maps">
+        <span class="sr-only">{{t "maps_button"}}</span>
+        {{> icon-map-marker}}
       </button>
-      <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="grid">
-        <span class="sr-only">{{t "grid view"}}</span>
-        {{> icon-grid}}
-      </button>
-    {{/if}}
+    </a>
+    <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
+      <span class="sr-only">{{t "list view"}}</span>
+      {{> icon-list}}
+    </button>
+    <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="grid">
+      <span class="sr-only">{{t "grid view"}}</span>
+      {{> icon-grid}}
+    </button>
     
   </div>
 
