@@ -1239,8 +1239,8 @@ module.exports = {
   },
 
   isMapView(req, maps) {
-    if (req.query.view) {
-      return req.query.view === maps;
+    if (req.query.layout) {
+      return req.query.layout === maps;
     } else {
       return false;
     }
@@ -1682,14 +1682,6 @@ module.exports = {
       ["/case", "/method", "/organization"].includes(req.baseUrl)
       ? false
       : true;
-  },
-
-  includeMapsView(req) {
-    const tabParam = req.query && req.query.view;
-    if (tabParam === "maps"){
-      return false;
-    }
-    return true;
   },
 
   withItem(object, options) {
