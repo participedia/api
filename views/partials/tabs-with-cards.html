@@ -8,12 +8,10 @@
       {{> download-csv-button }}
     {{/if}}
     
-    <a href="/search?selectedCategory=all&layout=maps" class="js-stats-link" data-stats-tracking-name="maps">
-      <button class="icon-only js-card-layout-btn" data-type="maps">
-        <span class="sr-only">{{t "maps_button"}}</span>
-        {{> icon-map-marker}}
-      </button>
-    </a>
+    <button class="icon-only toggle-maps-layout-btn js-card-layout-btn" data-type="maps">
+      <span class="sr-only">{{t "maps_button"}}</span>
+      {{> icon-map-marker}}
+    </button>
     <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
       <span class="sr-only">{{t "list view"}}</span>
       {{> icon-list}}

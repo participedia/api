@@ -280,6 +280,26 @@ hr.solid {
   margin-right: 30px;
 }
 
+[data-card-layout="maps"] .cards-container {
+  display: none;
+}
+
+[data-card-layout="list"] .search-map-block {
+  display: none;
+}
+
+[data-card-layout="list"] .search-map-container-block {
+  display: none;
+}
+
+[data-card-layout="grid"] .search-map-block {
+  display: none;
+}
+
+[data-card-layout="grid"] .search-map-container-block {
+  display: none;
+}
+
 /* PopOver on map */
 .pop-over .article-card {
   background-color: #fff;
@@ -319,10 +339,25 @@ hr.solid {
 [data-card-layout="grid"] .toggle-list-layout-btn .icon-fill {
   fill: #B3B3B3;
 }
+[data-card-layout="grid"] .toggle-maps-layout-btn .icon-fill {
+  fill: #B3B3B3;
+}
 [data-card-layout="list"] .toggle-grid-layout-btn .icon-fill {
   fill: #B3B3B3;
 }
+[data-card-layout="list"] .toggle-maps-layout-btn .icon-fill {
+  fill: #B3B3B3;
+}
 [data-card-layout="list"] .toggle-list-layout-btn .icon-fill {
+  fill: #EC2024;
+}
+[data-card-layout="maps"] .toggle-grid-layout-btn .icon-fill {
+  fill: #B3B3B3;
+}
+[data-card-layout="maps"] .toggle-list-layout-btn .icon-fill {
+  fill: #B3B3B3;
+}
+[data-card-layout="maps"] .toggle-maps-layout-btn .icon-fill {
   fill: #EC2024;
 }
 
