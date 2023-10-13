@@ -1654,10 +1654,21 @@ module.exports = {
   },
 
   isNotMapView(req, tabName) {
-    const tabParam = req.query && req.query.view;
+    const tabParam = req.query && req.query.layout;
     if (
       (tabName === "collections" || tabName === "method") &&
       tabParam === "maps"
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+
+  checkMapsAvail(req) {
+    const tabParam = req.query && req.query.selectedCategory;
+    if (
+      tabParam === "collections" || tabParam === "method"
     ) {
       return false;
     } else {

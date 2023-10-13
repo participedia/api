@@ -8,10 +8,12 @@
       {{> download-csv-button }}
     {{/if}}
     
-    <button class="icon-only toggle-maps-layout-btn js-card-layout-btn" data-type="maps">
-      <span class="sr-only">{{t "maps_button"}}</span>
-      {{> icon-map-marker}}
-    </button>
+    {{#if (checkMapsAvail req)}}
+      <button class="icon-only toggle-maps-layout-btn js-card-layout-btn" data-type="maps">
+        <span class="sr-only">{{t "maps_button"}}</span>
+        {{> icon-map-marker}}
+      </button>
+    {{/if}}
     <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
       <span class="sr-only">{{t "list view"}}</span>
       {{> icon-list}}
@@ -28,7 +30,7 @@
     <select>
       {{#each getTabs}}
         {{#if (isNotMapView ../req key)}}
-          <option value="{{key}}">{{title}}</option>
+          <option value="{{key}}">{{title}} a</option>
         {{/if}} 
       {{/each}}
     </select>
@@ -37,8 +39,8 @@
     <div class="js-tab-items">
       {{#each getTabs}}
         {{#if (isNotMapView ../req key)}}
-          <input id="{{key}}" type="radio" name="tabs" data-local={{isLocalNav key}} {{isTabActive ../req key}} class="tab-container-input">
-          <label for="{{key}}" class="tab-container-label">{{title}}</label>
+          <input id="{{key}}" type="radio" name="tabs" data-local={{isLocalNav key}} {{isTabActive ../req key}} class="tab-container-input tab-{{key}}">
+          <label for="{{key}}" class="tab-container-label">{{title}} b</label>
         {{/if}} 
       {{/each}}
     </div>
