@@ -30,7 +30,7 @@
     <select>
       {{#each getTabs}}
         {{#if (isNotMapView ../req key)}}
-          <option value="{{key}}">{{title}} a</option>
+          <option value="{{key}}">{{title}}</option>
         {{/if}} 
       {{/each}}
     </select>
@@ -39,8 +39,8 @@
     <div class="js-tab-items">
       {{#each getTabs}}
         {{#if (isNotMapView ../req key)}}
-          <input id="{{key}}" type="radio" name="tabs" data-local={{isLocalNav key}} {{isTabActive ../req key}} class="tab-container-input tab-{{key}}">
-          <label for="{{key}}" class="tab-container-label">{{title}} b</label>
+          <input id="{{key}}" type="radio" name="tabs" data-local={{isLocalNav key}} {{isTabActive ../req key}} class="tab-container-input">
+          <label for="{{key}}" class="tab-container-label tab-{{key}}">{{title}}</label>
         {{/if}} 
       {{/each}}
     </div>

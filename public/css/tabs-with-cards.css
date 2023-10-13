@@ -361,6 +361,26 @@ hr.solid {
   fill: #EC2024;
 }
 
+[data-card-layout="maps"] .tab-container .js-tab-items .tab-collections {
+  display: none;
+}
+[data-card-layout="maps"] .tab-container .js-tab-items .tab-method {
+  display: none;
+}
+[data-card-layout="grid"] .tab-container .js-tab-items .tab-collections {
+  display: inline block;
+}
+[data-card-layout="grid"] .tab-container .js-tab-items .tab-method {
+  display: inline block;
+}
+[data-card-layout="list"] .tab-container .js-tab-items .tab-collections {
+  display: inline block;
+}
+[data-card-layout="list"] .tab-container .js-tab-items .tab-method {
+  display: inline block;
+}
+
+
 .download-csv-btn {
   margin-right: 15px;
 }
