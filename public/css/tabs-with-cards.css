@@ -293,7 +293,7 @@ hr.solid {
 }
 
 [data-card-layout="grid"] .search-map-block {
-  display: none;
+  display: none !important;
 }
 
 [data-card-layout="grid"] .search-map-container-block {
