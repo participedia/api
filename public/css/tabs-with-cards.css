@@ -521,6 +521,19 @@ hr.solid {
     display: none;
   }
 
+  .toggle-grid-layout-btn, .toggle-grid-layout-btn {
+    padding: 8px;
+  }
+
+  .tab-buttons-button-filter {
+    right: -60px;
+  }
+
+  .toggle-grid-layout-btn .icon-fill,
+  .toggle-maps-layout-btn .icon-fill {
+    fill: #EC2024 !important;
+  }
+
   /* change tabs to select dropdown */
   .tab-select-container {
     display: block;

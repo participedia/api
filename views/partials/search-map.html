@@ -2,6 +2,10 @@
   <div class="tab-panel-header-content"> 
     {{> download-csv-button-mobile }}
     {{> search-filter-button }}
+    <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="grid">
+      <span class="sr-only">{{t "grid view"}}</span>
+      {{> icon-grid}}
+    </button>
   </div>
   <div class="tab-panel-header-content">
     {{#if totalResults}}
