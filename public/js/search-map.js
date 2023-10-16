@@ -351,6 +351,30 @@ const searchMap = {
     );
   },
 
+  openAllFullscreen(element) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.webkitRequestFullScreen) {
+      element.webkitRequestFullScreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.msRequestFullScreen) {
+      element.msRequestFullScreen();
+    }
+  },
+
+  closeAllFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  },
+
   requestFullscreen(element) {
     var tabsButtonsContainer = document.querySelector('.tab-buttons-container');
     var jsTabItems = document.querySelector('.js-tab-items');
@@ -423,10 +447,10 @@ const searchMap = {
     fullscreenControl.onclick = () => {
 
       if (screenWidth < 650){
-        if (tabSelectContainer.style.display == 'none') {
-          this.exitFullscreen();
+        if (this.isFullscreen(elementToSendFullscreen)) {
+          this.closeAllFullscreen();
         } else {
-          this.requestFullscreen(elementToSendFullscreen);
+          this.openAllFullscreen(elementToSendFullscreen);
         }
       } else {
         if (tabsButtonsContainer.style.display == 'none') {
