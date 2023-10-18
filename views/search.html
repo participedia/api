@@ -12,8 +12,6 @@
     </div>
     <div role="tabpanel" class="tab-cases">
       {{#if (isSelectedHomeTab req "case")}}
-          <div>Total {{total}}</div>
-          <div>pages {{pages}}</div>
           {{> search-map }}
           {{> cards-container
             totalResults=total
