@@ -1,4 +1,7 @@
 import tracking from "./utils/tracking.js";
+import {
+  getValueForParam,
+} from "./utils/utils.js";
 
 const header = {
   init() {
@@ -50,12 +53,15 @@ const header = {
   initClearSearchInput() {
     const searchInputEl = document.querySelector(".js-query-search-input");
     const clearSearchButtonEl = document.querySelector(".js-search-query-clear-button");
-    const searchFormEl = document.querySelector(".js-query-search-form");
+    const searchFormEl = document.querySelector(".js-query-search-form"); 
     this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const layout = urlParams.get('layout');
 
     searchFormEl.addEventListener("submit", e => {
       tracking.sendWithCallback("header", "search_submit", searchInputEl.value, () => {
-        location.href = `/search?query=${searchInputEl.value}`;
+        location.href = `/search?query=${searchInputEl.value}&layout=${layout}`;
       });
       e.preventDefault();
     });
