@@ -55,12 +55,12 @@ const header = {
     const clearSearchButtonEl = document.querySelector(".js-search-query-clear-button");
     const searchFormEl = document.querySelector(".js-query-search-form"); 
     this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const layout = urlParams.get('layout');
+    this.viewEl = document.querySelector("[data-card-layout]");
+    let layout = this.viewEl.getAttribute("data-card-layout");
 
     searchFormEl.addEventListener("submit", e => {
       tracking.sendWithCallback("header", "search_submit", searchInputEl.value, () => {
+        layout = this.viewEl.getAttribute("data-card-layout");
         location.href = `/search?query=${searchInputEl.value}&layout=${layout}`;
       });
       e.preventDefault();
