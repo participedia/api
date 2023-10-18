@@ -21,7 +21,11 @@
 .tab-panel-header .download-csv-btn,
 .no-result-container .download-csv-btn,
 .tab-panel-header .tab-maps-button,
+.tab-panel-header .toggle-grid-layout-btn,
+.tab-panel-header .toggle-maps-layout-btn,
 .no-result-container .tab-maps-button,
+.no-result-container .toggle-grid-layout-btn,
+.no-result-container .toggle-maps-layout-btn,
 .no-result-container .tab-buttons-button-filter {
   margin-right: 0;
   display: none;
@@ -545,9 +549,13 @@ hr.solid {
 
   .tab-panel-header .tab-buttons-button-filter,
   .tab-panel-header .download-csv-btn,
+  .tab-panel-header .toggle-maps-layout-btn,
+  .tab-panel-header .toggle-grid-layout-btn,
   .no-result-container .download-csv-btn,
   .tab-panel-header .tab-maps-button,
   .no-result-container .tab-maps-button,
+  .no-result-container .toggle-maps-layout-btn,
+  .no-result-container .toggle-grid-layout-btn,
   .no-result-container .tab-buttons-button-filter {
     display: block;
     padding: 8px 10px;
