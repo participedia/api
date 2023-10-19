@@ -44,6 +44,7 @@ const tabsWithCards = {
     moreFilterBtnEls.forEach(moreFilterBtnEl => {
       if (moreFilterBtnEl) {
         moreFilterBtnEl.addEventListener("click", event => {
+
           const category = getValueForParam("selectedCategory");
           if (["case", "organizations", "method"].indexOf(category) >= 0) {
             this.openSearchFilterModal();
@@ -75,22 +76,24 @@ const tabsWithCards = {
       });
     }
 
-    const downloadCsvBtnElMobile = document.querySelector(".js-download-csv-btn-mobile");
-    if (downloadCsvBtnElMobile) {
-      downloadCsvBtnElMobile.addEventListener("click", e => {
+    const downloadCsvBtnElMobiles = document.querySelectorAll(".js-download-csv-btn-mobile");
+
+    downloadCsvBtnElMobiles.forEach(downloadCsvBtnElMobile => {
+      if (downloadCsvBtnElMobile) {
+        downloadCsvBtnElMobile.addEventListener("click", event => {
         // Custom logic for CSV download button if category is all.
-        if (!this.isCsvGenerator()) {
+        if (this.isCsvGenerator()) {
           // Update selectedCategory to case and reload the page.
           updateUrlParams("selectedCategory", "case");
-          window.location.href = window.location.href;
-
+          let currentUrl= window.location.href;
           // Download CSV cases
-          let url = `${window.location.href}&returns=csv`;
-      	  window.open(url, '_blank');
+          let url = `${currentUrl}&returns=csv`;
+      	  window.open(url, '_blank'); 
         }
         tracking.send("search", "results_csv_button_click");
-      });
-    }
+        });
+      }
+    });
 
     const openFilter = getValueForParam("openFilters");
     if (openFilter == "1") {
