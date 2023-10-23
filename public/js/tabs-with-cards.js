@@ -120,7 +120,7 @@ const tabsWithCards = {
     const query = getValueForParam("query");
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const view = urlParams.get('view');
+    const layout = urlParams.get('layout');
     
     let url = `${window.location.origin +
       window.location.pathname}?selectedCategory=${category}`;
@@ -129,8 +129,8 @@ const tabsWithCards = {
       url = `${url}&query=${query}`;
     }
 
-    if (view === 'maps'){
-      url = url + '&view=maps';
+    if (layout != ''){
+      url = url + `&layout=${layout}`;
     }
 
     window.location.href = url;
