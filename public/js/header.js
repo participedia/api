@@ -57,11 +57,12 @@ const header = {
     this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
     this.viewEl = document.querySelector("[data-card-layout]");
     let layout = this.viewEl.getAttribute("data-card-layout");
+    let currentUrl= window.location.href;
 
     searchFormEl.addEventListener("submit", e => {
       tracking.sendWithCallback("header", "search_submit", searchInputEl.value, () => {
         layout = this.viewEl.getAttribute("data-card-layout");
-        location.href = `/search?query=${searchInputEl.value}&layout=${layout}`;
+        location.href = currentUrl + `&query=${searchInputEl.value}`;
       });
       e.preventDefault();
     });
@@ -73,8 +74,11 @@ const header = {
     clearSearchButtonEl.addEventListener("click", e => {
       searchInputEl.value = "";
       this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
-      history.pushState({}, "", `/search?layout=${layout}`);
-      location.href = `/search?layout=${layout}`;
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      urlParams.delete('query');
+      history.pushState({}, "", `/search?${urlParams}`);
+      location.href = `/search?${urlParams}`;
     });
   },
 
