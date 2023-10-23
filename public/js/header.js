@@ -73,8 +73,8 @@ const header = {
     clearSearchButtonEl.addEventListener("click", e => {
       searchInputEl.value = "";
       this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
-      history.pushState({}, "", '/search');
-      location.href = '/search';
+      history.pushState({}, "", `/search?layout=${layout}`);
+      location.href = `/search?layout=${layout}`;
     });
   },
 
