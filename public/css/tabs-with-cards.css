@@ -384,6 +384,25 @@ hr.solid {
   display: inline block;
 }
 
+[data-card-layout="maps"] .tab-select-container .select-collections {
+  display: none;
+}
+[data-card-layout="maps"] .tab-select-container .select-method {
+  display: none;
+}
+[data-card-layout="grid"] .tab-select-container .select-collections {
+  display: inline block;
+}
+[data-card-layout="grid"] .tab-select-container .select-method {
+  display: inline block;
+}
+[data-card-layout="list"] .tab-select-container .select-collections {
+  display: inline block;
+}
+[data-card-layout="list"] .tab-select-container .select-method {
+  display: inline block;
+}
+
 [data-card-layout="maps"] .tab-container .tab-panels div .pagination {
   display: none;
 }
@@ -532,7 +551,7 @@ hr.solid {
     display: none;
   }
 
-  .toggle-grid-layout-btn, .toggle-grid-layout-btn {
+  .toggle-maps-layout-btn {
     padding: 8px;
     position: relative;
     right: -40px;

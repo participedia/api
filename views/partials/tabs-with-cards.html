@@ -29,9 +29,7 @@
   <div class="tab-select-container js-tab-select-container">
     <select>
       {{#each getTabs}}
-        {{#if (isNotMapView ../req key)}}
-          <option value="{{key}}">{{title}}</option>
-        {{/if}} 
+          <option value="{{key}}" class="select-{{key}}">{{title}}</option>
       {{/each}}
     </select>
   </div>
