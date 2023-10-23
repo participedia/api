@@ -56,12 +56,10 @@ const header = {
     const searchFormEl = document.querySelector(".js-query-search-form"); 
     this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
     this.viewEl = document.querySelector("[data-card-layout]");
-    let layout = this.viewEl.getAttribute("data-card-layout");
-    let currentUrl= window.location.href;
 
     searchFormEl.addEventListener("submit", e => {
       tracking.sendWithCallback("header", "search_submit", searchInputEl.value, () => {
-        layout = this.viewEl.getAttribute("data-card-layout");
+        let currentUrl= window.location.href;
         location.href = currentUrl + `&query=${searchInputEl.value}`;
       });
       e.preventDefault();
