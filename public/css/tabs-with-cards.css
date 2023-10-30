@@ -403,11 +403,26 @@ hr.solid {
   display: inline block;
 }
 
-[data-card-layout="maps"] .tab-container .tab-panels div .pagination {
+[data-card-layout="maps"] .tab-container .tab-panels div .pagination .pagination-nav {
   display: none;
 }
+[data-card-layout="maps"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-string {
+  display: none;
+}
+[data-card-layout="grid"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-string {
+  display: block;
+}
+[data-card-layout="list"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-string {
+  display: block;
+}
 
-[data-card-layout="maps"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination {
+[data-card-layout="maps"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-maps {
+  display: block;
+}
+[data-card-layout="grid"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-maps {
+  display: none;
+}
+[data-card-layout="list"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-maps {
   display: none;
 }
 

@@ -1629,6 +1629,15 @@ module.exports = {
     return req.query.selectedCategory || null;
   },
 
+  getSelectedCategoryLabel(req, total) {
+    if (total <= 1){
+      return req.query.selectedCategory || null;
+    } else {
+      return req.query.selectedCategory + 's' || null;
+    }
+  },
+
+
   // Helper to identify if filter key will display as checkbox;
   isSearchFilterCheckboxSelection(key) {
     const excludedFilterKeys = ["country", "verified"];

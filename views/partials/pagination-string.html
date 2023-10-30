@@ -3,4 +3,8 @@
 	  {{paginationNumResults cards totalResults req}} {{getPaginationCategoryLabel req}} {{totalResults}}
 	  {{#if req.query.query}} {{t "for"}} "{{req.query.query}}" {{/if}}
   </div>
+	<div class="pagination-maps">
+	{{totalResults}} {{getSelectedCategoryLabel req totalResults}}
+	  {{#if req.query.query}} {{t "for"}} "{{req.query.query}}" {{/if}}
+  </div>
 </div>
