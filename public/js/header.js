@@ -59,8 +59,16 @@ const header = {
 
     searchFormEl.addEventListener("submit", e => {
       tracking.sendWithCallback("header", "search_submit", searchInputEl.value, () => {
-        let currentUrl= window.location.href;
-        location.href = currentUrl + `&query=${searchInputEl.value}`;
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('query')) {
+          urlParams.delete('query');
+        }
+        let urlTarget = `/search?${urlParams}` + `&query=${searchInputEl.value}`;
+        console.log(urlTarget);
+        // let currentUrl= window.location.href;
+        location.href = urlTarget;
       });
       e.preventDefault();
     });
