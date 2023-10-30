@@ -408,7 +408,7 @@ hr.solid {
 }
 
 [data-card-layout="maps"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination {
-  display: block;
+  display: none;
 }
 
 .download-csv-btn {
