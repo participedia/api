@@ -90,6 +90,7 @@ const map = {
 
     this.map = new google.maps.Map(this.mapEl, {
       center: { lat: 6.1259722, lng: 20.9404108 },
+      mapId: "11044b0cfd0d2e66",
       zoom: 2.5,
       disableDefaultUI: true,
       zoomControl: false,
