@@ -1630,10 +1630,58 @@ module.exports = {
   },
 
   getSelectedCategoryLabel(req, total) {
+    let text;
     if (total <= 1){
-      return req.query.selectedCategory || null;
+      // return req.query.selectedCategory || null;
+      switch (req.query.selectedCategory) {
+        case "case": {
+          text = "case";
+          break;
+        }
+        case "organizations": {
+          text = "organization";
+          break;
+        }
+        case "method": {
+          text = "method";
+          break;
+        }
+        case "collections": {
+          text = "collection";
+          break;
+        }
+        default: {
+          text = "entry";
+          break;
+        }
+      }
+
+      return text; 
     } else {
-      return req.query.selectedCategory + 's' || null;
+      switch (req.query.selectedCategory) {
+        case "case": {
+          text = "cases";
+          break;
+        }
+        case "organizations": {
+          text = "organizations";
+          break;
+        }
+        case "method": {
+          text = "methods";
+          break;
+        }
+        case "collections": {
+          text = "collections";
+          break;
+        }
+        default: {
+          text = "entries";
+          break;
+        }
+      }
+
+      return text;
     }
   },
 
