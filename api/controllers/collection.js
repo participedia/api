@@ -50,6 +50,11 @@ const COLLECTION_STRUCTURE = JSON.parse(
 );
 const { SUPPORTED_LANGUAGES } = require("../../constants");
 
+const {
+  createCSVEntry,
+  uploadCSVFile
+} = require("../helpers/export-helpers");
+
 var thingCollectionid = null;
 
 // strip off final character (assumed to be "s")
@@ -484,60 +489,73 @@ async function getCollectionHttp(req, res) {
   const articleid = params.articleid;
   const facets = `AND collections @> ARRAY[${articleid}]`;
 
-  // always fetch all article types so we can calculate totals for a collection
-  let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
-    query: null,
-    limit: limit ? limit : null, // null is no limit in SQL
-    offset: offset,
-    language: as.value(req.cookies.locale || "en"),
-    sortby: "updated_date",
-    userId: req.user ? req.user.id : null,
-    types: types,
-    facets: facets
-  });
-  
-  // get summary of article types for the collection
-  const summaryRow = await db.one(ENTRIES_SUMMARY_BY_COLLECTION_ID, {articleid, facets});
-  const summary = summaryRow.results;
-  let numArticlesByType = {
-    case: summary.total_cases,
-    method: summary.total_methods,
-    organization: summary.total_organizations,
-  };
+  if(req.query.returns == "csv"){
+    if (!req.user){
+      req.session.returnTo = req.originalUrl;
+      res.redirect("/login");
+    } else {
+      let csv_export_id = await createCSVEntry(req.user.id, type);
+      let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
+      return res.status(200).redirect("/exports/csv");
+    }
+  } else {
 
-  // const limit = 20; // number of entries displayed on one page
-  let total, pages;
-
-  // calculate pages and totals and add random texture url if no images are present
-  if (results) {
-    total = Number(results.length ? results[0].total || results.length : 0);
-    pages = total ? Math.max(Math.ceil(total / RESPONSE_LIMIT)) : null;
-
-    // for each entry, use a random texture image if there are no images uploaded
-    results = results.map(obj => {
-      if (obj.photos.length === 0) {
-        obj.photos = [{ url: randomTexture() }];
-      }
-      return obj;
+    // always fetch all article types so we can calculate totals for a collection
+    let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
+      query: null,
+      limit: limit ? limit : null, // null is no limit in SQL
+      offset: offset,
+      language: as.value(req.cookies.locale || "en"),
+      sortby: "updated_date",
+      userId: req.user ? req.user.id : null,
+      types: types,
+      facets: facets
     });
-  }
+    
+    // get summary of article types for the collection
+    const summaryRow = await db.one(ENTRIES_SUMMARY_BY_COLLECTION_ID, {articleid, facets});
+    const summary = summaryRow.results;
+    let numArticlesByType = {
+      case: summary.total_cases,
+      method: summary.total_methods,
+      organization: summary.total_organizations,
+    };
 
-  if (!articles) {
-    res.status(404).render("404");
-    return null;
+    // const limit = 20; // number of entries displayed on one page
+    let total, pages;
+
+    // calculate pages and totals and add random texture url if no images are present
+    if (results) {
+      total = Number(results.length ? results[0].total || results.length : 0);
+      pages = total ? Math.max(Math.ceil(total / RESPONSE_LIMIT)) : null;
+
+      // for each entry, use a random texture image if there are no images uploaded
+      results = results.map(obj => {
+        if (obj.photos.length === 0) {
+          obj.photos = [{ url: randomTexture() }];
+        }
+        return obj;
+      });
+    }
+
+    if (!articles) {
+      res.status(404).render("404");
+      return null;
+    }
+    const staticText = await getEditStaticText(params);
+    returnByType(
+      res,
+      params,
+      articles,
+      staticText,
+      req.user,
+      results,
+      total,
+      pages,
+      numArticlesByType
+    );
+
   }
-  const staticText = await getEditStaticText(params);
-  returnByType(
-    res,
-    params,
-    articles,
-    staticText,
-    req.user,
-    results,
-    total,
-    pages,
-    numArticlesByType
-  );
 }
 
 async function getEditStaticText(params) {
