@@ -25,7 +25,7 @@ const equals = require("deep-equal");
 const moment = require("moment");
 const { SUPPORTED_LANGUAGES, RESPONSE_LIMIT } = require("./../../constants.js");
 const logError = require("./log-error.js");
-const createCSVDataDump = require("./create-csv-data-dump.js");
+const {createCSVDataDump} = require("./create-csv-data-dump.js");
 const { getOriginalLanguageEntry } = require("../controllers/api/api-helpers");
 
 const {
