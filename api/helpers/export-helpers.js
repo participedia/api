@@ -25,13 +25,15 @@ const generateCsvExportId = (userId) => {
   return csvExportId;
 }
 
-const createCSVEntry = async (userId, type) => {
+const createCSVEntry = async (params) => {
   let csvExportId = generateCsvExportId(userId);
+  let type = params.type;
+  if (params.page == 'collection') { type = type + ' [Collection]'; };
     try {
       let results = await db.one(CREATE_CSV_EXPORT, {
         csvExportId: csvExportId,
-        type: type,
-        userId: userId,
+        type: params.type,
+        userId: params.userId,
       });
       return results;
     } catch (err) {

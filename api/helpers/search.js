@@ -136,10 +136,42 @@ const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed
   }
 }
 
+const getCollectionResults = async (user_query, limit, langQuery, lang, type, parsed_query, req) => {
+  try {
+    let results = null;
+    
+    if (lang === "zh" && user_query) {
+      results = await db.any(SEARCH_CHINESE, {
+        query: user_query,
+        limit: limit ? limit : null,
+        langQuery: langQuery,
+        language: lang,
+        type: type + "s",
+      });
+    } else {
+      results = await db.any(queryFileFromReq(req), {
+        query: parsed_query,
+        limit: limit ? limit : null, // null is no limit in SQL
+        offset: offsetFromReq(req),
+        language: lang,
+        langQuery: langQuery,
+        userId: req.user ? req.user.id : null,
+        sortby: sortbyFromReq(req),
+        type: type + "s",
+        facets: searchFiltersFromReq(req),
+      });
+    }
+    return results;
+  } catch (err) {
+    console.log("getSearchResults error - ", err);
+  }
+}
+
 
 module.exports = {
   preparse_query,
   tokenize,
   queryFileFromReq,
   getSearchResults,
+  getCollectionResults
 };
