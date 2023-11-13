@@ -16,6 +16,8 @@ const {
   parseGetParams,
   typeFromReq,
   limitFromReq,
+  offsetFromReq,
+  searchFiltersFromReq
 } = require("../helpers/things");
 const {
   createCSVEntry,
@@ -40,6 +42,13 @@ const redirectToSearchPageIfHasCollectionsQueryParameter = (req, res, next) => {
   }
 
   return next();
+};
+
+const sortbyFromReq = req => {
+  if (req.query.sortby === "post_date") {
+    return "post_date";
+  }
+  return "updated_date";
 };
 
 /**
@@ -82,14 +91,15 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async (req, 
   const params = parseGetParams(req, type);
   const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === lang).name.toLowerCase();
   let paramsForQuery = {
-    user_query: user_query,
+    query: parsed_query,
     limit: limit ? limit : null, // null is no limit in SQL
+    offset: offsetFromReq(req),
+    language: lang,
     langQuery: langQuery,
-    lang: lang,
-    type: type,
-    parsed_query: parsed_query,
-    req: req,
-    page: 'collection'
+    userId: req.user ? req.user.id : null,
+    sortby: sortbyFromReq(req),
+    type: type + "s",
+    facets: searchFiltersFromReq(req),
   }
 
   if(req.query.returns == "csv"){
@@ -103,7 +113,7 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async (req, 
         page: 'search'
       }
       let csv_export_id = await createCSVEntry(paramsForCSV);
-      let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
+      let uploadCSVFiles = uploadCSVFile(paramsForQuery, csv_export_id);
       return res.status(200).redirect("/exports/csv");
     }
   } else {

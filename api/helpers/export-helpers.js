@@ -12,6 +12,8 @@ const {createCSVDataDump} = require("./create-csv-data-dump.js");
 const {uploadCSVToAWS} = require("./upload-to-aws");
 let {
   getSearchResults,
+  getCollectionResults,
+  getSearchDownloadResults
 } = require("./search");
 
 const unixTimestampGeneration = () => {
@@ -26,7 +28,7 @@ const generateCsvExportId = (userId) => {
 }
 
 const createCSVEntry = async (params) => {
-  let csvExportId = generateCsvExportId(userId);
+  let csvExportId = generateCsvExportId(params.userId);
   let type = params.type;
   if (params.page == 'collection') { type = type + ' [Collection]'; };
     try {
@@ -78,8 +80,14 @@ const removeCSVEntry = async (csvExportId, userId) => {
   }
 };
 
-const uploadCSVFile = async (user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id) => {
-  let queryResults = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
+const uploadCSVFile = async (params, csv_export_id) => {
+  let queryResults
+  if (params.page == 'search') {
+    queryResults = await getSearchDownloadResults(params);
+  } else {
+    queryResults = await getCollectionResults(params);
+  }
+
   const fileUpload = await createCSVDataDump(type, queryResults);
   let filename = csv_export_id.csv_export_id + ".csv";
   let uploadData = await uploadCSVToAWS(fileUpload, filename);

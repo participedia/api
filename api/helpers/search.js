@@ -36,6 +36,13 @@ const pre_word_connector = (last_token, inside_quotes) => {
   }
 };
 
+const sortbyFromReq = req => {
+  if (req.query.sortby === "post_date") {
+    return "post_date";
+  }
+  return "updated_date";
+};
+
 const tokenize = function*(query, inside_quotes = false) {
   let re = /".*?"|[A-Z0-9a-zÀ-ÿ]+|<->|&|\||\!|\(|\)/g;
   let last_token = null;
@@ -83,7 +90,7 @@ const preparse_query = (userQuery) => {
   return [...tokenize(userQuery.toLowerCase())].join("");
 };
 
-const queryFileFromReq = req => {
+const queryFileFromReq = (req) => {
   const featuredOnly =
     !req.query.query || (req.query.query || "").toLowerCase() === "featured";
   const resultType = (req.query.resultType || "").toLowerCase();
@@ -98,12 +105,20 @@ const queryFileFromReq = req => {
   return queryfile;
 };
 
-const sortbyFromReq = req => {
-  if (req.query.sortby === "post_date") {
-    return "post_date";
+const getSearchDownloadResults = async (params) => {
+  try {
+    let results = null;
+    
+    if (params.lang === "zh" && params.user_query) {
+      results = await db.any(SEARCH_CHINESE, params);
+    } else {
+      results = await db.any(FEATURED, params);
+    }
+    return results;
+  } catch (err) {
+    console.log("getSearchResults error - ", err);
   }
-  return "updated_date";
-};
+}
 
 const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed_query, req) => {
   try {
@@ -136,34 +151,12 @@ const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed
   }
 }
 
-const getCollectionResults = async (user_query, limit, langQuery, lang, type, parsed_query, req) => {
+const getCollectionResults = async (params) => {
   try {
-    let results = null;
-    
-    if (lang === "zh" && user_query) {
-      results = await db.any(SEARCH_CHINESE, {
-        query: user_query,
-        limit: limit ? limit : null,
-        langQuery: langQuery,
-        language: lang,
-        type: type + "s",
-      });
-    } else {
-      results = await db.any(queryFileFromReq(req), {
-        query: parsed_query,
-        limit: limit ? limit : null, // null is no limit in SQL
-        offset: offsetFromReq(req),
-        language: lang,
-        langQuery: langQuery,
-        userId: req.user ? req.user.id : null,
-        sortby: sortbyFromReq(req),
-        type: type + "s",
-        facets: searchFiltersFromReq(req),
-      });
-    }
+    let results = await db.any(ENTRIES_BY_COLLECTION_ID, params);
     return results;
   } catch (err) {
-    console.log("getSearchResults error - ", err);
+    console.log("getCollectionResults error - ", err);
   }
 }
 
@@ -173,5 +166,6 @@ module.exports = {
   tokenize,
   queryFileFromReq,
   getSearchResults,
-  getCollectionResults
+  getCollectionResults,
+  getSearchDownloadResults
 };
