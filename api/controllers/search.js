@@ -92,8 +92,18 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async (req, 
         type: type,
         page: 'search'
       }
+      let paramsForQuery = {
+        user_query: user_query,
+        limit: limit ? limit : null, // null is no limit in SQL
+        langQuery: langQuery,
+        lang: lang,
+        type: type,
+        parsed_query: parsed_query,
+        req: req,
+        page: 'search'
+      }
       let csv_export_id = await createCSVEntry(paramsForCSV);
-      let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
+      let uploadCSVFiles = uploadCSVFile(paramsForQuery, csv_export_id);
       return res.status(200).redirect("/exports/csv");
     }
   } else {

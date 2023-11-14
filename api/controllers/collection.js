@@ -498,8 +498,21 @@ async function getCollectionHttp(req, res) {
         type: type,
         page: 'collection'
       }
+      let paramsForQuery = {
+        query: null,
+        limit: limit ? limit : null, // null is no limit in SQL
+        offset: offset,
+        language: as.value(req.cookies.locale || "en"),
+        sortby: "updated_date",
+        userId: req.user.id,
+        types: types,
+        type: type,
+        facets: facets,
+        req: req,
+        page: 'collection'
+      }
       let csv_export_id = await createCSVEntry(paramsForCSV);
-      // let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
+      let uploadCSVFiles = uploadCSVFile(paramsForQuery, csv_export_id);
       return res.status(200).redirect("/exports/csv");
     }
   } else {
@@ -636,9 +649,6 @@ async function saveCollectionDraft(req, res, entry = undefined) {
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let entryData;
-
-  console.log("req.body ", JSON.stringify(req.body));
-  console.log("entry ", JSON.stringify(req.body[entryLocales]));
 
   const params = parseGetParams(req, "collection");
     const user = req.user;

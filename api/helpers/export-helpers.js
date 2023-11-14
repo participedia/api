@@ -12,6 +12,8 @@ const {createCSVDataDump} = require("./create-csv-data-dump.js");
 const {uploadCSVToAWS} = require("./upload-to-aws");
 let {
   getSearchResults,
+  getSearchDownloadResults,
+  getCollectionResults
 } = require("./search");
 
 const unixTimestampGeneration = () => {
@@ -29,7 +31,6 @@ const createCSVEntry = async (params) => {
   let csvExportId = await generateCsvExportId(params.userId);
   let type = params.type;
   if (params.page == 'collection') { type = 'Collection - ' + type ; };
-
   try {
     let results = await db.one(CREATE_CSV_EXPORT, {
       csvExportId: csvExportId,
@@ -72,19 +73,23 @@ const removeCSVEntry = async (csvExportId, userId) => {
       csvExportId: csvExportId,
       user_id: userId
     });
-    console.log("results ", JSON.stringify(results));
     return results;
   } catch (err) {
     console.log("removeCSVEntry error - ", err);
   }
 };
 
-const uploadCSVFile = async (user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id) => {
-  let queryResults = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
-  const fileUpload = await createCSVDataDump(type, queryResults);
+const uploadCSVFile = async (params, csv_export_id) => {
+  let queryResults = null;
+  if (params.page == 'search') {
+    queryResults = await getSearchDownloadResults(params);
+  } else {
+    queryResults = await getCollectionResults(params);
+  }
+  const fileUpload = await createCSVDataDump(params.type, queryResults);
   let filename = csv_export_id.csv_export_id + ".csv";
   let uploadData = await uploadCSVToAWS(fileUpload, filename);
-  let updateExportEntry = await updateCSVEntry(req.user.id, uploadData, csv_export_id);
+  let updateExportEntry = await updateCSVEntry(params.req.user.id, uploadData, csv_export_id);
 }
 
 module.exports = {
