@@ -493,8 +493,13 @@ async function getCollectionHttp(req, res) {
       req.session.returnTo = req.originalUrl;
       res.redirect("/login");
     } else {
-      let csv_export_id = await createCSVEntry(req.user.id, type);
-      let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
+      let paramsForCSV = {
+        userId: req.user.id,
+        type: type,
+        page: 'collection'
+      }
+      let csv_export_id = await createCSVEntry(paramsForCSV);
+      // let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
       return res.status(200).redirect("/exports/csv");
     }
   } else {
