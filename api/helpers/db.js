@@ -80,6 +80,7 @@ const CREATE_METHOD = sql("../sql/create_method.sql");
 const CREATE_ORGANIZATION = sql("../sql/create_organization.sql");
 const TITLES_FOR_THINGS = sql("../sql/titles_for_things.sql");
 const SEARCH = sql("../sql/search.sql");
+const SEARCH_CASE_DOWNLOAD = sql("../sql/search_case_download.sql");
 const SEARCH_CHINESE = sql("../sql/search_chinese.sql");
 const FEATURED_MAP = sql("../sql/featuredmap.sql");
 const FEATURED = sql("../sql/featured.sql");
@@ -590,6 +591,7 @@ module.exports = {
   TITLES_FOR_THINGS,
   SEARCH,
   SEARCH_CHINESE,
+  SEARCH_CASE_DOWNLOAD,
   FEATURED_MAP,
   FEATURED,
   FEATURED_COLLECTION,
