@@ -36,13 +36,6 @@ const pre_word_connector = (last_token, inside_quotes) => {
   }
 };
 
-const sortbyFromReq = req => {
-  if (req.query.sortby === "post_date") {
-    return "post_date";
-  }
-  return "updated_date";
-};
-
 const tokenize = function*(query, inside_quotes = false) {
   let re = /".*?"|[A-Z0-9a-zÀ-ÿ]+|<->|&|\||\!|\(|\)/g;
   let last_token = null;
@@ -90,7 +83,7 @@ const preparse_query = (userQuery) => {
   return [...tokenize(userQuery.toLowerCase())].join("");
 };
 
-const queryFileFromReq = (req) => {
+const queryFileFromReq = req => {
   const featuredOnly =
     !req.query.query || (req.query.query || "").toLowerCase() === "featured";
   const resultType = (req.query.resultType || "").toLowerCase();
@@ -105,20 +98,12 @@ const queryFileFromReq = (req) => {
   return queryfile;
 };
 
-const getSearchDownloadResults = async (params) => {
-  try {
-    let results = null;
-    
-    if (params.lang === "zh" && params.user_query) {
-      results = await db.any(SEARCH_CHINESE, params);
-    } else {
-      results = await db.any(FEATURED, params);
-    }
-    return results;
-  } catch (err) {
-    console.log("getSearchResults error - ", err);
+const sortbyFromReq = req => {
+  if (req.query.sortby === "post_date") {
+    return "post_date";
   }
-}
+  return "updated_date";
+};
 
 const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed_query, req) => {
   try {
@@ -151,21 +136,10 @@ const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed
   }
 }
 
-const getCollectionResults = async (params) => {
-  try {
-    let results = await db.any(ENTRIES_BY_COLLECTION_ID, params);
-    return results;
-  } catch (err) {
-    console.log("getCollectionResults error - ", err);
-  }
-}
-
 
 module.exports = {
   preparse_query,
   tokenize,
   queryFileFromReq,
   getSearchResults,
-  getCollectionResults,
-  getSearchDownloadResults
 };

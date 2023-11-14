@@ -42,10 +42,6 @@ const {
   maybeUpdateUserTextLocaleEntry
 } = require("../helpers/things");
 
-let { 
-  preparse_query,
-} = require("../helpers/search");
-
 const logError = require("../helpers/log-error.js");
 const { RESPONSE_LIMIT } = require("./../../constants.js");
 const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser.js");
@@ -88,11 +84,6 @@ const getTypes = params => {
 
   return types;
 };
-
-function getLanguage(req) {
-  return req.cookies.locale || "en";
-}
-
 
 function randomTexture() {
   let index = Math.floor(Math.random() * 6) + 1;
@@ -358,9 +349,9 @@ async function postCollectionUpdateHttp(req, res) {
     });
   }
 
-  // if(originalLanguageEntry){
-  //   await collectionUpdate(req, res, originalLanguageEntry);
-  // }
+  if(originalLanguageEntry){
+    await collectionUpdate(req, res, originalLanguageEntry);
+  }
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
@@ -379,7 +370,6 @@ async function collectionUpdate(req, res, entry = undefined) {
   const newCollection = entry || req.body;
   const errors = validateFields(newCollection, "collection");
   // const isNewCollection = !newCollection.article_id;
-
   if (errors.length > 0) {
     return res.status(400).json({
       OK: false,
@@ -490,8 +480,6 @@ async function getCollection(params, res) {
 async function getCollectionHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "collection");
-  const user_query = req.query.query || "";
-  const parsed_query = preparse_query(user_query);
   const articles = await getCollection(params, res, req);
   const type = typeFromReq(req);
   const limit = limitFromReq(req);
@@ -499,38 +487,29 @@ async function getCollectionHttp(req, res) {
   const types = getTypes(params);
   const articleid = params.articleid;
   const facets = `AND collections @> ARRAY[${articleid}]`;
-  const lang = as.value(getLanguage(req));
-  const langQuery = SUPPORTED_LANGUAGES.find(element => element.twoLetterCode === lang).name.toLowerCase();
-  let paramsForQuery = {
-    query: null,
-    limit: limit ? limit : null, // null is no limit in SQL
-    offset: offset,
-    language: as.value(req.cookies.locale || "en"),
-    sortby: "updated_date",
-    userId: req.user ? req.user.id : null,
-    types: types,
-    facets: facets,
-    page: 'collection'
-  }
 
   if(req.query.returns == "csv"){
     if (!req.user){
       req.session.returnTo = req.originalUrl;
       res.redirect("/login");
     } else {
-      let paramsForCSV = {
-        userId: req.user.id,
-        type: type,
-        page: 'collection'
-      }
-      let csv_export_id = await createCSVEntry(paramsForCSV);
-      let uploadCSVFiles = uploadCSVFile(paramsForQuery, csv_export_id);
+      let csv_export_id = await createCSVEntry(req.user.id, type);
+      let uploadCSVFiles = uploadCSVFile(user_query, limit, langQuery, lang, type, parsed_query, req, csv_export_id);
       return res.status(200).redirect("/exports/csv");
     }
   } else {
 
     // always fetch all article types so we can calculate totals for a collection
-    let results = await db.any(ENTRIES_BY_COLLECTION_ID, paramsForQuery);
+    let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
+      query: null,
+      limit: limit ? limit : null, // null is no limit in SQL
+      offset: offset,
+      language: as.value(req.cookies.locale || "en"),
+      sortby: "updated_date",
+      userId: req.user ? req.user.id : null,
+      types: types,
+      facets: facets
+    });
     
     // get summary of article types for the collection
     const summaryRow = await db.one(ENTRIES_SUMMARY_BY_COLLECTION_ID, {articleid, facets});

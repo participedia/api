@@ -84,4 +84,6 @@
 \include 'migrations/migration_056.sql'
 \include 'migrations/migration_057.sql'
 \include 'migrations/migration_058.sql'
+\include 'migrations/migration_059.sql'
+\include 'migrations/migration_060.sql'
 
