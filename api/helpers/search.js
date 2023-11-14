@@ -8,6 +8,7 @@ let {
   SEARCH_MAP,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
+  SEARCH_CASE_DOWNLOAD,
   SEARCH_CHINESE,
   ENTRIES_BY_COLLECTION_ID,
 } = require("./db");
@@ -140,6 +141,21 @@ const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed
 const getSearchDownloadResults = async (params) => {
   try {
     let results = null;
+    let queryFile = SEARCH;
+    switch (params.type) {
+      case "case":
+        queryFile = SEARCH_CASE_DOWNLOAD;
+        break;
+      case "method":
+        // await removeEntryMethods(thingsByUser.id);
+        break;
+      case "collection":
+        // await removeEntryCollections(thingsByUser.id);
+        break;
+      case "organization":
+        // await removeEntryOrganizations(thingsByUser.id);
+        break;
+    }
     
     if (params.lang === "zh" && params.user_query) {
       results = await db.any(SEARCH_CHINESE, {
@@ -150,7 +166,7 @@ const getSearchDownloadResults = async (params) => {
         type: params.type + "s",
       });
     } else {
-      results = await db.any(queryFileFromReq(params.req), {
+      results = await db.any(queryFile, {
         query: params.parsed_query,
         limit: params.limit, // null is no limit in SQL
         offset: offsetFromReq(params.req),

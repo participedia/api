@@ -86,6 +86,7 @@ const uploadCSVFile = async (params, csv_export_id) => {
   } else {
     queryResults = await getCollectionResults(params);
   }
+  // console.log(JSON.stringify(queryResults));
   const fileUpload = await createCSVDataDump(params.type, queryResults);
   let filename = csv_export_id.csv_export_id + ".csv";
   let uploadData = await uploadCSVToAWS(fileUpload, filename);
