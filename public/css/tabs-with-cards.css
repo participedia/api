@@ -425,6 +425,9 @@ hr.solid {
 [data-card-layout="list"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-maps {
   display: none;
 }
+[data-card-layout="null"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-maps {
+  display: none;
+}
 
 .download-csv-btn {
   margin-right: 15px;
