@@ -19,7 +19,7 @@ async function getHeroFeatures(i18n) {
     {
       imageUrl: "/images/homepage/hero-map-static.png",
       entryTitle: i18n("Explore Cases & Organizations by Location"),
-      entryUrl: "#map",
+      entryUrl: "/search?selectedCategory=case&layout=maps",
     },
     {
       imageCredit: "Housing Institute of Buenos Aires",
