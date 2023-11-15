@@ -3,19 +3,25 @@
     {{#if (includeSearchFilters req)}}
       {{> search-filter-button }}
     {{/if}}
+
     {{#if (showCsvButton req)}}
       {{> download-csv-button }}
     {{/if}}
-    {{#if (hideGridToggle req)}}
-      <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
-        <span class="sr-only">{{t "list view"}}</span>
-        {{> icon-list}}
-      </button>
-      <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="grid">
-        <span class="sr-only">{{t "grid view"}}</span>
-        {{> icon-grid}}
+    
+    {{#if (checkMapsAvail req)}}
+      <button class="icon-only toggle-maps-layout-btn js-card-layout-btn" data-type="maps">
+        <span class="sr-only">{{t "maps_button"}}</span>
+        {{> icon-map-marker}}
       </button>
     {{/if}}
+    <button class="icon-only toggle-list-layout-btn js-card-layout-btn" data-type="list">
+      <span class="sr-only">{{t "list view"}}</span>
+      {{> icon-list}}
+    </button>
+    <button class="icon-only toggle-grid-layout-btn js-card-layout-btn" data-type="grid">
+      <span class="sr-only">{{t "grid view"}}</span>
+      {{> icon-grid}}
+    </button>
     
   </div>
 
@@ -23,15 +29,15 @@
   <div class="tab-select-container js-tab-select-container">
     <select>
       {{#each getTabs}}
-        <option value="{{key}}">{{title}}</option>
+          <option value="{{key}}" class="select-{{key}}">{{title}}</option>
       {{/each}}
     </select>
   </div>
   <div class="tab-container js-tab-container">
     <div class="js-tab-items">
       {{#each getTabs}}
-        <input id="{{key}}" type="radio" name="tabs" data-local={{isLocalNav key}} {{isTabActive ../req key}} class="tab-container-input">
-        <label for="{{key}}" class="tab-container-label">{{title}}</label>
+          <input id="{{key}}" type="radio" name="tabs" data-local={{isLocalNav key}} {{isTabActive ../req key}} class="tab-container-input">
+          <label for="{{key}}" class="tab-container-label tab-{{key}}">{{title}}</label>
       {{/each}}
     </div>
     

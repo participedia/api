@@ -3,8 +3,17 @@
   background-color: #C2CACC;
 }
 
+.search-map-container {
+  min-height: calc(100VH - 30px - 90px - 120px);
+  background-color: #C2CACC;
+}
+
 .map-inner {
   height: 600px;
+}
+
+.search-map-inner {
+  min-height: calc(100VH - 30px - 120px - 120px);
 }
 
 .map-controls {
@@ -167,6 +176,72 @@
   padding: 0;
 }
 
+.fullscreen-control {
+  display: block;
+  font-size: 1em;
+  height: 25px;
+  width: 25px;
+  top: 75px !important;
+  right: 15px !important;
+}
+
+.fullscreen-control .fullscreen-control-icon {
+  border-style: solid;
+  height: 0.25em;
+  position: absolute;
+  width: 0.25em;
+}
+
+.fullscreen-control .fullscreen-control-icon.fullscreen-control-top-left {
+  border-width: 2px 0 0 2px;
+  left: 0.1em;
+  top: 0.1em;
+}
+
+.fullscreen-control.is-fullscreen .fullscreen-control-icon.fullscreen-control-top-left {
+  border-width: 0 2px 2px 0;
+}
+
+.fullscreen-control .fullscreen-control-icon.fullscreen-control-top-right {
+  border-width: 2px 2px 0 0;
+  right: 0.1em;
+  top: 0.1em;
+}
+
+.fullscreen-control.is-fullscreen .fullscreen-control-icon.fullscreen-control-top-right {
+  border-width: 0 0 2px 2px;
+}
+
+.fullscreen-control .fullscreen-control-icon.fullscreen-control-bottom-left {
+  border-width: 0 0 2px 2px;
+  left: 0.1em;
+  bottom: 0.1em;
+}
+
+.fullscreen-control.is-fullscreen .fullscreen-control-icon.fullscreen-control-bottom-left {
+  border-width: 2px 2px 0 0;
+}
+
+.fullscreen-control .fullscreen-control-icon.fullscreen-control-bottom-right {
+  border-width: 0 2px 2px 0;
+  right: 0.1em;
+  bottom: 0.1em;
+}
+
+.fullscreen-control.is-fullscreen .fullscreen-control-icon.fullscreen-control-bottom-right {
+  border-width: 2px 0 0 2px;
+}
+
+.search-map-fullwidth {
+  min-width: 100vw;
+  min-height: calc(100vh - 60px);
+  height: calc(100vh - 60px) !important;
+  margin-left: -30px;
+  margin-top: -60px;
+  margin-bottom: -120px;
+}
+
+
 @media (max-width: 1280px) {
   .map-overlay-tagline {
     width: calc(75% - 60px);
@@ -177,6 +252,9 @@
   .map-overlay-tagline h1 {
     font-size: 24px;
     line-height: 35px;
+  }
+  .search-map-fullwidth {
+    margin-bottom: -175px;
   }
 }
 

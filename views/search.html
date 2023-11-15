@@ -2,21 +2,23 @@
   {{#> tabs-with-cards req=req getTabs=(getHomeTabs)}}
     <div role="tabpanel" class="tab-all">
       {{#if (isSelectedHomeTab req "all")}}
-        {{> cards-container
-          totalResults=total
-          totalPages=pages
-          cards=results
-        }}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+          }}
+          {{> search-map }}
       {{/if}}
     </div>
     <div role="tabpanel" class="tab-cases">
       {{#if (isSelectedHomeTab req "case")}}
-        {{> cards-container
-          totalResults=total
-          totalPages=pages
-          cards=results
-          type="case"
-        }}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            type="case"
+          }}
+          {{> search-map }}
       {{/if}}
     </div>
     <div role="tabpanel" class="tab-methods">
@@ -31,12 +33,13 @@
     </div>
     <div role="tabpanel" class="tab-organizations">
       {{#if (isSelectedHomeTab req "organizations")}}
-        {{> cards-container
-          totalResults=total
-          totalPages=pages
-          cards=results
-          type="organizations"
-        }}
+          {{> cards-container
+            totalResults=total
+            totalPages=pages
+            cards=results
+            type="organizations"
+          }}
+          {{> search-map }}
       {{/if}}
     </div>
     <div role="tabpanel" class="tab-collections">

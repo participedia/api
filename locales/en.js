@@ -1951,6 +1951,8 @@
   "home.verify_email.text": "Please verify your email address. If you have not received the email, check your spam box or try %sre-send verification email%s.",
   "guidelines_info_link": "For more information about this form, please review our %sguidelines%s.",
   "Results CSV": "Results CSV",
+  "maps_button": "Maps View",
+  "entries_button": "Entries View",
   "new-entry-language-select-tooltip__text": "To ensure accurate translation, please enter text in %s%s%s, or change selected language here.",
   "Tell me more...": "Tell me more...",
   "Got it": "Got it",

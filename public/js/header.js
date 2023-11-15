@@ -1,4 +1,7 @@
 import tracking from "./utils/tracking.js";
+import {
+  getValueForParam,
+} from "./utils/utils.js";
 
 const header = {
   init() {
@@ -50,12 +53,22 @@ const header = {
   initClearSearchInput() {
     const searchInputEl = document.querySelector(".js-query-search-input");
     const clearSearchButtonEl = document.querySelector(".js-search-query-clear-button");
-    const searchFormEl = document.querySelector(".js-query-search-form");
+    const searchFormEl = document.querySelector(".js-query-search-form"); 
     this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
+    this.viewEl = document.querySelector("[data-card-layout]");
 
     searchFormEl.addEventListener("submit", e => {
       tracking.sendWithCallback("header", "search_submit", searchInputEl.value, () => {
-        location.href = `/search?query=${searchInputEl.value}`;
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('query')) {
+          urlParams.delete('query');
+        }
+        let urlTarget = `/search?${urlParams}` + `&query=${searchInputEl.value}`;
+        console.log(urlTarget);
+        // let currentUrl= window.location.href;
+        location.href = urlTarget;
       });
       e.preventDefault();
     });
@@ -67,8 +80,11 @@ const header = {
     clearSearchButtonEl.addEventListener("click", e => {
       searchInputEl.value = "";
       this.hideOrShowSearchCloseButton(searchInputEl.value, clearSearchButtonEl);
-      history.pushState({}, "", '/search');
-      location.href = '/search';
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      urlParams.delete('query');
+      history.pushState({}, "", `/search?${urlParams}`);
+      location.href = `/search?${urlParams}`;
     });
   },
 

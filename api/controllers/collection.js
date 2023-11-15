@@ -50,6 +50,11 @@ const COLLECTION_STRUCTURE = JSON.parse(
 );
 const { SUPPORTED_LANGUAGES } = require("../../constants");
 
+const {
+  createCSVEntry,
+  uploadCSVFile
+} = require("../helpers/export-helpers");
+
 var thingCollectionid = null;
 
 // strip off final character (assumed to be "s")
@@ -344,9 +349,9 @@ async function postCollectionUpdateHttp(req, res) {
     });
   }
 
-  // if(originalLanguageEntry){
-  //   await collectionUpdate(req, res, originalLanguageEntry);
-  // }
+  if(originalLanguageEntry){
+    await collectionUpdate(req, res, originalLanguageEntry);
+  }
   const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
@@ -365,7 +370,6 @@ async function collectionUpdate(req, res, entry = undefined) {
   const newCollection = entry || req.body;
   const errors = validateFields(newCollection, "collection");
   // const isNewCollection = !newCollection.article_id;
-
   if (errors.length > 0) {
     return res.status(400).json({
       OK: false,
@@ -484,60 +488,91 @@ async function getCollectionHttp(req, res) {
   const articleid = params.articleid;
   const facets = `AND collections @> ARRAY[${articleid}]`;
 
-  // always fetch all article types so we can calculate totals for a collection
-  let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
-    query: null,
-    limit: limit ? limit : null, // null is no limit in SQL
-    offset: offset,
-    language: as.value(req.cookies.locale || "en"),
-    sortby: "updated_date",
-    userId: req.user ? req.user.id : null,
-    types: types,
-    facets: facets
-  });
-  
-  // get summary of article types for the collection
-  const summaryRow = await db.one(ENTRIES_SUMMARY_BY_COLLECTION_ID, {articleid, facets});
-  const summary = summaryRow.results;
-  let numArticlesByType = {
-    case: summary.total_cases,
-    method: summary.total_methods,
-    organization: summary.total_organizations,
-  };
-
-  // const limit = 20; // number of entries displayed on one page
-  let total, pages;
-
-  // calculate pages and totals and add random texture url if no images are present
-  if (results) {
-    total = Number(results.length ? results[0].total || results.length : 0);
-    pages = total ? Math.max(Math.ceil(total / RESPONSE_LIMIT)) : null;
-
-    // for each entry, use a random texture image if there are no images uploaded
-    results = results.map(obj => {
-      if (obj.photos.length === 0) {
-        obj.photos = [{ url: randomTexture() }];
+  if(req.query.returns == "csv"){
+    if (!req.user){
+      req.session.returnTo = req.originalUrl;
+      res.redirect("/login");
+    } else {
+      let paramsForCSV = {
+        userId: req.user.id,
+        type: type,
+        page: 'collection'
       }
-      return obj;
-    });
-  }
+      let paramsForQuery = {
+        query: null,
+        limit: limit ? limit : null, // null is no limit in SQL
+        offset: offset,
+        language: as.value(req.cookies.locale || "en"),
+        sortby: "updated_date",
+        userId: req.user.id,
+        types: types,
+        type: type,
+        facets: facets,
+        req: req,
+        page: 'collection'
+      }
+      let csv_export_id = await createCSVEntry(paramsForCSV);
+      let uploadCSVFiles = uploadCSVFile(paramsForQuery, csv_export_id);
+      return res.status(200).redirect("/exports/csv");
+    }
+  } else {
 
-  if (!articles) {
-    res.status(404).render("404");
-    return null;
+    // always fetch all article types so we can calculate totals for a collection
+    let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
+      query: null,
+      limit: limit ? limit : null, // null is no limit in SQL
+      offset: offset,
+      language: as.value(req.cookies.locale || "en"),
+      sortby: "updated_date",
+      userId: req.user ? req.user.id : null,
+      types: types,
+      facets: facets
+    });
+    
+    // get summary of article types for the collection
+    const summaryRow = await db.one(ENTRIES_SUMMARY_BY_COLLECTION_ID, {articleid, facets});
+    const summary = summaryRow.results;
+    let numArticlesByType = {
+      case: summary.total_cases,
+      method: summary.total_methods,
+      organization: summary.total_organizations,
+    };
+
+    // const limit = 20; // number of entries displayed on one page
+    let total, pages;
+
+    // calculate pages and totals and add random texture url if no images are present
+    if (results) {
+      total = Number(results.length ? results[0].total || results.length : 0);
+      pages = total ? Math.max(Math.ceil(total / RESPONSE_LIMIT)) : null;
+
+      // for each entry, use a random texture image if there are no images uploaded
+      results = results.map(obj => {
+        if (obj.photos.length === 0) {
+          obj.photos = [{ url: randomTexture() }];
+        }
+        return obj;
+      });
+    }
+
+    if (!articles) {
+      res.status(404).render("404");
+      return null;
+    }
+    const staticText = await getEditStaticText(params);
+    returnByType(
+      res,
+      params,
+      articles,
+      staticText,
+      req.user,
+      results,
+      total,
+      pages,
+      numArticlesByType
+    );
+
   }
-  const staticText = await getEditStaticText(params);
-  returnByType(
-    res,
-    params,
-    articles,
-    staticText,
-    req.user,
-    results,
-    total,
-    pages,
-    numArticlesByType
-  );
 }
 
 async function getEditStaticText(params) {
@@ -614,9 +649,6 @@ async function saveCollectionDraft(req, res, entry = undefined) {
 
   const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
   let entryData;
-
-  console.log("req.body ", JSON.stringify(req.body));
-  console.log("entry ", JSON.stringify(req.body[entryLocales]));
 
   const params = parseGetParams(req, "collection");
     const user = req.user;

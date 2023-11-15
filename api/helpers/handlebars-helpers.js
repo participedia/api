@@ -1238,6 +1238,14 @@ module.exports = {
     }
   },
 
+  isMapView(req, maps) {
+    if (req.query.layout) {
+      return req.query.layout === maps;
+    } else {
+      return false;
+    }
+  },
+
   // location helpers
   hasLocationData(article) {
     let hasLocationData = false;
@@ -1621,6 +1629,63 @@ module.exports = {
     return req.query.selectedCategory || null;
   },
 
+  getSelectedCategoryLabel(req, total) {
+    let text;
+    if (total <= 1){
+      // return req.query.selectedCategory || null;
+      switch (req.query.selectedCategory) {
+        case "case": {
+          text = "case";
+          break;
+        }
+        case "organizations": {
+          text = "organization";
+          break;
+        }
+        case "method": {
+          text = "method";
+          break;
+        }
+        case "collections": {
+          text = "collection";
+          break;
+        }
+        default: {
+          text = "entry";
+          break;
+        }
+      }
+
+      return text; 
+    } else {
+      switch (req.query.selectedCategory) {
+        case "case": {
+          text = "cases";
+          break;
+        }
+        case "organizations": {
+          text = "organizations";
+          break;
+        }
+        case "method": {
+          text = "methods";
+          break;
+        }
+        case "collections": {
+          text = "collections";
+          break;
+        }
+        default: {
+          text = "entries";
+          break;
+        }
+      }
+
+      return text;
+    }
+  },
+
+
   // Helper to identify if filter key will display as checkbox;
   isSearchFilterCheckboxSelection(key) {
     const excludedFilterKeys = ["country", "verified"];
@@ -1645,8 +1710,34 @@ module.exports = {
     return false;
   },
 
+  isNotMapView(req, tabName) {
+    const tabParam = req.query && req.query.layout;
+    if (
+      (tabName === "collections" || tabName === "method") &&
+      tabParam === "maps"
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+
+  checkMapsAvail(req) {
+    const tabParam = req.query && req.query.selectedCategory;
+    if (
+      tabParam === "collections" || tabParam === "method"
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+
   hideGridToggle(req) {
+    const tabParam = req.query && req.query.view;
     if (["/case", "/method", "/organization"].includes(req.baseUrl)) {
+      return false;
+    } else if (tabParam === "maps"){
       return false;
     }
     return true;

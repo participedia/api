@@ -39,7 +39,7 @@ const searchFilterList = {
           item.fieldNameKeys.forEach(key => this.SEARCH_FILTER_KEYS.push(key));
         });
       });
-    } else {
+    } else if (type != "maps"){
       searchFiltersList[type].forEach(item => {
         item.fieldNameKeys.forEach(key => this.SEARCH_FILTER_KEYS.push(key));
       });

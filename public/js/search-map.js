@@ -79,12 +79,12 @@ const markerStyles = markerSize => {
   }
 };
 
-const map = {
+const searchMap = {
   init() {
     this.mapEl = document.querySelector(".js-map-inner");
 
     if (!this.mapEl) return;
-    
+
     this.headerEl = document.querySelector(".js-header");
     this.mapLegendEl = document.querySelector(".js-map-legend");
 
@@ -100,7 +100,8 @@ const map = {
     this.initZoomControls();
     this.fetchMapResults();
     this.setMapHeight();
-    window.addEventListener('resize', () => {
+    this.initFullscreenControl();
+    window.addEventListener("resize", () => {
       this.setMapHeight();
     });
 
@@ -130,8 +131,10 @@ const map = {
   },
 
   fetchMapResults() {
-    const url = `/search?resultType=map&returns=json`;
+    const queryString = window.location.search;
 
+    let url = `/search` + queryString + `&resultType=map&returns=json`;
+ 
     const successCB = response => {
       const results = JSON.parse(response.response).results;
       this.cacheResults(response.responseURL, results);
@@ -251,63 +254,63 @@ const map = {
       this.cardEl = document.getElementById("js-map-article-card-template");
     }
 
-    let cardTemplate =  document.createElement("div");
+    let cardTemplate = document.createElement("div");
     cardTemplate.innerHTML = this.cardEl.innerHTML;
     cardTemplate = cardTemplate.querySelector("li").innerHTML;
-    
+
     const popOverContentEl = document.createElement("div");
-      // get card content from marker and set on content element
-      popOverContentEl.classList = "article-card";
-      popOverContentEl.innerHTML = cardTemplate;
+    // get card content from marker and set on content element
+    popOverContentEl.classList = "article-card";
+    popOverContentEl.innerHTML = cardTemplate;
 
-      // update type
-      const articleTypeEl = popOverContentEl.querySelector(
-        ".js-article-card-meta h5"
-      );
-      if (marker.featured) {
-        articleTypeEl.innerHTML = {
-          case: this.i18n["Featured_Case"],
-          method: this.i18n["Featured_Method"],
-        }[marker.type];
-      } else {
-        articleTypeEl.innerHTML = this.i18n[marker.type];
-      }
+    // update type
+    const articleTypeEl = popOverContentEl.querySelector(
+      ".js-article-card-meta h5"
+    );
+    if (marker.featured) {
+      articleTypeEl.innerHTML = {
+        case: this.i18n["Featured_Case"],
+        method: this.i18n["Featured_Method"],
+      }[marker.type];
+    } else {
+      articleTypeEl.innerHTML = this.i18n[marker.type];
+    }
 
-      // update image
-      const articleImageEl = popOverContentEl.querySelector(
-        ".js-article-card-img"
-      );
-      articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
+    // update image
+    const articleImageEl = popOverContentEl.querySelector(
+      ".js-article-card-img"
+    );
+    articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
 
-      // update title & truncate to 45 chars
-      const articleTitleEl = popOverContentEl.querySelector(
-        ".js-article-card-title"
-      );
-      if (marker.title.length < 50) {
-        articleTitleEl.innerText = marker.title;
-      } else {
-        articleTitleEl.innerText = marker.title.substring(0, 40) + "...";
-      }
+    // update title & truncate to 45 chars
+    const articleTitleEl = popOverContentEl.querySelector(
+      ".js-article-card-title"
+    );
+    if (marker.title.length < 50) {
+      articleTitleEl.innerText = marker.title;
+    } else {
+      articleTitleEl.innerText = marker.title.substring(0, 40) + "...";
+    }
 
-      // update submitted at
-      const articleSubmittedDate = popOverContentEl.querySelector(
-        ".js-article-date"
-      );
-      articleSubmittedDate.innerHTML = moment(marker.submittedDate).format(
-        "MMMM M, YYYY"
-      );
+    // update submitted at
+    const articleSubmittedDate = popOverContentEl.querySelector(
+      ".js-article-date"
+    );
+    articleSubmittedDate.innerHTML = moment(marker.submittedDate).format(
+      "MMMM M, YYYY"
+    );
 
-      // update links
-      const articleLinks = Array.prototype.slice.call(
-        popOverContentEl.querySelectorAll(".js-article-link")
-      );
-      articleLinks.forEach(el => {
-        el.setAttribute("href", `/${marker.type}/${marker.id}`);
-      });
-      return popOverContentEl;
+    // update links
+    const articleLinks = Array.prototype.slice.call(
+      popOverContentEl.querySelectorAll(".js-article-link")
+    );
+    articleLinks.forEach(el => {
+      el.setAttribute("href", `/${marker.type}/${marker.id}`);
+    });
+    return popOverContentEl;
   },
 
-  bindClickEventForMarker(markerEl, marker) {    
+  bindClickEventForMarker(markerEl, marker) {
     // on marker click, show article card in popover on map
     markerEl.addListener("click", event => {
       // if there is already a current pop over, remove it
@@ -339,6 +342,127 @@ const map = {
       tracking.send("home.map", "marker_click", marker.id);
     });
   },
+
+  isFullscreen(element) {
+    return (
+      (document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement) == element
+    );
+  },
+
+  openAllFullscreen(element) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.webkitRequestFullScreen) {
+      element.webkitRequestFullScreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.msRequestFullScreen) {
+      element.msRequestFullScreen();
+    }
+  },
+
+  closeAllFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  },
+
+  requestFullscreen(element) {
+    var tabsButtonsContainer = document.querySelector('.tab-buttons-container');
+    var jsTabItems = document.querySelector('.js-tab-items');
+    var searchMapContainer = document.querySelector('.search-map-container');
+    var jsFullscreenControl = document.querySelector('.js-fullscreen-control');
+    var tabPanelHeader = document.querySelector('.tab-panel-header');
+    var tabSelectContainer = document.querySelector('.tab-select-container');
+    var mainContent = document.querySelector('.main-content');
+
+    var screenWidth = window.innerWidth;
+
+    if (screenWidth < 650){
+      tabPanelHeader.style.display = 'none';
+      tabSelectContainer.style.display = 'none';
+    }else{
+      
+    }
+
+    if (screenWidth < 1000){
+      mainContent.style.marginTop = '85px';
+    } else {
+      mainContent.style.marginTop = '9px';
+    }
+
+    tabsButtonsContainer.style.display = 'none';
+    jsTabItems.style.display = 'none';
+    searchMapContainer.classList.add("search-map-fullwidth");
+    jsFullscreenControl.classList.add("is-fullscreen");
+  },
+
+  exitFullscreen() {
+    var tabsButtonsContainer = document.querySelector('.tab-buttons-container');
+    var jsTabItems = document.querySelector('.js-tab-items');
+    var searchMapContainer = document.querySelector('.search-map-container');
+    var jsFullscreenControl = document.querySelector('.js-fullscreen-control');
+    var tabPanelHeader = document.querySelector('.tab-panel-header');
+    var tabSelectContainer = document.querySelector('.tab-select-container');
+    var mainContent = document.querySelector('.main-content');
+
+    var screenWidth = window.innerWidth;
+
+    if (screenWidth < 650){
+      tabsButtonsContainer.style.display = 'none';
+      tabPanelHeader.style.display = 'block';
+      tabSelectContainer.style.display = 'block';
+    }else{
+      tabsButtonsContainer.style.display = 'flex';
+    }
+
+    if (screenWidth < 1000){
+      mainContent.style.marginTop = '115px';
+    } else {
+      mainContent.style.marginTop = '60px';
+    }
+  
+    jsTabItems.style.display = 'block';
+    searchMapContainer.classList.remove("search-map-fullwidth");
+    jsFullscreenControl.classList.remove("is-fullscreen");
+  },
+
+  initFullscreenControl() {
+    const elementToSendFullscreen = this.map.getDiv().firstChild;
+    const fullscreenControl = document.querySelector(".js-fullscreen-control");
+    const tabsButtonsContainer = document.querySelector('.tab-buttons-container');
+    var tabSelectContainer = document.querySelector('.tab-select-container');
+
+    var screenWidth = window.innerWidth;
+
+    this.map.controls[google.maps.ControlPosition.RIGHT_TOP].push(fullscreenControl);
+    fullscreenControl.onclick = () => {
+
+      if (screenWidth < 650){
+        if (this.isFullscreen(elementToSendFullscreen)) {
+          this.closeAllFullscreen();
+        } else {
+          this.openAllFullscreen(elementToSendFullscreen);
+        }
+      } else {
+        if (tabsButtonsContainer.style.display == 'none') {
+          this.exitFullscreen();
+        } else {
+          this.requestFullscreen(elementToSendFullscreen);
+        }
+      }
+
+    };
+  }
 };
 
-export default map;
+export default searchMap;

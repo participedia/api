@@ -8,7 +8,9 @@ let {
   SEARCH_MAP,
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
+  SEARCH_CASE_DOWNLOAD,
   SEARCH_CHINESE,
+  ENTRIES_BY_COLLECTION_ID,
 } = require("./db");
 
 const {
@@ -83,7 +85,7 @@ const preparse_query = (userQuery) => {
   return [...tokenize(userQuery.toLowerCase())].join("");
 };
 
-const queryFileFromReq = req => {
+const queryFileFromReq = (req) => {
   const featuredOnly =
     !req.query.query || (req.query.query || "").toLowerCase() === "featured";
   const resultType = (req.query.resultType || "").toLowerCase();
@@ -136,10 +138,76 @@ const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed
   }
 }
 
+const getSearchDownloadResults = async (params) => {
+  try {
+    let results = null;
+    let queryFile = SEARCH;
+    switch (params.type) {
+      case "case":
+        queryFile = SEARCH_CASE_DOWNLOAD;
+        break;
+      case "method":
+        // await removeEntryMethods(thingsByUser.id);
+        break;
+      case "collection":
+        // await removeEntryCollections(thingsByUser.id);
+        break;
+      case "organization":
+        // await removeEntryOrganizations(thingsByUser.id);
+        break;
+    }
+    
+    if (params.lang === "zh" && params.user_query) {
+      results = await db.any(SEARCH_CHINESE, {
+        query: params.user_query,
+        limit: params.limit,
+        langQuery: params.langQuery,
+        language: params.lang,
+        type: params.type + "s",
+      });
+    } else {
+      results = await db.any(queryFile, {
+        query: params.parsed_query,
+        limit: params.limit, // null is no limit in SQL
+        offset: offsetFromReq(params.req),
+        language: params.lang,
+        langQuery: params.langQuery,
+        userId: params.req.user ? params.req.user.id : null,
+        sortby: sortbyFromReq(params.req),
+        type: params.type + "s",
+        facets: searchFiltersFromReq(params.req),
+      });
+    }
+    return results;
+  } catch (err) {
+    console.log("getSearchDownloadResults error - ", err);
+  }
+}
+
+const getCollectionResults = async (params) => {
+  try {
+    let results = await db.any(ENTRIES_BY_COLLECTION_ID, {
+      query: params.query,
+      limit: params.limit, // null is no limit in SQL
+      offset: params.offset,
+      language: params.language,
+      sortby: params.sortby,
+      userId: params.userId,
+      types: params.types,
+      facets: params.facets
+    });
+    return results;
+  } catch (err) {
+    console.log("getCollectionResults error - ", err);
+  }
+}
+
 
 module.exports = {
   preparse_query,
   tokenize,
   queryFileFromReq,
   getSearchResults,
+  getSearchDownloadResults,
+  getCollectionResults
 };

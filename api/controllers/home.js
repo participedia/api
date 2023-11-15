@@ -19,7 +19,7 @@ async function getHeroFeatures(i18n) {
     {
       imageUrl: "/images/homepage/hero-map-static.png",
       entryTitle: i18n("Explore Cases & Organizations by Location"),
-      entryUrl: "#map",
+      entryUrl: "/search?selectedCategory=case&layout=maps",
     },
     {
       imageCredit: "Housing Institute of Buenos Aires",
@@ -60,7 +60,7 @@ async function getThingStatistic() {
     collections: 0,
   };
   const results = await db.any(
-    "SELECT type, COUNT(*) as total FROM things WHERE hidden = false GROUP BY type"
+    "SELECT type, COUNT(*) as total FROM things WHERE hidden = false and published = true GROUP BY type"
   );
   results.map(result => {
     let type = `${result.type}s`;

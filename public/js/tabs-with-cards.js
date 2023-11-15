@@ -44,6 +44,7 @@ const tabsWithCards = {
     moreFilterBtnEls.forEach(moreFilterBtnEl => {
       if (moreFilterBtnEl) {
         moreFilterBtnEl.addEventListener("click", event => {
+
           const category = getValueForParam("selectedCategory");
           if (["case", "organizations", "method"].indexOf(category) >= 0) {
             this.openSearchFilterModal();
@@ -75,22 +76,24 @@ const tabsWithCards = {
       });
     }
 
-    const downloadCsvBtnElMobile = document.querySelector(".js-download-csv-btn-mobile");
-    if (downloadCsvBtnElMobile) {
-      downloadCsvBtnElMobile.addEventListener("click", e => {
+    const downloadCsvBtnElMobiles = document.querySelectorAll(".js-download-csv-btn-mobile");
+
+    downloadCsvBtnElMobiles.forEach(downloadCsvBtnElMobile => {
+      if (downloadCsvBtnElMobile) {
+        downloadCsvBtnElMobile.addEventListener("click", event => {
         // Custom logic for CSV download button if category is all.
-        if (!this.isCsvGenerator()) {
+        if (this.isCsvGenerator()) {
           // Update selectedCategory to case and reload the page.
           updateUrlParams("selectedCategory", "case");
-          window.location.href = window.location.href;
-
+          let currentUrl= window.location.href;
           // Download CSV cases
-          let url = `${window.location.href}&returns=csv`;
-      	  window.open(url, '_blank');
+          let url = `${currentUrl}&returns=csv`;
+      	  window.open(url, '_blank'); 
         }
         tracking.send("search", "results_csv_button_click");
-      });
-    }
+        });
+      }
+    });
 
     const openFilter = getValueForParam("openFilters");
     if (openFilter == "1") {
@@ -115,11 +118,19 @@ const tabsWithCards = {
 
   navigateToTab(category) {
     const query = getValueForParam("query");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const layout = urlParams.get('layout');
+    
     let url = `${window.location.origin +
       window.location.pathname}?selectedCategory=${category}`;
 
     if (query) {
       url = `${url}&query=${query}`;
+    }
+
+    if (layout != ''){
+      url = url + `&layout=${layout}`;
     }
 
     window.location.href = url;
@@ -186,18 +197,21 @@ const tabsWithCards = {
     const optionEls = Array.prototype.slice.call(
       selectEl.querySelectorAll("option")
     );
-    const currentTab = this.tabInputEls.find(el => el.checked);
-    optionEls.forEach(el => (el.selected = el.value === currentTab.id));
 
-    // event listener for select change
-    selectEl.addEventListener("change", event => {
-      // change tab to selected type
-      const newTabId = event.target.value;
-      // toggle checked attr on inputs
-      this.tabInputEls.forEach(el => (el.checked = el.id === newTabId));
-      // go to new tab
-      this.navigateToTab(newTabId);
-    });
+    const currentTab = this.tabInputEls.find(el => el.checked);
+    if(currentTab){
+      optionEls.forEach(el => (el.selected = el.value === currentTab.id));
+
+      // event listener for select change
+      selectEl.addEventListener("change", event => {
+        // change tab to selected type
+        const newTabId = event.target.value;
+        // toggle checked attr on inputs
+        this.tabInputEls.forEach(el => (el.checked = el.id === newTabId));
+        // go to new tab
+        this.navigateToTab(newTabId);
+      });
+    }
   },
 
   initPagination() {

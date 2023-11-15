@@ -419,7 +419,11 @@ async function postOrganizationUpdateHttp(req, res) {
       if (originLang == entryLocale) {
         localeEntriesArr.push(entry);
       }
-      await organizationUpdate(req, res, originalLanguageEntry);
+
+      if(!entry.article_id && originalLanguageEntry.article_id){
+        entry.article_id = originalLanguageEntry.article_id;
+      }
+      await organizationUpdate(req, res, entry, true);
     }
   }
   const hasErrors = !!langErrors.find(
@@ -433,9 +437,9 @@ async function postOrganizationUpdateHttp(req, res) {
     });
   }
 
-  // if(originalLanguageEntry){
-  //   await organizationUpdate(req, res, originalLanguageEntry);
-  // }
+  if(originalLanguageEntry){
+    await organizationUpdate(req, res, originalLanguageEntry, true);
+  }
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
   const freshArticle = await getOrganization(params, res);
@@ -477,7 +481,7 @@ async function postOrganizationUpdatePreview(req, res) {
   }
 }
 
-async function organizationUpdate(req, res, entry = undefined) {
+async function organizationUpdate(req, res, entry = undefined, isUpdating = false) {
   const params = parseGetParams(req, "organization");
   const user = req.user;
   const { articlesid, type, view, userid, lang, returns } = params;
@@ -496,11 +500,12 @@ async function organizationUpdate(req, res, entry = undefined) {
   newOrganization.links = verifyOrUpdateUrl(newOrganization.links || []);
 
   // if this is a new organization, we don't have a post_date yet, so we set it here
-  if (isNewOrganization && newCase.title != null) {
+  if (!newOrganization.post_date) {
     newOrganization.post_date = Date.now();
-    newOrganization.updated_date = Date.now();
   }
 
+  // Override updated_date from request because the field in the client is not editable.
+  newOrganization.updated_date = Date.now();
   const {
     updatedText,
     author,
@@ -511,14 +516,15 @@ async function organizationUpdate(req, res, entry = undefined) {
     res,
     "organization"
   ); 
-
+  if(isUpdating && updatedText.language !== newOrganization.language){
+    updatedText.language = newOrganization.language;
+  }
   const [updatedOrganization, er] = getUpdatedOrganization(
     user,
     params,
     newOrganization,
     oldArticle
   );
- 
   if (isNaN(updatedOrganization.number_of_participants)) {
     updatedOrganization.number_of_participants = null;
   }
@@ -561,6 +567,8 @@ async function organizationUpdate(req, res, entry = undefined) {
           thingid: params.articleid,
           timestamp: new Date(newOrganization.post_date),
         };
+        updatedOrganization.creator = creator;
+
         await db.tx("update-organization", async t => {
           if (!isNewOrganization) {
             if (updatedOrganization.verified) {
