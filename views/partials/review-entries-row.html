@@ -1,5 +1,7 @@
 <tr>
-    <td>{{formatArticleDate this "updated_date" "MMMM DD, YYYY"}}</td>
+    <td>{{formatArticleDate this "join_date" "MMM DD, YYYY"}}</td>
+    <td class="hidden">{{formatArticleDate this "join_date" "YYYYMMDD"}}</td>
+    <td>{{formatArticleDate this "updated_date" "MMM DD, YYYY"}}</td>
     <td class="hidden">{{formatArticleDate this "updated_date" "YYYYMMDD"}}</td>
     <td class="word-wrap"><a class="" href="/{{type}}/{{thingid}}" target="_blank"> {{title}} </a></td>
     <td>{{type}}</td>
