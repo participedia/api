@@ -9,7 +9,7 @@ all_authors as (
     ORDER  BY thingid, timestamp  DESC
 ),
 all_users as (
- select name, id, accepted_date, join_date from users where accepted_date is null order by join_date desc
+ select name, id, accepted_date, join_date, bio from users where accepted_date is null order by join_date desc
 )
 SELECT all_hidden_things.*, all_authors.*, all_users.*
 FROM all_hidden_things, all_authors, all_users
