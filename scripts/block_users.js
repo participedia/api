@@ -6,7 +6,7 @@ const auth0Client = new ManagementClient({
   domain: process.env.AUTH0_DOMAIN,
   clientId: process.env.AUTH0_CLIENT_ID,
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
-  scope: "read:users update:users",
+  scope: "delete:users",
 });
 
 async function blockUsers() {
@@ -15,40 +15,32 @@ async function blockUsers() {
   // START DB QUERY
   const users = await db.any(
     `
-    WITH all_hidden_things  AS (
-      select id from things
-      where hidden = true and "type" != 'collection' 
-    ),
-    all_authors as (
-        SELECT DISTINCT ON (thingid) thingid, user_id
-        FROM authors 
-    ),
-    all_users as (
-    select id, accepted_date, bio from users where accepted_date is null
+    SELECT id, bio FROM users WHERE id NOT IN (
+      SELECT user_id FROM authors WHERE users.id = authors.user_id
     )
-    SELECT DISTINCT ON (all_users.id) all_users.id
-    FROM all_hidden_things, all_authors, all_users
-    where all_hidden_things.id = all_authors.thingid 
-    and all_authors.user_id = all_users.id 
-    and all_users.bio LIKE '%http%'
+    AND users.bio LIKE '%http%'
     `
   )
   // END DB QUERY
 
   console.log(`find ${users.length} users`);
 
+  let list = [];
+  if(users.length){
+    list.push(users[0]);
+  }
   //START BLOCK USERS
-  for (const user of users) {
+  for (const user of list) {
     try {
-      console.log(`---------- START blocking user with ID ${user.id} ----------`)
-      await auth0Client.updateUser({ id: user.id }, { blocked: true });
-      console.log(`^^^^^^^^^^ DONE blocking user ID ${user.id} ^^^^^^^^^^`)
+      console.log(`---------- START deleting user with ID ${user.id.toString()} ----------`)
+      await auth0Client.deleteUser({id: user.id.toString()});
+      await db.any(`DELETE FROM users WHERE id = ${user.id}`);
+      console.log(`^^^^^^^^^^ DONE deleting user ID ${user.id} ^^^^^^^^^^`)
     } catch (error) {
-      console.log(`?????????? ERROR blocking user ID ${user.id} ??????????`, error?.message)
+      console.log(`?????????? ERROR deleting user ID ${user.id} ??????????`, error?.message)
     }
   }
   //END BLOCK USERS
-
   console.log('*********** FINISHED PROCESSING ***********');
   process.exit();
 }
