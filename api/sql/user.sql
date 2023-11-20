@@ -1,1 +1,1 @@
-SELECT * FROM users order by id desc
+SELECT * FROM users order by join_date desc

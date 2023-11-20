@@ -48,8 +48,6 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 const sortbyFromReq = req => {
   if (req.query.sortby === "post_date") {
     return "post_date";
-  } else if  (req.query.sortby === "join_date") {
-    return "join_date";
   }
   return "updated_date";
 };
