@@ -2,9 +2,9 @@
     <td><a class="" href="/user/{{id}}" target="_blank"> {{name}} </a></td>
     <td class="hidden">{{id}}</td>
     <td class="word-wrap">{{email}}</td>
+    <td>{{convertHtmlToText this "bio"}}</td>
     <td>{{formatArticleDate this "join_date" "MMM DD, YYYY"}}</td>
     <td class="hidden">{{formatArticleDate this "join_date" "YYYYMMDD"}}</td>
-    <td>{{convertHtmlToText this "bio"}}</td>
     <td>
       <a class="entries-action js-delete-user button button-red" href="#" user-id="{{id}}" user-email="{{email}}">
         {{t "delete_user"}}
