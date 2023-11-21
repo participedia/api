@@ -9,6 +9,7 @@ let {
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
   SEARCH_CASE_DOWNLOAD,
+  SEARCH_ORGANIZATION_DOWNLOAD,
   SEARCH_CHINESE,
   ENTRIES_BY_COLLECTION_ID,
 } = require("./db");
@@ -153,6 +154,7 @@ const getSearchDownloadResults = async (params) => {
         // await removeEntryCollections(thingsByUser.id);
         break;
       case "organization":
+        queryFile = SEARCH_ORGANIZATION_DOWNLOAD;
         // await removeEntryOrganizations(thingsByUser.id);
         break;
     }
@@ -166,7 +168,7 @@ const getSearchDownloadResults = async (params) => {
         type: params.type + "s",
       });
     } else {
-      results = await db.any(queryFile, {
+      const filters = {
         query: params.parsed_query,
         limit: params.limit, // null is no limit in SQL
         offset: offsetFromReq(params.req),
@@ -176,7 +178,8 @@ const getSearchDownloadResults = async (params) => {
         sortby: sortbyFromReq(params.req),
         type: params.type + "s",
         facets: searchFiltersFromReq(params.req),
-      });
+      }
+      results = await db.any(queryFile, filters);
     }
     return results;
   } catch (err) {

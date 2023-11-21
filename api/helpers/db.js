@@ -113,6 +113,7 @@ const CREATE_CSV_EXPORT = sql("../sql/create_csv_export.sql");
 const UPDATE_CSV_EXPORT = sql("../sql/update_csv_export.sql");
 const REMOVE_CSV_EXPORT = sql("../sql/remove_csv_export.sql");
 const CSV_EXPORT = sql("../sql/csv_export.sql");
+const SEARCH_ORGANIZATION_DOWNLOAD = sql("../sql/search_organizations_download.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -633,5 +634,6 @@ module.exports = {
   UPDATE_CSV_EXPORT,
   REMOVE_CSV_EXPORT,
   CSV_EXPORT,
+  SEARCH_ORGANIZATION_DOWNLOAD,
   ErrorReporter,
 };
