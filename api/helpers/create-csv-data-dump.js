@@ -20,7 +20,64 @@ function sanitizeUserName(name) {
   if (atSymbolIndex > 0) {
     editedName = name.substr(0, atSymbolIndex);
   }
+  if(typeof editedName === 'string'){
+    return editedName.replace('/"/g', '')
+  }
   return editedName;
+}
+
+function convertToObjectOfAuthor(value){
+  if(typeof value === 'string'){
+    const arr = value.split(',');
+
+    const obj = {user_id: undefined, name: undefined}
+    if(arr.length) {
+      arr.forEach((val, index) =>{
+        if(index > 2){
+          return;
+        }
+        
+        let newValeu = val;
+        if(newValeu.includes('(')){
+          newValeu = newValeu.replace('(', '')
+        }
+        if(newValeu.includes(')')){
+          newValeu = newValeu.replace(')', '')
+        }
+        if(!isNaN(parseInt(newValeu))){
+          obj.user_id = parseInt(newValeu);
+        } else if(isNaN(parseInt(newValeu)) && moment.invalid(newValeu)){
+          if(arr.length > 3 && index === 2){
+            const newArray = arr.slice(2, arr.length);
+            obj.name = '';
+            newArray.forEach(str => {
+              obj.name += str;
+            })
+            if(obj.name.includes(')')){
+              obj.name = obj.name.replace(')', '')
+            }
+            obj.name = obj.name.trim();
+
+            obj.name = obj.name.replace('/"/g', '')
+          } else {
+            obj.name = newValeu.trim();
+          }
+        } 
+      })
+      return obj;
+    }
+  } else if (typeof value === 'object'){
+    return value
+  } else{
+    return value;
+  }
+
+}
+
+function getTitleFromString(value){
+  let newValue = value.replace('(', '');
+  newValue = newValue.replace(/.$/,'');
+  return newValue.replace('/"/g', '');
 }
 
 function generateMultiSelectFieldColumn(field, stringArrayValue) {
@@ -273,8 +330,10 @@ async function createCSVDataDump(type, results = []) {
         editedEntry.id
       }`;
 
-      // strip html from body
-      editedEntry.body = editedEntry.body.replace(/<\/?[^>]+(>|$)/g, " ");
+      if (editedEntry.body != undefined) {
+        // strip html from body
+        editedEntry.body = editedEntry.body.replace(/<\/?[^>]+(>|$)/g, " ");
+      }
 
       // max characters for an excel cell is 32766 so trimming
       // the body length so excel doesn't throw errors
@@ -289,21 +348,17 @@ async function createCSVDataDump(type, results = []) {
 
       // add creator and last_updated_by name and profile url
       if (editedEntry.creator) {
-        editedEntry.creator_id = editedEntry.creator.user_id;
-        editedEntry.creator_name = sanitizeUserName(editedEntry.creator.name);
-        editedEntry.creator_profile_url = `https://participedia.net/user/${
-          editedEntry.creator.user_id
-        }`;
+        const creator =  convertToObjectOfAuthor(editedEntry.creator);
+        editedEntry.creator_id = creator.user_id;
+        editedEntry.creator_name = sanitizeUserName(creator.name);
+        editedEntry.creator_profile_url = `https://participedia.net/user/${creator.user_id}`;
       }
 
       if (editedEntry.last_updated_by) {
-        editedEntry.last_updated_by_id = editedEntry.last_updated_by.user_id;
-        editedEntry.last_updated_by_name = sanitizeUserName(
-          editedEntry.last_updated_by.name
-        );
-        editedEntry.last_updated_by_profile_url = `https://participedia.net/user/${
-          editedEntry.last_updated_by.user_id
-        }`;
+        const last_updated_by =  convertToObjectOfAuthor(editedEntry.last_updated_by);
+        editedEntry.last_updated_by_id = last_updated_by.user_id;
+        editedEntry.last_updated_by_name = sanitizeUserName(last_updated_by.name);
+        editedEntry.last_updated_by_profile_url = `https://participedia.net/user/${last_updated_by.user_id}`;
       }
 
       // make sure all date fields are in the same format, ISO 8601
@@ -366,26 +421,43 @@ async function createCSVDataDump(type, results = []) {
         "specific_methods_tools_techniques",
       ];
       articlesToListOfTitles.forEach(field => {
-        if (editedEntry[field]) {
-          editedEntry[`${field}_titles`] = editedEntry[field]
-            .map(item => item.title)
-            .join(", ");
+        if (editedEntry[field] && editedEntry[field] !== null) {
+
+          if(Array.isArray(editedEntry[field])){
+            editedEntry[`${field}_titles`] = editedEntry[field].map(item => item.title).join(", ");
+          } else if(typeof editedEntry[field] === 'object'){
+            editedEntry[`${field}_titles`] = editedEntry[field].values.map(item => item.item).join(", ")
+          } else if(typeof editedEntry[field] === 'string'){
+            const evalEntry = eval(editedEntry[field]);
+            if(evalEntry !== undefined){
+              editedEntry[`${field}_titles`] = evalEntry;
+            }
+          }
         }
       });
 
       simpleArrayFields.forEach(field => {
-        if (editedEntry[field]) {
+        if (editedEntry[field] && editedEntry[field] !== null) {
           editedEntry[field] = editedEntry[field].toString().replace(/,/g, ", ");
         }
       });
 
       // Add "Collections" column
       if (editedEntry.collections) {
-        let collections = editedEntry.collections.map(collection => {
-          return collection.title;
-        });
-
-        editedEntry.collections = collections.toString();
+        if(typeof editedEntry.collections === 'string'){
+          const newItemOfCol = eval(editedEntry.collections)
+          if(newItemOfCol){
+            editedEntry.collections = newItemOfCol;
+          } else {
+            editedEntry.collections = ''
+          }
+        } else if(Array.isArray(editedEntry.collections)){
+          let collections = editedEntry.collections.map(collection => {
+            return collection.title;
+          });
+  
+          editedEntry.collections = collections.toString();
+        }
       }
       
       // reorder fields
@@ -394,7 +466,7 @@ async function createCSVDataDump(type, results = []) {
       const orderedEntry = {};
       orderOfFields.forEach(field => {
         if (simpleArrayFields.indexOf(field) >= 0) {
-          if (editedEntry[field]) {
+          if (editedEntry[field] && editedEntry[field] !== null) {
             let object = generateMultiSelectFieldColumn(field, editedEntry[field]);
             Object.keys(object).forEach(key => {
               orderedEntry[key] = object[key];
@@ -432,5 +504,6 @@ async function createCSVDataDump(type, results = []) {
 
   return filePath;
 }
+
 
 module.exports = {createCSVDataDump};

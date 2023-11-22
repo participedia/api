@@ -9,7 +9,9 @@ let {
   LIST_MAP_CASES,
   LIST_MAP_ORGANIZATIONS,
   SEARCH_CASE_DOWNLOAD,
-  SEARCH_ORGANIZATION_DOWNLOAD,
+  SEARCH_CASES,
+  SEARCH_ORGANIZATIONS,
+  SEARCH_METHODS,
   SEARCH_CHINESE,
   ENTRIES_BY_COLLECTION_ID,
 } = require("./db");
@@ -145,17 +147,16 @@ const getSearchDownloadResults = async (params) => {
     let queryFile = SEARCH;
     switch (params.type) {
       case "case":
-        queryFile = SEARCH_CASE_DOWNLOAD;
+        queryFile = SEARCH_CASES;
         break;
       case "method":
-        // await removeEntryMethods(thingsByUser.id);
+        queryFile = SEARCH_METHODS;
         break;
       case "collection":
         // await removeEntryCollections(thingsByUser.id);
         break;
       case "organization":
-        queryFile = SEARCH_ORGANIZATION_DOWNLOAD;
-        // await removeEntryOrganizations(thingsByUser.id);
+        queryFile = SEARCH_ORGANIZATIONS;
         break;
     }
     
@@ -173,8 +174,10 @@ const getSearchDownloadResults = async (params) => {
         limit: params.limit, // null is no limit in SQL
         offset: offsetFromReq(params.req),
         language: params.lang,
+        lang: params.lang,
         langQuery: params.langQuery,
         userId: params.req.user ? params.req.user.id : null,
+        userid: params.req.user ? params.req.user.id : null,
         sortby: sortbyFromReq(params.req),
         type: params.type + "s",
         facets: searchFiltersFromReq(params.req),

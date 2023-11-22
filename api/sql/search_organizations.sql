@@ -22,11 +22,11 @@ WITH full_thing AS (
     texts.description,
     texts.body,
     -- media links
-    photos,
-    files,
-    videos,
-    links,
-    audio,
+    to_json(COALESCE(photos, '{}')) AS photos,
+    to_json(COALESCE(videos, '{}')) AS videos,
+    to_json(COALESCE(files, '{}')) AS files,
+    to_json(COALESCE(links, '{}')) AS links,
+    to_json(COALESCE(audio, '{}')) AS audio,
     -- text values
     location_name,
     address1,
@@ -54,5 +54,5 @@ FROM
     get_localized_texts_fallback(organizations.id, ${lang}, organizations.original_language) AS texts
 where organizations.published = true and organizations.hidden = false
 )
-SELECT to_json(results.*) results FROM full_thing
+SELECT full_thing.* FROM full_thing
 ;
