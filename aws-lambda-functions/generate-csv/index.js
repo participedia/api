@@ -1,4 +1,5 @@
-const AWS = require("aws-sdk");
+// const AWS = require("aws-sdk");
+// const s3 = new AWS.S3();
 const promise = require("bluebird");
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
@@ -36,8 +37,13 @@ const AWS_SEARCH_CHINESE = sql("./sql/aws_search_chinese.sql");
 const AWS_SEARCH_CASES = sql("./sql/aws_search_cases.sql");
 const AWS_SEARCH_METHODS = sql("./sql/aws_search_methods.sql");
 const AWS_SEARCH_ORGANIZATIONS = sql("./sql/aws_search_organizations.sql");
+const AWS_UPDATE_CSV_EXPORT = sql("./sql/aws_update_csv_export.sql");
+
+const {createCSVDataDump} = require("./create-csv-data-dump.js");
 
 const getSearchDownloadResults = async (params) => {
+  console.log('!!!!!!!!!!!!!!!! getSearchDownloadResults params',  params);
+
   try {
     let results = null;
     let queryFile = AWS_SEARCH;
@@ -53,7 +59,7 @@ const getSearchDownloadResults = async (params) => {
         break;
     }
     
-    if (params.lang === "zh" && params.query) {
+    if (params.lang === "zh" && params.user_query) {
       results = await db.any(AWS_SEARCH_CHINESE, params.filters);
     } else {
       results = await db.any(queryFile, params.filters);
@@ -65,22 +71,35 @@ const getSearchDownloadResults = async (params) => {
   }
 }
 
+const updateCSVEntry = async (userId, downloadUrl, csvExportId) => {
+  try {
+    let results = await db.none(AWS_UPDATE_CSV_EXPORT, {
+      csvExportId: csvExportId.csv_export_id,
+      userId: userId,
+      downloadUrl: downloadUrl,
+    });
+    return results;
+  } catch (err) {
+    console.log("updatecreateCSVEntry error - ", err);
+    throw err;
+  }
+};
+
 exports.handler = async (event, context) => {
-  // var key = event.Records[0].s3.object.key;
-  // var bucket = event.Records[0].s3.bucket.name;
-  // var rawUrl = `https://s3.amazonaws.com/${bucket}/${key}`;
-  // const evn = JSON.stringify(event);
-  // const con = JSON.stringify(context)
   try {
     const result = await getSearchDownloadResults(event);
-    if(Array.isArray(result) && result.length){
-      console.log('!!!!!!!!!!!!!!!!11111 result[0]',  result[0]);
-    }
+    const csv_export_id = event.csv_export_id
+    let filename = csv_export_id+".csv";
+    const uploadData = await createCSVDataDump(event.type, result, event.bucket, filename);
+    console.log('!!!!!!!!! uploadData uploadedLocation', uploadedLocation);
+    console.log('!!!!!!!!! event.userId event.userId', event.userId);
+    console.log('!!!!!!!!!csv_export_id csv_export_id', csv_export_id);
+    await updateCSVEntry(event.userId, uploadData, csv_export_id);
+    return uploadData;
+
   } catch (error) {
+    console.log('handler error', error)
     throw error;
   }
-  
-  console.log('!!!!!!!!!!!!!!!! handler event', JSON.stringify(event))
-  console.log('!!!!!!!!!!!!!!!! handler context', JSON.stringify(context))
   // callback(JSON.stringify({eve: evn, con: con}));
 };

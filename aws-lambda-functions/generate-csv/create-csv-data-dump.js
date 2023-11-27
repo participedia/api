@@ -1,4 +1,5 @@
-// const fs = require("fs");
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3();
 const { parse } = require("json2csv");
 const moment = require("moment");
 const { sortBy } = require("lodash");
@@ -302,7 +303,7 @@ function convertToIdTitleUrlFields(entry, field) {
   return entry;
 }
 
-async function createCSVDataDump(type, results = []) {
+async function createCSVDataDump(type, results = [], bucket, filename) {
   var entries = results;
   var csvFields = Object.create({});
   
@@ -482,12 +483,20 @@ async function createCSVDataDump(type, results = []) {
 
   const csv = parse(sortBy(editedEntries, "id"), opts);
 
-  // const filePath = `./public/participedia-data-${type}s.csv`;
-
-  // fs.writeFileSync(filePath, csv);
-
-  // return filePath;
-  return csv;
+  try {
+    let uploadedLocation = "";
+    const params = {
+      Bucket: bucket,
+      Key: filename, 
+      Body: csv,
+      ACL: "public-read"
+    };
+    const stored = await s3.upload(params).promise();
+    uploadedLocation = stored.Location;
+    return uploadedLocation;
+  } catch (error) {
+    throw error;
+  }
 }
 
 
