@@ -1986,5 +1986,7 @@
   "Zoom Map Out": "Kaart uitzoomen",
   "download": "Downloaden",
   "delete": "Verwijderen",
-  "csv_exports": "CSV Exporteren"
+  "csv_exports": "CSV Exporteren",
+  "Participedia School": "Participedia School"
+
 }

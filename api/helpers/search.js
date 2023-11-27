@@ -141,6 +141,38 @@ const getSearchResults = async (user_query, limit, langQuery, lang, type, parsed
   }
 }
 
+const getParamsSearchDownloadResults = async (params) => {
+  try {
+    if (params.lang === "zh" && params.user_query) {
+      return {
+        query: params.user_query,
+        limit: params.limit,
+        langQuery: params.langQuery,
+        language: params.lang,
+        type: params.type + "s",
+      }
+    } else {
+      return {
+        query: params.parsed_query,
+        limit: params.limit, // null is no limit in SQL
+        offset: offsetFromReq(params.req),
+        language: params.lang,
+        lang: params.lang,
+        langQuery: params.langQuery,
+        userId: params.req.user ? params.req.user.id : null,
+        userid: params.req.user ? params.req.user.id : null,
+        sortby: sortbyFromReq(params.req),
+        type: params.type + "s",
+        facets: searchFiltersFromReq(params.req),
+      }
+    }
+  } catch (error) {
+    console.log("getParamsSearchDownloadResults error - ", err);
+    throw error;
+  }
+}
+
+
 const getSearchDownloadResults = async (params) => {
   try {
     let results = null;
@@ -215,5 +247,6 @@ module.exports = {
   queryFileFromReq,
   getSearchResults,
   getSearchDownloadResults,
-  getCollectionResults
+  getCollectionResults,
+  getParamsSearchDownloadResults,
 };

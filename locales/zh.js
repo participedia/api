@@ -1986,5 +1986,7 @@
   "Zoom Map Out": "缩放地图",
   "download": "下载",
   "delete": "删除",
-  "csv_exports": "导出 CSV"
+  "csv_exports": "导出 CSV",
+  "Participedia School": "Participedia 学校"
+
 }

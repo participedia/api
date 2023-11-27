@@ -1990,5 +1990,6 @@
   "Zoom Map Out": "Alejar mapa",
   "download": "Descargar",
   "delete": "Borrar",
-  "csv_exports": "Exportar CSV"
+  "csv_exports": "Exportar CSV",
+  "Participedia School": "Participedia Escuela"
 }

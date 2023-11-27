@@ -19,7 +19,8 @@ const {
 } = require("../helpers/things");
 const {
   createCSVEntry,
-  uploadCSVFile
+  uploadCSVFile,
+  processCSVFile
 } = require("../helpers/export-helpers");
 const logError = require("../helpers/log-error.js");
 const SUPPORTED_LANGUAGES = require("../../constants").SUPPORTED_LANGUAGES;
@@ -102,9 +103,20 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async (req, 
         req: req,
         page: 'search'
       }
-      let csv_export_id = await createCSVEntry(paramsForCSV);
-      let uploadCSVFiles = uploadCSVFile(paramsForQuery, csv_export_id);
-      return res.status(200).redirect("/exports/csv");
+      try {
+        let csv_export_id = await createCSVEntry(paramsForCSV);
+        
+        // if(paramsForQuery.page == 'search'){
+        //   processCSVFile(paramsForQuery, csv_export_id);
+        // } else {
+          uploadCSVFile(paramsForQuery, csv_export_id);
+        // }
+        return res.status(200).redirect("/exports/csv");
+      } catch (error) {
+        logError(error);
+        let OK = false;
+        res.status(500).json({ OK, error });
+      }
     }
   } else {
     try {

@@ -1,6 +1,11 @@
+var AWS = require('aws-sdk');
 "use strict";
 let express = require("express");
-
+const lambda = new AWS.Lambda({
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
 let {
   db,
   CREATE_CSV_EXPORT,
@@ -13,7 +18,8 @@ const {uploadCSVToAWS} = require("./upload-to-aws");
 let {
   getSearchResults,
   getSearchDownloadResults,
-  getCollectionResults
+  getCollectionResults,
+  getParamsSearchDownloadResults
 } = require("./search");
 
 const unixTimestampGeneration = () => {
@@ -93,10 +99,38 @@ const uploadCSVFile = async (params, csv_export_id) => {
   let updateExportEntry = await updateCSVEntry(params.req.user.id, uploadData, csv_export_id);
 }
 
+
+
+const processCSVFile = async (params, csv_export_id) => {
+  try {
+    console.log('@@@@@@@@@@@ 111111111111111111 processCSVFile params', params)
+    filters = await getParamsSearchDownloadResults(params);
+    console.log('@@@@@@@@@@@ 22222222222222 processCSVFile filters', filters)
+
+    const paramsLambda = {
+      FunctionName: 'generate-csv', 
+      Payload: JSON.stringify({...filters, csv_export_id: csv_export_id.csv_export_id}),
+    };
+    const result = await lambda.invoke(paramsLambda).promise();
+
+    console.log('Success!');
+    console.log('@@@@@@@@@@@ 33333333333 processCSVFile lambda result', result)
+    // console.log(JSON.stringify(queryResults));
+    // const fileUpload = await createCSVDataDump(params.type, queryResults);
+    // let filename = csv_export_id.csv_export_id + ".csv";
+    // let uploadData = await uploadCSVToAWS(fileUpload, filename);
+    // let updateExportEntry = await updateCSVEntry(params.req.user.id, uploadData, csv_export_id);
+  } catch (error) {
+    console.log('!!!!!!!!!!!!!1 processCSVFile error ', error);
+    throw error;
+  }
+}
+
 module.exports = {
     createCSVEntry,
     getCSVEntry,
     updateCSVEntry,
     removeCSVEntry,
     uploadCSVFile,
+    processCSVFile,
   };

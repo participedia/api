@@ -1991,5 +1991,6 @@
   "draft_container_description": "Continue edting your draft entries that are not yet published.",
   "download": "Download",
   "delete": "Delete",
-  "csv_exports": "My CSV Downloads"
+  "csv_exports": "My CSV Downloads",
+  "Participedia School":"Participedia School"
 }

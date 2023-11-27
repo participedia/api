@@ -1,0 +1,21 @@
+{
+  "name": "generate-csv",
+  "version": "1.0.0",
+  "description": "AWS Lambda function to generate csv file",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Participedia",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.623.0",
+    "bluebird": "^3.4.7",
+    "dotenv": "^14.2.0",
+    "json2csv": "4.5.1",
+    "lodash": "^4.17.4",
+    "moment": "^2.23.0",
+    "pg-connection-string": "2.5.0",
+    "pg-promise": "10.11.1"
+  }
+}

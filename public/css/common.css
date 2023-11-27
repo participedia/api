@@ -518,3 +518,11 @@ footer .language-select {
     width: calc(50% - 15px);
   }
 }
+
+.no-margin {
+  margin: 0 0 5px 0px;
+}
+
+.no-padding {
+  padding: 0;
+}

@@ -1986,5 +1986,6 @@
   "Zoom Map Out": "Allontana mappa",
   "download": "Scaricamento",
   "delete": "Eliminare",
-  "csv_exports": "Esporta CSV"
+  "csv_exports": "Esporta CSV",
+  "Participedia School": "Participedia Scuola"
 }
