@@ -325,7 +325,7 @@ app.get("/legal-english", function(req, res) {
 app.get("/research", function(req, res) {
   res.status(200).render("research-view");
 });
-app.get("/school", function(req, res) {
+app.get("/participediaschool", function(req, res) {
   res.status(200).render("school-view");
 });
 app.get("/teaching", function(req, res) {

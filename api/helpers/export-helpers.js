@@ -103,25 +103,35 @@ const uploadCSVFile = async (params, csv_export_id) => {
 
 const processCSVFile = async (params, csv_export_id) => {
   try {
-    console.log('@@@@@@@@@@@ 111111111111111111 processCSVFile params', params)
+    const payloadParams = {
+      user_query: params.user_query ? params.user_query : '',
+      limit: params.limit ? params.limit : null,
+      langQuery: params.langQuery,
+      lang: params.lang,
+      type: params.type,
+      parsed_query: params.parsed_query,
+      page: params.page,
+      bucket: process.env.AWS_S3_BUCKET,
+      userId: params.req.user.id
+    }
+    console.log('@@@@@@@@@@@ 111111111111111111 processCSVFile payloadParams', payloadParams)
+  
     filters = await getParamsSearchDownloadResults(params);
     console.log('@@@@@@@@@@@ 22222222222222 processCSVFile filters', filters)
 
     const paramsLambda = {
       FunctionName: 'generate-csv', 
-      Payload: JSON.stringify({...filters, csv_export_id: csv_export_id.csv_export_id}),
+      Payload: JSON.stringify({...payloadParams, filters: filters, csv_export_id: csv_export_id.csv_export_id}),
     };
     const result = await lambda.invoke(paramsLambda).promise();
-
-    console.log('Success!');
-    console.log('@@@@@@@@@@@ 33333333333 processCSVFile lambda result', result)
+    console.log('@@@@@@@@@@@ Success Success lambda result', result)
     // console.log(JSON.stringify(queryResults));
     // const fileUpload = await createCSVDataDump(params.type, queryResults);
     // let filename = csv_export_id.csv_export_id + ".csv";
     // let uploadData = await uploadCSVToAWS(fileUpload, filename);
     // let updateExportEntry = await updateCSVEntry(params.req.user.id, uploadData, csv_export_id);
   } catch (error) {
-    console.log('!!!!!!!!!!!!!1 processCSVFile error ', error);
+    console.log('???????? error lambda processCSVFile lambda error ', error);
     throw error;
   }
 }
