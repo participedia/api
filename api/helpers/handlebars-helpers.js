@@ -1778,9 +1778,11 @@ module.exports = {
   },
 
   convertHtmlToText(article, name) {
-    if(article[name]){
+    if(article && name && article[name]){
       const text = htmlToText(article[name]);
       return text.length > 40 ? `${text.slice(0, 40)}...` : text;
+    } else {
+      return '';
     } 
   },
 };
