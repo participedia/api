@@ -101,7 +101,7 @@ const uploadCSVFile = async (params, csv_export_id) => {
 
 
 
-const processCSVFile = async (params, csv_export_id) => {
+const processCSVFile = async (params, paramsForCSV) => {
   try {
     const payloadParams = {
       user_query: params.user_query ? params.user_query : '',
@@ -115,27 +115,22 @@ const processCSVFile = async (params, csv_export_id) => {
       userId: params.req.user.id
     }
     filters = await getParamsSearchDownloadResults(params);
-    const paramsLambda = {
-      FunctionName: 'generate-csv', 
-      Payload: JSON.stringify({...payloadParams, filters: filters, csv_export_id: csv_export_id.csv_export_id}),
-    };
-    const result = await lambda.invoke(paramsLambda).promise();
-    console.log(' lambda processCSVFile result ', result);
 
-    if(result && typeof result === 'object'){
-      if(!result.hasOwnProperty('FunctionError') 
-      && (result.StatusCode && result.StatusCode === 200))
-      {
+    const payloadLambda = JSON.stringify({
+      ...payloadParams, 
+      filters: filters, 
+      paramsForCSV: paramsForCSV
+    });
 
-        if(result.hasOwnProperty('Payload') && typeof result.Payload === 'string'){
-          const response = await JSON.parse(result.Payload);
-          await updateCSVEntry(response.userId, response.uploadData, {csv_export_id: response.csv_export_id});
-        }
-
-      }
+    let paramsLambda = { FunctionName: 'generate-csv', Payload: payloadLambda};
+    if(process.env.NODE_ENV === 'production'){
+      paramsLambda = {FunctionName: 'generate-csv-prod', Payload: payloadLambda};
     }
+
+    const result = await lambda.invoke(paramsLambda).promise();
+    console.log(' lambda result ', result);
   } catch (error) {
-    console.log('???? lambda processCSVFile error ', error);
+    console.log('lambda error ', error);
     throw error;
   }
 }

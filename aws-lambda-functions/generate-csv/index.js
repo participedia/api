@@ -1,4 +1,14 @@
 // zip -r ../generate-csv.zip *
+/*
+* in the lambda function for the csv generate. 
+* go to configration -> Environment variables
+* add the following "Environment variables": 
+* 1) DATABASE_URL
+* 2) ACCESS_KEY_ID // Note: ACCESS_KEY_ID is the AWS_ACCESS_KEY_ID
+* 3) REGION // Note: REGION is the AWS_REGION
+* 4) SECRET_ACCESS_KEY // Note: SECRET_ACCESS_KEY is the AWS_SECRET_ACCESS_KEY
+*
+*/
 const promise = require("bluebird");
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
@@ -30,16 +40,46 @@ function sql(filename) {
   });
 }
 
+const AWS_CREATE_CSV_EXPORT = sql("./sql/aws_create_csv_export.sql");
 const AWS_SEARCH = sql("./sql/aws_search.sql");
 const AWS_SEARCH_CHINESE = sql("./sql/aws_search_chinese.sql");
 const AWS_SEARCH_CASES = sql("./sql/aws_search_cases.sql");
 const AWS_SEARCH_METHODS = sql("./sql/aws_search_methods.sql");
 const AWS_SEARCH_ORGANIZATIONS = sql("./sql/aws_search_organizations.sql");
+const AWS_UPDATE_CSV_EXPORT = sql("./sql/aws_update_csv_export.sql");
+
 
 const {createCSVDataDump} = require("./create-csv-data-dump.js");
 
+const unixTimestampGeneration = () => {
+  return Math.floor(Date.now() / 1000)
+}
+
+const generateCsvExportId = async (userId) => {
+  let unixTimestamp = unixTimestampGeneration();
+  let csvExportId = userId.toString() + unixTimestamp.toString();
+
+  return csvExportId;
+}
+
+const createCSVEntry = async (params) => {
+  let csvExportId = await generateCsvExportId(params.userId);
+  let type = params.type;
+  if (params.page == 'collection') { type = 'Collection - ' + type ; };
+  try {
+    let results = await db.one(AWS_CREATE_CSV_EXPORT, {
+      csvExportId: csvExportId,
+      type: type,
+      userId: params.userId,
+    });
+    return results;
+  } catch (err) {
+    console.log("createCSVEntry error - ", err);
+    throw err;
+  }
+};
+
 const getSearchDownloadResults = async (params) => {
-  console.log('222222222 getSearchDownloadResults params ', params);
   try {
     let results = null;
     let queryFile = AWS_SEARCH;
@@ -68,19 +108,28 @@ const getSearchDownloadResults = async (params) => {
 }
 
 
+const updateCSVEntry = async (userId, downloadUrl, csvExportId) => {
+  try {
+    let results = await db.none(AWS_UPDATE_CSV_EXPORT, {
+      csvExportId: csvExportId.csv_export_id,
+      userId: userId,
+      downloadUrl: downloadUrl,
+    });
+    return results;
+  } catch (err) {
+    console.log("updateCSVEntry error - ", err);
+  }
+};
+
 exports.handler = async (event, context) => {
   try {
+    let csv_export_id = await createCSVEntry(event.paramsForCSV);
     const result = await getSearchDownloadResults(event);
-    console.log('222222222 getSearchDownloadResults result ', result.length);
-
-    const csv_export_id = event.csv_export_id
-    let filename = csv_export_id+".csv";
+    let filename = csv_export_id.csv_export_id + ".csv";
     const uploadData = await createCSVDataDump(event.type, result, event.bucket, filename);
-    console.log('222222222 getSearchDownloadResults uploadData ', uploadData);
-
-    return {uploadData: uploadData, userId: event.userId, csv_export_id: csv_export_id  };
+    await updateCSVEntry(event.userId, uploadData, csv_export_id);
+    return {uploadData: uploadData, userId: event.userId};
   } catch (error) {
-    console.log('handler error', error)
     throw error;
   }
 };

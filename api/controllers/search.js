@@ -104,11 +104,11 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async (req, 
         page: 'search'
       }
       try {
-        let csv_export_id = await createCSVEntry(paramsForCSV);
         
-        if(paramsForQuery.page == 'search'){
-          processCSVFile(paramsForQuery, csv_export_id);
+        if(paramsForQuery.page == 'search' && !process.env.APP_LOCAL){
+          processCSVFile(paramsForQuery, paramsForCSV);
         } else {
+          let csv_export_id = await createCSVEntry(paramsForCSV);
           uploadCSVFile(paramsForQuery, csv_export_id);
         }
         return res.status(200).redirect("/exports/csv");
