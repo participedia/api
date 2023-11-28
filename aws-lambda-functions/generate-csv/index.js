@@ -1,10 +1,8 @@
-// const AWS = require("aws-sdk");
-// const s3 = new AWS.S3();
+// zip -r ../generate-csv.zip *
 const promise = require("bluebird");
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 const path = require("path");
-// const request = require('request').defaults({ encoding: null });
 const options = {
   // Initialization Options
   promiseLib: promise, // use bluebird as promise library
@@ -37,13 +35,11 @@ const AWS_SEARCH_CHINESE = sql("./sql/aws_search_chinese.sql");
 const AWS_SEARCH_CASES = sql("./sql/aws_search_cases.sql");
 const AWS_SEARCH_METHODS = sql("./sql/aws_search_methods.sql");
 const AWS_SEARCH_ORGANIZATIONS = sql("./sql/aws_search_organizations.sql");
-const AWS_UPDATE_CSV_EXPORT = sql("./sql/aws_update_csv_export.sql");
 
 const {createCSVDataDump} = require("./create-csv-data-dump.js");
 
 const getSearchDownloadResults = async (params) => {
-  console.log('!!!!!!!!!!!!!!!! getSearchDownloadResults params',  params);
-
+  console.log('222222222 getSearchDownloadResults params ', params);
   try {
     let results = null;
     let queryFile = AWS_SEARCH;
@@ -71,35 +67,20 @@ const getSearchDownloadResults = async (params) => {
   }
 }
 
-const updateCSVEntry = async (userId, downloadUrl, csvExportId) => {
-  try {
-    let results = await db.none(AWS_UPDATE_CSV_EXPORT, {
-      csvExportId: csvExportId.csv_export_id,
-      userId: userId,
-      downloadUrl: downloadUrl,
-    });
-    return results;
-  } catch (err) {
-    console.log("updatecreateCSVEntry error - ", err);
-    throw err;
-  }
-};
 
 exports.handler = async (event, context) => {
   try {
     const result = await getSearchDownloadResults(event);
+    console.log('222222222 getSearchDownloadResults result ', result.length);
+
     const csv_export_id = event.csv_export_id
     let filename = csv_export_id+".csv";
     const uploadData = await createCSVDataDump(event.type, result, event.bucket, filename);
-    console.log('!!!!!!!!! uploadData uploadedLocation', uploadedLocation);
-    console.log('!!!!!!!!! event.userId event.userId', event.userId);
-    console.log('!!!!!!!!!csv_export_id csv_export_id', csv_export_id);
-    await updateCSVEntry(event.userId, uploadData, csv_export_id);
-    return uploadData;
+    console.log('222222222 getSearchDownloadResults uploadData ', uploadData);
 
+    return {uploadData: uploadData, userId: event.userId, csv_export_id: csv_export_id  };
   } catch (error) {
     console.log('handler error', error)
     throw error;
   }
-  // callback(JSON.stringify({eve: evn, con: con}));
 };
