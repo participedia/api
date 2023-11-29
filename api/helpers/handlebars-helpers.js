@@ -8,7 +8,6 @@ const searchFiltersList = require("./search-filters-list.js");
 const countries = require("./countries.js");
 const { SUPPORTED_LANGUAGES } = require("../../constants.js");
 const { searchFilterKeyLists, searchFilterKeys } = require("./things");
-// const { htmlToText } = require("html-to-text");
 
 const LOCATION_FIELD_NAMES = [
   "address1",
@@ -1778,9 +1777,9 @@ module.exports = {
   },
 
   convertHtmlToText(article, name) {
-    if(article && name && article[name]){
-      // const text = htmlToText(article[name] || "");
-      const text = article[name];
+    if(article && name && article[name] && typeof article[name] === 'string'){
+      let text = article[name] || "";
+      text = text.replace(/<[^>]+>/g, '');
       return text.length > 40 ? `${text.slice(0, 40)}...` : text;
     } else {
       return '';
