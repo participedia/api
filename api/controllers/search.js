@@ -104,14 +104,19 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async (req, 
         page: 'search'
       }
       try {
-        let csv_export_id = await createCSVEntry(paramsForCSV);
         
-        if(paramsForQuery.page == 'search'){
-          processCSVFile(paramsForQuery, csv_export_id);
+        // for staging or production server
+        if(paramsForQuery.page == 'search' && !process.env.APP_LOCAL){
+          processCSVFile(paramsForQuery, paramsForCSV);
+          setTimeout(() => {
+            return res.status(200).redirect("/exports/csv");
+          }, 3000);
         } else {
+          // for dev/local devices
+          let csv_export_id = await createCSVEntry(paramsForCSV);
           uploadCSVFile(paramsForQuery, csv_export_id);
+          return res.status(200).redirect("/exports/csv");
         }
-        return res.status(200).redirect("/exports/csv");
       } catch (error) {
         logError(error);
         let OK = false;
