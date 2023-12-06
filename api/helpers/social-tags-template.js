@@ -1,5 +1,9 @@
 function socialTagsTemplate(title, description, url, imageUrl) {
-  return `
+  let meta = '';
+  if(url && typeof url === 'string' && url.includes('/user/')){
+    meta += `<meta name="robots" content="noindex">`
+  }
+  return meta += `
     <meta itemprop="name" content="${title}">
     <meta itemprop="description" content="${description}">
     <meta itemprop="image" content="${imageUrl}">
