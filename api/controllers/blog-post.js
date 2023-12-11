@@ -9,7 +9,6 @@ const { chunk } = require("lodash");
 router.get("/", async (req, res) => {
   feed.load("https://medium.com/feed/@participediaproject")
     .then(rss => {
-      console.log('1111111 blog post feed rss ', rss)
       const chunkItems = rss.items.length > 0 ? chunk(rss.items, 10)[0] : [];
       const regEx = /<img[^>]+src="?([^"\s]+)"?\s*\/>/;
       
@@ -39,8 +38,6 @@ router.get("/", async (req, res) => {
       });
     })
     .catch(error => {
-      console.log('error blog post feed error ', error)
-
       logError(error);
       res.json({ success: false, error: error.message || error });
     });
