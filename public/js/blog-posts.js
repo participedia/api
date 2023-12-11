@@ -15,7 +15,7 @@ const blogPosts = {
       if (xhr.status === 200) {
         const response = JSON.parse(xhr.response);
         console.log('$$$$$$$$$$$$$$$$ response ', response);
-        this.render(response.blogPosts);
+        this.render(response.blogPosts ?? []);
       }
     };
     xhr.send();
