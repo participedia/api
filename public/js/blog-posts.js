@@ -14,6 +14,7 @@ const blogPosts = {
 
       if (xhr.status === 200) {
         const response = JSON.parse(xhr.response);
+        console.log('$$$$$$$$$$$$$$$$ response ', response);
         this.render(response.blogPosts);
       }
     };
@@ -25,6 +26,8 @@ const blogPosts = {
       .innerHTML;
     const columns = toArray(document.querySelectorAll(".js-blog-post-column"));
     columns.forEach((c, i) => {
+      console.log('$$$$$$$$$$$$$$$$ posts[i] ', posts[i]);
+
       const columnEl = c.parentElement;
       let postHTML = document.createElement("div");
       postHTML.innerHTML = template;
