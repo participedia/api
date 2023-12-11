@@ -18,7 +18,7 @@ const blogPosts = {
         this.render(response.blogPosts ?? []);
       }
     };
-    xhr.send();
+    xhr.send(null);
   },
 
   render(posts) {

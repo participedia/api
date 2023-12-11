@@ -1,7 +1,6 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const https = require('https');
 let Parser = require('rss-parser');
 let parser = new Parser({
   customFields:{
@@ -45,12 +44,12 @@ router.get("/", async (req, res) => {
       };
     });
 
-    res.status(200).json({blogPosts: blogItems });
+    return res.status(200).json({blogPosts: blogItems });
   } catch (error) {
     console.log('^^^^^^ blog posts error', error)
     console.log('^^^^^^ blog posts error message', error?.message)
     logError(error);
-    res.json({ success: false, error: error.message || error });
+    return res.json({ success: false, error: error.message || error });
   }
 
   // feed.load("https://medium.com/feed/@participediaproject")
