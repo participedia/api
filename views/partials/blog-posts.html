@@ -1,18 +1,33 @@
 {{#> three-column-row }}
-  {{#> three-column-column}}
-    <div class="js-blog-post-column"></div>
-  {{/ three-column-column}}
-  {{#> three-column-column}}
-    <div class="js-blog-post-column"></div>
-  {{/ three-column-column}}
-  {{#> three-column-column}}
-    <div class="js-blog-post-column"></div>
-  {{/ three-column-column}}
+  {{#each blogPosts}}
+    {{#> three-column-column}}
+      <div class="js-blog-post-column">
+        <div>
+          <div class="js-blog-post-card__image blog-post-card__image u-margin-bottom--xsmall" 
+          style="background-image: url('{{imageUrl}}')"></div>
+          <h3 class="u-margin-bottom--xsmall">
+            <a href="{{url}}"  target="_blank"rel="noopener" class="js-blog-post-card__title">{{title}}</a>
+          </h3>
+          <div class="js-blog-post-card__description blog-post-card__description u-margin-bottom--xsmall"> 
+            {{{description}}}
+          </div>
+        </div>
+      </div>
+      <a
+        href="{{url}}"
+        target="_blank"
+        rel="noopener"
+        class="js-blog-post-card__link blog-post-card__link u-extra-bold"
+      >
+        {{t "Read more"}} ->
+      </a>
+    {{/ three-column-column}}
+  {{/each}}
 {{/ three-column-row }}
 
 <script type="text/template" id="js-blog-post-card-template">
   <div>
-    <div class="js-blog-post-card__image blog-post-card__image u-margin-bottom--xsmall"></div>
+    <div class="js-blog-post-card__image blog-post-card__image u-margin-bottom--xsmall" ></div>
     <h3 class="u-margin-bottom--xsmall">
       <a href="#"  target="_blank"rel="noopener" class="js-blog-post-card__title"></a>
     </h3>

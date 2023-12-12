@@ -2,7 +2,7 @@ import map from "./map.js";
 import searchMap from "./search-map.js";
 import bannerNotice from "./banner-notice.js";
 import editSelect from "./edit-select.js";
-import blogPosts from "./blog-posts.js";
+// import blogPosts from "./blog-posts.js";
 import featuredEntriesCarousel from "./featured-entries-carousel.js";
 import homeHero from "./home-hero.js";
 import easingFunctions from "./utils/easing-functions.js";
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   searchMap.init();
   editSelect.init();
   // blogPosts.init(tracking);
-  blogPosts.fetch();
+  // blogPosts.fetch();
   featuredEntriesCarousel.init();
   homeHero.init();
   initSearchForm();
