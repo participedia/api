@@ -46,7 +46,6 @@ router.get("/", async (req, res) => {
 
     return res.status(200).json({blogPosts: blogItems });
   } catch (error) {
-    console.log('^^^^^^ blog posts error.message', error.message)
     logError(error);
     return res.json({ success: false, error: error.message || error });
   }
