@@ -4,6 +4,7 @@
 function createFunctionWithTimeout(callback, opt_timeout) {
   var called = false;
   function fn() {
+    console.log('%%%%%%%%%%%%%%%%%%%%%%%55 fn fn called ', called);
     if (!called) {
       called = true;
       callback();

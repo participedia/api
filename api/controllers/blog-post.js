@@ -12,11 +12,16 @@ let parser = new Parser({
     ]
   }
 });
-const feed = require('rss-to-json');
+// const feed = require('rss-to-json');
 const logError = require("../helpers/log-error.js");
 const { chunk } = require("lodash");
 
 router.get("/", async (req, res) => {
+  console.log('^^^^^^ blog post req ', req.hostname)
+  // console.log('^^^^^^ blog Retry-After res.header ', res.header('retry-after'))
+  console.log('^^^^^^ res 222 blog Retry-After res.header ', res.header['retry-after'])
+  console.log('^^^^^^ req 111 blog Retry-After res.header ', req.headers['retry-after'])
+
   try {
     const rss = await parser.parseURL('https://medium.com/feed/@participediaproject');
     console.log('^^^^^^ rss.items.length ', rss.items.length)
@@ -46,8 +51,8 @@ router.get("/", async (req, res) => {
 
     return res.status(200).json({blogPosts: blogItems });
   } catch (error) {
-    console.log('^^^^^^ blog posts error', error)
-    console.log('^^^^^^ blog posts error message', error?.message)
+    console.log('^^^^^^ blog posts error.status', error.status)
+    console.log('^^^^^^ blog posts error.message', error.message)
     logError(error);
     return res.json({ success: false, error: error.message || error });
   }
