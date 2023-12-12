@@ -25,28 +25,33 @@ const blogPosts = {
   render(posts) {
     const template = document.querySelector("#js-blog-post-card-template")
       .innerHTML;
+
     const columns = toArray(document.querySelectorAll(".js-blog-post-column"));
+    console.log('2222222222222222 columns columns ', columns)
     columns.forEach((c, i) => {
+      console.log('2222222222222222 posts[i] posts[i] ', posts[i])
 
-      const columnEl = c.parentElement;
-      let postHTML = document.createElement("div");
-      postHTML.innerHTML = template;
-
-      const imgDivEl = postHTML.querySelector(".js-blog-post-card__image");
-      const titleEl = postHTML.querySelector(".js-blog-post-card__title");
-      const descriptionEl = postHTML.querySelector(
-        ".js-blog-post-card__description"
-      );
-      const linkEl = postHTML.querySelector(".js-blog-post-card__link");
-
-      imgDivEl.style.backgroundImage = `url(${posts[i].imageUrl})`;
-      titleEl.innerHTML = posts[i].title;
-      titleEl.setAttribute("data-title", posts[i].title);
-      titleEl.href = posts[i].url;
-      descriptionEl.innerHTML = posts[i].description + "...";
-      linkEl.setAttribute("href", posts[i].url);
-
-      columnEl.innerHTML = postHTML.innerHTML;
+      if(posts[i]){
+        const columnEl = c.parentElement;
+        let postHTML = document.createElement("div");
+        postHTML.innerHTML = template;
+  
+        const imgDivEl = postHTML.querySelector(".js-blog-post-card__image");
+        const titleEl = postHTML.querySelector(".js-blog-post-card__title");
+        const descriptionEl = postHTML.querySelector(
+          ".js-blog-post-card__description"
+        );
+        const linkEl = postHTML.querySelector(".js-blog-post-card__link");
+  
+        imgDivEl.style.backgroundImage = `url(${posts[i].imageUrl})`;
+        titleEl.innerHTML = posts[i].title;
+        titleEl.setAttribute("data-title", posts[i].title);
+        titleEl.href = posts[i].url;
+        descriptionEl.innerHTML = posts[i].description + "...";
+        linkEl.setAttribute("href", posts[i].url);
+  
+        columnEl.innerHTML = postHTML.innerHTML;
+      }
     });
 
     // Track article clicks
