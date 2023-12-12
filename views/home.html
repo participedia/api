@@ -186,21 +186,24 @@
     }}
 </div>
 
-<div class="home-section">
-  <div class="u-inner-container">
-    <div class="home-section-header">
-      <h2>{{t "News"}}</h2>
-      <a
-        href="https://medium.com/@participediaproject"
-        target="_blank"
-        rel="noopener"
-      >
-        {{t "View all"}}
-      </a>
+{{#if blogPosts.length}}
+  <div class="home-section">
+    <div class="u-inner-container">
+      <div class="home-section-header">
+        <h2>{{t "News"}}</h2>
+        <a
+          href="https://medium.com/@participediaproject"
+          target="_blank"
+          rel="noopener"
+        >
+          {{t "View all"}}
+        </a>
+      </div>
+      {{> blog-posts}}
     </div>
-    {{> blog-posts}}
   </div>
-</div>
+{{/if}}
+
 
 <div class="home-section">
   {{> featured-entries-carousel 

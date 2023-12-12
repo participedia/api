@@ -126,8 +126,6 @@ async function getBlogPosts() {
     }
     return blogItems;
   } catch (error) {
-    console.log('^^^^^^ blog posts error.status', error.status)
-    console.log('^^^^^^ blog posts error.message', error.message)
     logError(error);
     return [];
   }
