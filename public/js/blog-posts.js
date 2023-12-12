@@ -3,7 +3,7 @@ const toArray = nodeList => Array.prototype.slice.call(nodeList);
 const blogPosts = {
   init(tracking) {
     this.fetch();
-    this.tracking = tracking;
+    // this.tracking = tracking;
   },
 
   fetch() { 
@@ -27,10 +27,8 @@ const blogPosts = {
       .innerHTML;
 
     const columns = toArray(document.querySelectorAll(".js-blog-post-column"));
-    console.log('2222222222222222 columns columns ', columns)
     columns.forEach((c, i) => {
       console.log('2222222222222222 posts[i] posts[i] ', posts[i])
-
       if(posts[i]){
         const columnEl = c.parentElement;
         let postHTML = document.createElement("div");
@@ -59,12 +57,11 @@ const blogPosts = {
     if(titleEls) {
       titleEls.forEach(el => {
         el.addEventListener("click", e => {
-          console.log('2121231231312313 render blog post e ', e);
           e.preventDefault();
-          let title = el.getAttribute("data-title");
-          this.tracking.sendWithCallback("home.news", "blog_article_click", title, () => {
+          // let title = el.getAttribute("data-title");
+          // this.tracking.sendWithCallback("home.news", "blog_article_click", title, () => {
             window.open(e.target.href);
-          });
+          // });
         });
       });
     }

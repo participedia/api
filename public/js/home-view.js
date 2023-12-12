@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   map.init();
   searchMap.init();
   editSelect.init();
-  blogPosts.init(tracking);
+  // blogPosts.init(tracking);
+  blogPosts.fetch();
   featuredEntriesCarousel.init();
   homeHero.init();
   initSearchForm();

@@ -17,10 +17,6 @@ const logError = require("../helpers/log-error.js");
 const { chunk } = require("lodash");
 
 router.get("/", async (req, res) => {
-  console.log('^^^^^^ blog post req ', req.hostname)
-  // console.log('^^^^^^ blog Retry-After res.header ', res.header('retry-after'))
-  console.log('^^^^^^ res 222 blog Retry-After res.header ', res.header('retry-after'))
-
   try {
     const rss = await parser.parseURL('https://medium.com/feed/@participediaproject');
     console.log('^^^^^^ rss.items.length ', rss.items.length)
