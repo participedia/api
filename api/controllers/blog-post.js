@@ -80,8 +80,8 @@ router.get("/", async (req, res) => {
     .catch(async (error) => {
       console.log('blog posts error', error)
       const posts = await getMediumPosts();
-      console.log('****** posts MEDIUM_POSTS error', posts.length);
       if(Array.isArray(posts)){
+        console.log('****** posts error', posts.length);
         res.status(200).json({blogPosts: posts});
       } else {
         logError(error);
