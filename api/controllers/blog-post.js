@@ -26,8 +26,6 @@ async function getMediumPosts() {
     const posts = await db.any(MEDIUM_POSTS);
     return posts.map(post => mapPost(post));
   } catch (error) {
-    console.log('****** getMediumPosts error', error);
-
     return null;
   }
 }
@@ -49,7 +47,6 @@ async function upsertMediumPosts(blogPosts) {
 router.get("/", async (req, res) => {
   feed.load("https://medium.com/feed/@participediaproject")
     .then(rss => {
-      console.log('^^^^^^ rss.items.length ', rss.items.length)
       const chunkItems = rss.items.length > 0 ? chunk(rss.items, 10)[0] : [];
       const regEx = /<img[^>]+src="?([^"\s]+)"?\s*\/>/;
       
@@ -80,10 +77,8 @@ router.get("/", async (req, res) => {
       });
     })
     .catch(async (error) => {
-      console.log('blog posts error', error.message || error)
       const posts = await getMediumPosts();
       if(Array.isArray(posts)){
-        console.log('****** posts error', posts.length);
         res.status(200).json({blogPosts: posts});
       } else {
         logError(error);
