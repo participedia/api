@@ -114,6 +114,8 @@ const UPDATE_CSV_EXPORT = sql("../sql/update_csv_export.sql");
 const REMOVE_CSV_EXPORT = sql("../sql/remove_csv_export.sql");
 const CSV_EXPORT = sql("../sql/csv_export.sql");
 const SEARCH_ORGANIZATION_DOWNLOAD = sql("../sql/search_organizations_download.sql");
+const UPSERT_MEDIUM_POST = sql("../sql/upsert_medium_post.sql");
+const MEDIUM_POSTS = sql("../sql/medium_posts.sql");
 
 function ErrorReporter() {
   this.errors = [];
@@ -636,4 +638,6 @@ module.exports = {
   CSV_EXPORT,
   SEARCH_ORGANIZATION_DOWNLOAD,
   ErrorReporter,
+  UPSERT_MEDIUM_POST,
+  MEDIUM_POSTS,
 };

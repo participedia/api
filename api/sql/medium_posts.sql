@@ -1,0 +1,1 @@
+SELECT * FROM medium_posts ORDER BY created_at desc LIMIT 3;

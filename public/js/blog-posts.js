@@ -3,7 +3,7 @@ const toArray = nodeList => Array.prototype.slice.call(nodeList);
 const blogPosts = {
   init(tracking) {
     this.fetch();
-    // this.tracking = tracking;
+    this.tracking = tracking;
   },
 
   fetch() { 
@@ -14,6 +14,7 @@ const blogPosts = {
 
       if (xhr.status === 200) {
         const response = JSON.parse(xhr.response);
+        console.log('response ', response);
         this.render(response.blogPosts ?? []);
       }
     };
