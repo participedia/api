@@ -26,6 +26,8 @@ async function getMediumPosts() {
     const posts = await db.any(MEDIUM_POSTS);
     return posts.map(post => mapPost(post));
   } catch (error) {
+    console.log('****** getMediumPosts error', error);
+
     return null;
   }
 }
@@ -78,7 +80,7 @@ router.get("/", async (req, res) => {
       });
     })
     .catch(async (error) => {
-      console.log('blog posts error', error)
+      console.log('blog posts error', error.message || error)
       const posts = await getMediumPosts();
       if(Array.isArray(posts)){
         console.log('****** posts error', posts.length);
