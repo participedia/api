@@ -309,6 +309,40 @@ function convertToIdTitleUrlFields(entry, field) {
   return entry;
 }
 
+// work on the convert string to fileds
+function convertToIdTitleUrl(entry, field) {
+
+  /*
+  * e.x (5391,case,Sciencewise)
+  */
+
+  if (entry[field]) {
+    
+    if(typeof entry[field] === 'string'){
+      const str = entry[field];
+      const id = str.substring(1, str.indexOf(','));
+      entry[`${field}_id`] = id;
+      const updateStr = str.substring(id.length + 2, str.length);
+      const type = updateStr.substring(0, updateStr.indexOf(','));
+
+      // get title of string
+      /**
+       * (id.length + 3 + type.length) 
+       * (str.length - 2)
+       */
+      let title = str.substring((id.length + 3 + type.length), (str.length - 2));
+      if(title.startsWith('"')){
+        title = title.replace('"', '');
+      }
+      entry[`${field}_title`] = title;
+      entry[`${field}_url`] = `https://participedia.net/${type}/${id}`;
+    }
+
+  }
+  return entry;
+}
+
+
 async function createCSVDataDump(type, results = [], bucket, filename) {
   var entries = results;
   var csvFields = Object.create({});
@@ -376,8 +410,8 @@ async function createCSVDataDump(type, results = [], bucket, filename) {
 
       // convert primary_organizer and is_component_of into three new fields (id, title, url)
       if (editedEntry.type === "case") {
-        editedEntry = convertToIdTitleUrlFields(editedEntry, "is_component_of");
-        editedEntry = convertToIdTitleUrlFields(editedEntry, "primary_organizer");
+        editedEntry = convertToIdTitleUrl(editedEntry, "is_component_of");
+        editedEntry = convertToIdTitleUrl(editedEntry, "primary_organizer");
       }
 
       // convert specific_methods_tools_techniques into three new fields (id, title, url)
