@@ -2010,7 +2010,7 @@
   "participedia.school.p2": "Diese neuen transnationalen Prozesse, Methoden und Werkzeuge finden zunehmend Eingang, sei es durch globale deliberative Mini-Öffentlichkeiten und transnationale deliberative Organisationsdesigns bis hin zu digitalen Infrastrukturen und Methoden der vernetzten Partizipation, Forschung, Einbindung und Koalitionsbildung. Heute müssen wir mehr denn je zusammenkommen, uns austauschen, von erfahrenen Menschen hören und uns die Fähigkeiten aneignen, auf transnationale demokratische Innovationen zu reagieren, daraus zu lernen, sie zu identifizieren, zu erforschen und zu gestalten.",
   "participedia.school.p3": "In Zusammenarbeit mit der Memorial University, der University of Western Cape, der McMaster University, dem Coady Institute, der Federal University of Minas Gerais, der Innovation for Policy Foundation, Mission Publiques, Democracy International und einem Konsortium führender Praktiker und Wissenschaftler nehmen wir an der nächsten Veranstaltung teil Participedia-Schule für transnationale demokratische Innovationen!",
   "participedia.school.p4": "Die Veranstaltung findet vom 10. bis 15. Juni 2024 gleichzeitig an drei dezentralen Standorten statt: der Memorial University (St. John's, Kanada), der University of Western Cape (Kapstadt, Südafrika) und der Federal University of Minas Gerais (Belo Horizonte, Brasilien). Das Brasilien-Erlebnis wird hauptsächlich auf Spanisch/Portugiesisch stattfinden und die drei Standorte werden durch einzigartige virtuelle Programme mit Live-Übersetzung verbunden, um Zugänglichkeit und Wirkung zu maximieren. Mit diesem global dezentralen Ansatz hoffen wir, ein transnationales Lernökosystem zu schaffen, das das Thema widerspiegelt und Studierende und Praktiker aus der ganzen Welt miteinander und mit führenden Experten verbindet.",
-  "participedia.school.p5": "Teilnehmer können sich für die persönliche Teilnahme an allen Standorten anmelden, bis die Plätze belegt sind (50 Plätze pro Campus). Begrenzte Stipendien stehen je nach „Bedarf“ zur Verfügung, um Registrierung, Reisekosten und Unterkunft abzudecken. Alle Speisen und Getränke werden den Teilnehmern zur Verfügung gestellt.",
+  "participedia.school.p5": "Teilnehmer können sich für die persönliche Teilnahme an allen Standorten anmelden, bis die Plätze belegt sind (50 Plätze pro Campus). Begrenzte Stipendien stehen je nach 'Bedarf' zur Verfügung, um Registrierung, Reisekosten und Unterkunft abzudecken. Alle Speisen und Getränke werden den Teilnehmern zur Verfügung gestellt.",
   "participedia.school.summary.video": "Video zur Summer School 2023 von SFU CERi",
   "participedia.school.summer.school": "Die CERi-Participedia Summer School",
   "participedia.school.ui.1.li.1": "Sprache: Englisch (Grundschule)",
@@ -2032,5 +2032,5 @@
   "Who": "Die",
   "Fee Schedule": "Gebührenordnung",
   "Register Here": "Hier registrieren",
-  "June": "Juni",
+  "June": "Juni"
 }

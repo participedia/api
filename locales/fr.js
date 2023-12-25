@@ -2032,5 +2032,5 @@
   "Who": "Qui",
   "Fee Schedule": "Barème des frais",
   "Register Here": "Inscrivez-vous ici",
-  "June": "Juin",
+  "June": "Juin"
 }

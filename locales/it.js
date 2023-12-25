@@ -2032,5 +2032,5 @@
   "Who": "Chi",
   "Fee Schedule": "Piano tariffario",
   "Register Here": "Registrati qui",
-  "June": "Giugno",
+  "June": "Giugno"
 }

@@ -2031,6 +2031,6 @@
   "Where": "Waar",
   "Who": "WHO",
   "Fee Schedule": "Tariefschema",
-  "Register Here": "Registreer hier"
-  "June": "juni",
+  "Register Here": "Registreer hier",
+  "June": "juni"
 }

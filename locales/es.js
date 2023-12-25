@@ -2035,6 +2035,6 @@
   "Where": "Dónde",
   "Who": "Quien",
   "Fee Schedule":"Programa de tarifas",
-  "Register Here":"Registrar aquí"
-  "June": "Junio",
+  "Register Here":"Registrar aquí",
+  "June": "Junio"
 }
