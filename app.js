@@ -326,7 +326,12 @@ app.get("/research", function(req, res) {
   res.status(200).render("research-view");
 });
 app.get("/participediaschool", function(req, res) {
-  res.status(200).render("school-view");
+  const language = req.cookies.locale || "en";
+  let headImg = 'darker-orange-version.png';
+  if(language === 'pt'){
+    headImg = 'darker-orange-version-pr.png';
+  }
+  res.status(200).render("school-view", {headImg: headImg});
 });
 app.get("/teaching", function(req, res) {
   res.status(200).render("teaching-view");
