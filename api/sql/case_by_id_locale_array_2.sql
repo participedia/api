@@ -80,6 +80,6 @@ select distinct on (localized_texts."language") *,
 from 
   cases
   INNER JOIN localized_texts on thingid = ${articleid}
-where cases.id = ${articleid}
+where cases.id = ${articleid} and cases.hidden = false and cases.published = true 
 ORDER BY localized_texts.language, localized_texts.timestamp DESC
 ) AS results ;
