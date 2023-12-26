@@ -92,6 +92,16 @@ const removeAuthor = async entryId => {
   }
 };
 
+const removeAuthorByUserId = async userId => {
+  try {
+    return await db.none("DELETE FROM authors WHERE user_id = ${userId}", {
+      userId: userId,
+    });
+  } catch (err) {
+    console.log("removeAuthor error - ", err);
+  }
+};
+
 const removeLocalizedText = async entryId => {
   try {
     return await db.none(
@@ -166,4 +176,5 @@ module.exports = {
   getAuthorByEntry,
   getOriginLanguageEntry,
   getEntryOriginLang,
+  removeAuthorByUserId,
 };

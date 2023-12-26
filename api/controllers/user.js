@@ -18,6 +18,7 @@ const {
   removeAuthor,
   removeLocalizedText,
   getRejectionUserPost,
+  removeAuthorByUserId,
 } = require("../helpers/entries-helpers");
 
 const {
@@ -169,7 +170,7 @@ router.post("/delete-user", async function(req, res) {
         await removeLocalizedText(thingsByUser.id);
       }
     }
-
+    await removeAuthorByUserId(author)
     await deleteUser(author);
     let userData = await auth0Client.getUsersByEmail(userEmail);
     let blockUserAccess = await blockUserAuth0(userData[0].user_id);
