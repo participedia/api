@@ -96,6 +96,7 @@ router.get("/review", requireAuthenticatedUser(), async function(req, res) {
       sortby: sortbyFromReq(req),
       type: type + "s",
       facets: searchFiltersFromReq(req),
+      post_date: "2023-08-01",
     });
 
     let data = results;
