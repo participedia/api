@@ -1725,7 +1725,7 @@ module.exports = {
   checkMapsAvail(req) {
     const tabParam = req.query && req.query.selectedCategory;
     if (
-      tabParam === "collections" || tabParam === "method"
+      tabParam === "collections" || tabParam === "method" || req.baseUrl === '/user'
     ) {
       return false;
     } else {
@@ -1784,5 +1784,14 @@ module.exports = {
     } else {
       return '';
     } 
+  },
+
+  hideFormatButton(req) {
+    if (req.baseUrl === '/user'
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   },
 };

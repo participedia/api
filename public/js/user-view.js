@@ -4,7 +4,7 @@ import dropdownButton from "./dropdown-button.js";
 import lazyLoadImages from "./lazy-load-images.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  tabsWithCards.init();
+  tabsWithCards.init('user');
   bookmarkButtons.init();
   dropdownButton.init();
   lazyLoadImages.init();

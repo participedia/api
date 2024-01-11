@@ -8,7 +8,7 @@ import tracking from "./utils/tracking.js";
 import csvGenerator from "./csv-generator.js";
 
 const tabsWithCards = {
-  init() {
+  init(view = '') {
     this.tabInputEls = Array.prototype.slice.call(
       document.querySelectorAll(".js-tab-container input[name='tabs']")
     );
@@ -18,7 +18,7 @@ const tabsWithCards = {
     this.viewEl = document.querySelector("[data-card-layout]");
     this.localForms = document.querySelectorAll("form[data-local=local]");
 
-    if (this.tabInputEls.length === 0 && this.localTabInputEls.length === 0) return;
+    if (this.tabInputEls.length === 0 && this.localTabInputEls.length === 0 && view !== 'user') return;
 
     // Initiate CSV generator
     this.initiateCsvGenerator();
