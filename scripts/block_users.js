@@ -38,9 +38,11 @@ async function blockUsers() {
     try {
       const user_id = user.id.toString();
       console.log(`---------- START deleting user with ID ${user_id} ----------`)
-      await deleteUserAuth0(user_id);
-      await db.any(`DELETE FROM users WHERE id = ${user.id}`);
-      console.log(`^^^^^^^^^^ DONE deleting user ID ${user.id} ^^^^^^^^^^`)
+      const result = await deleteUserAuth0(user_id);
+      if(result){
+        await db.any(`DELETE FROM users WHERE id = ${user.id}`);
+      }
+      console.log(`^^^^^^^^^^ DONE deleting user ID ${user.id} ^^^^^^^^^^ result ${result}`)
     } catch (error) {
       console.log(`?????????? ERROR deleting user ID ${user.id} ??????????`, error?.message)
     }
