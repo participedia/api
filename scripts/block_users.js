@@ -50,16 +50,21 @@ async function blockUsers() {
 }
 
 const deleteUserAuth0 = async (user_id) => {
-  auth0Client.deleteUser(
-    { id: `${user_id}` },
-    (err, auth0User) => {
-      if (err) {
-        throw err
-      } else {
-        return auth0User;
+  try {
+    auth0Client.deleteUser(
+      { id: `${user_id}` },
+      (err, auth0User) => {
+        if (err) {
+        console.log(`?????????? ERROR auth0 deleting user ID ${user.id} ??????????`, err?.message)
+          return false;
+        } else {
+          return auth0User;
+        }
       }
-    }
-  );
+    );
+  } catch (error) {
+    return false;
+  }
 }
 
 
