@@ -25,12 +25,15 @@ async function blockUsers() {
 
   console.log(`find ${users.length} users`);
 
-  let list = [];
-  if(users.length){
-    list.push(users[0]);
-  }
+  // ****** start only testing ********8 
+  // let list = [];
+  // if(users.length){
+  //   list.push(users[0]);
+  // }
+  // ****** end only testing ********8
+
   //START BLOCK USERS
-  for (const user of list) {
+  for (const user of users) {
     try {
       const user_id = user.id.toString();
       console.log(`---------- START deleting user with ID ${user_id} ----------`)
