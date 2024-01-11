@@ -34,6 +34,7 @@ async function blockUsers() {
 
   //START BLOCK USERS
   for (const user of users) {
+    await timeout(2000);
     try {
       const user_id = user.id.toString();
       console.log(`---------- START deleting user with ID ${user_id} ----------`)
@@ -65,6 +66,10 @@ const deleteUserAuth0 = async (user_id) => {
   } catch (error) {
     return false;
   }
+}
+
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
