@@ -44,8 +44,6 @@ async function blockUsers() {
     } catch (error) {
       console.log(`?????????? ERROR deleting user ID ${user.id} ??????????`, error?.message)
     }
-    process.exit();
-
   }
   //END BLOCK USERS
   console.log('*********** FINISHED PROCESSING ***********');
