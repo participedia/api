@@ -1205,6 +1205,8 @@ module.exports = {
           { title: i18n("Contributions", context), key: "contributions" },
           { title: i18n("Bookmarks", context), key: "bookmarks" },
         ];
+      } else{
+        return [{ title: i18n("Contributions", context), key: "contributions" }];
       }
     } else {
       return [{ title: i18n("Contributions", context), key: "contributions" }];
