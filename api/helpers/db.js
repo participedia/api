@@ -50,6 +50,7 @@ const COLLECTION_BY_ID = sql("../sql/collection_by_id.sql");
 const COLLECTION_BY_ID_LOCALE = sql("../sql/collection_by_id_locale.sql");
 const COLLECTIONS = sql("../sql/collections.sql");
 const CASE_BY_ID = sql("../sql/case_by_id.sql");
+const CASE_BY_ID_GET = sql("../sql/case_by_id_get.sql");
 const CASES_LOCALE_BY_ID = sql("../sql/case_by_id_locale_array_2.sql");
 const METHOD_BY_ID = sql("../sql/method_by_id.sql");
 const METHODS_LOCALE_BY_ID = sql("../sql/method_by_id_locale.sql");
@@ -613,6 +614,7 @@ module.exports = {
   COLLECTION_BY_ID,
   COLLECTIONS,
   CASE_BY_ID,
+  CASE_BY_ID_GET,
   CASE,
   CASES_LOCALE_BY_ID,
   METHOD_BY_ID,

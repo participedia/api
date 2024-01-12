@@ -11,6 +11,7 @@ const {
   CASES_BY_COUNTRY,
   CREATE_CASE,
   CASE_BY_ID,
+  CASE_BY_ID_GET,
   CASES_LOCALE_BY_ID,
   INSERT_AUTHOR,
   INSERT_LOCALIZED_TEXT,
@@ -806,11 +807,35 @@ async function getCase(params, res) {
   }
 }
 
+async function getCaseById(params, res) {
+  try {
+    if (Number.isNaN(params.articleid)) {
+      return null;
+    }
+    const articleRow = await db.one(CASE_BY_ID_GET, params);
+    const article = articleRow.results;
+    fixUpURLs(article);
+    return article;
+  } catch (error) {
+    // only log actual excaptional results, not just data not found
+    if (error.message !== "No data returned from the query.") {
+      logError(error);
+    }
+    // if no entry is found, render the 404 page
+    return null;
+  }
+}
+
 async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   const params = parseGetParams(req, "case");
-  const article = await getCase(params, res);
+  const article = await getCaseById(params, res);
   if (!article) {
+    res.status(404).render("404");
+    return null;
+  }
+  const user = req.user;
+  if(!article.published && !user.isadmin && user.id !== article.creator.user_id){
     res.status(404).render("404");
     return null;
   }
@@ -847,6 +872,14 @@ async function getCaseEditHttp(req, res) {
   if (!articles) {
     res.status(404).render("404");
     return null;
+  }
+  if(Array.isArray(articles) && articles.length){
+    const article = articles[0];
+    const user = req.user;
+    if(article && !article.published && user.id !== article.creator.user_id){
+      res.status(404).render("404");
+      return null;
+    }
   }
   const staticText = await getEditStaticText(params);
   returnByType(res, params, articles, staticText, req.user);
