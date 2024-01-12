@@ -749,31 +749,38 @@ async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
 }
 
 async function translateText(data, targetLanguage) {
-  // The text to translate
-  let allTranslation = "";
-
-  // The target language
-  const target = targetLanguage;
-  let length = data.length;
-  if (length > 5000) {
-    // Get text chunks
-    let textParts = data.match(/.{1,5000}/g);
-    for (let text of textParts) {
-      let [translation] = await translate
-        .translate(text, target)
+  try {
+    // The text to translate
+    let allTranslation = "";
+  
+    // The target language
+    const target = targetLanguage;
+    let length = data.length;
+    if (length > 5000) {
+      // Get text chunks
+      let textParts = data.match(/.{1,5000}/g);
+      for (let text of textParts) {
+        let [translation] = await translate
+          .translate(text, target)
+          .catch(function(error) {
+              console.log('122222222221111 translateText for error ', error);
+            logError(error);
+          });
+        allTranslation += translation;
+      }
+    } else {
+      [allTranslation] = await translate
+        .translate(data, target)
         .catch(function(error) {
+          console.log('122222222221111 translateText else error ', error);
           logError(error);
         });
-      allTranslation += translation;
     }
-  } else {
-    [allTranslation] = await translate
-      .translate(data, target)
-      .catch(function(error) {
-        logError(error);
-      });
+    return allTranslation;
+  } catch (error) {
+    console.log('122222222221111 translateText error ', error);
+    throw error;
   }
-  return allTranslation;
 }
 
 function generateLocaleArticle(article, uniqueTranslateData, isEdit = false) {
