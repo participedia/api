@@ -2032,5 +2032,6 @@
   "Who": "Quem",
   "Fee Schedule": "Tabela de taxas",
   "Register Here": "Registre-se aqui",
-  "June": "Junho"
+  "June": "Junho",
+  "no_entry":"Não há nenhuma entrada aguardando revisão"
  }

@@ -2032,5 +2032,6 @@
   "Who": "Die",
   "Fee Schedule": "Gebührenordnung",
   "Register Here": "Hier registrieren",
-  "June": "Juni"
+  "June": "Juni",
+  "no_entry":"Es gibt keinen Eintrag, der auf eine Überprüfung wartet"
 }

@@ -2032,5 +2032,6 @@
   "Who": "WHO",
   "Fee Schedule": "Tariefschema",
   "Register Here": "Registreer hier",
-  "June": "juni"
+  "June": "juni",
+  "no_entry":"Er wacht geen inzending op beoordeling"
 }

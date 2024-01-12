@@ -2032,5 +2032,6 @@
   "Who": "Qui",
   "Fee Schedule": "Barème des frais",
   "Register Here": "Inscrivez-vous ici",
-  "June": "Juin"
+  "June": "Juin",
+  "no_entry":"Aucune entrée n'est en attente d'examen"
 }

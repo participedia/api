@@ -2037,5 +2037,6 @@
   "Who": "Who",
   "Fee Schedule": "Fee Schedule",
   "Register Here": "Register Here",
-  "June": "June"
+  "June": "June",
+  "no_entry":"There's no entry waiting for review"
 }

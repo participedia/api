@@ -2032,5 +2032,6 @@
   "Who": "谁",
   "Fee Schedule": "费用表",
   "Register Here": "在这里注册",
-  "June": "六月"
+  "June": "六月",
+  "no_entry":"没有等待审核的条目"
 }

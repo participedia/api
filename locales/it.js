@@ -2032,5 +2032,6 @@
   "Who": "Chi",
   "Fee Schedule": "Piano tariffario",
   "Register Here": "Registrati qui",
-  "June": "Giugno"
+  "June": "Giugno",
+  "no_entry":"Non c'è nessuna voce in attesa di revisione"
 }

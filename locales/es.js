@@ -2036,5 +2036,6 @@
   "Who": "Quien",
   "Fee Schedule":"Programa de tarifas",
   "Register Here":"Registrar aquí",
-  "June": "Junio"
+  "June": "Junio",
+  "no_entry":"No hay ninguna entrada esperando revisión."
 }
