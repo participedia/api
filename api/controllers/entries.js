@@ -101,7 +101,6 @@ router.get("/review", requireAuthenticatedUser(), async function(req, res) {
 
     let data = results;
 
-    console.log('results results ', results);
     // return html template
     const returnType = req.query.returns || "html";
     if (returnType === "html") {

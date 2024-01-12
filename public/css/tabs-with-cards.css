@@ -304,6 +304,10 @@ hr.solid {
   display: none;
 }
 
+[data-card-layout="null"] .search-map-container-block {
+  display: none;
+}
+
 /* PopOver on map */
 .pop-over .article-card {
   background-color: #fff;
