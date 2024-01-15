@@ -763,7 +763,6 @@ async function translateText(data, targetLanguage) {
         let [translation] = await translate
           .translate(text, target)
           .catch(function(error) {
-              console.log('122222222221111 translateText for error ', error);
             logError(error);
           });
         allTranslation += translation;
@@ -772,13 +771,12 @@ async function translateText(data, targetLanguage) {
       [allTranslation] = await translate
         .translate(data, target)
         .catch(function(error) {
-          console.log('122222222221111 translateText else error ', error);
           logError(error);
         });
     }
     return allTranslation;
   } catch (error) {
-    console.log('122222222221111 translateText error ', error);
+    console.log('translateText error ', error);
     throw error;
   }
 }
