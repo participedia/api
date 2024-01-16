@@ -10,7 +10,6 @@ const authKeys = JSON.parse(keysEnvVar);
 authKeys["key"] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
 
-// let languageList = ["en", "fr", "de", "es", "zh", "it", "pt", "nl"];
 // *************************8
 // not exist
 //   SELECT Host FROM HostSoftware
@@ -36,27 +35,26 @@ async function processTranslation() {
       ORDER BY localized_texts.timestamp DESC LIMIT ${LIMIT}
       `
     );
-  
+
+    let originEntry = null;
+
     for (const entry of entries) {
       
-      console.log(`---------- START process entry  ${entry.id} ----------`)
+      console.log(`-------------------- START process entry  ${entry.id} ------------------ with entry language ${entry.language}`)
       if(!entry.title && !entry.body && !entry.description){
-        await timeout(3000);
+        await timeout(5000);
   
-        let originEntry = null;
         if(!originEntry || originEntry.thingid !== entry.id){
+          originEntry = null;
           originEntry = await getOriginLanguageEntry(entry.id, entry.original_language);
         }
-        
-        if(!originEntry){
+
+        if(!originEntry || originEntry.language === entry.language){
           console.log(`????????????????? Has no originEntry ?????????????? skip`)
           continue;
         }
-        // get list of languages with same entry id
-        let languageList = entries.filter(item => item.id === entry.id);
-        languageList = languageList.map(item => item.language);
-        console.log('languageList ', languageList)
-        await translateEntry(languageList, entry.id, originEntry)
+
+        await translateEntry(entry.language, entry.id, originEntry)
         
       } else {
         console.log(`????????????????? not all empty ?????????????? skip ${entry.id}`)
@@ -73,27 +71,29 @@ async function processTranslation() {
 
 }
 
-const translateEntry = async (languageList, entryId, originEntry) => {
-  const langList = languageList.filter(el => el !== originEntry.language);
-
-  for (let i = 0; i < langList.length; i++) {
-    await timeout(3000);
-
+const translateEntry = async (language, entryId, originEntry) => {
+  try {
     const item = {
       body: "",
       title: "",
       description: "",
-      language: langList[i],
+      language: language,
       thingid: entryId
     };
 
 
-    item.body = await translateText(originEntry.body, langList[i]);
-    item.title = await translateText(originEntry.title, langList[i]);
-    item.description = await translateText(
-      originEntry.description,
-      langList[i]
-    );
+    if(originEntry.body){
+      item.body = await translateText(originEntry.body, language);
+    }
+    if(originEntry.title){
+      item.title = await translateText(originEntry.title, language);
+    }
+    if(originEntry.description){
+      item.description = await translateText(
+        originEntry.description,
+        language
+      );
+    }
 
     const condition = pgp.as.format('WHERE thingid = ${thingid} AND language = ${language}', item);
     const update = await pgp.helpers.update(
@@ -102,16 +102,14 @@ const translateEntry = async (languageList, entryId, originEntry) => {
       "localized_texts"
     ) + condition;
 
-    try {
-      await db.none(update);
-      console.log(`---------- Update entry id ${entryId} ---------- of language ${langList[i]}`)
-      
-    } catch (error) {
-      console.log("error update", error);
-    }
+    await db.none(update);
+    console.log(`^^^^^^^^^^^^^^^^^^^^^ Update entry id ${entryId} ^^^^^^^^^^^^^^^^^^^ of language ${language}`)
+    
+  } catch (error) {
+    console.log("error update", error);
   }
 
-  console.log(`---------- DONE the traslation entry id ${entryId} ---------- with languages ${langList}`)
+  console.log(`******************** DONE the traslation entry id ${entryId} ********** with languages ${language}`)
 
   return true;
 
