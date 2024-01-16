@@ -38,9 +38,10 @@ async function processTranslation() {
     );
   
     for (const entry of entries) {
-  
+      
       console.log(`---------- START process entry  ${entry.id} ----------`)
       if(!entry.title && !entry.body && !entry.description){
+        await timeout(3000);
   
         let originEntry = null;
         if(!originEntry || originEntry.thingid !== entry.id){
@@ -77,7 +78,7 @@ const translateEntry = async (languageList, entryId, originEntry) => {
   const langList = languageList.filter(el => el !== originEntry.language);
 
   for (let i = 0; i < langList.length; i++) {
-    await timeout(5000);
+    await timeout(3000);
 
     const item = {
       body: "",
