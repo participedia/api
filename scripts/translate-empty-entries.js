@@ -53,9 +53,8 @@ async function processTranslation() {
           continue;
         }
         // get list of languages with same entry id
-        let languageList = entries.map(item => { 
-          if(item.id === entry.id && item.language) return item.language
-        });
+        let languageList = entries.filter(item => item.id === entry.id);
+        languageList = languageList.map(item => item.language);
         console.log('languageList ', languageList)
         await translateEntry(languageList, entry.id, originEntry)
         
