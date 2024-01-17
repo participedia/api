@@ -15,11 +15,11 @@ async function processCalculator() {
     GROUP BY things.id
     ORDER BY things.id DESC`
   );
-  console.log(`-------------------- entries length is  ${entries.length}`);
+  console.log(`&&&&&&&&&&&&&&&&& entries length is  ${entries.length} &&&&&&&&&&&&&&&&&`);
 
   let characters = 0;
   for (const entry of entries) {
-    console.log(`-------------------- START process entry  ${entry.id} ------------------ with entry language ${entry.language}`)
+    console.log(`-------------------- START process entry  ${entry.id} ------------------ with entry language ${entry.original_language}`)
     originEntry = await getOriginLanguageEntry(entry.id, entry.original_language);
     let entryCharacters = 0;
 
@@ -36,10 +36,10 @@ async function processCalculator() {
       entryCharacters += originEntry.body.length;
     }
 
-    console.log(`***************** Calculate entry characters of ${entry.id} is: ${entryCharacters}*************** `);
+    console.log(`***************** the entry ${entry.id} characters lenght is: ***** ${entryCharacters}*************** `);
   }
 
-  console.log(`---------- DONE Calculattion Characters -------------- result is: ${characters}`)
+  console.log(`#################### DONE Calculattion Characters #################3 result is: ${characters}`)
   process.exit();
 
 }
