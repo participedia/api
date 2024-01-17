@@ -1,5 +1,5 @@
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
-const { db, pgp } = require("../api/helpers/db.js");
+const { db, pgp, LOCALIZED_TEXT_BY_ID_LOCALE } = require("../api/helpers/db.js");
 
 // npm run calculate-entires-character
 async function processCalculator() {
@@ -43,5 +43,19 @@ async function processCalculator() {
   process.exit();
 
 }
+
+const getOriginLanguageEntry = async (thingid, originLang) => {
+  console.log(`---------- get origin language entry entry ${thingid} originLang ${originLang}----------`)
+
+  try {
+    let results = await db.one(LOCALIZED_TEXT_BY_ID_LOCALE, {
+      thingid: thingid,
+      language: originLang,
+    });
+    return results;
+  } catch (err) {
+    console.log("getOriginLanguageEntry error - ", err);
+  }
+};
 
 processCalculator();
