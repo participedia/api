@@ -39,7 +39,7 @@ async function processCalculator() {
     console.log(`***************** Calculate entry characters of ${entry.id} is: ${entryCharacters}*************** `);
   }
 
-  console.log(`---------- DONE Calculattion Characters --------------`)
+  console.log(`---------- DONE Calculattion Characters -------------- result is: ${characters}`)
   process.exit();
 
 }
