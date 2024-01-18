@@ -28,12 +28,14 @@ async function processCalculator() {
       entryCharacters += originEntry.title.length;
     }
     if(originEntry.description){
-      characters += originEntry.description.length;
-      entryCharacters += originEntry.description.length;
+      const description = originEntry.description.replace(/<[^>]+>/g, '');
+      characters += description.length;
+      entryCharacters += description.length;
     }
     if(originEntry.body){
-      characters += originEntry.body.length;
-      entryCharacters += originEntry.body.length;
+      const body = originEntry.body.replace(/<[^>]+>/g, '');
+      characters += body.length;
+      entryCharacters += body.length;
     }
 
     console.log(`***************** the entry ${entry.id} characters lenght is: ***** ${entryCharacters}*************** `);
