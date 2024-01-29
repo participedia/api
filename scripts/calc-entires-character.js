@@ -33,7 +33,12 @@ async function processCalculator() {
       entryCharacters += description.length;
     }
     if(originEntry.body){
-      const body = originEntry.body.replace(/<[^>]+>/g, '');
+      // blob base64
+      // const body = originEntry.body.replace(/<[^>]+>/g, '');
+      const body = originEntry.replace(/<img src="data:imag"[^>]*>/g,'');
+      // body = originEntry.replace(/<img[^>]*>/g,'');
+      // strToReplace.replace(/^data:image\/[a-z]+;base64,/, "");
+      // data:image/jpeg;base64,
       characters += body.length;
       entryCharacters += body.length;
     }
