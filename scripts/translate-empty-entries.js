@@ -18,7 +18,9 @@ const translate = new Translate(authKeys);
 //     WHERE InnerSoftware.Host = HostSoftware.Host AND InnerSoftware.Software ='Title2'
 // )
 // *********************
-
+//env LIMIT=1 npm run translate-empty-entries
+// OR
+// npm run translate-empty-entries
 async function processTranslation() {
   const LIMIT = process.env.LIMIT || 10; 
   console.log('*********** START PROCESSING ***********', LIMIT);
