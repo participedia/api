@@ -65,7 +65,7 @@ async function processTranslation() {
           console.log(`++++++++++++++++++ is already translated +++++++++++++++ skip ${entry.id} ++++++ with language ${entry.language} ++++++`);
           continue;
         }
-        console.log(`================ translate entry ${entry.id} ===============`)
+        console.log(`================ translate entry ${entry.id} =============== from language ${originEntry.language} to language ${entry.language}`)
 
         // await translateEntry(entry.language, entry.id, originEntry);
         
