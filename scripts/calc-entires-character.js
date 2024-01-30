@@ -12,9 +12,10 @@ async function processCalculator() {
       localized_texts.title IS NULL OR localized_texts.title = ''
     )
     AND localized_texts.timestamp > '2023-07-01'
-    GROUP BY things.id
     ORDER BY things.id DESC`
   );
+  // GROUP BY things.id
+
   console.log(`&&&&&&&&&&&&&&&&& entries length is  ${entries.length} &&&&&&&&&&&&&&&&&`);
 
   let characters = 0;
