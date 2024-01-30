@@ -34,13 +34,8 @@ async function processCalculator() {
       entryCharacters += description.length;
     }
     if(originEntry.body){
-      // blob base64
       // const body = originEntry.body.replace(/<[^>]+>/g, '');
       body = originEntry.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
-      // const body = originEntry.replace(/<img src='data:image/jpeg;base64'[^>]*>/g,'');
-      // replace(/^<img src="data:image\/[a-z]+;base64"/g, "")
-      // strToReplace.replace(/^data:image\/[a-z]+;base64,/, "");
-      // data:image/jpeg;base64,
       characters += body.length;
       entryCharacters += body.length;
     }

@@ -72,6 +72,8 @@ async function processTranslation() {
 }
 
 const translateEntry = async (language, entryId, originEntry) => {
+  let entryCharacters = 0;
+
   try {
     const item = {
       body: "",
@@ -84,18 +86,22 @@ const translateEntry = async (language, entryId, originEntry) => {
 
     if(originEntry.body){
       const body = originEntry.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+      entryCharacters += body.length;
       item.body = await translateText(body, language);
     }
     if(originEntry.title){
+      entryCharacters += originEntry.title.length;
       item.title = await translateText(originEntry.title, language);
     }
     if(originEntry.description){
       const description = originEntry.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+      entryCharacters += description.length;
       item.description = await translateText(
         description,
         language
       );
     }
+    console.log(`!!!!!!!!!!!!!!!!!! the entry ${entryId} characters lenght is: !!!!!!!!! ${entryCharacters} !!!!!!!! `);
 
     const condition = pgp.as.format('WHERE thingid = ${thingid} AND language = ${language}', item);
     const update = await pgp.helpers.update(
