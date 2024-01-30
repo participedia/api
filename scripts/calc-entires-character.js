@@ -35,7 +35,7 @@ async function processCalculator() {
     if(originEntry.body){
       // blob base64
       // const body = originEntry.body.replace(/<[^>]+>/g, '');
-      body = originEntry.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+      body = originEntry.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
       // const body = originEntry.replace(/<img src='data:image/jpeg;base64'[^>]*>/g,'');
       // replace(/^<img src="data:image\/[a-z]+;base64"/g, "")
       // strToReplace.replace(/^data:image\/[a-z]+;base64,/, "");
