@@ -37,7 +37,6 @@ async function processTranslation() {
     let countTranslated = 0;
     for (const entry of entries) {
       count++;
-      count++;
       
       console.log(`-------------------- START process entry  ${entry.id} ------------------ with entry language ${entry.language}`);
       console.log('****************************************************************************************************************');
