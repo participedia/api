@@ -33,7 +33,9 @@ async function processTranslation() {
     let originEntry = null;
 
     let count = 0;
+    let countTranslated = 0;
     for (const entry of entries) {
+      count++;
       count++;
       
       console.log(`-------------------- START process entry  ${entry.id} ------------------ with entry language ${entry.language}`);
@@ -62,6 +64,7 @@ async function processTranslation() {
         console.log(`${count} ================ translate entry ${entry.id} =============== from language ${originEntry.language} to language ${entry.language}`)
 
         // await translateEntry(entry.language, entry.id, originEntry);
+        countTranslated++;
         
       } else {
         console.log(`????????????????? not all empty ?????????????? skip ${entry.id}`)
@@ -69,7 +72,7 @@ async function processTranslation() {
       console.log('****************************************************************************************************************');
       console.log('****************************************************************************************************************');
     }
-    console.log(`---------- DONE Translations --------------`)
+    console.log(`---------- DONE Translations -------------- ${countTranslated}`)
 
     process.exit();
     
