@@ -63,7 +63,7 @@ async function processTranslation() {
         }
         console.log(`${count} ================ translate entry ${entry.id} =============== from language ${originEntry.language} to language ${entry.language}`)
 
-        // await translateEntry(entry.language, entry.id, originEntry);
+        await translateEntry(entry.language, entry.id, originEntry);
         countTranslated++;
         
       } else {
