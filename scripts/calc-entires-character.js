@@ -28,7 +28,8 @@ async function processCalculator() {
       entryCharacters += originEntry.title.length;
     }
     if(originEntry.description){
-      const description = originEntry.description.replace(/<[^>]+>/g, '');
+      // const description = originEntry.description.replace(/<[^>]+>/g, '');
+      const description = originEntry.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
       characters += description.length;
       entryCharacters += description.length;
     }

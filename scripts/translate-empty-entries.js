@@ -83,14 +83,16 @@ const translateEntry = async (language, entryId, originEntry) => {
 
 
     if(originEntry.body){
-      item.body = await translateText(originEntry.body, language);
+      const body = originEntry.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+      item.body = await translateText(body, language);
     }
     if(originEntry.title){
       item.title = await translateText(originEntry.title, language);
     }
     if(originEntry.description){
+      const description = originEntry.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
       item.description = await translateText(
-        originEntry.description,
+        description,
         language
       );
     }
