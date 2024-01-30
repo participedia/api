@@ -26,6 +26,7 @@ async function processTranslation() {
       WHERE things.hidden = false AND things.published = true AND (
         localized_texts.title IS NULL OR localized_texts.title = ''
       )
+      AND localized_texts.timestamp > '2023-07-01'
       ORDER BY localized_texts.timestamp DESC LIMIT ${LIMIT}
       `
     );
