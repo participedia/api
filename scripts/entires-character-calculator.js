@@ -6,7 +6,7 @@ if (!keysEnvVar) {
   process.exit();
 }
 
-const character = 0;
+let character = 0;
 // npm run entires-character-calculator
 async function processTranslation() {
   // const LIMIT = process.env.LIMIT || 10; 
