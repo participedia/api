@@ -10,14 +10,6 @@ const authKeys = JSON.parse(keysEnvVar);
 authKeys["key"] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
 
-// *************************8
-// not exist
-//   SELECT Host FROM HostSoftware
-// WHERE NOT EXISTS (
-//     SELECT * FROM HostSoftware AS InnerSoftware
-//     WHERE InnerSoftware.Host = HostSoftware.Host AND InnerSoftware.Software ='Title2'
-// )
-// *********************
 //env LIMIT=1 npm run translate-empty-entries
 // OR
 // npm run translate-empty-entries
@@ -40,6 +32,7 @@ async function processTranslation() {
 
     let originEntry = null;
 
+    let count = 1;
     for (const entry of entries) {
       
       console.log(`-------------------- START process entry  ${entry.id} ------------------ with entry language ${entry.language}`);
@@ -54,7 +47,7 @@ async function processTranslation() {
         }
 
         if(!originEntry || originEntry.language === entry.language){
-          console.log(`????????????????? Has no originEntry ?????????????? skip`);
+          console.log(`????????????????? Has no originEntry ?????????????? skip ??????????`);
           continue;
         }
 
@@ -62,17 +55,19 @@ async function processTranslation() {
         // Check that entery already translate and has latest date
         const isTranslated = await getEntery(entry.id, entry.language, entry.timestamp);
         if(isTranslated){
-          console.log(`++++++++++++++++++ is already translated +++++++++++++++ skip ${entry.id} ++++++ with language ${entry.language} ++++++`);
+          console.log(`${count} ++++++++++++++++++ is already translated +++++++++++++++ skip ${entry.id} ++++++ with language ${entry.language} ++++++`);
           continue;
         }
-        console.log(`================ translate entry ${entry.id} =============== from language ${originEntry.language} to language ${entry.language}`)
+        console.log(`${count} ================ translate entry ${entry.id} =============== from language ${originEntry.language} to language ${entry.language}`)
 
         // await translateEntry(entry.language, entry.id, originEntry);
         
       } else {
         console.log(`????????????????? not all empty ?????????????? skip ${entry.id}`)
       }
-  
+      console.log('****************************************************************************************************************');
+      console.log('****************************************************************************************************************');
+      count++;
     }
     console.log(`---------- DONE Translations --------------`)
 
