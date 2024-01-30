@@ -42,7 +42,6 @@ async function processTranslation() {
       console.log('****************************************************************************************************************');
       console.log('****************************************************************************************************************');
       if(!entry.title && !entry.body && !entry.description){
-        await timeout(5000);
   
         if(!originEntry || originEntry.thingid !== entry.id){
           originEntry = null;
@@ -65,6 +64,7 @@ async function processTranslation() {
 
         await translateEntry(entry.language, entry.id, originEntry);
         countTranslated++;
+        await timeout(5000);
         
       } else {
         console.log(`????????????????? not all empty ?????????????? skip ${entry.id}`)
