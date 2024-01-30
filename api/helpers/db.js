@@ -64,6 +64,9 @@ const UPDATE_DRAFT_LOCALIZED_TEXT = sql(
 const LOCALIZED_TEXT_BY_ID_LOCALE = sql(
   "../sql/localized_text_by_id_locale.sql"
 );
+const LOCALIZED_TEXT_BY_ID_LOCALE_NO_LIMIT = sql(
+  "../sql/localized_text_by_id_locale_no_limit.sql"
+);
 const LOCALIZED_TEXT_BY_THING_ID = sql("../sql/localized_text_by_thing_id.sql");
 const UPDATE_NOUN = sql("../sql/update_noun.sql");
 const INSERT_AUTHOR = sql("../sql/insert_author.sql");
@@ -579,6 +582,7 @@ module.exports = {
   INSERT_LOCALIZED_TEXT,
   UPDATE_DRAFT_LOCALIZED_TEXT,
   LOCALIZED_TEXT_BY_ID_LOCALE,
+  LOCALIZED_TEXT_BY_ID_LOCALE_NO_LIMIT,
   LOCALIZED_TEXT_BY_THING_ID,
   UPDATE_NOUN,
   INSERT_AUTHOR,

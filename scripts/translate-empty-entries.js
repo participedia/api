@@ -1,5 +1,5 @@
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
-const { db, pgp, LOCALIZED_TEXT_BY_ID_LOCALE } = require("../api/helpers/db.js");
+const { db, pgp, LOCALIZED_TEXT_BY_ID_LOCALE, LOCALIZED_TEXT_BY_ID_LOCALE_NO_LIMIT } = require("../api/helpers/db.js");
 const keysEnvVar = process.env["GOOGLE_TRANSLATE_CREDENTIALS"];
 if (!keysEnvVar) {
   console.error('The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!');
@@ -28,7 +28,7 @@ async function processTranslation() {
   try {
     const entries = await db.any(
       `
-      SELECT localized_texts.thingid, localized_texts.title, localized_texts.language, localized_texts.body, things.id, things.original_language
+      SELECT localized_texts.thingid, localized_texts.title, localized_texts.language, localized_texts.body, things.id, things.original_language, localized_texts.timestamp
       FROM (SELECT * FROM things WHERE things.original_language <> '' GROUP BY id, original_language) as things
       JOIN localized_texts ON things.id = localized_texts.thingid
       WHERE things.hidden = false AND things.published = true AND (
@@ -42,7 +42,9 @@ async function processTranslation() {
 
     for (const entry of entries) {
       
-      console.log(`-------------------- START process entry  ${entry.id} ------------------ with entry language ${entry.language}`)
+      console.log(`-------------------- START process entry  ${entry.id} ------------------ with entry language ${entry.language}`);
+      console.log('****************************************************************************************************************');
+      console.log('****************************************************************************************************************');
       if(!entry.title && !entry.body && !entry.description){
         await timeout(5000);
   
@@ -52,11 +54,20 @@ async function processTranslation() {
         }
 
         if(!originEntry || originEntry.language === entry.language){
-          console.log(`????????????????? Has no originEntry ?????????????? skip`)
+          console.log(`????????????????? Has no originEntry ?????????????? skip`);
           continue;
         }
 
-        await translateEntry(entry.language, entry.id, originEntry)
+        //TODO
+        // Check that entery already translate and has latest date
+        const isTranslated = await getEntery(entry.id, entry.language, entry.timestamp);
+        if(isTranslated){
+          console.log(`++++++++++++++++++ is already translated +++++++++++++++ skip ${entry.id} ++++++ with language ${entry.language} ++++++`);
+          continue;
+        }
+        console.log(`================ translate entry ${entry.id} ===============`)
+
+        // await translateEntry(entry.language, entry.id, originEntry);
         
       } else {
         console.log(`????????????????? not all empty ?????????????? skip ${entry.id}`)
@@ -138,6 +149,19 @@ const getOriginLanguageEntry = async (thingid, originLang) => {
     console.log("getOriginLanguageEntry error - ", err);
   }
 };
+
+const getEntery = async (thingid, lang, timestamp) => {
+  try {
+    let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE_NO_LIMIT, {
+      thingid: thingid,
+      language: lang,
+      timestamp: timestamp,
+    });
+    return Array.isArray(results) && results.length ? results : false;
+  } catch (err) {
+    console.log("getEntery error - ", err);
+  }
+}
 
 const translateText = async (data, targetLanguage) => {
   // The text to translate
