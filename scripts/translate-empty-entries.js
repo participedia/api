@@ -15,7 +15,7 @@ const translate = new Translate(authKeys);
 // npm run translate-empty-entries
 async function processTranslation() {
   const LIMIT = process.env.LIMIT || 10; 
-  console.log('*********** START PROCESSING ***********', LIMIT);
+  console.log('*********** LIMIT ***********', LIMIT);
   // START DB QUERY
   try {
     const entries = await db.any(
@@ -29,6 +29,7 @@ async function processTranslation() {
       ORDER BY localized_texts.timestamp DESC LIMIT ${LIMIT}
       `
     );
+    console.log('*********** START PROCESSING *********** length ', entries.length);
 
     let originEntry = null;
 
