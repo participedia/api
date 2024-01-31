@@ -16,7 +16,6 @@ const languageSelect = {
         this.tracking.sendWithCallback("language", "language_dropdown", e.target.value, () => {
           this.handleSelectChange(e);
         });
-        this.tracking.send('change_language_dropdown', 'language_dropdown', e.target.value)
       });
     });
   },

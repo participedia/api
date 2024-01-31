@@ -80,7 +80,7 @@ const editForm = {
     fullVersionButtonEls.forEach(el => handleFullVersionClick(el));
 
     this.initOtherLangSelector();
-
+    
     infoIconToModal.init();
     // this.initPinTabs();
 
@@ -97,6 +97,26 @@ const editForm = {
     // languageSelectTooltipForNewEntries.init();
     languageSelectTooltipForNewEntryInput.init();
     submitFormLanguageSelector.init();
+
+    // track if the user's current language is different than the original language
+    if(this.isEditMode && this.articleData && typeof this.articleData === 'object'){
+      const langKey = Object.keys(this.articleData).find(key => {
+        const object = this.articleData[key];
+        return object && object.original_language
+      });
+      if(langKey){
+        const articelObj = this.articleData[langKey];
+        const entryOrginalLanguage = articelObj.original_language;
+
+        // current language is different than the original language
+        if(entryOrginalLanguage !== this.userLocale){
+          tracking.send("edit_different_language", "edit_different_language", articelObj.id);
+        }
+      }
+
+
+    }
+    
   },
   richTextEditorList: {},
 
