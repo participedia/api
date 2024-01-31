@@ -725,14 +725,13 @@ async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
         }
 
         if (!entry.body && mainEntry.body) {
-          item.body = await translateText(mainEntry.body, entry.language);
+          const body = mainEntry.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+          item.body = await translateText(body, entry.language);
         }
 
         if (!entry.description && mainEntry.description) {
-          item.description = await translateText(
-            mainEntry.description,
-            entry.language
-          );
+          const description = mainEntry.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+          item.description = await translateText(description, entry.language);
         }
       }
 
