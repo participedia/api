@@ -384,6 +384,16 @@ const editForm = {
             ];
           }
         }
+
+        //When the user use the dropdown to change language on EDIT. Track change_edit_language_dropdown
+        if(this.isEditMode){
+          const articelObj = Object.values(this.articleData).find(val => {
+            return val && val.id && val.original_language
+          });
+          if(articelObj && this.userLocale !== articelObj.original_language){
+            tracking.send("change_edit_language_dropdown", "change_edit_language_dropdown", articelObj.id);
+          }
+        }
       });
     });
   },
