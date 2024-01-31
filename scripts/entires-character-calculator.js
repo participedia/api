@@ -6,6 +6,16 @@ if (!keysEnvVar) {
   process.exit();
 }
 
+// `
+// SELECT localized_texts.thingid, localized_texts.title, localized_texts.language, localized_texts.body, things.id, things.original_language, localized_texts.timestamp
+// FROM (SELECT * FROM things WHERE things.original_language <> '' GROUP BY id, original_language) as things
+// JOIN localized_texts ON things.id = localized_texts.thingid
+// WHERE localized_texts.thingid IN (12489, 12524) AND things.hidden = false AND things.published = true AND (
+//   localized_texts.title IS NULL OR localized_texts.title = ''
+// )
+// AND localized_texts.timestamp > '2023-07-01'
+// ORDER BY localized_texts.timestamp DESC
+// `
 let character = 0;
 // npm run entires-character-calculator
 async function processTranslation() {
@@ -21,7 +31,6 @@ async function processTranslation() {
       WHERE localized_texts.thingid IN (12489, 12524) AND things.hidden = false AND things.published = true AND (
         localized_texts.title IS NULL OR localized_texts.title = ''
       )
-      AND localized_texts.timestamp > '2023-07-01'
       ORDER BY localized_texts.timestamp DESC
       `
     );
