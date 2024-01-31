@@ -149,7 +149,10 @@ async function postCaseNewHttp(req, res) {
     let title = originalLanguageEntry.title;
     let body =
       originalLanguageEntry.body || originalLanguageEntry.summary || "";
+    //Remove the blobs from being translated, in the create and edit form
+    body = body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
     let description = originalLanguageEntry.description || "";
+    description = description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
     let original_language = originalLanguageEntry.original_language || "en";
 
     if (!req.body.entryId) {

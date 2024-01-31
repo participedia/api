@@ -345,6 +345,13 @@ async function maybeUpdateUserTextLocaleEntry(body, req, res, type) {
     }
   }
 
+  //Remove the blobs from being translated, in the create and edit form
+  if(updatedText && updatedText.body){
+    updatedText.body = updatedText.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+  }
+  if(updatedText && updatedText.description){
+    updatedText.description = updatedText.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+  }
   if (textModified) {
     return { updatedText, author, oldArticle };
   } else {
@@ -659,7 +666,8 @@ async function createLocalizedRecord(
       };
 
       if (data.body && !item.body) {
-        item.body = await translateText(data.body, language.twoLetterCode);
+        let body = data.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+        item.body = await translateText(body, language.twoLetterCode);
       }
 
       if (data.title && !item.title) {
@@ -667,10 +675,8 @@ async function createLocalizedRecord(
       }
 
       if (data.description && !item.description) {
-        item.description = await translateText(
-          data.description,
-          language.twoLetterCode
-        );
+        const description = data.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+        item.description = await translateText(description, language.twoLetterCode);
       }
 
       records.push(item);
