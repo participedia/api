@@ -39,10 +39,11 @@ const uploadToAWS = (base64String) => {
   const contentExtension = base64String.substring("data:image/".length, base64String.indexOf(";base64"));
   const newFileName = uuidv4() + "." + contentExtension;
   const base64Buffer = createBufferFromBase64(base64String);
+  const key = `raw/${newFileName}`;
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET,
-    Key: newFileName, 
+    Key: key, 
     Body: base64Buffer,
     ContentEncoding: "base64",
     ContentType: contentType,
