@@ -162,8 +162,8 @@
     "block-users-script": "node scripts/block_users.js",
     "translate-empty-entries": "node scripts/translate-empty-entries.js",
     "calculate-entires-character": "node scripts/calc-entires-character.js",
-    "entires-character-calculator": "node scripts/entires-character-calculator.js"
-    
+    "entires-character-calculator": "node scripts/entires-character-calculator.js",
+    "generate-sitemap": "node scripts/sitemap-generator.js"
   },
   "husky": {
     "hooks": {
