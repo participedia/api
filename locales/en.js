@@ -2040,5 +2040,9 @@
   "Register Here": "Register Here",
   "June": "June",
   "no_entry":"There's no entry waiting for review",
-  "home_hero.feature.8376":"Transnational Citizens' Assemblies"
+  "home_hero.feature.8376":"Transnational Citizens' Assemblies",
+  "Find and contribute":"Find and contribute",
+  "teaching_resources":"teaching resources",
+  "home.participediaschool.use":"and use Participedia in the classroom to engage students and showcase their research. Participate in Participedia Schools and gain global perspectives with leading researchers and practitioners.",
+  "about.participediaschool.a":"Check out Participedia School ->"
 }
