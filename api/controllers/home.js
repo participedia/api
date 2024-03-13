@@ -41,12 +41,10 @@ async function getHeroFeatures(i18n) {
       country: "South Africa",
     },
     {
-      imageCredit: "Global Assembly",
       imageUrl: "/images/homepage/transnational-citizens-assemblies.jpeg",
       entryTitle: i18n("home_hero.feature.8376"),
       entryUrl: "/collection/8376",
       entryId: 8376,
-      country: "South Africa",
     },
   ]);
 }
