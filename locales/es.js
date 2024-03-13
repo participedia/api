@@ -692,6 +692,7 @@
   "home_hero.feature.5600": "Investigación participativa sobre el desmantelamiento de los servicios sociales de Sudáfrica",
   "home_hero.feature.5988": "Proceso participativo de mejoramiento de barrios marginales en la Ciudad de Buenos Aires: el caso \"Villa 20\"",
   "home_hero.feature.6590": "Protestas de George Floyd",
+  "home_hero.feature.8376": "Asambleas de ciudadanos transnacionales",
   "home_hero_tagline": "Una red global y una plataforma de crowdsourcing para investigadores, educadores, profesionales, legisladores, activistas y cualquier persona interesada en la participación pública y las innovaciones democráticas.",
   "Honduras": "Honduras",
   "Hong Kong": "Hong Kong",

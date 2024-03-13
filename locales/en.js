@@ -2039,5 +2039,6 @@
   "Fee Schedule": "Fee Schedule",
   "Register Here": "Register Here",
   "June": "June",
-  "no_entry":"There's no entry waiting for review"
+  "no_entry":"There's no entry waiting for review",
+  "home_hero.feature.8376":"Transnational Citizens' Assemblies"
 }

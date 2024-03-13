@@ -692,6 +692,7 @@
   "home_hero.feature.5600": "南非社会服务部门退出的参与性研究",
   "home_hero.feature.5988": "布宜诺斯艾利斯市参与式贫民窟升级改造过程：“ Villa 20”案例",
   "home_hero.feature.6590": "乔治·弗洛伊德抗议",
+  "home_hero.feature.8376": "跨国公民大会",
   "home_hero_tagline": "面向科研工作者，教育工作者，从业者，政策制定人，活动家以及所有对公众参与和民主创新感兴趣的人的全球网络和众包平台",
   "Honduras": "洪都拉斯",
   "Hong Kong": "香港",

@@ -692,6 +692,7 @@
   "home_hero.feature.5600": "Participatief onderzoek naar de ontmanteling van Zuid-Afrikaanse sociale diensten",
   "home_hero.feature.5988": "Participatief sloppenwijk-upgradeproces in de stad Buenos Aires: de \"Villa 20\"-casus",
   "home_hero.feature.6590": "George Floyd protesten",
+  "home_hero.feature.8376": "Transnationale Burgervergaderingen",
   "home_hero_tagline": "Een wereldwijd netwerk en crowdsourcingplatform voor onderzoekers, docenten, praktijkmensen, beleidsmakers, activisten en iedereen die geïnteresseerd is in publieke participatie en democratische innovaties.",
   "Honduras": "Honduras",
   "Hong Kong": "Hong Kong",

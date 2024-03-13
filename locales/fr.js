@@ -692,6 +692,7 @@
   "home_hero.feature.5600": "Recherche participative sur le déclassement des services sociaux sud-africains",
   "home_hero.feature.5988": "Processus participatif de rénovation des bidonvilles de la ville de Buenos Aires: le cas de la «Villa 20»",
   "home_hero.feature.6590": "Protestations de George Floyd",
+  "home_hero.feature.8376": "Assemblées citoyennes transnationales",
   "home_hero_tagline": "Un réseau mondial et une plateforme de crowdsourcing pour les chercheur.es, les enseignant.es, les praticien.nes, les décideur.ses politiques, les activistes et toute personne intéressée par la participation publique et les innovations démocratiques",
   "Honduras": "Honduras",
   "Hong Kong": "Hong Kong",

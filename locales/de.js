@@ -692,6 +692,7 @@
   "home_hero.feature.5600": "Partizipative Forschung zur Abschaltung südafrikanischer Sozialdienste",
   "home_hero.feature.5988": "Partizipativer Slum-Modernisierungsprozess in Buenos Aires: Der Fall \"Villa 20\"",
   "home_hero.feature.6590": "George-Floyd-Proteste",
+  "home_hero.feature.8376": "Transnationale Bürgerversammlungen",
   "home_hero_tagline": "Ein globales Netzwerk und eine Crowdsourcing-Plattform für Forscher*innen, Pädagog*innen, Praktiker*innen, politische Entscheidungsträger*innen, Aktivist*innen und alle, die an öffentlicher Beteiligung und demokratischen Innovationen interessiert sind.",
   "Honduras": "Honduras",
   "Hong Kong": "Hongkong",
