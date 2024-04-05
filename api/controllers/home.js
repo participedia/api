@@ -41,13 +41,10 @@ async function getHeroFeatures(i18n) {
       country: "South Africa",
     },
     {
-      imageCredit: "Max Bender",
-      imageUrl:
-        "https://s3.amazonaws.com/participedia.prod/d97cf067-9b0b-4d80-bc38-aee5b8553c8c",
-      entryTitle: i18n("home_hero.feature.6590"),
-      entryUrl: "/case/6590",
-      entryId: 6590,
-      country: "United States",
+      imageUrl: "/images/homepage/transnational-citizens-assemblies.jpeg",
+      entryTitle: i18n("home_hero.feature.8376"),
+      entryUrl: "/collection/8376",
+      entryId: 8376,
     },
   ]);
 }
