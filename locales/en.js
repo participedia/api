@@ -2046,5 +2046,6 @@
   "FederalUniversityOfMinasGerais":"Federal University of Minas Gerais (UFMG) location of the upcoming Participedia School has been cancelled",
   "umfg.Information.part3":"due to an ongoing strike by staff members of Brazilian federal universities. We stand in solidarity with our UFMG colleagues and movements that uphold democracy, and will not cross the picket line. We are unfortunately unable to offer spaces at either of our alternate school locations due to registration capacity limits. However, we invite interested parties to",
   "join_the_waitlist":"join the waitlist.",
+  "federal.university.minas.gerais": "The %sFederal University of Minas Gerais (UFMG) location of the upcoming Participedia School has been cancelled%s due to an ongoing strike by staff members of Brazilian federal universities. We stand in solidarity with our UFMG colleagues and movements that uphold democracy, and will not cross the picket line. We are unfortunately unable to offer spaces at either of our alternate school locations due to registration capacity limits. However, we invite interested parties to %sjoin the waitlist%s. Thank you for your understanding.",
   "Thankyoufor.your.understanding":"Thank you for your understanding."
 }
