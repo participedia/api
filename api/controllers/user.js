@@ -184,6 +184,71 @@ router.post("/delete-user", async function(req, res) {
   }
 });
 
+// delete users
+router.post("/delete-users", async function(req, res) {
+  if (!req.user) {
+    return res
+      .status(401)
+      .json({ error: "You must be logged in to perform this action." });
+  }
+
+  if (!req.user.isadmin) {
+    return res
+      .status(403)
+      .json({ error: "You must be an admin to perform this action." });
+  }
+
+  try {
+
+    let authors = req.body.authors;
+
+    if (authors && Array.isArray(authors) && Array.isArray(authors).length > 0) {
+
+      for (const authorData in authors) {
+        
+        let author = authorData.userId;
+        let userEmail = authorData.userEmail;
+    
+        // let allUserPosts = await getRejectionUserPost(author);
+        // if (Object.keys(allUserPosts).length > 0) {
+        //   for (const allUserPost in allUserPosts) {
+        //     let thingsByUser = allUserPosts[allUserPost];
+        //     await removeEntryThings(thingsByUser.id);
+        //     switch (thingsByUser.type) {
+        //       case "case":
+        //         await removeEntryCases(thingsByUser.id);
+        //         break;
+        //       case "method":
+        //         await removeEntryMethods(thingsByUser.id);
+        //         break;
+        //       case "collection":
+        //         await removeEntryCollections(thingsByUser.id);
+        //         break;
+        //       case "organization":
+        //         await removeEntryOrganizations(thingsByUser.id);
+        //         break;
+        //     }
+        //     await removeAuthor(thingsByUser.id);
+        //     await removeLocalizedText(thingsByUser.id);
+        //   }
+        // }
+        // await removeAuthorByUserId(author)
+        // await deleteUser(author);
+        // let userData = await auth0Client.getUsersByEmail(userEmail);
+        // let blockUserAccess = await blockUserAuth0(userData[0].user_id);
+        
+      }
+    }
+
+    res.status(200).json({
+      OK: true,
+    });
+  } catch (error) {
+    console.log("delete-user error - ", error);
+    res.status(403).json({ error: "Delete user is failed" });
+  }
+});
+
 /**
  * @api {get} /user/:userId Retrieve a user
  * @apiGroup users

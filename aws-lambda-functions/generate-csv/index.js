@@ -43,9 +43,16 @@ function sql(filename) {
 const AWS_CREATE_CSV_EXPORT = sql("./sql/aws_create_csv_export.sql");
 const AWS_SEARCH = sql("./sql/aws_search.sql");
 const AWS_SEARCH_CHINESE = sql("./sql/aws_search_chinese.sql");
+
 const AWS_SEARCH_CASES = sql("./sql/aws_search_cases.sql");
+const AWS_CASES = sql("./sql/aws_cases.sql");
+
 const AWS_SEARCH_METHODS = sql("./sql/aws_search_methods.sql");
+const AWS_METHODS = sql("./sql/aws_methods.sql");
+
 const AWS_SEARCH_ORGANIZATIONS = sql("./sql/aws_search_organizations.sql");
+const AWS_ORGANIZATIONS = sql("./sql/aws_organizations.sql");
+
 const AWS_UPDATE_CSV_EXPORT = sql("./sql/aws_update_csv_export.sql");
 
 
@@ -85,13 +92,13 @@ const getSearchDownloadResults = async (params) => {
     let queryFile = AWS_SEARCH;
     switch (params.type) {
       case "case":
-        queryFile = AWS_SEARCH_CASES;
+        queryFile = casesQueryFile(params.filters);
         break;
       case "method":
-        queryFile = AWS_SEARCH_METHODS;
+        queryFile = methodsQueryFile(params.filters);
         break;
       case "organization":
-        queryFile = AWS_SEARCH_ORGANIZATIONS;
+        queryFile = organizationsQueryFile(params.filters);
         break;
     }
     
@@ -106,6 +113,34 @@ const getSearchDownloadResults = async (params) => {
     throw err;
   }
 }
+
+const casesQueryFile = (params) => {
+  const str = params.query;
+  if (str !== undefined && str !== null && str !== "") {
+    return AWS_SEARCH_CASES;
+  } else {
+    return AWS_CASES;
+  }
+};
+
+const methodsQueryFile = (params) => {
+  const str = params.query;
+  if (str !== undefined && str !== null && str !== "") {
+    return AWS_SEARCH_METHODS;
+  } else {
+    return AWS_METHODS;
+  }
+};
+
+const organizationsQueryFile = (params) => {
+  const str = params.query;
+  if (str !== undefined && str !== null && str !== "") {
+    return AWS_SEARCH_ORGANIZATIONS;
+  } else {
+    return AWS_ORGANIZATIONS;
+  }
+};
+
 
 
 const updateCSVEntry = async (userId, downloadUrl, csvExportId) => {
