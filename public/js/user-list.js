@@ -18,12 +18,23 @@ const userList = {
         const userList = this.getSelectedUsers();
         if(Array.isArray(userList) && userList.length){
           this.deleteMultipleUser(userList)
+        } else {
+          Toastify({
+            text: "Please select one or more users to delete.",
+            duration: 3000,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "#2f3e46",
+            },
+          }).showToast();
         }
       });
     });
     this.listItemUser = document.querySelector(".js-users-block-all");
     this.checkboxEls = this.listItemUser.querySelectorAll(".js-keys-list-item-users input[type=checkbox]");
-
   },
   confirmDeleteUser(userId, userEmail) {
     const xhr = new XMLHttpRequest();
@@ -94,8 +105,7 @@ const userList = {
     });
   },
 
-  confirmMultipleDeleteUser(userList) {
-    console.log("&&&&&&&&&&&&&&&& userList ", userList);
+  confirmMultipleDeleteUsers(userList) {
     const xhr = new XMLHttpRequest();
     const apiUrl = "/user/delete-users";
     xhr.open("POST", apiUrl, true);
@@ -120,7 +130,7 @@ const userList = {
             },
           }).showToast();
           setTimeout(() => {
-            // location.reload();
+            location.reload();
           }, 2000);
           setTimeout(() => {
             modal.closeModal();
@@ -138,8 +148,8 @@ const userList = {
 
   deleteMultipleUser(userList) {
     const content = `
-        <h3>Confirm Delete Users</h3>
-        <p>Are you sure you would like to delete these users? <br /> Deleting a user will delete that user and permanently delete all of their entries from the database.</p>
+        <h3>Confirm Delete Selected Users</h3>
+        <p>Are you sure you would like to delete these users? <br /> Deleting users will delete each user and permanently, and delete all of their entries from the database.</p>
         <a href="#" class="button button-red js-block-user-confirm">Delete Users</a>
         `;
     modal.updateModal(content);
@@ -153,7 +163,7 @@ const userList = {
             `;
         modal.updateModalReview(content);
         modal.openModal("review-entry-modal");
-        this.confirmMultipleDeleteUser(userList);
+        this.confirmMultipleDeleteUsers(userList);
       } catch (err) {
         console.warn(err);
       }

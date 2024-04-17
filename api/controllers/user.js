@@ -201,41 +201,38 @@ router.post("/delete-users", async function(req, res) {
   try {
 
     let authors = req.body.authors;
-
-    if (authors && Array.isArray(authors) && Array.isArray(authors).length > 0) {
-
-      for (const authorData in authors) {
-        
+    if (authors && Array.isArray(authors) && authors.length > 0) {
+      for (const authorIndex in authors) {
+        let authorData = authors[authorIndex];
         let author = authorData.userId;
-        let userEmail = authorData.userEmail;
-    
-        // let allUserPosts = await getRejectionUserPost(author);
-        // if (Object.keys(allUserPosts).length > 0) {
-        //   for (const allUserPost in allUserPosts) {
-        //     let thingsByUser = allUserPosts[allUserPost];
-        //     await removeEntryThings(thingsByUser.id);
-        //     switch (thingsByUser.type) {
-        //       case "case":
-        //         await removeEntryCases(thingsByUser.id);
-        //         break;
-        //       case "method":
-        //         await removeEntryMethods(thingsByUser.id);
-        //         break;
-        //       case "collection":
-        //         await removeEntryCollections(thingsByUser.id);
-        //         break;
-        //       case "organization":
-        //         await removeEntryOrganizations(thingsByUser.id);
-        //         break;
-        //     }
-        //     await removeAuthor(thingsByUser.id);
-        //     await removeLocalizedText(thingsByUser.id);
-        //   }
-        // }
-        // await removeAuthorByUserId(author)
-        // await deleteUser(author);
-        // let userData = await auth0Client.getUsersByEmail(userEmail);
-        // let blockUserAccess = await blockUserAuth0(userData[0].user_id);
+        let userEmail = authorData.email;
+        let allUserPosts = await getRejectionUserPost(author);
+        if (Object.keys(allUserPosts).length > 0) {
+          for (const allUserPost in allUserPosts) {
+            let thingsByUser = allUserPosts[allUserPost];
+            await removeEntryThings(thingsByUser.id);
+            switch (thingsByUser.type) {
+              case "case":
+                await removeEntryCases(thingsByUser.id);
+                break;
+              case "method":
+                await removeEntryMethods(thingsByUser.id);
+                break;
+              case "collection":
+                await removeEntryCollections(thingsByUser.id);
+                break;
+              case "organization":
+                await removeEntryOrganizations(thingsByUser.id);
+                break;
+            }
+            await removeAuthor(thingsByUser.id);
+            await removeLocalizedText(thingsByUser.id);
+          }
+        }
+        await removeAuthorByUserId(author)
+        await deleteUser(author);
+        let userData = await auth0Client.getUsersByEmail(userEmail);
+        let blockUserAccess = await blockUserAuth0(userData[0].user_id);
         
       }
     }
@@ -244,7 +241,7 @@ router.post("/delete-users", async function(req, res) {
       OK: true,
     });
   } catch (error) {
-    console.log("delete-user error - ", error);
+    console.log("delete-users error - ", error);
     res.status(403).json({ error: "Delete user is failed" });
   }
 });
