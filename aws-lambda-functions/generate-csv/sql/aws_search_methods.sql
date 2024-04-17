@@ -58,4 +58,5 @@ WHERE
   searchresults.id = methods.id AND
   methods.published = true AND
   methods.hidden = false
+  ${facets:raw} 
 ;

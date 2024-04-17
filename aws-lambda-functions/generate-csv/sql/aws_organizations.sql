@@ -52,7 +52,7 @@ WITH full_thing AS (
 FROM
     organizations,
     get_localized_texts_fallback(organizations.id, ${lang}, organizations.original_language) AS texts
-where organizations.published = true and organizations.hidden = false
+where organizations.published = true and organizations.hidden = false ${facets:raw} 
 )
 SELECT full_thing.* FROM full_thing
 ;

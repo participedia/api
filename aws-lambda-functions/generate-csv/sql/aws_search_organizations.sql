@@ -63,5 +63,5 @@ WHERE
   searchresults.id = organizations.id AND
   organizations.published = true AND 
   organizations.hidden = false
-
+  ${facets:raw} 
 ;
