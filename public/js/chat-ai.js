@@ -15,7 +15,6 @@ const chatAi = {
     closePopupBtn.addEventListener('click', e => {
       messageUsBtn.style.display = 'block';
       chatPopup.style.display = 'none';
-
     });
 
     sendButton.addEventListener('click', e => {
@@ -30,24 +29,61 @@ const chatAi = {
 
   },
 
+  sendRequest(message) {
+    const xhr = new XMLHttpRequest();
+    const apiUrl = "/chat-ai/completions";
+    xhr.open("POST", apiUrl, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = () => {
+      // wait for request to be done
+      if (xhr.readyState !== xhr.DONE) return;
+      if (xhr.status === 200) {
+
+        const response = JSON.parse(xhr.response);
+        this.handleSuccess(response.data);
+      } else {
+
+        const error = this.getErrorMessage(xhr.response)
+        Toastify({
+          text: error,
+          duration: 3000,
+          close: true,
+          gravity: "top", // `top` or `bottom`
+          position: "right", // `left`, `center` or `right`
+          stopOnFocus: true, // Prevents dismissing of toast on hover
+          style: {
+            background: "#eb445a",
+          },
+        }).showToast();
+        this.bttonLoading(false);
+      }
+    }
+    const payload = {message: message};
+    xhr.send(JSON.stringify(payload));
+  },
+
   sendMessage() {
     const userInput = document.getElementById('user-input');
 
     const message = userInput.value.trim();
+
     if (message !== '') {
-        this.appendMessage(message);
-        userInput.value = '';
-        // Here you can add code to send the message to your chatbot backend
+      this.bttonLoading(true);
+      this.appendMessage(message, {name: 'You', photoUrl: '/images/user.png'});
+      userInput.value = '';
+      // Here you can add code to send the message to your chatbot backend
+      this.sendRequest(message);
+      
     }
   },
 
-  appendMessage(message) {
+  appendMessage(message, user) {
     if(message !== null || message !== '' || message !== undefined){
-      const welcomeMsg = document.getElementById(' js-chat-welcome-msg');
+      const welcomeMsg = document.getElementById('js-chat-welcome-msg');
       welcomeMsg.style.display = 'none';
     }
     const chatBox = document.getElementById('chat-box');
-    const messageElement = this.createMechatMsgParentssageDiv(message, {});
+    const messageElement = this.createMechatMsgParentssageDiv(message, user);
     chatBox.appendChild(messageElement);
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to bottom
   },
@@ -78,12 +114,12 @@ const chatAi = {
     authorProfileImageInit.classList.add('author-profile-image-initial');
     authorProfileImageInit.innerText = 'TS';
 
-    // const imgEl = document.createElement('img');
-    // imgEl.src = user.photoUrl ? user.photoUr : 'https://www.gravatar.com/avatar/0a86b9188ff3a5b83959f8688f08f1ba?s=40&d=blank';
-    // imgEl.alt = '';
+    const imgEl = document.createElement('img');
+    imgEl.src = user.photoUrl ? user.photoUrl : '/images/assistance.png';
+    imgEl.alt = '';
 
-    // avaterRelativeFlex.appendChild(imgEl);
-    avaterRelativeFlex.appendChild(authorProfileImageInit);
+    // avaterRelativeFlex.appendChild(authorProfileImageInit);
+    avaterRelativeFlex.appendChild(imgEl);
     avaterDiv.appendChild(avaterRelativeFlex);
     chatAvater.appendChild(avaterDiv);
     // **************** [END] start element (include avater) *********
@@ -126,7 +162,48 @@ const chatAi = {
     chatMsgParent.appendChild(chatContent);
 
     return chatMsgParent;
+  },
+
+  bttonLoading(display) {
+    const spinner = document.getElementById('spinner');
+    spinner.style.display = (display === true) ? 'block' : 'none';
+    const sendButton = document.getElementById('send-btn');
+    if(display === true){
+      sendButton.classList.add('opacity-5');
+      sendButton.disabled = true;
+    } else {
+      sendButton.classList.remove('opacity-5');
+      sendButton.disabled = false;
+    }
+  },
+
+  handleSuccess(response) {
+    this.appendMessage(response.message.content, {
+      name: 'Participedia AI',
+      photoUrl: '/images/assistance.png'
+    })
+    this.bttonLoading(false);
+  },
+
+  getErrorMessage(jsonString) {
+    const canDoParse = this.canParseJSON(jsonString);
+    if(canDoParse){
+      const res = JSON.parse(jsonString);
+      return res.error;
+    }
+    return "An unexpected error occurred while processing your request. Please try again later.";
+  },
+
+  canParseJSON(jsonString) {
+    try {
+      JSON.parse(jsonString);
+      return true; // Parsing succeeded
+    } catch (error) {
+      return false; // Parsing failed
+    }
   }
+
+
 };
 
 export default chatAi;

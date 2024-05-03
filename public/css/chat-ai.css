@@ -47,13 +47,7 @@
 
 .chat-ai .chat-popup .chat-container #chat-box {
   flex: 1;
-  padding: 10px;
-  overflow-y: scroll;
-}
-
-.chat-ai .chat-popup .chat-container #chat-box {
-  flex: 1;
-  padding: 10px;
+  padding: 20px;
   overflow-y: scroll;
 }
 
@@ -66,6 +60,7 @@
 }
 
 .chat-ai #send-btn {
+  position: relative;
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
@@ -104,7 +99,7 @@
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 9999px;
-  background-color: #414141;
+  /* background-color: #414141; */
 }
 
 .chat-ai .chat-message-box .chat-avater-item .chat-avater .chat-relative-flex{
@@ -123,6 +118,14 @@
   width: 100%;
 }
 
+
+.chat-ai .chat-message-box .chat-avater-item .chat-avater .chat-relative-flex img{
+  border-radius: 1.125rem;
+  height: auto;
+  max-width: 100%;
+}
+
+
 .chat-ai .chat-message-box .chat-content-item{
   position: relative;
   display: flex;
@@ -132,7 +135,7 @@
 .chat-ai .chat-message-box .chat-content-item .chat-author{
   font-size: 1rem;
   line-height: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .chat-ai .chat-message-box .chat-content-item .chat-text-flex{
@@ -191,4 +194,44 @@
 }
 
 
+.chat-ai .relative {
+  position: relative;
+}
+.chat-ai .opacity-5 {
+  opacity: 0.5;
+}
 
+.chat-ai #spinner {
+  display: none;
+  position: absolute;
+  top: 5px;
+  right: 24px; /* Adjust as needed based on spinner size and button padding */
+  transform: translateY(-50%);
+  width: 14px; /* Adjust spinner size */
+  height: 14px; /* Adjust spinner size */
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* width */
+.chat-ai .chat-popup .chat-container #chat-box::-webkit-scrollbar{
+  width: 6px;
+}
+
+/* Handle */
+.chat-ai .chat-popup .chat-container #chat-box::-webkit-scrollbar-thumb{
+  background: #000; 
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+.chat-ai .chat-popup .chat-container #chat-box::-webkit-scrollbar-thumb{
+  background: #000; 
+}
