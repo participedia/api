@@ -27,7 +27,7 @@ const connectRedis = async () => {
         password: process.env.REDIS_PASSWORD,
         socket: {
             host: process.env.REDIS_URL,
-            port: 17956
+            port: process.env.REDIS_PORT 
         }
       });
 
