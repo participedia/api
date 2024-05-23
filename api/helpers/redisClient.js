@@ -21,9 +21,24 @@ const connectRedis = async () => {
 
   try {
 
-    client = createClient({
-      url: process.env.REDIS_URL,
-    });
+    if(!process.env.APP_LOCAL){
+
+      client = createClient({
+        password: process.env.REDIS_PASSWORD,
+        socket: {
+            host: process.env.REDIS_URL,
+            port: 17956
+        }
+      });
+
+    } else {
+
+      client = createClient({
+        url: process.env.REDIS_URL,
+      });
+
+    }
+
 
     client.on('error', (err) => {
       console.error('Redis error:', err);
