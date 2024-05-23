@@ -58,9 +58,7 @@ router.post("/completions", async function(req, res) {
     };
 
     // push to the list of items
-    await addToRedis(message, listKey);
-    const itmes = await listRedis(listKey);
-    console.log("########### itmes ", itmes)
+    addToRedis(message, listKey);
     
     res.status(200).json({OK: true, data: result});
   } catch (error) {
