@@ -4,21 +4,39 @@ const { createClient } = require('redis');
  * @type {import('redis').RedisClientType}
  */
 let client;
+let isConnecting = false;
 
 const connectRedis = async () => {
   if (client && client.isOpen) return client;
 
-  client = createClient({
+  if (isConnecting) {
+    throw new Error('Redis connection is already in progress');
+  }
+
+  isConnecting = true;
+
+  try {
+
+    client = createClient({
       url: process.env.REDIS_URL || 'redis://localhost:6379',
-  });
+    });
 
-  client.on('error', (err) => {
+    client.on('error', (err) => {
       console.error('Redis error:', err);
-  });
+    });
 
-  await client.connect();
-  console.log('Connected to Redis');
-  return client;
+    await client.connect();
+    console.log('Connected to Redis');
+    return client;
+
+  } catch (error) {
+    console.error('Failed to connect to Redis:', err);
+    throw err;
+
+  } finally {
+    isConnecting = false;
+  }
+  
 };
 
 // Key for the list
@@ -32,8 +50,8 @@ const listKey = 'chat-ai-questions';
  */
 const add = async (item, key) => {
   try {
-    const getClient = await connectRedis();
-    await getClient.lPush(key, item)
+    const redis = await connectRedis();
+    await redis.lPush(key, item)
   } catch (err) {
     console.error('Error adding item:', err);
   }
@@ -46,8 +64,8 @@ const add = async (item, key) => {
  */
 const list = async (key) => {
   try {
-    const getClient = await connectRedis();
-    const items = getClient.lRange(key, 0, -1);
+    const redis = await connectRedis();
+    const items = redis.lRange(key, 0, -1);
     return items;
   } catch (error) {
     console.error('Error retrieving questions:', err);
