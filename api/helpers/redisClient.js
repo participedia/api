@@ -9,6 +9,10 @@ let isConnecting = false;
 const connectRedis = async () => {
   if (client && client.isOpen) return client;
 
+  if(!process.env.REDIS_URL){
+    throw new Error('REDIS_URL is missing');
+  }
+
   if (isConnecting) {
     throw new Error('Redis connection is already in progress');
   }
@@ -17,11 +21,9 @@ const connectRedis = async () => {
 
   try {
 
-    client = createClient();
-
-    // client = createClient({
-    //   url: process.env.REDIS_URL || 'redis://localhost:6379',
-    // });
+    client = createClient({
+      url: process.env.REDIS_URL,
+    });
 
     client.on('error', (err) => {
       console.error('Redis error:', err);
