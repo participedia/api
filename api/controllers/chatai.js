@@ -2,10 +2,12 @@
 let express = require("express");
 let router = express.Router();
 const OpenAI = require("openai");
+const { listKey, add: addToRedis, list: listRedis } = require("../helpers/redisClient");
 
 const openai = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
 });
+
 
 /**
  * TODO
@@ -55,10 +57,15 @@ router.post("/completions", async function(req, res) {
       ...choice,
     };
 
+    // push to the list of items
+    await addToRedis(message, listKey);
+
     res.status(200).json({OK: true, data: result});
   } catch (error) {
     handlingError(req, res, error);
   }
 });
+
+
 
 module.exports = router;
