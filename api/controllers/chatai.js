@@ -56,10 +56,15 @@ router.post("/completions", async function(req, res) {
       system_fingerprint: chatCompletion.system_fingerprint,
       ...choice,
     };
-
-    // push to the list of items
-    addToRedis(message, listKey);
     
+
+    // data to add to redis
+    const currentDate = new Date();
+    const dateString = currentDate.toISOString();
+    const item = JSON.stringify({question: message, createAt: dateString});
+    // push to the list of items
+    addToRedis(item, listKey);
+
     res.status(200).json({OK: true, data: result});
   } catch (error) {
     handlingError(req, res, error);

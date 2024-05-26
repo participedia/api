@@ -59,7 +59,7 @@ const connectRedis = async () => {
 };
 
 // Key for the list
-const listKey = 'chat-ai-questions';
+const listKey = 'chat-ai-questions-list';
 
 
 /**
