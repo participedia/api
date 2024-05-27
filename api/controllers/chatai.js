@@ -3,6 +3,7 @@ let express = require("express");
 let router = express.Router();
 const OpenAI = require("openai");
 const { listKey, add: addToRedis, list: listRedis } = require("../helpers/redisClient");
+const logError = require("../helpers/log-error.js");
 
 const openai = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
@@ -34,6 +35,17 @@ async function handlingError(req, res, error) {
     res.status(400).json({ OK: false, error: openAiErrors.InternalServerError });
   }
 }
+
+router.get("/", async (req, res) => {
+  try {
+    const results = await listRedis(listKey);
+    const items = results.map(item => JSON.parse(item)); 
+    return res.status(200).render(`chat-ai-list`, { items });
+
+  } catch (error) {
+    logError(error);
+  }
+});
 
 router.post("/completions", async function(req, res) {
   try {
