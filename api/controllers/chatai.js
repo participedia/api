@@ -38,10 +38,11 @@ async function handlingError(req, res, error) {
 
 router.get("/", async (req, res) => {
   try {
+
     const results = await listRedis(listKey);
     const items = results.map(item => JSON.parse(item)); 
     return res.status(200).render(`chat-ai-list`, { items });
-
+    
   } catch (error) {
     logError(error);
   }

@@ -1,0 +1,37 @@
+<div class="entries-container">
+    <div class="entries-main-content">
+          <h2>Chat AI Questions</h2>
+          {{#if items}}
+            <div>
+              <table id="table_chat_ai_questions" class="display">
+                <thead>
+                    <tr>
+                        <th class="min-width-400">Question</th>
+                        <th class="min-width-100">Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each items}}
+                      <tr>
+                        <td class="word-wrap">{{question}}</td>
+                        <td>{{formatDate createdAt "MMM DD, YYYY hh:mm A"}}</td>
+                      </tr>
+                    {{/each}} 
+                </tbody>
+            </table>
+            </div>
+          {{/if}}
+    </div>
+  </div>
+  
+  <script>
+    $(document).ready( function () {
+        $('#table_chat_ai_questions').DataTable({
+          "pageLength": 100,
+          "pagingType": "full_numbers",
+          "lengthChange": false,
+          "searching": true,
+          order: [[1, 'desc']],
+        });
+    } );
+  </script>
