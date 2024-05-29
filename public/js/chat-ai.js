@@ -31,7 +31,7 @@ const chatAi = {
 
   sendRequest(message) {
     const xhr = new XMLHttpRequest();
-    const apiUrl = "/chat-ai/completions";
+    const apiUrl = "/ai-questions-list/completions";
     xhr.open("POST", apiUrl, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = () => {

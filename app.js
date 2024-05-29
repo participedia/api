@@ -303,7 +303,7 @@ app.use("/entries", entries);
 app.use("/exports", exportsData);
 app.use("/bookmark", bookmark);
 app.use("/blog-post", blogPost);
-app.use("/chat-ai", chatai);
+app.use("/ai-questions-list", chatai);
 
 // endpoint to set new locale
 app.get("/set-locale", function(req, res) {
