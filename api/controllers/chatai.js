@@ -57,7 +57,7 @@ router.post("/completions", async function(req, res) {
         .json({ error: openAiErrors.BadRequestError });
     }
     const chatCompletion = await openai.chat.completions.create({
-      messages: [{ role: 'user', content: message }],
+      messages: [{ role: 'user', content: `${message}. Reply with data on participedia.net and give some links as examples` }],
       model: 'gpt-3.5-turbo',
     });
     const choice = chatCompletion.choices[0];
