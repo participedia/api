@@ -10,7 +10,7 @@ const {
   offsetFromReq,
 } = require("../helpers/things");
 
-const { translateEntry } = require("../helpers/translate-helpers");
+const { processTranslateEntry } = require("../helpers/translate-helpers");
 
 const {
   publishHiddenEntry,
@@ -185,7 +185,8 @@ router.post("/approve-entry", async function(req, res) {
       author.user_id,
       currentDate
     );
-    let translateEntryText = translateEntry(req.body.entryId, originLang.original_language);
+    // let translateEntryText = translateEntry(req.body.entryId, originLang.original_language);
+    let translateEntryText = processTranslateEntry(req.body.entryId, originLang.original_language);
     let allUserPosts = await getApprovalUserPost(author.user_id);
 
     for (const allUserPost in allUserPosts) {

@@ -162,6 +162,20 @@ const getOriginLanguageEntry = async (thingid, originLang) => {
   }
 };
 
+const getEntryByThingidAndLang = async (thingid, originLang) => {
+  try {
+    let results = await db.one(LOCALIZED_TEXT_BY_ID_LOCALE, {
+      thingid: thingid,
+      language: originLang,
+    });
+    return results;
+  } catch (err) {
+    console.log("getEntryByThingidAndLang error - ", err);
+    return null
+  }
+};
+
+
 module.exports = {
   publishHiddenEntry,
   removeEntryThings,
@@ -177,4 +191,5 @@ module.exports = {
   getOriginLanguageEntry,
   getEntryOriginLang,
   removeAuthorByUserId,
+  getEntryByThingidAndLang
 };
