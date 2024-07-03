@@ -592,7 +592,7 @@ async function getCollectionEditHttp(req, res) {
 
   if(Array.isArray(articles) && articles.length){
     const article = articles[0];
-    if(req.user && (!req.user.isadmin && req.user.id !== article.creator.user_id) ){
+    if(!article.published && req.user && (!req.user.isadmin && req.user.id !== article.creator.user_id) ){
       res.status(404).render("access-denied");
       return null;
     }
