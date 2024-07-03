@@ -63,9 +63,7 @@
     {{> view-socialmedia }}
     {{/if}}
     {{#if article.verified}}
-    <img src="/images/icon-verified.svg" class="image-svg-action floating-action-image show-verified-info-trigger js-show-verified-info-trigger">
-    
-  </img>
+    <img src="/images/icon-verified.svg" class="image-svg-action floating-action-image show-verified-info-trigger js-show-verified-info-trigger" />
     {{else}}
     <a
       href="/{{article.type}}/{{article.id}}/edit"

@@ -589,6 +589,15 @@ async function getCollectionEditHttp(req, res) {
     res.status(404).render("404");
     return null;
   }
+
+  if(Array.isArray(articles) && articles.length){
+    const article = articles[0];
+    if(req.user && (!req.user.isadmin && req.user.id !== article.creator.user_id) ){
+      res.status(404).render("access-denied");
+      return null;
+    }
+  }
+
   const staticText = await getEditStaticText(params);
   returnByType(res, params, articles, staticText, req.user);
 }

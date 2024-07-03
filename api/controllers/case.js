@@ -834,11 +834,13 @@ async function getCaseHttp(req, res) {
     res.status(404).render("404");
     return null;
   }
-  const user = req.user;
-  if(!article.published && !user.isadmin && user.id !== article.creator.user_id){
-    res.status(404).render("404");
-    return null;
+
+  if(!article.published){
+    if(req.user && !req.user.isadmin && req.user.id !== article.creator.user_id){
+      return res.status(404).render("waiting-for-approval");
+    }
   }
+
   const staticText = await getEditStaticText(params);
   returnByType(res, params, article, staticText, req.user);
 }
@@ -871,16 +873,17 @@ async function getCaseEditHttp(req, res) {
   const articles = await getThingEdit(params, CASES_LOCALE_BY_ID, res);
   if (!articles) {
     res.status(404).render("404");
-    return null;
+    return null;  
   }
+
   if(Array.isArray(articles) && articles.length){
     const article = articles[0];
-    const user = req.user;
-    if(article && !article.published && user.id !== article.creator.user_id){
-      res.status(404).render("404");
+    if(req.user && (!req.user.isadmin && req.user.id !== article.creator.user_id) ){
+      res.status(404).render("access-denied");
       return null;
     }
   }
+
   const staticText = await getEditStaticText(params);
   returnByType(res, params, articles, staticText, req.user);
 }
