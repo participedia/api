@@ -41,6 +41,7 @@ const {
   COLLECTION_BY_ID,
   COLLECTIONS,
   FEATURED,
+  LOCALIZED_TEXT_BY_THINGID_ORDERBY,
 } = require("./db");
 
 // Define the keys we're testing (move these to helper/things.js ?
@@ -286,12 +287,15 @@ async function maybeUpdateUserText(req, res, type) {
   return maybeUpdateUserTextLocaleEntry(req.body, req, res, type);
 }
 
-async function maybeUpdateUserTextLocaleEntry(body, req, res, type) {
+async function maybeUpdateUserTextLocaleEntry(body, req, res, type, reqParams = null) {
   // keyFieldsToObjects is a temporary workaround while we move from {key, value} objects to keys
   // if none of the user-submitted text fields have changed, don't add a record
   // to localized_text or
   const newArticle = body;
-  const params = parseGetParams(req, type);
+  let params = parseGetParams(req, type);
+  if(reqParams){
+    params = reqParams;
+  }
   const oldArticle = (await db.one(queries[type], params)).results;
   if (!oldArticle) {
     throw new Error("No %s found for id %s", type, params.articleid);
@@ -1140,6 +1144,39 @@ async function saveDraft(req, res, args) {
   return { payload, thingId: params.articleid };
 }
 
+
+/**
+ * @param {*} editedEntryId 
+ * @param {*} orginalEntryId 
+ */
+async function applyLocalizedTextChangesToOrgin(editedEntryId, orginalEntryId, userId = null) {
+  try {
+    const results = await db.any(LOCALIZED_TEXT_BY_THINGID_ORDERBY, {thingid: editedEntryId});
+    if(Array.isArray(results) && results.length){
+      for (let item in results) {
+        let localzedData = results[item];
+        localzedData.thingid = orginalEntryId
+        localzedData.id = orginalEntryId
+        await db.none(INSERT_LOCALIZED_TEXT, localzedData);
+      }
+    }
+
+    if(userId){
+      const author = {
+        user_id: userId,
+        timestamp: "now",
+        thingid: orginalEntryId,
+      };
+      console.log("applyLocalizedTextChangesToOrgin ##### author ", author);
+
+      await db.none(INSERT_AUTHOR, author);
+    }
+
+  } catch (error) {
+    console.log("applyLocalizedTextChangesToOrgin error ", error);
+  }
+}
+
 module.exports = {
   supportedTypes,
   titleKeys,
@@ -1173,4 +1210,5 @@ module.exports = {
   validateCaptcha,
   generateLocaleArticle,
   publishDraft,
+  applyLocalizedTextChangesToOrgin
 };

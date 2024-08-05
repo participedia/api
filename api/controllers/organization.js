@@ -22,6 +22,9 @@ const {
   ErrorReporter,
   LOCALIZED_TEXT_BY_ID_LOCALE,
   UPDATE_DRAFT_LOCALIZED_TEXT,
+  DELETE_EDITED_ORGANIZATION_ENTRY,
+  COPY_ORGANIZATION,
+  THING_BY_ORGINAL_ENTRY_ID,
 } = require("../helpers/db");
 
 const {
@@ -43,6 +46,7 @@ const {
   validateCaptcha,
   generateLocaleArticle,
   publishDraft,
+  applyLocalizedTextChangesToOrgin,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -373,7 +377,8 @@ async function postOrganizationUpdateHttp(req, res) {
       urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
     }
   }
-
+  
+  //validate captcha end
   let checkReCaptcha = await validateCaptcha(urlCaptcha);
   if (!checkReCaptcha) {
     return res.status(400).json({
@@ -381,7 +386,6 @@ async function postOrganizationUpdateHttp(req, res) {
       errors: captcha_error_message,
     });
   }
-  //validate captcha end
 
   if (!article.published && !article.hidden) {
     publishDraft(req, res, organizationUpdate, "organization");
@@ -423,13 +427,12 @@ async function postOrganizationUpdateHttp(req, res) {
       if(!entry.article_id && originalLanguageEntry.article_id){
         entry.article_id = originalLanguageEntry.article_id;
       }
-      await organizationUpdate(req, res, entry, true);
+      // await organizationUpdate(req, res, entry, true);
     }
   }
   const hasErrors = !!langErrors.find(
     errorEntry => errorEntry.errors.length > 0
   );
-
   if (hasErrors) {
     return res.status(400).json({
       OK: false,
@@ -437,8 +440,50 @@ async function postOrganizationUpdateHttp(req, res) {
     });
   }
 
+  /**
+ * NON Approved user
+ * is editing && entry is published && entry not hidden 
+ * is editing entry && not admin && non approved user => create a copy of that entry and fill orginal_entry_id
+ */
+  const user = req.user;
+  if(!user.isadmin && !originalLanguageEntry.hidden && (user.accepted_date === null || user.accepted_date === "")){
+    const { editOrganization, errors }  = await copyOrganization(originalLanguageEntry, params, req, res);
+    if (errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+    if(editOrganization){
+      return res.status(200).json({
+        OK: true,
+        article: editOrganization,
+      });
+    }
+  }
+  /**
+   * apply changes of non approved changes
+   * if admin published the entry
+   */
+  let isCopyProcess = false; // in case the admin published the copy entry that was editing by non approved user
+  if(user.isadmin && article.orginal_entry_id && article.hidden){
+    const orginalEntryId = article.orginal_entry_id;
+    const createdId = (article.creator && article.creator.user_id) ? article.creator.user_id : null // user id
+    await applyLocalizedTextChangesToOrgin(article.id, orginalEntryId, createdId)
+    await db.any(DELETE_EDITED_ORGANIZATION_ENTRY, {thingid: article.id})
+    req.params.thingid = orginalEntryId;
+    params.thingid = orginalEntryId;
+    params.articleid = orginalEntryId;
+    originalLanguageEntry.hidden = false;
+    isCopyProcess = true;
+  }
+  /**
+   * *********************** END editing entry of non approved user
+   */
+
+
   if(originalLanguageEntry){
-    await organizationUpdate(req, res, originalLanguageEntry, true);
+    await organizationUpdate(req, res, originalLanguageEntry, true, isCopyProcess);
   }
 
   await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
@@ -481,7 +526,7 @@ async function postOrganizationUpdatePreview(req, res) {
   }
 }
 
-async function organizationUpdate(req, res, entry = undefined, isUpdating = false) {
+async function organizationUpdate(req, res, entry = undefined, isUpdating = false, isCopyProcess = false) {
   const params = parseGetParams(req, "organization");
   const user = req.user;
   const { articlesid, type, view, userid, lang, returns } = params;
@@ -587,7 +632,9 @@ async function organizationUpdate(req, res, entry = undefined, isUpdating = fals
               await t.none(INSERT_AUTHOR, author);
               updatedOrganization.updated_date = "now";
             } else {
-              await t.none(UPDATE_AUTHOR_FIRST, creator);
+              if(!isCopyProcess){
+                await t.none(UPDATE_AUTHOR_FIRST, creator);
+              }
             }
           }
           
@@ -613,6 +660,106 @@ async function organizationUpdate(req, res, entry = undefined, isUpdating = fals
   } else {
     logError(`400 with errors: ${er.errors.join(", ")}`);
     return { errors: er.errors };
+  }
+}
+
+async function createOrganization(updatedText, oldArticle){
+  try {
+    let hidden = true;
+    let title = updatedText.title ? updatedText.title : null;
+    let body = updatedText.body ? updatedText.body : null;
+    let description = updatedText.description ? updatedText.description : null;
+    let original_language = updatedText.language ? updatedText.language : 'en';
+    let orginal_entry_id = oldArticle.id;
+    let local_language = updatedText.language ? updatedText.language : 'en';
+    const thing = await db.one(COPY_ORGANIZATION, {
+      title,
+      body,
+      description,
+      original_language,
+      hidden,
+      orginal_entry_id,
+      local_language
+    });
+    return thing.thingid;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// create a copy of entry once non approved user edit on entry
+async function copyOrganization(entry, params, req, res){
+  try {
+    const user = req.user;
+    const newOrganization = entry;
+    const errorsValidate = validateFields(newOrganization, "organization");
+    if (errorsValidate.length > 0) {
+      return res.status(400).json({
+        OK: false,
+        errors: errorsValidate,
+      });
+    }
+    newOrganization.links = verifyOrUpdateUrl(newOrganization.links || []);
+    const {
+      updatedText,
+      author,
+      oldArticle,
+    } = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization"); // fill data of entry & author
+    
+    const options = {
+      articleid: oldArticle.id,
+      userid: params.userid,
+      lang: params.lang
+    }
+    let thingid;
+    let isNewCopy = false;
+    // check if non approved user has already has a copy of the organization 
+    const orginalEntryArr = (await db.any(THING_BY_ORGINAL_ENTRY_ID, options));
+    if(Array.isArray(orginalEntryArr) && orginalEntryArr.length){
+      const item = orginalEntryArr[0];
+      thingid = item.id;
+      updatedText.id = thingid;
+      await db.tx("update-organization", async t => {
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+      });
+    } else {
+      thingid = await createOrganization(updatedText, oldArticle);
+      isNewCopy = true;
+    }
+
+    params.thingid = thingid;
+    params.articleid = thingid;
+    const [updatedOrganization, er] = getUpdatedOrganization(user, params, newOrganization, oldArticle); // map columns of organization
+    if(isNaN(updatedOrganization.number_of_participants)) {
+      updatedOrganization.number_of_participants = null;
+    }
+
+    //get current date when user.isAdmin is false;
+    updatedOrganization.updated_date = !user.isadmin ? "now" : updatedOrganization.updated_date;
+    updatedOrganization.id = thingid;
+    updatedOrganization.hidden = true;
+    author.timestamp = 'now';
+    author.thingid = thingid;
+    if(isNewCopy){
+      updatedOrganization.original_language = updatedText.language ? updatedText.language : 'en';
+    }
+
+    if (!er.hasErrors()) {
+      await db.tx("update-organization", async t => {
+        if(isNewCopy){
+          await t.none(INSERT_AUTHOR, author);
+        }
+        await t.none(UPDATE_ORGANIZATION, updatedOrganization);
+      });
+      const freshArticle = await getOrganization(params, res);
+      return {editOrganization: freshArticle};
+    } else{
+      logError(`400 with errors: ${er.errors.join(", ")}`);
+      return { errors: er.errors};
+    }
+
+  } catch (error) {
+    return {errors: error}
   }
 }
 
@@ -801,4 +948,5 @@ module.exports = {
   getOrganizationEditHttp,
   getOrganizationNewHttp,
   postOrganizationUpdatePreview,
+  getUpdatedOrganization,
 };

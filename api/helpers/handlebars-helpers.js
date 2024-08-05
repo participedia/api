@@ -997,13 +997,19 @@ module.exports = {
       return userIsIn && dateIsIn;
     };
 
-    if (!postDateIsInHistory()) {
+    console.log("@@@@@@@@@@@@@@@@@@2 postDateIsInHistory() ", postDateIsInHistory())
+    console.log("@@@@@@@@@@@@@@@@@@2 article.orginal_entry_id ", article.orginal_entry_id)
+
+
+    if (!postDateIsInHistory() && !article.orginal_entry_id) {
       history.push({
         user_id: creator ? creator.user_id : null,
         timestamp: postDate,
         name: creator ? creator.name : null,
       });
     }
+
+    console.log("@@@@@@@@@@@@@@@@@@2 sortedEditHistory history ", history)
 
     return history;
   },

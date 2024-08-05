@@ -21,6 +21,9 @@ const {
   ErrorReporter,
   LOCALIZED_TEXT_BY_ID_LOCALE,
   UPDATE_DRAFT_LOCALIZED_TEXT,
+  THING_BY_ORGINAL_ENTRY_ID,
+  COPY_METHOD,
+  DELETE_EDITED_METHODS_ENTRY,
 } = require("../helpers/db");
 
 const {
@@ -42,6 +45,7 @@ const {
   validateCaptcha,
   generateLocaleArticle,
   publishDraft,
+  applyLocalizedTextChangesToOrgin,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -291,10 +295,10 @@ async function postMethodUpdateHttp(req, res) {
   let captcha_error_message = "";
   let supportedLanguages;
   let article = "";
+  const articleRow = await db.one(METHOD_BY_ID, params);
+  article = articleRow.results;
 
   if (!Object.keys(req.body).length) {
-    const articleRow = await db.one(METHOD_BY_ID, params);
-    article = articleRow.results;
 
     if (!article.latitude && !article.longitude) {
       article.latitude = "";
@@ -376,6 +380,7 @@ async function postMethodUpdateHttp(req, res) {
     }
   }
 
+  //validate captcha end
   let checkReCaptcha = await validateCaptcha(urlCaptcha);
   if (!checkReCaptcha) {
     return res.status(400).json({
@@ -383,7 +388,6 @@ async function postMethodUpdateHttp(req, res) {
       errors: captcha_error_message,
     });
   }
-  //validate captcha end
 
   if (!article.published && !article.hidden) {
     publishDraft(req, res, methodUpdate, "method");
@@ -422,13 +426,12 @@ async function postMethodUpdateHttp(req, res) {
       if (originLang == entryLocale) {
         localeEntriesArr.push(entry);
       }
-      await methodUpdate(req, res, entry);
+      // await methodUpdate(req, res, entry);
     }
   }
   const hasErrors = !!langErrors.find(
     errorEntry => errorEntry.errors.length > 0
   );
-
   if (hasErrors) {
     return res.status(400).json({
       OK: false,
@@ -436,12 +439,54 @@ async function postMethodUpdateHttp(req, res) {
     });
   }
 
-  // if(originalLanguageEntry){
-  //   await methodUpdate(req, res, originalLanguageEntry);
-  // }
+  /**
+   * NON Approved user
+   * is editing && entry is published && entry not hidden 
+   * is editing entry && not admin && non approved user => create a copy of that entry and fill orginal_entry_id
+   */
+  const user = req.user;
+  if(!user.isadmin && !originalLanguageEntry.hidden && (user.accepted_date === null || user.accepted_date === "")){
+    const { editMethod, errors }  = await copyMethod(originalLanguageEntry, params, req, res);
+    if (errors) {
+      return res.status(400).json({
+        OK: false,
+        errors,
+      });
+    }
+    if(editMethod){
+      return res.status(200).json({
+        OK: true,
+        article: editMethod,
+      });
+    }
+  }
+  /**
+   * apply changes of non approved changes
+   * if admin published the entry
+   */
+  let isCopyProcess = false; // in case the admin published the copy entry that was editing by non approved user
+  if(user.isadmin && article.orginal_entry_id && article.hidden){
+    const orginalEntryId = article.orginal_entry_id;
+    const createdId = (article.creator && article.creator.user_id) ? article.creator.user_id : null // user id
+    await applyLocalizedTextChangesToOrgin(article.id, orginalEntryId, createdId)
+    await db.any(DELETE_EDITED_METHODS_ENTRY, {thingid: article.id})
+    req.params.thingid = orginalEntryId;
+    params.thingid = orginalEntryId;
+    params.articleid = orginalEntryId;
+    originalLanguageEntry.hidden = false;
+    isCopyProcess = true;
+  }
+  /**
+   * *********************** END editing entry of non approved user
+   */
+
+
+  if(originalLanguageEntry){
+    await methodUpdate(req, res, originalLanguageEntry, isCopyProcess);
+  }
   // const localeEntriesArr = [].concat(...Object.values(localeEntries));
 
-  await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
+  // await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
   const freshArticle = await getMethod(params, res);
   res.status(200).json({
     OK: true,
@@ -574,7 +619,7 @@ async function postMethodUpdatePreview(req, res) {
   }
 }
 
-async function methodUpdate(req, res, entry = undefined) {
+async function methodUpdate(req, res, entry = undefined, isCopyProcess = false) {
   const params = parseGetParams(req, "method");
   const user = req.user;
   const { articleid, type, view, userid, lang, returns } = params;
@@ -672,7 +717,10 @@ async function methodUpdate(req, res, entry = undefined) {
               await t.none(INSERT_AUTHOR, author);
               updatedMethod.updated_date = "now";
             } else {
-              await t.none(UPDATE_AUTHOR_FIRST, creator);
+
+              if(!isCopyProcess){
+                await t.none(UPDATE_AUTHOR_FIRST, creator);
+              }
             }
           }
           await t.none(UPDATE_METHOD, updatedMethod);
@@ -696,6 +744,108 @@ async function methodUpdate(req, res, entry = undefined) {
   } else {
     logError(er);
     return { errors: er.errors };
+  }
+}
+
+async function createMethod(updatedText, oldArticle){
+  try {
+    let hidden = true;
+    let title = updatedText.title ? updatedText.title : null;
+    let body = updatedText.body ? updatedText.body : null;
+    let description = updatedText.description ? updatedText.description : null;
+    let original_language = updatedText.language ? updatedText.language : 'en';
+    let orginal_entry_id = oldArticle.id;
+    let local_language = updatedText.language ? updatedText.language : 'en';
+    const thing = await db.one(COPY_METHOD, {
+      title,
+      body,
+      description,
+      original_language,
+      hidden,
+      orginal_entry_id,
+      local_language
+    });
+    return thing.thingid;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// create a copy of entry once non approved user edit on entry
+async function copyMethod(entry, params, req, res){
+  try {
+    const user = req.user;
+    const newMethod = entry;
+    const errorsValidate = validateFields(newMethod, "method");
+    if (errorsValidate.length > 0) {
+      return res.status(400).json({
+        OK: false,
+        errors: errorsValidate,
+      });
+    }
+    newMethod.links = verifyOrUpdateUrl(newMethod.links || []);
+    const {
+      updatedText,
+      author,
+      oldArticle,
+    } = await maybeUpdateUserTextLocaleEntry(newMethod, req, res, "method"); // fill data of entry & author
+    
+    const options = {
+      articleid: oldArticle.id,
+      userid: params.userid,
+      lang: params.lang
+    }
+    let thingid;
+    let isNewCopy = false;
+    // check if non approved user has already has a copy of the method 
+    const orginalEntryArr = (await db.any(THING_BY_ORGINAL_ENTRY_ID, options));
+    if(Array.isArray(orginalEntryArr) && orginalEntryArr.length){
+      const item = orginalEntryArr[0];
+      thingid = item.id;
+      updatedText.id = thingid;
+      await db.tx("update-method", async t => {
+        await t.none(INSERT_LOCALIZED_TEXT, updatedText);
+      });
+    } else {
+      thingid = await createMethod(updatedText, oldArticle);
+      isNewCopy = true;
+    }
+
+    params.thingid = thingid;
+    params.articleid = thingid;
+    const [updatedMethod, er] = getUpdatedMethod(user, params, newMethod, oldArticle); // map columns of method
+
+    if(isNaN(updatedMethod.number_of_participants)) {
+      updatedMethod.number_of_participants = null;
+    }
+
+    //get current date when user.isAdmin is false;
+    updatedMethod.updated_date = !user.isadmin ? "now" : updatedMethod.updated_date;
+    author.timestamp = 'now';
+
+    updatedMethod.id = thingid;
+    updatedMethod.hidden = true;
+    author.thingid = thingid;
+    if(isNewCopy){
+      updatedMethod.original_language = updatedText.language ? updatedText.language : 'en';
+    }
+
+    if (!er.hasErrors()) {
+      await db.tx("update-method", async t => {
+        if(isNewCopy){
+          await t.none(INSERT_AUTHOR, author);
+        }
+        await t.none(UPDATE_METHOD, updatedMethod);
+      });
+      const freshArticle = await getMethod(params, res);
+      return {editMethod: freshArticle};
+    } else{
+      logError(`400 with errors: ${er.errors.join(", ")}`);
+      return { errors: er.errors};
+    }
+
+  } catch (error) {
+    return {errors: error}
   }
 }
 
@@ -865,4 +1015,5 @@ module.exports = {
   postMethodUpdateHttp,
   postMethodUpdatePreview,
   methodUpdateHttp,
+  getUpdatedMethod,
 };

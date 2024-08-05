@@ -34,7 +34,7 @@ const removeEntryThings = async entryId => {
 
 const getEntryOriginLang = async entryId => {
   try {
-    return await db.one("SELECT original_language FROM things WHERE id = ${entryId}", {
+    return await db.one("SELECT original_language,type,orginal_entry_id FROM things WHERE id = ${entryId}", {
       entryId: entryId,
     });
   } catch (err) {

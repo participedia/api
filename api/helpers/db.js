@@ -120,6 +120,16 @@ const CSV_EXPORT = sql("../sql/csv_export.sql");
 const SEARCH_ORGANIZATION_DOWNLOAD = sql("../sql/search_organizations_download.sql");
 const UPSERT_MEDIUM_POST = sql("../sql/upsert_medium_post.sql");
 const MEDIUM_POSTS = sql("../sql/medium_posts.sql");
+const COPY_CASE = sql("../sql/copy_case.sql");
+const CASE_BY_ORGINAL_ENTRY_ID = sql("../sql/case_by_orginal_entry_id.sql");
+const DELETE_EDITED_CASE_ENTRY = sql("../sql/delete_edited_case_entry.sql");
+const LOCALIZED_TEXT_BY_THINGID_ORDERBY = sql("../sql/localized_text_by_thingid_no_limit.sql");
+const THING_BY_ORGINAL_ENTRY_ID = sql("../sql/things_by_orginal_entry_id.sql");
+const COPY_METHOD = sql("../sql/copy_method.sql");
+const DELETE_EDITED_METHODS_ENTRY = sql("../sql/delete_edited_method_entry.sql");
+const DELETE_EDITED_ORGANIZATION_ENTRY = sql("../sql/delete_edited_organization_entry.sql");
+const COPY_ORGANIZATION = sql("../sql/copy_organization.sql");
+
 
 function ErrorReporter() {
   this.errors = [];
@@ -646,4 +656,13 @@ module.exports = {
   ErrorReporter,
   UPSERT_MEDIUM_POST,
   MEDIUM_POSTS,
+  COPY_CASE,
+  CASE_BY_ORGINAL_ENTRY_ID,
+  DELETE_EDITED_CASE_ENTRY,
+  LOCALIZED_TEXT_BY_THINGID_ORDERBY,
+  THING_BY_ORGINAL_ENTRY_ID,
+  COPY_METHOD,
+  DELETE_EDITED_METHODS_ENTRY,
+  DELETE_EDITED_ORGANIZATION_ENTRY,
+  COPY_ORGANIZATION
 };
