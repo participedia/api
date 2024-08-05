@@ -997,9 +997,6 @@ module.exports = {
       return userIsIn && dateIsIn;
     };
 
-    console.log("@@@@@@@@@@@@@@@@@@2 postDateIsInHistory() ", postDateIsInHistory())
-    console.log("@@@@@@@@@@@@@@@@@@2 article.orginal_entry_id ", article.orginal_entry_id)
-
 
     if (!postDateIsInHistory() && !article.orginal_entry_id) {
       history.push({
@@ -1008,8 +1005,6 @@ module.exports = {
         name: creator ? creator.name : null,
       });
     }
-
-    console.log("@@@@@@@@@@@@@@@@@@2 sortedEditHistory history ", history)
 
     return history;
   },
@@ -1801,5 +1796,12 @@ module.exports = {
     } else {
       return true;
     }
+  },
+
+  checkAndGetValue(val){
+    if(val){
+      return val;
+    }
+    return '__'
   },
 };
