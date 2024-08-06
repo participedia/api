@@ -424,9 +424,9 @@ async function postOrganizationUpdateHttp(req, res) {
         localeEntriesArr.push(entry);
       }
 
-      if(!entry.article_id && originalLanguageEntry.article_id){
-        entry.article_id = originalLanguageEntry.article_id;
-      }
+      // if(!entry.article_id && originalLanguageEntry.article_id){
+      //   entry.article_id = originalLanguageEntry.article_id;
+      // }
       // await organizationUpdate(req, res, entry, true);
     }
   }
