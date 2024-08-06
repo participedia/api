@@ -423,10 +423,7 @@ async function postOrganizationUpdateHttp(req, res) {
       if (originLang == entryLocale) {
         localeEntriesArr.push(entry);
       }
-
-      // if(!entry.article_id && originalLanguageEntry.article_id){
-      //   entry.article_id = originalLanguageEntry.article_id;
-      // }
+      
       // await organizationUpdate(req, res, entry, true);
     }
   }
