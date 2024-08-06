@@ -777,6 +777,7 @@ async function postCaseUpdateHttp(req, res) {
     req.params.thingid = orginalEntryId;
     params.thingid = orginalEntryId;
     params.articleid = orginalEntryId;
+    originalLanguageEntry.hidden = false;
     isCopyProcess = true;
    }
   /**
