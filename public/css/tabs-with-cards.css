@@ -132,7 +132,9 @@
 .tab-container .tab-panels .tab-contributions,
 .tab-container .tab-panels .tab-bookmarks,
 .tab-container .tab-panels .tab-drafts,
-.tab-container .tab-panels .tab-collections {
+.tab-container .tab-panels .tab-collections,
+.tab-container .tab-panels .tab-review-new,
+.tab-container .tab-panels .tab-review-edits {
   display: block;
 }
 

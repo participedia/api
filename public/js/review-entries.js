@@ -1,3 +1,4 @@
+import tabsWithCards from "./tabs-with-cards.js";
 import modal from "./modal.js";
 
 const reviewEntries = {
@@ -112,5 +113,6 @@ const reviewEntries = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  tabsWithCards.init('user');
   reviewEntries.init();
 });

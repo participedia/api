@@ -205,11 +205,17 @@ router.get("/review", requireAuthenticatedUser(), async function(req, res) {
     });
 
     let data = results;
-
     // return html template
     const returnType = req.query.returns || "html";
     if (returnType === "html") {
-      return res.status(200).render(`review-entries`, { results });
+
+      if(req.query.selectedCategory && req.query.selectedCategory === 'review-edits'){
+        results = results.filter(item => item.orginal_entry_id);
+      } else {
+        results = results.filter(item => !item.orginal_entry_id);
+      }
+      
+      return res.status(200).render(`review-entries`, { results, req });
     } else if (returnType === "json") {
       return res.status(200).json(data);
     }

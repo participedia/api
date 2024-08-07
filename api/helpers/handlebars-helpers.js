@@ -1138,7 +1138,7 @@ module.exports = {
     // have a default tab with the same name as a non-default tab on another page.
     // tab-contributions is default tab on /user/{id} (user-view)
     // tab-all is default tab on /search
-    const defaultTabs = ["contributions", "all"];
+    const defaultTabs = ["contributions", "all", "review-new"];
     // if there is no param, make default tab active
     if (
       (!tabParam && defaultTabs.indexOf(tabName) > -1) ||
@@ -1803,5 +1803,21 @@ module.exports = {
       return val;
     }
     return '__'
+  },
+
+  getEntriesReviewTabs(context) {
+    return [
+      { title: i18n("New Entries", context), key: "review-new" },
+      { title: i18n("Edits", context), key: "review-edits" },
+    ];
+  },
+
+  isSelectedEntriesReviewTab(req, category) {
+    const defaultTab = "review-new";
+    if (req.query.selectedCategory) {
+      return req.query.selectedCategory === category;
+    } else if (category === defaultTab) {
+      return true;
+    }
   },
 };
