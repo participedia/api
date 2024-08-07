@@ -230,6 +230,7 @@ const parseGetParams = function(req, type) {
     lang: as.value(getLanguage(req)),
     userid: req.user ? as.integer(req.user.id) : null,
     returns: as.value(req.query.returns || "html"),
+    canEdit: as.boolean(req.query.canEdit || true)
   });
 };
 

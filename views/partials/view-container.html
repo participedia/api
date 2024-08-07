@@ -64,7 +64,7 @@
     {{/if}}
     {{#if article.verified}}
     <img src="/images/icon-verified.svg" class="image-svg-action floating-action-image show-verified-info-trigger js-show-verified-info-trigger" />
-    {{else}}
+    {{else if params.canEdit}}
     <a
       href="/{{article.type}}/{{article.id}}/edit"
       class="button button-red floating-action-button"
