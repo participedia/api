@@ -1,10 +1,9 @@
 .chat-ai .fab {
   position: fixed;
   bottom: 50px;
-  right: 35px;
+  right: 50px;
   border-radius: 20px;
   background-color: #EC2024;
-  font-size: 24px;
   font-weight: bold;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   border: none;
