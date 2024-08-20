@@ -600,12 +600,7 @@ const editForm = {
     }
 
     if ("article_type" in this.formEl) {
-      let titleVal = this.entryLocaleData.title[formValue.original_language];
-      if(titleVal && typeof titleVal === 'string'){
-        titleVal = titleVal.trim();
-      }
-
-      if (!titleVal || titleVal === '') {
+      if (!this.entryLocaleData.title[formValue.original_language]) {
         this.handleErrors([this.formEl.no_title_error.value]);
         return;
       }
