@@ -2,7 +2,6 @@
 let express = require("express");
 let router = express.Router();
 const OpenAI = require("openai");
-const { listKey, add: addToRedis, list: listRedis } = require("../helpers/redisClient");
 const logError = require("../helpers/log-error.js");
 
 const openai = new OpenAI({
@@ -38,8 +37,8 @@ async function handlingError(req, res, error) {
 
 router.get("/", async (req, res) => {
   try {
-
-    const results = await listRedis(listKey);
+    const results = [];
+    // const results = await listRedis(listKey);
     const items = results.map(item => JSON.parse(item)); 
     return res.status(200).render(`chat-ai-list`, { items });
     
@@ -76,7 +75,7 @@ router.post("/completions", async function(req, res) {
     const dateString = currentDate.toISOString();
     const item = JSON.stringify({question: message, createAt: dateString});
     // push to the list of items
-    addToRedis(item, listKey);
+    // addToRedis(item, listKey);
 
     res.status(200).json({OK: true, data: result});
   } catch (error) {
