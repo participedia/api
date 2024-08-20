@@ -60,7 +60,6 @@ const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
 const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
 let localeLang = "en";
-const chatai = require("./api/controllers/chatai.js");
 
 const port = process.env.PORT || 3001;
 
@@ -303,7 +302,6 @@ app.use("/entries", entries);
 app.use("/exports", exportsData);
 app.use("/bookmark", bookmark);
 app.use("/blog-post", blogPost);
-app.use("/ai-questions-list", chatai);
 
 // endpoint to set new locale
 app.get("/set-locale", function(req, res) {
