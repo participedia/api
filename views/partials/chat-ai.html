@@ -1,7 +1,7 @@
 
 <div class="chat-ai js-chat-ai">
   <button id="message-us-btn" type="button" class="fab button button-red">
-    Chat AI
+    {{> icon-beta }} {{t "Chat AI"}}
   </button>
   <div id="chat-popup" class="chat-popup">
     <div class="chat-welcome-msg" id="js-chat-welcome-msg">
@@ -9,7 +9,7 @@
         <img src="/images/assistance.png" alt="welcome chat" />
       </div>
       <div class="chat-welcome-text">
-        <h4>{{t "How can I help you today?"}}</h4>
+        <p> {{t "Welcome to Participedia's AI search assistant (BETA). This bot is here to help you find information about democratic innovations, and it will do it's best to provide examples from our database. Please excuse any errors, as the bot is still being tested, and be sure to review responses for accuracy."}}</p>
       </div>
     </div>
     <div class="chat-container">

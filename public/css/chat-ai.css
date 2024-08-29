@@ -1,7 +1,7 @@
 .chat-ai .fab {
   position: fixed;
   bottom: 50px;
-  right: 50px;
+  right: 40px;
   border-radius: 20px;
   background-color: #EC2024;
   font-weight: bold;
@@ -181,8 +181,13 @@
   line-height: 2rem;
 }
 
-.chat-ai .chat-popup .chat-welcome-msg .chat-welcome-text h4 {
-  font-weight: 700;
+.chat-ai .chat-popup .chat-welcome-msg .chat-welcome-text p {
+  font-weight: normal;
+  padding: 0 16px;
+  font-size: 14px;
+  text-align: center;
+  line-height: 25px;
+  color: #545454;
 }
 
 @media (max-width: 600px) {
@@ -234,4 +239,8 @@
 /* Handle on hover */
 .chat-ai .chat-popup .chat-container #chat-box::-webkit-scrollbar-thumb{
   background: #000; 
+}
+
+.chat-ai .button svg{
+  padding-right: unset !important;
 }
