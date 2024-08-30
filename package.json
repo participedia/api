@@ -164,7 +164,8 @@
     "translate-empty-entries": "node scripts/translate-empty-entries.js",
     "calculate-entires-character": "node scripts/calc-entires-character.js",
     "entires-character-calculator": "node scripts/entires-character-calculator.js",
-    "generate-sitemap": "node scripts/sitemap-generator.js"
+    "generate-sitemap": "node scripts/sitemap-generator.js",
+    "generate-friendlyId": "node scripts/generate-friendlyId.js"
   },
   "husky": {
     "hooks": {

@@ -46,6 +46,7 @@ const {
   generateLocaleArticle,
   publishDraft,
   applyLocalizedTextChangesToOrgin,
+  generateSlug,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -737,6 +738,11 @@ async function methodUpdate(req, res, entry = undefined, isCopyProcess = false) 
         await t.none(UPDATE_METHOD, updatedMethod);
       });
     }
+    
+    // add/update the freindly id
+    if(updatedText && updatedText.title && updatedText.title != '' &&  updatedText.language === 'en'){
+      await updateFriendlyId(updatedText.id, updatedText.title);
+    }
     // the client expects this request to respond with json
     // save successful response
     const freshArticle = await getMethod(params, res);
@@ -746,6 +752,14 @@ async function methodUpdate(req, res, entry = undefined, isCopyProcess = false) 
     return { errors: er.errors };
   }
 }
+
+async function updateFriendlyId(id, title) {
+  try {
+    const tit = generateSlug(title);
+    await db.any(`UPDATE methods SET friendlyId = $1 WHERE id = $2 RETURNING *`, [tit, id]);
+  } catch (error) {
+  }
+} 
 
 async function createMethod(updatedText, oldArticle){
   try {

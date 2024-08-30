@@ -47,6 +47,7 @@ const {
   generateLocaleArticle,
   publishDraft,
   applyLocalizedTextChangesToOrgin,
+  generateSlug,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -651,6 +652,12 @@ async function organizationUpdate(req, res, entry = undefined, isUpdating = fals
         await t.none(UPDATE_ORGANIZATION, updatedOrganization);
       });
     }
+    
+    // add/update the freindly id
+    if(updatedText && updatedText.title && updatedText.title != '' &&  updatedText.language === 'en'){
+      await updateFriendlyId(updatedText.id, updatedText.title);
+    }
+
     const freshArticle = await getOrganization(params, res);
     return { article: freshArticle };
     refreshSearch();
@@ -659,6 +666,14 @@ async function organizationUpdate(req, res, entry = undefined, isUpdating = fals
     return { errors: er.errors };
   }
 }
+
+async function updateFriendlyId(id, title) {
+  try {
+    const tit = generateSlug(title);
+    await db.any(`UPDATE organizations SET friendlyId = $1 WHERE id = $2 RETURNING *`, [tit, id]);
+  } catch (error) {
+  }
+} 
 
 async function createOrganization(updatedText, oldArticle){
   try {

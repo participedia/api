@@ -1178,6 +1178,16 @@ async function applyLocalizedTextChangesToOrgin(editedEntryId, orginalEntryId, u
   }
 }
 
+function generateSlug(title) {
+  return title
+      .toLowerCase() // Convert to lowercase
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+      .trim() // Remove whitespace from both ends
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-'); // Remove consecutive hyphens
+}
+
+
 module.exports = {
   supportedTypes,
   titleKeys,
@@ -1211,5 +1221,6 @@ module.exports = {
   validateCaptcha,
   generateLocaleArticle,
   publishDraft,
-  applyLocalizedTextChangesToOrgin
+  applyLocalizedTextChangesToOrgin,
+  generateSlug
 };
