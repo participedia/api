@@ -1,5 +1,5 @@
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
-const { db, pgp } = require("../api/helpers/db.js");
+const { db } = require("../api/helpers/db.js");
 
 async function generateFriendlyId() {
   console.log('*********** START PROCESSING ***********');
@@ -26,12 +26,9 @@ async function generateFriendlyId() {
       const entry = entries[i];
       console.log('**************************************************************************************');
       console.log('*************************************************************************************');
-      if(i === (entries.length -1)){
-        await saveFriendlyId(entry);
-      }
-
+      await saveFriendlyId(entry);
     }
-    console.log('FriendlyIds generated successfully!');
+    console.log('&&&&&& FriendlyIds generated successfully! &&&&&&&');
 
     process.exit();
   } catch (error) {
