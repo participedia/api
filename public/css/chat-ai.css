@@ -244,3 +244,19 @@
 .chat-ai .button svg{
   padding-right: unset !important;
 }
+
+.chat-ai-button {
+  position: relative;
+  padding: 14px 20px;
+  color: white;
+}
+
+.chat-ai-button .beta {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  color: white;
+  padding: 2px 10px;
+  font-size: 10px;
+  border-radius: 3px;
+}
