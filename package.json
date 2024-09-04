@@ -165,7 +165,8 @@
     "calculate-entires-character": "node scripts/calc-entires-character.js",
     "entires-character-calculator": "node scripts/entires-character-calculator.js",
     "generate-sitemap": "node scripts/sitemap-generator.js",
-    "generate-friendlyId": "node scripts/generate-friendlyId.js"
+    "generate-friendlyId": "node scripts/generate-friendlyId.js",
+    "empty-friendlyId": "node scripts/empty-friendlyId.js"
   },
   "husky": {
     "hooks": {

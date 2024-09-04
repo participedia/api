@@ -765,13 +765,42 @@ async function methodUpdate(req, res, entry = undefined, isCopyProcess = false) 
   }
 }
 
-async function updateFriendlyId(id, title) {
+async function updateFriendlyId(entryId, enteryTitle) {
   try {
-    const tit = generateSlug(title);
-    await db.any(`UPDATE methods SET friendly_id = $1 WHERE id = $2 RETURNING *`, [tit, id]);
-  } catch (error) {
+
+    if(enteryTitle){
+      const title = generateSlug(enteryTitle);
+
+      const existingEntry = await db.oneOrNone(
+        `SELECT friendly_id FROM methods WHERE friendly_id = $1 AND id != $2`,
+        [title, entryId]
+      );
+
+      let newFriendlyId = title;
+
+      // Step 2: If it exists, modify the title to make it unique
+      if (existingEntry) {
+        newFriendlyId = `${title}-1`;
+        // Ensure uniqueness by checking if the newFriendlyId already exists
+        let suffix = 1;
+        while (
+          await db.oneOrNone(
+            `SELECT friendly_id FROM methods WHERE friendly_id = $1 AND id != $2`,
+            [newFriendlyId, entryId]
+          )
+        ) {
+          suffix += 1;
+          newFriendlyId = `${title}-${suffix}`;
+        }
+      }
+
+      // Step 3: Update the friendly_id column where the id matches
+      await db.any(`UPDATE methods SET friendly_id = $1 WHERE id = $2 RETURNING *`, [newFriendlyId, entryId]);
+    }
+
+  } catch (error) {   
   }
-} 
+}
 
 async function createMethod(updatedText, oldArticle){
   try {
