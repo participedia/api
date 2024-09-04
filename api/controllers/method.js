@@ -768,7 +768,7 @@ async function methodUpdate(req, res, entry = undefined, isCopyProcess = false) 
 async function updateFriendlyId(id, title) {
   try {
     const tit = generateSlug(title);
-    await db.any(`UPDATE methods SET friendlyId = $1 WHERE id = $2 RETURNING *`, [tit, id]);
+    await db.any(`UPDATE methods SET friendly_id = $1 WHERE id = $2 RETURNING *`, [tit, id]);
   } catch (error) {
   }
 } 

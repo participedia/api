@@ -485,7 +485,7 @@ async function caseUpdate(req, res, entry = undefined, isCopyProcess = false) {
 async function updateFriendlyId(id, title) {
   try {
     const tit = generateSlug(title)
-    await db.any(`UPDATE cases SET friendlyId = $1 WHERE id = $2 RETURNING *`, [tit, id]);
+    await db.any(`UPDATE cases SET friendly_id = $1 WHERE id = $2 RETURNING *`, [tit, id]);
   } catch (error) {   
   }
 } 

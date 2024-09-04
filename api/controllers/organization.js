@@ -682,7 +682,7 @@ async function organizationUpdate(req, res, entry = undefined, isUpdating = fals
 async function updateFriendlyId(id, title) {
   try {
     const tit = generateSlug(title);
-    await db.any(`UPDATE organizations SET friendlyId = $1 WHERE id = $2 RETURNING *`, [tit, id]);
+    await db.any(`UPDATE organizations SET friendly_id = $1 WHERE id = $2 RETURNING *`, [tit, id]);
   } catch (error) {
   }
 } 
