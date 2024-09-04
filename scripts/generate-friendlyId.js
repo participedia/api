@@ -14,7 +14,7 @@ async function generateFriendlyId() {
       FROM (SELECT * FROM things WHERE things.original_language = 'en' GROUP BY id) as things
       JOIN localized_texts ON things.id = localized_texts.thingid
       WHERE things.hidden = false AND things.published = true AND (
-        localized_texts.title IS NOT NULL OR localized_texts.title != ''
+        localized_texts.title IS NOT NULL OR localized_texts.title != '' AND localized_texts.language = 'en'
       )
       ORDER BY localized_texts.timestamp DESC
       `
@@ -45,7 +45,7 @@ async function saveFriendlyId(entry) {
     const id = entry.id;
     console.log('*******************************title title*******************************************************', title);
     console.log('*******************************id id*******************************************************', id);
-    await db.any(`UPDATE ${tableName} SET friendlyId = $1 WHERE id = $2 RETURNING *`, 
+    await db.any(`UPDATE ${tableName} SET friendly_id = $1 WHERE id = $2 RETURNING *`, 
       [title, id])
   } catch (error) {
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! error !!!!!!!!!!!!!!! error ", error);

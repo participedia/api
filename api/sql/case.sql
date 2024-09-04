@@ -61,7 +61,8 @@ SELECT
   EXTRACT(EPOCH FROM post_date) as post_date,
   EXTRACT(EPOCH FROM updated_date) as updated_date,
   completeness,
-  COALESCE(get_object_title_list(collections, 'en', cases.original_language), '{}') as collections
+  COALESCE(get_object_title_list(collections, 'en', cases.original_language), '{}') as collections,
+  friendly_id
 FROM
   cases,
   get_localized_texts_fallback(cases.id, 'en', cases.original_language) as localized_texts

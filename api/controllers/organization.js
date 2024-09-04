@@ -265,7 +265,19 @@ async function postOrganizationNewHttp(req, res) {
 
 async function getOrganization(params, res) {
   try {
-    if (Number.isNaN(params.articleid)) {
+    if(!params.articleid){
+      return null;
+    }
+
+    // get organizations id => by friendly id
+    if(isNaN(params.articleid)){
+      const result = await db.oneOrNone('SELECT id FROM organizations WHERE friendly_id = $1', [params.articleid]);
+      if(result){
+        params.articleid = as.integer(result.id); // update the params of articleid = id
+      }
+    }
+
+    if(Number.isNaN(params.articleid)) {
       return null;
     }
     const articleRow = await db.one(ORGANIZATION_BY_ID, params);
@@ -837,8 +849,7 @@ function getUpdatedOrganization(
 
 async function getOrganizationHttp(req, res) {
   /* This is the entry point for getting an article */
-  const params = parseGetParams(req, "organization");
-
+  const params = parseGetParams(req, "organization", true);
   const article = await getOrganization(params, res);
   if (!article) {
     res.status(404).render("404");

@@ -42,6 +42,7 @@ SELECT
   ${type:name}.country,
   ${type:name}.latitude,
   ${type:name}.longitude,
+  ${type:name}.friendly_id,
   texts.title,
   texts.description,
   texts.body,

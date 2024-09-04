@@ -222,11 +222,11 @@ const getStructure = (type, id) => {
   return { id, ...structure, ...{ articleId: id } };
 };
 
-const parseGetParams = function(req, type) {
+const parseGetParams = function(req, type, isView = false) {
   return Object.assign({}, req.query, {
     type,
     view: as.value(req.params.view || "view"),
-    articleid: as.integer(req.params.thingid || req.params.articleid),
+    articleid: isView ? (req.params.thingid || req.params.articleid) : as.integer(req.params.thingid || req.params.articleid),
     lang: as.value(getLanguage(req)),
     userid: req.user ? as.integer(req.user.id) : null,
     returns: as.value(req.query.returns || "html"),

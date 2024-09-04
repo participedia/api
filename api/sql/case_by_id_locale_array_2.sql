@@ -76,7 +76,8 @@ select distinct on (localized_texts."language") *,
   get_edit_authors(${articleid}) as edit_history,
   hidden,
   completeness,
-  COALESCE(get_object_title_list(collections, '', cases.original_language), '{}') as collections
+  COALESCE(get_object_title_list(collections, '', cases.original_language), '{}') as collections,
+  friendly_id
 from 
   cases
   INNER JOIN localized_texts on thingid = ${articleid}

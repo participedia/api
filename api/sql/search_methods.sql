@@ -44,7 +44,8 @@ WITH full_thing AS (
     decision_methods,
     if_voting,
     purpose_method,
-    COALESCE(get_object_title_list(collections, ${lang}, methods.original_language), '{}') as collections
+    COALESCE(get_object_title_list(collections, ${lang}, methods.original_language), '{}') as collections,
+    friendly_id
 FROM
     methods,
     get_localized_texts_fallback(methods.id, ${lang}, methods.original_language) AS texts

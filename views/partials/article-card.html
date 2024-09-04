@@ -3,8 +3,12 @@
   data-type="{{type}}"
 >
   {{#if published}}
-    <a href="/{{type}}/{{id}}" class="js-article-link">
+    {{#if friendly_id}}
+      <a href="/{{type}}/{{friendly_id}}" class="js-article-link">
     {{else}}
+      <a href="/{{type}}/{{id}}" class="js-article-link">
+    {{/if}}
+  {{else}}
     <a href="/{{type}}/{{id}}/edit" class="js-article-link">
   {{/if}}
   <div

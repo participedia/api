@@ -267,6 +267,18 @@ async function postMethodNewHttp(req, res) {
 
 async function getMethod(params, res) {
   try {
+    if(!params.articleid){
+      return null;
+    }
+
+    // get method id => by friendly id
+    if(isNaN(params.articleid) && typeof params.articleid === 'string'){
+      const result = await db.oneOrNone('SELECT id FROM methods WHERE friendly_id = $1', [params.articleid]);
+      if(result){
+        params.articleid = as.integer(result.id) ; // update the params of articleid = id
+      }
+    }
+
     if (Number.isNaN(params.articleid)) {
       return null;
     }
@@ -920,7 +932,7 @@ function getUpdatedMethod(user, params, newMethod, oldMethod) {
 
 async function getMethodHttp(req, res) {
   /* This is the entry point for getting an article */
-  const params = parseGetParams(req, "method");
+  const params = parseGetParams(req, "method", true);
   const article = await getMethod(params, res);
   if (!article) {
     res.status(404).render("404");

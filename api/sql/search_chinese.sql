@@ -27,7 +27,8 @@ SELECT
   to_json(COALESCE(photos, '{}')) AS photos,
   to_json(COALESCE(videos, '{}')) AS videos,
   updated_date,
-  post_date
+  post_date,
+  friendly_id
   
 FROM
   things,

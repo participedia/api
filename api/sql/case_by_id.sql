@@ -76,7 +76,8 @@ SELECT
   hidden,
   completeness,
   COALESCE(get_object_title_list(collections, ${lang}, cases.original_language), '{}') as collections,
-  orginal_entry_id
+  orginal_entry_id,
+  friendly_id
 FROM
   cases,
   get_localized_texts_fallback(${articleid}, ${lang}, cases.original_language) as localized_texts

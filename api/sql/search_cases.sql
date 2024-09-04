@@ -75,7 +75,8 @@ WITH full_thing AS (
     get_edit_authors(cases.id) as edit_history,
     hidden,
     completeness,
-    COALESCE(get_object_title_list(collections, ${lang}, cases.original_language), '{}') as collections
+    COALESCE(get_object_title_list(collections, ${lang}, cases.original_language), '{}') as collections,
+    friendly_id
   FROM
     cases,
     get_localized_texts_fallback(cases.id, ${lang}, cases.original_language) as localized_texts

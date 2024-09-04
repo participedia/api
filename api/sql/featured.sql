@@ -35,7 +35,8 @@ WITH all_featured  AS (
     to_json(COALESCE(videos, '{}')) as videos,
     updated_date,
     post_date,
-    bookmarked(type, id, ${userId})
+    bookmarked(type, id, ${userId}),
+    friendly_id
   FROM
     ${type:name},
     get_localized_texts_fallback(${type:name}.id, ${language}, ${type:name}.original_language) AS texts

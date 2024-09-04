@@ -893,7 +893,19 @@ async function getCase(params, res) {
 
 async function getCaseById(params, res) {
   try {
-    if (Number.isNaN(params.articleid)) {
+    if(!params.articleid){
+      return null;
+    }
+
+    // get case by friendly id
+    if(isNaN(params.articleid)){
+      const result = await db.oneOrNone('SELECT id FROM cases WHERE friendly_id = $1', [params.articleid]);
+      if(result){
+        params.articleid = as.integer(result.id) ; // update the params of articleid = id
+      }
+    }
+
+    if(Number.isNaN(params.articleid)) {
       return null;
     }
     const articleRow = await db.one(CASE_BY_ID_GET, params);
@@ -912,7 +924,7 @@ async function getCaseById(params, res) {
 
 async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
-  const params = parseGetParams(req, "case");
+  const params = parseGetParams(req, "case", true);
   const article = await getCaseById(params, res);
   if (!article) {
     res.status(404).render("404");

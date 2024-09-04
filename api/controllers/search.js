@@ -126,6 +126,7 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async (req, 
   } else {
     try {
       let results = await getSearchResults(user_query, limit, langQuery, lang, type, parsed_query, req);
+      console.log("@@@@@@@@@@@@@@ getSearchResults ", results)
       if (req.query.resultType === "map" && parsed_query) {
         results = results.filter(result => result.searchmatched);
       }
