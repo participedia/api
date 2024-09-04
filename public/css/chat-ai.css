@@ -1,7 +1,7 @@
 .chat-ai .fab {
   position: fixed;
   bottom: 50px;
-  right: 40px;
+  right: 45px;
   border-radius: 20px;
   background-color: #EC2024;
   font-weight: bold;
@@ -247,14 +247,14 @@
 
 .chat-ai-button {
   position: relative;
-  padding: 14px 20px;
+  padding: 12px 18px;
   color: white;
 }
 
 .chat-ai-button .beta {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: -5px;
+  right: 2px;
   color: white;
   padding: 2px 10px;
   font-size: 10px;
