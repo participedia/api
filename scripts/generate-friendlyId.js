@@ -45,8 +45,10 @@ async function saveFriendlyId(entry) {
     const id = entry.id;
     console.log('*******************************title title*******************************************************', title);
     console.log('*******************************id id*******************************************************', id);
-    await db.any(`UPDATE ${tableName} SET friendly_id = $1 WHERE id = $2 RETURNING *`, 
-      [title, id])
+    if(title){
+      await db.any(`UPDATE ${tableName} SET friendly_id = $1 WHERE id = $2 RETURNING *`, 
+        [title, id])
+    }
   } catch (error) {
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! error !!!!!!!!!!!!!!! error ", error);
   }
