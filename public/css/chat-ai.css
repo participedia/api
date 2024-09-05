@@ -247,16 +247,17 @@
 
 .chat-ai-button {
   position: relative;
-  padding: 12px 18px;
+  padding: 10px 14px;
   color: white;
 }
 
 .chat-ai-button .beta {
   position: absolute;
-  top: -5px;
-  right: 2px;
-  color: white;
-  padding: 2px 10px;
+  top: -20px;
+  right: -10px;
+  color: black;
+  padding: 5px 5px;
   font-size: 10px;
-  border-radius: 3px;
+  background: rgb(230, 230, 230);
+  border-radius: 50%;
 }
