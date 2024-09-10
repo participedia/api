@@ -4,7 +4,11 @@
 >
   {{#if published}}
     {{#if friendly_id}}
-      <a href="/{{type}}/{{friendly_id}}" class="js-article-link">
+      {{#if (isEqual type "collection")}}
+        <a href="/{{type}}/{{id}}" class="js-article-link">
+      {{else}}
+        <a href="/{{type}}/{{friendly_id}}" class="js-article-link">
+      {{/if}}
     {{else}}
       <a href="/{{type}}/{{id}}" class="js-article-link">
     {{/if}}
