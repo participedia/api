@@ -49,9 +49,13 @@ function mapIdTitleToKeyValue(options) {
   });
 }
 
-function currentUrl(req) {
+function currentUrl(req, articleId = null) {
   const path = req.originalUrl;
   const host = req.headers.host;
+  if(articleId){
+    const updatedPath = path.replace(/[^/]+$/, articleId);
+    return `https://${host}${updatedPath}`; 
+  }
   return `https://${host}${path}`;
 }
 
@@ -881,7 +885,7 @@ module.exports = {
 
   shareLink(type, article, req) {
     const twitterCharacterMax = 240 - 17; // minus 17 characters to account for @participedia and ellipsis
-    const url = currentUrl(req);
+    const url = currentUrl(req, article.id);
     const title = () => {
       const articleTitle = article.title;
       if (articleTitle.length >= twitterCharacterMax) {
