@@ -2,6 +2,19 @@
   <li>
     <a
       href="#"
+      class="js-copy-button"
+      data-type="{{article.type}}"
+      data-thing-id="{{article.id}}"
+    >
+      <span class="copy-article">
+        <span class="sr-only">{{t "Copy"}}</span>
+        {{> icon-copy}}
+      </span>
+    </a>
+  </li>
+  <li>
+    <a
+      href="#"
       class="js-bookmark-button"
       data-bookmarked="{{article.bookmarked}}"
       data-type="{{article.type}}"
