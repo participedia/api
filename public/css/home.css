@@ -279,6 +279,7 @@
   }
   .home-quick-sumbit__floating-action-button { 
     display: flex;
+    bottom: 120px;
   }
 }
 
