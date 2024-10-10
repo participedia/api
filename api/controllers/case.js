@@ -363,8 +363,12 @@ async function caseUpdate(req, res, entry = undefined, isCopyProcess = false) {
   newCase.links = verifyOrUpdateUrl(newCase.links || []);
 
   // if this is a new case, we don't have a post_date and update_date yet, so we set it here
-  if (isNewCase && newCase.title != null) {
+  if (isNewCase) {
     newCase.post_date = Date.now();
+  }
+
+  // if this is a new case, we don't have a updated_date yet, so we set it here
+  if (isNewCase) {
     newCase.updated_date = Date.now();
   }
 
@@ -388,12 +392,12 @@ async function caseUpdate(req, res, entry = undefined, isCopyProcess = false) {
 
   //get current date when user.isAdmin is false;
   updatedCase.updated_date = !user.isadmin ? "now" : updatedCase.updated_date;
-  // updatedCase.post_date = !updatedCase.published
-  //   ? "now"
-  //   : updatedCase.post_date;
-  // newCase.post_date = !updatedCase.published
-  //   ? Date.now()
-  //   : updatedCase.post_date;
+  updatedCase.post_date = !updatedCase.published
+    ? "now"
+    : (updatedCase.post_date ? updatedCase.post_date : Date.now());
+  newCase.post_date = !updatedCase.published
+    ? Date.now()
+    : (updatedCase.post_date ? updatedCase.post_date : Date.now());
   updatedCase.published = true;
   author.timestamp = new Date()
     .toJSON()
