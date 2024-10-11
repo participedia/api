@@ -272,11 +272,9 @@ async function getMethod(params, res) {
     }
 
     // get method id => by friendly id
-    if(isNaN(params.articleid) && typeof params.articleid === 'string'){
-      const result = await db.oneOrNone('SELECT id FROM methods WHERE friendly_id = $1', [params.articleid]);
-      if(result){
-        params.articleid = as.integer(result.id) ; // update the params of articleid = id
-      }
+    const result = await db.oneOrNone('SELECT id FROM methods WHERE friendly_id = $1', [params.articleid]);
+    if(result){
+      params.articleid = as.integer(result.id) ; // update the params of articleid = id
     }
 
     if (Number.isNaN(params.articleid)) {

@@ -931,11 +931,9 @@ async function getCaseById(params, res) {
     }
 
     // get case by friendly id
-    if(isNaN(params.articleid)){
-      const result = await db.oneOrNone('SELECT id FROM cases WHERE friendly_id = $1', [params.articleid]);
-      if(result){
-        params.articleid = as.integer(result.id) ; // update the params of articleid = id
-      }
+    const result = await db.oneOrNone('SELECT id FROM cases WHERE friendly_id = $1', [params.articleid]);
+    if(result){
+      params.articleid = as.integer(result.id) ; // update the params of articleid = id
     }
 
     if(Number.isNaN(params.articleid)) {
