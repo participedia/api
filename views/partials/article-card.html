@@ -19,8 +19,11 @@
   {{/if}}
   <div
   class="article-card-img js-article-card-img lazyload"
-      style="background-image: url('{{getFirstThumbnailImageForArticle this}}'), url('/images/texture_1.svg');"
-    ></div>
+      style="background-image: url('/images/texture_1.svg');"
+    >
+    <img src="{{getFirstThumbnailImageForArticle this}}" alt="Media" class="main-image"
+    onload="this.parentElement.classList.add('image-loaded')">
+  </div>
 
     <div class="article-card-content">
       <div class="article-card-meta js-article-card-meta">
