@@ -107,6 +107,7 @@ const editMultiSelect = {
     const currentList = document.querySelector(
       `.js-edit-multi-select-list[data-name=${name}]`
     );
+
     const currentSelect = document.querySelector(
       `.js-edit-multi-select[name=${name}]`
     );
@@ -137,6 +138,16 @@ const editMultiSelect = {
       !isInList() // if it's already in the list, don't append to ui
     ) {
       currentList.append(newItemHTML);
+
+if (name === 'specific_topics' || name === 'general_issues') {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'topicSelection',
+        'topicName': selectedText,
+        'topicCategory': name,
+        'caseId': document.querySelector('form')?.getAttribute('data-id') || 'new_case'
+      });
+    }
     } else if (!hasNotReachedMax()) {
       // insert error text & open modal
       const errorText = `You can not add more than ${maxItems} items to this field.`;
@@ -192,6 +203,17 @@ const editMultiSelect = {
       listItem.style.height = "0";
       listItem.style.marginBottom = "0";
     } else {
+const name = listContainer.getAttribute('data-name');
+    if (name === 'specific_topics' || name === 'general_issues') {
+      const removedText = listItem.querySelector('span').innerText;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'topicRemoval',
+        'topicName': removedText,
+        'topicCategory': name,
+        'caseId': document.querySelector('form')?.getAttribute('data-id') || 'new_case'
+      });
+    }
       listContainer.removeChild(listItem);
       this.updateIndexes(e);
     }
