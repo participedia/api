@@ -178,16 +178,16 @@ const getSearchDownloadResults = async (params) => {
     let results = null;
     let queryFile = SEARCH;
     switch (params.type) {
-      case "case":
+      case "cases":
         queryFile = SEARCH_CASES;
         break;
-      case "method":
+      case "methods":
         queryFile = SEARCH_METHODS;
         break;
-      case "collection":
+      case "collections":
         // await removeEntryCollections(thingsByUser.id);
         break;
-      case "organization":
+      case "organizations":
         queryFile = SEARCH_ORGANIZATIONS;
         break;
     }

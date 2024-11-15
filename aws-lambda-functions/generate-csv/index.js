@@ -91,13 +91,13 @@ const getSearchDownloadResults = async (params) => {
     let results = null;
     let queryFile = AWS_SEARCH;
     switch (params.type) {
-      case "case":
+      case "cases":
         queryFile = casesQueryFile(params.filters);
         break;
-      case "method":
+      case "methods":
         queryFile = methodsQueryFile(params.filters);
         break;
-      case "organization":
+      case "organizations":
         queryFile = organizationsQueryFile(params.filters);
         break;
     }
