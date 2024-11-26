@@ -34,7 +34,7 @@ if (
     environment: process.env.NODE_ENV,
   });
   // The request handler must be the first middleware on the app
-  app.use(Sentry.Handlers.requestHandler());
+  // app.use(Sentry.Handlers.requestHandler());
 }
 
 // other logging middlewear
@@ -409,7 +409,7 @@ app.use((req, res, next) => {
 });
 
 // The error handler must be before any other logging middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler());
+// app.use(Sentry.Handlers.errorHandler());
 
 if (process.env.NODE_ENV === "development") {
   // only use in development
