@@ -47,71 +47,21 @@
           </a>
         </li>
       </ul>
-      <!-- <div class="home-hero-search-all">
+      <div class="home-hero-search">
         <form
-          action="/search"
-          class="home-hero-search-all__form js-home-hero-search__form"
+        action="/search"
+        class="home-hero-search__form js-home-hero-search__form"
         >
-        <div class="home-hero-search-all__form-inputs">
-          <div class="home-hero-search-all_search-input">
-            <div class="home-hero-search-all__form-search-icon-container">
-              {{> icon-search }}
-            </div>
-            <input name="query" type="text" placeholder={{t "Search"}}
-          </div>
-          <div class="home-hero-search-all_select-input">
-            <select
-            name="type"
-            class="home-hero-search-all__edit-select js-edit-select u-margin-right--xsmall"
-            id="js-home-hero-search__edit-select"
-            >
-              <option value="all">
-                {{t "All"}}
-              </option>
-              <option value="case">
-                {{t "Cases"}}
-              </option>
-              <option value="organizations">
-                {{t "Organizations"}}
-              </option>
-              <option value="method">
-                {{t "Methods"}}
-              </option>
-              <option value="collections">
-                {{t "Collections"}}
-              </option>
-            </select>
-          </div>
-
-          <div class="home-hero-search-all_actions">
-            <button class="button button-red" type="submit">{{t "Search"}}</button>
-            <div class="home-hero-browse-all-link">
-              <a href="/search" class="js-home-hero-browse-all-link">{{t "Browse all entries"}}</a>
-            </div>
-          </div>
-
-        </div>
-
-        </form>
-      </div> -->
-
-      <!-- <div class="home-hero-search">
-        <form
-          action="/search"
-          class="home-hero-search__form js-home-hero-search__form"
-        >
-        <div class="home-hero-search__form-inputs">
-          <div class="home-hero-searc_search-input">
+          <div class="home-hero-search__form-inputs">
             <div class="home-hero-search__form-search-icon-container">
               {{> icon-search }}
             </div>
             <input name="query" type="text" placeholder={{t "Search"}}
-          </div>
-          <div class="home-hero-search_select-input">
+            class="home-hero-search__form-input js-home-hero-search__form-input" />
             <select
-            name="type"
-            class="home-hero-search__edit-select js-edit-select u-margin-right--xsmall"
-            id="js-home-hero-search__edit-select"
+              name="type"
+              class="home-hero-search__edit-select js-edit-select u-margin-right--xsmall"
+              id="js-home-hero-search__edit-select"
             >
               <option value="all">
                 {{t "All"}}
@@ -130,17 +80,12 @@
               </option>
             </select>
           </div>
-          <div class="home-hero-search_actions">
-            <button class="button button-red" type="submit">{{t "Search"}}</button>
-            <div class="home-hero-browse-all-link">
-              <a href="/search" class="js-home-hero-browse-all-link">{{t "Browse all entries"}}</a>
-            </div>
+          <button class="button button-red" type="submit">{{t "Search"}}</button>
+          <div class="home-hero-browse-all-link">
+            <a href="/search" class="js-home-hero-browse-all-link">{{t "Browse all entries"}}</a>
           </div>
-        </div>
         </form>
-      </div> -->
-
-
+      </div>
     </div>
     <div class="home-hero-footer">
       {{#> three-column-row }}

@@ -63,7 +63,7 @@
     "react-dropzone-s3-uploader": "^1.1.0",
     "rss-parser": "^3.13.0",
     "sinon": "^19.0.2",
-    "slim-select": "2.10.0",
+    "slim-select": "^2.10.0",
     "sortablejs": "1.15.4",
     "tape": "^5.9.0",
     "tippy.js": "^6.3.7",

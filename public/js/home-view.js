@@ -16,7 +16,6 @@ const toArray = nodeList => Array.prototype.slice.call(nodeList);
 document.addEventListener("DOMContentLoaded", () => {
   map.init();
   searchMap.init();
-  editSelect.init();
   blogPosts.init(tracking);
   featuredEntriesCarousel.init();
   homeHero.init();
@@ -25,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTracking();
   infoIconToModal.init();
   modalOpened.init();
+  editSelect.init();
 });
 
 function initTracking() {
