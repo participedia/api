@@ -61,7 +61,7 @@
     "pg-promise": "11.10.2",
     "quill": "^2.0.2",
     "react-dropzone-s3-uploader": "^1.1.0",
-    "rss-to-json": "^2.1.1",
+    "rss-parser": "^3.13.0",
     "sinon": "^19.0.2",
     "slim-select": "2.10.0",
     "sortablejs": "1.15.4",

@@ -4,7 +4,8 @@ const router = express.Router();
 let { db, as, UPSERT_MEDIUM_POST, MEDIUM_POSTS } = require("../helpers/db");
 
 
-const feed = require('rss-to-json');
+const RSSParser = require('rss-parser');
+const parser = new RSSParser();
 const logError = require("../helpers/log-error.js");
 const { chunk } = require("lodash");
 
@@ -45,46 +46,52 @@ async function upsertMediumPosts(blogPosts) {
 }
 
 router.get("/", async (req, res) => {
-  feed.load("https://medium.com/feed/@participediaproject")
-    .then(rss => {
-      const chunkItems = rss.items.length > 0 ? chunk(rss.items, 10)[0] : [];
-      const regEx = /<img[^>]+src="?([^"\s]+)"?\s*\/>/;
-      
-      // there is a bug in the medium feed where the title for the first blog post
-      // is returned with the content as well. As a stop gap bug fix i'm hardcoding 
-      // the title here and removing it from the content so we don't see t
-      // he duplicated title on the home page
-      const duplicateTitleInContent = "<h3><strong>Governance Snapshots: <br>Adaptations, Innovations and Practitioner Learning in a Time of COVID-19</strong></h3>";
+  const feedUrl = 'https://medium.com/feed/@participediaproject';
+  try {
+    const rss = await parser.parseURL(feedUrl);
 
-      const blogItems = chunkItems.map(x => {
-        let content = x.content;
-        if (x.content.indexOf(duplicateTitleInContent) === 0) {
-          content = x.content.split(duplicateTitleInContent)[1];
+    // Chunk items and process
+    const chunkItems = rss.items.length > 0 ? chunk(rss.items, 10)[0] : [];
+    const regEx = /<img[^>]+src="?([^"\s]+)"?\s*\/>/;
+      
+    // there is a bug in the medium feed where the title for the first blog post
+    // is returned with the content as well. As a stop gap bug fix i'm hardcoding 
+    // the title here and removing it from the content so we don't see t
+    // he duplicated title on the home page
+    const duplicateTitleInContent = "<h3><strong>Governance Snapshots: <br>Adaptations, Innovations and Practitioner Learning in a Time of COVID-19</strong></h3>";
+
+    const blogItems = chunkItems.map(x => {
+        let content = x.content || x['content:encoded'] || ''; // Medium uses 'content:encoded' in some feeds
+        if (content.indexOf(duplicateTitleInContent) === 0) {
+            content = content.split(duplicateTitleInContent)[1];
         }
+        const date = new Date(x.isoDate);
+        const milliseconds = date.getTime();
         return {
-          id: x.id,
-          title: x.title,
-          author: x.author,
-          createdAt: x.created,
-          description: content.substring(0, 320),
-          url: x.url,
-          imageUrl: x.content.match(regEx) ? x.content.match(regEx)[1] : null
+            id: x.id || x.guid,
+            title: x.title,
+            author: x.creator || x.author,
+            createdAt: milliseconds,
+            description: content.substring(0, 320),
+            url: x.link,
+            imageUrl: content.match(regEx) ? content.match(regEx)[1] : null
         };
-      });
-      upsertMediumPosts(blogItems);
-      res.status(200).json({
-        blogPosts: blogItems
-      });
-    })
-    .catch(async (error) => {
-      const posts = await getMediumPosts();
-      if(Array.isArray(posts)){
-        res.status(200).json({blogPosts: posts});
-      } else {
-        logError(error);
-        res.json({ success: false, error: error.message || error });
-      }
     });
+
+    await upsertMediumPosts(blogItems);
+
+    res.status(200).json({
+        blogPosts: blogItems
+    });
+  } catch (error) {
+    const posts = await getMediumPosts();
+    if(Array.isArray(posts)){
+      res.status(200).json({blogPosts: posts});
+    } else {
+      logError(error);
+      res.json({ success: false, error: error.message || error });
+    }
+  }
 });
 
 module.exports = router;
