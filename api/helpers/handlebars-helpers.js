@@ -1732,7 +1732,7 @@ module.exports = {
   checkMapsAvail(req) {
     const tabParam = req.query && req.query.selectedCategory;
     if (
-      tabParam === "collections" || tabParam === "method" || req.baseUrl === '/user'
+      tabParam === "collections" || tabParam === "method" || req.baseUrl === '/user' || req.baseUrl === '/entries'
     ) {
       return false;
     } else {
@@ -1754,7 +1754,7 @@ module.exports = {
     // do not show search filters on new case, organization, method and collection as well as on collection and user pages
     return req.baseUrl.indexOf("collection") > 0 ||
       req.baseUrl.indexOf("user") > 0 ||
-      ["/case", "/method", "/organization"].includes(req.baseUrl)
+      ["/case", "/method", "/organization", "/entries"].includes(req.baseUrl)
       ? false
       : true;
   },
@@ -1821,6 +1821,15 @@ module.exports = {
     if (req.query.selectedCategory) {
       return req.query.selectedCategory === category;
     } else if (category === defaultTab) {
+      return true;
+    }
+  },
+
+  checkeEtries(req) {
+    const tabParam = req.query && req.query.selectedCategory;
+    if (req.baseUrl === '/entries') {
+      return false;
+    } else {
       return true;
     }
   },

@@ -98,17 +98,23 @@ const deleteUser = async (id) => {
 };
 
 const blockUserAuth0 = async user_id => {
-  auth0Client.updateUser(
-    { id: `${user_id}` },
-    { blocked: true },
-    (err, auth0User) => {
-      if (err) {
-        return console.log(" blockUserAuth0 error " + err);
-      } else {
-        return auth0User;
-      }
-    }
-  );
+  try {
+    const response = await auth0Client.users.update({ id: user_id }, { blocked: true });
+    return response.data ? response.data : null
+  } catch (error) {
+    return null;
+  }
+  // auth0Client.updateUser(
+  //   { id: `${user_id}` },
+  //   { blocked: true },
+  //   (err, auth0User) => {
+  //     if (err) {
+  //       return console.log(" blockUserAuth0 error " + err);
+  //     } else {
+  //       return auth0User;
+  //     }
+  //   }
+  // );
 };
 
 module.exports = exports = {

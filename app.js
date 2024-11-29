@@ -229,7 +229,8 @@ app.get("/resend-verification", function(req, res, next) {
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       scope: 'read:users update:users'
     });
-    auth0Client.sendEmailVerification({user_id});
+    // auth0Client.sendEmailVerification({user_id});
+    auth0Client.jobs.verifyEmail({ user_id: userId });
   }
   req.session.user_to_verify = '';
   res.redirect(currentUrl || "/");

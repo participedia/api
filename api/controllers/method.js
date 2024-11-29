@@ -294,215 +294,221 @@ async function getMethod(params, res) {
 }
 
 async function postMethodUpdateHttp(req, res) {
-  cache.clear();
-
-  const params = parseGetParams(req, "method");
-  // const user = req.user;
-  const { articleid, datatype, lang } = params;
-  const langErrors = [];
-  const originLang = lang;
-  let urlCaptcha = ``;
-  let captcha_error_message = "";
-  let supportedLanguages;
-  let article = "";
-  const articleRow = await db.one(METHOD_BY_ID, params);
-  article = articleRow.results;
-
-  if (!Object.keys(req.body).length) {
-
-    if (!article.latitude && !article.longitude) {
-      article.latitude = "";
-      article.longitude = "";
+  try {
+    cache.clear();
+  
+    const params = parseGetParams(req, "method");
+    // const user = req.user;
+    const { articleid, datatype, lang } = params;
+    const langErrors = [];
+    const originLang = lang;
+    let urlCaptcha = ``;
+    let captcha_error_message = "";
+    let supportedLanguages;
+    let article = "";
+    const articleRow = await db.one(METHOD_BY_ID, params);
+    article = articleRow.results;
+  
+    if (!Object.keys(req.body).length) {
+  
+      if (!article.latitude && !article.longitude) {
+        article.latitude = "";
+        article.longitude = "";
+      }
+  
+      try {
+        supportedLanguages =
+          SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
+      } catch (error) {
+        supportedLanguages = [];
+      }
+  
+      var entryLocaleData = {
+        title: {},
+        description: {},
+        body: {},
+      };
+      var title = {};
+      var desc = {};
+      var body = {};
+  
+      for (let i = 0; i < supportedLanguages.length; i++) {
+        const lang = supportedLanguages[i];
+        let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
+          language: lang,
+          thingid: article.id,
+        });
+  
+        if (lang === article.original_language) {
+          req.body[lang] = article;
+  
+          title[lang] = results[0].title;
+          desc[lang] = results[0].description;
+          body[lang] = results[0].body;
+        } else {
+          const otherLangArticle = {
+            title: results[0]?.title ?? "",
+            description: results[0]?.description ?? "",
+            body: results[0]?.body ?? "",
+          };
+  
+          if (results[0]?.title) {
+            title[lang] = results[0].title;
+          }
+  
+          if (results[0]?.description) {
+            desc[lang] = results[0].description;
+          }
+  
+          if (results[0]?.body) {
+            body[lang] = results[0].body;
+          }
+          req.body[lang] = otherLangArticle;
+        }
+  
+        entryLocaleData = {
+          title: title,
+          description: desc,
+          body: body,
+        };
+      }
+      req.body["entryLocales"] = entryLocaleData;
     }
-
+  
+    //validate captcha start
     try {
       supportedLanguages =
         SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
     } catch (error) {
       supportedLanguages = [];
     }
-
-    var entryLocaleData = {
-      title: {},
-      description: {},
-      body: {},
-    };
-    var title = {};
-    var desc = {};
-    var body = {};
-
     for (let i = 0; i < supportedLanguages.length; i++) {
       const lang = supportedLanguages[i];
-      let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
-        language: lang,
-        thingid: article.id,
-      });
-
-      if (lang === article.original_language) {
-        req.body[lang] = article;
-
-        title[lang] = results[0].title;
-        desc[lang] = results[0].description;
-        body[lang] = results[0].body;
-      } else {
-        const otherLangArticle = {
-          title: results[0]?.title ?? "",
-          description: results[0]?.description ?? "",
-          body: results[0]?.body ?? "",
-        };
-
-        if (results[0]?.title) {
-          title[lang] = results[0].title;
-        }
-
-        if (results[0]?.description) {
-          desc[lang] = results[0].description;
-        }
-
-        if (results[0]?.body) {
-          body[lang] = results[0].body;
-        }
-        req.body[lang] = otherLangArticle;
+      if (req.body[lang]["g-recaptcha-response"]) {
+        let resKey = req.body[lang]["g-recaptcha-response"];
+        captcha_error_message = req.body[lang].captcha_error;
+        urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
       }
-
-      entryLocaleData = {
-        title: title,
-        description: desc,
-        body: body,
-      };
     }
-    req.body["entryLocales"] = entryLocaleData;
-  }
-
-  //validate captcha start
-  try {
-    supportedLanguages =
-      SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
-  } catch (error) {
-    supportedLanguages = [];
-  }
-  for (let i = 0; i < supportedLanguages.length; i++) {
-    const lang = supportedLanguages[i];
-    if (req.body[lang]["g-recaptcha-response"]) {
-      let resKey = req.body[lang]["g-recaptcha-response"];
-      captcha_error_message = req.body[lang].captcha_error;
-      urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
-    }
-  }
-
-  //validate captcha end
-  let checkReCaptcha = await validateCaptcha(urlCaptcha);
-  if (!checkReCaptcha) {
-    return res.status(400).json({
-      OK: false,
-      errors: captcha_error_message,
-    });
-  }
-
-  if (!article.published && !article.hidden) {
-    publishDraft(req, res, methodUpdate, "method");
-    return;
-  }
-
-  const localeEntries = generateLocaleArticle(
-    req.body,
-    req.body.entryLocales,
-    true
-  );
-  let originalLanguageEntry;
-  let entryOriginalLanguage;
-  const localeEntriesArr = [];
-
-  for (const entryLocale in localeEntries) {
-    if (req.body.hasOwnProperty(entryLocale)) {
-      const entry = localeEntries[entryLocale];
-      if (req.body.hasOwnProperty(entry.original_language)) {
-        entryOriginalLanguage = entry.original_language;
-      }
-      if (entryLocale === entry.original_language) {
-        originalLanguageEntry = entry;
-      }
-      let errors = validateFields(entry, "method");
-      errors = errors.map(
-        e =>
-          `${
-            SUPPORTED_LANGUAGES.find(
-              locale => locale.twoLetterCode === entryLocale
-            ).name
-          }: ${e}`
-      );
-      langErrors.push({ locale: entryLocale, errors });
-
-      if (originLang == entryLocale) {
-        localeEntriesArr.push(entry);
-      }
-      // await methodUpdate(req, res, entry);
-    }
-  }
-  const hasErrors = !!langErrors.find(
-    errorEntry => errorEntry.errors.length > 0
-  );
-  if (hasErrors) {
-    return res.status(400).json({
-      OK: false,
-      errors: langErrors,
-    });
-  }
-
-  /**
-   * NON Approved user
-   * is editing && entry is published && entry not hidden 
-   * is editing entry && not admin && non approved user => create a copy of that entry and fill orginal_entry_id
-   */
-  const user = req.user;
-  if(!user.isadmin && !originalLanguageEntry.hidden && (user.accepted_date === null || user.accepted_date === "")){
-    const { editMethod, errors }  = await copyMethod(originalLanguageEntry, params, req, res);
-    if (errors) {
+  
+    //validate captcha end
+    let checkReCaptcha = await validateCaptcha(urlCaptcha);
+    if (!checkReCaptcha) {
       return res.status(400).json({
         OK: false,
-        errors,
+        errors: captcha_error_message,
       });
     }
-    if(editMethod){
-      return res.status(200).json({
-        OK: true,
-        article: editMethod,
+  
+    if (!article.published && !article.hidden) {
+      publishDraft(req, res, methodUpdate, "method");
+      return;
+    }
+  
+    const localeEntries = generateLocaleArticle(
+      req.body,
+      req.body.entryLocales,
+      true
+    );
+    let originalLanguageEntry;
+    let entryOriginalLanguage;
+    const localeEntriesArr = [];
+  
+    for (const entryLocale in localeEntries) {
+      if (req.body.hasOwnProperty(entryLocale)) {
+        const entry = localeEntries[entryLocale];
+        if (req.body.hasOwnProperty(entry.original_language)) {
+          entryOriginalLanguage = entry.original_language;
+        }
+        if (entryLocale === entry.original_language) {
+          originalLanguageEntry = entry;
+        }
+        let errors = validateFields(entry, "method");
+        errors = errors.map(
+          e =>
+            `${
+              SUPPORTED_LANGUAGES.find(
+                locale => locale.twoLetterCode === entryLocale
+              ).name
+            }: ${e}`
+        );
+        langErrors.push({ locale: entryLocale, errors });
+  
+        if (originLang == entryLocale) {
+          localeEntriesArr.push(entry);
+        }
+        // await methodUpdate(req, res, entry);
+      }
+    }
+    const hasErrors = !!langErrors.find(
+      errorEntry => errorEntry.errors.length > 0
+    );
+    if (hasErrors) {
+      return res.status(400).json({
+        OK: false,
+        errors: langErrors,
       });
     }
+  
+    /**
+     * NON Approved user
+     * is editing && entry is published && entry not hidden 
+     * is editing entry && not admin && non approved user => create a copy of that entry and fill orginal_entry_id
+     */
+    const user = req.user;
+    if(!user.isadmin && !originalLanguageEntry.hidden && (user.accepted_date === null || user.accepted_date === "")){
+      const { editMethod, errors }  = await copyMethod(originalLanguageEntry, params, req, res);
+      if (errors) {
+        return res.status(400).json({
+          OK: false,
+          errors,
+        });
+      }
+      if(editMethod){
+        return res.status(200).json({
+          OK: true,
+          article: editMethod,
+        });
+      }
+    }
+    /**
+     * apply changes of non approved changes
+     * if admin published the entry
+     */
+    let isCopyProcess = false; // in case the admin published the copy entry that was editing by non approved user
+    if(user.isadmin && article.orginal_entry_id && article.hidden){
+      const orginalEntryId = article.orginal_entry_id;
+      const createdId = (article.creator && article.creator.user_id) ? article.creator.user_id : null // user id
+      await applyLocalizedTextChangesToOrgin(article.id, orginalEntryId, createdId)
+      await db.any(DELETE_EDITED_METHODS_ENTRY, {thingid: article.id})
+      req.params.thingid = orginalEntryId;
+      params.thingid = orginalEntryId;
+      params.articleid = orginalEntryId;
+      originalLanguageEntry.hidden = false;
+      isCopyProcess = true;
+    }
+    /**
+     * *********************** END editing entry of non approved user
+     */
+  
+  
+    if(originalLanguageEntry){
+      await methodUpdate(req, res, originalLanguageEntry, isCopyProcess);
+    }
+    // const localeEntriesArr = [].concat(...Object.values(localeEntries));
+  
+    // await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
+    const freshArticle = await getMethod(params, res);
+    res.status(200).json({
+      OK: true,
+      article: freshArticle,
+    });
+    refreshSearch();
+    
+  } catch (error) {
+    logError(error);
+    res.status(400).json({ OK: false, error: error });
   }
-  /**
-   * apply changes of non approved changes
-   * if admin published the entry
-   */
-  let isCopyProcess = false; // in case the admin published the copy entry that was editing by non approved user
-  if(user.isadmin && article.orginal_entry_id && article.hidden){
-    const orginalEntryId = article.orginal_entry_id;
-    const createdId = (article.creator && article.creator.user_id) ? article.creator.user_id : null // user id
-    await applyLocalizedTextChangesToOrgin(article.id, orginalEntryId, createdId)
-    await db.any(DELETE_EDITED_METHODS_ENTRY, {thingid: article.id})
-    req.params.thingid = orginalEntryId;
-    params.thingid = orginalEntryId;
-    params.articleid = orginalEntryId;
-    originalLanguageEntry.hidden = false;
-    isCopyProcess = true;
-  }
-  /**
-   * *********************** END editing entry of non approved user
-   */
-
-
-  if(originalLanguageEntry){
-    await methodUpdate(req, res, originalLanguageEntry, isCopyProcess);
-  }
-  // const localeEntriesArr = [].concat(...Object.values(localeEntries));
-
-  // await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
-  const freshArticle = await getMethod(params, res);
-  res.status(200).json({
-    OK: true,
-    article: freshArticle,
-  });
-  refreshSearch();
 }
 
 async function methodUpdateHttp(req, res, entry = undefined) {
