@@ -240,10 +240,21 @@ app.get("/resend-verification", function(req, res, next) {
 // Perform session logout and redirect to homepage
 app.get("/logout", (req, res) => {
   let currentUrl = `${req.protocol}://${req.headers.host}`;
-  req.logout();
-  res.redirect(
-    `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
-  );
+  
+  req.logout((err) => {
+    if (err) {
+      return next(err); // Pass error to the next middleware (Express error handler)
+    }
+    
+    // Redirect to the Auth0 logout URL with a returnTo parameter
+    res.redirect(
+      `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
+    );
+  });
+  // req.logout();
+  // res.redirect(
+  //   `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
+  // );
 });
 
 const cache = apicache.middleware;
