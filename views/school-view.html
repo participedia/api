@@ -11,21 +11,17 @@
 
 <!-- Images -->
 <div class="participedia-images">
-  <div class="image-1">
-    <img src="/images/school/PSchool-2025-Rio-English.png" class="static-view-section-illustration-full"
-    alt="Participedia School 2025 Rio - English" />
-  </div>
-  <div class="image-2">
-    <img src="/images/school/PSchool-2025-Rio-Portuguese.png" class="static-view-section-illustration-full"
-      alt="Participedia School 2025 Rio - Portuguese" />
+  <div>
+    <img src="/images/school/{{pSchoolRioImg}}" class="static-view-section-illustration-full"
+    alt="Participedia School 2025 Rio" />
   </div>
 </div>
 
 <p>{{t "participedia.school.p1.1"}}</p>
 <p>
+  {{t "participedia.school.p1.2.start"}},
   {{t "participedia.school.p1.2.1"}}, <strong>{{t "participedia.school.p1.2.2"}}</strong> {{t
   "participedia.school.p1.2.3"}}
-
 </p>
 
 <div>
@@ -36,7 +32,6 @@
     <li>{{t "participedia.school.p2.ul.li.3"}}</li>
     <li>{{t "participedia.school.p2.ul.li.4"}}</li>
   </ol>
-
 </div>
 
 <div>
@@ -47,13 +42,16 @@
   <p>{{t "participedia.school.fee.schedule"}}: {{t "participedia.school.p5.fee.schedule.p"}}</p>
 </div>
 
-<p>
+<div>
   <strong>{{t "participedia.school.registration"}}</strong><br>
-  {{t "participedia.school.registration.1"}} <a
-    href="https://docs.google.com/forms/d/e/1FAIpQLSe71EcdXZJmHgU7qcVI5sG2XrNoLElOpI2J8qWKMiq7wMWsjA/viewform?usp=sf_link"
-    target="_blank" rel="noopener">{{t "participedia.school.registration.here"}}</a> {{t
-  "participedia.school.registration.2"}} <a href="mailto:info@participedia.net">info@participedia.net</a>.
-</p>
+  <p class="click-apply">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSe71EcdXZJmHgU7qcVI5sG2XrNoLElOpI2J8qWKMiq7wMWsjA/viewform?usp=sf_link" class="button button-dark-grey"
+      target="_blank" rel="noopener">
+      {{t "click_here_to_apply"}}
+    </a>
+  </p>
+  {{t "participedia.school.registration.2"}} <a href="mailto:info@participedia.net">info@participedia.net</a>.
+</div>
 <br>
 
 <h2>
@@ -97,16 +95,22 @@
 <p>{{t "participedia.school.fee.schedule"}}: <br> $300 {{t "participedia.school.usd"}} {{t
   "participedia.school.usd.paid"}} {{t "participedia.school.march"}} 2025</p>
 
-<p><strong>{{t "participedia.school.registration"}}</strong> <br> {{t "participedia.school.registration.2.1"}} <a
-    href="https://www.eventbrite.ca/e/participedia-school-2025-on-digital-democracy-tickets-1108581770919"
-    target="_blank" rel="noopener">{{t "participedia.school.registration.here"}}</a> {{t
-  "participedia.school.registration.2.2"}} <a href="mailto:info@participedia.net">info@participedia.net</a>.</p>
+<div>
+  <strong>{{t "participedia.school.registration"}}</strong><br>
+  <p class="click-apply">
+    <a href="https://www.eventbrite.ca/e/participedia-school-2025-on-digital-democracy-tickets-1108581770919" class="button button-dark-grey"
+      target="_blank" rel="noopener">
+      {{t "click_here_to_register"}}
+    </a>
+  </p>
+  {{t "participedia.school.registration.2.2"}} <a href="mailto:info@participedia.net">info@participedia.net</a>.
+</div>
 
 <hr class="space-30">
 
-<h2>
+<h1>
   {{t "participedia.school.past"}}
-</h2>
+</h1>
 <p>{{t "participedia.school.past.p1"}}</p>
 <div>
   __<br>
@@ -134,7 +138,7 @@
 </p>
 
 <p>
-  <a href="https://drive.google.com/file/d/1Ny2dkHzMfwWcQm_3pIsDd2Fc25TDN4Fz/view" class="button button-dark-grey"
+  <a href="{{latestPdfUrl}}"  class="button button-dark-grey"
     target="_blank" rel="noopener">
     {{t "participedia.school.download.summary.report"}}
   </a>
@@ -152,8 +156,17 @@
 <img src="/images/homepage/RadDem_Eventbrite1.jpg" class="static-view-section-illustration-full" />
 <p>{{t "hosted.with.partner"}} <a href="https://www.democracy-international.org/" target="_blank" rel="noopener">{{t
     "simon.fraser"}}</a> {{t "hosted.with.partner.end"}} </p>
-<a href="https://drive.google.com/file/d/1Y5XvPuYt_m3NEZkRstri8K2FZT_vnWYM/view?usp=sharing"
+<a href="{{pdfUrl2023}}"
   class="button button-dark-grey" target="_blank" rel="noopener">
   {{t "participedia.school.download.summary.report"}}
 </a>
+
+<h2 class="u-margin-top--small">
+  {{t "participedia.school.summary.video"}}:
+</h2>
+<div class="video-embed-container">
+  <iframe src="https://www.youtube.com/embed/WmVok0gvEgU" frameborder="0" webkitAllowFullScreen mozallowfullscreen
+    allowFullScreen></iframe>
+</div>
+
 {{/static-view-container}}
