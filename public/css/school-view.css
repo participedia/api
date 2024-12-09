@@ -4,13 +4,6 @@
   gap: 20px;
 }
 
-/* Media query for desktop screens */
-@media (min-width: 768px) {
-  .participedia-images {
-    grid-template-columns: 1fr 1fr; /* Two columns for larger screens */
-  }
-}
-
 .font-18{
   font-size: 18px;
 }
