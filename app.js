@@ -337,10 +337,10 @@ app.get("/participediaschool", function(req, res) {
   let headImg;
   let pSchoolRioImg;
   if(language === 'pt'){
-    headImg = 'darker-orange-version-pr.png';
     pSchoolRioImg = 'PSchool-2025-Rio-Portuguese.png';
+  } else if(language === 'es') {
+    pSchoolRioImg = 'PSchool_Rio_Spanish.png';
   } else {
-    headImg = 'darker-orange-version.png';
     pSchoolRioImg = 'PSchool-2025-Rio-English.png'
   }
   res.status(200).render("school-view", {headImg, latestPdfUrl, pdfUrl2023, pSchoolRioImg});
