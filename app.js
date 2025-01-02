@@ -334,7 +334,6 @@ app.get("/participediaschool", function(req, res) {
   const latestPdfUrl = `${fullHost}/images/school/REPORT_Participedia_School_2024_PUBLIC.pdf`;
   const pdfUrl2023 = `${fullHost}/images/school/Summary_Report_Radical_Democracy_Summer_School_Aug_2023.pdf`;
   const language = req.cookies.locale || "en";
-  let headImg;
   let pSchoolRioImg;
   if(language === 'pt'){
     pSchoolRioImg = 'PSchool-2025-Rio-Portuguese.png';
@@ -343,7 +342,7 @@ app.get("/participediaschool", function(req, res) {
   } else {
     pSchoolRioImg = 'PSchool-2025-Rio-English.png'
   }
-  res.status(200).render("school-view", {headImg, latestPdfUrl, pdfUrl2023, pSchoolRioImg});
+  res.status(200).render("school-view", {latestPdfUrl, pdfUrl2023, pSchoolRioImg});
 });
 app.get("/teaching", function(req, res) {
   res.status(200).render("teaching-view");
