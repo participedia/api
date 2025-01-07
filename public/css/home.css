@@ -124,6 +124,10 @@
   align-self: center;
 }
 
+.home-hero-search__edit-select.ss-single-selected {
+  align-items: center;
+}
+
 
 .home-hero-browse-all-link {
   display: flex;
