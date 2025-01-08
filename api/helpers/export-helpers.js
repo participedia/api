@@ -123,7 +123,7 @@ const processCSVFile = async (params, paramsForCSV) => {
       bucket: process.env.AWS_S3_BUCKET,
       userId: params.req.user.id
     }
-    filters = await getParamsSearchDownloadResults(params);
+    const filters = await getParamsSearchDownloadResults(params);
 
     const payloadLambda = JSON.stringify({
       ...payloadParams, 
