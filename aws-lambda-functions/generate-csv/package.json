@@ -9,7 +9,7 @@
   "author": "Participedia",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.623.0",
+    "@aws-sdk/client-s3": "^3.726.1",
     "bluebird": "^3.4.7",
     "dotenv": "^14.2.0",
     "json2csv": "4.5.1",
