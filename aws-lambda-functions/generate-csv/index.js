@@ -168,7 +168,6 @@ exports.handler = async (event, context) => {
     await updateCSVEntry(event.userId, uploadData, csv_export_id);
     return {uploadData: uploadData, userId: event.userId};
   } catch (error) {
-    console.log("@@@@@@@@@@@ handler error ", error);
     throw error;
   }
 };

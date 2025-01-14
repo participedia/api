@@ -1,11 +1,5 @@
-// const AWS = require("aws-sdk");
-// const s3 = new AWS.S3({
-//   region: process.env.REGION,
-//   accessKeyId: process.env.ACCESS_KEY_ID,
-//   secretAccessKey: process.env.SECRET_ACCESS_KEY
-// });
-
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const { S3Client } = require("@aws-sdk/client-s3");
+const { Upload } = require("@aws-sdk/lib-storage");
 const { parse } = require("json2csv");
 const moment = require("moment");
 const { sortBy } = require("lodash");
@@ -532,35 +526,21 @@ async function createCSVDataDump(type, results = [], bucket, filename) {
   const csv = parse(sortBy(editedEntries, "id"), opts);
 
   try {
-    // let uploadedLocation = "";
-    // const params = {
-    //   Bucket: bucket,
-    //   Key: filename, 
-    //   Body: csv,
-    //   ACL: "public-read"
-    // };
-    // const stored = await s3.upload(params).promise();
-    // uploadedLocation = stored.Location;
-
-
     // 2) Use PutObjectCommand in AWS SDK v3
-    const params = {
-      Bucket: bucket,
-      Key: filename,
-      Body: csv,
-      ACL: "public-read",
-    };
-    console.log("@@@@@@@@@@@ createCSVDataDump params ", params);
+    const upload = new Upload({
+      client: s3Client,
+      params: {
+        Bucket: bucket,
+        Key: filename,
+        Body: csv,
+        ACL: "public-read",
+      },
+    });
 
-    // Send the PutObjectCommand via s3Client
-    await s3Client.send(new PutObjectCommand(params));
-    // The v3 PutObjectCommand response does not return a .Location like v2.
-    // You can construct the file's location manually if needed.
-    const uploadedLocation = `https://${bucket}.s3.${process.env.REGION}.amazonaws.com/${filename}`;
-    return uploadedLocation;
+    await upload.done();
+    const uploadedLocation = `${process.env.AWS_UPLOADS_URL}${filename}`;
+    return uploadedLocation
   } catch (error) {
-    console.log("@@@@@@@@@@@ createCSVDataDump error ", error);
-    
     throw error;
   }
 }
