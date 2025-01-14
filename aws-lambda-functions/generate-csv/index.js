@@ -88,22 +88,27 @@ const getSearchDownloadResults = async (params) => {
   try {
     let results = null;
     let queryFile = AWS_SEARCH;
-    switch (params.type) {
-      case "cases":
-        queryFile = casesQueryFile(params.filters);
-        break;
-      case "methods":
-        queryFile = methodsQueryFile(params.filters);
-        break;
-      case "organizations":
-        queryFile = organizationsQueryFile(params.filters);
-        break;
+    if(!params.user_query || params.user_query === ''){
+      switch (params.type) {
+        case "case":
+          queryFile = casesQueryFile(params.filters);
+          break;
+        case "method":
+          queryFile = methodsQueryFile(params.filters);
+          break;
+        case "organization":
+          queryFile = organizationsQueryFile(params.filters);
+          break;
+      }
     }
     
+    let type = (params.type.slice(-1) === "s") ? params.type : (params.type + "s");
+    let filters = {...params.filters};
+    filters.type = type;
     if (params.lang === "zh" && params.user_query) {
-      results = await db.any(AWS_SEARCH_CHINESE, params.filters);
+      results = await db.any(AWS_SEARCH_CHINESE, filters);
     } else {
-      results = await db.any(queryFile, params.filters);
+      results = await db.any(queryFile, filters);
     }
     return results;
   } catch (err) {

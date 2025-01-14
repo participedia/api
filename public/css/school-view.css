@@ -1,0 +1,21 @@
+.participedia-images{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.font-18{
+  font-size: 18px;
+}
+
+ol, ul{
+  margin-top: 0;
+}
+
+.space-30{
+  margin: 30px 0;
+}
+
+.click-apply{
+  margin: 10px 0;
+}

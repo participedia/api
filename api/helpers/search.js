@@ -149,7 +149,7 @@ const getParamsSearchDownloadResults = async (params) => {
         limit: params.limit,
         langQuery: params.langQuery,
         language: params.lang,
-        type: params.type + "s",
+        type: params.type,
       }
     } else {
       return {
@@ -162,7 +162,7 @@ const getParamsSearchDownloadResults = async (params) => {
         userId: params.req.user ? params.req.user.id : null,
         userid: params.req.user ? params.req.user.id : null,
         sortby: sortbyFromReq(params.req),
-        type: params.type + "s",
+        type: params.type,
         facets: searchFiltersFromReq(params.req),
       }
     }
@@ -177,28 +177,28 @@ const getSearchDownloadResults = async (params) => {
   try {
     let results = null;
     let queryFile = SEARCH;
-    switch (params.type) {
-      case "cases":
-        queryFile = SEARCH_CASES;
-        break;
-      case "methods":
-        queryFile = SEARCH_METHODS;
-        break;
-      case "collections":
-        // await removeEntryCollections(thingsByUser.id);
-        break;
-      case "organizations":
-        queryFile = SEARCH_ORGANIZATIONS;
-        break;
+    if(!params.user_query === null || params.user_query === ''){
+      switch (params.type) {
+        case "case":
+          queryFile = SEARCH_CASES;
+          break;
+        case "method":
+          queryFile = SEARCH_METHODS;
+          break;
+        case "organization":
+          queryFile = SEARCH_ORGANIZATIONS;
+          break;
+      }
     }
     
+    const type = (params.type.slice(-1) === "s") ? params.type : (params.type + "s");
     if (params.lang === "zh" && params.user_query) {
       results = await db.any(SEARCH_CHINESE, {
         query: params.user_query,
         limit: params.limit,
         langQuery: params.langQuery,
         language: params.lang,
-        type: params.type + "s",
+        type: type,
       });
     } else {
       const filters = {
@@ -211,7 +211,7 @@ const getSearchDownloadResults = async (params) => {
         userId: params.req.user ? params.req.user.id : null,
         userid: params.req.user ? params.req.user.id : null,
         sortby: sortbyFromReq(params.req),
-        type: params.type + "s",
+        type: type,
         facets: searchFiltersFromReq(params.req),
       }
       results = await db.any(queryFile, filters);
