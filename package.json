@@ -167,7 +167,8 @@
     "entires-character-calculator": "node scripts/entires-character-calculator.js",
     "generate-sitemap": "node scripts/sitemap-generator.js",
     "generate-friendlyId": "node scripts/generate-friendlyId.js",
-    "empty-friendlyId": "node scripts/empty-friendlyId.js"
+    "empty-friendlyId": "node scripts/empty-friendlyId.js",
+    "migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f migrations/all_migrations.sql"
   },
   "husky": {
     "hooks": {
