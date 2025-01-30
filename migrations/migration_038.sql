@@ -14,9 +14,9 @@ CREATE FUNCTION medialist_to_text(list full_file[]) RETURNS text
   LANGUAGE sql STABLE
   AS $_$
   SELECT COALESCE(array_to_string(
-    array_agg(media_to_text(medium)),
+    array_agg(public.media_to_text(medium)),
     ' '), '')
-    from unnest(list) as medium
+    FROM unnest(list) as medium
     ;
 $_$;
 
@@ -24,9 +24,9 @@ CREATE FUNCTION medialist_to_text(list full_link[]) RETURNS text
   LANGUAGE sql STABLE
   AS $_$
   SELECT COALESCE(array_to_string(
-    array_agg(media_to_text(medium)),
+    array_agg(public.media_to_text(medium)),
     ' '), '')
-    from unnest(list) as medium
+    FROM unnest(list) as medium
     ;
 $_$;
 
