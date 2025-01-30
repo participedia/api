@@ -1,4 +1,4 @@
-DROP TABLE csv_export;
+DROP TABLE IF EXISTS csv_export;
 
 CREATE TABLE csv_export (
     id SERIAL PRIMARY KEY,

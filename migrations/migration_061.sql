@@ -1,4 +1,4 @@
-DROP TABLE medium_posts;
+DROP TABLE IF EXISTS medium_posts;
 
 CREATE TABLE medium_posts (
     id SERIAL PRIMARY KEY,
