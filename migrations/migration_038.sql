@@ -42,10 +42,9 @@ CREATE FUNCTION keylist_to_text(lang text, field text, keys text[]) RETURNS text
   LANGUAGE sql STABLE
   AS $_$
   SELECT COALESCE(array_to_string(
-    array_agg(value_key_to_text(lang, field, key)),
+    array_agg(public.value_key_to_text(lang, field, key)),
     ' '), '')
-    from unnest(keys) as key
-    ;
+    FROM unnest(keys::text[]) AS key;
 $_$;
 
 -- FIXME: Split the materialized view into smaller functions like the below
