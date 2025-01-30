@@ -10,14 +10,14 @@ WITH allauthors AS (
    authors.thingid = things.id
   GROUP BY things.id
 ), texts AS (
-select distinct on(thingid) thingid, title, body, description
- from (
-   select distinct on(thingid, timestamp) thingid, title, body, description
-   from localized_texts
-   where language = 'pt'
-   order by thingid, timestamp DESC
+SELECT DISTINCT ON(thingid) thingid, title, body, description
+ FROM (
+   SELECT DISTINCT ON(thingid, timestamp) thingid, title, body, description
+   FROM localized_texts
+   WHERE language = 'pt'
+   ORDER BY thingid, timestamp DESC
  ) as titles
- order by thingid
+ ORDER BY thingid
 )
 SELECT
    cases.id,

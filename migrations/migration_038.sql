@@ -34,7 +34,7 @@ CREATE FUNCTION value_key_to_text(lang text, field text, key text) RETURNS text
   LANGUAGE sql STABLE
   AS $_$
 SELECT COALESCE(keyvalues ->> quote_ident(format('name:%s-key:%s', field, key)), '')
-FROM localizations
+FROM public.localizations
 WHERE language = lang;
 $_$;
 

@@ -77,6 +77,12 @@
 \include 'migrations/migration_049.sql'
 \include 'migrations/migration_050.sql'
 \include 'migrations/migration_051.sql'
+
+\include 'migrations/migration_060.sql'
+\include 'migrations/migration_061.sql'
+\include 'migrations/migration_062.sql'
+\include 'migrations/migration_063.sql'
+
 \include 'migrations/migration_052.sql'
 \include 'migrations/migration_053.sql'
 \include 'migrations/migration_054.sql'
@@ -85,7 +91,3 @@
 \include 'migrations/migration_057.sql'
 \include 'migrations/migration_058.sql'
 \include 'migrations/migration_059.sql'
-\include 'migrations/migration_060.sql'
-\include 'migrations/migration_061.sql'
-\include 'migrations/migration_062.sql'
-\include 'migrations/migration_063.sql'
