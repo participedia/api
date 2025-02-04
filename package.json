@@ -168,7 +168,8 @@
     "generate-sitemap": "node scripts/sitemap-generator.js",
     "generate-friendlyId": "node scripts/generate-friendlyId.js",
     "empty-friendlyId": "node scripts/empty-friendlyId.js",
-    "migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f setup.sql; psql -d \"${DATABASE_NEW_PROD_URL}\" -f migrations/all_migrations.sql"
+    "setup-migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f setup.sql -U uaf92iv9m4slg6",
+    "migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f migrations/all_migrations.sql -U uaf92iv9m4slg6"
   },
   "husky": {
     "hooks": {
