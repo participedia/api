@@ -170,7 +170,7 @@
     "empty-friendlyId": "node scripts/empty-friendlyId.js",
     "setup-migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f setup.sql -U uaf92iv9m4slg6",
     "migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f migrations/all_migrations.sql -U uaf92iv9m4slg6",
-    "export-users": "node scripts/export-users.js"
+    "exportusers": "node scripts/export-users.js"
   },
   "husky": {
     "hooks": {
