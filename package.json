@@ -169,7 +169,9 @@
     "generate-friendlyId": "node scripts/generate-friendlyId.js",
     "empty-friendlyId": "node scripts/empty-friendlyId.js",
     "setup-migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f setup.sql -U uaf92iv9m4slg6",
-    "migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f migrations/all_migrations.sql -U uaf92iv9m4slg6"
+    "migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f migrations/all_migrations.sql -U uaf92iv9m4slg6",
+    "copyprodtonewdb": "pg_dump --no-owner --no-privileges -d $(heroku config:get HEROKU_POSTGRESQL_BROWN_URL) | psql $(heroku config:get HEROKU_POSTGRESQL_ORANGE_URL)",
+    "export-users": "node scripts/export-users.js"
   },
   "husky": {
     "hooks": {
