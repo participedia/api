@@ -1,9 +1,12 @@
 require("dotenv").config();
-const { db, pgp } = require("../api/helpers/db.js");
+const { db, pgp, LIST_USER } = require("../api/helpers/db.js");
 const { ManagementClient } = require("auth0");
 const fs = require("fs");
 const { parse } = require("json2csv");
-// const mysql = require("mysql2/promise");
+const path = require("path");
+
+// File path
+const filePath = path.join(__dirname, "active_users.csv");
 
 // Auth0 ManagementClient Configuration
 const auth0Client = new ManagementClient({
@@ -69,7 +72,16 @@ async function exportUsersToCSV() {
   }
 
   // Convert JSON to CSV
-  const csv = parse(activeUsers, { fields: ["id", "email", "auth0_id"] });
+  const csv = parse(activeUsers, {
+    fields: [
+      "id",
+      "name",
+      "email",
+      "language",
+      "accepted_date",
+      "last_access_date",
+    ],
+  });
 
   // Save as CSV file
   fs.writeFileSync("active_users.csv", csv);
