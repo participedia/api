@@ -29,9 +29,12 @@ try {
     config.ssl = false;
   } else {
     config.ssl = {
-      sslmode: "require",
-      rejectUnauthorized: false,
+      rejectUnauthorized: false, // Required for Heroku
     };
+    // config.ssl = {
+    //   sslmode: "require",
+    //   rejectUnauthorized: false,
+    // };
   }
 } catch (e) {
   console.log("e e error error error ^^^^^^^^^^^^^^^^^^^^^^^^ process.env.DATABASE_UR error" , process.env.DATABASE_URL)
@@ -39,7 +42,10 @@ try {
 
   console.error("# Error parsing DATABASE_URL environment variable");
 }
+
+
 let db = pgp(config);
+console.log("db db db db ^^^^^^^^^^^^^^^^^^^^^^^^ db ", db)
 
 const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
 
