@@ -13,7 +13,6 @@ const fs = require("fs");
 
 const pgp = require("pg-promise")(options);
 const path = require("path");
-console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ connectionString connectionString ', process.env.DATABASE_URL)
 const connectionString = process.env.DATABASE_URL;
 const parse = require("pg-connection-string").parse;
 let config;

@@ -61,8 +61,6 @@ const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
 let localeLang = "en";
 const chatai = require("./api/controllers/chatai.js");
-console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ DATABASE_URL DATABASE_URL DATABASE_URL ', process.env.DATABASE_URL)
-console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ HEROKU_POSTGRESQL_SILVER_URL HEROKU_POSTGRESQL_SILVER_URL HEROKU_POSTGRESQL_SILVER_URL ', process.env.HEROKU_POSTGRESQL_SILVER_URL)
 
 const port = process.env.PORT || 3001;
 
