@@ -263,8 +263,16 @@ router.post("/reject-entry", async function(req, res) {
       await removeLocalizedText(thingsByUser.id);
     }
 
-    let userData = await auth0Client.getUsersByEmail(author.email);
-    let blockUserAccess = await blockUserAuth0(userData[0].user_id);
+    try {
+      // let users = await auth0Client.getUsersByEmail(author.email);
+      let response = await auth0Client.usersByEmail.getByEmail({email: author.email});
+      let users = Array.isArray(response.data) ? response.data : []; 
+      if (users && users.length > 0) {
+        let blockUserAccess = await blockUserAuth0(users[0].user_id);
+      }
+    } catch (error) {
+      console.log("reject-entry error ", error);
+    }
 
     res.status(200).json({
       OK: true,

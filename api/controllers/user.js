@@ -172,8 +172,12 @@ router.post("/delete-user", async function(req, res) {
     }
     await removeAuthorByUserId(author)
     await deleteUser(author);
-    let userData = await auth0Client.getUsersByEmail(userEmail);
-    let blockUserAccess = await blockUserAuth0(userData[0].user_id);
+    // let users = await auth0Client.getUsersByEmail(userEmail);
+    let response = await auth0Client.usersByEmail.getByEmail({email: userEmail});
+    let users = Array.isArray(response.data) ? response.data : []; 
+    if (users && users.length > 0) {
+      let blockUserAccess = await blockUserAuth0(users[0].user_id);
+    }
 
     res.status(200).json({
       OK: true,
@@ -231,8 +235,12 @@ router.post("/delete-users", async function(req, res) {
         }
         await removeAuthorByUserId(author)
         await deleteUser(author);
-        let userData = await auth0Client.getUsersByEmail(userEmail);
-        let blockUserAccess = await blockUserAuth0(userData[0].user_id);
+        // let userData = await auth0Client.getUsersByEmail(userEmail);
+        let response = await auth0Client.usersByEmail.getByEmail({email: userEmail});
+        let users = Array.isArray(response.data) ? response.data : []; 
+        if (users && users.length > 0) {
+          let blockUserAccess = await blockUserAuth0(userData[0].user_id);
+        }
         
       }
     }

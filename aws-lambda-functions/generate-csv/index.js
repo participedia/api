@@ -18,8 +18,6 @@ const options = {
   promiseLib: promise, // use bluebird as promise library
   capSQL: true, // when building SQL queries dynamically, capitalize SQL keywords
 };
-// aws lambda update-function-code --function-name lambdaFunc \
-// --zip-file fileb:///home/ramzi/Desktop/apps/nodejs/api/aws-lambda-functions/lambdaFunc.zip
 const pgp = require("pg-promise")(options);
 
 let config;

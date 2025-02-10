@@ -1,11 +1,5 @@
-const AWS = require("aws-sdk");
-const s3 = new AWS.S3({
-  region: process.env.REGION,
-  accessKeyId: process.env.ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY
-});
-
-// const s3 = new AWS.S3();
+const { S3Client } = require("@aws-sdk/client-s3");
+const { Upload } = require("@aws-sdk/lib-storage");
 const { parse } = require("json2csv");
 const moment = require("moment");
 const { sortBy } = require("lodash");
@@ -344,6 +338,14 @@ function convertToIdTitleUrl(entry, field) {
 
 
 async function createCSVDataDump(type, results = [], bucket, filename) {
+  // 1) Initialize an S3 Client from AWS SDK v3
+  const s3Client = new S3Client({
+    region: process.env.REGION,
+    credentials: {
+      accessKeyId: process.env.ACCESS_KEY_ID,
+      secretAccessKey: process.env.SECRET_ACCESS_KEY,
+    },
+  });
   var entries = results;
   var csvFields = Object.create({});
   
@@ -524,16 +526,20 @@ async function createCSVDataDump(type, results = [], bucket, filename) {
   const csv = parse(sortBy(editedEntries, "id"), opts);
 
   try {
-    let uploadedLocation = "";
-    const params = {
-      Bucket: bucket,
-      Key: filename, 
-      Body: csv,
-      ACL: "public-read"
-    };
-    const stored = await s3.upload(params).promise();
-    uploadedLocation = stored.Location;
-    return uploadedLocation;
+    // 2) Use PutObjectCommand in AWS SDK v3
+    const upload = new Upload({
+      client: s3Client,
+      params: {
+        Bucket: bucket,
+        Key: filename,
+        Body: csv,
+        ACL: "public-read",
+      },
+    });
+
+    await upload.done();
+    const uploadedLocation = `${process.env.AWS_UPLOADS_URL}${filename}`;
+    return uploadedLocation
   } catch (error) {
     throw error;
   }

@@ -4,7 +4,11 @@ const fs = require("fs");
 const promise = require("bluebird");
 const { Parser } = require("json2csv");
 const { htmlToText } = require("html-to-text");
-const AWS = require("aws-sdk");
+const {
+  ComprehendClient,
+  BatchDetectDominantLanguageCommand,
+} = require("@aws-sdk/client-comprehend");
+
 const parses = require("pg-connection-string").parse;
 const { Client } = require("pg");
 const { delay } = require("bluebird");
@@ -19,11 +23,19 @@ const pgp = require("pg-promise")(options);
 let db = pgp(config);
 let client;
 
-const comprehend = new AWS.Comprehend({
+const comprehendClient = new ComprehendClient({
   region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
 });
+
+// const comprehend = new AWS.Comprehend({
+//   region: process.env.AWS_REGION,
+//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+// });
 
 // Update to set maximum items to fetch from DB
 const numData = -1;
@@ -93,32 +105,57 @@ async function detectLanguages(entries) {
 }
 
 function batchDetectLanguages(entries) {
-  const batchedEntries = entries;
-  const detectedLanguagesPromisified = [];
+  const detectedLanguagesPromises = entries.map(async TextList => {
+    if (!TextList.length) {
+      return [];
+    }
 
-  for (let j = 0; j < batchedEntries.length; j++) {
-    const TextList = batchedEntries[j];
-    let params = {
+    const params = {
       TextList,
     };
-    if (!params.TextList.length) {
-      continue;
+
+    try {
+      const command = new BatchDetectDominantLanguageCommand(params);
+      const data = await comprehendClient.send(command);
+
+      // Map each result to the first detected language (most dominant)
+      return data.ResultList.map(el => el.Languages[0]);
+    } catch (err) {
+      console.error("Error detecting languages:", err);
+      // Return an empty array or handle the error as needed
+      return [];
     }
-    detectedLanguagesPromisified.push(
-      new Promise((resolve, reject) =>
-        comprehend.batchDetectDominantLanguage(params, function(err, data) {
-          if (err) {
-            console.log(err, err.stack);
-            resolve([]);
-          } else {
-            const reslt = data.ResultList.map(el => el.Languages[0]);
-            resolve(reslt);
-          }
-        })
-      )
-    );
-  }
-  return Promise.all(detectedLanguagesPromisified);
+  });
+
+  // Wait for all batch detections to complete
+  return Promise.all(detectedLanguagesPromises);
+
+  // const batchedEntries = entries;
+  // const detectedLanguagesPromisified = [];
+
+  // for (let j = 0; j < batchedEntries.length; j++) {
+  //   const TextList = batchedEntries[j];
+  //   let params = {
+  //     TextList,
+  //   };
+  //   if (!params.TextList.length) {
+  //     continue;
+  //   }
+  //   detectedLanguagesPromisified.push(
+  //     new Promise((resolve, reject) =>
+  //       comprehend.batchDetectDominantLanguage(params, function(err, data) {
+  //         if (err) {
+  //           console.log(err, err.stack);
+  //           resolve([]);
+  //         } else {
+  //           const reslt = data.ResultList.map(el => el.Languages[0]);
+  //           resolve(reslt);
+  //         }
+  //       })
+  //     )
+  //   );
+  // }
+  // return Promise.all(detectedLanguagesPromisified);
 }
 
 async function writeToCSVFile(data, fields, fieldNames, filename) {

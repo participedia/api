@@ -102,26 +102,27 @@ const placeHolderPhotos = article => {
 };
 
 async function validateCaptcha(url) {
-  let captchaValidationResult = false;
-  let res = await fetch(url, {
-    method: "post",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      Accept: "application/json",
-    },
-  })
-    .then(response => response.json())
-    .then(google_response => {
-      if (google_response.success == true) {
-        captchaValidationResult = true;
-      }
-    })
-    .catch(error => {
-      console.log(error);
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Accept: "application/json",
+      },
     });
-  return captchaValidationResult;
+
+    const googleResponse = await response.json();
+    if (googleResponse.success) {
+      return true;
+    } else {
+      return false;
+    }
+
+  } catch (error) {
+    console.error("Error validating captcha: ", error);
+    return false;
+  }
 }
 
 const returnByType = async (

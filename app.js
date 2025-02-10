@@ -34,7 +34,7 @@ if (
     environment: process.env.NODE_ENV,
   });
   // The request handler must be the first middleware on the app
-  app.use(Sentry.Handlers.requestHandler());
+  // app.use(Sentry.Handlers.requestHandler());
 }
 
 // other logging middlewear
@@ -229,7 +229,8 @@ app.get("/resend-verification", function(req, res, next) {
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       scope: 'read:users update:users'
     });
-    auth0Client.sendEmailVerification({user_id});
+    // auth0Client.sendEmailVerification({user_id});
+    auth0Client.jobs.verifyEmail({ user_id: userId });
   }
   req.session.user_to_verify = '';
   res.redirect(currentUrl || "/");
@@ -239,10 +240,21 @@ app.get("/resend-verification", function(req, res, next) {
 // Perform session logout and redirect to homepage
 app.get("/logout", (req, res) => {
   let currentUrl = `${req.protocol}://${req.headers.host}`;
-  req.logout();
-  res.redirect(
-    `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
-  );
+  
+  req.logout((err) => {
+    if (err) {
+      return next(err); // Pass error to the next middleware (Express error handler)
+    }
+    
+    // Redirect to the Auth0 logout URL with a returnTo parameter
+    res.redirect(
+      `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
+    );
+  });
+  // req.logout();
+  // res.redirect(
+  //   `https://${process.env.AUTH0_DOMAIN}/v2/logout?returnTo=${currentUrl}`
+  // );
 });
 
 const cache = apicache.middleware;
@@ -418,7 +430,7 @@ app.use((req, res, next) => {
 });
 
 // The error handler must be before any other logging middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler());
+// app.use(Sentry.Handlers.errorHandler());
 
 if (process.env.NODE_ENV === "development") {
   // only use in development

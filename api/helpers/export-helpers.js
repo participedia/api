@@ -1,11 +1,5 @@
-var AWS = require('aws-sdk');
 "use strict";
-let express = require("express");
-const lambda = new AWS.Lambda({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
+const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
 let {
   db,
   CREATE_CSV_EXPORT,
@@ -21,6 +15,20 @@ let {
   getCollectionResults,
   getParamsSearchDownloadResults
 } = require("./search");
+
+// const lambda = new AWS.Lambda({
+//   region: process.env.AWS_REGION,
+//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+// });
+
+const lambdaClient = new LambdaClient({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 const unixTimestampGeneration = () => {
   return Math.floor(Date.now() / 1000)
@@ -103,6 +111,7 @@ const uploadCSVFile = async (params, csv_export_id) => {
 
 const processCSVFile = async (params, paramsForCSV) => {
   try {
+    // Build the payload for your Lambda
     const payloadParams = {
       user_query: params.user_query ? params.user_query : '',
       limit: params.limit ? params.limit : null,
@@ -114,7 +123,7 @@ const processCSVFile = async (params, paramsForCSV) => {
       bucket: process.env.AWS_S3_BUCKET,
       userId: params.req.user.id
     }
-    filters = await getParamsSearchDownloadResults(params);
+    const filters = await getParamsSearchDownloadResults(params);
 
     const payloadLambda = JSON.stringify({
       ...payloadParams, 
@@ -122,12 +131,36 @@ const processCSVFile = async (params, paramsForCSV) => {
       paramsForCSV: paramsForCSV
     });
 
-    let paramsLambda = { FunctionName: 'generate-csv', Payload: payloadLambda};
-    if(process.env.NODE_ENV === 'production'){
-      paramsLambda = {FunctionName: 'generate-csv-prod', Payload: payloadLambda};
+    // Decide which Lambda function name to use based on environment
+    let functionName = "generate-csv";
+    if (process.env.NODE_ENV === "production") {
+      functionName = "generate-csv-prod";
     }
 
-    const result = await lambda.invoke(paramsLambda).promise();
+    // Prepare parameters for InvokeCommand
+    const paramsLambda = {
+      FunctionName: functionName,
+      Payload: Buffer.from(payloadLambda), // must be a Uint8Array/Buffer in v3
+    };
+
+    // Invoke Lambda using the new AWS SDK v3
+    const command = new InvokeCommand(paramsLambda);
+    const result = await lambdaClient.send(command);
+    console.log("Lambda result:", result);
+    // If your Lambda returns a JSON payload, you can decode and parse it:
+    // if (result.Payload) {
+    //   const decodedPayload = new TextDecoder("utf-8").decode(result.Payload);
+    //   console.log("Decoded Lambda payload:", decodedPayload);
+    //   // const jsonPayload = JSON.parse(decodedPayload);
+    //   // do something with jsonPayload if needed
+    // }
+
+    // let paramsLambda = { FunctionName: 'generate-csv', Payload: payloadLambda};
+    // if(process.env.NODE_ENV === 'production'){
+    //   paramsLambda = {FunctionName: 'generate-csv-prod', Payload: payloadLambda};
+    // }
+
+    // const result = await lambda.invoke(paramsLambda).promise();
     console.log(' lambda result ', result);
   } catch (error) {
     console.log('lambda error ', error);

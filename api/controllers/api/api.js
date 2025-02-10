@@ -30,10 +30,11 @@ if (
   ) {
     Sentry.init({
       dsn: process.env.SENTRY_DSN,
+      tracesSampleRate: 1.0,
       environment: process.env.NODE_ENV,
     });
     // The request handler must be the first middleware on the app
-    api.use(Sentry.Handlers.requestHandler());
+    // api.use(Sentry.Handlers.requestHandler());
   }
 
 api.use('/v1', auth, api); 
@@ -117,7 +118,7 @@ api.use((req, res, next) => {
     });
 });
 
-api.use(Sentry.Handlers.errorHandler());
+// api.use(Sentry.Handlers.errorHandler());
 
 if (process.env.NODE_ENV === "development") {
     api.use(apiErrorHandler);
