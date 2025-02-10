@@ -61,7 +61,6 @@ const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
 let localeLang = "en";
 const chatai = require("./api/controllers/chatai.js");
-console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ process.env.DATABASE_URL ", process.env.DATABASE_URL)
 const port = process.env.PORT || 3001;
 
 app.use("/api", cors(), api);
