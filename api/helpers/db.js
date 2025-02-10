@@ -40,7 +40,6 @@ try {
 
 
 let db = pgp(config);
-console.log("db db db db ^^^^^^^^^^^^^^^^^^^^^^^^ db ", db)
 
 const i18n_en = JSON.parse(fs.readFileSync("locales/en.js"));
 
