@@ -34,6 +34,9 @@ try {
     };
   }
 } catch (e) {
+  console.log("e e error error error ^^^^^^^^^^^^^^^^^^^^^^^^ process.env.DATABASE_UR error" , process.env.DATABASE_URL)
+  console.log("e e error error error ^^^^^^^^^^^^^^^^^^^^^^^^ error ", e)
+
   console.error("# Error parsing DATABASE_URL environment variable");
 }
 let db = pgp(config);
