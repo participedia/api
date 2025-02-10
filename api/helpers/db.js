@@ -13,7 +13,11 @@ const fs = require("fs");
 
 const pgp = require("pg-promise")(options);
 const path = require("path");
+console.log("11111111111111111 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ process.env.DATABASE_URL ", process.env.DATABASE_URL)
+
 const connectionString = process.env.DATABASE_URL;
+console.log("22222222222222222222222 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ process.env.DATABASE_URL ", process.env.DATABASE_URL)
+
 const parse = require("pg-connection-string").parse;
 let config;
 const {uploadToAWS} = require("./upload-to-aws.js");
