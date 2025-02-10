@@ -61,6 +61,7 @@ const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
 let localeLang = "en";
 const chatai = require("./api/controllers/chatai.js");
+console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ DATABASE_URL connectionString connectionString ', process.env.DATABASE_URL)
 
 const port = process.env.PORT || 3001;
 
@@ -69,6 +70,7 @@ app.use("/api", cors(), api);
 app.use(errorhandler());
 // canonicalize url
 app.use((req, res, next) => {
+
   if (
     process.env.NODE_ENV === "production" &&
     req.hostname !== "participedia.net" &&
