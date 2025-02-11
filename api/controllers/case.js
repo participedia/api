@@ -961,21 +961,28 @@ async function getCaseById(params, res) {
 
 async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
-  const params = parseGetParams(req, "case", true);
-  const article = await getCaseById(params, res);
-  if (!article) {
-    res.status(404).render("404");
-    return null;
-  }
-
-  if(!article.published){
-    if(req.user && !req.user.isadmin && req.user.id !== article.creator.user_id){
-      return res.status(404).render("waiting-for-approval");
+  try {
+    const params = parseGetParams(req, "case", true);
+    console.log("@@@@@@@@@@@@@@@@ getCaseHttp parmas", params);
+    const article = await getCaseById(params, res);
+    if (!article) {
+      res.status(404).render("404");
+      return null;
     }
+  
+    if(!article.published){
+      if(req.user && !req.user.isadmin && req.user.id !== article.creator.user_id){
+        return res.status(404).render("waiting-for-approval");
+      }
+    }
+  
+    const staticText = await getEditStaticText(params);
+    returnByType(res, params, article, staticText, req.user);
+    
+  } catch (error) {
+    console.log("error getCaseHttp @@@@@@@@@@@@@@@@ getCaseHttp error", error);
+    return res.status(404).render("404");
   }
-
-  const staticText = await getEditStaticText(params);
-  returnByType(res, params, article, staticText, req.user);
 }
 
 async function getEditStaticText(params) {

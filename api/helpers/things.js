@@ -136,85 +136,91 @@ const returnByType = async (
   pages = null,
   numArticlesByType = null
 ) => {
-  const { returns, type, view, articleid } = params;
-  const articles = {};
-  const currentLocale = res.locale || "en";
-
-  if (!article) return;
-
-  // if article is hidden and user is not admin, return 404
-  if (Array.isArray(article)) {
-    if (
-      (article[0] && article[0].hidden && (!user || (user && !user.isadmin))) ||
-      article.length === 0
-    ) {
-      return res.status(404).render("404");
-    }
-    article.forEach(e => {
-      articles[e.language] = e;
-    });
-    article = articles[currentLocale];
-
-    // If current locale has no data structure. Then generate from the template;
-    if (!article) {
-      article = getStructure(type, articleid);
-      articles[currentLocale] = article;
-    }
-  } else {
-    if (article.hidden && (!user || (user && !user.isadmin))) {
-      if (article.published) {
-        return res.status(404).render("waiting-for-approval");
-      } else {
+  try {
+    const { returns, type, view, articleid } = params;
+    const articles = {};
+    const currentLocale = res.locale || "en";
+  
+    if (!article) return;
+  
+    // if article is hidden and user is not admin, return 404
+    if (Array.isArray(article)) {
+      if (
+        (article[0] && article[0].hidden && (!user || (user && !user.isadmin))) ||
+        article.length === 0
+      ) {
         return res.status(404).render("404");
       }
-    }
-  }
-
-  switch (returns) {
-    case "htmlfrag":
-      return res.status(200).render(type + "-" + view, {
-        article,
-        static,
-        user,
-        params,
-        layout: false,
+      article.forEach(e => {
+        articles[e.language] = e;
       });
-    case "json":
-      return res
-        .status(200)
-        .json({ OK: true, article, results, total, pages, numArticlesByType });
-    case "csv":
-      // TODO: implement CSV
-      let category =
-        params.selectedCategory == "organizations"
-          ? "organization"
-          : params.selectedCategory;
-      if (
-        params.type === "collection" &&
-        supportedTypes.indexOf(category) >= 0
-      ) {
-        let file = await createCSVDataDump(category, results);
-        return res.download(file);
+      article = articles[currentLocale];
+  
+      // If current locale has no data structure. Then generate from the template;
+      if (!article) {
+        article = getStructure(type, articleid);
+        articles[currentLocale] = article;
       }
-      return res.status(500, "CSV not implemented yet").render();
-    case "xml":
-      // TODO: implement XML
-      return res.status(500, "XML not implemented yet").render();
-    case "html": // fall through
-    default:
-      return res
-        .status(200)
-        .render(type + "-" + view, {
-          articles,
+    } else {
+      if (article.hidden && (!user || (user && !user.isadmin))) {
+        if (article.published) {
+          return res.status(404).render("waiting-for-approval");
+        } else {
+          return res.status(404).render("404");
+        }
+      }
+    }
+  
+    switch (returns) {
+      case "htmlfrag":
+        return res.status(200).render(type + "-" + view, {
           article,
-          results,
           static,
           user,
           params,
-          total,
-          pages,
-          numArticlesByType,
+          layout: false,
         });
+      case "json":
+        return res
+          .status(200)
+          .json({ OK: true, article, results, total, pages, numArticlesByType });
+      case "csv":
+        // TODO: implement CSV
+        let category =
+          params.selectedCategory == "organizations"
+            ? "organization"
+            : params.selectedCategory;
+        if (
+          params.type === "collection" &&
+          supportedTypes.indexOf(category) >= 0
+        ) {
+          let file = await createCSVDataDump(category, results);
+          return res.download(file);
+        }
+        return res.status(500, "CSV not implemented yet").render();
+      case "xml":
+        // TODO: implement XML
+        return res.status(500, "XML not implemented yet").render();
+      case "html": // fall through
+      default:
+        return res
+          .status(200)
+          .render(type + "-" + view, {
+            articles,
+            article,
+            results,
+            static,
+            user,
+            params,
+            total,
+            pages,
+            numArticlesByType,
+          });
+    }
+    
+  } catch (error) {
+    console.log("error returnByType @@@@@@@@@@@@@@@@ returnByType error", error);
+    throw error;
   }
 };
 
