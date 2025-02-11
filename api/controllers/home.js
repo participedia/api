@@ -156,7 +156,7 @@ router.get("/", async function(req, res) {
       heroFeatures: heroFeatures,
       emailNotVerified: req.cookies.verify_email
     };
-    console.log("home data home data @@@@@@@@@@@@@@@@@@@ data ", data);
+    console.log("home returnType home returnType @@@@@@@@@@@@@@@@@@@ returnType ", returnType);
 
     if(req.cookies.verify_email) {
       req.session.user_to_verify = req.cookies.verify_email;
