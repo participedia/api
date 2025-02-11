@@ -937,7 +937,8 @@ async function getCaseById(params, res) {
     }
 
     // get case by friendly id
-    const result = await db.oneOrNone('SELECT id FROM cases WHERE friendly_id = $1', [params.articleid]);
+    // const result = await db.oneOrNone('SELECT id FROM cases WHERE friendly_id = $1', [params.articleid]);
+    const result = await db.oneOrNone(`SELECT id FROM cases WHERE friendly_id = '${params.articleid}'`);
     if(result){
       params.articleid = as.integer(result.id) ; // update the params of articleid = id
     }
@@ -963,7 +964,6 @@ async function getCaseHttp(req, res) {
   /* This is the entry point for getting an article */
   try {
     const params = parseGetParams(req, "case", true);
-    console.log("@@@@@@@@@@@@@@@@ getCaseHttp parmas", params);
     const article = await getCaseById(params, res);
     if (!article) {
       res.status(404).render("404");
