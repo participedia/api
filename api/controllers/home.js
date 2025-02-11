@@ -21,7 +21,7 @@ function shuffle(array) {
 }
 
 async function getHeroFeatures(i18n) {
-  console.log("@@@@@@@@@@@@@@@@ getHeroFeatures i18n", i18n)
+  console.log("@@@@@@@@@@@@@@@@ getHeroFeatures i18n")
   return shuffle([
     {
       imageUrl: "/images/homepage/hero-map-static.png",
@@ -57,6 +57,8 @@ async function getHeroFeatures(i18n) {
 }
 
 async function getThingStatistic() {
+  console.log("111111111111111 getThingStatistic ");
+
   const stats = {
     cases: 0,
     methods: 0,
@@ -82,6 +84,8 @@ async function getThingStatistic() {
 }
 
 async function getTotalCountries() {
+  console.log("222222222222222 getTotalCountries ");
+
   try {
     const results = await db.any(
       "SELECT country FROM things WHERE type IN ('case', 'organization') and country <> '' GROUP BY country"
@@ -110,6 +114,7 @@ function addTextureImageIfNeeded(entries) {
 }
 
 router.get("/", async function(req, res) {
+  console.log("0000000000000000000 @@@@@@@@@@@@@@@@ get / req ", req)
   let returnType = req.query.returns;
   const language = req.cookies.locale || "en";
   const thingStatsResult = await getThingStatistic();
