@@ -7,14 +7,21 @@ let { db, FEATURED, CASE_BY_ID } = require("../helpers/db");
 
 function shuffle(array) {
   const shuffledArray = array.slice();
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  try {
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+    
+  } catch (error) {
+    console.log("shuffle @@@@@@@@@@@@@@@@@@@ shuffle error ", error);
+    return shuffledArray;
   }
-  return shuffledArray;
 }
 
 async function getHeroFeatures(i18n) {
+  console.log("@@@@@@@@@@@@@@@@ getHeroFeatures i18n", i18n)
   return shuffle([
     {
       imageUrl: "/images/homepage/hero-map-static.png",
@@ -56,27 +63,38 @@ async function getThingStatistic() {
     organizations: 0,
     collections: 0,
   };
-  const results = await db.any(
-    "SELECT type, COUNT(*) as total FROM things WHERE hidden = false and published = true GROUP BY type"
-  );
-  results.map(result => {
-    let type = `${result.type}s`;
-    if (stats.hasOwnProperty(type)) {
-      stats[type] = parseInt(result.total);
-    }
-  });
-  return stats;
+  try {
+    const results = await db.any(
+      "SELECT type, COUNT(*) as total FROM things WHERE hidden = false and published = true GROUP BY type"
+    );
+    results.map(result => {
+      let type = `${result.type}s`;
+      if (stats.hasOwnProperty(type)) {
+        stats[type] = parseInt(result.total);
+      }
+    });
+    return stats;
+    
+  } catch (error) {
+    console.log("getThingStatistic @@@@@@@@@@@@@@@@@@@ getThingStatistic error ", error);
+    return stats;
+  }
 }
 
 async function getTotalCountries() {
-  const results = await db.any(
-    "SELECT country FROM things WHERE type IN ('case', 'organization') and country <> '' GROUP BY country"
-  );
-  let total = 0;
-  if (results && results.length) {
-    total = parseInt(results.length);
+  try {
+    const results = await db.any(
+      "SELECT country FROM things WHERE type IN ('case', 'organization') and country <> '' GROUP BY country"
+    );
+    let total = 0;
+    if (results && results.length) {
+      total = parseInt(results.length);
+    }
+    return total;
+  } catch (error) {
+    console.log("getTotalCountries @@@@@@@@@@@@@@@@@@@ getTotalCountries error ", error);
+    return 0;
   }
-  return total;
 }
   
 
