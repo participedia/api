@@ -114,7 +114,6 @@ function addTextureImageIfNeeded(entries) {
 }
 
 router.get("/", async function(req, res) {
-  console.log("0000000000000000000 @@@@@@@@@@@@@@@@ get / req ", req)
   let returnType = req.query.returns;
   const language = req.cookies.locale || "en";
   const thingStatsResult = await getThingStatistic();
@@ -130,49 +129,55 @@ router.get("/", async function(req, res) {
     countries: totalCounties, // (number of unique countries represented between cases and orgs)
   };
 
-  // Collect Featured Things
-  let featuredEntries = await db.any(FEATURED, {
-    language: language,
-    limit: 10,
-    sortby: "post_date",
-    type: "things",
-    userId: req.user ? req.user.id : null,
-    facets: "",
-    offset: 0,
-  });
-  featuredEntries = addTextureImageIfNeeded(featuredEntries);
-  const featuredCollections = featuredEntries.filter(
-    entry => entry.type === "collection" && entry.featured === true
-  );
-  const featuredCasesMethodsOrgs = featuredEntries.filter(
-    entry => entry.type !== "collection" && entry.featured === true
-  );
-
-  // Populate response data
-  const data = {
-    featuredCasesMethodsOrgs: featuredCasesMethodsOrgs,
-    featuredCollections: featuredCollections,
-    stats: stats,
-    heroFeatures: heroFeatures,
-    emailNotVerified: req.cookies.verify_email
-  };
-  if(req.cookies.verify_email) {
-    req.session.user_to_verify = req.cookies.verify_email;
-    res.clearCookie('verify_email');
-  }
-
-  switch (returnType) {
-    case "json":
-      return res.status(200).json({
-        user: req.user || null,
-        ...data,
-      });
-    case "html": // fall through
-    default:
-      return res.status(200).render("home", {
-        user: req.user || null,
-        ...data,
-      });
+  try {
+    // Collect Featured Things
+    let featuredEntries = await db.any(FEATURED, {
+      language: language,
+      limit: 10,
+      sortby: "post_date",
+      type: "things",
+      userId: req.user ? req.user.id : null,
+      facets: "",
+      offset: 0,
+    });
+    featuredEntries = addTextureImageIfNeeded(featuredEntries);
+    const featuredCollections = featuredEntries.filter(
+      entry => entry.type === "collection" && entry.featured === true
+    );
+    const featuredCasesMethodsOrgs = featuredEntries.filter(
+      entry => entry.type !== "collection" && entry.featured === true
+    );
+  
+    // Populate response data
+    const data = {
+      featuredCasesMethodsOrgs: featuredCasesMethodsOrgs,
+      featuredCollections: featuredCollections,
+      stats: stats,
+      heroFeatures: heroFeatures,
+      emailNotVerified: req.cookies.verify_email
+    };
+    if(req.cookies.verify_email) {
+      req.session.user_to_verify = req.cookies.verify_email;
+      res.clearCookie('verify_email');
+    }
+  
+    switch (returnType) {
+      case "json":
+        return res.status(200).json({
+          user: req.user || null,
+          ...data,
+        });
+      case "html": // fall through
+      default:
+        return res.status(200).render("home", {
+          user: req.user || null,
+          ...data,
+        });
+    }
+    
+  } catch (error) {
+    console.log("home error home error @@@@@@@@@@@@@@@@@@@ error ", error);
+    res.status(404).render("404");
   }
 });
 
