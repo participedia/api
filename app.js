@@ -192,6 +192,7 @@ app.get("/login", function(req, res, next) {
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
 app.get("/redirect", function(req, res, next) {
   passport.authenticate("auth0", function(err, user, info) {
+    console.log("@@@@@@@@@@ err", err);
     if (err) {
       return next(err);
     }
