@@ -19,9 +19,6 @@ const authKeys = JSON.parse(keysEnvVar);
 authKeys["key"] = process.env.GOOGLE_API_KEY;
 const translate = new Translate(authKeys);
 
-let { remove } = require("lodash");
-const cache = require("apicache");
-const equals = require("deep-equal");
 const moment = require("moment");
 const { SUPPORTED_LANGUAGES, RESPONSE_LIMIT } = require("./../../constants.js");
 const logError = require("./log-error.js");
@@ -101,29 +98,29 @@ const placeHolderPhotos = article => {
   }
 };
 
-async function validateCaptcha(url) {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        Accept: "application/json",
-      },
-    });
+// async function validateCaptcha(url) {
+//   try {
+//     const response = await fetch(url, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//         "Access-Control-Allow-Origin": "*",
+//         Accept: "application/json",
+//       },
+//     });
 
-    const googleResponse = await response.json();
-    if (googleResponse.success) {
-      return true;
-    } else {
-      return false;
-    }
+//     const googleResponse = await response.json();
+//     if (googleResponse.success) {
+//       return true;
+//     } else {
+//       return false;
+//     }
 
-  } catch (error) {
-    console.error("Error validating captcha: ", error);
-    return false;
-  }
-}
+//   } catch (error) {
+//     console.error("Error validating captcha: ", error);
+//     return false;
+//   }
+// }
 
 const returnByType = async (
   res,
@@ -1225,7 +1222,6 @@ module.exports = {
   parseAndValidateThingPostData,
   getThingEdit,
   saveDraft,
-  validateCaptcha,
   generateLocaleArticle,
   publishDraft,
   applyLocalizedTextChangesToOrgin,

@@ -1,25 +1,17 @@
 "use strict";
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
-let {
-  db,
-  as,
-  LIST_MAP_CASES,
-  LIST_MAP_ORGANIZATIONS,
-} = require("../helpers/db");
+let { as } = require("../helpers/db");
 let { 
   preparse_query,
   getSearchResults,
 } = require("../helpers/search");
 const {
-  supportedTypes,
   parseGetParams,
   typeFromReq,
   limitFromReq,
 } = require("../helpers/things");
 const {
-  createCSVEntry,
-  uploadCSVFile,
   processCSVFile
 } = require("../helpers/export-helpers");
 const logError = require("../helpers/log-error.js");
@@ -106,17 +98,17 @@ router.get("/", redirectToSearchPageIfHasCollectionsQueryParameter, async (req, 
       try {
         
         // for staging or production server
-        // if(paramsForQuery.page == 'search' && !process.env.APP_LOCAL){
+        if(paramsForQuery.page == 'search' && !process.env.APP_LOCAL){
           processCSVFile(paramsForQuery, paramsForCSV);
           setTimeout(() => {
             return res.status(200).redirect("/exports/csv");
           }, 3000);
-        // } else {
-        //   // for dev/local devices
-        //   let csv_export_id = await createCSVEntry(paramsForCSV);
-        //   uploadCSVFile(paramsForQuery, csv_export_id);
-        //   return res.status(200).redirect("/exports/csv");
-        // }
+        } else {
+          // for dev/local devices
+          let csv_export_id = await createCSVEntry(paramsForCSV);
+          uploadCSVFile(paramsForQuery, csv_export_id);
+          return res.status(200).redirect("/exports/csv");
+        }
       } catch (error) {
         logError(error);
         let OK = false;

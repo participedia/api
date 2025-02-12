@@ -34,11 +34,8 @@ const {
 
 const {
   setConditional,
-  maybeUpdateUserText,
   maybeUpdateUserTextLocaleEntry,
   parseGetParams,
-  validateUrl,
-  isValidDate,
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
@@ -48,7 +45,6 @@ const {
   validateFields,
   parseAndValidateThingPostData,
   getThingEdit,
-  validateCaptcha,
   saveDraft,
   generateLocaleArticle,
   publishDraft,
@@ -110,22 +106,22 @@ async function postCaseNewHttp(req, res) {
     } catch (error) {
       supportedLanguages = [];
     }
-    for (let i = 0; i < supportedLanguages.length; i++) {
-      const lang = supportedLanguages[i];
-      if (req.body[lang]["g-recaptcha-response"]) {
-        let resKey = req.body[lang]["g-recaptcha-response"];
-        captcha_error_message = req.body[lang].captcha_error;
-        urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
-      }
-    }
+    // for (let i = 0; i < supportedLanguages.length; i++) {
+    //   const lang = supportedLanguages[i];
+    //   if (req.body[lang]["g-recaptcha-response"]) {
+    //     let resKey = req.body[lang]["g-recaptcha-response"];
+    //     captcha_error_message = req.body[lang].captcha_error;
+    //     urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+    //   }
+    // }
 
-    let checkReCaptcha = await validateCaptcha(urlCaptcha);
-    if (!checkReCaptcha) {
-      return res.status(400).json({
-        OK: false,
-        errors: captcha_error_message,
-      });
-    }
+    // let checkReCaptcha = await validateCaptcha(urlCaptcha);
+    // if (!checkReCaptcha) {
+    //   return res.status(400).json({
+    //     OK: false,
+    //     errors: captcha_error_message,
+    //   });
+    // }
     //validate captcha end
 
     let {
@@ -721,22 +717,22 @@ async function postCaseUpdateHttp(req, res) {
     } catch (error) {
       supportedLanguages = [];
     }
-    for (let i = 0; i < supportedLanguages.length; i++) {
-      const lang = supportedLanguages[i];
-      if (req.body[lang]["g-recaptcha-response"]) {
-        let resKey = req.body[lang]["g-recaptcha-response"];
-        captcha_error_message = req.body[lang].captcha_error;
-        urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
-      }
-    }
-    //validate captcha end
-    let checkReCaptcha = await validateCaptcha(urlCaptcha);
-    if (!checkReCaptcha) {
-      return res.status(400).json({
-        OK: false,
-        errors: captcha_error_message,
-      });
-    }
+    // for (let i = 0; i < supportedLanguages.length; i++) {
+    //   const lang = supportedLanguages[i];
+    //   if (req.body[lang]["g-recaptcha-response"]) {
+    //     let resKey = req.body[lang]["g-recaptcha-response"];
+    //     captcha_error_message = req.body[lang].captcha_error;
+    //     urlCaptcha = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_SITE_SECRET}&response=${resKey}`;
+    //   }
+    // }
+    // //validate captcha end
+    // let checkReCaptcha = await validateCaptcha(urlCaptcha);
+    // if (!checkReCaptcha) {
+    //   return res.status(400).json({
+    //     OK: false,
+    //     errors: captcha_error_message,
+    //   });
+    // }
   
     if (!article.published && !article.hidden) {
       publishDraft(req, res, caseUpdate, "case");
@@ -937,7 +933,6 @@ async function getCaseById(params, res) {
     }
 
     // get case by friendly id
-    // const result = await db.oneOrNone('SELECT id FROM cases WHERE friendly_id = $1', [params.articleid]);
     const result = await db.oneOrNone(`SELECT id FROM cases WHERE friendly_id = '${params.articleid}'`);
     if(result){
       params.articleid = as.integer(result.id) ; // update the params of articleid = id
