@@ -27,9 +27,12 @@ try {
     config.ssl = false;
   } else {
     config.ssl = {
-      sslmode: "require",
-      rejectUnauthorized: false,
+      rejectUnauthorized: false, // Required for Heroku
     };
+    // config.ssl = {
+    //   sslmode: "require",
+    //   rejectUnauthorized: false,
+    // };
   }
 } catch (e) {
   console.error("# Error parsing DATABASE_URL environment variable");
