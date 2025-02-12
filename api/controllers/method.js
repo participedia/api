@@ -57,8 +57,6 @@ const sharedFieldOptions = require("../helpers/shared-field-options.js");
 
 const isPostOrPutUser = require("../middleware/isPostOrPutUser.js");
 const { SUPPORTED_LANGUAGES } = require("../../constants");
-const { updateMethod } = require("../../test/data/helpers");
-const { t } = require("../helpers/handlebars-helpers");
 
 var thingMethodid = null;
 

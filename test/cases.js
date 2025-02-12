@@ -1,5 +1,4 @@
 let chai = require("chai");
-let should = chai.should();
 let expect = chai.expect;
 const {
   getMocks,
@@ -10,10 +9,7 @@ const {
   updateCase,
 } = require("./data/helpers.js");
 const {
-  getCaseEditHttp,
-  getCaseNewHttp,
   postCaseNewHttp,
-  getCaseHttp,
   postCaseUpdateHttp,
 } = require("../api/controllers/case");
 

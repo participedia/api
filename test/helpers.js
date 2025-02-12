@@ -1,8 +1,6 @@
-const tokens = require("./setupenv");
 const app = require("../app");
 
 module.exports = function(chai, utils) {
-  var Assertion = chai.Assertion;
   // your helpers here
   utils.addMethod(chai, "postJSON", url => {
     return chai

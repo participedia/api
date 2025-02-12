@@ -1,20 +1,15 @@
 let chai = require("chai");
-let should = chai.should();
 let expect = chai.expect;
 const {
   getMocks,
   getMocksAuth,
   example_organization,
-  getOrganization,
   addBasicOrganization,
   updateOrganization,
 } = require("./data/helpers.js");
 const {
   getOrganizationHttp,
-  getOrganizationEditHttp,
   postOrganizationNewHttp,
-  getOrganizationNewHttp,
-  postOrganizationUpdateHttp,
 } = require("../api/controllers/organization");
 
 const { listCases, cacheTitlesRefreshSearch } = require("../api/helpers/db");

@@ -1,21 +1,60 @@
 let chai = require("chai");
+const { mockRequest, mockResponse } = require("mock-req-res");
+
 let should = chai.should();
 let expect = chai.expect;
 const {
   getMocks,
   getMocksAuth,
   example_method,
-  getMethod,
-  addBasicMethod,
-  updateMethod,
 } = require("./data/helpers.js");
 const {
   getMethodHttp,
-  getMethodEditHttp,
-  getMethodNewHttp,
   postMethodNewHttp,
   postMethodUpdateHttp,
 } = require("../api/controllers/method");
+
+
+function getMocks(args) {
+  const req = mockRequest(
+    Object.assign({ query: { returns: "json" } }, args || {})
+  );
+  const ret = {};
+  const res = mockResponse({
+    json: body => {
+      // console.log("json() called");
+      ret.body = body;
+    },
+    status: stat => {
+      console.log("status(%s)", stat);
+      ret.status = stat;
+    },
+  });
+  return { req, res, ret };
+}
+
+
+function getMocksAuth(args) {
+  return getMocks(Object.assign({ user: mock_user2 }, args || {}));
+}
+
+async function addBasicMethod() {
+  const { req, res, ret } = getMocksAuth({
+    body: example_method,
+    params: {},
+  });
+  await postMethodNewHttp(req, res);
+  return ret.body;
+}
+
+async function updateMethod(id, blob) {
+  const { req, res, ret } = getMocksAuth({
+    params: { thingid: id },
+    body: blob,
+  });
+  await postMethodUpdateHttp(req, res);
+  return ret.body;
+}
 
 describe("Methods", () => {
   describe("Lookup", () => {

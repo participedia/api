@@ -4,7 +4,6 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const { addBasicCase } = require("./cases");
 const chaiHelpers = require("./helpers");
-const should = chai.should();
 chai.use(chaiHttp);
 chai.use(chaiHelpers);
 

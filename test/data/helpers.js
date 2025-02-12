@@ -1,22 +1,12 @@
 const fs = require("fs");
 const { mockRequest, mockResponse } = require("mock-req-res");
 const {
-  getCaseEditHttp,
-  getCaseNewHttp,
   postCaseNewHttp,
   getCaseHttp,
   postCaseUpdateHttp,
 } = require("../../api/controllers/case");
+
 const {
-  getMethodHttp,
-  getMethodEditHttp,
-  getMethodNewHttp,
-  postMethodNewHttp,
-  postMethodUpdateHttp,
-} = require("../../api/controllers/method");
-const {
-  getOrganizationEditHttp,
-  getOrganizationNewHttp,
   postOrganizationNewHttp,
   getOrganizationHttp,
   postOrganizationUpdateHttp,
@@ -54,32 +44,6 @@ async function updateCase(id, blob) {
     body: blob,
   });
   await postCaseUpdateHttp(req, res);
-  return ret.body;
-}
-
-async function addBasicMethod() {
-  const { req, res, ret } = getMocksAuth({
-    body: example_method,
-    params: {},
-  });
-  await postMethodNewHttp(req, res);
-  return ret.body;
-}
-
-async function updateMethod(id, blob) {
-  const { req, res, ret } = getMocksAuth({
-    params: { thingid: id },
-    body: blob,
-  });
-  await postMethodUpdateHttp(req, res);
-  return ret.body;
-}
-
-async function getMethod(id) {
-  const { req, res, ret } = getMocks({
-    params: { thingid: id },
-  });
-  await getMethodHttp(req, res);
   return ret.body;
 }
 
@@ -139,9 +103,6 @@ module.exports = {
   addBasicCase,
   updateCase,
   example_method,
-  getMethod,
-  addBasicMethod,
-  updateMethod,
   example_organization,
   getOrganization,
   addBasicOrganization,
