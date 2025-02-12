@@ -192,7 +192,7 @@ app.get("/login", function(req, res, next) {
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
 app.get("/redirect", function(req, res, next) {
   passport.authenticate("auth0", function(err, user, info) {
-    console.log("@@@@@@@@@@ err", err);
+    console.log("1111111 @@@@@@@@@@ err", err);
     if (err) {
       return next(err);
     }
@@ -204,6 +204,8 @@ app.get("/redirect", function(req, res, next) {
       return res.redirect("/");
     }
     req.logIn(user, function(err) {
+      console.log("222222222222 @@@@@@@@@@ err", err);
+
       if (err) {
         return next(err);
       }
@@ -215,6 +217,8 @@ app.get("/redirect", function(req, res, next) {
       if (refreshAndClose === "true") {
         returnToUrl = returnToUrl + "?refreshAndClose=true";
       }
+      console.log("33333333333333333333 @@@@@@@@@@ returnToUrl", returnToUrl);
+
       res.redirect(returnToUrl || "/");
     });
   })(req, res, next);
