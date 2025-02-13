@@ -260,7 +260,6 @@ async function _refreshSearch() {
 
 
 async function cacheTitlesRefreshSearch(done) {
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@ cacheTitlesRefreshSearch cacheTitlesRefreshSearch ")
   // if (!process.env.MIGRATIONS) {
   if (process.env.NODE_ENV === "test") {
     await _listUsers();

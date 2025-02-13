@@ -66,21 +66,15 @@ app.use("/api", cors(), api);
 app.use(errorhandler());
 // canonicalize url
 app.use((req, res, next) => {
-  console.log("appjs 0000000000000000000000000 app.js");
-
   if (
     process.env.NODE_ENV === "production" &&
     req.hostname !== "participedia.net" &&
     !res.headersSent
   ) {
-    console.log("app.js 000000000 if if redirect")
-
     res.redirect("https://participedia.net" + req.originalUrl);
   } else {
-    console.log("app.js 000000000 else else  ")
     next();
   }
-  console.log("app.js 000000000 done")
 });
 // CONFIGS
 app.use(compression());
@@ -100,34 +94,28 @@ i18n.configure({
 });
 
 app.use((req, res, next) => {
-  console.log("app.js 111111111111 cookies local ");
   // set english as the default locale, if it's not already set
   if (!req.cookies.locale) {
-    console.log("app.js 1111111111111 if !req.cookies local");
     const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
       req.path
     }`;
     res.cookie("locale", "en", { path: "/" });
     //return res.redirect(currentUrl);
   }
-  console.log(" app.js 111111111111111111111 done next");
   next();
 });
 
 app.use((req, res, next) => {
-  console.log("app.js 22222222 set-local ")
   // if the lang query param is present and it's not the same as the locale coookie,
   // redirect to set-locale route with the redirect param set to the current page
   const lang = req.query && req.query.lang;
   localeLang = req.cookies.locale;
   if (lang && lang !== req.cookies.locale) {
-    console.log("app.js 222222222222222222222 if lang if lang !== req.cookies.locale");
     const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
       req.path
     }`;
     res.redirect(`/set-locale?locale=${lang}&redirectTo=${currentUrl}`);
   } else {
-    console.log("app.js 22222 22222222222222222222 else ");
     next();
   }
 });
@@ -162,7 +150,6 @@ const strategy = new Auth0Strategy(
     // accessToken is the token to call Auth0 API (not needed in the most cases)
     // extraParams.id_token has the JSON Web Token
     // profile has all the information from the user
-    console.log("app.js 33333333 startegy passport to use auth0");
     return done(null, profile);
   }
 );
@@ -174,16 +161,12 @@ app.use(passport.session());
 
 // You can use this section to keep a smaller payload
 passport.serializeUser(function(user, done) {
-  console.log("app.js 4444444444 serializeruser ");
   done(null, user);
 });
 
 passport.deserializeUser(async function(user, done) {
-  console.log("app.js 4444444444 deserializeUser get user or create user");
-
   // get db user from auth0 user data
   const dbUser = await getUserOrCreateUser(user._json, localeLang);
-  console.log("app.js 4444444444444444 getUserOrCreateUser dbuser ", !!dbUser);
   done(null, dbUser);
 });
 
@@ -206,7 +189,6 @@ app.get("/login", function(req, res, next) {
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
 app.get("/redirect", function(req, res, next) {
   passport.authenticate("auth0", function(err, user, info) {
-    console.log("1111111 @@@@@@@@@@ err", err);
     if (err) {
       return next(err);
     }
@@ -218,8 +200,6 @@ app.get("/redirect", function(req, res, next) {
       return res.redirect("/");
     }
     req.logIn(user, function(err) {
-      console.log("222222222222 @@@@@@@@@@ err", err);
-
       if (err) {
         return next(err);
       }
@@ -231,8 +211,6 @@ app.get("/redirect", function(req, res, next) {
       if (refreshAndClose === "true") {
         returnToUrl = returnToUrl + "?refreshAndClose=true";
       }
-      console.log("33333333333333333333 @@@@@@@@@@ returnToUrl", returnToUrl);
-
       res.redirect(returnToUrl || "/");
     });
   })(req, res, next);
@@ -299,7 +277,6 @@ app.set("view engine", ".html");
 // make data available as local vars in templates
 app.use((req, res, next) => {
 
-  console.log("app.js 55555555555555 make data ava as local vars temp")
   const gaTrackingIdByEnv = {
     production: process.env.GOOGLE_TRACKING_ID_PROD,
     staging: process.env.GOOGLE_TRACKING_ID_STAGE,
@@ -308,7 +285,6 @@ app.use((req, res, next) => {
 
   res.locals.req = req;
   res.locals.GA_TRACKING_ID = gaTrackingIdByEnv[process.env.NODE_ENV];
-  console.log("app.js 55555555555555555555555 done next");
   next();
 });
 
@@ -319,8 +295,6 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const hasQuery = req.query && req.query.query;
   const isEnglish = req.cookies.locale && req.cookies.locale === "en";
-  console.log("app.js 666666666666666666 if the local is NOT en")
-
   next();
 });
 

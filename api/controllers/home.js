@@ -13,7 +13,6 @@ function shuffle(array) {
     return shuffledArray;
     
   } catch (error) {
-    console.log("shuffle @@@@@@@@@@@@@@@@@@@ shuffle error ", error);
     return shuffledArray;
   }
 }
@@ -73,7 +72,6 @@ async function getThingStatistic() {
     return stats;
     
   } catch (error) {
-    console.log("getThingStatistic @@@@@@@@@@@@@@@@@@@ getThingStatistic error ", error);
     return stats;
   }
 }
@@ -89,7 +87,6 @@ async function getTotalCountries() {
     }
     return total;
   } catch (error) {
-    console.log("getTotalCountries @@@@@@@@@@@@@@@@@@@ getTotalCountries error ", error);
     return 0;
   }
 }
@@ -107,15 +104,11 @@ function addTextureImageIfNeeded(entries) {
 }
 
 router.get("/", async function(req, res) {
-  console.log("000000000000000000 start / 0000000000000000000000");
   let returnType = req.query.returns;
   const language = req.cookies.locale || "en";
   const thingStatsResult = await getThingStatistic();
-  console.log("1111111111111111111 thingStatsResult11111111111111111111 ", thingStatsResult);
   const totalCounties = await getTotalCountries();
-  console.log("2222222222222222222222 totalCounties 2222222222 ", totalCounties)
   const heroFeatures = await getHeroFeatures(res.__);
-  console.log("3333333333333333333333333333333333 heroFeatures 333333333333333", heroFeatures.length)
   // Collect Statistics
   const stats = {
     cases: thingStatsResult.cases, // (total entries)
@@ -136,7 +129,6 @@ router.get("/", async function(req, res) {
       facets: "",
       offset: 0,
     });
-    console.log("4444444444444444444444444444444 featuredEntries 44444444444444444444444444444", featuredEntries.length)
     featuredEntries = addTextureImageIfNeeded(featuredEntries);
     const featuredCollections = featuredEntries.filter(
       entry => entry.type === "collection" && entry.featured === true
@@ -144,7 +136,6 @@ router.get("/", async function(req, res) {
     const featuredCasesMethodsOrgs = featuredEntries.filter(
       entry => entry.type !== "collection" && entry.featured === true
     );
-    console.log("55555555555555555555555555555555555555555555 ")
   
     // Populate response data
     const data = {
@@ -154,7 +145,6 @@ router.get("/", async function(req, res) {
       heroFeatures: heroFeatures,
       emailNotVerified: req.cookies.verify_email
     };
-    console.log("6666666666666666666666666666666666");
     if(req.cookies.verify_email) {
       req.session.user_to_verify = req.cookies.verify_email;
       res.clearCookie('verify_email');
@@ -162,7 +152,6 @@ router.get("/", async function(req, res) {
   
     switch (returnType) {
       case "json":{
-        console.log("77777777777777777777777777777777777777777777 json")
         return res.status(200).json({
           user: req.user || null,
           ...data,
@@ -170,11 +159,6 @@ router.get("/", async function(req, res) {
       }
       case "html": // fall through
       default: {
-
-        console.log("777777777777777777777777777777777777 default");
-        console.log("777777777777777777777777777777777777 req.user || null ", !!req.user );
-        console.log("777777777777777777777777777777777777 .....data ");
-
         return res.status(200).render("home", {
           user: req.user || null,
           ...data,
@@ -183,7 +167,6 @@ router.get("/", async function(req, res) {
     }
     
   } catch (error) {
-    console.log("home error home error @@@@@@@@@@@@@@@@@@@ error ", error);
     res.status(404).render("404");
   }
 });
