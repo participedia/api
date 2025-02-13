@@ -244,11 +244,14 @@ async function _refreshSearch() {
         let lang = SUPPORTED_LANGUAGES[i];
         if (lang !== "zh") {
           await db.none(`REFRESH MATERIALIZED VIEW search_index_${lang};`);
+          console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch REFRESH MATERIALIZED lang ", lang);
         }
       }
     }
     // Only schedule the next execution if no error occurred
     setTimeout(_refreshSearch, randomDelay());
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch REFRESH MATERIALIZED done ", done);
+
   } catch (error) {
     console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch _refreshSearch error ", error);
     // Do not schedule another run if an error occurs
