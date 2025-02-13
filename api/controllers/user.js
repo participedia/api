@@ -298,6 +298,7 @@ router.get("/:userId", async function(req, res) {
   } catch (error) {
     console.error("Exception in /user/%s => %s", userId, error.message);
     logError(error);
+    res.status(404).render("404");
   }
 });
 
@@ -334,6 +335,7 @@ router.get("/", async function(req, res) {
     return getUserById(req.user.user_id, req, res);
   } catch (error) {
     logError(error);
+    res.status(404).render("404");
   }
 });
 

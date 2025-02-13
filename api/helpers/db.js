@@ -170,53 +170,94 @@ let _organizations = {};
 let _searchDirty = true;
 
 async function _listUsers() {
-  _users = (
-    await db.one(
-      "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
-    )
-  ).authors;
-  setTimeout(_listUsers, randomDelay());
+  try {
+    // Attempt to fetch users from the database
+    _users = (
+      await db.one(
+        "SELECT to_json(array_agg((id, name)::object_title)) AS authors FROM users;"
+      )
+    ).authors;
+
+    // Schedule the next execution with a random delay
+    setTimeout(_listUsers, randomDelay());
+  } catch (error) {
+    // Log the error for debugging or handle it as necessary
+    console.error("Error in _listUsers:", error);
+  }
 }
 
 async function _listCases(lang) {
   try {
+    // Attempt to fetch cases from the database
     _cases[lang] = await db.many(LIST_ARTICLES, { type: "cases", lang: lang });
   } catch (e) {
-    logError(`Error in _listCases: ${e.message}`);
+    // Log the error with appropriate context
+    logError(`Error in _listCases for language '${lang}': ${e}`);
+    return; // Exit the function to stop execution
   }
-  setTimeout(_listCases, randomDelay(), lang);
+
+  // Only schedule the next execution if there was no error
+  setTimeout(() => _listCases(lang), randomDelay());
 }
 
 async function _listMethods(lang) {
-  _methods[lang] = await db.many(LIST_ARTICLES, {
-    type: "methods",
-    lang: lang,
-  });
-  setTimeout(_listMethods, randomDelay(), lang);
+  try {
+    // Attempt to fetch methods from the database
+    _methods[lang] = await db.many(LIST_ARTICLES, {
+      type: "methods",
+      lang: lang,
+    });
+  } catch (error) {
+    // Log the error with context
+    console.error(`Error in _listMethods for language '${lang}': ${error}`);
+    return; // Stop further execution and prevent retry
+  }
+
+  // Only schedule the next execution if there was no error
+  setTimeout(() => _listMethods(lang), randomDelay());
 }
 
 async function _listOrganizations(lang) {
-  _organizations[lang] = await db.many(LIST_ARTICLES, {
-    type: "organizations",
-    lang: "en",
-  });
-  setTimeout(_listOrganizations, randomDelay(), lang);
+  try {
+    // Fetch organizations from the database
+    _organizations[lang] = await db.many(LIST_ARTICLES, {
+      type: "organizations",
+      lang: "en",
+    });
+  } catch (error) {
+    // Log the error with context about the language
+    console.error(`Error in _listOrganizations for language '${lang}': ${error.message}`);
+    return; // Stop further execution to prevent retry
+  }
+
+  // Only schedule the next execution if no error occurred
+  setTimeout(() => _listOrganizations(lang), randomDelay());
 }
+
 
 async function _refreshSearch() {
-  if (_searchDirty) {
-    _searchDirty = false;
-    for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
-      let lang = SUPPORTED_LANGUAGES[i];
-      if (lang !== "zh") {
-        await db.none(`REFRESH MATERIALIZED VIEW search_index_${lang};`);
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch _refreshSearch ");
+  try {
+    if (_searchDirty) {
+      _searchDirty = false;
+      for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+        let lang = SUPPORTED_LANGUAGES[i];
+        if (lang !== "zh") {
+          await db.none(`REFRESH MATERIALIZED VIEW search_index_${lang};`);
+        }
       }
     }
+    // Only schedule the next execution if no error occurred
+    setTimeout(_refreshSearch, randomDelay());
+  } catch (error) {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch _refreshSearch error ", error);
+    // Do not schedule another run if an error occurs
   }
-  setTimeout(_refreshSearch, randomDelay());
 }
 
+
 async function cacheTitlesRefreshSearch(done) {
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@ cacheTitlesRefreshSearch cacheTitlesRefreshSearch ")
   // if (!process.env.MIGRATIONS) {
   if (process.env.NODE_ENV === "test") {
     await _listUsers();
@@ -242,7 +283,7 @@ async function cacheTitlesRefreshSearch(done) {
     }
   }
   // keep running these, but we can start the server now
-  _refreshSearch().then(() => console.log("search refreshed"));
+  _refreshSearch().then(() => console.log("search refreshed")).catch(error => console.log('@@@@@@@@@@ error _refreshSearch ', error));
 
   for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     let lang = SUPPORTED_LANGUAGES[i];
