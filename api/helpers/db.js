@@ -286,7 +286,7 @@ async function cacheTitlesRefreshSearch(done) {
     }
   }
   // keep running these, but we can start the server now
-  _refreshSearch().then(() => console.log("search refreshed")).catch(error => console.log('@@@@@@@@@@ error _refreshSearch ', error));
+  // _refreshSearch().then(() => console.log("search refreshed")).catch(error => console.log('@@@@@@@@@@ error _refreshSearch ', error));
 
   for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     let lang = SUPPORTED_LANGUAGES[i];
@@ -300,7 +300,7 @@ async function cacheTitlesRefreshSearch(done) {
   }
   if (done) {
     done();
-  }
+  } 
 }
 
 function refreshSearch() {
