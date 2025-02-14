@@ -21,7 +21,6 @@ async function getUserOrCreateUser(auth0User, localeLang) {
   const userByEmail = await db.oneOrNone(USER_BY_EMAIL, {
     userEmail: auth0User.email,
   });
-  console.log("getUserOrCreateUser 4444444444444444444444444 user by email userByEmail ", !!userByEmail);
 
   // if we don't have a user yet, create one
   let createdUser;
@@ -38,20 +37,15 @@ async function getUserOrCreateUser(auth0User, localeLang) {
       language: "en",
     });
   }
-  console.log("4444444444444444444444444444444 CREATE_USER_ID createuser done")
-
   // we either have an id from userByEmail or createdUser
   const userId =
     (userByEmail && userByEmail.id) || (createdUser && createdUser.user_id);
 
   // get full user object by id
-  console.log("4444444444444444444444444444444 USER_BY_ID  await")
-
   result = await db.oneOrNone(USER_BY_ID, {
     userId: userId,
     language: localeLang,
   });
-  console.log("4444444444444444444444444444444 USER_BY_ID  done")
   result.user.auth0_user_id = auth0User.user_id;
   return result.user;
 }
