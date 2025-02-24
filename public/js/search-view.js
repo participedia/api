@@ -4,7 +4,7 @@ import dropdownButton from "./dropdown-button.js";
 import lazyLoadImages from "./lazy-load-images.js";
 import searchFilterList from "./search-filter-list.js";
 import map from "./map.js";
-import searchMap from "./search-map.js";
+// import searchMap from "./search-map.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   tabsWithCards.init();
@@ -13,5 +13,5 @@ document.addEventListener("DOMContentLoaded", () => {
   lazyLoadImages.init();
   searchFilterList.init();
   map.init();
-  searchMap.init();
+  // searchMap.init();
 });

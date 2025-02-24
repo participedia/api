@@ -99,7 +99,7 @@ const searchMap = {
 
     this.initZoomControls();
     this.fetchMapResults();
-    this.setMapHeight();
+    this.setMapHeight(); 
     this.initFullscreenControl();
     window.addEventListener("resize", () => {
       this.setMapHeight();
