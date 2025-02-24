@@ -278,7 +278,14 @@ const map = {
       const articleImageEl = popOverContentEl.querySelector(
         ".js-article-card-img"
       );
-      articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
+      // articleImageEl.style.backgroundImage = `url("${marker.photo}")`;
+      const imgElement = articleImageEl.querySelector('img'); // Select the img element inside the div
+      if (imgElement) {
+        imgElement.src = marker.photo;
+        imgElement.style.height = '150px';
+      } else {
+        articleImageEl.style.setProperty('background-image', `url("${marker.photo}")`, 'important');
+      }
 
       // update title & truncate to 45 chars
       const articleTitleEl = popOverContentEl.querySelector(
