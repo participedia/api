@@ -30,6 +30,7 @@
     "copy-to-clipboard": "^3.3.3",
     "cors": "^2.8.5",
     "countup.js": "^2.8.0",
+    "d3": "^7.9.0",
     "dotenv": "^16.4.5",
     "errorhandler": "^1.5.1",
     "express": "^4.21.1",

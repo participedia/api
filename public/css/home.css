@@ -398,3 +398,13 @@
     line-height: 20px;
   }
 }
+
+#barChart {
+  width: 100%;
+}
+
+#barChart svg {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px
+}

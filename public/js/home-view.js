@@ -8,6 +8,7 @@ import { CountUp } from "countup.js";
 import tracking from "./utils/tracking.js";
 import infoIconToModal from "./info-icon-to-modal.js";
 import modalOpened from "./modal-opened.js";
+import barChart from "./bar-chart.js";
 
 const toArray = nodeList => Array.prototype.slice.call(nodeList);
 
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   infoIconToModal.init();
   modalOpened.init();
   editSelect.init();
+  barChart.init();
 });
 
 function initTracking() {
