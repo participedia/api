@@ -347,8 +347,19 @@ router.get("/cases-group-general-issues", async function(req, res, next) {
         console.log(err);
         return next(err);
     });
+  
+  const i18n = res.__;
+  console.log("results ", results);
+
+  let items = results.map(item => {
+    return {
+      ...item,
+      issue: item.issue !== 'uncategorized' ? i18n(`name:general_issues-key:${item.issue}`) : 'Uncategorized'
+    }
+  })
+  
   res.status(200).json({
-      cases: results
+      cases: items
   });
 });
 

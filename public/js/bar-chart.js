@@ -30,7 +30,7 @@ const barChart = {
     //   a.length > b.length ? a : b
     // );
     // Estimate width based on character count (e.g., 8px per character)
-    const charWidth = 8;
+    // const charWidth = 8;
     // const estimatedWidth = maxLengthItem.length * charWidth;
 
     // Define a minimum bar height that fits the bold 18px text comfortably
@@ -96,7 +96,7 @@ const barChart = {
       .attr("x", 5) // Small left offset
       .attr("y", (d, i) => i * (minBarHeight + gap) + minBarHeight / 2)
       .attr("dy", "0.35em") // Vertically centers the text
-      .text(d => `${d.issue}: ${d.count}`);
+      .text(d => `${d.issue}: ${d.count} Cases`);
   },
 };
 

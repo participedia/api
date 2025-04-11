@@ -224,6 +224,34 @@
   display: none;
 }
 
+#barChart {
+  width: 100%;
+}
+
+/* Bars styled in sky blue */
+.bar {
+  fill: skyblue;
+}
+/* Label style: bold 18px sans-serif, black text */
+.bar-label {
+  fill: black;
+  font-size: 16px;
+  font-weight: bold;
+  text-anchor: start;
+}
+
+.chart-title{
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.chart-sub-title{
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+
+
 @media (max-height: 598px) { 
   .home-hero-stats {
     justify-content: flex-start;
@@ -397,35 +425,13 @@
     font-size: 16px;
     line-height: 20px;
   }
-}
 
-#barChart {
-  width: 100%;
-}
+  .chart-section .u-inner-container{
+    padding: 0 8px !important;
+  }
 
-/* #barChart svg {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 10px
-} */
-
-/* Bars styled in sky blue */
-.bar {
-  fill: skyblue;
-}
-/* Label style: bold 18px sans-serif, black text */
-.bar-label {
-  fill: black;
-  font: bold 18px sans-serif;
-  text-anchor: start;
-}
-
-.chart-title{
-  font-size: 2.5rem;
-  font-weight: bold;
-}
-
-.chart-sub-title{
-  font-size: 1.4rem;
-  font-weight: bold;
+  .chart-section .bar-label {
+    font-size: 14px;
+    font-weight: bold;
+  }
 }
