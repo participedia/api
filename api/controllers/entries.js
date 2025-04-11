@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 
-let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY } = require("../helpers/db");
+let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY, COUNT_GENERAL_ISSUES_FOR_CHART } = require("../helpers/db");
 
 const {
   searchFiltersFromReq,
@@ -339,6 +339,17 @@ router.post("/approve-entry", async function(req, res) {
     res.status(403).json({ error: error.message});
   }
 
+});
+
+
+router.get("/cases-group-general-issues", async function(req, res, next) {
+  const results = await db.any(COUNT_GENERAL_ISSUES_FOR_CHART).catch(err => {
+        console.log(err);
+        return next(err);
+    });
+  res.status(200).json({
+      cases: results
+  });
 });
 
 module.exports = router;

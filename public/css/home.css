@@ -403,8 +403,29 @@
   width: 100%;
 }
 
-#barChart svg {
+/* #barChart svg {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px
+} */
+
+/* Bars styled in sky blue */
+.bar {
+  fill: skyblue;
+}
+/* Label style: bold 18px sans-serif, black text */
+.bar-label {
+  fill: black;
+  font: bold 18px sans-serif;
+  text-anchor: start;
+}
+
+.chart-title{
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.chart-sub-title{
+  font-size: 1.4rem;
+  font-weight: bold;
 }

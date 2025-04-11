@@ -8,6 +8,7 @@ const {
     CASE,
     METHOD,
     ORGANIZATION,
+    COUNT_GENERAL_ISSUES_FOR_CHART,
 } = require("../../helpers/db");
 
 const {

@@ -1,98 +1,103 @@
 // barChart.js
-import * as d3 from 'd3';
+import * as d3 from "d3";
+import { xhrReq } from "./utils/utils.js";
 
 const barChart = {
-  init(data) {
-    // Use the provided data, or fallback to a default dataset.
-    data = data || [
-      { letter: "A", frequency: 0.08167 },
-      { letter: "B", frequency: 0.01492 },
-      { letter: "C", frequency: 0.02782 },
-      { letter: "D", frequency: 0.04253 },
-      { letter: "E", frequency: 0.12702 },
-      { letter: "F", frequency: 0.02288 },
-      { letter: "G", frequency: 0.02015 },
-      { letter: "H", frequency: 0.06094 },
-      { letter: "I", frequency: 0.06966 },
-      { letter: "J", frequency: 0.00153 },
-      { letter: "K", frequency: 0.00772 },
-      { letter: "L", frequency: 0.04025 },
-      { letter: "M", frequency: 0.02406 },
-      { letter: "N", frequency: 0.06749 },
-      { letter: "O", frequency: 0.07507 },
-      { letter: "P", frequency: 0.01929 },
-      { letter: "Q", frequency: 0.00095 },
-      { letter: "R", frequency: 0.05987 },
-      { letter: "S", frequency: 0.06327 },
-      { letter: "T", frequency: 0.09056 },
-      { letter: "U", frequency: 0.02758 },
-      { letter: "V", frequency: 0.00978 },
-      { letter: "W", frequency: 0.0236 },
-      { letter: "X", frequency: 0.0015 },
-      { letter: "Y", frequency: 0.01974 },
-      { letter: "Z", frequency: 0.00074 }
-    ];
+  init() {
+    this.fetchChartResults();
+  },
 
+  fetchChartResults() {
+    const successCB = response => {
+      const results = JSON.parse(response.response).cases;
+      this.drawChart(results);
+    };
+    const errorCB = response => {
+      //console.log("err", response)
+    };
 
-    // Determine the container width dynamically.
-    const container = document.getElementById('barChart');
-    const width = container.clientWidth; // responsive width
-    const height = 500;                  // fixed height
+    const url = `/entries/cases-group-general-issues`;
+    xhrReq("GET", url, {}, successCB, errorCB);
+  },
+  drawChart(results) {
+    // Sample data: each object has a label and a count.
+    const data = results;
 
-    // Chart margins.
-    const marginTop = 30;
-    const marginRight = 0;
-    const marginBottom = 30;
-    const marginLeft = 40;
+    // Merge "issue: count" and push to new array for baseline text measure
+    // const mergedData = data.map(item => `${item.issue}: ${item.count}`);
+    // // Find the longest string
+    // const maxLengthItem = mergedData.reduce((a, b) =>
+    //   a.length > b.length ? a : b
+    // );
+    // Estimate width based on character count (e.g., 8px per character)
+    const charWidth = 8;
+    // const estimatedWidth = maxLengthItem.length * charWidth;
 
-    // Declare the x-scale.
-    // Use d3.groupSort to sort letters descending by frequency.
-    const x = d3.scaleBand()
-      .domain(d3.groupSort(data, ([d]) => -d.frequency, d => d.letter))
-      .range([marginLeft, width - marginRight])
-      .padding(0.1);
+    // Define a minimum bar height that fits the bold 18px text comfortably
+    const minBarHeight = 24;
+    const gap = 5; // Gap between bars in pixels
+    const numBars = data.length;
+    // Compute overall chart height (bars + gaps)
+    const chartHeight = numBars * minBarHeight + (numBars - 1) * gap;
 
-    // Declare the y-scale.
-    const y = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.frequency)])
-      .range([height - marginBottom, marginTop]);
+    // Define margins
+    const margin = { top: 20, right: 0, bottom: 20, left: 0 };
 
-    // Create the SVG element and make it responsive.
-    const svg = d3.select(container)
+    // Select the container element
+    const container = document.getElementById("barChart");
+    // Get the container's current width (for responsiveness)
+    const containerWidth = container.clientWidth;
+    // Compute SVG height including margins
+    const svgHeight = chartHeight + margin.top + margin.bottom;
+
+    // Create the responsive SVG: set width to "100%" and define viewBox for scaling
+    const svg = d3
+      .select(container)
       .append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("style", "max-width: 100%; height: auto;");
+      .attr("width", "100%")
+      .attr("height", svgHeight)
+      .attr("viewBox", `0 0 ${containerWidth} ${svgHeight}`)
+      .attr("preserveAspectRatio", "xMidYMid meet");
 
-    // Add a rectangle for each bar.
-    svg.append("g")
-      .attr("fill", "#242424")
-      .selectAll("rect")
+    // Append a group element and translate it according to the margins
+    const chartGroup = svg
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    // Effective width for drawing the bars (subtract left/right margins from containerWidth)
+    const effectiveWidth = containerWidth - margin.left - margin.right;
+
+    // Create a linear x-scale based solely on the count value.
+    // The scale maps the data from estimatedWidth (the baseline for text) to the full effective width.
+    const x = d3
+      .scaleLinear()
+      .domain([0, d3.max(data, d => +d.count)])
+      .range([0, effectiveWidth]);
+
+    // Create the bars. Y-positions are computed manually using index, with fixed bar height and gap.
+    chartGroup
+      .selectAll(".bar")
       .data(data)
-      .join("rect")
-      .attr("x", d => x(d.letter))
-      .attr("y", d => y(d.frequency))
-      .attr("height", d => y(0) - y(d.frequency))
-      .attr("width", x.bandwidth());
+      .enter()
+      .append("rect")
+      .attr("class", "bar")
+      .attr("x", 0)
+      .attr("y", (d, i) => i * (minBarHeight + gap))
+      .attr("width", d => x(+d.count))
+      .attr("height", minBarHeight);
 
-    // Add the x-axis.
-    svg.append("g")
-      .attr("transform", `translate(0, ${height - marginBottom})`)
-      .call(d3.axisBottom(x).tickSizeOuter(0));
-
-    // Add the y-axis, remove the domain line, and add a label.
-    svg.append("g")
-      .attr("transform", `translate(${marginLeft}, 0)`)
-      .call(d3.axisLeft(y)
-        .tickFormat(yValue => (yValue * 100).toFixed()))
-      .call(g => g.select(".domain").remove())
-      .call(g => g.append("text")
-        .attr("x", -marginLeft)
-        .attr("y", 10)
-        .attr("fill", "currentColor")
-        .attr("text-anchor", "start"));
-  }
+    // Append text labels to each bar. The label appears at the start of each bar with a small left offset.
+    chartGroup
+      .selectAll(".bar-label")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "bar-label")
+      .attr("x", 5) // Small left offset
+      .attr("y", (d, i) => i * (minBarHeight + gap) + minBarHeight / 2)
+      .attr("dy", "0.35em") // Vertically centers the text
+      .text(d => `${d.issue}: ${d.count}`);
+  },
 };
 
 export default barChart;
