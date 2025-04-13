@@ -349,8 +349,7 @@ router.get("/cases-group-general-issues", async function(req, res, next) {
     });
   
   const i18n = res.__;
-  console.log("results ", results);
-
+  
   let items = results.map(item => {
     return {
       ...item,
