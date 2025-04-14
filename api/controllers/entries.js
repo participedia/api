@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 
-let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY, COUNT_GENERAL_ISSUES_FOR_CHART } = require("../helpers/db");
+let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY, COUNT_GENERAL_ISSUES_FOR_CHART, COUNT_SCOPE_OF_INFLUENCE_CHART } = require("../helpers/db");
 
 const {
   searchFiltersFromReq,
@@ -360,6 +360,45 @@ router.get("/cases-group-general-issues", async function(req, res, next) {
   res.status(200).json({
       cases: items
   });
+});
+
+router.get("/cases-group-scope-influence", async function(req, res, next) {
+  try {
+    const results = await db.any(COUNT_SCOPE_OF_INFLUENCE_CHART).catch(err => {
+          console.log(err);
+          return next(err);
+      });
+  
+    const i18n = res.__;
+
+    //  Merge items with the same 'scope_of_influence' and sum the 'count'
+    const mergedData = results.reduce((acc, curr) => {
+      const existing = acc.find(item => item.scope_of_influence === curr.scope_of_influence);
+      if (existing) {
+        existing.count = (parseInt(existing.count) + parseInt(curr.count)).toString();
+      } else {
+        acc.push({ ...curr });
+      }
+      return acc;
+    }, []);
+
+    // map items and loclize each item
+    let items = mergedData.map(item => {
+      return {
+        ...item,
+        scope_of_influence: item.scope_of_influence !== 'uncategorized' ? i18n(`name:scope_of_influence-key:${item.scope_of_influence}`) : 'Etc.'
+      }
+    })
+    
+    res.status(200).json({
+        cases: items
+    });
+    
+  } catch (error) {
+    res.status(400).json({
+      error: error
+  });
+  }
 });
 
 module.exports = router;

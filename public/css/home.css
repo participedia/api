@@ -435,3 +435,81 @@
     font-weight: bold;
   }
 }
+
+/* Base styles for the pie chart wrapper */
+#pieChartWrapper {
+  display: flex;
+  flex-direction: column; /* Default mobile view */
+  align-items: center;
+  justify-content: center; /* Center everything */
+  text-align: center; /* Center text */
+}
+
+/* Labels and Colors Column */
+#labelsColumn {
+  display: flex;
+  flex-direction: column; /* Vertical labels */
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+/* Each label and color box */
+#labelContainer .label-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Color box style */
+.color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+/* Label text style */
+.label-text {
+  font-size: 16px;
+}
+
+/* Pie Chart Column */
+#pieChart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Ensure the pie chart is responsive */
+#pieChart svg {
+  width: 80%;
+  height: auto; /* Ensures height adjusts with width */
+}
+
+/* Media queries for larger screens */
+@media (min-width: 1024px) {
+  #pieChartWrapper {
+    flex-direction: row-reverse;
+  }
+
+  #labelsColumn {
+    width: 33%;
+    margin-right: 30px;
+    margin-bottom: 0;
+  }
+
+  #pieChart {
+    width: 66%;
+  }
+}
+
+@media (max-width: 1024px) {
+  #labelsColumn {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  #pieChart {
+    width: 100%;
+  }
+}

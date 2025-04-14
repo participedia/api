@@ -4,13 +4,14 @@ import { xhrReq } from "./utils/utils.js";
 
 const barChart = {
   init() {
-    this.fetchChartResults();
+    this.fetchBarChartResults();
+    this.fetchPicChartResults();
   },
 
-  fetchChartResults() {
+  fetchBarChartResults() {
     const successCB = response => {
       const results = JSON.parse(response.response).cases;
-      this.drawChart(results);
+      this.drawBarChart(results);
     };
     const errorCB = response => {
       //console.log("err", response)
@@ -19,7 +20,7 @@ const barChart = {
     const url = `/entries/cases-group-general-issues`;
     xhrReq("GET", url, {}, successCB, errorCB);
   },
-  drawChart(results) {
+  drawBarChart(results) {
     // Sample data: each object has an "issue" (label) and a "count".
     const data = results;
 
@@ -107,7 +108,7 @@ const barChart = {
       .attr("y", labelRowHeight + barRowHeight / 2)
       .attr("dy", "0.35em")
       // Choose a contrasting fill color for better visibility over the bar (e.g., white).
-      .text(d => `${d.count} Cases` );
+      .text(d => `${d.count} Cases`);
 
     // // Sample data: each object has a label and a count.
     // const data = results;
@@ -175,6 +176,102 @@ const barChart = {
     //   .attr("y", (d, i) => i * (minBarHeight + gap) + minBarHeight / 2)
     //   .attr("dy", "0.35em") // Vertically centers the text
     //   .text(d => `${d.issue}: ${d.count} Cases`);
+  },
+
+  fetchPicChartResults() {
+    const successCB = response => {
+      const results = JSON.parse(response.response).cases;
+      this.drawPieChart(results);
+    };
+    const errorCB = response => {
+      //console.log("err", response)
+    };
+
+    const url = `/entries/cases-group-scope-influence`;
+    xhrReq("GET", url, {}, successCB, errorCB);
+  },
+  drawPieChart(result) {
+    let data = result;
+    // Colors array (existing + new)
+    const colors = [
+      "#aaed93",
+      "#9edcfa",
+      "#d8c7ff",
+      "#febbbe",
+      "#e265a2",
+      "#2897dc",
+      "#f0db4f",
+      "#ff7f50",
+      "#98c6e9",
+    ];
+
+    data = this.assignColorsToData(data, colors);
+
+    // Set dimensions for chart
+    const width = 500;
+    const height = 500;
+    const radius = Math.min(width, height) / 2; // Radius of the pie chart
+    const holeRadius = radius * 0.3; // Small hole in the middle
+    const sliceSpacing = 2; // Space between each slice
+
+    // Create the pie chart layout
+    const pie = d3
+      .pie()
+      .value(d => d.count)
+      .sort(null); // Use the 'count' field for the pie chart calculation
+
+    // Define the arc (each slice of the pie)
+    const arc = d3
+      .arc()
+      .innerRadius(holeRadius) // Radius for the hole in the middle
+      .outerRadius(d => radius - sliceSpacing) // Outer radius of each slice, with spacing
+      .padAngle(0.01); // Adds space between slices
+
+    // Create an SVG element for the pie chart
+    const svg = d3
+      .select("#pieChart")
+      .append("svg")
+      .attr("viewBox", `0 0 ${width} ${height}`) // ViewBox for responsive scaling
+      .attr("preserveAspectRatio", "xMidYMid meet") // Maintain aspect ratio
+      .append("g")
+      .attr("transform", `translate(${width / 2}, ${height / 2})`); // Center the chart
+
+    // Create the pie chart slices
+    const slices = svg
+      .selectAll("path")
+      .data(pie(data))
+      .enter()
+      .append("path")
+      .attr("d", arc)
+      .attr("fill", d => d.data.color) // Use the 'color' field from the data for each slice
+      .attr("stroke", "white") // Add a white stroke for separation between slices
+      .attr("stroke-width", 2); // Stroke width for separation
+
+    // Create the labels and color boxes vertically
+    const labelContainer = d3.select("#labelContainer");
+
+    data.forEach(item => {
+      const labelBox = labelContainer.append("div").attr("class", "label-item");
+
+      // Create a small color box for each label
+      labelBox
+        .append("div")
+        .attr("class", "color-box")
+        .style("background-color", item.color);
+
+      // Add label text beside the color box
+      labelBox
+        .append("span")
+        .text(item.scope_of_influence)
+        .attr("class", "label-text");
+    });
+  },
+  assignColorsToData(data, colors) {
+    return data.map((item, index) => {
+      // Assign color using modulo to loop through the colors array
+      item.color = colors[index % colors.length]; // Loops through the colors array
+      return item;
+    });
   },
 };
 
