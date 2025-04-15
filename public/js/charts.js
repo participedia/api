@@ -35,7 +35,7 @@ const barChart = {
     const chartHeight = numGroups * groupHeight;
 
     // Define margins for the SVG container.
-    const margin = { top: 20, right: 0, bottom: 20, left: 0 };
+    const margin = { top: 16, right: 0, bottom: 16, left: 0 };
 
     // Select the container element and its current width (for responsiveness)
     const container = document.getElementById("barChart");

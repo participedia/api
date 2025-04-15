@@ -241,12 +241,13 @@
 }
 
 .chart-title{
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .chart-sub-title{
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: bold;
 }
 
@@ -436,16 +437,14 @@
   }
 }
 
-/* Base styles for the pie chart wrapper */
 #pieChartWrapper {
   display: flex;
-  flex-direction: column; /* Default mobile view */
+  flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center everything */
-  text-align: center; /* Center text */
+  justify-content: flex-end;
+  text-align: center;
 }
 
-/* Labels and Colors Column */
 #labelsColumn {
   display: flex;
   flex-direction: column; /* Vertical labels */
@@ -475,7 +474,7 @@
 /* Pie Chart Column */
 #pieChart {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
 }
@@ -494,7 +493,6 @@
 
   #labelsColumn {
     width: 33%;
-    margin-right: 30px;
     margin-bottom: 0;
   }
 
@@ -511,5 +509,6 @@
 
   #pieChart {
     width: 100%;
+    justify-content: center;
   }
 }
