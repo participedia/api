@@ -353,6 +353,7 @@ router.get("/cases-group-general-issues", async function(req, res, next) {
   let items = results.map(item => {
     return {
       ...item,
+      key: item.issue !== 'uncategorized' ? item.issue : null,
       issue: item.issue !== 'uncategorized' ? i18n(`name:general_issues-key:${item.issue}`) : 'Uncategorized'
     }
   })
@@ -386,6 +387,7 @@ router.get("/cases-group-scope-influence", async function(req, res, next) {
     let items = mergedData.map(item => {
       return {
         ...item,
+        key: item.scope_of_influence !== 'uncategorized' ? item.scope_of_influence : null,
         scope_of_influence: item.scope_of_influence !== 'uncategorized' ? i18n(`name:scope_of_influence-key:${item.scope_of_influence}`) : 'Etc.'
       }
     })
