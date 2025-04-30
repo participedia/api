@@ -148,52 +148,120 @@ const barChart = {
 
     data = this.assignColorsToData(data, colors);
 
-    // Set dimensions for chart
-    const width = 500;
-    const height = 500;
-    const radius = Math.min(width, height) / 2; // Radius of the pie chart
-    const holeRadius = radius * 0.3; // Small hole in the middle
-    const sliceSpacing = 2; // Space between each slice
 
-    // Create the pie chart layout
-    const pie = d3
-      .pie()
-      .value(d => d.count)
-      .sort(null); // Use the 'count' field for the pie chart calculation
+      // dimensions
+    const width = 500, height = 500,
+    radius = Math.min(width, height) / 2,
+    holeRadius = radius * 0.3,
+    sliceSpacing = 2;
 
-    // Define the arc (each slice of the pie)
-    const arc = d3
-      .arc()
-      .innerRadius(holeRadius) // Radius for the hole in the middle
-      .outerRadius(d => radius - sliceSpacing) // Outer radius of each slice, with spacing
-      .padAngle(0.01); // Adds space between slices
+    // prepare wrapper and tooltip
+    const wrapper = d3.select("#pieChartWrapper")
+    .style("position", "relative");
+    const tooltip = wrapper.append("div")
+    .attr("class", "tooltipPicChart")
+    .style("position", "absolute")
+    .style("pointer-events", "none")
+    .style("visibility", "hidden");
 
-    // Create an SVG element for the pie chart
-    const svg = d3
-      .select("#pieChart")
-      .append("svg")
-      .attr("viewBox", `0 0 ${width} ${height}`) // ViewBox for responsive scaling
-      .attr("preserveAspectRatio", "xMidYMid meet") // Maintain aspect ratio
-      .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2})`); // Center the chart
+    // compute total for percent
+    const total = d3.sum(data, d => d.count);
 
-    // Create the pie chart slices
-    const slices = svg
-      .selectAll("path")
-      .data(pie(data))
-      .enter()
-      .append("path")
-      .attr("d", arc)
-      .attr("fill", d => d.data.color) // Use the 'color' field from the data for each slice
-      .attr("stroke", "white") // Add a white stroke for separation between slices
-      .attr("stroke-width", 2) // Stroke width for separation
-      .style("cursor", d => d.data.key ? "pointer" : "default") 
-      .on("click", function (event, d) {
-        if (d.data.key) { // <-- your condition here
-          const slug = encodeURIComponent(d.data.key); // Make it URL-safe
-          window.location.href = `/search?selectedCategory=case&scope_of_influence=${slug}`;
-        }
-      });
+    // pie layout & arc
+    const pie = d3.pie().value(d => d.count).sort(null);
+    const arc = d3.arc()
+    .innerRadius(holeRadius)
+    .outerRadius(d => radius - sliceSpacing)
+    .padAngle(0.01);
+
+    // svg container
+    const svg = d3.select("#pieChart")
+    .append("svg")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .append("g")
+    .attr("transform", `translate(${width/2},${height/2})`);
+
+    // slices
+    const slices = svg.selectAll("path")
+    .data(pie(data))
+    .enter().append("path")
+    .attr("d", arc)
+    .attr("fill", d => d.data.color)
+    .attr("stroke", "white")
+    .attr("stroke-width", 2)
+    .style("cursor", d => d.data.key ? "pointer" : "default")
+    .on("click", (event, d) => {
+      if (d.data.key) {
+        const slug = encodeURIComponent(d.data.key);
+        window.location.href = `/search?selectedCategory=case&scope_of_influence=${slug}`;
+      }
+    })
+    // tooltip handlers
+    .on("mouseover", (event, d) => {
+      const pct = ((d.data.count / total) * 100).toFixed(1);
+      tooltip.html(`
+        <strong>${d.data.scope_of_influence}</strong><br/>
+        ${pct}% (${d.data.count})
+      `).style("visibility", "visible");
+    })
+    .on("mousemove", (event) => {
+      tooltip
+        .style("top",  (event.layerY + 10) + "px")
+        .style("left", (event.layerX + 10) + "px");
+    })
+    .on("mouseout", () => {
+      tooltip.style("visibility", "hidden");
+    });
+
+
+
+    // // Set dimensions for chart
+    // const width = 500;
+    // const height = 500;
+    // const radius = Math.min(width, height) / 2; // Radius of the pie chart
+    // const holeRadius = radius * 0.3; // Small hole in the middle
+    // const sliceSpacing = 2; // Space between each slice
+
+    // // Create the pie chart layout
+    // const pie = d3
+    //   .pie()
+    //   .value(d => d.count)
+    //   .sort(null); // Use the 'count' field for the pie chart calculation
+
+    // // Define the arc (each slice of the pie)
+    // const arc = d3
+    //   .arc()
+    //   .innerRadius(holeRadius) // Radius for the hole in the middle
+    //   .outerRadius(d => radius - sliceSpacing) // Outer radius of each slice, with spacing
+    //   .padAngle(0.01); // Adds space between slices
+
+    // // Create an SVG element for the pie chart
+    // const svg = d3
+    //   .select("#pieChart")
+    //   .append("svg")
+    //   .attr("viewBox", `0 0 ${width} ${height}`) // ViewBox for responsive scaling
+    //   .attr("preserveAspectRatio", "xMidYMid meet") // Maintain aspect ratio
+    //   .append("g")
+    //   .attr("transform", `translate(${width / 2}, ${height / 2})`); // Center the chart
+
+    // // Create the pie chart slices
+    // const slices = svg
+    //   .selectAll("path")
+    //   .data(pie(data))
+    //   .enter()
+    //   .append("path")
+    //   .attr("d", arc)
+    //   .attr("fill", d => d.data.color) // Use the 'color' field from the data for each slice
+    //   .attr("stroke", "white") // Add a white stroke for separation between slices
+    //   .attr("stroke-width", 2) // Stroke width for separation
+    //   .style("cursor", d => d.data.key ? "pointer" : "default") 
+    //   .on("click", function (event, d) {
+    //     if (d.data.key) { // <-- your condition here
+    //       const slug = encodeURIComponent(d.data.key); // Make it URL-safe
+    //       window.location.href = `/search?selectedCategory=case&scope_of_influence=${slug}`;
+    //     }
+    //   });
 
     // Create the labels and color boxes vertically
     const labelContainer = d3.select("#labelContainer");
