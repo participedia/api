@@ -136,8 +136,7 @@ const COPY_METHOD = sql("../sql/copy_method.sql");
 const DELETE_EDITED_METHODS_ENTRY = sql("../sql/delete_edited_method_entry.sql");
 const DELETE_EDITED_ORGANIZATION_ENTRY = sql("../sql/delete_edited_organization_entry.sql");
 const COPY_ORGANIZATION = sql("../sql/copy_organization.sql");
-const COUNT_GENERAL_ISSUES_FOR_CHART = sql("../sql/count_general_issues_for_chart.sql");
-const COUNT_SCOPE_OF_INFLUENCE_CHART = sql("../sql/count_scope_of_influence_chart.sql");
+const COUNT_ISSUE_SCOPE_COMBINED = sql("../sql/count_issue_scope_combined.sql");
 
 
 function ErrorReporter() {
@@ -717,6 +716,5 @@ module.exports = {
   DELETE_EDITED_METHODS_ENTRY,
   DELETE_EDITED_ORGANIZATION_ENTRY,
   COPY_ORGANIZATION,
-  COUNT_GENERAL_ISSUES_FOR_CHART,
-  COUNT_SCOPE_OF_INFLUENCE_CHART
+  COUNT_ISSUE_SCOPE_COMBINED
 };

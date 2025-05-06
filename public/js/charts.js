@@ -3,26 +3,45 @@ import * as d3 from "d3";
 import { xhrReq } from "./utils/utils.js";
 
 const barChart = {
+  data: null,
+  issueMap: null,
+  scopeMap: null,
   init() {
-    this.fetchBarChartResults();
-    this.fetchPicChartResults();
+    this.fetchAllData();
+    document.getElementById("resetFilters")
+      .addEventListener("click", () => this.resetFilters());
   },
 
-  fetchBarChartResults() {
-    const successCB = response => {
-      const results = JSON.parse(response.response).cases;
-      this.drawBarChart(results);
-    };
-    const errorCB = response => {
-      //console.log("err", response)
-    };
-
-    const url = `/entries/cases-group-general-issues`;
-    xhrReq("GET", url, {}, successCB, errorCB);
+  resetFilters() {
+    // simply redraw full data
+    this.drawBarChart(this.data.general);
+    this.drawPieChart(this.data.scope);
   },
-  drawBarChart(results) {
+
+
+  fetchAllData() {
+    xhrReq("GET", "/entries/cases-charts", {}, response => {
+      const { generalIssues, scopeOfInfluence, combined } = JSON.parse(response.response);
+      this.data = { general: generalIssues, scope: scopeOfInfluence, combined };
+
+      // build lookup maps
+      this.issueMap = new Map(generalIssues.map(d => [d.key, d.issue]));
+      this.scopeMap = new Map(scopeOfInfluence.map(d => [d.key, d.scope_of_influence]));
+
+      // initial render
+      this.drawBarChart(this.data.general);
+      this.drawPieChart(this.data.scope);
+    }, () => {
+      console.error("Failed to load chart data");
+    });
+  },
+
+  drawBarChart(data) {
+    const container = document.getElementById("barChart");
+    d3.select(container).selectAll("*").remove();
+    // clear old
+    d3.select("#barChart").selectAll("*").remove();
     // Sample data: each object has an "issue" (label) and a "count".
-    const data = results;
 
     // Define dimensions for the two rows (label and bar) plus a gap between groups.
     const labelRowHeight = 20; // Height for the label row
@@ -38,7 +57,6 @@ const barChart = {
     const margin = { top: 16, right: 0, bottom: 16, left: 0 };
 
     // Select the container element and its current width (for responsiveness)
-    const container = document.getElementById("barChart");
     const containerWidth = container.clientWidth;
 
     // Compute the total SVG height including margins.
@@ -77,10 +95,11 @@ const barChart = {
       // Each group is positioned vertically by its index multiplied by groupHeight.
       .attr("transform", (d, i) => `translate(0, ${i * groupHeight})`)
       .style("cursor", d => d.key ? "pointer" : "default")
-      .on("click", function (event, d) {
+      .on("click", (event, d) => {
         if (d.key) {
-          const issueSlug = encodeURIComponent(d.key);
-          window.location.href = `/search?selectedCategory=case&general_issues=${issueSlug}`;
+          this.applyIssueFilter(d.key)
+          // const issueSlug = encodeURIComponent(d.key);
+          // window.location.href = `/search?selectedCategory=case&general_issues=${issueSlug}`;
         }
       });
 
@@ -119,20 +138,11 @@ const barChart = {
 
   },
 
-  fetchPicChartResults() {
-    const successCB = response => {
-      const results = JSON.parse(response.response).cases;
-      this.drawPieChart(results);
-    };
-    const errorCB = response => {
-      //console.log("err", response)
-    };
+  drawPieChart(data) {
+    d3.select("#pieChart").selectAll("*").remove();
+    d3.select(".tooltipPicChart")?.remove();
+    d3.select("#labelContainer").selectAll("*").remove();
 
-    const url = `/entries/cases-group-scope-influence`;
-    xhrReq("GET", url, {}, successCB, errorCB);
-  },
-  drawPieChart(result) {
-    let data = result;
     // Colors array (existing + new)
     const colors = [
       "#aaed93",
@@ -193,8 +203,10 @@ const barChart = {
     .style("cursor", d => d.data.key ? "pointer" : "default")
     .on("click", (event, d) => {
       if (d.data.key) {
-        const slug = encodeURIComponent(d.data.key);
-        window.location.href = `/search?selectedCategory=case&scope_of_influence=${slug}`;
+        this.applyScopeFilter(d.data.key);
+
+        // const slug = encodeURIComponent(d.data.key);
+        // window.location.href = `/search?selectedCategory=case&scope_of_influence=${slug}`;
       }
     })
     // tooltip handlers
@@ -213,55 +225,6 @@ const barChart = {
     .on("mouseout", () => {
       tooltip.style("visibility", "hidden");
     });
-
-
-
-    // // Set dimensions for chart
-    // const width = 500;
-    // const height = 500;
-    // const radius = Math.min(width, height) / 2; // Radius of the pie chart
-    // const holeRadius = radius * 0.3; // Small hole in the middle
-    // const sliceSpacing = 2; // Space between each slice
-
-    // // Create the pie chart layout
-    // const pie = d3
-    //   .pie()
-    //   .value(d => d.count)
-    //   .sort(null); // Use the 'count' field for the pie chart calculation
-
-    // // Define the arc (each slice of the pie)
-    // const arc = d3
-    //   .arc()
-    //   .innerRadius(holeRadius) // Radius for the hole in the middle
-    //   .outerRadius(d => radius - sliceSpacing) // Outer radius of each slice, with spacing
-    //   .padAngle(0.01); // Adds space between slices
-
-    // // Create an SVG element for the pie chart
-    // const svg = d3
-    //   .select("#pieChart")
-    //   .append("svg")
-    //   .attr("viewBox", `0 0 ${width} ${height}`) // ViewBox for responsive scaling
-    //   .attr("preserveAspectRatio", "xMidYMid meet") // Maintain aspect ratio
-    //   .append("g")
-    //   .attr("transform", `translate(${width / 2}, ${height / 2})`); // Center the chart
-
-    // // Create the pie chart slices
-    // const slices = svg
-    //   .selectAll("path")
-    //   .data(pie(data))
-    //   .enter()
-    //   .append("path")
-    //   .attr("d", arc)
-    //   .attr("fill", d => d.data.color) // Use the 'color' field from the data for each slice
-    //   .attr("stroke", "white") // Add a white stroke for separation between slices
-    //   .attr("stroke-width", 2) // Stroke width for separation
-    //   .style("cursor", d => d.data.key ? "pointer" : "default") 
-    //   .on("click", function (event, d) {
-    //     if (d.data.key) { // <-- your condition here
-    //       const slug = encodeURIComponent(d.data.key); // Make it URL-safe
-    //       window.location.href = `/search?selectedCategory=case&scope_of_influence=${slug}`;
-    //     }
-    //   });
 
     // Create the labels and color boxes vertically
     const labelContainer = d3.select("#labelContainer");
@@ -289,6 +252,47 @@ const barChart = {
       return item;
     });
   },
+
+  // filter bars by scopeKey → redraw bar chart
+  applyScopeFilter(scopeKey) {
+    // 1) filter detail by chosen scope
+    const filtered = this.data.combined.filter(d => d.key_scope === scopeKey);
+
+    // 2) roll up counts per issueKey
+    const m = d3.rollup(
+      filtered,
+      v => d3.sum(v, d => d.count),
+      d => d.key_issue
+    );
+
+    // 3) build barData in the SAME ORDER as this.data.general
+    const barData = this.data.general
+    // keep only those with a non‐zero count in this scope
+    .filter(item => m.has(item.key))
+    // map to the shape drawBarChart expects
+    .map(item => ({
+      key:   item.key,
+      issue: item.issue,
+      count: m.get(item.key)
+    }));
+
+  // 4) redraw bars
+  this.drawBarChart(barData);
+  },
+
+  // filter pie by issueKey → redraw pie chart
+  applyIssueFilter(issueKey) {
+    const filtered = this.data.combined.filter(d=> d.key_issue===issueKey);
+    const m = d3.rollup(filtered, v=> d3.sum(v,d=>d.count), d=> d.key_scope);
+    const pieData = Array.from(m, ([key,count]) => ({
+      key,
+      scope_of_influence: this.scopeMap.get(key) || key,
+      count
+    }));
+
+    this.drawPieChart(pieData);
+  }
+
 };
 
 export default barChart;

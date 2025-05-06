@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 
-let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY, COUNT_GENERAL_ISSUES_FOR_CHART, COUNT_SCOPE_OF_INFLUENCE_CHART } = require("../helpers/db");
+let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY, COUNT_ISSUE_SCOPE_COMBINED } = require("../helpers/db");
 
 const {
   searchFiltersFromReq,
@@ -342,64 +342,46 @@ router.post("/approve-entry", async function(req, res) {
 });
 
 
-router.get("/cases-group-general-issues", async function(req, res, next) {
-  const results = await db.any(COUNT_GENERAL_ISSUES_FOR_CHART).catch(err => {
-        console.log(err);
-        return next(err);
-    });
-  
-  const i18n = res.__;
-  
-  let items = results.map(item => {
-    return {
-      ...item,
-      key: item.issue !== 'uncategorized' ? item.issue : null,
-      issue: item.issue !== 'uncategorized' ? i18n(`name:general_issues-key:${item.issue}`) : 'Uncategorized'
-    }
-  })
-  
-  res.status(200).json({
-      cases: items
-  });
-});
 
-router.get("/cases-group-scope-influence", async function(req, res, next) {
+router.get("/cases-charts", async (req, res, next) => {
   try {
-    const results = await db.any(COUNT_SCOPE_OF_INFLUENCE_CHART).catch(err => {
-          console.log(err);
-          return next(err);
-      });
-  
+    const raw = await db.any(COUNT_ISSUE_SCOPE_COMBINED);
     const i18n = res.__;
 
-    //  Merge items with the same 'scope_of_influence' and sum the 'count'
-    const mergedData = results.reduce((acc, curr) => {
-      const existing = acc.find(item => item.scope_of_influence === curr.scope_of_influence);
-      if (existing) {
-        existing.count = (parseInt(existing.count) + parseInt(curr.count)).toString();
-      } else {
-        acc.push({ ...curr });
-      }
-      return acc;
-    }, []);
+    // map & localize
+    const combined = raw.map(r => ({
+      scope_of_influence: r.scope_of_influence === 'uncategorized'
+        ? 'Etc.'
+        : i18n(`name:scope_of_influence-key:${r.scope_of_influence}`),
+      key_scope:       r.scope_of_influence !== 'uncategorized' ? r.scope_of_influence : null,
 
-    // map items and loclize each item
-    let items = mergedData.map(item => {
-      return {
-        ...item,
-        key: item.scope_of_influence !== 'uncategorized' ? item.scope_of_influence : null,
-        scope_of_influence: item.scope_of_influence !== 'uncategorized' ? i18n(`name:scope_of_influence-key:${item.scope_of_influence}`) : 'Etc.'
-      }
-    })
-    
-    res.status(200).json({
-        cases: items
+      issue: r.issue === 'uncategorized'
+        ? 'Uncategorized'
+        : i18n(`name:general_issues-key:${r.issue}`),
+      key_issue:    r.issue !== 'uncategorized' ? r.issue : null,
+
+      count: +r.count
+    }));
+
+    // aggregate for the two visuals
+    const generalMap = new Map();
+    const scopeMap   = new Map();
+    combined.forEach(({ issue, key_issue, scope_of_influence, key_scope, count }) => {
+      if (!generalMap.has(issue)) generalMap.set(issue, { issue, key: key_issue, count: 0 });
+      generalMap.get(issue).count += count;
+
+      if (!scopeMap.has(scope_of_influence))
+        scopeMap.set(scope_of_influence, { scope_of_influence, key: key_scope, count: 0 });
+      scopeMap.get(scope_of_influence).count += count;
     });
-    
-  } catch (error) {
-    res.status(400).json({
-      error: error
-  });
+
+    res.json({
+      generalIssues:    Array.from(generalMap.values()),
+      scopeOfInfluence: Array.from(scopeMap.values()),
+      combined          // raw breakdown for cross-filtering
+    });
+  } catch (err) {
+    next(err);
   }
 });
 

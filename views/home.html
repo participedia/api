@@ -124,8 +124,12 @@
 
 <div class="home-section u-margin-bottom--large u-margin-top--med chart-section">
   <div class="u-inner-container">
-    <div class="home-section-header">
+    <div class="home-section-header flex">
       <div class="chart-title">{{t "Case Data"}}</div>
+      <button class="icon-only" id="resetFilters">
+        <span class="sr-only">{{t "reset filter"}}</span>
+        {{> icon-restart}}
+      </button>
     </div>
     <div class="home-section-header">
       <div class="chart-sub-title">{{t "General Issues"}}</div>
