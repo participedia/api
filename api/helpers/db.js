@@ -236,26 +236,22 @@ async function _listOrganizations(lang) {
 
 
 async function _refreshSearch() {
-  // console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch _refreshSearch ");
-  // try {
-  //   if (_searchDirty) {
-  //     _searchDirty = false;
-  //     for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
-  //       let lang = SUPPORTED_LANGUAGES[i];
-  //       if (lang !== "zh") {
-  //         await db.none(`REFRESH MATERIALIZED VIEW search_index_${lang};`);
-  //         console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch REFRESH MATERIALIZED lang ", lang);
-  //       }
-  //     }
-  //   }
-  //   // Only schedule the next execution if no error occurred
-  //   setTimeout(_refreshSearch, randomDelay());
-  //   console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch REFRESH MATERIALIZED done ", done);
+  try {
+    if (_searchDirty) {
+      _searchDirty = false;
+      for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+        let lang = SUPPORTED_LANGUAGES[i];
+        if (lang !== "zh") {
+          await db.none(`REFRESH MATERIALIZED VIEW search_index_${lang};`);
+        }
+      }
+    }
+    // Only schedule the next execution if no error occurred
+    setTimeout(_refreshSearch, randomDelay());
 
-  // } catch (error) {
-  //   console.log("@@@@@@@@@@@@@@@@@@@@@@@ _refreshSearch _refreshSearch error ", error);
-  //   // Do not schedule another run if an error occurs
-  // }
+  } catch (error) {
+    // Do not schedule another run if an error occurs
+  }
 }
 
 
@@ -285,7 +281,7 @@ async function cacheTitlesRefreshSearch(done) {
     }
   }
   // keep running these, but we can start the server now
-  // _refreshSearch().then(() => console.log("search refreshed")).catch(error => console.log('@@@@@@@@@@ error _refreshSearch ', error));
+  _refreshSearch().then(() => console.log("search refreshed")).catch(error => console.log('@@@@@@@@@@ error _refreshSearch ', error));
 
   for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
     let lang = SUPPORTED_LANGUAGES[i];
