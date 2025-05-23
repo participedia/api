@@ -437,6 +437,36 @@
   }
 }
 
+.chart-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px;
+  width: 96%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+
+.bar-chart-container,
+.pie-chart-container {
+  flex: 1 1 0;
+  min-width: 0; /* Prevent overflow */
+}
+
+/* Optional: Make sure charts are responsive */
+@media (max-width: 900px) {
+  .chart-container {
+    flex-direction: column;
+  }
+  .bar-chart-container,
+  .pie-chart-container {
+    width: 95%;
+  }
+}
+
+
 #pieChartWrapper {
   display: flex;
   flex-direction: column;
@@ -450,6 +480,7 @@
   flex-direction: column; /* Vertical labels */
   margin-bottom: 20px;
   align-items: center;
+  width: 100%;
 }
 
 /* Each label and color box */
@@ -474,7 +505,7 @@
 /* Pie Chart Column */
 #pieChart {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   width: 100%;
 }
@@ -485,21 +516,6 @@
   height: auto; /* Ensures height adjusts with width */
 }
 
-/* Media queries for larger screens */
-@media (min-width: 1024px) {
-  #pieChartWrapper {
-    flex-direction: row-reverse;
-  }
-
-  #labelsColumn {
-    width: 33%;
-    margin-bottom: 0;
-  }
-
-  #pieChart {
-    width: 66%;
-  }
-}
 
 @media (max-width: 1024px) {
   #labelsColumn {
@@ -523,4 +539,48 @@
   line-height: 1.3;
   white-space: nowrap;
   z-index: 10;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 20px auto;
+  width: 96%;
+}
+
+.chart-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.chart-row--titles > div {
+  flex: 1 1 0;
+  text-align: left;
+  padding-bottom: 10px;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.chart-row--charts > .bar-chart-container,
+.chart-row--charts > .pie-chart-container {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .chart-row {
+    flex-direction: column;
+  }
+  .chart-row--titles > div,
+  .chart-row--charts > .bar-chart-container,
+  .chart-row--charts > .pie-chart-container {
+    width: 100%;
+  }
+}
+
+.chart-header{
+  margin: 20px auto;
+  width: 96%;
 }

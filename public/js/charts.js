@@ -160,7 +160,7 @@ const barChart = {
 
 
       // dimensions
-    const width = 500, height = 500,
+    const width = 300, height = 300,
     radius = Math.min(width, height) / 2,
     holeRadius = radius * 0.3,
     sliceSpacing = 2;
