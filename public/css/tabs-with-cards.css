@@ -184,6 +184,7 @@
   width: 100%;
   height: 200px;
   background-color: transparent; /* Make sure there's no background color */
+  object-fit: cover;
 }
 
 .image-loaded{

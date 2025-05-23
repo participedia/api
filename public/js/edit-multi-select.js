@@ -18,42 +18,44 @@ const editMultiSelect = {
   },
 
   initSelects() {
-    const selectEls = toArray(
-      document.querySelectorAll(".js-edit-multi-select")
-    );
-    selectEls.forEach(selectEl => {
-      const placeholderText = selectEl.querySelector("option[data-placeholder]")
-        .innerText;
-      // numOptions is 1 less than all options to account for the placeholder option
-      const numOptions = selectEl.querySelectorAll("option").length - 1;
-      const options = {
-        select: `#${selectEl.id}`,
-        placeholder: placeholderText,
-        allowDeselectOption: true,
-      };
+    document
+      .querySelectorAll("select.js-edit-multi-select")
+      .forEach(selectEl => {
+        // grab your placeholder text
+        const placeholderText = selectEl
+          .querySelector("option[data-placeholder]")
+          .textContent.trim();
 
-      // don't show search input if there are 5 or fewer options
-      if (numOptions <= 5) {
-        options.showSearch = false;
-      }
-
-      const slim = new SlimSelect(options);
-
-      slim.onChange = info => {
-        this.onSelectChange({
-          name: selectEl.getAttribute("name"),
-          selectedKey: info.value,
-          selectedText: info.text,
+        // instantiate SlimSelect v2
+        const slim = new SlimSelect({
+          select: selectEl,     // the real <select>
+          settings: {
+            closeOnSelect: true,                     // collapse after pick
+            placeholderText: placeholderText,        // what shows when nothing selected
+            allowDeselect: true,                     // let user clear
+            showSearch: selectEl.options.length > 6, // hide search on small lists
+          },
+          events: {
+            // fires _before_ the new option is in place
+            beforeChange: newVal => {
+              if (newVal.length) {
+                // single-select: newVal[0] is the chosen Option object
+                const { value, text } = newVal[0];
+                this.onSelectChange({
+                  name: selectEl.name,
+                  selectedKey: value,
+                  selectedText: text,
+                });
+              }
+              slim.setSelected("");
+            },
+            // also fire on every close (in case they deselect or click away)
+            afterClose: () => {
+              slim.setSelected("");
+            }
+          }
         });
-      };
-
-      slim.afterClose = info => {
-        // always show the placeholder text
-        slim.slim.container.querySelector(
-          ".placeholder"
-        ).innerHTML = placeholderText;
-      };
-    });
+      });
   },
 
   initSortableLists() {

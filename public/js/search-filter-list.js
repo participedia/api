@@ -76,18 +76,16 @@ const searchFilterList = {
 
   updateUIFromUrlParams() {
     const paramsFromUrl = {};
+    const searchParams = new URLSearchParams(window.location.search);
 
-    // Get query parameters if exists
-    if (window.location.search) {
-      window.location.search
-        .split("?")[1]
-        .split("&")
-        .map(p => p.split("="))
-        .forEach(param => (paramsFromUrl[param[0]] = param[1]));
+    // Populate our plain-object
+    for (const [key, value] of searchParams.entries()) {
+      paramsFromUrl[key] = value;    // value is "" if param was present without “=…”
     }
 
+    // Now safely .split() every value
     Object.keys(paramsFromUrl).forEach(key => {
-      const values = paramsFromUrl[key].split(",");
+      const values = paramsFromUrl[key].split(",");  // never undefined
       values.forEach(value => {
         const input = document.getElementById(`${key}[${value}]`);
         if (input) {
@@ -113,6 +111,43 @@ const searchFilterList = {
     });
 
     this.updateBadge();
+
+    // // Get query parameters if exists
+    // if (window.location.search) {
+    //   window.location.search
+    //     .split("?")[1]
+    //     .split("&")
+    //     .map(p => p.split("="))
+    //     .forEach(param => (paramsFromUrl[param[0]] = param[1]));
+    // }
+
+    // Object.keys(paramsFromUrl).forEach(key => {
+    //   const values = paramsFromUrl[key].split(",");
+    //   values.forEach(value => {
+    //     const input = document.getElementById(`${key}[${value}]`);
+    //     if (input) {
+    //       input.checked = true;
+         
+    //       // If selected filter is inside of dropdown, 
+    //       // then open the dropdown
+    //       if (input.getAttribute("data-section-key") == "full") {
+    //         let fieldName = input.getAttribute("data-field-name");
+    //         let showAllInputEl = document.getElementById(`${fieldName}-accordion`);
+    //         showAllInputEl.checked = true;
+    //       }
+
+    //       this.totalFilters++;
+    //     }
+
+    //     // Manually count country
+    //     if (key == "country") {
+    //       searchFilterAutocomplete.addSelectedItem("country", {label: decodeURI(value), value: decodeURI(value)});
+    //       this.totalFilters++;
+    //     }
+    //   });
+    // });
+
+    // this.updateBadge();
   },
 
   updateBadge() {
