@@ -975,7 +975,6 @@ async function getCaseHttp(req, res) {
     returnByType(res, params, article, staticText, req.user);
     
   } catch (error) {
-    console.log("error getCaseHttp @@@@@@@@@@@@@@@@ getCaseHttp error", error);
     return res.status(404).render("404");
   }
 }

@@ -20,7 +20,18 @@ const requireAuthenticatedUser = require("../middleware/requireAuthenticatedUser
 
 router.get("/csv", requireAuthenticatedUser(), async function(req, res) {
   let results = await getCSVEntry(req.user.id.toString());
-  return res.status(200).render(`csv-exports`,{
+
+  results = results.map(entry => ({
+    ...entry,
+    requested_timestamp_iso: entry.requested_timestamp
+      ? new Date(entry.requested_timestamp).toISOString()
+      : "",
+    finished_timestamp_iso: entry.finished_timestamp
+      ? new Date(entry.finished_timestamp).toISOString()
+      : ""
+  }));
+
+  return res.status(200).render(`csv-exports`, {
     results
   });
 

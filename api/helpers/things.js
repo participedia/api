@@ -216,7 +216,6 @@ const returnByType = async (
     }
     
   } catch (error) {
-    console.log("error returnByType @@@@@@@@@@@@@@@@ returnByType error", error);
     throw error;
   }
 };

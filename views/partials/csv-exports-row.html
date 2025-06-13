@@ -1,8 +1,8 @@
 <tr>
     <td>{{csvid}}</td>
     <td>{{type}}</td>
-    <td>{{formatArticleDate this "requested_timestamp" "MMMM DD, YYYY HH:mm:ss"}}</td>
-    <td>
+    <td data-order="{{requested_timestamp_iso}}">{{formatArticleDate this "requested_timestamp" "MMMM DD, YYYY HH:mm:ss"}}</td>
+    <td data-order="{{finished_timestamp_iso}}">
       {{#if finished_timestamp}}
         {{formatArticleDate this "finished_timestamp" "MMMM DD, YYYY HH:mm:ss"}}
       {{else}}
