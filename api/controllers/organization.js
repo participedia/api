@@ -20,6 +20,7 @@ const {
   ErrorReporter,
   LOCALIZED_TEXT_BY_ID_LOCALE,
   UPDATE_DRAFT_LOCALIZED_TEXT,
+  ENTRY_REVIEW,
   DELETE_EDITED_ORGANIZATION_ENTRY,
   COPY_ORGANIZATION,
   THING_BY_ORGINAL_ENTRY_ID,
@@ -43,6 +44,7 @@ const {
   publishDraft,
   applyLocalizedTextChangesToOrgin,
   generateSlug,
+  cleanFloat,
 } = require("../helpers/things");
 
 const logError = require("../helpers/log-error.js");
@@ -96,9 +98,6 @@ async function getEditStaticText(params) {
  *
  */
 async function postOrganizationNewHttp(req, res) {
-  // create new `organization` in db
-  let urlCaptcha = ``;
-  let captcha_error_message = "";
   let supportedLanguages;
   try {
     cache.clear();
@@ -283,12 +282,11 @@ async function getOrganization(params, res) {
 
 async function postOrganizationUpdateHttp(req, res) {
   try {
+    cache.clear();
     const params = parseGetParams(req, "organization");
     const { articleid, lang } = params;
     const langErrors = [];
     const originLang = lang;
-    let urlCaptcha = ``;
-    let captcha_error_message = "";
     let supportedLanguages;
     let article = "";
   
@@ -482,7 +480,7 @@ async function postOrganizationUpdateHttp(req, res) {
     if(originalLanguageEntry){
       await organizationUpdate(req, res, originalLanguageEntry, true, isCopyProcess);
     }
-  
+
     await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
     const freshArticle = await getOrganization(params, res);
     res.status(200).json({
@@ -494,7 +492,6 @@ async function postOrganizationUpdateHttp(req, res) {
     logError(error);
     res.status(400).json({ OK: false, error: error });
   }
-
 }
 
 async function postOrganizationUpdatePreview(req, res) {
@@ -513,7 +510,9 @@ async function postOrganizationUpdatePreview(req, res) {
       id: thingid,
     };
     const entryReview = await db.none(ENTRY_REVIEW, paramsEntryReview);
-    const articleRow = await db.one(CASE_BY_ID, params);
+
+    const articleRow = await db.one(ORGANIZATION_BY_ID, params);
+
     const article = articleRow.results;
 
     res.status(200).json({
@@ -572,6 +571,9 @@ async function organizationUpdate(req, res, entry = undefined, isUpdating = fals
     newOrganization,
     oldArticle
   );
+  updatedOrganization.latitude = cleanFloat(updatedOrganization.latitude);
+  updatedOrganization.longitude = cleanFloat(updatedOrganization.longitude);
+
   if (isNaN(updatedOrganization.number_of_participants)) {
     updatedOrganization.number_of_participants = null;
   }

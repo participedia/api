@@ -1190,6 +1190,14 @@ function generateSlug(title) {
       .replace(/-+/g, '-'); // Remove consecutive hyphens
 }
 
+const cleanFloat = (val) => {
+    if (typeof val === "string") {
+    val = val.replace(/[()]/g, "").trim();
+  }
+  const num = parseFloat(val);
+  return isNaN(num) ? null : num;
+}
+
 
 module.exports = {
   supportedTypes,
@@ -1224,5 +1232,6 @@ module.exports = {
   generateLocaleArticle,
   publishDraft,
   applyLocalizedTextChangesToOrgin,
-  generateSlug
+  generateSlug,
+  cleanFloat
 };

@@ -20,6 +20,7 @@ const {
   ErrorReporter,
   LOCALIZED_TEXT_BY_ID_LOCALE,
   UPDATE_DRAFT_LOCALIZED_TEXT,
+  ENTRY_REVIEW,
   THING_BY_ORGINAL_ENTRY_ID,
   COPY_METHOD,
   DELETE_EDITED_METHODS_ENTRY,
@@ -614,7 +615,7 @@ async function postMethodUpdatePreview(req, res) {
       id: thingid,
     };
     const entryReview = await db.none(ENTRY_REVIEW, paramsEntryReview);
-    const articleRow = await db.one(CASE_BY_ID, params);
+    const articleRow = await db.one(METHOD_BY_ID, params);
     const article = articleRow.results;
 
     res.status(200).json({
