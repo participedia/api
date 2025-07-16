@@ -3,7 +3,7 @@
     <td class="hidden">{{formatArticleDate this "updated_date" "YYYYMMDD"}}</td>
     <td class="word-wrap"><a class="" href="/{{type}}/{{thingid}}?canEdit=false" target="_blank"> {{checkAndGetValue title}} </a></td>
     <td>{{type}}</td>
-    <td>{{#if name}}{{name}}{{else}}-{{/if}}</td>
+    <td>{{#if name}}{{name}}{{else}}(no name){{/if}}</td>
     <td>
       <a class="entries-action entry-approve button button-red" href="#" entry-id="{{thingid}}">
         {{t "approve_entry"}}
