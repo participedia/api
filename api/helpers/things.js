@@ -161,7 +161,8 @@ const returnByType = async (
     } else {
       if (article.hidden && (!user || (user && !user.isadmin))) {
         if (article.published) {
-          return res.status(404).render("waiting-for-approval");
+          // return res.status(404).render("waiting-for-approval");
+          return res.status(404).render("entry-hidden");
         } else {
           return res.status(404).render("404");
         }

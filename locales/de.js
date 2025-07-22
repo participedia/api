@@ -2112,5 +2112,6 @@
   "Zambia": "Sambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Karte vergrößern",
-  "Zoom Map Out": "Karte verkleinern"
+  "Zoom Map Out": "Karte verkleinern",
+  "entry_hidden_message": "Dieser Eintrag ist verborgen"
 }

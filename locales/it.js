@@ -2112,5 +2112,6 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Ingrandisci mappa",
-  "Zoom Map Out": "Allontana mappa"
+  "Zoom Map Out": "Allontana mappa",
+  "entry_hidden_message": "Questa voce è nascosta"
 }

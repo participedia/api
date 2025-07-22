@@ -2112,5 +2112,7 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabue",
   "Zoom Map In": "Acercar mapa",
-  "Zoom Map Out": "Alejar mapa"
+  "Zoom Map Out": "Alejar mapa",
+  "entry_hidden_message": "Esta entrada está oculta",
+  "entry_hidden_message": "Esta entrada está oculta"
 }

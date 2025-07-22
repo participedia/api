@@ -2112,5 +2112,6 @@
   "Zambia": "Zambia",
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Kaart inzoomen",
-  "Zoom Map Out": "Kaart uitzoomen"
+  "Zoom Map Out": "Kaart uitzoomen",
+  "entry_hidden_message": "Dit item is verborgen"
 }
