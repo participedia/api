@@ -25,12 +25,16 @@ async function getUserOrCreateUser(auth0User, localeLang) {
   // if we don't have a user yet, create one
   let createdUser;
   if (!userByEmail) {
+    // Clean and validate user name
+    let cleanedName = (auth0User.name || "").trim();
+    if (!cleanedName) {
+      cleanedName = auth0User.email.substr(0, auth0User.email.indexOf("@"));
+    }
+    
     createdUser = await db.one(CREATE_USER_ID, {
       userEmail: auth0User.email,
       // if auth0User.name is null, use first part of email address for username
-      userName:
-        auth0User.name ||
-        auth0User.email.substr(0, auth0User.email.indexOf("@")),
+      userName: cleanedName,
       joinDate: auth0User.created_at,
       auth0UserId: auth0User.id,
       bio: "",
