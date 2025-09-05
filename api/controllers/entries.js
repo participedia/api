@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 
-let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY } = require("../helpers/db");
+let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY, COUNT_ISSUE_SCOPE_COMBINED } = require("../helpers/db");
 
 const {
   searchFiltersFromReq,
@@ -339,6 +339,50 @@ router.post("/approve-entry", async function(req, res) {
     res.status(403).json({ error: error.message});
   }
 
+});
+
+
+
+router.get("/cases-charts", async (req, res, next) => {
+  try {
+    const raw = await db.any(COUNT_ISSUE_SCOPE_COMBINED);
+    const i18n = res.__;
+
+    // map & localize
+    const combined = raw.map(r => ({
+      scope_of_influence: r.scope_of_influence === 'uncategorized'
+        ? 'Etc.'
+        : i18n(`name:scope_of_influence-key:${r.scope_of_influence}`),
+      key_scope:       r.scope_of_influence !== 'uncategorized' ? r.scope_of_influence : null,
+
+      issue: r.issue === 'uncategorized'
+        ? 'Uncategorized'
+        : i18n(`name:general_issues-key:${r.issue}`),
+      key_issue:    r.issue !== 'uncategorized' ? r.issue : null,
+
+      count: +r.count
+    }));
+
+    // aggregate for the two visuals
+    const generalMap = new Map();
+    const scopeMap   = new Map();
+    combined.forEach(({ issue, key_issue, scope_of_influence, key_scope, count }) => {
+      if (!generalMap.has(issue)) generalMap.set(issue, { issue, key: key_issue, count: 0 });
+      generalMap.get(issue).count += count;
+
+      if (!scopeMap.has(scope_of_influence))
+        scopeMap.set(scope_of_influence, { scope_of_influence, key: key_scope, count: 0 });
+      scopeMap.get(scope_of_influence).count += count;
+    });
+
+    res.json({
+      generalIssues:    Array.from(generalMap.values()),
+      scopeOfInfluence: Array.from(scopeMap.values()),
+      combined          // raw breakdown for cross-filtering
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
