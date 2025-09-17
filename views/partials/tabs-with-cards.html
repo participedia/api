@@ -24,6 +24,13 @@
       {{> icon-grid}}
     </button>
     {{/if}}
+    {{#if (checkChartAvail req)}}
+      <button class="icon-only toggle-chart-layout-btn js-card-layout-btn px-8" data-type="chart">
+        <span class="sr-only">{{t "Data Visualization"}}</span>
+        {{> icon-chart}}
+      </button>
+    {{/if}}
+ 
 
   </div>
 

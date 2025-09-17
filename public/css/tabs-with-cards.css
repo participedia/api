@@ -321,6 +321,33 @@ hr.solid {
   display: none;
 }
 
+[data-card-layout="chart"] .search-map-block {
+  display: none !important;
+}
+
+[data-card-layout="chart"] .cards-container {
+  display: none;
+}
+
+[data-card-layout="chart"] .search-map-container-block {
+  display: none;
+}
+
+[data-card-layout="list"] .chart-container {
+  display: none !important;
+}
+
+[data-card-layout="maps"] .chart-container {
+  display: none;
+}
+
+[data-card-layout="grid"] .chart-container {
+  display: none;
+}
+
+
+
+
 /* PopOver on map */
 .pop-over .article-card {
   background-color: #fff;
@@ -354,6 +381,10 @@ hr.solid {
   padding: 0;
 }
 
+.px-8{
+  padding-inline: 8px;
+}
+
 [data-card-layout="grid"] .toggle-grid-layout-btn .icon-fill {
   fill: #EC2024;
 }
@@ -381,6 +412,18 @@ hr.solid {
 [data-card-layout="maps"] .toggle-maps-layout-btn .icon-fill {
   fill: #EC2024;
 }
+[data-card-layout="chart"] .toggle-list-layout-btn .icon-fill {
+  fill: #B3B3B3;
+}
+[data-card-layout="chart"] .toggle-grid-layout-btn .icon-fill {
+  fill: #B3B3B3;
+}
+[data-card-layout="chart"] .toggle-maps-layout-btn .icon-fill {
+  fill: #B3B3B3;
+}
+[data-card-layout="chart"] .toggle-chart-layout-btn .icon-fill {
+  fill: #EC2024;
+}
 
 [data-card-layout="maps"] .tab-container .js-tab-items .tab-collections {
   display: none;
@@ -400,6 +443,16 @@ hr.solid {
 [data-card-layout="list"] .tab-container .js-tab-items .tab-method {
   display: inline block;
 }
+[data-card-layout="chart"] .tab-container .js-tab-items .tab-method {
+  display: none
+}
+[data-card-layout="chart"] .tab-container .js-tab-items .tab-collections {
+  display: none;
+}
+[data-card-layout="chart"] .tab-container .js-tab-items .tab-organizations {
+  display: none;
+}
+
 
 [data-card-layout="maps"] .tab-select-container .select-collections {
   display: none;
@@ -418,6 +471,13 @@ hr.solid {
 }
 [data-card-layout="list"] .tab-select-container .select-method {
   display: inline block;
+}
+
+[data-card-layout="chart"] .tab-select-container .select-collections {
+  display: none;
+}
+[data-card-layout="chart"] .tab-select-container .select-method {
+  display: none;
 }
 
 [data-card-layout="maps"] .tab-container .tab-panels div .pagination .pagination-nav {
@@ -443,6 +503,15 @@ hr.solid {
   display: none;
 }
 [data-card-layout="null"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-maps {
+  display: none;
+}
+[data-card-layout="chart"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-string {
+  display: none;
+}
+[data-card-layout="chart"] .tab-container .tab-panels .tab-panel-header .tab-panel-header-content .pagination .pagination-maps {
+  display: none;
+}
+[data-card-layout="chart"] .tab-container .tab-panels div .pagination .pagination-nav {
   display: none;
 }
 
