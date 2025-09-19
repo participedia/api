@@ -5,6 +5,11 @@ const searchChart = {
   data: null,
   issueMap: null,
   scopeMap: null,
+  methodMap: null,
+  selectedMethodKey: null,
+  selectedScopeKey: null,
+  selectedIssueKey: null,
+
   init() {
     this.fetchAllData();
     document.getElementById("resetFilters")
@@ -13,12 +18,12 @@ const searchChart = {
 
   fetchAllData() {
     xhrReq("GET", "/entries/cases-charts", {}, response => {
-      const { generalIssues, scopeOfInfluence, combined } = JSON.parse(response.response);
-      this.data = { general: generalIssues, scope: scopeOfInfluence, combined };
-
+      const { generalIssues, scopeOfInfluence, methodTypes, combined } = JSON.parse(response.response);
+      this.data = { general: generalIssues, scope: scopeOfInfluence, methods: methodTypes, combined };
       // build lookup maps
       this.issueMap = new Map(generalIssues.map(d => [d.key, d.issue]));
       this.scopeMap = new Map(scopeOfInfluence.map(d => [d.key, d.scope_of_influence]));
+      this.methodMap = new Map(methodTypes.map(d => [d.key, d.method_type]));
 
       // Helper to check if container is visible and has width
       function isVisibleAndReady(selector) {
@@ -31,22 +36,20 @@ const searchChart = {
         if (
           isVisibleAndReady('.chart-container') &&
           isVisibleAndReady('#barChart') &&
-          isVisibleAndReady('#pieChart')
+          isVisibleAndReady('#pieChart') &&
+          isVisibleAndReady('#methodChart')
         ) {
           clearInterval(pollInterval);
           this.resetFilters(); // Draw both charts
         }
       }, 100);
 
-      // initial render
-      // this.drawBarChart(this.data.general);
-      // this.drawPieChart(this.data.scope);
     }, () => {
       console.error("Failed to load chart data");
     });
   },
 
-  drawBarChart(data) {
+  drawBarChart(data, selectedKey = this.selectedIssueKey) {
     try {
       const container = document.getElementById("barChart");
       // d3.select(container).selectAll("*").remove();
@@ -102,7 +105,7 @@ const searchChart = {
         .data(data)
         .enter()
         .append("g")
-        .attr("class", "group")
+        .attr("class", d => "group" + (selectedKey && d.key === selectedKey ? " is-selected" : ""))
         // Each group is positioned vertically by its index multiplied by groupHeight.
         .attr("transform", (d, i) => `translate(0, ${i * groupHeight})`)
         .style("cursor", d => d.key ? "pointer" : "default")
@@ -155,7 +158,7 @@ const searchChart = {
 
   },
 
-  drawPieChart(data) {
+  drawPieChart(data, selectedKey = this.selectedScopeKey) {
     d3.select("#pieChart").selectAll("*").remove();
     d3.select(".tooltipPicChart")?.remove();
     d3.select("#labelContainer").selectAll("*").remove();
@@ -214,7 +217,11 @@ const searchChart = {
     .data(pie(data))
     .enter().append("path")
     .attr("d", arc)
-    .attr("fill", d => d.data.color)
+    .attr("fill", d => 
+      selectedKey && d.data.key === selectedKey
+        ? d3.color(d.data.color).darker(1.5) // make it darker if selected
+        : d.data.color
+    )
     .attr("stroke", "white")
     .attr("stroke-width", 2)
     .style("cursor", d => d.data.key ? "pointer" : "default")
@@ -262,6 +269,7 @@ const searchChart = {
         .attr("class", "label-text");
     });
   },
+
   assignColorsToData(data, colors) {
     return data.map((item, index) => {
       // Assign color using modulo to loop through the colors array
@@ -270,8 +278,88 @@ const searchChart = {
     });
   },
 
-  // filter bars by scopeKey → redraw bar chart
+  /* ---------------------------
+   * Method Type bar chart (bottom)
+   * ------------------------- */
+  drawMethodBarChart(data, selectedKey = this.selectedMethodKey) {
+    try {
+      const container = document.getElementById("methodChart");
+      d3.select("#methodChart").selectAll("*").remove();
+
+      const labelRowHeight = 20;
+      const barRowHeight = 24;
+      const groupGap = 10;
+      const groupHeight = labelRowHeight + barRowHeight + groupGap;
+      const chartHeight = data.length * groupHeight;
+      const margin = { top: 16, right: 0, bottom: 16, left: 0 };
+      const containerWidth = container.clientWidth || 400;
+      const svgHeight = chartHeight + margin.top + margin.bottom;
+
+      const svg = d3
+        .select("#methodChart")
+        .append("svg")
+        .attr("width", "100%")
+        .attr("height", svgHeight)
+        .attr("viewBox", `0 0 ${containerWidth} ${svgHeight}`)
+        .attr("preserveAspectRatio", "xMidYMid meet");
+
+      const chartGroup = svg
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+      const effectiveWidth = containerWidth - margin.left - margin.right;
+      const x = d3
+        .scaleLinear()
+        .domain([0, d3.max(data, d => +d.count) || 1])
+        .range([0, effectiveWidth]);
+
+      const groups = chartGroup
+        .selectAll(".group")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("class", d => "group" + (selectedKey && d.key === selectedKey ? " is-selected" : ""))
+        .attr("transform", (d, i) => `translate(0, ${i * groupHeight})`)
+        .style("cursor", d => d.key ? "pointer" : "default")
+        .on("click", (event, d) => {
+          if (d.key) this.setMethodFilter(d.key);
+        });
+
+      groups
+        .append("text")
+        .attr("class", "label")
+        .attr("x", 0)
+        .attr("y", labelRowHeight / 2)
+        .attr("dy", "0.35em")
+        .style("font-size", "16px")
+        .style("font-weight", "bold")
+        .text(d => d.method_type);
+
+      groups
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        .attr("y", labelRowHeight)
+        .attr("width", d => x(+d.count))
+        .attr("height", barRowHeight);
+
+      groups
+        .append("text")
+        .attr("class", "bar-count")
+        .attr("x", 5)
+        .attr("y", labelRowHeight + barRowHeight / 2)
+        .attr("dy", "0.35em")
+        .text(d => `${d.count} ${d.count === 1 ? "Case" : "Cases"}`);
+    } catch (error) {
+      console.error("Error drawing Method bar chart:", error);
+    }
+  },
+
   applyScopeFilter(scopeKey) {
+    this.selectedScopeKey = scopeKey;
+    this.selectedIssueKey = null;
+    this.selectedMethodKey = null;
+
     // 1) filter detail by chosen scope
     const filtered = this.data.combined.filter(d => d.key_scope === scopeKey);
 
@@ -284,37 +372,121 @@ const searchChart = {
 
     // 3) build barData in the SAME ORDER as this.data.general
     const barData = this.data.general
-    // keep only those with a non‐zero count in this scope
-    .filter(item => m.has(item.key))
-    // map to the shape drawBarChart expects
-    .map(item => ({
-      key:   item.key,
-      issue: item.issue,
-      count: m.get(item.key)
-    }));
+      .filter(item => m.has(item.key))
+      .map(item => ({
+        key: item.key,
+        issue: item.issue,
+        count: m.get(item.key)
+      }));
 
-  // 4) redraw bars
-  this.drawBarChart(barData);
+    // 4) redraw bars
+    this.drawBarChart(barData);
+
+    // 5) filter and redraw method chart
+    const methodRollup = d3.rollup(
+      filtered,
+      v => d3.sum(v, d => d.count),
+      d => d.key_method_type
+    );
+    const methodData = this.data.methods
+      .filter(item => methodRollup.has(item.key))
+      .map(item => ({
+        key: item.key,
+        method_type: item.method_type,
+        count: methodRollup.get(item.key)
+      }));
+    this.drawMethodBarChart(methodData);
+
+
+    this.drawPieChart(this.data.scope);
   },
 
-  // filter pie by issueKey → redraw pie chart
+
   applyIssueFilter(issueKey) {
-    const filtered = this.data.combined.filter(d=> d.key_issue===issueKey);
-    const m = d3.rollup(filtered, v=> d3.sum(v,d=>d.count), d=> d.key_scope);
-    const pieData = Array.from(m, ([key,count]) => ({
+    this.selectedIssueKey = issueKey;
+    this.selectedScopeKey = null;
+    this.selectedMethodKey = null;
+
+    const filtered = this.data.combined.filter(d => d.key_issue === issueKey);
+    const m = d3.rollup(filtered, v => d3.sum(v, d => d.count), d => d.key_scope);
+    const scopeData = Array.from(m, ([key, count]) => ({
       key,
       scope_of_influence: this.scopeMap.get(key) || key,
       count
     }));
 
+    this.drawPieChart(scopeData);
+
+    // filter and redraw method chart
+    const methodRollup = d3.rollup(
+      filtered,
+      v => d3.sum(v, d => d.count),
+      d => d.key_method_type
+    );
+    const methodData = this.data.methods
+      .filter(item => methodRollup.has(item.key))
+      .map(item => ({
+        key: item.key,
+        method_type: item.method_type,
+        count: methodRollup.get(item.key)
+      }));
+    this.drawMethodBarChart(methodData);
+
+
+    this.drawBarChart(this.data.general);
+  },
+
+  setMethodFilter(methodKey) {
+    this.selectedIssueKey = null;
+    this.selectedScopeKey = null;
+    this.selectedMethodKey = methodKey;
+
+    // Filter combined data by selected method
+    const filtered = this.data.combined.filter(d => d.key_method_type === methodKey);
+
+    // --- Update Bar Chart (General Issues) ---
+    const issueRollup = d3.rollup(
+      filtered,
+      v => d3.sum(v, d => d.count),
+      d => d.key_issue
+    );
+    const barData = this.data.general
+      .filter(item => issueRollup.has(item.key))
+      .map(item => ({
+        key: item.key,
+        issue: item.issue,
+        count: issueRollup.get(item.key)
+      }));
+    this.drawBarChart(barData);
+
+    // --- Update Pie Chart (Scope of Influence) ---
+    const scopeRollup = d3.rollup(
+      filtered,
+      v => d3.sum(v, d => d.count),
+      d => d.key_scope
+    );
+    const pieData = Array.from(scopeRollup, ([key, count]) => ({
+      key,
+      scope_of_influence: this.scopeMap.get(key) || key,
+      count
+    }));
     this.drawPieChart(pieData);
+
+    this.drawMethodBarChart(this.data.methods);
   },
 
   resetFilters() {
+    this.selectedMethodKey = null;
+    this.selectedScopeKey = null;
+    this.selectedIssueKey = null;
     // simply redraw full data
     this.drawBarChart(this.data.general);
     this.drawPieChart(this.data.scope);
+    this.drawMethodBarChart(this.data.methods);
   },
+
+
+
 
 }
 

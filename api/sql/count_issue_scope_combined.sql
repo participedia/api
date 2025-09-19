@@ -1,25 +1,32 @@
--- returns one row per (issue, scope_of_influence) pair
+-- one row per (scope_of_influence, issue, method_type)
 WITH exploded AS (
-  -- explode the array of general_issues (or “uncategorized” if null)
   SELECT
     COALESCE(NULLIF(scope_of_influence, ''), 'uncategorized') AS scope_of_influence,
-    unnest(general_issues)                                AS issue
+    gi AS issue,
+    mt AS method_type
   FROM cases
-  WHERE general_issues IS NOT NULL
-
-  UNION ALL
-
-  -- for cases without any general_issues
-  SELECT
-    COALESCE(NULLIF(scope_of_influence, ''), 'uncategorized') AS scope_of_influence,
-    'uncategorized'                                           AS issue
-  FROM cases
-  WHERE general_issues IS NULL
+  -- explode general_issues (or 'uncategorized' if null/empty)
+  CROSS JOIN LATERAL UNNEST(
+    CASE
+      WHEN general_issues IS NULL OR CARDINALITY(general_issues) = 0
+        THEN ARRAY['uncategorized']::text[]
+      ELSE general_issues
+    END
+  ) AS gi
+  -- explode method_types (or 'uncategorized' if null/empty)
+  CROSS JOIN LATERAL UNNEST(
+    CASE
+      WHEN method_types IS NULL OR CARDINALITY(method_types) = 0
+        THEN ARRAY['uncategorized']::text[]
+      ELSE method_types
+    END
+  ) AS mt
 )
 SELECT
   scope_of_influence,
   issue,
-  COUNT(*)::TEXT AS count
+  method_type,
+  COUNT(*)::text AS count
 FROM exploded
-GROUP BY scope_of_influence, issue
+GROUP BY scope_of_influence, issue, method_type
 ORDER BY scope_of_influence, count DESC;

@@ -342,47 +342,81 @@ router.post("/approve-entry", async function(req, res) {
 });
 
 
+function moveUncategorizedLast(arr, uncategorizedLabel = "Uncategorized") {
+  const uncategorized = arr.filter(item => item.issue === uncategorizedLabel || item.scope_of_influence === "Etc." || item.method_type === uncategorizedLabel);
+  const categorized = arr.filter(item => !(item.issue === uncategorizedLabel || item.scope_of_influence === "Etc." || item.method_type === uncategorizedLabel));
+  return [...categorized, ...uncategorized];
+}
 
 router.get("/cases-charts", async (req, res, next) => {
   try {
-    const raw = await db.any(COUNT_ISSUE_SCOPE_COMBINED);
+    const rows = await db.any(COUNT_ISSUE_SCOPE_COMBINED);
     const i18n = res.__;
 
-    // map & localize
-    const combined = raw.map(r => ({
-      scope_of_influence: r.scope_of_influence === 'uncategorized'
-        ? 'Etc.'
-        : i18n(`name:scope_of_influence-key:${r.scope_of_influence}`),
-      key_scope:       r.scope_of_influence !== 'uncategorized' ? r.scope_of_influence : null,
+    // map & localize (scope + issue + method_type)
+    const combined = rows.map(r => {
+      const isScopeUncat  = r.scope_of_influence === 'uncategorized';
+      const isIssueUncat  = r.issue === 'uncategorized';
+      const isMethodUncat = r.method_type === 'uncategorized';
 
-      issue: r.issue === 'uncategorized'
-        ? 'Uncategorized'
-        : i18n(`name:general_issues-key:${r.issue}`),
-      key_issue:    r.issue !== 'uncategorized' ? r.issue : null,
+      return {
+        scope_of_influence: isScopeUncat
+          ? 'Etc.'
+          : i18n(`name:scope_of_influence-key:${r.scope_of_influence}`),
+        key_scope: !isScopeUncat ? r.scope_of_influence : null,
 
-      count: +r.count
-    }));
+        issue: isIssueUncat
+          ? 'Uncategorized'
+          : i18n(`name:general_issues-key:${r.issue}`),
+        key_issue: !isIssueUncat ? r.issue : null,
 
-    // aggregate for the two visuals
-    const generalMap = new Map();
-    const scopeMap   = new Map();
-    combined.forEach(({ issue, key_issue, scope_of_influence, key_scope, count }) => {
-      if (!generalMap.has(issue)) generalMap.set(issue, { issue, key: key_issue, count: 0 });
-      generalMap.get(issue).count += count;
+        method_type: isMethodUncat
+          ? 'Uncategorized'
+          : i18n(`name:method_types-key:${r.method_type}`),
+        key_method_type: !isMethodUncat ? r.method_type : null,
 
-      if (!scopeMap.has(scope_of_influence))
-        scopeMap.set(scope_of_influence, { scope_of_influence, key: key_scope, count: 0 });
-      scopeMap.get(scope_of_influence).count += count;
+        count: +r.count
+      };
     });
 
+    // aggregates for visuals
+    const generalMap = new Map(); // by issue
+    const scopeMap   = new Map(); // by scope_of_influence
+    const methodMap  = new Map(); // by method_type
+
+    combined.forEach(({ issue, key_issue, scope_of_influence, key_scope, method_type, key_method_type, count }) => {
+      if (!generalMap.has(issue)) {
+        generalMap.set(issue, { issue, key: key_issue, count: 0 });
+      }
+      generalMap.get(issue).count += count;
+
+      if (!scopeMap.has(scope_of_influence)) {
+        scopeMap.set(scope_of_influence, { scope_of_influence, key: key_scope, count: 0 });
+      }
+      scopeMap.get(scope_of_influence).count += count;
+
+      if (!methodMap.has(method_type)) {
+        methodMap.set(method_type, { method_type, key: key_method_type, count: 0 });
+      }
+      methodMap.get(method_type).count += count;
+    });
+
+    // Move uncategorized to last
+    const generalIssues    = moveUncategorizedLast(Array.from(generalMap.values()), "Uncategorized");
+    const scopeOfInfluence = moveUncategorizedLast(Array.from(scopeMap.values()), "Etc.");
+    const methodTypes      = moveUncategorizedLast(Array.from(methodMap.values()), "Uncategorized");
+
+
     res.json({
-      generalIssues:    Array.from(generalMap.values()),
-      scopeOfInfluence: Array.from(scopeMap.values()),
-      combined          // raw breakdown for cross-filtering
+      generalIssues,
+      scopeOfInfluence,
+      methodTypes,
+      combined
     });
   } catch (err) {
     next(err);
   }
 });
+
 
 module.exports = router;

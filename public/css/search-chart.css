@@ -1,3 +1,49 @@
+/* ---------- Method Type (below the pie) ---------- */
+.method-chart-container {
+  margin-top: 24px;            /* spacing from the pie */
+}
+
+#methodChart {
+  width: 100%;
+}
+
+/* Optional hover cue for both bar charts */
+#barChart .group:hover .bar,
+#methodChart .group:hover .bar {
+  filter: brightness(0.9);
+}
+
+/* Active (selected) state: darker shade for Issue + Method Type bars */
+#barChart .group.is-selected .bar,
+#methodChart .group.is-selected .bar {
+  filter: brightness(0.8);
+}
+
+/* Keep label sizing consistent on small screens */
+@media (max-width: 500px) {
+  #methodChart .label {
+    font-size: 14px;
+    font-weight: bold;
+  }
+}
+
+/* If you want a little breathing room under labels for both bar charts */
+#barChart .label,
+#methodChart .label {
+  fill: black;
+  font-size: 16px;
+  font-weight: bold;
+  text-anchor: start;
+}
+
+/* Optional: tighten vertical gaps on smaller screens */
+@media (max-width: 900px) {
+  .method-chart-container {
+    margin-top: 16px;
+  }
+}
+
+
 #barChart {
   width: 100%;
 }

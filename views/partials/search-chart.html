@@ -6,21 +6,32 @@
       {{> icon-restart}}
     </button>
   </div>
+
   <div class="chart-container">
     <div class="chart-row chart-row--charts">
+
       <div class="bar-chart-container">
         <div class="bar-chart-title chart-title">{{t "General Issues"}}</div>
         <div id="barChart"></div>
       </div>
+
       <div class="pie-chart-container">
         <div class="pie-chart-title chart-title">{{t "Scope of influence"}}</div>
+
         <div id="pieChartWrapper">
           <div id="labelsColumn">
             <div id="labelContainer"></div>
           </div>
           <div id="pieChart"></div>
         </div>
+
+        <!-- NEW: Method Type chart lives under the pie -->
+        <div class="method-chart-container">
+          <div class="bar-chart-title chart-title">{{t "Method Type"}}</div>
+          <div id="methodChart"></div>
+
       </div>
     </div>
   </div>
+
 </div>
