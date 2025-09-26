@@ -340,7 +340,9 @@ pre {
 }
 
 .floating-quick-submit-button {
-  display: none;
+  display: flex;
+  right: 30px;
+  bottom: 120px;
 }
 
 .floating-action-image {
