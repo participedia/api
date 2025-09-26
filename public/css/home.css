@@ -221,7 +221,10 @@
 }
 
 .home-quick-sumbit__floating-action-button {
-  display: none;
+  /* display: none; */
+  display: flex;
+  right: 32px;
+  bottom: 120px;
 }
 
 @media (max-height: 598px) { 
