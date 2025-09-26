@@ -2113,5 +2113,6 @@
   "Zimbabwe": "津巴布韦",
   "Zoom Map In": "放大缩小字体功能",
   "Zoom Map Out": "缩放地图",
-  "entry_hidden_message": "此条目已隐藏"
+  "entry_hidden_message": "此条目已隐藏",
+  "Visit Participedia.org": "访问 Participedia.org"
 }

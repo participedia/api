@@ -2113,5 +2113,6 @@
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Kaart inzoomen",
   "Zoom Map Out": "Kaart uitzoomen",
-  "entry_hidden_message": "Dit item is verborgen"
+  "entry_hidden_message": "Dit item is verborgen",
+  "Visit Participedia.org": "Bezoek Participedia.org"
 }

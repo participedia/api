@@ -2120,5 +2120,6 @@
   "participedia.school.p1.2.start":"In collaboration with McMaster University, University of Montreal, Toronto Metropolitan University, Concordia University, University of Alberta, the Federal University of Minas Gerais, Fundação Casa de Rui Barbosa, the Brazilian Political Science Association, the Brazilian Association of Graduate Studies and Research in Social Sciences",
   "click_here_to_apply":"Click Here to Apply",
   "click_here_to_register":"Click Here to Register",
-  "entry_hidden_message": "This entry is hidden"
+  "entry_hidden_message": "This entry is hidden",
+  "Visit Participedia.org": "Visit Participedia.org"
 }

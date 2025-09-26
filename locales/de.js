@@ -2113,5 +2113,6 @@
   "Zimbabwe": "Zimbabwe",
   "Zoom Map In": "Karte vergrößern",
   "Zoom Map Out": "Karte verkleinern",
-  "entry_hidden_message": "Dieser Eintrag ist verborgen"
+  "entry_hidden_message": "Dieser Eintrag ist verborgen",
+  "Visit Participedia.org": "Besuchen Sie Participedia.org"
 }
