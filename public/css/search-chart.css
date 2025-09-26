@@ -110,23 +110,6 @@
   }
 }
 
-
-#pieChartWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  text-align: center;
-}
-
-#labelsColumn {
-  display: flex;
-  flex-direction: column; /* Vertical labels */
-  margin-bottom: 20px;
-  align-items: center;
-  width: 100%;
-}
-
 /* Each label and color box */
 #labelContainer .label-item {
   display: flex;
@@ -146,32 +129,6 @@
   font-size: 16px;
 }
 
-/* Pie Chart Column */
-#pieChart {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-/* Ensure the pie chart is responsive */
-#pieChart svg {
-  width: 80%;
-  height: auto; /* Ensures height adjusts with width */
-}
-
-
-@media (max-width: 1024px) {
-  #labelsColumn {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-
-  #pieChart {
-    width: 100%;
-    justify-content: center;
-  }
-}
 
 /* Tooltip styling */
 .tooltipPicChart {
@@ -235,7 +192,7 @@
 .chart-row--charts {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 32px;
   width: 100%;
 }
 
@@ -262,4 +219,66 @@
     width: 100%;
     margin-bottom: 24px;
   }
+}
+
+#pieChartWrapper {
+  display: flex;
+  flex-direction: row;  /* side-by-side */
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: left;     /* labels left-aligned */
+}
+
+#labelsColumn {
+  display: flex;
+  flex-direction: column; /* label list vertical */
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 30%;             /* was 40% */
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+#pieChart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;             /* was 60% */
+}
+
+#pieChart svg {
+  width: 100%;
+  max-width: 520px;       /* was 420px */
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  #pieChartWrapper {
+    flex-direction: column; /* stack on small screens */
+    gap: 12px;
+  }
+  #labelsColumn,
+  #pieChart {
+    width: 100%;
+  }
+  #labelsColumn {
+    align-items: center; /* center labels when stacked */
+  }
+}
+
+.y-grid path { display: none; }    /* hides the Y grid outline */
+.y-axis path, .x-axis path { display: none; } /* hides axis domain lines */
+
+.bar.is-selected {
+  fill: brightness(0.8);
+  filter: brightness(0.8);
+}
+
+.bar:hover {
+  filter: brightness(0.9);
+}
+
+.bar-count {
+  font-weight: 600;
 }
