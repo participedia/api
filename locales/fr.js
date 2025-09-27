@@ -2116,5 +2116,6 @@
   "entry_hidden_message": "Cette entrée est cachée",
   "Visit Participedia.org": "Visitez Participedia.org",
   "about.content.cta": "Visitez %sParticipedia.org%s pour en savoir plus sur le projet Participedia, notamment notre mission, nos pôles de recherche, nos événements et plus encore.",
-  "Participedia Project": "Projet Participedia"
+  "Participedia Project": "Projet Participedia",
+  "participedia.school.events.cta": "Visitez %sParticipedia.org/participedia-school%s pour en savoir plus sur nos événements Participedia School."
 }

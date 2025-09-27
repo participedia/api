@@ -2116,5 +2116,6 @@
   "entry_hidden_message": "此条目已隐藏",
   "Visit Participedia.org": "访问 Participedia.org",
   "about.content.cta": "访问%sParticipedia.org%s，了解有关 Participedia 项目的更多信息，包括我们的使命、研究集群、活动等内容。",
-  "Participedia Project": "Participedia 项目"
+  "Participedia Project": "Participedia 项目",
+  "participedia.school.events.cta": "访问%sParticipedia.org/participedia-school%s，了解更多关于我们的 Participedia School 活动的信息。"
 }

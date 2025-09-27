@@ -2116,5 +2116,6 @@
   "entry_hidden_message": "Dit item is verborgen",
   "Visit Participedia.org": "Bezoek Participedia.org",
   "about.content.cta": "Bezoek %sParticipedia.org%s voor meer informatie over het Participedia-project, inclusief onze missie, onderzoeksgroepen, evenementen en meer.",
-  "Participedia Project": "Participedia-project"
+  "Participedia Project": "Participedia-project",
+  "participedia.school.events.cta": "Bezoek %sParticipedia.org/participedia-school%s voor meer informatie over onze Participedia School-evenementen."
 }
