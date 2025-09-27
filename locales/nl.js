@@ -2114,5 +2114,7 @@
   "Zoom Map In": "Kaart inzoomen",
   "Zoom Map Out": "Kaart uitzoomen",
   "entry_hidden_message": "Dit item is verborgen",
-  "Visit Participedia.org": "Bezoek Participedia.org"
+  "Visit Participedia.org": "Bezoek Participedia.org",
+  "about.content.cta": "Bezoek %sParticipedia.org%s voor meer informatie over het Participedia-project, inclusief onze missie, onderzoeksgroepen, evenementen en meer.",
+  "Participedia Project": "Participedia-project"
 }

@@ -2114,5 +2114,7 @@
   "Zoom Map In": "Ingrandisci mappa",
   "Zoom Map Out": "Allontana mappa",
   "entry_hidden_message": "Questa voce è nascosta",
-  "Visit Participedia.org": "Visita Participedia.org"
+  "Visit Participedia.org": "Visita Participedia.org",
+  "about.content.cta": "Visita %sParticipedia.org%s per maggiori informazioni sul progetto Participedia, inclusa la nostra missione, i gruppi di ricerca, gli eventi e altro ancora.",
+  "Participedia Project": "Progetto Participedia"
 }

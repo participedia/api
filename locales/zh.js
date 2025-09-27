@@ -2114,5 +2114,7 @@
   "Zoom Map In": "放大缩小字体功能",
   "Zoom Map Out": "缩放地图",
   "entry_hidden_message": "此条目已隐藏",
-  "Visit Participedia.org": "访问 Participedia.org"
+  "Visit Participedia.org": "访问 Participedia.org",
+  "about.content.cta": "访问%sParticipedia.org%s，了解有关 Participedia 项目的更多信息，包括我们的使命、研究集群、活动等内容。",
+  "Participedia Project": "Participedia 项目"
 }

@@ -2121,5 +2121,7 @@
   "click_here_to_apply":"Click Here to Apply",
   "click_here_to_register":"Click Here to Register",
   "entry_hidden_message": "This entry is hidden",
-  "Visit Participedia.org": "Visit Participedia.org"
+  "Visit Participedia.org": "Visit Participedia.org",
+  "about.content.cta": "Visit %sParticipedia.org%s for more information about the Participedia Project, including our mission, research clusters, events and more.",
+  "Participedia Project": "Participedia Project"
 }
