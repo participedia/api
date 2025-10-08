@@ -717,3 +717,7 @@ hr.solid {
     right: -10px !important;
   }
 }
+
+.collection-view .toggle-chart-layout-btn {
+  display: none !important;
+}
