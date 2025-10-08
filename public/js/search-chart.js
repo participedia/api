@@ -17,7 +17,10 @@ const searchChart = {
   },
 
   fetchAllData() {
-    xhrReq("GET", "/entries/cases-charts", {}, response => {
+    const queryString = window.location.search;
+    let url = `/entries/cases-charts` + queryString + `&resultType=chart&returns=json`;
+
+    xhrReq("GET", url, {}, response => {
       const { generalIssues, scopeOfInfluence, methodTypes, combined } = JSON.parse(response.response);
       this.data = { general: generalIssues, scope: scopeOfInfluence, methods: methodTypes, combined };
       // build lookup maps

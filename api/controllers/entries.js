@@ -350,7 +350,8 @@ function moveUncategorizedLast(arr, uncategorizedLabel = "Uncategorized") {
 
 router.get("/cases-charts", async (req, res, next) => {
   try {
-    const rows = await db.any(COUNT_ISSUE_SCOPE_COMBINED);
+    const facets = searchFiltersFromReq(req) || "";
+    const rows = await db.any(COUNT_ISSUE_SCOPE_COMBINED, {facets: facets});
     const i18n = res.__;
 
     // map & localize (scope + issue + method_type)
