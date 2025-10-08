@@ -528,3 +528,23 @@ footer .language-select {
 .no-padding {
   padding: 0;
 }
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns on desktop */
+  gap: 16px;
+}
+
+.image-grid img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px; /* optional */
+}
+
+/* 📱 Mobile: stack images in one column */
+@media (max-width: 768px) {
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+}
