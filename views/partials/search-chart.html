@@ -1,6 +1,12 @@
 <div class="home-section chart-section chart-container">
   <div class="chart-header home-section-header flex">
-    <div class="chart-title">{{t "Case Data"}}</div>
+    <div class="chart-title">
+      {{#if chartTitle}}
+        {{t chartTitle}}
+      {{else}}
+        {{t "search_chart_title_case"}}
+      {{/if}}
+    </div>
     <button class="icon-only" id="resetFilters">
       <span class="sr-only">{{t "reset filter"}}</span>
       {{> icon-restart}}
@@ -11,7 +17,13 @@
     <div class="chart-row chart-row--charts">
 
       <div class="bar-chart-container">
-        <div class="bar-chart-title chart-title">{{t "General Issues"}}</div>
+        <div class="bar-chart-title chart-title">
+          {{#if issueTitleKey}}
+            {{t issueTitleKey}}
+          {{else}}
+            {{t "General Issues"}}
+          {{/if}}
+        </div>
         <div id="barChart"></div>
       </div>
 

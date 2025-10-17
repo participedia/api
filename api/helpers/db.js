@@ -136,7 +136,7 @@ const COPY_METHOD = sql("../sql/copy_method.sql");
 const DELETE_EDITED_METHODS_ENTRY = sql("../sql/delete_edited_method_entry.sql");
 const DELETE_EDITED_ORGANIZATION_ENTRY = sql("../sql/delete_edited_organization_entry.sql");
 const COPY_ORGANIZATION = sql("../sql/copy_organization.sql");
-const COUNT_ISSUE_SCOPE_COMBINED = sql("../sql/count_issue_scope_combined.sql");
+const STATE_CHARTS_DATA = sql("../sql/state_charts_data.sql");
 
 
 function ErrorReporter() {
@@ -712,5 +712,5 @@ module.exports = {
   DELETE_EDITED_METHODS_ENTRY,
   DELETE_EDITED_ORGANIZATION_ENTRY,
   COPY_ORGANIZATION,
-  COUNT_ISSUE_SCOPE_COMBINED
+  STATE_CHARTS_DATA
 };

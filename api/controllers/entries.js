@@ -2,7 +2,7 @@
 let express = require("express");
 let router = express.Router(); // eslint-disable-line new-cap
 
-let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY, COUNT_ISSUE_SCOPE_COMBINED } = require("../helpers/db");
+let { db, ENTRIES_REVIEW_LIST, UPDATE_CASE, INSERT_AUTHOR, CASE_BY_ID_GET, DELETE_EDITED_CASE_ENTRY, METHOD_BY_ID, UPDATE_METHOD, DELETE_EDITED_METHODS_ENTRY, ORGANIZATION_BY_ID, UPDATE_ORGANIZATION, DELETE_EDITED_ORGANIZATION_ENTRY, STATE_CHARTS_DATA } = require("../helpers/db");
 
 const {
   searchFiltersFromReq,
@@ -348,35 +348,128 @@ function moveUncategorizedLast(arr, uncategorizedLabel = "Uncategorized") {
   return [...categorized, ...uncategorized];
 }
 
-router.get("/cases-charts", async (req, res, next) => {
+router.get("/charts", async (req, res, next) => {
   try {
+    const type = typeFromReq(req);
+    const chartConfig = {
+      case: {
+        table: "cases",
+        scopeExpr: `
+          ARRAY[
+            COALESCE(NULLIF(scope_of_influence, ''), 'uncategorized')
+          ]::text[]
+        `,
+        issueExpr: `
+          CASE
+            WHEN general_issues IS NULL OR COALESCE(array_length(general_issues, 1), 0) = 0
+              THEN ARRAY['uncategorized']::text[]
+            ELSE general_issues
+          END::text[]
+        `,
+        methodExpr: `
+          CASE
+            WHEN method_types IS NULL OR COALESCE(array_length(method_types, 1), 0) = 0
+              THEN ARRAY['uncategorized']::text[]
+            ELSE method_types
+          END::text[]
+        `,
+        issueI18nKey: "general_issues",
+        methodI18nKey: "method_types",
+      },
+      method: {
+        table: "methods",
+        scopeExpr: `
+          CASE
+            WHEN scope_of_influence IS NULL OR COALESCE(array_length(scope_of_influence, 1), 0) = 0
+              THEN ARRAY['uncategorized']::text[]
+            ELSE scope_of_influence
+          END::text[]
+        `,
+        issueExpr: `
+          CASE
+            WHEN purpose_method IS NULL OR COALESCE(array_length(purpose_method, 1), 0) = 0
+              THEN ARRAY['uncategorized']::text[]
+            ELSE purpose_method
+          END::text[]
+        `,
+        methodExpr: `
+          CASE
+            WHEN method_types IS NULL OR COALESCE(array_length(method_types, 1), 0) = 0
+              THEN ARRAY['uncategorized']::text[]
+            ELSE method_types
+          END::text[]
+        `,
+        issueI18nKey: "purposes",
+        methodI18nKey: "method_types",
+      },
+      organization: {
+        table: "organizations",
+        scopeExpr: `
+          CASE
+            WHEN scope_of_influence IS NULL OR COALESCE(array_length(scope_of_influence, 1), 0) = 0
+              THEN ARRAY['uncategorized']::text[]
+            ELSE scope_of_influence
+          END::text[]
+        `,
+        issueExpr: `
+          CASE
+            WHEN general_issues IS NULL OR COALESCE(array_length(general_issues, 1), 0) = 0
+              THEN ARRAY['uncategorized']::text[]
+            ELSE general_issues
+          END::text[]
+        `,
+        methodExpr: `
+          CASE
+            WHEN type_method IS NULL OR COALESCE(array_length(type_method, 1), 0) = 0
+              THEN ARRAY['uncategorized']::text[]
+            ELSE type_method
+          END::text[]
+        `,
+        issueI18nKey: "general_issues",
+        methodI18nKey: "type_method",
+      },
+    };
+
+    const { table, scopeExpr, issueExpr, methodExpr, issueI18nKey, methodI18nKey } =
+      chartConfig[type] || chartConfig.case;
+
     const facets = searchFiltersFromReq(req) || "";
-    const rows = await db.any(COUNT_ISSUE_SCOPE_COMBINED, {facets: facets});
+    const rows = await db.any(STATE_CHARTS_DATA, {
+      facets: facets,
+      table: table,
+      scopeExpr: scopeExpr,
+      issueExpr: issueExpr,
+      methodExpr: methodExpr,
+    });
     const i18n = res.__;
 
     // map & localize (scope + issue + method_type)
     const combined = rows.map(r => {
-      const isScopeUncat  = r.scope_of_influence === 'uncategorized';
-      const isIssueUncat  = r.issue === 'uncategorized';
-      const isMethodUncat = r.method_type === 'uncategorized';
+      const isScopeUncat = r.scope_of_influence === "uncategorized";
+      const scopeLabel = isScopeUncat
+        ? "Etc."
+        : i18n(`name:scope_of_influence-key:${r.scope_of_influence}`);
+
+      const issueKey = r.issue_key;
+      const isIssueUncat = issueKey === "uncategorized";
+      const issueLabel = isIssueUncat
+        ? "Uncategorized"
+        : i18n(`name:${issueI18nKey}-key:${issueKey}`);
+
+      const methodKey = r.method_type_key;
+      const isMethodUncat = methodKey === "uncategorized";
+      const methodLabel = isMethodUncat
+        ? "Uncategorized"
+        : i18n(`name:${methodI18nKey}-key:${methodKey}`);
 
       return {
-        scope_of_influence: isScopeUncat
-          ? 'Etc.'
-          : i18n(`name:scope_of_influence-key:${r.scope_of_influence}`),
+        scope_of_influence: scopeLabel,
         key_scope: !isScopeUncat ? r.scope_of_influence : null,
-
-        issue: isIssueUncat
-          ? 'Uncategorized'
-          : i18n(`name:general_issues-key:${r.issue}`),
-        key_issue: !isIssueUncat ? r.issue : null,
-
-        method_type: isMethodUncat
-          ? 'Uncategorized'
-          : i18n(`name:method_types-key:${r.method_type}`),
-        key_method_type: !isMethodUncat ? r.method_type : null,
-
-        count: +r.count
+        issue: issueLabel,
+        key_issue: !isIssueUncat ? issueKey : null,
+        method_type: methodLabel,
+        key_method_type: !isMethodUncat ? methodKey : null,
+        count: +r.count,
       };
     });
 

@@ -18,7 +18,7 @@ const searchChart = {
 
   fetchAllData() {
     const queryString = window.location.search;
-    let url = `/entries/cases-charts` + queryString + `&resultType=chart&returns=json`;
+    let url = `/entries/charts` + queryString + `&resultType=chart&returns=json`;
 
     xhrReq("GET", url, {}, response => {
       const { generalIssues, scopeOfInfluence, methodTypes, combined } = JSON.parse(response.response);

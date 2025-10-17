@@ -2117,5 +2117,8 @@
   "Visit Participedia.org": "Visita Participedia.org",
   "about.content.cta": "Visita %sParticipedia.org%s per maggiori informazioni sul progetto Participedia, inclusa la nostra missione, i gruppi di ricerca, gli eventi e altro ancora.",
   "Participedia Project": "Progetto Participedia",
-  "participedia.school.events.cta": "Visita %sParticipedia.org/participedia-school%s per ulteriori informazioni sui nostri eventi della Participedia School."
+  "participedia.school.events.cta": "Visita %sParticipedia.org/participedia-school%s per ulteriori informazioni sui nostri eventi della Participedia School.",
+  "search_chart_title_case": "Dati sui casi",
+  "search_chart_title_method": "Dati sui metodi",
+  "search_chart_title_organization": "Dati sulle organizzazioni"
 }

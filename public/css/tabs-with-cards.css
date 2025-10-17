@@ -443,16 +443,9 @@ hr.solid {
 [data-card-layout="list"] .tab-container .js-tab-items .tab-method {
   display: inline block;
 }
-[data-card-layout="chart"] .tab-container .js-tab-items .tab-method {
-  display: none
-}
 [data-card-layout="chart"] .tab-container .js-tab-items .tab-collections {
   display: none;
 }
-[data-card-layout="chart"] .tab-container .js-tab-items .tab-organizations {
-  display: none;
-}
-
 
 [data-card-layout="maps"] .tab-select-container .select-collections {
   display: none;

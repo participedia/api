@@ -2117,5 +2117,8 @@
   "Visit Participedia.org": "Bezoek Participedia.org",
   "about.content.cta": "Bezoek %sParticipedia.org%s voor meer informatie over het Participedia-project, inclusief onze missie, onderzoeksgroepen, evenementen en meer.",
   "Participedia Project": "Participedia-project",
-  "participedia.school.events.cta": "Bezoek %sParticipedia.org/participedia-school%s voor meer informatie over onze Participedia School-evenementen."
+  "participedia.school.events.cta": "Bezoek %sParticipedia.org/participedia-school%s voor meer informatie over onze Participedia School-evenementen.",
+  "search_chart_title_case": "Casusgegevens",
+  "search_chart_title_method": "Methodegegevens",
+  "search_chart_title_organization": "Organisatiegegevens"
 }
