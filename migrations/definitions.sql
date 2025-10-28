@@ -250,7 +250,28 @@ CREATE TABLE cases (
     implementers_of_change text[] DEFAULT '{}'::text[],
     formal_evaluation text DEFAULT ''::text,
     evaluation_reports text[] DEFAULT '{}'::text[],
-    evaluation_links text[] DEFAULT '{}'::text[]
+    evaluation_links text[] DEFAULT '{}'::text[],
+    representation_change_who text DEFAULT ''::text,
+    representation_change_what text DEFAULT ''::text,
+    represented_shaped text DEFAULT ''::text,
+    anonymous_identified text DEFAULT ''::text,
+    represented_characteristics text[] DEFAULT '{}'::text[],
+    represented_group text[] DEFAULT '{}'::text[],
+    ai_ml text DEFAULT ''::text,
+    argument_tools text[] DEFAULT '{}'::text[],
+    facilitator_automation text DEFAULT ''::text,
+    facetoface_and_online_integration text DEFAULT ''::text,
+    gamification text[] DEFAULT '{}'::text[],
+    synchronous_asynchronous text DEFAULT ''::text,
+    text_video text DEFAULT ''::text,
+    visualization text DEFAULT ''::text,
+    virtual_reality text DEFAULT ''::text,
+    representation_claims text[] DEFAULT '{}'::text[],
+    feedback_methods text[] DEFAULT '{}'::text[],
+    behind_claim text DEFAULT ''::text,
+    most_affected text DEFAULT ''::text,
+    implementers_connected text DEFAULT ''::text,
+    represented_evaluation text DEFAULT ''::text
 )
 INHERITS (things);
 

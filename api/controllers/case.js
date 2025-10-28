@@ -297,6 +297,9 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "postal_code",
     "country",
     "funder",
+    "most_affected",
+    "implementers_connected",
+    "represented_evaluation",
   ].map(key => cond(key, as.text));
   // date
   ["start_date", "end_date"].map(key => cond(key, as.date));
@@ -313,10 +316,22 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "legality",
     "facilitators",
     "facilitator_training",
+    "facilitator_automation",
+    "facetoface_and_online_integration",
     "facetoface_online_or_both",
     "open_limited",
     "recruitment_method",
     "time_limited",
+    "representation_change_who",
+    "representation_change_what",
+    "ai_ml",
+    "synchronous_asynchronous",
+    "text_video",
+    "visualization",
+    "virtual_reality",
+    "behind_claim",
+    "represented_shaped",
+    "anonymous_identified",
   ].map(key => cond(key, as.casekeyflat));
   // list of keys
   [
@@ -336,6 +351,12 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "change_types",
     "implementers_of_change",
     "tools_techniques_types",
+    "represented_characteristics",
+    "represented_group",
+    "argument_tools",
+    "gamification",
+    "representation_claims",
+    "feedback_methods",
   ].map(key => cond(key, as.casekeys));
   return [updatedCase, er];
 }

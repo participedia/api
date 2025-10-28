@@ -482,6 +482,12 @@ const editForm = {
       "photos",
       "implementers_of_change",
       "evaluation_reports",
+      "represented_characteristics",
+      "represented_group",
+      "argument_tools",
+      "gamification",
+      "representation_claims",
+      "feedback_methods",
     ].map(key => {
       let formKeys = Object.keys(originalEntry);
       let formValues = originalEntry;

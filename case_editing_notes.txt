@@ -37,15 +37,31 @@
   end_date, // convert to Date
   ongoing, // must be boolean
   time_limited, // normalize to key
+  representation_change_who, // normalize to key
+  representation_change_what, // normalize to key
   purposes, // normalize to array of keys
   approaches, // normalize to array of keys
   public_spectrum, // normalize to key
+  represented_characteristics, // normalize to array of keys
+  represented_shaped, // normalize to key
   number_of_participants, // must be integer
   open_limited, // normalize to key
   recruitment_method, // normalize to key
   targeted_participants, // normalize to array of keys
+  represented_group, // normalize to array of keys
+  anonymous_identified, // normalize to key
+  facilitator_automation, // normalize to key
+  facetoface_and_online_integration, // normalize to key
+  ai_ml, // normalize to key
+  synchronous_asynchronous, // normalize to key
+  text_video, // normalize to key
+  visualization, // normalize to key
+  virtual_reality, // normalize to key
   method_types, // normalize to array of keys
   tools_techniques_types, // normalize to array of keys
+  argument_tools, // normalize to array of keys
+  representation_claims, // normalize to array of keys
+  feedback_methods, // normalize to array of keys
   specific_methods_tools_techniques, // normalize to array of ids for methods or tools
   legality, // normalize to key
   facilitators, // normalize to key
@@ -62,6 +78,7 @@
   funder_types, // normalize to list of keys
   staff, // boolean only
   volunteers, // boolean only
+  behind_claim, // normalize to key
   impact_evidence, // boolean only
   change_types, // normalize to array of keys
   implementers_of_change, // normalize to array of keys
