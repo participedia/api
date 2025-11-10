@@ -7,8 +7,17 @@ const OCTOBER_RANGE = {
   endDate: "2025-10-31",
 };
 
+const EMBEDDED_IMAGE_PATTERN = /<img src="data:image\/[a-z]+;base64[^>]*>/i;
+const EMBEDDED_IMAGE_REGEX = new RegExp(
+  EMBEDDED_IMAGE_PATTERN.source,
+  "gi"
+);
+
 const sanitizeRichText = value =>
-  (value || "").replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g, "");
+  (value || "").replace(EMBEDDED_IMAGE_REGEX, "");
+
+const hasEmbeddedImage = value =>
+  EMBEDDED_IMAGE_PATTERN.test(value || "");
 
 const countCharactersForEntry = entry =>
   sanitizeRichText(entry.title).length +
@@ -45,18 +54,44 @@ async function reportOctoberCharacterTotals() {
     }
 
     const summary = { entries: 0, characters: 0 };
+    const entriesWithEmbeddedImages = [];
 
     for (const row of rows) {
       summary.entries += 1;
 
       const characters = countCharactersForEntry(row);
       summary.characters += characters;
+
+      if (
+        hasEmbeddedImage(row.title) ||
+        hasEmbeddedImage(row.description) ||
+        hasEmbeddedImage(row.body)
+      ) {
+        entriesWithEmbeddedImages.push({
+          thingId: row.thingid,
+          language: row.language,
+          entryDate: row.entry_date,
+        });
+      }
     }
 
     console.log(`Entries and characters added in ${OCTOBER_RANGE.label}:`);
     console.log(
       `${summary.entries} entries, ${summary.characters} characters (Oct 1-31)`
     );
+
+    if (entriesWithEmbeddedImages.length) {
+      console.log(
+        `${entriesWithEmbeddedImages.length} entries contain embedded base64 images:`
+      );
+      entriesWithEmbeddedImages.forEach(entry => {
+        console.log(
+          `- thing ${entry.thingId} (${entry.language}) on ${entry.entryDate}`
+        );
+      });
+    } else {
+      console.log("No embedded base64 images detected in October entries.");
+    }
 
     process.exit(0);
   } catch (error) {
