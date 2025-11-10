@@ -176,7 +176,8 @@
     "migratenewprod": "psql -d \"${DATABASE_NEW_PROD_URL}\" -f migrations/all_migrations.sql -U uaf92iv9m4slg6",
     "exportusers": "node scripts/export-users.js",
     "pg-version": "node scripts/psql-version.js",
-    "check-indexes": "node scripts/check_indexes.js"
+    "check-indexes": "node scripts/check_indexes.js",
+    "entry-character-summary": "node scripts/entry-character-summary.js"
   },
   "husky": {
     "hooks": {
