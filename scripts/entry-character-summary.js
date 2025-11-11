@@ -28,9 +28,9 @@ async function reportOctoberCharacterTotals() {
   try {
     const rows = await db.any(
       `
-      WITH localized_language_versions AS (
+      WITH first_complete_entry_text AS (
         SELECT
-          lt.thingid,
+          t.id AS thingid,
           lt.language,
           lt.title,
           lt.description,
@@ -38,15 +38,30 @@ async function reportOctoberCharacterTotals() {
           lt.timestamp AS entry_timestamp,
           lt.timestamp::date AS entry_date,
           t.original_language,
-          COUNT(*) OVER (
-            PARTITION BY lt.thingid, lt.language
-          ) AS localized_version_count,
-          ROW_NUMBER() OVER (
-            PARTITION BY lt.thingid, lt.language
-            ORDER BY lt.timestamp ASC
-          ) AS version_rank
-        FROM localized_texts lt
-        JOIN things t ON t.id = lt.thingid
+          vc.localized_version_count
+        FROM things t
+        JOIN LATERAL (
+          SELECT lt_inner.*
+          FROM localized_texts lt_inner
+          WHERE lt_inner.thingid = t.id
+            AND lt_inner.title IS NOT NULL
+            AND lt_inner.description IS NOT NULL
+            AND lt_inner.body IS NOT NULL
+          ORDER BY
+            CASE
+              WHEN NULLIF(t.original_language, '') IS NOT NULL
+                   AND lt_inner.language = t.original_language THEN 0
+              ELSE 1
+            END,
+            lt_inner.timestamp ASC
+          LIMIT 1
+        ) lt ON TRUE
+        JOIN LATERAL (
+          SELECT COUNT(*) AS localized_version_count
+          FROM localized_texts lt_count
+          WHERE lt_count.thingid = t.id
+            AND lt_count.language = lt.language
+        ) vc ON TRUE
         WHERE t.hidden = false
           AND t.published = true
       )
@@ -59,9 +74,8 @@ async function reportOctoberCharacterTotals() {
         original_language,
         entry_date,
         localized_version_count
-      FROM localized_language_versions
-      WHERE version_rank = 1
-        AND entry_timestamp::date BETWEEN $(startDate) AND $(endDate)
+      FROM first_complete_entry_text
+      WHERE entry_timestamp::date BETWEEN $(startDate) AND $(endDate)
       ORDER BY entry_timestamp ASC
       `,
       {
@@ -97,7 +111,7 @@ async function reportOctoberCharacterTotals() {
       summariesByLanguage.set(languageKey, languageSummary);
 
       console.log(
-        `Thing ${row.thingid} language ${row.language} (original ${row.original_language}) has ${row.localized_version_count} localized_texts records; counting first version only.`
+        `Thing ${row.thingid} counted once (language ${row.language}, original ${row.original_language}) with ${row.localized_version_count} localized_texts versions; using earliest complete version only.`
       );
 
       if (
