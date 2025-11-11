@@ -28,67 +28,49 @@ async function reportOctoberCharacterTotals() {
   try {
     const rows = await db.any(
       `
-      WITH entry_first_version AS (
-        SELECT
-          t.id AS thingid,
-          t.original_language,
-          MIN(lt.timestamp) FILTER (
-            WHERE lt.title IS NOT NULL
-              AND lt.title <> ''
-              AND lt.description IS NOT NULL
-              AND lt.description <> ''
-              AND lt.body IS NOT NULL
-              AND lt.body <> ''
-          ) AS first_version_timestamp
-        FROM things t
-        JOIN localized_texts lt ON lt.thingid = t.id
-        WHERE t.hidden = false
-          AND t.published = true
-        GROUP BY t.id, t.original_language
-      ),
-      localized_language_versions AS (
+      WITH localized_entry_versions AS (
         SELECT
           lt.thingid,
           lt.language,
           lt.title,
           lt.description,
           lt.body,
-          lt.timestamp AS language_timestamp,
+          lt.timestamp AS entry_timestamp,
+          lt.timestamp::date AS entry_date,
+          t.original_language,
           COUNT(*) OVER (
             PARTITION BY lt.thingid, lt.language
           ) AS localized_version_count,
           ROW_NUMBER() OVER (
-            PARTITION BY lt.thingid, lt.language
-            ORDER BY lt.timestamp ASC
-          ) AS language_version_rank
+            PARTITION BY lt.thingid
+            ORDER BY
+              lt.timestamp ASC,
+              CASE
+                WHEN NULLIF(t.original_language, '') IS NOT NULL
+                     AND lt.language = t.original_language THEN 0
+                ELSE 1
+              END
+          ) AS entry_version_rank
         FROM localized_texts lt
         JOIN things t ON t.id = lt.thingid
         WHERE t.hidden = false
           AND t.published = true
       )
       SELECT
-        llv.thingid,
-        llv.language,
-        llv.title,
-        llv.description,
-        llv.body,
-        efv.original_language,
-        efv.first_version_timestamp::date AS entry_date,
-        llv.localized_version_count,
-        efv.first_version_timestamp,
-        llv.language_timestamp
-      FROM entry_first_version efv
-      JOIN localized_language_versions llv ON llv.thingid = efv.thingid
-      WHERE efv.first_version_timestamp IS NOT NULL
-        AND efv.first_version_timestamp::date BETWEEN $(startDate) AND $(endDate)
-        AND llv.language_version_rank = 1
-        AND llv.title IS NOT NULL
-        AND llv.title <> ''
-        AND llv.description IS NOT NULL
-        AND llv.description <> ''
-        AND llv.body IS NOT NULL
-        AND llv.body <> ''
-      ORDER BY efv.first_version_timestamp ASC, llv.language ASC
+        thingid,
+        language,
+        title,
+        description,
+        body,
+        original_language,
+        entry_date,
+        localized_version_count
+      FROM localized_entry_versions
+      WHERE entry_version_rank = 1
+        AND body IS NOT NULL
+        AND body <> ''
+        AND entry_timestamp::date BETWEEN $(startDate) AND $(endDate)
+      ORDER BY entry_timestamp ASC
       `,
       {
         startDate: OCTOBER_RANGE.startDate,
@@ -123,7 +105,7 @@ async function reportOctoberCharacterTotals() {
       summariesByLanguage.set(languageKey, languageSummary);
 
       console.log(
-        `Thing ${row.thingid} created ${row.entry_date} (original ${row.original_language}); counting language ${row.language} first version on ${row.language_timestamp}, ${row.localized_version_count} records exist for this language.`
+        `Thing ${row.thingid} counted once (first localized_text version on ${row.entry_date} in ${row.language}, original ${row.original_language}); ${row.localized_version_count} versions exist for that language.`
       );
 
       if (
