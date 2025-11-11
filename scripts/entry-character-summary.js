@@ -28,19 +28,41 @@ async function reportOctoberCharacterTotals() {
   try {
     const rows = await db.any(
       `
+      WITH localized_language_versions AS (
+        SELECT
+          lt.thingid,
+          lt.language,
+          lt.title,
+          lt.description,
+          lt.body,
+          lt.timestamp AS entry_timestamp,
+          lt.timestamp::date AS entry_date,
+          t.original_language,
+          COUNT(*) OVER (
+            PARTITION BY lt.thingid, lt.language
+          ) AS localized_version_count,
+          ROW_NUMBER() OVER (
+            PARTITION BY lt.thingid, lt.language
+            ORDER BY lt.timestamp ASC
+          ) AS version_rank
+        FROM localized_texts lt
+        JOIN things t ON t.id = lt.thingid
+        WHERE t.hidden = false
+          AND t.published = true
+      )
       SELECT
-        localized_texts.thingid,
-        localized_texts.language,
-        localized_texts.title,
-        localized_texts.description,
-        localized_texts.body,
-        localized_texts.timestamp::date AS entry_date
-      FROM localized_texts
-      JOIN things ON things.id = localized_texts.thingid
-      WHERE things.hidden = false
-        AND things.published = true
-        AND localized_texts.timestamp::date BETWEEN $(startDate) AND $(endDate)
-      ORDER BY localized_texts.timestamp ASC
+        thingid,
+        language,
+        title,
+        description,
+        body,
+        original_language,
+        entry_date,
+        localized_version_count
+      FROM localized_language_versions
+      WHERE version_rank = 1
+        AND entry_timestamp::date BETWEEN $(startDate) AND $(endDate)
+      ORDER BY entry_timestamp ASC
       `,
       {
         startDate: OCTOBER_RANGE.startDate,
@@ -53,14 +75,30 @@ async function reportOctoberCharacterTotals() {
       process.exit(0);
     }
 
-    const summary = { entries: 0, characters: 0 };
+    const totalSummary = { entries: 0, characters: 0 };
+    const summariesByLanguage = new Map();
     const entriesWithEmbeddedImages = [];
 
     for (const row of rows) {
-      summary.entries += 1;
+      totalSummary.entries += 1;
 
       const characters = countCharactersForEntry(row);
-      summary.characters += characters;
+      totalSummary.characters += characters;
+
+      const languageKey = row.language || "unknown";
+      const languageSummary =
+        summariesByLanguage.get(languageKey) || {
+          entries: 0,
+          characters: 0,
+        };
+
+      languageSummary.entries += 1;
+      languageSummary.characters += characters;
+      summariesByLanguage.set(languageKey, languageSummary);
+
+      console.log(
+        `Thing ${row.thingid} language ${row.language} (original ${row.original_language}) has ${row.localized_version_count} localized_texts records; counting first version only.`
+      );
 
       if (
         hasEmbeddedImage(row.title) ||
@@ -77,8 +115,19 @@ async function reportOctoberCharacterTotals() {
 
     console.log(`Entries and characters added in ${OCTOBER_RANGE.label}:`);
     console.log(
-      `${summary.entries} entries, ${summary.characters} characters (Oct 1-31)`
+      `${totalSummary.entries} entries, ${totalSummary.characters} characters (Oct 1-31)`
     );
+
+    if (summariesByLanguage.size) {
+      console.log("Breakdown by language (first version per thing/language):");
+      [...summariesByLanguage.entries()]
+        .sort(([aLang], [bLang]) => aLang.localeCompare(bLang))
+        .forEach(([language, summary]) => {
+          console.log(
+            `- ${language}: ${summary.entries} entries, ${summary.characters} characters`
+          );
+        });
+    }
 
     if (entriesWithEmbeddedImages.length) {
       console.log(
