@@ -1,11 +1,21 @@
 require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
+
 const { db } = require("../api/helpers/db.js");
+const { SUPPORTED_LANGUAGES } = require("../constants.js");
 
 const OCTOBER_RANGE = {
   label: "October 2025",
   startDate: "2025-10-01",
   endDate: "2025-10-31",
 };
+
+const supportedLanguageCodes = SUPPORTED_LANGUAGES.map(locale =>
+  (locale.twoLetterCode || "").toLowerCase()
+).filter(Boolean);
+
+if (!supportedLanguageCodes.length) {
+  throw new Error("SUPPORTED_LANGUAGES contains no valid twoLetterCode values.");
+}
 
 const EMBEDDED_IMAGE_PATTERN = /<img src="data:image\/[a-z]+;base64[^>]*>/i;
 const EMBEDDED_IMAGE_REGEX = new RegExp(
@@ -16,145 +26,162 @@ const EMBEDDED_IMAGE_REGEX = new RegExp(
 const sanitizeRichText = value =>
   (value || "").replace(EMBEDDED_IMAGE_REGEX, "");
 
-const hasEmbeddedImage = value =>
-  EMBEDDED_IMAGE_PATTERN.test(value || "");
+const countTranslatedCharacters = entry => {
+  const title = entry.title || "";
+  const description = entry.description || "";
+  const body = sanitizeRichText(entry.body || "");
+  return title.length + description.length + body.length;
+};
 
-const countCharactersForEntry = entry =>
-  sanitizeRichText(entry.title).length +
-  sanitizeRichText(entry.description).length +
-  sanitizeRichText(entry.body).length;
+const formatDate = value => {
+  if (!value) {
+    return "n/a";
+  }
 
-async function reportOctoberCharacterTotals() {
-  try {
-    const rows = await db.any(
-      `
-      WITH localized_entry_versions AS (
-        SELECT
-          lt.thingid,
-          lt.language,
-          lt.title,
-          lt.description,
-          lt.body,
-          lt.timestamp AS entry_timestamp,
-          lt.timestamp::date AS entry_date,
-          t.original_language,
-          COUNT(*) OVER (
-            PARTITION BY lt.thingid, lt.language
-          ) AS localized_version_count,
-          ROW_NUMBER() OVER (
-            PARTITION BY lt.thingid
-            ORDER BY
-              lt.timestamp ASC,
-              CASE
-                WHEN NULLIF(t.original_language, '') IS NOT NULL
-                     AND lt.language = t.original_language THEN 0
-                ELSE 1
-              END
-          ) AS entry_version_rank
-        FROM localized_texts lt
-        JOIN things t ON t.id = lt.thingid
-        WHERE t.hidden = false
-          AND t.published = true
-      )
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "n/a";
+  }
+
+  return date.toISOString().split("T")[0];
+};
+
+async function fetchOctoberEntriesWithTranslations() {
+  const query = `
+    WITH october_things AS (
       SELECT
-        thingid,
-        language,
-        title,
-        description,
-        body,
+        id AS thing_id,
         original_language,
-        entry_date,
-        localized_version_count
-      FROM localized_entry_versions
-      WHERE entry_version_rank = 1
-        AND body IS NOT NULL
-        AND body <> ''
-        AND entry_timestamp::date BETWEEN $(startDate) AND $(endDate)
-      ORDER BY entry_timestamp ASC
-      `,
-      {
-        startDate: OCTOBER_RANGE.startDate,
-        endDate: OCTOBER_RANGE.endDate,
-      }
-    );
+        post_date::date AS post_date
+      FROM things
+      WHERE hidden = false
+        AND published = true
+        AND post_date::date BETWEEN $(startDate) AND $(endDate)
+    ),
+    localized_versions AS (
+      SELECT
+        lt.thingid,
+        lower(lt.language) AS language,
+        lt.title,
+        lt.description,
+        lt.body,
+        lt.timestamp,
+        ROW_NUMBER() OVER (
+          PARTITION BY lt.thingid, lower(lt.language)
+          ORDER BY lt.timestamp ASC
+        ) AS language_version_rank
+      FROM localized_texts lt
+      JOIN october_things ot
+        ON ot.thing_id = lt.thingid
+      WHERE (ot.original_language IS NULL
+             OR lower(lt.language) <> lower(ot.original_language))
+        AND lower(lt.language) IN ($(supportedLanguages:csv))
+        AND COALESCE(lt.body, '') <> ''
+    )
+    SELECT
+      ot.thing_id,
+      ot.post_date,
+      ot.original_language,
+      lv.language,
+      lv.title,
+      lv.description,
+      lv.body,
+      lv.timestamp AS first_translation_timestamp
+    FROM october_things ot
+    JOIN localized_versions lv
+      ON lv.thingid = ot.thing_id
+    WHERE lv.language_version_rank = 1
+    ORDER BY ot.post_date ASC, lv.language ASC;
+  `;
+
+  return db.any(query, {
+    startDate: OCTOBER_RANGE.startDate,
+    endDate: OCTOBER_RANGE.endDate,
+    supportedLanguages: supportedLanguageCodes,
+  });
+}
+
+async function reportOctoberTranslationCharacters() {
+  try {
+    const rows = await fetchOctoberEntriesWithTranslations();
 
     if (!rows.length) {
-      console.log("No localized text entries found for October 2025.");
+      console.log(`No translated localized_text entries found for ${OCTOBER_RANGE.label}.`);
       process.exit(0);
     }
 
-    const totalSummary = { entries: 0, characters: 0 };
-    const summariesByLanguage = new Map();
-    const entriesWithEmbeddedImages = [];
+    const distinctThingIds = new Set();
+    const perLanguage = new Map();
+    const perThing = new Map();
+    let totalCharacters = 0;
 
-    for (const row of rows) {
-      totalSummary.entries += 1;
+    rows.forEach(row => {
+      distinctThingIds.add(row.thing_id);
+      const charCount = countTranslatedCharacters(row);
+      totalCharacters += charCount;
 
-      const characters = countCharactersForEntry(row);
-      totalSummary.characters += characters;
-
-      const languageKey = row.language || "unknown";
       const languageSummary =
-        summariesByLanguage.get(languageKey) || {
-          entries: 0,
-          characters: 0,
-        };
+        perLanguage.get(row.language) || { translations: 0, characters: 0 };
+      languageSummary.translations += 1;
+      languageSummary.characters += charCount;
+      perLanguage.set(row.language, languageSummary);
 
-      languageSummary.entries += 1;
-      languageSummary.characters += characters;
-      summariesByLanguage.set(languageKey, languageSummary);
+      const thingSummary =
+        perThing.get(row.thing_id) || {
+          translations: 0,
+          characters: 0,
+          languages: [],
+        };
+      thingSummary.translations += 1;
+      thingSummary.characters += charCount;
+      thingSummary.languages.push(row.language);
+      perThing.set(row.thing_id, thingSummary);
 
       console.log(
-        `Thing ${row.thingid} counted once (first localized_text version on ${row.entry_date} in ${row.language}, original ${row.original_language}); ${row.localized_version_count} versions exist for that language.`
+        [
+          `Thing ${row.thing_id}`,
+          `(original ${row.original_language || "n/a"})`,
+          `first ${row.language} version => ${charCount} characters`,
+          `(post ${formatDate(row.post_date)}, translation ${formatDate(
+            row.first_translation_timestamp
+          )})`,
+        ].join(" ")
       );
+    });
 
-      if (
-        hasEmbeddedImage(row.title) ||
-        hasEmbeddedImage(row.description) ||
-        hasEmbeddedImage(row.body)
-      ) {
-        entriesWithEmbeddedImages.push({
-          thingId: row.thingid,
-          language: row.language,
-          entryDate: row.entry_date,
-        });
-      }
-    }
+    console.log("");
+    console.log(`Entries published in ${OCTOBER_RANGE.label}: ${distinctThingIds.size}`);
+    console.log(`Translated versions counted: ${rows.length}`);
+    console.log(`Total translated characters: ${totalCharacters}`);
 
-    console.log(`Entries and characters added in ${OCTOBER_RANGE.label}:`);
-    console.log(
-      `${totalSummary.entries} entries, ${totalSummary.characters} characters (Oct 1-31)`
-    );
-
-    if (summariesByLanguage.size) {
-      console.log("Breakdown by language (first version per thing/language):");
-      [...summariesByLanguage.entries()]
-        .sort(([aLang], [bLang]) => aLang.localeCompare(bLang))
+    if (perLanguage.size) {
+      console.log("\nCharacters by language:");
+      [...perLanguage.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
         .forEach(([language, summary]) => {
           console.log(
-            `- ${language}: ${summary.entries} entries, ${summary.characters} characters`
+            `- ${language}: ${summary.translations} translations, ${summary.characters} characters`
           );
         });
     }
 
-    if (entriesWithEmbeddedImages.length) {
-      console.log(
-        `${entriesWithEmbeddedImages.length} entries contain embedded base64 images:`
-      );
-      entriesWithEmbeddedImages.forEach(entry => {
-        console.log(
-          `- thing ${entry.thingId} (${entry.language}) on ${entry.entryDate}`
-        );
-      });
-    } else {
-      console.log("No embedded base64 images detected in October entries.");
+    if (perThing.size) {
+      console.log("\nCharacters by entry:");
+      [...perThing.entries()]
+        .sort(([a], [b]) => Number(a) - Number(b))
+        .forEach(([thingId, summary]) => {
+          const languages = summary.languages.join(", ");
+          console.log(
+            `- thing ${thingId}: ${summary.translations} translations (${languages}), ${summary.characters} characters`
+          );
+        });
     }
 
     process.exit(0);
   } catch (error) {
-    console.error("Failed to calculate October character totals", error);
+    console.error("Failed to calculate October translation characters", error);
     process.exit(1);
   }
 }
 
-reportOctoberCharacterTotals();
+reportOctoberTranslationCharacters();
