@@ -332,11 +332,13 @@ function getUpdatedCase(user, params, newCase, oldCase) {
     "behind_claim",
     "represented_shaped",
     "anonymous_identified",
+    "impact_outcome",
   ].map(key => cond(key, as.casekeyflat));
   // list of keys
   [
     "general_issues",
     "specific_topics",
+    "theme",
     "purposes",
     "approaches",
     "targeted_participants",

@@ -11,6 +11,7 @@
   {{> edit-multi-select static=static locale=locale ranked=true name="general_issues" quick-submit=true max=3 }}
   {{> edit-multi-select static=static locale=locale ranked=true name="specific_topics" max=3 quick-submit=true }}
   {{> edit-textarea name="description" quick-submit=true charLimit=280}}
+  {{> edit-multi-select static=static locale=locale ranked=true name="theme" max=3 quick-submit=true }}
 
   {{> edit-richtext
   name="body"
@@ -104,6 +105,7 @@
 <fieldset class="evidence_of_impact fullonly">
   <h2 class="fieldset-header">{{t "evidence_sectionlabel"}}</h2>
   {{> article-edit-select name="impact_evidence" }}
+  {{> article-edit-select name="impact_outcome" }}
   {{> edit-multi-select static=static locale=locale ranked=true name="change_types" }}
   {{> edit-multi-select static=static locale=locale ranked=true name="implementers_of_change" max=3 }}
   {{> article-edit-select name="most_affected" }}

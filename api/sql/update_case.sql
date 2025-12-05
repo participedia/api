@@ -57,6 +57,7 @@ SET
 -- list of keys
   general_issues = ${general_issues},
   specific_topics = ${specific_topics},
+  theme = ${theme},
   collections = ${collections},
   time_limited = ${time_limited},
   purposes = ${purposes},
@@ -74,6 +75,7 @@ SET
   funder_types = ${funder_types},
   change_types = ${change_types},
   implementers_of_change = ${implementers_of_change},
+  impact_outcome = ${impact_outcome},
   tools_techniques_types = ${tools_techniques_types},
   facilitators = ${facilitators},
   representation_change_who = ${representation_change_who},

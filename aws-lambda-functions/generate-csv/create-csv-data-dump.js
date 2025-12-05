@@ -136,6 +136,7 @@ const orderedCaseFields = [
   "has_components_titles",
   "general_issues",
   "specific_topics",
+  "theme",
   "scope_of_influence",
   "start_date",
   "end_date",
@@ -167,6 +168,7 @@ const orderedCaseFields = [
   "funder_types",
   "staff",
   "volunteers",
+  "impact_outcome",
   "impact_evidence",
   "change_types",
   "implementers_of_change",
@@ -286,6 +288,7 @@ const orderedOrganizationFields = [
 const simpleArrayFields = [
   "general_issues",
   "specific_topics",
+  "theme",
   "implementers_of_change",
   "change_types",
   "funder_types",

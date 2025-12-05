@@ -635,6 +635,7 @@ const editForm = {
       "specific_methods_tools_techniques",
       "collections",
       "specific_topics",
+      "theme",
       "purposes",
       "approaches",
       "targeted_participants",
