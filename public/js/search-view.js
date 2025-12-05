@@ -5,7 +5,6 @@ import lazyLoadImages from "./lazy-load-images.js";
 import searchFilterList from "./search-filter-list.js";
 import map from "./map.js";
 import searchChart from "./search-chart.js";
-// import charts from "./charts.js";
 
 // import searchMap from "./search-map.js";
 

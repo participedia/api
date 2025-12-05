@@ -91,3 +91,7 @@
 \include 'migrations/migration_057.sql'
 \include 'migrations/migration_058.sql'
 \include 'migrations/migration_059.sql'
+\include 'migrations/migration_064.sql'
+\include 'migrations/migration_065.sql'
+\include 'migrations/migration_066.sql'
+\include 'migrations/migration_067.sql'

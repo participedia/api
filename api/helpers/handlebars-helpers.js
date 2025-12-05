@@ -1837,7 +1837,7 @@ module.exports = {
   checkChartAvail(req) {
     const tabParam = req.query && req.query.selectedCategory;
     if (
-      tabParam === "collections" || tabParam === "method" || tabParam === "organizations" || req.baseUrl === '/user' || req.baseUrl === '/entries'
+      tabParam === undefined || tabParam === "all" || tabParam === "collections" || req.baseUrl === '/user' || req.baseUrl === '/entries'
     ) {
       return false;
     } else {

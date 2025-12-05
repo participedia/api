@@ -17,7 +17,10 @@ const searchChart = {
   },
 
   fetchAllData() {
-    xhrReq("GET", "/entries/cases-charts", {}, response => {
+    const queryString = window.location.search;
+    let url = `/entries/charts` + queryString + `&resultType=chart&returns=json`;
+
+    xhrReq("GET", url, {}, response => {
       const { generalIssues, scopeOfInfluence, methodTypes, combined } = JSON.parse(response.response);
       this.data = { general: generalIssues, scope: scopeOfInfluence, methods: methodTypes, combined };
       // build lookup maps
@@ -428,8 +431,8 @@ const searchChart = {
         .style("pointer-events", "none")
         .text(d => d.count);
 
-      labels.transition(t).attr("y", d => y(+d.count) - 6);
-
+      // labels.transition(t).attr("y", d => y(+d.count) - 6);
+      const nf = new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
       // --- Tooltips (simple title) ---
       bars.append("title")
         .text(d => `${d.method_type}\n${nf.format(d.count)} ${d.count === 1 ? "case" : "cases"}`);

@@ -8,7 +8,7 @@
             cards=results
           }}
           {{> search-map }}
-          {{> search-chart }}
+          {{> search-chart chartTitle="search_chart_title_case"}}
       {{/if}}
     </div>
     <div role="tabpanel" class="tab-cases">
@@ -20,7 +20,7 @@
             type="case"
           }}
           {{> search-map }}
-          {{> search-chart }}
+          {{> search-chart chartTitle="search_chart_title_case"}}
       {{/if}}
     </div>
     <div role="tabpanel" class="tab-methods">
@@ -31,6 +31,7 @@
           cards=results
           type="method"
         }}
+        {{> search-chart chartTitle="search_chart_title_method" issueTitleKey="method_edit_purpose_method_label"}}
       {{/if}}
     </div>
     <div role="tabpanel" class="tab-organizations">
@@ -42,6 +43,7 @@
             type="organizations"
           }}
           {{> search-map }}
+          {{> search-chart chartTitle="search_chart_title_organization"}}
       {{/if}}
     </div>
     <div role="tabpanel" class="tab-collections">
