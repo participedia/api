@@ -624,6 +624,8 @@
   "Equatorial Guinea": "赤道几内亚",
   "Eritrea": "厄立特里亚",
   "error_message_file_to_large": "抱歉，您的文件太大。尝试一次上传一个文件或上传较小的文件（总共 50mb）。",
+  "upload_error_title": "上传失败",
+  "upload_error_message": "抱歉，无法上传该文件。请重试。",
   "error_message_no_title": "至少没有标题就无法创建。",
   "Estonia": "爱沙尼亚",
   "Ethiopia": "埃塞俄比亚",

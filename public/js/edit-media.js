@@ -50,6 +50,33 @@ const editMedia = {
     modal.openModal("aria-modal");
   },
 
+  openUploadErrorModal(errors) {
+    const formEl = document.querySelector(".js-edit-form");
+    const title =
+      formEl?.upload_error_title?.value || "Upload failed";
+    const defaultMessage =
+      formEl?.upload_error_message?.value ||
+      "Sorry, we couldn't upload that file. Please try again.";
+    let content = `<h3>${title}</h3><p>${defaultMessage}</p>`;
+
+    if (typeof errors === "string" && errors.trim()) {
+      content = `<h3>${title}</h3><p>${errors}</p>`;
+    } else if (Array.isArray(errors) && errors.length) {
+      const errorsHtml = errors
+        .map(error => {
+          if (error && error.errors) {
+            return error.errors.map(err => `<li>${err}</li>`).join("");
+          }
+          return `<li>${error}</li>`;
+        })
+        .join("");
+      content = `<h3>Upload failed</h3><ul>${errorsHtml}</ul>`;
+    }
+
+    modal.updateModal(content);
+    modal.openModal("aria-modal", { showCloseBtn: true });
+  },
+
   handleInputChange(ev) {
     this.renderUploadedFiles(ev.target);
   },
@@ -137,6 +164,32 @@ const editMedia = {
             let articleId = sessionStorage.getItem("articleId");
             xhr.open("POST", updatedForm.getAttribute("action") + "/saveDraft", true);
             xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = () => {
+              if (xhr.readyState !== xhr.DONE) return;
+              if (xhr.status === 413) {
+                const message =
+                  updatedForm?.file_to_large_error?.value ||
+                  "Sorry, your files are too large. Try uploading smaller files.";
+                this.openUploadErrorModal([message]);
+                return;
+              }
+              if (xhr.status >= 400) {
+                this.openUploadErrorModal();
+                return;
+              }
+              let response = null;
+              try {
+                response = JSON.parse(xhr.responseText);
+              } catch (error) {
+                return;
+              }
+              if (response && response.OK === false) {
+                this.openUploadErrorModal(response.errors);
+              }
+            };
+            xhr.onerror = () => {
+              this.openUploadErrorModal();
+            };
             xhr.send(
               JSON.stringify({
               ...formsData,

@@ -627,6 +627,8 @@
   "Equatorial Guinea": "Guinea Ecuatorial",
   "Eritrea": "Eritrea",
   "error_message_file_to_large": "Lo siento, tus archivos son demasiado grandes. Intente cargar uno a la vez o cargar archivos más pequeños (50 MB en total).",
+  "upload_error_title": "Error al subir",
+  "upload_error_message": "Lo sentimos, no pudimos subir ese archivo. Por favor, inténtalo de nuevo.",
   "error_message_no_title": "No se puede crear sin al menos un título.",
   "Estonia": "Estonia",
   "Ethiopia": "Etiopía",

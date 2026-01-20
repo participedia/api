@@ -624,6 +624,8 @@
   "Equatorial Guinea": "Equatoriaal-Guinea",
   "Eritrea": "Eritrea",
   "error_message_file_to_large": "Sorry, uw bestanden zijn te groot. Probeer er één tegelijk te uploaden of kleinere bestanden te uploaden (totaal 50 MB).",
+  "upload_error_title": "Upload mislukt",
+  "upload_error_message": "Sorry, we konden dat bestand niet uploaden. Probeer het opnieuw.",
   "error_message_no_title": "Kan niet creëren zonder ten minste een titel.",
   "Estonia": "Estland",
   "Ethiopia": "Ethiopië",

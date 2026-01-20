@@ -627,6 +627,8 @@
   "Equatorial Guinea": "Guiné Equatorial",
   "Eritrea": "Eritreia",
   "error_message_file_to_large": "Desculpe, seus arquivos são muito grandes. Tente enviar um de cada vez ou enviar arquivos menores (50 MB no total).",
+  "upload_error_title": "Falha no envio",
+  "upload_error_message": "Desculpe, não foi possível enviar esse arquivo. Tente novamente.",
   "error_message_no_title": "Não é possível criar sem pelo menos um título.",
   "Estonia": "Estônia",
   "Ethiopia": "Etiópia",

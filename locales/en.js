@@ -2171,6 +2171,8 @@
   "recaptcha_issues" : "Please fix the following issues",
   "error_message_no_title" : "Cannot create without at least a title.",
   "error_message_file_to_large" : "Sorry your files are too large. Try uploading one at at time or uploading smaller files (50mb total).",
+  "upload_error_title": "Upload failed",
+  "upload_error_message": "Sorry, we couldn't upload that file. Please try again.",
   "reviewed_entries_title": "Reviewed Entries",
   "reviewed_entries_label": "Reviewed by Participedia Editorial Board",
   "reviewed_popup_message": "This entry has been reviewed by our Editorial Board and can no longer be edited. If you would like to suggest changes to this entry, please %scontact us.%s",

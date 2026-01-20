@@ -22,10 +22,34 @@ const { ALLOWED_IMAGE_TYPES } = require("../../constants.js");
 // AWS.config.update({ region: process.env.AWS_REGION });
 
 function createBufferFromBase64(base64String) {
-  return Buffer.from(
-    base64String.split(";")[1].split(",")[1],
-    "base64"
-  );
+  const parts = base64String.split(",");
+  if (parts.length < 2) {
+    throw new Error("Invalid base64 data");
+  }
+  return Buffer.from(parts[1], "base64");
+}
+
+function getContentTypeFromDataUrl(base64String) {
+  if (typeof base64String !== "string") {
+    return "application/octet-stream";
+  }
+  const match = base64String.match(/^data:([^;]+);base64,/);
+  return match ? match[1] : "application/octet-stream";
+}
+
+function getExtensionFromContentType(contentType) {
+  if (!contentType || typeof contentType !== "string") {
+    return "bin";
+  }
+  const slashIndex = contentType.indexOf("/");
+  if (slashIndex === -1) {
+    return "bin";
+  }
+  let subtype = contentType.slice(slashIndex + 1).toLowerCase();
+  if (subtype.includes("+")) {
+    subtype = subtype.split("+")[0];
+  }
+  return subtype || "bin";
 }
 
 // function uploadObject(buffer, contentType, filename, cb) {
@@ -43,9 +67,9 @@ function createBufferFromBase64(base64String) {
 // }
 
 const uploadToAWS = (base64String) => {
-  const contentType = base64String.split(":")[1].split(";")[0];
-  const contentExtension = base64String.substring("data:image/".length, base64String.indexOf(";base64"));
-  const newFileName = uuidv4() + "." + contentExtension;
+  const contentType = getContentTypeFromDataUrl(base64String);
+  const contentExtension = getExtensionFromContentType(contentType);
+  const newFileName = `${uuidv4()}.${contentExtension}`;
   const base64Buffer = createBufferFromBase64(base64String);
   const key = `raw/${newFileName}`;
 
@@ -59,7 +83,6 @@ const uploadToAWS = (base64String) => {
     ACL: "public-read",
   };
 
-
   try {
     // Use the Upload helper to handle the put operation
     const parallelUpload = new Upload({
@@ -68,14 +91,13 @@ const uploadToAWS = (base64String) => {
     });
 
     // This promise resolves when upload is complete
-    parallelUpload.done();
+    parallelUpload.done().catch(err => logError(err));
     
     return `${process.env.AWS_UPLOADS_URL}${newFileName}`;
   } catch (err) {
-    console.log("uploadToAWS ", err)
+    console.log("uploadToAWS ", err);
     throw err;
   }
-
 }
 
 const uploadCSVToAWS = async (files, filename) => {
