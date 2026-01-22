@@ -21,7 +21,7 @@ const {
   LOCALIZED_TEXT_BY_ID_LOCALE,
   UPDATE_DRAFT_LOCALIZED_TEXT,
   ENTRY_REVIEW,
-  THING_BY_ORGINAL_ENTRY_ID,
+  METHOD_BY_ORGINAL_ENTRY_ID,
   COPY_METHOD,
   DELETE_EDITED_METHODS_ENTRY,
 } = require("../helpers/db");
@@ -287,6 +287,27 @@ async function getMethod(params, res) {
     return null;
   }
 }
+
+
+async function getMethodForCopy(params, res) {
+  try {
+    if (Number.isNaN(params.articleid)) {
+      return null;
+    }
+    const articleRow = await db.one(METHOD_BY_ID, params);
+    const article = articleRow.results;
+    fixUpURLs(article);
+    return article;
+  } catch (error) {
+    // only log actual excaptional results, not just data not found
+    if (error.message !== "No data returned from the query.") {
+      logError(error);
+    }
+    // if no entry is found, render the 404 page
+    return null;
+  }
+}
+
 
 async function postMethodUpdateHttp(req, res) {
   try {
@@ -851,7 +872,7 @@ async function copyMethod(entry, params, req, res){
     let thingid;
     let isNewCopy = false;
     // check if non approved user has already has a copy of the method 
-    const orginalEntryArr = (await db.any(THING_BY_ORGINAL_ENTRY_ID, options));
+    const orginalEntryArr = (await db.any(METHOD_BY_ORGINAL_ENTRY_ID, options));
     if(Array.isArray(orginalEntryArr) && orginalEntryArr.length){
       const item = orginalEntryArr[0];
       thingid = item.id;
@@ -890,7 +911,7 @@ async function copyMethod(entry, params, req, res){
         }
         await t.none(UPDATE_METHOD, updatedMethod);
       });
-      const freshArticle = await getMethod(params, res);
+      const freshArticle = await getMethodForCopy(params, res);
       return {editMethod: freshArticle};
     } else{
       logError(`400 with errors: ${er.errors.join(", ")}`);

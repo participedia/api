@@ -14,7 +14,7 @@ VALUES
     ${body},
     ${title},
     ${description},
-    ${original_language},
+    ${local_language},
     (select thingid from insert_method),
     'now'
   ) RETURNING thingid
