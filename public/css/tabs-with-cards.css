@@ -345,6 +345,9 @@ hr.solid {
   display: none;
 }
 
+[data-card-layout="null"] .chart-container {
+  display: none;
+}
 
 
 
