@@ -9,6 +9,7 @@ const s3Client = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
+  forcePathStyle: true,
 });
 // const s3 = new AWS.S3({
 //   apiVersion: "2006-03-01",
@@ -125,7 +126,7 @@ const uploadCSVToAWS = async (files, filename) => {
     uploadedLocation = uploadResult.Location;
     
   } catch (err) {
-    console.log(err)
+    console.log("uploadCSVToAWS err err ", err);
   }
 
   return uploadedLocation;
