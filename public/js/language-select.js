@@ -8,10 +8,12 @@ const GOOGLE_TRANSLATE_SCRIPT_SRC =
 const WIDGET_POLL_DELAY = 200;
 const WIDGET_POLL_MAX_ATTEMPTS = 100;
 const LOCALE_STORAGE_KEY = "locale";
+const TRANSLATED_LANGUAGE_STORAGE_KEY = "translatedLanguageCode";
 const THING_DETAILS_TYPES = ["case", "method", "organization"];
 
 const languageSelect = {
   selectEls: [],
+  appLocaleCodes: new Set(),
   pendingLanguageCode: null,
   widgetReady: false,
   widgetInitPromise: null,
@@ -24,6 +26,7 @@ const languageSelect = {
     this.tracking = tracking;
     this.selectEls = Array.from(document.querySelectorAll(".js-language-select"));
     if (!this.selectEls.length) return;
+    this.appLocaleCodes = this.getAppLocaleCodes();
     this.ensureWidgetInitialized().catch(() => {});
 
     this.selectEls.forEach(select => {
@@ -46,11 +49,38 @@ const languageSelect = {
         this.handleLanguageChange(languageCode);
       });
     });
+
+    this.restoreSavedTranslatedLanguage();
   },
 
   handleLanguageChange(languageCode) {
     this.syncSelectors(languageCode);
-    this.setLocaleAndReload(languageCode);
+
+    if (this.isAppLocaleLanguage(languageCode)) {
+      this.clearSavedTranslatedLanguage();
+      this.setLocaleAndReload(languageCode);
+      return;
+    }
+
+    this.saveTranslatedLanguage(languageCode);
+    this.translatePage(languageCode);
+  },
+
+  getAppLocaleCodes() {
+    const appLocalesAttr =
+      this.selectEls[0] && this.selectEls[0].dataset
+        ? this.selectEls[0].dataset.appLocales
+        : "";
+    return new Set(
+      (appLocalesAttr || "")
+        .split(",")
+        .map(code => code.trim())
+        .filter(Boolean)
+    );
+  },
+
+  isAppLocaleLanguage(languageCode) {
+    return this.appLocaleCodes.has(languageCode);
   },
 
   syncSelectors(languageCode) {
@@ -63,6 +93,49 @@ const languageSelect = {
     document.querySelectorAll(".selected-language").forEach(el => {
       el.textContent = languageCode.toUpperCase();
     });
+  },
+
+  restoreSavedTranslatedLanguage() {
+    const languageCode = this.getSavedTranslatedLanguage();
+    if (!languageCode) return;
+    if (this.isAppLocaleLanguage(languageCode)) return;
+    if (!this.hasLanguageOption(languageCode)) {
+      this.clearSavedTranslatedLanguage();
+      return;
+    }
+
+    this.syncSelectors(languageCode);
+    this.translatePage(languageCode);
+  },
+
+  hasLanguageOption(languageCode) {
+    return this.selectEls.some(select => {
+      return Array.from(select.options).some(option => option.value === languageCode);
+    });
+  },
+
+  getSavedTranslatedLanguage() {
+    try {
+      return localStorage.getItem(TRANSLATED_LANGUAGE_STORAGE_KEY);
+    } catch (error) {
+      return null;
+    }
+  },
+
+  saveTranslatedLanguage(languageCode) {
+    try {
+      localStorage.setItem(TRANSLATED_LANGUAGE_STORAGE_KEY, languageCode);
+    } catch (error) {
+      // Ignore storage errors (privacy settings, etc.) and continue.
+    }
+  },
+
+  clearSavedTranslatedLanguage() {
+    try {
+      localStorage.removeItem(TRANSLATED_LANGUAGE_STORAGE_KEY);
+    } catch (error) {
+      // Ignore storage errors (privacy settings, etc.) and continue.
+    }
   },
 
   mapLanguageCode(languageCode) {

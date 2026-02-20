@@ -6,7 +6,10 @@ const socialTagsTemplate = require("./social-tags-template.js");
 const sharedFieldOptions = require("./shared-field-options.js");
 const searchFiltersList = require("./search-filters-list.js");
 const countries = require("./countries.js");
-const { SUPPORTED_LANGUAGES } = require("../../constants.js");
+const {
+  SUPPORTED_LANGUAGES,
+  TRANSLATION_LLM_SUPPORTED_LANGUAGES,
+} = require("../../constants.js");
 const { searchFilterKeyLists, searchFilterKeys } = require("./things");
 
 const LOCATION_FIELD_NAMES = [
@@ -23,6 +26,55 @@ const LOCATION_FIELD_NAMES = [
 const PARTNER_TEAM = JSON.parse(
   fs.readFileSync("api/helpers/data/team.json", "utf8")
 );
+
+const normalizeTranslationLanguageCode = code => {
+  if (code === "zh-CN") return "zh";
+  return code;
+};
+
+const APP_LOCALE_CODE_SET = new Set(
+  SUPPORTED_LANGUAGES.map(language => language.twoLetterCode)
+);
+
+const LANGUAGE_SELECTOR_OPTIONS = (() => {
+  const optionsByCode = new Map();
+
+  SUPPORTED_LANGUAGES.forEach(language => {
+    optionsByCode.set(language.twoLetterCode, {
+      twoLetterCode: language.twoLetterCode,
+      name: language.name,
+      isAppLocale: true,
+    });
+  });
+
+  TRANSLATION_LLM_SUPPORTED_LANGUAGES.forEach(language => {
+    const code = normalizeTranslationLanguageCode(language.twoLetterCode);
+    if (optionsByCode.has(code)) return;
+
+    optionsByCode.set(code, {
+      twoLetterCode: code,
+      name: language.name,
+      isAppLocale: APP_LOCALE_CODE_SET.has(code),
+    });
+  });
+
+  const appLocaleOptions = [];
+  const translationOnlyOptions = [];
+
+  optionsByCode.forEach(option => {
+    if (option.isAppLocale) {
+      appLocaleOptions.push(option);
+      return;
+    }
+    translationOnlyOptions.push(option);
+  });
+
+  translationOnlyOptions.sort((left, right) =>
+    left.name.localeCompare(right.name)
+  );
+
+  return appLocaleOptions.concat(translationOnlyOptions);
+})();
 
 function setMomentLocale(context) {
   const req = context.data.root.req;
@@ -348,7 +400,18 @@ module.exports = {
   },
 
   getLanguageOptions: () => {
-    return SUPPORTED_LANGUAGES;
+    return LANGUAGE_SELECTOR_OPTIONS;
+  },
+
+  getAppLocaleCodesCsv: () => {
+    return SUPPORTED_LANGUAGES.map(language => language.twoLetterCode).join(",");
+  },
+
+  getLanguageOptionValue: (language, context) => {
+    if (language && language.isAppLocale) {
+      return i18n(language.name, context);
+    }
+    return language ? language.name : "";
   },
 
   booleanCheck: value => {
