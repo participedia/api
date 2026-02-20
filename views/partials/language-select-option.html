@@ -1,10 +1,9 @@
 <option
   value="{{key}}"
-  data-is-app-locale="{{#if isAppLocale}}true{{else}}false{{/if}}"
   {{#if (isSelectedLanguage key)}}selected{{/if}}
 >
   {{#if showBoth}}
-    {{toUpperCase key}} - {{value}}
+    {{toUpperCase (t key)}} - {{value}}
   {{else}}
     {{value}}
   {{/if}}

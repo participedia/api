@@ -314,14 +314,17 @@ app.use("/blog-post", blogPost);
 app.use("/ai-questions-list", chatai);
 
 // endpoint to set new locale
-app.get("/set-locale", function(req, res) {
+const setLocaleAndRedirect = function(req, res) {
   const locale = req.query && req.query.locale;
   const redirectTo = req.query && req.query.redirectTo;
   if (locale) {
     res.cookie("locale", locale, { path: "/" });
   }
   return res.redirect(redirectTo || "/");
-});
+};
+
+// backward-compatible locale endpoint
+app.get("/set-locale", setLocaleAndRedirect);
 
 app.get("/about", function(req, res) {
   res.status(200).render("about-view");

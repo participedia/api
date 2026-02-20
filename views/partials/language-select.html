@@ -1,29 +1,23 @@
 <div class="language-selector js-language-selector">
   <label class="selected-language">{{getLocale}}</label>
-  <select
-    name="locale"
-    class="language-select js-language-select"
-    data-app-locales="{{getAppLocaleCodesCsv}}"
-  >
+  <select name="locale" class="language-select js-language-select">
     {{#if showTwoLetterCode}}
     {{else}}
       <option value="">{{t "Select Language"}}</option>
     {{/if}}
     {{#each (getLanguageOptions)}}
       {{#if ../showBoth}}
-        {{> language-select-option key=twoLetterCode showBoth=../showBoth isAppLocale=isAppLocale value=(getLanguageOptionValue this)}}
+        {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(t name)}}
       {{else}}
         {{#if ../showTwoLetterCode}}
-          {{> language-select-option key=twoLetterCode showBoth=../showBoth isAppLocale=isAppLocale value=(toUpperCase twoLetterCode)}}
+          {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(toUpperCase twoLetterCode)}}
         {{else}}
-          {{> language-select-option key=twoLetterCode showBoth=../showBoth isAppLocale=isAppLocale value=(getLanguageOptionValue this)}}
+          {{> language-select-option key=twoLetterCode showBoth=../showBoth value=(t name)}}
         {{/if}}
       {{/if}}
     {{/each}}
   </select>
 </div>
-
-<div class="js-google-translate-element" style="display:none;" aria-hidden="true"></div>
 
 <script 
   type="text/template" 
