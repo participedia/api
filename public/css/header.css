@@ -17,6 +17,10 @@ header a {
   color: #fff;
   text-decoration: none;
   display: inline-block;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .horizontal-menu {
@@ -370,4 +374,43 @@ header .right-col {
   .header-buttons .language-selector {
     display: none;
   }
+}
+
+
+.goog-te-gadget{
+  font-size: 0px !important;
+}
+
+.VIpgJd-ZVi9od-l4eHX-hSRGPd{
+  display: none;
+}
+
+.languages-sel{
+  padding: 1px 4px;
+  display: flex;
+  align-items: center;
+}
+
+.goog-te-gadget .goog-te-combo{
+  margin: 5px 0;
+  padding-right: 5px;
+}
+
+select.goog-te-combo{
+  width: 135px !important;
+  font-size: 13px !important;
+}
+
+/* .VIpgJd-ZVi9od-ORHb-OEVmcd{
+  -webkit-transition-delay: .6s !important;
+  transition-delay: .6s !important;
+  left: -1000px !important;
+  top: -1000px !important;
+} */
+
+
+.go-to-paricipedia{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
