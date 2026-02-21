@@ -57,7 +57,8 @@ const { getUserOrCreateUser } = require("./api/helpers/users-helpers");
 const oldDotNetUrlHandler = require("./api/helpers/old-dot-net-url-handler.js");
 const { SUPPORTED_LANGUAGES } = require("./constants.js");
 const logError = require("./api/helpers/log-error.js");
-let localeLang = "en";
+const DEFAULT_LOCALE = "en";
+let localeLang = DEFAULT_LOCALE;
 const chatai = require("./api/controllers/chatai.js");
 const port = process.env.PORT || 3001;
 
@@ -87,40 +88,56 @@ app.use(cookieParser());
 
 i18n.configure({
   locales: SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode),
+  defaultLocale: DEFAULT_LOCALE,
   cookie: "locale",
   extension: ".js",
   directory: "./locales",
   updateFiles: false,
 });
 
+// app.use((req, res, next) => {
+//   // set english as the default locale, if it's not already set
+//   if (!req.cookies.locale) {
+//     const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
+//       req.path
+//     }`;
+//     res.cookie("locale", "en", { path: "/" });
+//     //return res.redirect(currentUrl);
+//   }
+//   next();
+// });
+
 app.use((req, res, next) => {
-  // set english as the default locale, if it's not already set
-  if (!req.cookies.locale) {
-    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
-      req.path
-    }`;
-    res.cookie("locale", "en", { path: "/" });
-    //return res.redirect(currentUrl);
-  }
+  // Force English locale for all requests.
+  req.cookies = req.cookies || {};
+  req.cookies.locale = DEFAULT_LOCALE;
+  localeLang = DEFAULT_LOCALE;
+  res.cookie("locale", DEFAULT_LOCALE, { path: "/" });
   next();
 });
 
-app.use((req, res, next) => {
-  // if the lang query param is present and it's not the same as the locale coookie,
-  // redirect to set-locale route with the redirect param set to the current page
-  const lang = req.query && req.query.lang;
-  localeLang = req.cookies.locale;
-  if (lang && lang !== req.cookies.locale) {
-    const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
-      req.path
-    }`;
-    res.redirect(`/set-locale?locale=${lang}&redirectTo=${currentUrl}`);
-  } else {
-    next();
-  }
-});
-
 app.use(i18n.init);
+
+// app.use((req, res, next) => {
+//   // if the lang query param is present and it's not the same as the locale coookie,
+//   // redirect to set-locale route with the redirect param set to the current page
+//   const lang = req.query && req.query.lang;
+//   localeLang = req.cookies.locale;
+//   if (lang && lang !== req.cookies.locale) {
+//     const currentUrl = `${req.protocol}://${req.get("host")}${req.baseUrl}${
+//       req.path
+//     }`;
+//     res.redirect(`/set-locale?locale=${lang}&redirectTo=${currentUrl}`);
+//   } else {
+//     next();
+//   }
+// });
+
+app.use((req, res, next) => {
+  // req.setLocale(DEFAULT_LOCALE);
+  res.locals.locale = DEFAULT_LOCALE;
+  next();
+});
 
 // config express-session
 const sess = {
@@ -315,11 +332,8 @@ app.use("/ai-questions-list", chatai);
 
 // endpoint to set new locale
 app.get("/set-locale", function(req, res) {
-  const locale = req.query && req.query.locale;
   const redirectTo = req.query && req.query.redirectTo;
-  if (locale) {
-    res.cookie("locale", locale, { path: "/" });
-  }
+  res.cookie("locale", DEFAULT_LOCALE, { path: "/" });
   return res.redirect(redirectTo || "/");
 });
 
@@ -341,7 +355,7 @@ app.get("/participediaschool", function(req, res) {
    const fullHost = `${protocol}://${host}`;
   const latestPdfUrl = `${fullHost}/images/school/REPORT_Participedia_School_2024_PUBLIC.pdf`;
   const pdfUrl2023 = `${fullHost}/images/school/Summary_Report_Radical_Democracy_Summer_School_Aug_2023.pdf`;
-  const language = req.cookies.locale || "en";
+  const language = DEFAULT_LOCALE;
   let pSchoolRioImg;
   if(language === 'pt'){
     pSchoolRioImg = 'PSchool-2025-Rio-Portuguese.png';
