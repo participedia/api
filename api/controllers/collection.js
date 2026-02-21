@@ -26,14 +26,12 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
-  createLocalizedRecord,
-  parseAndValidateThingPostData,
+  getEnglishEntryFromRequestBody,
   generateLocaleArticle,
   validateFields,
   limitFromReq,
   getThingEdit,
   offsetFromReq,
-  createUntranslatedLocalizedRecords,
   maybeUpdateUserTextLocaleEntry
 } = require("../helpers/things");
 
@@ -122,25 +120,19 @@ async function postCollectionNewHttp(req, res) {
     // let original_language = req.body.original_language || "en";
     // const errors = validateFields(req.body, "collection");
 
-    let {
-      hasErrors,
-      langErrors,
-      localesToTranslate,
-      localesToNotTranslate,
-      originalLanguageEntry
-    } = parseAndValidateThingPostData(generateLocaleArticle(req.body, req.body.entryLocales), "collection");
-
-    if (hasErrors) {
+    const originalLanguageEntry = getEnglishEntryFromRequestBody(req.body);
+    const validationErrors = validateFields(originalLanguageEntry, "collection");
+    if (validationErrors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: langErrors,  
+        errors: [{ locale: "en", errors: validationErrors }],
       });
     }
 
     let title = originalLanguageEntry.title;
     let body = originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description;
-    let original_language = originalLanguageEntry.original_language || "en";
+    let original_language = "en";
 
     const thing = await db.one(CREATE_COLLECTION, {
       title,
@@ -159,21 +151,7 @@ async function postCollectionNewHttp(req, res) {
       });
     }
 
-    localesToNotTranslate = localesToNotTranslate.filter(el => el.language !== originalLanguageEntry.language);
-    let localizedData = {
-      body: body,
-      description: description,
-      language: original_language,
-      title: title
-    };
-
-    const filteredLocalesToTranslate = localesToTranslate.filter(locale => !(locale === 'entryLocales' || locale === 'originalEntry' || locale === originalLanguageEntry.language));
-
-    if (filteredLocalesToTranslate.length)  {
-      createLocalizedRecord(localizedData, thing.thingid, filteredLocalesToTranslate, req.body.entryLocales);
-    } if (localesToNotTranslate.length > 0) {
-      createUntranslatedLocalizedRecords(localesToNotTranslate, thing.thingid, localizedData);
-    }
+    // English-only mode: do not write translated/localized records.
 
     res.status(200).json({
       OK: true,
@@ -217,7 +195,6 @@ async function postCollectionUpdateHttp(req, res) {
   
   const params = parseGetParams(req, "collection");
   const { articleid } = params;
-  const langErrors = [];
   let urlCaptcha = ``;
   let captcha_error_message = "";
   let supportedLanguages;
@@ -316,40 +293,19 @@ async function postCollectionUpdateHttp(req, res) {
   // }
   //validate captcha end
 
-  const localeEntries = generateLocaleArticle(req.body, req.body.entryLocales, true);
-  let originalLanguageEntry;
-  let entryOriginalLanguage;
-
-  for (const entryLocale in localeEntries) {
-    if (req.body.hasOwnProperty(entryLocale)) {
-      const entry = localeEntries[entryLocale];
-
-      if (req.body.hasOwnProperty(entry.original_language)){
-        entryOriginalLanguage = entry.original_language;
-      }
-      if (entryLocale === entry.original_language) {
-        originalLanguageEntry = entry;
-      }
-      let errors = validateFields(entry, "collection");
-      errors = errors.map(e => `${SUPPORTED_LANGUAGES.find(locale => locale.twoLetterCode === entryLocale).name}: ${e}`);
-      langErrors.push({ locale: entryLocale, errors });
-      await collectionUpdate(req, res, entry);
-    }
-  }
-  const hasErrors = !!langErrors.find(errorEntry => errorEntry.errors.length > 0);
-  if (hasErrors) {
+  const originalLanguageEntry = getEnglishEntryFromRequestBody(req.body);
+  const validationErrors = validateFields(originalLanguageEntry, "collection");
+  if (validationErrors.length > 0) {
     return res.status(400).json({
       OK: false,
-      errors: langErrors,
+      errors: [{ locale: "en", errors: validationErrors }],
     });
   }
 
   if(originalLanguageEntry){
     await collectionUpdate(req, res, originalLanguageEntry);
   }
-  const localeEntriesArr = [].concat(...Object.values(localeEntries));
-
-  await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
+  // English-only mode: do not write translated/localized records.
   const freshArticle = await getCollection(params, res);
   res.status(200).json({
     OK: true,
@@ -630,18 +586,14 @@ function getUpdatedCollection(user, params, newCollection, oldCollection) {
 
 async function saveCltnDraft(req, res, entry = undefined) {
   const args = {
-    LOCALIZED_TEXT_BY_ID_LOCALE,
-    UPDATE_DRAFT_LOCALIZED_TEXT,
-    INSERT_LOCALIZED_TEXT,
     INSERT_AUTHOR,
-    UPDATE_AUTHOR_FIRST,
-    UPDATE_ENTRY: UPDATE_METHOD,
-    CREATE_ENTRY_QUERY: CREATE_METHOD,
+    UPDATE_ENTRY: UPDATE_COLLECTION,
+    CREATE_ENTRY_QUERY: CREATE_COLLECTION,
     refreshSearch,
     thingId: req.body.entryId,
     getUpdatedEntry: getUpdatedCollection,
     getEntry: getCollection,
-    entryType: "method",
+    entryType: "collection",
   };
   const { payload, thingId } = await saveDraft(req, res, args);
   thingCollectionid = req.body.entryId;

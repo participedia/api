@@ -32,15 +32,12 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
-  createLocalizedRecord,
-  createUntranslatedLocalizedRecords,
   getCollections,
   validateFields,
-  parseAndValidateThingPostData,
+  getEnglishEntryFromRequestBody,
   maybeUpdateUserTextLocaleEntry,
   getThingEdit,
   saveDraft,
-  generateLocaleArticle,
   publishDraft,
   applyLocalizedTextChangesToOrgin,
   generateSlug,
@@ -125,21 +122,12 @@ async function postOrganizationNewHttp(req, res) {
     //   });
     // }
 
-    let {
-      hasErrors,
-      langErrors,
-      localesToTranslate,
-      localesToNotTranslate,
-      originalLanguageEntry,
-    } = parseAndValidateThingPostData(
-      generateLocaleArticle(req.body, req.body.entryLocales),
-      "organization"
-    );
-
-    if (hasErrors) {
+    const originalLanguageEntry = getEnglishEntryFromRequestBody(req.body);
+    const validationErrors = validateFields(originalLanguageEntry, "organization");
+    if (validationErrors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: langErrors,
+        errors: [{ locale: "en", errors: validationErrors }],
       });
     }
 
@@ -152,7 +140,7 @@ async function postOrganizationNewHttp(req, res) {
     let body =
       originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description;
-    let original_language = originalLanguageEntry.original_language || "en";
+    let original_language = "en";
 
     // const user_id = req.user.id;
 
@@ -181,40 +169,7 @@ async function postOrganizationNewHttp(req, res) {
         errors,
       });
     }
-    localesToNotTranslate = localesToNotTranslate.filter(
-      el => el.language !== originalLanguageEntry.language
-    );
-
-    let localizedData = {
-      body,
-      description,
-      language: original_language,
-      title,
-    };
-
-    const filteredLocalesToTranslate = localesToTranslate.filter(
-      locale =>
-        !(
-          locale === "entryLocales" ||
-          locale === "originalEntry" ||
-          locale === originalLanguageEntry.language
-        )
-    );
-
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(
-        localizedData,
-        req.params.thingid,
-        filteredLocalesToTranslate,
-        req.body.entryLocales
-      );
-    }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(
-        localesToNotTranslate,
-        articleid
-      );
-    }
+    // English-only mode: do not write translated/localized records.
     res.status(200).json({
       OK: true,
       article,
@@ -284,9 +239,7 @@ async function postOrganizationUpdateHttp(req, res) {
   try {
     cache.clear();
     const params = parseGetParams(req, "organization");
-    const { articleid, lang } = params;
-    const langErrors = [];
-    const originLang = lang;
+    const { articleid } = params;
     let supportedLanguages;
     let article = "";
   
@@ -390,48 +343,12 @@ async function postOrganizationUpdateHttp(req, res) {
       return;
     }
   
-    const localeEntries = generateLocaleArticle(
-      req.body,
-      req.body.entryLocales,
-      true
-    );
-    let originalLanguageEntry;
-    let entryOriginalLanguage;
-    const localeEntriesArr = [];
-  
-    for (const entryLocale in localeEntries) {
-      if (req.body.hasOwnProperty(entryLocale)) {
-        const entry = localeEntries[entryLocale];
-        if (req.body.hasOwnProperty(entry.original_language)) {
-          entryOriginalLanguage = entry.original_language;
-        }
-        if (entryLocale === entry.original_language) {
-          originalLanguageEntry = entry;
-        }
-        let errors = validateFields(entry, "organization");
-        errors = errors.map(
-          e =>
-            `${
-              SUPPORTED_LANGUAGES.find(
-                locale => locale.twoLetterCode === entryLocale
-              ).name
-            }: ${e}`
-        );
-        langErrors.push({ locale: entryLocale, errors });
-        if (originLang == entryLocale) {
-          localeEntriesArr.push(entry);
-        }
-        
-        // await organizationUpdate(req, res, entry, true);
-      }
-    }
-    const hasErrors = !!langErrors.find(
-      errorEntry => errorEntry.errors.length > 0
-    );
-    if (hasErrors) {
+    const originalLanguageEntry = getEnglishEntryFromRequestBody(req.body);
+    const validationErrors = validateFields(originalLanguageEntry, "organization");
+    if (validationErrors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: langErrors,
+        errors: [{ locale: "en", errors: validationErrors }],
       });
     }
   
@@ -481,7 +398,7 @@ async function postOrganizationUpdateHttp(req, res) {
       await organizationUpdate(req, res, originalLanguageEntry, true, isCopyProcess);
     }
 
-    await createUntranslatedLocalizedRecords(localeEntriesArr, articleid);
+    // English-only mode: do not write translated/localized records.
     const freshArticle = await getOrganization(params, res);
     res.status(200).json({
       OK: true,

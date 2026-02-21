@@ -32,15 +32,12 @@ const {
   verifyOrUpdateUrl,
   returnByType,
   fixUpURLs,
-  createLocalizedRecord,
-  createUntranslatedLocalizedRecords,
   getCollections,
   validateFields,
-  parseAndValidateThingPostData,
+  getEnglishEntryFromRequestBody,
   maybeUpdateUserTextLocaleEntry,
   getThingEdit,
   saveDraft,
-  generateLocaleArticle,
   publishDraft,
   applyLocalizedTextChangesToOrgin,
   generateSlug,
@@ -137,21 +134,12 @@ async function postMethodNewHttp(req, res) {
     // let original_language = req.body.original_language || "en";
     // const errors = validateFields(req.body, "method");
 
-    let {
-      hasErrors,
-      langErrors,
-      localesToTranslate,
-      localesToNotTranslate,
-      originalLanguageEntry,
-    } = parseAndValidateThingPostData(
-      generateLocaleArticle(req.body, req.body.entryLocales),
-      "method"
-    );
-
-    if (hasErrors) {
+    const originalLanguageEntry = getEnglishEntryFromRequestBody(req.body);
+    const validationErrors = validateFields(originalLanguageEntry, "method");
+    if (validationErrors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: langErrors,
+        errors: [{ locale: "en", errors: validationErrors }],
       });
     }
 
@@ -164,7 +152,7 @@ async function postMethodNewHttp(req, res) {
     let body =
       originalLanguageEntry.body || originalLanguageEntry.summary || "";
     let description = originalLanguageEntry.description;
-    let original_language = originalLanguageEntry.original_language || "en";
+    let original_language = "en";
 
     if (!req.body.entryId) {
       const thing = await db.one(CREATE_METHOD, {
@@ -190,39 +178,7 @@ async function postMethodNewHttp(req, res) {
         errors,
       });
     }
-    localesToNotTranslate = localesToNotTranslate.filter(
-      el => el.language !== originalLanguageEntry.language
-    );
-    let localizedData = {
-      body,
-      description,
-      language: original_language,
-      title,
-    };
-
-    const filteredLocalesToTranslate = localesToTranslate.filter(
-      locale =>
-        !(
-          locale === "entryLocales" ||
-          locale === "originalEntry" ||
-          locale === originalLanguageEntry.language
-        )
-    );
-
-    if (filteredLocalesToTranslate.length) {
-      await createLocalizedRecord(
-        localizedData,
-        req.params.thingid,
-        filteredLocalesToTranslate,
-        req.body.entryLocales
-      );
-    }
-    if (localesToNotTranslate.length > 0) {
-      await createUntranslatedLocalizedRecords(
-        localesToNotTranslate,
-        req.params.thingid
-      );
-    }
+    // English-only mode: do not write translated/localized records.
     res.status(200).json({
       OK: true,
       article,
@@ -315,9 +271,6 @@ async function postMethodUpdateHttp(req, res) {
   
     const params = parseGetParams(req, "method");
     // const user = req.user;
-    const { articleid, datatype, lang } = params;
-    const langErrors = [];
-    const originLang = lang;
     let urlCaptcha = ``;
     let captcha_error_message = "";
     let supportedLanguages;
@@ -421,48 +374,12 @@ async function postMethodUpdateHttp(req, res) {
       return;
     }
   
-    const localeEntries = generateLocaleArticle(
-      req.body,
-      req.body.entryLocales,
-      true
-    );
-    let originalLanguageEntry;
-    let entryOriginalLanguage;
-    const localeEntriesArr = [];
-  
-    for (const entryLocale in localeEntries) {
-      if (req.body.hasOwnProperty(entryLocale)) {
-        const entry = localeEntries[entryLocale];
-        if (req.body.hasOwnProperty(entry.original_language)) {
-          entryOriginalLanguage = entry.original_language;
-        }
-        if (entryLocale === entry.original_language) {
-          originalLanguageEntry = entry;
-        }
-        let errors = validateFields(entry, "method");
-        errors = errors.map(
-          e =>
-            `${
-              SUPPORTED_LANGUAGES.find(
-                locale => locale.twoLetterCode === entryLocale
-              ).name
-            }: ${e}`
-        );
-        langErrors.push({ locale: entryLocale, errors });
-  
-        if (originLang == entryLocale) {
-          localeEntriesArr.push(entry);
-        }
-        // await methodUpdate(req, res, entry);
-      }
-    }
-    const hasErrors = !!langErrors.find(
-      errorEntry => errorEntry.errors.length > 0
-    );
-    if (hasErrors) {
+    const originalLanguageEntry = getEnglishEntryFromRequestBody(req.body);
+    const validationErrors = validateFields(originalLanguageEntry, "method");
+    if (validationErrors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: langErrors,
+        errors: [{ locale: "en", errors: validationErrors }],
       });
     }
   

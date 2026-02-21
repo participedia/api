@@ -170,7 +170,7 @@ const editForm = {
       title: {},
       description: {},
       body: {},
-      originalLanguage: userLocale
+      originalLanguage: "en"
     };
 
     if (this.isEditMode) {
@@ -419,6 +419,31 @@ const editForm = {
 
   validateLocalForms() {},
 
+  buildEnglishEntryLocaleData(formValues = {}) {
+    const english = "en";
+    return {
+      title: {
+        [english]:
+          formValues.title ??
+          this.entryLocaleData?.title?.[english] ??
+          "",
+      },
+      description: {
+        [english]:
+          formValues.description ??
+          this.entryLocaleData?.description?.[english] ??
+          "",
+      },
+      body: {
+        [english]:
+          formValues.body ??
+          this.entryLocaleData?.body?.[english] ??
+          "",
+      },
+      originalLanguage: english,
+    };
+  },
+
   initPinTabs() {
     const tabsContainer = document.querySelector(".js-tab-items");
     const mobileTabsContainer = document.querySelector(
@@ -442,16 +467,8 @@ const editForm = {
     if (!this.isDraftEntry()) return;
 
     const updatedForm = document.querySelector(".js-edit-form");
-    var formsData = {};
     const formData = serialize(updatedForm);
     const originalEntry = Object.fromEntries(new URLSearchParams(formData));
-
-    let supportedLanguages;
-    try {
-      supportedLanguages = JSON.parse(this.formEl.supportedLangs?.value) || [];
-    } catch (error) {
-      supportedLanguages = [];
-    }
 
     [
       "links",
@@ -519,19 +536,7 @@ const editForm = {
       });
     });
 
-    if (supportedLanguages && supportedLanguages.length) {
-      supportedLanguages.forEach(lang => {
-        formsData[lang.key] = {}; // formObject;
-        formsData[lang.key]["title"] =
-          this.entryLocaleData["title"]?.[lang.key] || "";
-        formsData[lang.key]["description"] =
-          this.entryLocaleData["description"]?.[lang.key] || "";
-        formsData[lang.key]["body"] =
-          this.entryLocaleData["body"]?.[lang.key] || "";
-      });
-    } else {
-      formsData = originalEntry;
-    }
+    this.entryLocaleData = this.buildEnglishEntryLocaleData(originalEntry);
 
     const xhr = new XMLHttpRequest();
     const endpoint = isNeedToPreview ? "/saveDraftPreview" : "/saveDraft";
@@ -579,12 +584,8 @@ const editForm = {
       }
     };
 
-    if (originalEntry.locale) {
-      formsData[originalEntry.locale] = originalEntry;
-    }
-
     const requestPayload = {
-      ...formsData,
+      ...originalEntry,
       entryLocales: this.entryLocaleData,
       entryId: this.entryId,
     };
@@ -595,22 +596,9 @@ const editForm = {
   sendFormData() {
     const formData = serialize(this.formEl);
     const formValue = Object.fromEntries(new URLSearchParams(formData));
-    const formObject = Object.fromEntries(new URLSearchParams(formData));
-
-    let formsData = {};
-    let supportedLanguages;
-    try {
-      supportedLanguages = JSON.parse(this.formEl.supportedLangs?.value) || [];
-    } catch (error) {
-      supportedLanguages = [];
-    }
 
     if ("article_type" in this.formEl) {
-      let titleVal = this.entryLocaleData.title[formValue.original_language];
-      if(titleVal && typeof titleVal === 'string'){
-        titleVal = titleVal.trim();
-      }
-
+      const titleVal = (formValue.title || "").trim();
       if (!titleVal || titleVal === '') {
         this.handleErrors([this.formEl.no_title_error.value]);
         return;
@@ -685,19 +673,8 @@ const editForm = {
       });
     });
 
-    if (supportedLanguages && supportedLanguages.length) {
-      supportedLanguages.forEach(lang => {
-        formsData[lang.key] = {}; // formObject;
-        formsData[lang.key]["title"] =
-          this.entryLocaleData["title"]?.[lang.key] || "";
-        formsData[lang.key]["description"] =
-          this.entryLocaleData["description"]?.[lang.key] || "";
-        formsData[lang.key]["body"] =
-          this.entryLocaleData["body"]?.[lang.key] || "";
-      });
-    } else {
-      formsData = formValue;
-    }
+    this.entryLocaleData = this.buildEnglishEntryLocaleData(formValue);
+
     const xhr = new XMLHttpRequest();
     const datatype = this.formEl.dataset.datatype;
     const formAction = this.formEl.getAttribute("action");
@@ -734,12 +711,8 @@ const editForm = {
       }
     };
 
-    if (formValue.locale) {
-      formsData[formValue.locale] = formValue;
-    }
-
     const requestPayload = {
-      ...formsData,
+      ...formValue,
       entryLocales: this.entryLocaleData,
       entryId: this.entryId,
     };

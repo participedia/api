@@ -1,11 +1,5 @@
-// Get google translate credentials
+// Google translate is optional now that entry writes are English-only.
 const keysEnvVar = process.env["GOOGLE_TRANSLATE_CREDENTIALS"];
-if (!keysEnvVar) {
-  throw new Error(
-    "The GOOGLE_TRANSLATE_CREDENTIALS environment variable was not found!"
-  );
-  return;
-}
 const selectedCategoryValues = [
   "all",
   "case",
@@ -15,15 +9,23 @@ const selectedCategoryValues = [
 ];
 
 const { Translate } = require("@google-cloud/translate").v2;
-const authKeys = JSON.parse(keysEnvVar);
-authKeys["key"] = process.env.GOOGLE_API_KEY;
-const translate = new Translate(authKeys);
+const DEFAULT_ENTRY_LANGUAGE = "en";
+const logError = require("./log-error.js");
+let translate = null;
+
+if (keysEnvVar) {
+  try {
+    const authKeys = JSON.parse(keysEnvVar);
+    authKeys.key = process.env.GOOGLE_API_KEY;
+    translate = new Translate(authKeys);
+  } catch (error) {
+    logError(error);
+  }
+}
 
 const moment = require("moment");
 const { SUPPORTED_LANGUAGES, RESPONSE_LIMIT } = require("./../../constants.js");
-const logError = require("./log-error.js");
 const {createCSVDataDump} = require("./create-csv-data-dump.js");
-const { getOriginalLanguageEntry } = require("../controllers/api/api-helpers");
 
 const {
   as,
@@ -61,7 +63,43 @@ function fixedEncodeURIComponent(str) {
 function getLanguage(req) {
   // once we have translations for user generated content in all supported languages,
   // we can use the locale cookie to query by language.
-  return req.cookies.locale || "en";
+  return req.cookies.locale || DEFAULT_ENTRY_LANGUAGE;
+}
+
+function getEnglishEntryFromRequestBody(body = {}) {
+  if (!body || typeof body !== "object") {
+    return {
+      language: DEFAULT_ENTRY_LANGUAGE,
+      original_language: DEFAULT_ENTRY_LANGUAGE,
+    };
+  }
+
+  if (
+    body.entryLocales &&
+    typeof body.entryLocales.originalLanguage === "string" &&
+    body[body.entryLocales.originalLanguage] &&
+    typeof body[body.entryLocales.originalLanguage] === "object"
+  ) {
+    return {
+      ...body[body.entryLocales.originalLanguage],
+      language: DEFAULT_ENTRY_LANGUAGE,
+      original_language: DEFAULT_ENTRY_LANGUAGE,
+    };
+  }
+
+  if (body.en && typeof body.en === "object") {
+    return {
+      ...body.en,
+      language: DEFAULT_ENTRY_LANGUAGE,
+      original_language: DEFAULT_ENTRY_LANGUAGE,
+    };
+  }
+
+  return {
+    ...body,
+    language: DEFAULT_ENTRY_LANGUAGE,
+    original_language: DEFAULT_ENTRY_LANGUAGE,
+  };
 }
 
 function encodeURL(url) {
@@ -764,6 +802,12 @@ async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
 
 async function translateText(data, targetLanguage) {
   try {
+    if (!data) {
+      return "";
+    }
+    if (!translate || targetLanguage === DEFAULT_ENTRY_LANGUAGE) {
+      return data;
+    }
     // The text to translate
     let allTranslation = "";
   
@@ -914,33 +958,14 @@ async function getThingEdit(params, sqlFile, res) {
  */
 async function publishDraft(req, res, entryUpdate, entryType) {
   try {
-    let {
-      hasErrors,
-      langErrors,
-      localesToTranslate,
-      localesToNotTranslate,
-      originalLanguageEntry,
-    } = parseAndValidateThingPostData(
-      generateLocaleArticle(req.body, req.body.entryLocales),
-      entryType
-    );
-
-    if (hasErrors) {
+    const originalLanguageEntry = getEnglishEntryFromRequestBody(req.body);
+    const validationErrors = validateFields(originalLanguageEntry, entryType);
+    if (validationErrors.length > 0) {
       return res.status(400).json({
         OK: false,
-        errors: langErrors,
+        errors: [{ locale: DEFAULT_ENTRY_LANGUAGE, errors: validationErrors }],
       });
     }
-    let hidden = false;
-    if (req.user.accepted_date === null || req.user.accepted_date === "") {
-      hidden = true;
-    }
-
-    const title = originalLanguageEntry.title;
-    const body =
-      originalLanguageEntry.body || originalLanguageEntry.summary || "";
-    const description = originalLanguageEntry.description || "";
-    const original_language = originalLanguageEntry.original_language || "en";
     const { article, errors } = await entryUpdate(
       req,
       res,
@@ -952,42 +977,6 @@ async function publishDraft(req, res, entryUpdate, entryType) {
         OK: false,
         errors,
       });
-    }
-
-    if (hidden === false) {
-      localesToNotTranslate = localesToNotTranslate.filter(
-        el => el.language !== originalLanguageEntry.language
-      );
-      const localizedData = {
-        body,
-        description,
-        language: original_language,
-        title,
-      };
-
-      const filteredLocalesToTranslate = localesToTranslate.filter(
-        locale =>
-          !(
-            locale === "entryLocales" ||
-            locale === "originalEntry" ||
-            locale === originalLanguageEntry.language
-          )
-      );
-      if (filteredLocalesToTranslate.length) {
-        await createLocalizedRecord(
-          localizedData,
-          article.id,
-          filteredLocalesToTranslate,
-          req.body.entryLocales
-        );
-      }
-      if (localesToNotTranslate.length > 0) {
-        await createUntranslatedLocalizedRecords(
-          localesToNotTranslate,
-          article.id,
-          localizedData
-        );
-      }
     }
     res.status(200).json({
       OK: true,
@@ -1008,11 +997,7 @@ async function publishDraft(req, res, entryUpdate, entryType) {
  */
 async function saveDraft(req, res, args) {
   let {
-    LOCALIZED_TEXT_BY_ID_LOCALE,
-    UPDATE_DRAFT_LOCALIZED_TEXT,
-    INSERT_LOCALIZED_TEXT,
     INSERT_AUTHOR,
-    UPDATE_AUTHOR_FIRST,
     UPDATE_ENTRY,
     CREATE_ENTRY_QUERY,
     refreshSearch,
@@ -1024,13 +1009,7 @@ async function saveDraft(req, res, args) {
   const params = parseGetParams(req, entryType);
   const user = req.user;
   const { articleid } = params;
-  const originalLanguageEntry = getOriginalLanguageEntry(req.body);
-  let entryData = "";
-  if(req.body[originalLanguageEntry] !== undefined && req.body[originalLanguageEntry] !== null){
-    entryData = req.body[originalLanguageEntry];
-  } else {
-    entryData = req.body;
-  }
+  const entryData = getEnglishEntryFromRequestBody(req.body);
   let hidden = false;
 
   // Save draft
@@ -1039,7 +1018,7 @@ async function saveDraft(req, res, args) {
       title: entryData.title || "",
       body: entryData.body || "",
       description: entryData.description || "",
-      original_language: req.body.entryLocales.originalLanguage || "en",
+      original_language: DEFAULT_ENTRY_LANGUAGE,
       hidden,
     });
 
@@ -1062,41 +1041,7 @@ async function saveDraft(req, res, args) {
     oldArticle
   );
 
-  if(req.body.entryLocales !== undefined && req.body.entryLocales !== null){
-    const localeEntries = generateLocaleArticle(
-      req.body,
-      req.body.entryLocales,
-      true
-    );
-
-    for (const entryLocale in localeEntries) {
-      if (req.body.hasOwnProperty(entryLocale)) {
-        const entry = localeEntries[entryLocale];
-        const localizedData = {
-          title: entry.title ?? "",
-          description: entry.description,
-          body: entry.body,
-          id: params.articleid,
-          language: entryLocale,
-        };
-
-        let hasLocaleData = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
-          language: entryLocale,
-          thingid: params.articleid,
-        });
-
-        if (hasLocaleData.length) {
-          await db.tx(`update-${entryType}`, async t => {
-            await t.none(UPDATE_DRAFT_LOCALIZED_TEXT, localizedData);
-          });
-        } else {
-          await db.tx(`update-${entryType}`, async t => {
-            await t.none(INSERT_LOCALIZED_TEXT, localizedData);
-          });
-        }
-      }
-    }
-  }
+  // Intentionally no localization writes in draft save flow.
 
   newEntry.post_date = Date.now();
   newEntry.updated_date = Date.now();
@@ -1228,6 +1173,7 @@ module.exports = {
   limitFromReq,
   offsetFromReq,
   parseAndValidateThingPostData,
+  getEnglishEntryFromRequestBody,
   getThingEdit,
   saveDraft,
   generateLocaleArticle,
