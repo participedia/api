@@ -3,7 +3,6 @@ import loadingGifBase64 from "./loading-gif-base64.js";
 import modal from "./modal.js";
 import infoIconToModal from "./info-icon-to-modal.js";
 import tracking from "./utils/tracking.js";
-import languageSelectTooltipForNewEntries from "./language-select-tooltip-for-new-entries.js";
 import languageSelectTooltipForNewEntryInput from "./language-select-tooltip-for-new-entry-input";
 
 import submitFormLanguageSelector from "./submit-form-language-selector";
@@ -13,9 +12,6 @@ import tabsWithCards from "./tabs-with-cards.js";
 const editForm = {
   init(args = {}) {
     this.isEditMode = !!document.querySelector("input[name=article_id]")?.value;
-    this.originalLanguage = document.querySelector(
-      "input[name=original_language]"
-    )?.value;
     this.entryId = null;
 
     if (typeof args == "object" && "richTextEditorList" in args) {
@@ -142,7 +138,6 @@ const editForm = {
   },
 
   initOtherLangSelector() {
-    const userLocale = document.querySelector("input[name=locale]")?.value;
     this.userLocale = document.querySelector("input[name=locale]")?.value;
     let articleId = sessionStorage.getItem("articleId");
     let article_type = sessionStorage.getItem("article_type");
@@ -155,294 +150,16 @@ const editForm = {
       sessionStorage.removeItem("articleId");
       sessionStorage.removeItem("article_type");
     }
-    const articles =
-      document.querySelector("input[name=article_data]")?.value || "{}";
-    this.articleData = JSON.parse(articles);
     try {
-      this.localePlaceholders = JSON.parse(
-        document.querySelector("input[name=locale_placeholders]")?.value || "{}"
-      );
+      const articles =
+        document.querySelector("input[name=article_data]")?.value || "{}";
+      this.articleData = JSON.parse(articles);
     } catch (error) {
-      this.localePlaceholders = {};
+      this.articleData = {};
     }
-    this.currentInputValue = "";
-    this.entryLocaleData = {
-      title: {},
-      description: {},
-      body: {},
-      originalLanguage: "en"
-    };
-
-    if (this.isEditMode) {
-      this.initOtherLangSelectorForEditMode();
-    }
-
-    const selectInputArr = document.querySelectorAll(
-      "select.js-edit-select[name=languages]"
-    );
-    // const selectorLoaders = document.querySelectorAll(".js-language-select-container");
-    const otherLanguageselectorLabel = document.querySelectorAll(
-      ".js-other-lang-select"
-    );
-    const inputFields = document.querySelectorAll(
-      ".js-language-select-container+input, .js-language-select-container+textarea"
-    );
-    const bodyField = document.querySelector(".ql-editor");
-
-    const getFormLanguage = childNodes => {
-      var formLanguage = "en";
-      for (const [index, item] of childNodes.entries()) {
-        if ("className" in item && item.className.includes("js-edit-select")) {
-          formLanguage = item.value;
-        }
-      }
-
-      return formLanguage;
-    };
-
-    inputFields.forEach(input => {
-      input.addEventListener("focus", evt => {
-        this.currentInputValue = evt.target.value;
-        this.currentInput = evt.target.name;
-      });
-      input.addEventListener("keyup", evt => {
-        this.currentInputValue = evt.target.value;
-        this.currentInput = evt.target.name;
-        const formLanguage = getFormLanguage(
-          evt.target.previousElementSibling.childNodes
-        );
-
-        if (Object.keys(this.entryLocaleData[this.currentInput]).length === 0) {
-          this.userLocale = document.querySelector("input[name=locale]").value;
-        }
-
-        this.entryLocaleData[this.currentInput][
-          formLanguage
-        ] = this.currentInputValue;
-      });
-    });
-
-    otherLanguageselectorLabel.forEach(el => {
-      const selectEl = el.nextElementSibling.children[1];
-      const inputEl = el.nextElementSibling.nextElementSibling;
-
-      const _disableSelectEl = value => {
-        const inputFormLanguage = selectEl.value;
-        selectEl.disabled = true;
-        selectEl.previousElementSibling.style.display = "initial";
-
-        if (inputFormLanguage !== this.originalLanguage) {
-          selectEl.disabled = false;
-          selectEl.previousElementSibling.style.display = "none";
-        } else if (value.trim().length) {
-          selectEl.disabled = false;
-          selectEl.previousElementSibling.style.display = "none";
-        }
-        if (this.currentInput) {
-          if (this.entryLocaleData[this.currentInput][this.originalLanguage]) {
-            selectEl.disabled = false;
-            selectEl.previousElementSibling.style.display = "none";
-          }
-        }
-      };
-
-      const _disableBodySelectEl = innerText => {
-        const inputFormLanguage = selectEl.value;
-        const value = innerText.replace(/[\r\n]/gm, "");
-        selectEl.disabled = true;
-        selectEl.previousElementSibling.style.display = "initial";
-
-        // Validate if value is the same as placeholder from localization
-        const placeholderText = document.createElement("div");
-        placeholderText.innerHTML = this.localePlaceholders["en"].body;
-
-        // If user locale is different in form input language. Then stop the validation
-        if (inputFormLanguage !== userLocale) {
-          selectEl.disabled = false;
-          selectEl.previousElementSibling.style.display = "none";
-          return;
-        }
-
-        if (placeholderText.innerText === value) {
-          selectEl.disabled = true;
-          selectEl.previousElementSibling.style.display = "initial";
-          return;
-        }
-
-        const localeBodyFieldValueEl = document.createElement("div");
-        localeBodyFieldValueEl.innerHTML =
-          this.entryLocaleData["body"][userLocale] || "";
-
-        if (this.entryLocaleData["body"][userLocale] || !value.trim().length) {
-          selectEl.disabled = false;
-          selectEl.previousElementSibling.style.display = "none";
-          return;
-        }
-
-        if (localeBodyFieldValueEl.innerText.trim().length) {
-          selectEl.disabled = false;
-          selectEl.previousElementSibling.style.display = "none";
-          return;
-        }
-      };
-
-      if (["input", "textarea"].indexOf(inputEl.localName) >= 0) {
-        // Toggle select element disable state
-        _disableSelectEl(inputEl.value);
-
-        // Listen to keyup event of input element
-        inputEl.addEventListener("keyup", e => {
-          _disableSelectEl(e.target.value);
-        });
-      } else if (inputEl.className.includes("ql-toolbar")) {
-        // bodyField.innerHTML = this.entryLocaleData.body[selectEl.value];
-        this.entryLocaleData["body"][this.userLocale] = bodyField.innerHTML;
-        _disableBodySelectEl(bodyField.innerText);
-        bodyField.addEventListener("keyup", evt => {
-          this.currentInput = "body";
-          this.entryLocaleData["body"][this.userLocale] = evt.target.innerHTML;
-          bodyField.classList.add("dirty");
-          _disableBodySelectEl(bodyField.innerText);
-        });
-
-        bodyField.addEventListener("blur", evt => {
-          this.saveDraft(false);
-        });
-
-        /**
-         * Handle rich editor's text change because the current listener only trigger keyup
-         */
-        if ("body" in this.richTextEditorList) {
-          this.richTextEditorList.body.on("editor-change", event => {
-            if (event === "text-change") {
-              this.currentInput = "body";
-              this.entryLocaleData["body"][this.userLocale] =
-                bodyField.innerHTML;
-              bodyField.classList.add("dirty");
-              _disableBodySelectEl(bodyField.innerText);
-            }
-          });
-        }
-      }
-
-      el.addEventListener("click", e => {
-        e.preventDefault();
-        e.target.parentElement.nextElementSibling.classList.toggle(
-          "is-visible"
-        );
-      });
-    });
-
-    selectInputArr.forEach(el => {
-      el.addEventListener("change", evt => {
-        evt.preventDefault();
-        const isBody = el.parentElement.nextElementSibling.className.includes(
-          "ql-toolbar"
-        );
-        const inputField = isBody
-          ? bodyField
-          : el.parentElement.nextElementSibling;
-
-        this.userLocale = evt.target.value;
-        this.inputName = isBody
-          ? "body"
-          : el.parentElement.nextElementSibling.name;
-        if (isBody) {
-          this.entryLocaleData[this.inputName][this.userLocale] =
-            this.entryLocaleData[this.inputName][this.userLocale] ||
-            this.localePlaceholders[this.userLocale][this.inputName];
-        } else {
-          el.parentElement.nextElementSibling.setAttribute(
-            "placeholder",
-            this.localePlaceholders[this.userLocale][this.inputName] || ""
-          );
-        }
-
-        if (
-          this.entryLocaleData[this.inputName] &&
-          this.entryLocaleData[this.inputName][this.userLocale]
-        ) {
-          if (isBody) {
-            inputField.innerHTML = this.entryLocaleData[this.inputName][
-              this.userLocale
-            ];
-          } else {
-            inputField.value = this.entryLocaleData[this.inputName][
-              this.userLocale
-            ];
-          }
-          // }
-        } else {
-          this.entryLocaleData[this.inputName][this.userLocale] = "";
-          if (isBody) {
-            inputField.innerHTML = this.entryLocaleData[this.inputName][
-              this.userLocale
-            ];
-          } else {
-            inputField.value = this.entryLocaleData[this.inputName][
-              this.userLocale
-            ];
-          }
-        }
-
-        //When the user use the dropdown to change language on EDIT. Track change_edit_language_dropdown
-        if(this.isEditMode){
-          const articelObj = Object.values(this.articleData).find(val => {
-            return val && val.id && val.original_language
-          });
-          if(articelObj && this.userLocale !== articelObj.original_language){
-            tracking.send("change_edit_language_dropdown", "change_edit_language_dropdown", articelObj.id);
-          }
-        }
-      });
-    });
-  },
-
-  initOtherLangSelectorForEditMode() {
-    try {
-      const selectInputArr = document.querySelectorAll("select[name=languages");
-
-      for (const locale in this.articleData) {
-        if (this.articleData.hasOwnProperty(locale)) {
-          const localeArticle = this.articleData[locale];
-          this.entryLocaleData.title[locale] = localeArticle.title;
-          this.entryLocaleData.description[locale] = localeArticle.description;
-          this.entryLocaleData.body[locale] = localeArticle.body;
-        }
-      }
-
-      selectInputArr.forEach(el => {
-        el.classList.add("is-visible");
-      });
-    } catch (error) {}
   },
 
   validateLocalForms() {},
-
-  buildEnglishEntryLocaleData(formValues = {}) {
-    const english = "en";
-    return {
-      title: {
-        [english]:
-          formValues.title ??
-          this.entryLocaleData?.title?.[english] ??
-          "",
-      },
-      description: {
-        [english]:
-          formValues.description ??
-          this.entryLocaleData?.description?.[english] ??
-          "",
-      },
-      body: {
-        [english]:
-          formValues.body ??
-          this.entryLocaleData?.body?.[english] ??
-          "",
-      },
-      originalLanguage: english,
-    };
-  },
 
   initPinTabs() {
     const tabsContainer = document.querySelector(".js-tab-items");
@@ -536,8 +253,6 @@ const editForm = {
       });
     });
 
-    this.entryLocaleData = this.buildEnglishEntryLocaleData(originalEntry);
-
     const xhr = new XMLHttpRequest();
     const endpoint = isNeedToPreview ? "/saveDraftPreview" : "/saveDraft";
     const apiUrl = `${updatedForm.getAttribute("action")}${endpoint}`;
@@ -586,7 +301,6 @@ const editForm = {
 
     const requestPayload = {
       ...originalEntry,
-      entryLocales: this.entryLocaleData,
       entryId: this.entryId,
     };
     
@@ -673,8 +387,6 @@ const editForm = {
       });
     });
 
-    this.entryLocaleData = this.buildEnglishEntryLocaleData(formValue);
-
     const xhr = new XMLHttpRequest();
     const datatype = this.formEl.dataset.datatype;
     const formAction = this.formEl.getAttribute("action");
@@ -713,7 +425,6 @@ const editForm = {
 
     const requestPayload = {
       ...formValue,
-      entryLocales: this.entryLocaleData,
       entryId: this.entryId,
     };
 

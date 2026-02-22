@@ -246,73 +246,6 @@ async function postOrganizationUpdateHttp(req, res) {
     const articleRow = await db.one(ORGANIZATION_BY_ID, params);
     article = articleRow.results;
   
-    if (!Object.keys(req.body).length) {
-  
-      if (!article.latitude && !article.longitude) {
-        article.latitude = "";
-        article.longitude = "";
-      }
-  
-      try {
-        supportedLanguages =
-          SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
-      } catch (error) {
-        supportedLanguages = [];
-      }
-  
-      var entryLocaleData = {
-        title: {},
-        description: {},
-        body: {},
-      };
-      var title = {};
-      var desc = {};
-      var body = {};
-  
-      for (let i = 0; i < supportedLanguages.length; i++) {
-        const lang = supportedLanguages[i];
-        let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
-          language: lang,
-          thingid: article.id,
-        });
-  
-        if (lang === article.original_language) {
-          req.body[lang] = article;
-  
-          title[lang] = results[0].title;
-          desc[lang] = results[0].description;
-          body[lang] = results[0].body;
-        } else {
-          const otherLangArticle = {
-            title: results[0]?.title ?? "",
-            description: results[0]?.description ?? "",
-            body: results[0]?.body ?? "",
-          };
-  
-          if (results[0]?.title) {
-            title[lang] = results[0].title;
-          }
-  
-          if (results[0]?.description) {
-            desc[lang] = results[0].description;
-          }
-  
-          if (results[0]?.body) {
-            body[lang] = results[0].body;
-          }
-          req.body[lang] = otherLangArticle;
-        }
-  
-        entryLocaleData = {
-          title: title,
-          description: desc,
-          body: body,
-        };
-  
-        req.body["entryLocales"] = entryLocaleData;
-      }
-    }
-  
     //validate captcha start
     try {
       supportedLanguages =
@@ -479,8 +412,8 @@ async function organizationUpdate(req, res, entry = undefined, isUpdating = fals
     res,
     "organization"
   ); 
-  if(isUpdating && updatedText.language !== newOrganization.language){
-    updatedText.language = newOrganization.language;
+  if (updatedText) {
+    updatedText.language = "en";
   }
   const [updatedOrganization, er] = getUpdatedOrganization(
     user,
@@ -633,9 +566,9 @@ async function createOrganization(updatedText, oldArticle){
     let title = updatedText.title ? updatedText.title : null;
     let body = updatedText.body ? updatedText.body : null;
     let description = updatedText.description ? updatedText.description : null;
-    let original_language = updatedText.language ? updatedText.language : 'en';
+    let original_language = "en";
     let orginal_entry_id = oldArticle.id;
-    let local_language = updatedText.language ? updatedText.language : 'en';
+    let local_language = "en";
     const thing = await db.one(COPY_ORGANIZATION, {
       title,
       body,
@@ -669,6 +602,9 @@ async function copyOrganization(entry, params, req, res){
       author,
       oldArticle,
     } = await maybeUpdateUserTextLocaleEntry(newOrganization, req, res, "organization"); // fill data of entry & author
+    if (updatedText) {
+      updatedText.language = "en";
+    }
     
     const options = {
       articleid: oldArticle.id,
@@ -705,7 +641,7 @@ async function copyOrganization(entry, params, req, res){
     author.timestamp = 'now';
     author.thingid = thingid;
     if(isNewCopy){
-      updatedOrganization.original_language = updatedText.language ? updatedText.language : 'en';
+      updatedOrganization.original_language = "en";
     }
 
     if (!er.hasErrors()) {

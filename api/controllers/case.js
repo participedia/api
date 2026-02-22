@@ -351,6 +351,9 @@ async function caseUpdate(req, res, entry = undefined, isCopyProcess = false) {
     author,
     oldArticle,
   } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case"); // fill data of entry & author
+  if (updatedText) {
+    updatedText.language = "en";
+  }
   const [updatedCase, er] = getUpdatedCase(user, params, newCase, oldArticle); // map columns of cases
 
   const isIntegerList = ["is_component_of", "number_of_participants", "primary_organizer", "collections", "latitude", "longitude"];
@@ -502,9 +505,9 @@ async function createCase(updatedText, oldArticle){
     let title = updatedText.title ? updatedText.title : null;
     let body = updatedText.body ? updatedText.body : null;
     let description = updatedText.description ? updatedText.description : null;
-    let original_language = updatedText.language ? updatedText.language : 'en';
+    let original_language = "en";
     let orginal_entry_id = oldArticle.id;
-    let local_language = updatedText.language ? updatedText.language : 'en';
+    let local_language = "en";
     const thing = await db.one(COPY_CASE, {
       title,
       body,
@@ -538,6 +541,9 @@ async function copyCase(entry, params, req, res){
       author,
       oldArticle,
     } = await maybeUpdateUserTextLocaleEntry(newCase, req, res, "case"); // fill data of entry & author
+    if (updatedText) {
+      updatedText.language = "en";
+    }
     
     const options = {
       articleid: oldArticle.id,
@@ -580,7 +586,7 @@ async function copyCase(entry, params, req, res){
     updatedCase.hidden = true;
     author.thingid = thingid;
     if(isNewCopy){
-      updatedCase.original_language = updatedText.language ? updatedText.language : 'en';
+      updatedCase.original_language = "en";
     }
 
     if (!er.hasErrors()) {
@@ -617,73 +623,6 @@ async function postCaseUpdateHttp(req, res) {
     const articleRow = await db.one(CASE_BY_ID, params);
     article = articleRow.results;
   
-    if (!Object.keys(req.body).length) {
-      
-      if (!article.latitude && !article.longitude) {
-        article.latitude = "";
-        article.longitude = "";
-      }
-  
-      try {
-        supportedLanguages =
-          SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
-      } catch (error) {
-        supportedLanguages = [];
-      }
-  
-      var entryLocaleData = {
-        title: {},
-        description: {},
-        body: {},
-      };
-      var title = {};
-      var desc = {};
-      var body = {};
-  
-      for (let i = 0; i < supportedLanguages.length; i++) {
-        const lang = supportedLanguages[i];
-        let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
-          language: lang,
-          thingid: article.id,
-        });
-  
-        if (lang === article.original_language) {
-          req.body[lang] = article;
-  
-          title[lang] = results[0].title;
-          desc[lang] = results[0].description;
-          body[lang] = results[0].body;
-        } else {
-          const otherLangArticle = {
-            title: results[0]?.title ?? "",
-            description: results[0]?.description ?? "",
-            body: results[0]?.body ?? "",
-          };
-  
-          if (results[0]?.title) {
-            title[lang] = results[0].title;
-          }
-  
-          if (results[0]?.description) {
-            desc[lang] = results[0].description;
-          }
-  
-          if (results[0]?.body) {
-            body[lang] = results[0].body;
-          }
-          req.body[lang] = otherLangArticle;
-        }
-  
-        entryLocaleData = {
-          title: title,
-          description: desc,
-          body: body,
-        };
-      }
-  
-      req.body["entryLocales"] = entryLocaleData;
-    } 
-    
     //validate captcha start
     try {
       supportedLanguages =
@@ -766,7 +705,6 @@ async function postCaseUpdateHttp(req, res) {
       await caseUpdate(req, res, originalLanguageEntry, isCopyProcess);
     }
     // const localeEntriesArr = [].concat(...Object.values(localeEntries));
-    // await createUntranslatedLocalizedRecords(localeEntriesArr, articleid); // dublicated insert
     const freshArticle = await getCase(params, res);
     res.status(200).json({
       OK: true,

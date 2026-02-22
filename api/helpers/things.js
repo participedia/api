@@ -1,5 +1,4 @@
 // Google translate is optional now that entry writes are English-only.
-const keysEnvVar = process.env["GOOGLE_TRANSLATE_CREDENTIALS"];
 const selectedCategoryValues = [
   "all",
   "case",
@@ -8,20 +7,8 @@ const selectedCategoryValues = [
   "collection",
 ];
 
-const { Translate } = require("@google-cloud/translate").v2;
 const DEFAULT_ENTRY_LANGUAGE = "en";
 const logError = require("./log-error.js");
-let translate = null;
-
-if (keysEnvVar) {
-  try {
-    const authKeys = JSON.parse(keysEnvVar);
-    authKeys.key = process.env.GOOGLE_API_KEY;
-    translate = new Translate(authKeys);
-  } catch (error) {
-    logError(error);
-  }
-}
 
 const moment = require("moment");
 const { SUPPORTED_LANGUAGES, RESPONSE_LIMIT } = require("./../../constants.js");
@@ -678,166 +665,166 @@ const requireTranslation = (entry, entryName) => {
   return requiresTranslation;
 };
 
-async function createLocalizedRecord(
-  data,
-  thingid,
-  localesToTranslate = undefined,
-  entryLocales
-) {
-  let records = [];
-  let languagesToTranslate = localesToTranslate || SUPPORTED_LANGUAGES || [];
+// async function createLocalizedRecord(
+//   data,
+//   thingid,
+//   localesToTranslate = undefined,
+//   entryLocales
+// ) {
+//   let records = [];
+//   let languagesToTranslate = localesToTranslate || SUPPORTED_LANGUAGES || [];
 
-  const getEntryData = (field, language) => {
-    try {
-      return entryLocales[field][language];
-    } catch (error) {
-      return "";
-    }
-  };
+//   const getEntryData = (field, language) => {
+//     try {
+//       return entryLocales[field][language];
+//     } catch (error) {
+//       return "";
+//     }
+//   };
 
-  for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
-    const language = SUPPORTED_LANGUAGES[i];
+//   for (let i = 0; i < SUPPORTED_LANGUAGES.length; i++) {
+//     const language = SUPPORTED_LANGUAGES[i];
 
-    if (
-      languagesToTranslate.includes(language.twoLetterCode) &&
-      language.twoLetterCode !== data.language
-    ) {
-      const item = {
-        body: getEntryData("body", language.twoLetterCode),
-        title: getEntryData("title", language.twoLetterCode),
-        description: getEntryData("description", language.twoLetterCode),
-        language: language.twoLetterCode,
-        thingid: thingid,
-        // TODO: Admin check here
-        timestamp: "now",
-      };
+//     if (
+//       languagesToTranslate.includes(language.twoLetterCode) &&
+//       language.twoLetterCode !== data.language
+//     ) {
+//       const item = {
+//         body: getEntryData("body", language.twoLetterCode),
+//         title: getEntryData("title", language.twoLetterCode),
+//         description: getEntryData("description", language.twoLetterCode),
+//         language: language.twoLetterCode,
+//         thingid: thingid,
+//         // TODO: Admin check here
+//         timestamp: "now",
+//       };
 
-      if (data.body && !item.body) {
-        let body = data.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
-        item.body = await translateText(body, language.twoLetterCode);
-      }
+//       if (data.body && !item.body) {
+//         let body = data.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+//         item.body = await translateText(body, language.twoLetterCode);
+//       }
 
-      if (data.title && !item.title) {
-        item.title = await translateText(data.title, language.twoLetterCode);
-      }
+//       if (data.title && !item.title) {
+//         item.title = await translateText(data.title, language.twoLetterCode);
+//       }
 
-      if (data.description && !item.description) {
-        const description = data.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
-        item.description = await translateText(description, language.twoLetterCode);
-      }
+//       if (data.description && !item.description) {
+//         const description = data.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+//         item.description = await translateText(description, language.twoLetterCode);
+//       }
 
-      records.push(item);
-    }
-  }
+//       records.push(item);
+//     }
+//   }
 
-  const insert = pgp.helpers.insert(
-    records,
-    ["body", "title", "description", "language", "thingid", "timestamp"],
-    "localized_texts"
-  );
+//   const insert = pgp.helpers.insert(
+//     records,
+//     ["body", "title", "description", "language", "thingid", "timestamp"],
+//     "localized_texts"
+//   );
 
-  db.none(insert)
-    .then(function(data) {
-      console.log(data);
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-}
+//   db.none(insert)
+//     .then(function(data) {
+//       console.log(data);
+//     })
+//     .catch(function(error) {
+//       console.log(error);
+//     });
+// }
 
-async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
-  let records = [];
+// async function createUntranslatedLocalizedRecords(data, thingid, mainEntry) {
+//   let records = [];
 
-  if (!Array.isArray(data)) return;
-  const supportedTwoLetterCodes = SUPPORTED_LANGUAGES.map(
-    lang => lang.twoLetterCode
-  );
+//   if (!Array.isArray(data)) return;
+//   const supportedTwoLetterCodes = SUPPORTED_LANGUAGES.map(
+//     lang => lang.twoLetterCode
+//   );
 
-  for (let i = 0; i < data.length; i++) {
-    const entry = data[i];
-    if (supportedTwoLetterCodes.includes(entry.language)) {
-      const item = {
-        body: entry.body || "",
-        title: entry.title || "",
-        description: entry.description || "",
-        language: entry.language,
-        thingid: thingid,
-        // TODO: Admin check here
-        timestamp: "now",
-      };
+//   for (let i = 0; i < data.length; i++) {
+//     const entry = data[i];
+//     if (supportedTwoLetterCodes.includes(entry.language)) {
+//       const item = {
+//         body: entry.body || "",
+//         title: entry.title || "",
+//         description: entry.description || "",
+//         language: entry.language,
+//         thingid: thingid,
+//         // TODO: Admin check here
+//         timestamp: "now",
+//       };
 
-      if (mainEntry) {
-        if (!entry.title && mainEntry.title) {
-          item.title = await translateText(mainEntry.title, entry.language);
-        }
+//       if (mainEntry) {
+//         if (!entry.title && mainEntry.title) {
+//           item.title = await translateText(mainEntry.title, entry.language);
+//         }
 
-        if (!entry.body && mainEntry.body) {
-          const body = mainEntry.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
-          item.body = await translateText(body, entry.language);
-        }
+//         if (!entry.body && mainEntry.body) {
+//           const body = mainEntry.body.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+//           item.body = await translateText(body, entry.language);
+//         }
 
-        if (!entry.description && mainEntry.description) {
-          const description = mainEntry.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
-          item.description = await translateText(description, entry.language);
-        }
-      }
+//         if (!entry.description && mainEntry.description) {
+//           const description = mainEntry.description.replace(/<img src="data:image\/[a-z]+;base64[^>]*>/g,'');
+//           item.description = await translateText(description, entry.language);
+//         }
+//       }
 
-      records.push(item);
-    }
-  }
-  const insert = pgp.helpers.insert(
-    records,
-    ["body", "title", "description", "language", "thingid", "timestamp"],
-    "localized_texts"
-  );
+//       records.push(item);
+//     }
+//   }
+//   const insert = pgp.helpers.insert(
+//     records,
+//     ["body", "title", "description", "language", "thingid", "timestamp"],
+//     "localized_texts"
+//   );
 
-  db.none(insert)
-    .then(function(data) {
-      console.log(data);
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-}
+//   db.none(insert)
+//     .then(function(data) {
+//       console.log(data);
+//     })
+//     .catch(function(error) {
+//       console.log(error);
+//     });
+// }
 
-async function translateText(data, targetLanguage) {
-  try {
-    if (!data) {
-      return "";
-    }
-    if (!translate || targetLanguage === DEFAULT_ENTRY_LANGUAGE) {
-      return data;
-    }
-    // The text to translate
-    let allTranslation = "";
+// async function translateText(data, targetLanguage) {
+//   try {
+//     if (!data) {
+//       return "";
+//     }
+//     if (!translate || targetLanguage === DEFAULT_ENTRY_LANGUAGE) {
+//       return data;
+//     }
+//     // The text to translate
+//     let allTranslation = "";
   
-    // The target language
-    const target = targetLanguage;
-    let length = data.length;
-    if (length > 5000) {
-      // Get text chunks
-      let textParts = data.match(/.{1,5000}/g);
-      for (let text of textParts) {
-        let [translation] = await translate
-          .translate(text, target)
-          .catch(function(error) {
-            logError(error);
-          });
-        allTranslation += translation;
-      }
-    } else {
-      [allTranslation] = await translate
-        .translate(data, target)
-        .catch(function(error) {
-          logError(error);
-        });
-    }
-    return allTranslation;
-  } catch (error) {
-    console.log('translateText error ', error);
-    throw error;
-  }
-}
+//     // The target language
+//     const target = targetLanguage;
+//     let length = data.length;
+//     if (length > 5000) {
+//       // Get text chunks
+//       let textParts = data.match(/.{1,5000}/g);
+//       for (let text of textParts) {
+//         let [translation] = await translate
+//           .translate(text, target)
+//           .catch(function(error) {
+//             logError(error);
+//           });
+//         allTranslation += translation;
+//       }
+//     } else {
+//       [allTranslation] = await translate
+//         .translate(data, target)
+//         .catch(function(error) {
+//           logError(error);
+//         });
+//     }
+//     return allTranslation;
+//   } catch (error) {
+//     console.log('translateText error ', error);
+//     throw error;
+//   }
+// }
 
 function generateLocaleArticle(article, uniqueTranslateData, isEdit = false) {
   const articles = {};
@@ -1165,8 +1152,6 @@ module.exports = {
   searchFiltersFromReq,
   typeFromReq,
   placeHolderPhotos,
-  createLocalizedRecord,
-  createUntranslatedLocalizedRecords,
   getCollections,
   validateFields,
   requireTranslation,

@@ -11,8 +11,6 @@ const {
   applyLocalizedTextChangesToOrgin,
 } = require("../helpers/things");
 
-const { processTranslateEntry } = require("../helpers/translate-helpers");
-
 const {
   publishHiddenEntry,
   removeEntryThings,
@@ -315,8 +313,6 @@ router.post("/approve-entry", async function(req, res) {
         author.user_id,
         currentDate
       );
-      // let translateEntryText = translateEntry(entryId, entryData.original_language);
-      let translateEntryText = processTranslateEntry(entryId, entryData.original_language);
       let allUserPosts = await getApprovalUserPost(author.user_id);
   
       for (const allUserPost in allUserPosts) {

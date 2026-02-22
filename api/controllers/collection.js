@@ -199,76 +199,6 @@ async function postCollectionUpdateHttp(req, res) {
   let captcha_error_message = "";
   let supportedLanguages;
 
-  if(!Object.keys(req.body).length) {
-    const articleRow = await (await db.one(COLLECTION_BY_ID, params));
-    const article = articleRow.results;
-
-    if (!article.latitude && !article.longitude) {
-      article.latitude = '';
-      article.longitude = '';
-    }
-
-    try {
-      supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
-    } catch (error) {
-      supportedLanguages = [];
-    }
-
-    var entryLocaleData = {
-      title: {},
-      description: {},
-      body: {},
-    };
-    var title = {};
-    var desc = {};
-    var body = {};
-
-    for (let i = 0; i < supportedLanguages.length; i++) {
-      const lang = supportedLanguages[i];
-      let results = await db.any(LOCALIZED_TEXT_BY_ID_LOCALE, {
-        language: lang,
-        thingid: article.id
-      });
-
-      if (lang === article.original_language) {
-        req.body[lang] = article;
-
-        title[lang] = results[0].title;
-        desc[lang] = results[0].description;
-        body[lang] = results[0].body;
-
-      } else {
-        const otherLangArticle = {
-          title: (results[0]?.title) ?? '',
-          description: results[0]?.description ?? '',
-          body: results[0]?.body ?? ''
-        };
-
-        if (results[0]?.title) {
-          title[lang] = results[0].title;
-        }
-
-        if (results[0]?.description) {
-          desc[lang] = results[0].description;
-        }
-
-        if (results[0]?.body) {
-          body[lang] = results[0].body;
-        }
-        req.body[lang] = otherLangArticle;
-      }
-
-      entryLocaleData = {
-        title: title,
-        description: desc,
-        body: body
-      };
-
-      req.body['entryLocales'] = entryLocaleData;
-    }
-
-  }
-
   //validate captcha start
   try {
     supportedLanguages = SUPPORTED_LANGUAGES.map(locale => locale.twoLetterCode) || [];
@@ -344,6 +274,9 @@ async function collectionUpdate(req, res, entry = undefined) {
     author,
     oldArticle: oldCollection,
   } = await maybeUpdateUserTextLocaleEntry(newCollection, req, res, "collection");
+  if (updatedText) {
+    updatedText.language = "en";
+  }
   const [updatedCollection, er] = getUpdatedCollection(
     user,
     params,
