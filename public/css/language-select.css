@@ -25,3 +25,36 @@
 select.js-edit-select[name=languages] {
   margin-bottom: 10px;
 }
+
+/* Keep one visible Google Translate dropdown if the widget is initialized twice. */
+#google_translate_element select.goog-te-combo ~ select.goog-te-combo {
+  display: none !important;
+}
+
+select.goog-te-combo[data-google-translate-duplicate="true"] {
+  display: none !important;
+}
+
+#google_translate_element .goog-te-combo {
+  scrollbar-width: thin;               /* Firefox */
+  scrollbar-color: #666 #242424;       /* Firefox */
+}
+
+#google_translate_element .goog-te-combo::-webkit-scrollbar {
+  width: 8px;                          /* Chrome/Safari/Edge */
+}
+
+#google_translate_element .goog-te-combo::-webkit-scrollbar-track {
+  background: #242424;
+}
+
+#google_translate_element .goog-te-combo::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 8px;
+}
+
+.goog-te-gadget .goog-te-combo :focus-visible {
+  outline: none;
+  border: none;
+  box-shadow: none; 
+}

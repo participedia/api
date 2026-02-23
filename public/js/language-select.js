@@ -4,9 +4,11 @@ const things = ['method', 'case', 'organization'];
 const languageSelect = {
   redirectUrl: null,
   isThingDetailsPageWithLanguageParam: false,
+  googleTranslateObserver: null,
   init(tracking) {
     this.tracking = tracking;
     this.generateRedirectPath();
+    this.initGoogleTranslateSelectDeduper();
     const selectEls = document.querySelectorAll(".js-language-select");
 
     if (!selectEls) return;
@@ -17,6 +19,39 @@ const languageSelect = {
           this.handleSelectChange(e);
         });
       });
+    });
+  },
+
+  initGoogleTranslateSelectDeduper() {
+    const googleTranslateContainerEls = document.querySelectorAll("#google_translate_element");
+    if (!googleTranslateContainerEls.length) return;
+
+    this.markDuplicateGoogleTranslateSelects();
+    if (!window.MutationObserver) return;
+
+    this.googleTranslateObserver = new MutationObserver(() => {
+      this.markDuplicateGoogleTranslateSelects();
+    });
+
+    toArray(googleTranslateContainerEls).forEach(containerEl => {
+      this.googleTranslateObserver.observe(containerEl, {
+        childList: true,
+        subtree: true
+      });
+    });
+  },
+
+  markDuplicateGoogleTranslateSelects() {
+    const googleTranslateSelectEls = document.querySelectorAll("select.goog-te-combo");
+    if (!googleTranslateSelectEls.length) return;
+
+    toArray(googleTranslateSelectEls).forEach((select, index) => {
+      if (index === 0) {
+        select.removeAttribute("data-google-translate-duplicate");
+        return;
+      }
+
+      select.setAttribute("data-google-translate-duplicate", "true");
     });
   },
 

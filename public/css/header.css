@@ -394,6 +394,22 @@ header .right-col {
 .goog-te-gadget .goog-te-combo{
   margin: 5px 0;
   padding-right: 5px;
+
+/* Remove default browser arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Custom White SVG Arrow */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFFFFF'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 18px;
+
+  /* Styling for visibility (White arrows need a dark background!) */
+  background-color: #242424;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
 select.goog-te-combo{
