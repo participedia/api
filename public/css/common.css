@@ -42,6 +42,7 @@ body {
   font-size: 1rem; /* 16px */
   font-weight: 300;
   line-height: 1.5; /* 24px */
+  top: 0 !important;
 }
 h1,
 h2,
