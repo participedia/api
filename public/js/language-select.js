@@ -5,10 +5,14 @@ const languageSelect = {
   redirectUrl: null,
   isThingDetailsPageWithLanguageParam: false,
   googleTranslateObserver: null,
+  googleTranslateHeaderOffsetObserver: null,
+  googleTranslateHeaderOffsetRafId: null,
+  lastGoogleTranslateTopOffset: null,
   init(tracking) {
     this.tracking = tracking;
     this.generateRedirectPath();
     this.initGoogleTranslateSelectDeduper();
+    this.initGoogleTranslateHeaderOffset();
     const selectEls = document.querySelectorAll(".js-language-select");
 
     if (!selectEls) return;
@@ -39,6 +43,79 @@ const languageSelect = {
         subtree: true
       });
     });
+  },
+
+  initGoogleTranslateHeaderOffset() {
+    if (!document.querySelector("#google_translate_element")) return;
+
+    this.queueSyncGoogleTranslateHeaderOffset();
+
+    window.addEventListener("resize", () => {
+      this.queueSyncGoogleTranslateHeaderOffset();
+    });
+
+    if (!window.MutationObserver || !document.body) return;
+
+    this.googleTranslateHeaderOffsetObserver = new MutationObserver(() => {
+      this.queueSyncGoogleTranslateHeaderOffset();
+    });
+
+    this.googleTranslateHeaderOffsetObserver.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class", "style"]
+    });
+
+    this.googleTranslateHeaderOffsetObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  },
+
+  queueSyncGoogleTranslateHeaderOffset() {
+    if (this.googleTranslateHeaderOffsetRafId) return;
+
+    if (!window.requestAnimationFrame) {
+      this.syncGoogleTranslateHeaderOffset();
+      return;
+    }
+
+    this.googleTranslateHeaderOffsetRafId = window.requestAnimationFrame(() => {
+      this.googleTranslateHeaderOffsetRafId = null;
+      this.syncGoogleTranslateHeaderOffset();
+    });
+  },
+
+  syncGoogleTranslateHeaderOffset() {
+    const topOffset = this.getGoogleTranslateTopOffset();
+    if (topOffset === this.lastGoogleTranslateTopOffset) return;
+
+    this.lastGoogleTranslateTopOffset = topOffset;
+    document.documentElement.style.setProperty(
+      "--google-translate-offset",
+      `${topOffset}px`
+    );
+  },
+
+  getGoogleTranslateTopOffset() {
+    if (!document.body) return 0;
+
+    const bodyTop = parseFloat(window.getComputedStyle(document.body).top) || 0;
+    const googleBannerEls = document.querySelectorAll(
+      "iframe.goog-te-banner-frame, .goog-te-banner-frame, .VIpgJd-ZVi9od-ORHb-OEVmcd, iframe[class*='VIpgJd']"
+    );
+
+    let visibleBannerHeight = 0;
+    toArray(googleBannerEls).forEach(bannerEl => {
+      const styles = window.getComputedStyle(bannerEl);
+      if (styles.display === "none" || styles.visibility === "hidden") return;
+
+      const bannerHeight = Math.round(bannerEl.getBoundingClientRect().height);
+      if (bannerHeight > visibleBannerHeight) {
+        visibleBannerHeight = bannerHeight;
+      }
+    });
+
+    return Math.max(0, Math.max(Math.round(bodyTop), visibleBannerHeight));
   },
 
   markDuplicateGoogleTranslateSelects() {
