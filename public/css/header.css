@@ -415,11 +415,6 @@ header .right-col {
   cursor: pointer;
 }
 
-select.goog-te-combo{
-  width: 135px !important;
-  font-size: 13px !important;
-}
-
 .go-to-paricipedia{
   white-space: nowrap;
   overflow: hidden;
@@ -428,5 +423,4 @@ select.goog-te-combo{
 
 .VIpgJd-ZVi9od-aZ2wEe-wOHMyf-ti6hGc{
   left: 50px !important;
-
 }
