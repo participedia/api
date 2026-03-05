@@ -55,6 +55,10 @@ select.goog-te-combo[data-google-translate-duplicate="true"] {
 
 .goog-te-gadget .goog-te-combo :focus-visible {
   outline: none;
-  border: none;
   box-shadow: none; 
+}
+
+.goog-te-gadget .goog-te-combo{
+  border-radius: 20px;
+  border-color: white;
 }

@@ -412,7 +412,6 @@ header .right-col {
   /* Styling for visibility (White arrows need a dark background!) */
   background-color: #242424;
   color: white;
-  border: none;
   cursor: pointer;
 }
 
