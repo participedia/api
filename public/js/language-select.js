@@ -8,8 +8,7 @@ const languageSelect = {
   redirectUrl: null,
   isThingDetailsPageWithLanguageParam: false,
   googleTranslateObserver: null,
-  googleTranslateLabelObserver: null,
-  googleTranslateLabelIntervalId: null,
+  googleTranslateRefreshRafId: null,
   googleTranslateHeaderOffsetObserver: null,
   googleTranslateHeaderOffsetRafId: null,
   lastGoogleTranslateTopOffset: null,
@@ -35,24 +34,7 @@ const languageSelect = {
   initGoogleTranslateDefaultLabel() {
     if (!document.querySelector("#google_translate_element")) return;
 
-    if (this.setGoogleTranslateDefaultLabel()) return;
-
-    if (window.MutationObserver && document.body) {
-      this.googleTranslateLabelObserver = new MutationObserver(() => {
-        if (!this.setGoogleTranslateDefaultLabel()) return;
-        this.teardownGoogleTranslateDefaultLabelWatcher();
-      });
-
-      this.googleTranslateLabelObserver.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-    }
-
-    this.googleTranslateLabelIntervalId = window.setInterval(() => {
-      if (!this.setGoogleTranslateDefaultLabel()) return;
-      this.teardownGoogleTranslateDefaultLabelWatcher();
-    }, 250);
+    this.queueRefreshGoogleTranslateSelectState();
   },
 
   setGoogleTranslateDefaultLabel() {
@@ -62,60 +44,86 @@ const languageSelect = {
     }
 
     const firstOption = googleTranslateSelect.options[0];
-    firstOption.text = GOOGLE_TRANSLATE_DEFAULT_LABEL;
+    if (firstOption.text !== GOOGLE_TRANSLATE_DEFAULT_LABEL) {
+      firstOption.text = GOOGLE_TRANSLATE_DEFAULT_LABEL;
+    }
     googleTranslateSelect.style.color = "#fff";
     googleTranslateSelect.style.paddingLeft = "30px";
 
-    if (!googleTranslateSelect.getAttribute("data-google-translate-iconized")) {
-      const googleTranslateIconUri = `url("data:image/svg+xml,${encodeURIComponent(GOOGLE_TRANSLATE_ICON_SVG)}")`;
-      const existingBackgroundImage = window.getComputedStyle(googleTranslateSelect).backgroundImage;
-      const hasExistingBackgroundImage = existingBackgroundImage && existingBackgroundImage !== "none";
+    const googleTranslateIconUri = `url("data:image/svg+xml,${encodeURIComponent(GOOGLE_TRANSLATE_ICON_SVG)}")`;
+    const baseBackgroundImage = this.getGoogleTranslateBaseBackgroundImage(googleTranslateSelect);
+    const hasBaseBackgroundImage = baseBackgroundImage && baseBackgroundImage !== "none";
 
-      googleTranslateSelect.style.backgroundImage = hasExistingBackgroundImage
-        ? `${googleTranslateIconUri}, ${existingBackgroundImage}`
-        : googleTranslateIconUri;
-      googleTranslateSelect.style.backgroundRepeat = hasExistingBackgroundImage
-        ? "no-repeat, no-repeat"
-        : "no-repeat";
-      googleTranslateSelect.style.backgroundPosition = hasExistingBackgroundImage
-        ? "8px center, calc(100% - 8px) center"
-        : "8px center";
-      googleTranslateSelect.style.backgroundSize = hasExistingBackgroundImage
-        ? "16px 16px, 18px 18px"
-        : "16px 16px";
-      googleTranslateSelect.setAttribute("data-google-translate-iconized", "true");
-    }
+    googleTranslateSelect.style.backgroundImage = hasBaseBackgroundImage
+      ? `${googleTranslateIconUri}, ${baseBackgroundImage}`
+      : googleTranslateIconUri;
+    googleTranslateSelect.style.backgroundRepeat = hasBaseBackgroundImage
+      ? "no-repeat, no-repeat"
+      : "no-repeat";
+    googleTranslateSelect.style.backgroundPosition = hasBaseBackgroundImage
+      ? "8px center, calc(100% - 8px) center"
+      : "8px center";
+    googleTranslateSelect.style.backgroundSize = hasBaseBackgroundImage
+      ? "16px 16px, 18px 18px"
+      : "16px 16px";
 
     return firstOption.text === GOOGLE_TRANSLATE_DEFAULT_LABEL;
   },
 
-  teardownGoogleTranslateDefaultLabelWatcher() {
-    if (this.googleTranslateLabelObserver) {
-      this.googleTranslateLabelObserver.disconnect();
-      this.googleTranslateLabelObserver = null;
+  getGoogleTranslateBaseBackgroundImage(googleTranslateSelect) {
+    const storedBaseBackgroundImage = googleTranslateSelect.getAttribute(
+      "data-google-translate-base-background-image"
+    );
+    if (storedBaseBackgroundImage !== null) return storedBaseBackgroundImage;
+
+    const computedBackgroundImage = window.getComputedStyle(googleTranslateSelect).backgroundImage;
+    const baseBackgroundImage = computedBackgroundImage && computedBackgroundImage !== "none"
+      ? computedBackgroundImage
+      : "";
+
+    googleTranslateSelect.setAttribute(
+      "data-google-translate-base-background-image",
+      baseBackgroundImage
+    );
+
+    return baseBackgroundImage;
+  },
+
+  queueRefreshGoogleTranslateSelectState() {
+    if (this.googleTranslateRefreshRafId) return;
+
+    if (!window.requestAnimationFrame) {
+      this.refreshGoogleTranslateSelectState();
+      return;
     }
 
-    if (!this.googleTranslateLabelIntervalId) return;
+    this.googleTranslateRefreshRafId = window.requestAnimationFrame(() => {
+      this.googleTranslateRefreshRafId = null;
+      this.refreshGoogleTranslateSelectState();
+    });
+  },
 
-    window.clearInterval(this.googleTranslateLabelIntervalId);
-    this.googleTranslateLabelIntervalId = null;
+  refreshGoogleTranslateSelectState() {
+    this.markDuplicateGoogleTranslateSelects();
+    this.setGoogleTranslateDefaultLabel();
   },
 
   initGoogleTranslateSelectDeduper() {
     const googleTranslateContainerEls = document.querySelectorAll("#google_translate_element");
     if (!googleTranslateContainerEls.length) return;
 
-    this.markDuplicateGoogleTranslateSelects();
+    this.queueRefreshGoogleTranslateSelectState();
     if (!window.MutationObserver) return;
 
     this.googleTranslateObserver = new MutationObserver(() => {
-      this.markDuplicateGoogleTranslateSelects();
+      this.queueRefreshGoogleTranslateSelectState();
     });
 
     toArray(googleTranslateContainerEls).forEach(containerEl => {
       this.googleTranslateObserver.observe(containerEl, {
         childList: true,
-        subtree: true
+        subtree: true,
+        characterData: true
       });
     });
   },
